@@ -617,8 +617,17 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
     if(!r.ok)throw new Error('vacantes '+r.status);return r.json();
   }
 
+  async function llamar(fn){
+    const {data:{session}}=await sb.auth.getSession();
+    const r=await fetch(`${SUPA_URL}/functions/v1/${fn}`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:'{}'});
+    const out=await r.json().catch(()=>({}));if(!r.ok)throw out;return out;
+  }
+
   window.PC_SHIM={
     vacantes,
+    async hasSecret(n){const {data}=await sb.rpc('pc_has_named_secret',{p_name:n});return data===true},
+    async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
+    avisarAhora:()=>llamar('pc-avisos'),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
     async signOut(){await sb.auth.signOut();location.reload()},
     openSettings:ajustes
@@ -626,7 +635,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf6lksx').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf6p2uk').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -921,7 +930,7 @@ function renderSide(){
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
       <div class="plist" id="plist-proy">${listaProyectos()}</div>
       ${nav('papelera','trash','Papelera')}</div>
-    ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
+    ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
     <span class="status" id="status">${S.modo==='local'?'Guardado solo en este navegador':S.modo==='error'?'Sin conexión al almacenamiento':''}</span>`;
   const bb=$('#bottombar');if(bb){const b=(act,v,ico,n,cur)=>`<button class="bb ${act==='nuevo'?'fab':''}" data-act="${act}" ${v?`data-v="${v}"`:''} aria-current="${!!cur}">${ICO[ico]}<span>${n}</span></button>`;
     bb.innerHTML=b('vista','inicio','home','Inicio',S.vista==='inicio'&&!S.menu)+b('menu','','folder','Proyectos',S.menu||S.vista==='proyecto')+b('nuevo','','plus','Nuevo')+b('vista','estilo','eye','Estilo',S.vista==='estilo'&&!S.menu)+b('vista','artistas','users','Artistas',S.vista==='artistas'&&!S.menu)}
@@ -949,6 +958,7 @@ function renderMainInner(){
   if(S.vista==='nivel'){m.innerHTML=vNivel();return}
   if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
   if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
+  if(S.vista==='avisos'){m.innerHTML=vAvisos();return}
   if(S.vista==='redes'){m.innerHTML=vRedes();return}
   if(S.vista==='cobros'){m.innerHTML=vCobros();return}
   if(S.vista==='ruta'){m.innerHTML=vRuta();return}
@@ -2263,6 +2273,25 @@ function vAdaptar(){
   ${(r.prueba||[]).length?`<div class="box"><h3>Prepárate para su prueba o entrevista</h3><ul style="margin:0;padding-left:18px;line-height:1.6">${r.prueba.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`:''}
   ${hist.length>1?`<div class="box"><h3>Análisis anteriores</h3><ul class="list">${hist.map((h,i)=>`<li><span><b>${esc(h.estudio)}</b> · ${esc(h.puesto)} · ${+h.data.encaje||0}% · <span class="muted">${fecha(h.ts)}</span></span><button class="btn sm" data-act="adp-ver" data-i="${i}">Ver</button></li>`).join('')}</ul></div>`:''}`}
 
+/* ============ Avisos por correo ============ */
+async function cargarAvisos(){if(!window.PC_SHIM?.hasSecret)return;try{S.avisosKey=await window.PC_SHIM.hasSecret('resend')}catch{S.avisosKey=false}if(S.vista==='avisos')renderMain()}
+function vAvisos(){
+  const c=S.ajustes.avisos||{},con=S.avisosKey;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Avisos por correo</h1>
+  <p class="intro">Todos los días a las <b>8:00 am</b> (hora de México) te llega un correo con lo importante: entregas y pruebas de arte que vencen, seguimientos que tocan, publicaciones del día, <b>vacantes nuevas que encajan con tu perfil</b>, cobros pendientes y tu racha. Si no hay nada nuevo, no te llega nada.</p>
+  ${!window.PC_SHIM?'<div class="banner">Los avisos por correo funcionan desde tu app de GitHub.</div>':`
+  <div class="box"><h3>1 · Conecta el servicio de correo</h3>
+    <p style="margin:0">${con==null?'Revisando…':con?'<b style="color:var(--ok)">Conectado.</b> Ya se pueden mandar los avisos.':'<b style="color:var(--warn)">Sin conectar.</b>'}</p>
+    <ol style="margin:0;padding-left:20px;line-height:1.7"><li>Crea una cuenta gratis en <a href="https://resend.com/signup" target="_blank" rel="noopener" style="color:var(--accent)">resend.com</a> <b>con tu correo salvarezdelfin@gmail.com</b> (los avisos solo pueden llegar al correo de esa cuenta).</li>
+      <li>En Resend ve a <b>API Keys → Create API Key</b> y cópiala (empieza con <code>re_</code>).</li><li>Pégala aquí. Se guarda en tu servidor privado y nunca vuelve al navegador.</li></ol>
+    <div class="prow"><input type="password" id="av-key" autocomplete="off" placeholder="${con?'Pega una nueva para reemplazarla':'re_…'}" style="flex:1 1 240px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px">
+      <button class="btn pri" data-act="av-key">Guardar</button>${con?'<button class="btn danger" data-act="av-quitar">Desconectar</button>':''}</div></div>
+  <div class="box"><h3>2 · Tus avisos</h3>
+    <label class="chk"><input type="checkbox" id="av-activo" data-avisos="activo" ${c.activo!==false?'checked':''}><span><b>Mandarme el resumen diario</b><small>8:00 am, solo si hay pendientes o vacantes nuevas.</small></span></label>
+    <div class="field"><label for="av-email">Correo</label><input type="text" id="av-email" data-avisos="email" value="${esc(c.email||'salvarezdelfin@gmail.com')}"><small class="muted">Debe ser el mismo correo de tu cuenta de Resend.</small></div>
+    <div class="prow"><button class="btn" data-act="av-prueba" ${con?'':'disabled'}>${S.avPrueba==='enviando'?'Enviando…':'Enviarme un correo de prueba'}</button>${S.avPrueba&&S.avPrueba!=='enviando'?`<span class="muted">${esc(S.avPrueba)}</span>`:''}</div></div>`}`}
+
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2577,6 +2606,7 @@ function aMarkdown(p){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
+  if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
@@ -2642,7 +2672,7 @@ async function accion(a,el){
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);break;
+    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();break;
     case 'tab':S.tab=ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
@@ -2703,6 +2733,11 @@ async function accion(a,el){
     case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
     case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
     case 'cot-hist':cargarCotHist();break;
+    case 'av-key':{const k=$('#av-key')?.value.trim();if(!/^re_/.test(k||'')){toast('Esa no parece una clave de Resend (empieza con re_)');return}try{await window.PC_SHIM.setSecret('resend',k);S.avisosKey=true;S.ajustes.avisos={activo:true,email:'salvarezdelfin@gmail.com',...(S.ajustes.avisos||{})};marcarAj();renderMain();toast('Correo conectado')}catch{toast('No se pudo guardar')}break}
+    case 'av-quitar':{try{await window.PC_SHIM.setSecret('resend','');S.avisosKey=false;renderMain()}catch{}break}
+    case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await S.db.doc('ajustes/principios').set(clone(S.ajustes));S.ajDirty=false}catch{}
+      try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
+      renderMain();break}
     case 'vac-adaptar':{const x=(S.vac?.items||[]).find(v=>v.id===ds.id);if(!x)return;S.adp={estudio:x.company||'',puesto:x.title||'',link:x.url||'',texto:''};S.adpVer=null;S.vista='adaptar';render();toast('Abre la vacante, copia su texto y pégalo aquí');break}
     case 'post-adaptar':{const x=itemDe('postulaciones',ds.id);if(!x)return;S.adp={estudio:x.estudio||'',puesto:x.puesto||'',link:x.link||'',texto:''};S.adpVer=null;S.vista='adaptar';render();break}
     case 'adp-ver':S.adpVer=+ds.i;renderMain();window.scrollTo({top:0});break;

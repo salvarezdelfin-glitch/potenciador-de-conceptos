@@ -233,8 +233,17 @@
     if(!r.ok)throw new Error('vacantes '+r.status);return r.json();
   }
 
+  async function llamar(fn){
+    const {data:{session}}=await sb.auth.getSession();
+    const r=await fetch(`${SUPA_URL}/functions/v1/${fn}`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:'{}'});
+    const out=await r.json().catch(()=>({}));if(!r.ok)throw out;return out;
+  }
+
   window.PC_SHIM={
     vacantes,
+    async hasSecret(n){const {data}=await sb.rpc('pc_has_named_secret',{p_name:n});return data===true},
+    async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
+    avisarAhora:()=>llamar('pc-avisos'),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
     async signOut(){await sb.auth.signOut();location.reload()},
     openSettings:ajustes
