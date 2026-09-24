@@ -1,5 +1,5 @@
 // Guarda la app para abrir rápido y sin conexión; los datos siempre vienen de Supabase.
-const CACHE = 'potenciador-muf4u8pi';
+const CACHE = 'potenciador-muf56eb4';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {

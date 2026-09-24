@@ -85,6 +85,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .btn.sm{padding:3px 8px;font-size:12.5px}
 .btn.danger{color:var(--warn)}
 .btn[disabled]{opacity:.5;cursor:default}
+a.btn{color:inherit;text-decoration:none}
 /* main */
 .main{min-width:0;display:flex;flex-direction:column;gap:20px}
 .phead{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
@@ -256,6 +257,13 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .corr input{margin-top:4px;accent-color:var(--accent)}
 .corr small{display:block;color:var(--ink2)}
 .corr:has(input:checked) span{opacity:.5;text-decoration:line-through}
+.nivelbar{display:flex;gap:4px;flex-wrap:wrap}
+.nivelbar span{flex:1 1 70px;text-align:center;font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;padding:6px 4px;border-radius:6px;background:var(--surface3);color:var(--ink3)}
+.nivelbar span.pas{background:var(--accent-soft);color:var(--ink2)}
+.nivelbar span.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.etapa{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.etapa b{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1}
 .timer{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .timer b{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .cal{display:grid;grid-template-columns:repeat(7,22px);gap:5px}
@@ -574,7 +582,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf4u8pi').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf56eb4').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -840,6 +848,7 @@ function renderSide(){
       ${nav('progreso','chart','Mi progreso')}
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Carrera</span>
+      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
       ${nav('cotizador','coin','Cotizador freelance')}
     </div>
@@ -872,6 +881,7 @@ function renderMainInner(){
   if(S.vista==='estilo'){m.innerHTML=vEstilo();return}
   if(S.vista==='diario'){m.innerHTML=vDiario();return}
   if(S.vista==='retos'){m.innerHTML=vRetos();return}
+  if(S.vista==='nivel'){m.innerHTML=vNivel();return}
   if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
   if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
   if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
@@ -1221,7 +1231,7 @@ const ROL_CRITICA='Eres un panel de revisión de un estudio de la industria: un 
 const ROL='Eres un director de arte y mentor de concept art con experiencia en cine y videojuegos. Le hablas en español, de tú, a un ilustrador que quiere mejorar su conceptualización y su proceso de referencias. Sé específico, directo y útil; nada genérico.';
 
 async function preguntar(kind){
-  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto'].includes(kind)))return;
+  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel'].includes(kind)))return;
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
@@ -1236,6 +1246,12 @@ async function preguntar(kind){
       const pipe=pipeDe(p),i=+kind.split('-')[1],e=pipe[i];
       const r=await S.sample.json(`${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nEstá en la etapa ${i+1} de ${pipe.length} del pipeline de producción de ${p.tipo}: "${e.n}". Entrega esperada: ${e.entrega}. Pregunta de diseño: ${e.diseno}\nSus notas de esta etapa: ${p.prod?.notas?.[i]||'(ninguna)'}\nEnséñale a DISEÑAR, no solo a dibujar: cómo se hace esta etapa en un estudio profesional aplicada a SU proyecto, qué decisiones tomar y en qué orden.\nResponde SOLO con JSON: {"objetivo":"qué tiene que lograr en esta etapa, en una frase","pasos":["pasos concretos y ordenados, aplicados a su proyecto (5-7)"],"decisiones":[{"pregunta":"decisión de diseño que debe tomar","opciones":"2-3 opciones concretas para su proyecto"}],"errores":["errores comunes en esta etapa (3-4)"],"estudio":"cómo lo hace un estudio (tiempos, cantidad, qué se presenta al director de arte)","listo_si":"cómo sabe que ya puede pasar a la siguiente etapa"}`,{signal:ctl.signal,cache:false});
       S.ai[kind]={data:r};
+    }else if(kind==='nivel'){
+      const url=S.ajustes.portafolioUrl||PF_URL_DEF,imgs=await imagenesPortafolio(url);
+      let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
+      const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\nSé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
     }else if(kind==='diario'){
       const {orden,prom}=debilidades(),ult=Object.values(S.P).flatMap(q=>q.piezas||[]).filter(x=>x.feedback).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];
       const r=await S.sample.json(`${ROL}\n\nDiseña su ejercicio de estudio de HOY (30 minutos).\nSus habilidades más débiles, de peor a mejor: ${orden.slice(0,4).map(k=>SKILLS[k]+(prom[k]?` (${prom[k].toFixed(1)}/10)`:'')).join(', ')}.\n${ult?`Su última crítica le dijo: ${ult.feedback.siguiente_paso||''} ${ult.feedback.ejercicio||''}`:''}\n${S.ajustes.estiloAnalisis?.data?`Huecos de su estilo: ${(S.ajustes.estiloAnalisis.data.huecos||[]).join('; ')}`:''}\nSu gusto: ${S.ajustes.gusto||'—'}\nGuías fundamentales: ${guiasTexto()||'—'}\nUn ejercicio concreto, cronometrado y medible, que ataque la debilidad principal usando temas que le gustan.\nResponde SOLO con JSON: {"ejercicio":"título corto","pasos":["3-5 pasos con minutos"],"objetivo":"qué debería notar al terminar"}`,{signal:ctl.signal,cache:false,modelTier:'quick'});
@@ -1530,71 +1546,192 @@ async function paquetePortafolio(){
 }
 
 /* ============ Cotizador freelance ============ */
-const COT_TIPOS=[['Personaje (diseño completo)',10,18,30],['Criatura',10,20,34],['Entorno / keyframe',8,16,28],['Key art / ilustración a color',12,22,40],['Prop / arma',5,10,18],['Ilustración editorial',6,12,20],['Portada (libro o álbum)',12,22,36],['Paquete de thumbnails / exploración',3,6,10],['Turnaround / orthos (adicional)',4,8,14]];
+// [nombre, horas simple, media, alta, disciplina]
+const COT_TIPOS=[['Personaje (diseño completo)',10,18,30,'concept'],['Criatura',10,20,34,'concept'],['Entorno / keyframe',8,16,28,'concept'],['Prop / arma',5,10,18,'concept'],['Paquete de thumbnails / exploración',3,6,10,'concept'],['Turnaround / orthos (adicional)',4,8,14,'concept'],
+  ['Key art / ilustración a color',12,22,40,'ilustracion'],['Ilustración editorial',6,12,20,'ilustracion'],['Portada (libro o álbum)',12,22,36,'ilustracion'],
+  ['Animación 2D (cada 10 segundos)',8,16,30,'animacion'],['Motion graphics (cada 10 segundos)',3,6,10,'animacion'],['Animatic / storyboard animado (cada 30 segundos)',4,8,14,'animacion']];
 const COT_CLIENTE=[['Personal / indie',.8],['Estudio de videojuegos o animación',1],['Editorial',.9],['Publicidad / marca',1.4]];
 const COT_USO=[['Portafolio / uso personal',1],['Comercial limitado',1.25],['Comercial amplio',1.6],['Exclusivo / cesión total',2]];
 const COT_URG=[['Normal',1],['Rápida',1.3],['Urgente',1.6]];
-function cotBase(){const a=S.ajustes.cot||{};return {tarifa:+a.tarifa||400,tc:+a.tc||18.5,nombre:a.nombre||'Sebastián Álvarez',contacto:a.contacto||'salvarezdelfin@gmail.com'}}
-function cotDraft(){return S.cot=S.cot||{cliente:'',proyecto:'',tipo:2,compl:1,cant:1,rev:2,cliTipo:1,uso:1,urg:0,entrega:'',extraHoras:0,notas:''}}
+const DISC={concept:'Concept art',ilustracion:'Ilustración',animacion:'Animación 2D'};
+// Estudio de mercado · septiembre 2026. Tarifas freelance por hora. d = dato publicado, e = estimado a partir de sueldos (+50–100% por ser freelance).
+const MERCADOS={
+  mx:{n:'México',mon:'MXN',nota:'Clientes locales. Concept artist empleado ≈ $15,000 MXN/mes; ilustrador ≈ $9,400–12,000 MXN/mes; diseño gráfico freelance $200–600 MXN/h.',
+    t:{concept:[[150,250],[250,450],[450,800],'e'],ilustracion:[[120,220],[220,400],[400,700],'e'],animacion:[[150,250],[250,450],[450,750],'e']}},
+  us:{n:'EE. UU.',mon:'USD',nota:'Concept artist freelance promedio $23–31 USD/h; junior empleado $25–33 USD/h; ilustración junior desde $20, media ~$58, senior ~$103; animación 2D junior $20–50, senior $75–130.',
+    t:{concept:[[25,40],[40,75],[75,150],'d'],ilustracion:[[20,35],[35,60],[60,110],'d'],animacion:[[20,40],[40,75],[75,130],'d']}},
+  ca:{n:'Canadá',mon:'CAD',nota:'Ilustración freelance: junior CA$26–44, media CA$44–75, senior CA$75–123. Concept artist empleado ≈ CA$84,000/año.',
+    t:{concept:[[30,50],[50,85],[85,140],'e'],ilustracion:[[26,44],[44,75],[75,123],'d'],animacion:[[28,48],[48,85],[85,140],'e']}},
+  eu:{n:'Europa',mon:'EUR',nota:'España, ilustración freelance: junior 15–25 €, media 25–45 €, senior 45–80 € (concept art para entretenimiento puede pasar de 80 €). Alemania, concept artist empleado ≈ 24.90 €/h. Reino Unido, ilustrador freelance promedio ≈ £38/h.',
+    t:{concept:[[20,35],[35,60],[60,100],'e'],ilustracion:[[15,25],[25,45],[45,80],'d'],animacion:[[18,32],[32,55],[55,95],'e']}}
+};
+const FUENTES=[['ZipRecruiter · Freelance Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Freelance-Concept-Artist-Salary'],['ZipRecruiter · Junior Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Junior-Concept-Artist-Salary'],['Glassdoor · Freelance Concept Artist','https://www.glassdoor.com/Salaries/freelance-concept-artist-salary-SRCH_KO0,24.htm'],['goLance · Illustrator hourly rates 2026','https://golance.com/hiring/best-freelance-illustrators-hourly-rate'],['Twine · 2D animator hourly rates','https://www.twine.net/blog/2d-animator-hourly-rates/'],['Freel · Illustrator cost in Canada 2026','https://freel.ca/cost/how-much-does-it-cost-to-hire-illustrator'],['Tarifa Autónomo · Ilustrador en España 2026','https://tarifaautonomo.com/blog/tarifa-hora-ilustrador-espana'],['Glassdoor México · Concept Artist','https://www.glassdoor.com.mx/Sueldo/concept-artist-sueldo-SRCH_KO0,14.htm'],['Data México · Dibujantes e ilustradores','https://www.economia.gob.mx/datamexico/es/profile/occupation/dibujantes-y-disenadores-artisticos-ilustradores-y-grabadores'],['RappiCard · Cómo cobrar como freelancer','https://rappicard.mx/2025/03/30/como-cobrar-como-freelancer/'],['ArtBlast · Concept artist salary guide','https://artblast.co/concept-artist-salary-guide/'],['Graphic Artists Guild Handbook (17ª ed.)','https://graphicartistsguild.org/the-graphic-artists-guild-handbook-pricing-ethical-guidelines/']];
+function cotBase(){const a=S.ajustes.cot||{};return {tarifa:+a.tarifa||0,tc:{USD:+a.tc||18.5,CAD:+a.tcCad||13.5,EUR:+a.tcEur||21.5,MXN:1},nombre:a.nombre||'Sebastián Álvarez',contacto:a.contacto||'salvarezdelfin@gmail.com',t:a.t||{}}}
+// tu tarifa por mercado y disciplina; si no la has fijado, el punto medio del rango junior
+function tarifaDe(m,disc){const b=cotBase(),v=+(b.t[m]?.[disc]);if(v)return v;if(m==='mx'&&b.tarifa)return b.tarifa;const r=MERCADOS[m].t[disc][0];return Math.round((r[0]+r[1])/2)}
+function cotDraft(){const d=S.cot=S.cot||{cliente:'',proyecto:'',tipo:2,compl:1,cant:1,rev:2,cliTipo:1,uso:1,urg:0,entrega:'',extraHoras:0,notas:'',mercado:'mx'};d.mercado=d.mercado||'mx';return d}
+function dinero(n,mon){n=Math.round(n);return mon==='EUR'?n.toLocaleString('es-ES')+' €':(mon==='USD'?'US$':mon==='CAD'?'CA$':'$')+n.toLocaleString('es-MX')+(mon==='MXN'?' MXN':'')}
+const mxn=n=>dinero(n,'MXN');
 function cotCalc(d){
-  const b=cotBase(),t=COT_TIPOS[d.tipo]||COT_TIPOS[0],horasU=t[1+(+d.compl)]+(+d.extraHoras||0),cant=Math.max(1,+d.cant||1);
-  const desc=Math.min(.2,(cant-1)*.05),horas=horasU*cant*(1-desc);
-  const revExtra=Math.max(0,(+d.rev||0)-2)*.1;
-  const mult=COT_CLIENTE[d.cliTipo][1]*COT_USO[d.uso][1]*COT_URG[d.urg][1]*(1+revExtra);
-  const base=horas*b.tarifa,total=Math.round(base*mult/50)*50;
-  return {horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/50)*50,usd:Math.round(total/b.tc),anticipo:Math.round(total/2),desc};
+  const b=cotBase(),m=MERCADOS[d.mercado]?d.mercado:'mx',mon=MERCADOS[m].mon,t=COT_TIPOS[d.tipo]||COT_TIPOS[0],disc=t[4],tarifa=tarifaDe(m,disc);
+  const horasU=t[1+(+d.compl)]+(+d.extraHoras||0),cant=Math.max(1,+d.cant||1),desc=Math.min(.2,(cant-1)*.05),horas=horasU*cant*(1-desc);
+  const revExtra=Math.max(0,(+d.rev||0)-2)*.1,mult=COT_CLIENTE[d.cliTipo][1]*COT_USO[d.uso][1]*COT_URG[d.urg][1]*(1+revExtra);
+  const red=mon==='MXN'?50:5,base=horas*tarifa,total=Math.round(base*mult/red)*red;
+  return {m,mon,disc,tarifa,horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/red)*red,enMxn:Math.round(total*b.tc[mon]),usd:Math.round(total*b.tc[mon]/b.tc.USD),anticipo:Math.round(total/2),desc};
 }
-const mxn=n=>'$'+Math.round(n).toLocaleString('es-MX')+' MXN';
 function vCotizador(){
-  const d=cotDraft(),b=cotBase(),c=cotCalc(d),hist=S.cotHist;
-  const sel=(k,arr,lab)=>`<div class="field"><label for="ct-${k}">${lab}</label><select id="ct-${k}" data-cot="${k}">${arr.map((o,i)=>`<option value="${i}" ${+d[k]===i?'selected':''}>${esc(Array.isArray(o)?o[0]:o)}</option>`).join('')}</select></div>`;
-  const inp=(k,lab,type='text',ph='')=>`<div class="field"><label for="ct-${k}">${lab}</label><input type="${type==='number'?'text':'text'}" inputmode="${type==='number'?'decimal':'text'}" id="ct-${k}" data-cot="${k}" value="${esc(d[k])}" placeholder="${ph}"></div>`;
+  const tab=S.cotTab||'cotizar';
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cotizador freelance</h1>
-  <p class="intro">Cotiza encargos de concept e ilustración con lógica de industria: horas por complejidad × tu tarifa, ajustado por tipo de cliente, uso o licencia, urgencia y revisiones. Los multiplicadores son un punto de partida: tú decides el precio final.</p>
+  <nav class="tabs" role="tablist" style="align-self:flex-start"><button class="tab" role="tab" data-act="cot-tab" data-t="cotizar" aria-selected="${tab==='cotizar'}">Cotizar un encargo</button><button class="tab" role="tab" data-act="cot-tab" data-t="tarifas" aria-selected="${tab==='tarifas'}">¿Cuánto cobrar?</button></nav>
+  ${tab==='tarifas'?vTarifas():vCotizar()}`}
+function vTarifas(){
+  const b=cotBase(),mk=S.mkt||'mx',M=MERCADOS[mk],lv=['Junior (0–2 años)','Intermedio (3–6)','Senior (7+)'];
+  const g=S.ajustes.cot?.gastos||{},n=k=>+g[k]||0;
+  const vida=n('vida')||15000,equipo=n('equipo')||1500,imp=(g.imp??10),ahorro=(g.ahorro??10),horasSem=n('horas')||20;
+  const minima=Math.ceil((vida+equipo)/Math.max(.2,1-(+imp+ +ahorro)/100)/(horasSem*4.33)/10)*10;
+  const jrMx=MERCADOS.mx.t;
+  const gi=(k,lab,val,suf='')=>`<div class="field"><label for="g-${k}">${lab}</label><input type="text" inputmode="decimal" id="g-${k}" data-aj="cot.gastos.${k}" value="${esc(val)}" placeholder="${esc(val)}">${suf?`<small class="muted">${suf}</small>`:''}</div>`;
+  return `
+  <p class="intro">Estudio de mercado de <b>septiembre 2026</b> con tarifas <b>freelance por hora</b>. Tú estás en <b>Junior</b>: empieza en el rango junior y sube cada vez que tu portafolio y tus clientes lo justifiquen. Esto es una guía para decidir, no una regla.</p>
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Tarifas de mercado</h3>
+    <div class="stepper" style="padding:0">${Object.entries(MERCADOS).map(([k,v])=>`<button class="step ${k===mk?'on':''}" data-act="mkt" data-m="${k}"><span class="sn">${v.mon==='MXN'?'$':v.mon==='EUR'?'€':v.mon[0]}</span><span class="st">${v.n}</span></button>`).join('')}</div></div>
+    <div class="tbl"><table><thead><tr><th>Disciplina (${M.mon}/hora)</th>${lv.map((l,i)=>`<th style="text-align:right;${i===0?'color:var(--accent)':''}">${l}</th>`).join('')}<th>Dato</th><th>Tu tarifa</th></tr></thead><tbody>
+    ${Object.entries(M.t).map(([d,r])=>`<tr><td><b>${DISC[d]}</b></td>${[0,1,2].map(i=>`<td class="num" style="${i===0?'color:var(--accent);font-weight:600':''}">${dinero(r[i][0],M.mon)} – ${dinero(r[i][1],M.mon)}</td>`).join('')}
+      <td><span class="muted" style="font-size:12px">${r[3]==='d'?'Publicado':'Estimado'}</span></td>
+      <td><div class="prow" style="flex-wrap:nowrap"><input type="text" inputmode="decimal" id="tt-${mk}-${d}" data-aj="cot.t.${mk}.${d}" value="${esc(b.t[mk]?.[d]||'')}" placeholder="${tarifaDe(mk,d)}" style="width:90px">
+      ${M.mon!=='MXN'?`<small class="muted">≈ ${mxn(tarifaDe(mk,d)*b.tc[M.mon])}</small>`:''}</div></td></tr>`).join('')}</tbody></table></div>
+    <p class="hint" style="margin:0">${esc(M.nota)}</p>
+    <p class="hint" style="margin:0"><b>Publicado:</b> el rango sale directo de las fuentes. <b>Estimado:</b> calculado de sueldos publicados + 50–100% por trabajar freelance (sin prestaciones, pagas tu equipo y tus impuestos, y no todas tus horas se cobran). Si dejas "Tu tarifa" vacía, el cotizador usa el punto medio del rango junior.</p>
+    ${M.mon!=='MXN'?`<div class="prow">${[['USD','tc','Dólar'],['CAD','tcCad','Dólar canadiense'],['EUR','tcEur','Euro']].filter(x=>x[0]===M.mon).map(([m,k,lab])=>`<label class="lbl" for="tc-${k}">${lab} en MXN (actualízalo)</label><input type="text" inputmode="decimal" id="tc-${k}" data-aj="cot.${k}" value="${esc(b.tc[m])}" style="width:90px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:6px 8px">`).join('')}</div>`:''}
+  </div>
+  <div class="grid2">
+    <div class="box"><h3>Tu tarifa mínima</h3><p class="hint">Lo mínimo que necesitas cobrar por hora para vivir de esto. Nunca cotices por debajo.</p>
+      <div class="grid2" style="gap:10px">${gi('vida','Gastos de vida al mes (MXN)',vida)}${gi('equipo','Equipo y software al mes (MXN)',equipo,'Wacom, Photoshop, Blender add-ons, luz, internet')}</div>
+      <div class="grid3" style="gap:10px">${gi('imp','% para impuestos',imp,'Pregúntale a tu contador tu régimen')}${gi('ahorro','% colchón y ahorro',ahorro)}${gi('horas','Horas cobrables por semana',horasSem,'Las que sí facturas, no las que trabajas')}</div>
+      <div><span class="lbl">Tu mínima</span><b class="cotbig" style="display:block">${mxn(minima)} / h</b>
+      <span class="muted">${minima<=jrMx.concept[0][1]?'Está dentro o debajo del rango junior de concept en México: puedes cobrar al menos el rango del mercado.':minima<=jrMx.concept[1][1]?'Está arriba del rango junior local: busca clientes que paguen como intermedio o clientes internacionales.':'Es alta para el mercado local: apunta a clientes internacionales o a más horas cobrables.'}</span></div>
+      <div class="prow"><button class="btn pri" data-act="usar-minima" data-v="${minima}">Usarla como mi tarifa en México</button></div></div>
+    <div class="box"><h3>Consejos para empezar (Junior)</h3><ul style="margin:0;padding-left:18px;line-height:1.6">
+      <li><b>Cotiza por proyecto, no por hora.</b> La tarifa por hora es tu cálculo interno; al cliente le das un precio total.</li>
+      <li><b>Anticipo del 50%</b> antes de empezar, siempre.</li>
+      <li><b>Revisiones limitadas</b> (2 incluidas); las extra se cobran.</li>
+      <li><b>El uso se cobra aparte:</b> no es lo mismo portafolio que publicidad o exclusividad.</li>
+      <li><b>No bajes de tu mínima</b> para "ganar experiencia"; mejor cotiza un alcance más chico.</li>
+      <li><b>Sube 10–20%</b> cada 6 meses o después de 3 clientes contentos.</li>
+      <li><b>Clientes internacionales</b> pagan 2–4 veces más: portafolio en inglés, ArtStation activo y precio en USD, CAD o EUR.</li>
+      <li>Para impuestos y facturación en México, confírmalo con un contador.</li></ul></div>
+  </div>
+  <div class="box"><h3>Fuentes</h3><ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7">${FUENTES.map(([n,u])=>`<li><a href="${u}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(n)}</a></li>`).join('')}</ul>
+    <p class="hint" style="margin:6px 0 0">Los sueldos y tarifas cambian: pídele a Claude "actualiza el estudio de mercado" cada año.</p></div>`}
+function vCotizar(){
+  const d=cotDraft(),b=cotBase(),c=cotCalc(d),hist=S.cotHist;
+  const sel=(k,arr,lab)=>`<div class="field"><label for="ct-${k}">${lab}</label><select id="ct-${k}" data-cot="${k}">${arr.map((o,i)=>`<option value="${i}" ${+d[k]===i?'selected':''}>${esc(Array.isArray(o)?o[0]:o)}</option>`).join('')}</select></div>`;
+  const inp=(k,lab,type='text',ph='')=>`<div class="field"><label for="ct-${k}">${lab}</label><input type="text" inputmode="${type==='number'?'decimal':'text'}" id="ct-${k}" data-cot="${k}" value="${esc(d[k])}" placeholder="${ph}"></div>`;
+  return `
+  <p class="intro">Horas por complejidad × tu tarifa de ese mercado y disciplina, ajustado por cliente, uso o licencia, urgencia y revisiones. Tus tarifas se definen en <a href="#" data-act="cot-tab" data-t="tarifas" style="color:var(--accent)">¿Cuánto cobrar?</a>. Tú decides el precio final.</p>
   <div class="grid2">
     <div class="box"><h3>El encargo</h3>
+      <div class="field"><label for="ct-mercado">Mercado del cliente</label><select id="ct-mercado" data-cot="mercado">${Object.entries(MERCADOS).map(([k,v])=>`<option value="${k}" ${d.mercado===k?'selected':''}>${v.n} (${v.mon})</option>`).join('')}</select></div>
       <div class="grid2" style="gap:10px">${inp('cliente','Cliente','text','Nombre o estudio')}${inp('proyecto','Proyecto','text','Ej. 3 criaturas para juego indie')}</div>
-      <div class="grid2" style="gap:10px">${sel('tipo',COT_TIPOS,'Tipo de pieza')}${sel('compl',['Simple','Media','Alta'],'Complejidad')}</div>
-      <div class="grid2" style="gap:10px">${inp('cant','Cantidad de piezas','number')}${inp('rev','Rondas de revisión incluidas','number')}</div>
+      <div class="grid2" style="gap:10px"><div class="field"><label for="ct-tipo">Tipo de pieza</label><select id="ct-tipo" data-cot="tipo">${Object.entries(DISC).map(([dk,dn])=>`<optgroup label="${dn}">${COT_TIPOS.map((o,i)=>o[4]===dk?`<option value="${i}" ${+d.tipo===i?'selected':''}>${esc(o[0])}</option>`:'').join('')}</optgroup>`).join('')}</select></div>${sel('compl',['Simple','Media','Alta'],'Complejidad')}</div>
+      <div class="grid2" style="gap:10px">${inp('cant','Cantidad (piezas o bloques)','number')}${inp('rev','Rondas de revisión incluidas','number')}</div>
       <div class="grid2" style="gap:10px">${sel('cliTipo',COT_CLIENTE,'Tipo de cliente')}${sel('uso',COT_USO,'Uso / licencia')}</div>
       <div class="grid2" style="gap:10px">${sel('urg',COT_URG,'Urgencia')}${inp('entrega','Fecha de entrega','text','Ej. 15 de octubre')}</div>
       <div class="grid2" style="gap:10px">${inp('extraHoras','Horas extra por pieza (opcional)','number')}<div class="field"><label for="ct-notas">Notas para el cliente</label><input type="text" id="ct-notas" data-cot="notas" value="${esc(d.notas)}" placeholder="Incluye archivos PSD, etc."></div></div>
     </div>
     <div class="box" id="cot-res">${cotResHTML(d,c,b)}</div>
   </div>
-  <div class="box"><h3>Tus datos</h3><div class="grid3">
-    <div class="field"><label for="ca-tarifa">Tu tarifa por hora (MXN)</label><input type="text" inputmode="decimal" id="ca-tarifa" data-aj="cot.tarifa" value="${esc(b.tarifa)}"></div>
-    <div class="field"><label for="ca-tc">Tipo de cambio USD</label><input type="text" inputmode="decimal" id="ca-tc" data-aj="cot.tc" value="${esc(b.tc)}"></div>
+  <div class="box"><h3>Tus datos</h3><div class="grid2">
     <div class="field"><label for="ca-nombre">Nombre en la cotización</label><input type="text" id="ca-nombre" data-aj="cot.nombre" value="${esc(b.nombre)}"></div>
     <div class="field"><label for="ca-contacto">Contacto</label><input type="text" id="ca-contacto" data-aj="cot.contacto" value="${esc(b.contacto)}"></div></div></div>
-  <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${mxn(q.total)}</td>
+  <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${dinero(q.total,q.mon||'MXN')}</td>
     <td><select id="cq-${esc(q.folio)}" data-cotestado="${esc(q.folio)}">${['Enviada','Aceptada','Rechazada','Pagada'].map(e=>`<option ${q.estado===e?'selected':''}>${e}</option>`).join('')}</select></td>
     <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
 function cotResHTML(d,c,b){
-  return `<span class="lbl">Precio recomendado</span><b class="cotbig">${mxn(c.total)}</b>
-    <span class="muted">≈ US$${c.usd.toLocaleString('en-US')} · mínimo sugerido ${mxn(c.minimo)}</span>
-    <div class="desg"><span>Horas estimadas</span><b>${c.horas} h${c.desc?` (−${Math.round(c.desc*100)}% por volumen)`:''}</b>
-      <span>Base (${c.horas} h × ${mxn(b.tarifa)})</span><b>${mxn(c.base)}</b>
+  const r=MERCADOS[c.m].t[c.disc][0];
+  return `<span class="lbl">Precio recomendado · ${MERCADOS[c.m].n}</span><b class="cotbig">${dinero(c.total,c.mon)}</b>
+    <span class="muted">${c.mon==='MXN'?`≈ US$${c.usd.toLocaleString('en-US')}`:`≈ ${mxn(c.enMxn)}`} · mínimo sugerido ${dinero(c.minimo,c.mon)}</span>
+    <div class="desg"><span>Tu tarifa · ${DISC[c.disc]}</span><b>${dinero(c.tarifa,c.mon)}/h</b>
+      <span>Rango junior del mercado</span><b>${dinero(r[0],c.mon)}–${dinero(r[1],c.mon)}</b>
+      <span>Horas estimadas</span><b>${c.horas} h${c.desc?` (−${Math.round(c.desc*100)}% por volumen)`:''}</b>
+      <span>Base</span><b>${dinero(c.base,c.mon)}</b>
       <span>Ajuste cliente · uso · urgencia · revisiones</span><b>×${c.mult.toFixed(2)}</b>
-      <span>Anticipo 50%</span><b>${mxn(c.anticipo)}</b></div>
+      <span>Anticipo 50%</span><b>${dinero(c.anticipo,c.mon)}</b></div>
     <div class="prow"><button class="btn pri" data-act="cot-guardar">Guardar y descargar</button><button class="btn" data-act="cot-copiar">Copiar texto</button></div>`}
 function cotTexto(q){
-  const t=COT_TIPOS[q.d.tipo][0];
-  return `COTIZACIÓN ${q.folio} · ${fecha(q.ts)}\n${q.nombre} · ${q.contacto}\n\nCliente: ${q.d.cliente||'—'}\nProyecto: ${q.d.proyecto||'—'}\n\n${q.d.cant} × ${t} (complejidad ${['simple','media','alta'][q.d.compl]})\nUso: ${COT_USO[q.d.uso][0]}\nRevisiones incluidas: ${q.d.rev}\nEntrega: ${q.d.entrega||'por definir'}\n\nTOTAL: ${mxn(q.total)} (≈ US$${q.usd})\nAnticipo 50% para iniciar: ${mxn(q.total/2)}\n\nCondiciones:\n- Se inicia con el 50% de anticipo; el resto contra entrega final.\n- Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.\n- Los derechos de uso aplican según lo indicado una vez liquidado el pago total.\n- El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.\n- Vigencia de la cotización: 15 días.${q.d.notas?'\n\nNotas: '+q.d.notas:''}`}
+  const t=COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN';
+  return `COTIZACIÓN ${q.folio} · ${fecha(q.ts)}\n${q.nombre} · ${q.contacto}\n\nCliente: ${q.d.cliente||'—'}\nProyecto: ${q.d.proyecto||'—'}\n\n${q.d.cant} × ${t} (complejidad ${['simple','media','alta'][q.d.compl]})\nUso: ${COT_USO[q.d.uso][0]}\nRevisiones incluidas: ${q.d.rev}\nEntrega: ${q.d.entrega||'por definir'}\n\nTOTAL: ${dinero(q.total,mon)}\nAnticipo 50% para iniciar: ${dinero(q.total/2,mon)}\n\nCondiciones:\n- Se inicia con el 50% de anticipo; el resto contra entrega final.\n- Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.\n- Los derechos de uso aplican según lo indicado una vez liquidado el pago total.\n- El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.\n- Vigencia de la cotización: 15 días.${q.d.notas?'\n\nNotas: '+q.d.notas:''}`}
 function cotHTMLDoc(q){
-  const e=s=>esc(s),t=COT_TIPOS[q.d.tipo][0];
-  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Cotización ${e(q.folio)}</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#15171b}h1{font-size:34px;letter-spacing:.02em;margin:0}.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid #ff6a3d;padding-bottom:14px}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}.tot{font-size:26px;font-weight:700}small{color:#666}ul{padding-left:18px;line-height:1.6}</style></head><body>
-  <div class="top"><div><h1>COTIZACIÓN</h1><small>${e(q.folio)} · ${fecha(q.ts)}</small></div><div style="text-align:right"><b>${e(q.nombre)}</b><br><small>${e(q.contacto)}</small></div></div>
-  <p><b>Cliente:</b> ${e(q.d.cliente||'—')}<br><b>Proyecto:</b> ${e(q.d.proyecto||'—')}</p>
-  <table><tr><th>Concepto</th><th>Cantidad</th><th style="text-align:right">Importe</th></tr><tr><td>${e(t)} · complejidad ${['simple','media','alta'][q.d.compl]}<br><small>Uso: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ronda(s) de revisión · entrega ${e(q.d.entrega||'por definir')}</small></td><td>${q.d.cant}</td><td style="text-align:right">${mxn(q.total)}</td></tr>
-  <tr><td colspan="2" class="tot">Total</td><td class="tot" style="text-align:right">${mxn(q.total)}</td></tr></table>
-  <p><small>Equivalente aproximado: US$${q.usd.toLocaleString('en-US')}</small></p>
-  <h3>Condiciones</h3><ul><li>Se inicia con el 50% de anticipo (${mxn(q.total/2)}); el resto contra entrega final.</li><li>Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.</li><li>Los derechos de uso aplican según lo indicado una vez liquidado el pago total.</li><li>El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.</li><li>Vigencia: 15 días.</li></ul>
-  ${q.d.notas?`<p><b>Notas:</b> ${e(q.d.notas)}</p>`:''}</body></html>`}
+  const e=s=>esc(s),t=COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN',ing=mon!=='MXN';
+  const L=ing?{h:'QUOTE',cli:'Client',pro:'Project',con:'Item',can:'Qty',imp:'Amount',tot:'Total',uso:'Usage',rev:'revision round(s)',ent:'delivery',cond:'Terms',c:[`50% deposit (${dinero(q.total/2,mon)}) to start; balance on final delivery.`,`Includes ${q.d.rev} revision round(s); additional rounds are quoted separately.`,'Usage rights as stated, granted upon full payment.','The artist may show the work in their portfolio once the project is public, unless under NDA.','Quote valid for 15 days.'],cx:['simple','medium','high'][q.d.compl],nt:'Notes'}
+    :{h:'COTIZACIÓN',cli:'Cliente',pro:'Proyecto',con:'Concepto',can:'Cantidad',imp:'Importe',tot:'Total',uso:'Uso',rev:'ronda(s) de revisión',ent:'entrega',cond:'Condiciones',c:[`Se inicia con el 50% de anticipo (${dinero(q.total/2,mon)}); el resto contra entrega final.`,`Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.`,'Los derechos de uso aplican según lo indicado una vez liquidado el pago total.','El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.','Vigencia: 15 días.'],cx:['simple','media','alta'][q.d.compl],nt:'Notas'};
+  return `<!doctype html><html lang="${ing?'en':'es'}"><head><meta charset="utf-8"><title>${L.h} ${e(q.folio)}</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#15171b}h1{font-size:34px;letter-spacing:.02em;margin:0}.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid #ff6a3d;padding-bottom:14px}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}.tot{font-size:26px;font-weight:700}small{color:#666}ul{padding-left:18px;line-height:1.6}</style></head><body>
+  <div class="top"><div><h1>${L.h}</h1><small>${e(q.folio)} · ${fecha(q.ts)}</small></div><div style="text-align:right"><b>${e(q.nombre)}</b><br><small>${e(q.contacto)}</small></div></div>
+  <p><b>${L.cli}:</b> ${e(q.d.cliente||'—')}<br><b>${L.pro}:</b> ${e(q.d.proyecto||'—')}</p>
+  <table><tr><th>${L.con}</th><th>${L.can}</th><th style="text-align:right">${L.imp}</th></tr><tr><td>${e(t)} · ${L.cx}<br><small>${L.uso}: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ${L.rev} · ${L.ent} ${e(q.d.entrega||'—')}</small></td><td>${q.d.cant}</td><td style="text-align:right">${dinero(q.total,mon)}</td></tr>
+  <tr><td colspan="2" class="tot">${L.tot}</td><td class="tot" style="text-align:right">${dinero(q.total,mon)}</td></tr></table>
+  <h3>${L.cond}</h3><ul>${L.c.map(x=>`<li>${x}</li>`).join('')}</ul>
+  ${q.d.notas?`<p><b>${L.nt}:</b> ${e(q.d.notas)}</p>`:''}</body></html>`}
 async function cargarCotHist(){S.cotHist={cargando:true};renderMain();
   try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};S.cotHist={lista:s.docs.map(x=>x.data()).sort((a,b)=>b.ts-a.ts)}}
   catch{S.cotHist={lista:[]}}renderMain()}
+
+/* ============ Mi nivel: evaluación del portafolio y plan de crecimiento ============ */
+const NIVELES=['Estudiante','Junior','Junior sólido','Intermedio','Senior','Lead'];
+const PF_URL_DEF='https://sebastianalvarezdelfin.github.io/portafolio/';
+function lineaSVG(pts){
+  if(pts.length<2)return '';
+  const W=560,H=140,P=24,xs=pts.map((p,i)=>P+i*(W-2*P)/(pts.length-1)),ys=pts.map(p=>H-P-(p.v/100)*(H-2*P));
+  const d=xs.map((x,i)=>(i?'L':'M')+x.toFixed(1)+' '+ys[i].toFixed(1)).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto" role="img" aria-label="Tu puntuación en el tiempo">
+    ${[25,50,75].map(v=>`<line x1="${P}" x2="${W-P}" y1="${H-P-v/100*(H-2*P)}" y2="${H-P-v/100*(H-2*P)}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="4" y="${H-P-v/100*(H-2*P)+4}" font-size="10" fill="var(--ink3)">${v}</text>`).join('')}
+    <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+    ${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="${i===xs.length-1?5:3.5}" fill="var(--accent)"/><text x="${x}" y="${H-6}" font-size="10" fill="var(--ink3)" text-anchor="middle">${esc(pts[i].t)}</text>`).join('')}</svg>`}
+function vNivel(){
+  const a=S.ajustes,ev=(a.niveles||[]).slice().sort((x,y)=>x.ts-y.ts),u=ev.at(-1),d=u?.data,url=a.portafolioUrl||PF_URL_DEF;
+  const idx=d?Math.max(0,NIVELES.indexOf(d.nivel)):-1;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi nivel</h1>
+  <p class="intro">Tu portafolio evaluado contra el estándar de la industria (estudios de videojuegos, cine y outsourcing), con un plan por meses. Evalúalo cada 2–3 meses: la gráfica muestra si de verdad estás creciendo.</p>
+  <div class="box"><div class="prow" style="align-items:flex-end">
+    <div class="field" style="flex:1 1 280px"><label for="f-pfurl">Link de tu portafolio</label><input type="text" id="f-pfurl" data-aj="portafolioUrl" value="${esc(url)}"></div>
+    <div class="field" style="width:170px"><label for="f-hsem">Horas de estudio por semana</label><input type="text" inputmode="decimal" id="f-hsem" data-aj="horasSemana" value="${esc(a.horasSemana||10)}"></div>
+    <a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Ver portafolio ↗</a>
+    ${S.sample?(S.aiBusy.nivel?'<button class="btn" data-act="ai-stop" data-k="nivel">Detener</button><span class="muted">Revisando tu portafolio…</span>':'<button class="btn pri" data-act="ai" data-k="nivel">Evaluar mi nivel</button>'):''}</div>
+    ${S.ai.nivel?.error?`<p class="muted">${esc(S.ai.nivel.error)}</p>`:''}</div>
+  ${d?`
+  <div class="grid2">
+    <div class="box"><span class="lbl">Evaluación del ${fecha(u.ts)}${u.fuente?' · '+esc(u.fuente):''}</span>
+      <div class="nivelbar">${NIVELES.map((n,i)=>`<span class="${i<idx?'pas':i===idx?'on':''}">${n}</span>`).join('')}</div>
+      <div class="prow" style="align-items:baseline;gap:14px"><b class="cotbig">${esc(d.nivel)}</b><span class="lbl">${+d.puntuacion||0}/100</span></div>
+      <p style="margin:0">${esc(d.resumen)}</p>
+      ${d.contratable?`<p class="next" style="margin:0">${esc(d.contratable)}</p>`:''}</div>
+    <div class="box"><span class="lbl">Tu crecimiento</span>${ev.length>1?lineaSVG(ev.map(e=>({v:+e.data.puntuacion||0,t:new Date(e.ts).toLocaleDateString('es-MX',{month:'short',year:'2-digit'})}))):'<p class="muted">Tu primera medición. Vuelve a evaluar en 2–3 meses para ver la curva.</p>'}
+      <div class="stats" style="grid-template-columns:repeat(2,1fr)">${d.meses_junior_solido!=null?`<div class="stat"><b>${esc(d.meses_junior_solido)}</b><span>meses a Junior sólido (contratable)</span></div>`:''}${d.meses_intermedio!=null?`<div class="stat"><b>${esc(d.meses_intermedio)}</b><span>meses a Intermedio</span></div>`:''}</div>
+      <small class="muted">Con ${esc(a.horasSemana||10)} h de estudio a la semana y aplicando las críticas. Si estudias más y con dirección, baja; si te detienes, sube.</small></div>
+  </div>
+  ${(d.criterios||[]).length?`<div class="box"><h3>Por criterio</h3><div class="scores">${d.criterios.map(s=>{const n=Math.max(0,Math.min(10,+s.nota||0));return `<div class="score"><span>${esc(s.criterio)}</span><div class="bar" style="width:auto;flex:1"><i style="width:${n*10}%;background:${n>=8?'var(--ok)':n>=5?'var(--c-tecnica)':'var(--warn)'}"></i></div><b>${n}</b><small>${esc(s.comentario||'')}</small></div>`}).join('')}</div></div>`:''}
+  <div class="grid2">
+    <div class="box"><h3>Lo que ya juega a tu favor</h3><ul style="margin:0;padding-left:18px;line-height:1.6">${(d.fortalezas||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="box"><h3>Lo que te frena</h3><ul style="margin:0;padding-left:18px;line-height:1.6">${(d.frenos||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  </div>
+  ${(d.piezas||[]).length?`<div class="box"><h3>Pieza por pieza</h3><ul class="list">${d.piezas.map(x=>`<li style="grid-template-columns:1fr auto"><span><b>${esc(x.pieza)}</b><br><span class="muted">${esc(x.nota)}</span></span><span class="nivel" style="${x.decision==='Quitar'?'color:var(--warn);border-color:var(--warn)':x.decision==='Mejorar'?'color:var(--c-tecnica);border-color:var(--c-tecnica)':'color:var(--ok);border-color:var(--ok)'}">${esc(x.decision)}</span></li>`).join('')}</ul></div>`:''}
+  ${(d.plan||[]).length?`<div class="box"><h3>Tu plan de crecimiento</h3><div class="plan">${d.plan.map((e,i)=>`<div class="etapa"><span class="lbl">${esc(e.meses)}</span><b>${esc(e.nivel)}</b><p style="margin:0">${esc(e.meta)}</p><ul style="margin:0;padding-left:18px">${(e.acciones||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${e.tarifa?`<small class="muted">Tarifa esperada: ${esc(e.tarifa)}</small>`:''}</div>`).join('')}</div></div>`:''}
+  ${ev.length>1?`<div class="box"><h3>Historial</h3><ul class="list">${ev.slice().reverse().map(e=>`<li><span>${fecha(e.ts)} · <b>${esc(e.data.nivel)}</b> · ${+e.data.puntuacion||0}/100</span><span class="muted">${esc(e.fuente||'')}</span></li>`).join('')}</ul></div>`:''}`
+  :'<div class="empty">Todavía no hay evaluación. Aprieta "Evaluar mi nivel".</div>'}`}
+async function imagenesPortafolio(url){
+  const out=[];
+  try{
+    const r=await fetch(url,{mode:'cors'});if(!r.ok)throw 0;const html=await r.text(),base=new URL(url);
+    const srcs=[...new Set([...html.matchAll(/["'(]([^"'()]*?img\/[^"'()]+?\.(?:jpe?g|png|webp))["')]/gi)].map(m=>m[1]))];
+    const orden=[...srcs.filter(s=>/cover/.test(s)),...srcs.filter(s=>!/cover/.test(s))].map(s=>s.replace(/(-sm)?\.(jpe?g|png|webp)$/i,'-sm.$2'));
+    for(const s of [...new Set(orden)].slice(0,10)){try{const b=await (await fetch(new URL(s,base))).blob();if(/^image\//.test(b.type))out.push(b)}catch{}if(out.length>=8)break}
+  }catch{}
+  if(out.length<3){for(const x of (S.ajustes.estiloImgs||[]).slice(-6))try{out.push(await blobDeRef(x))}catch{}
+    for(const p of Object.values(S.P))for(const x of (p.piezas||[]).slice(-1))if(out.length<8)try{out.push(await blobDeRef(x))}catch{}}
+  return out;
+}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -1934,6 +2071,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
+  if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};marcarAj();renderMain()}).catch(()=>toast('No se pudo subir'))}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
@@ -1946,7 +2084,7 @@ document.addEventListener('keydown',e=>{
   if(t.dataset.enter){e.preventDefault();accion(t.dataset.enter,t);}
 });
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-act]');if(!b)return;
+  const b=e.target.closest('[data-act]');if(!b)return;if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
   if(b.tagName==='IMG'&&b.dataset.act==='zoom'){$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img src="${esc(b.currentSrc||b.src)}" alt=""></div>`;return}
   accion(b.dataset.act,b);
 });
@@ -2026,10 +2164,13 @@ async function accion(a,el){
     case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
     case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
     case 'cot-hist':cargarCotHist();break;
-    case 'cot-copiar':{const d=cotDraft(),c=cotCalc(d),b=cotBase();const txt=cotTexto({folio:'(borrador)',ts:Date.now(),d,total:c.total,usd:c.usd,nombre:b.nombre,contacto:b.contacto});try{await navigator.clipboard.writeText(txt);toast('Copiada')}catch{toast('No se pudo copiar')}break}
+    case 'cot-tab':S.cotTab=ds.t;renderMain();break;
+    case 'mkt':S.mkt=ds.m;renderMain();break;
+    case 'usar-minima':setPath(S.ajustes,'cot.t.mx.concept',+ds.v);setPath(S.ajustes,'cot.t.mx.ilustracion',+ds.v);setPath(S.ajustes,'cot.t.mx.animacion',+ds.v);marcarAj();renderMain();toast('Tarifa aplicada a concept, ilustración y animación en México');break;
+    case 'cot-copiar':{const d=cotDraft(),c=cotCalc(d),b=cotBase();const txt=cotTexto({folio:'(borrador)',ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,nombre:b.nombre,contacto:b.contacto});try{await navigator.clipboard.writeText(txt);toast('Copiada')}catch{toast('No se pudo copiar')}break}
     case 'cot-guardar':{const d=clone(cotDraft()),c=cotCalc(d),b=cotBase();
       let n=1;try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};n=1+s.docs.reduce((m,x)=>Math.max(m,+(String(x.id).split('-')[1])||0),0)}catch{}
-      const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto};
+      const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,mercado:c.m,tarifa:c.tarifa,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto};
       try{if(S.db)await S.db.collection('cotizaciones').doc(folio).set(q)}catch{toast('No se pudo guardar en el historial')}
       S.cotHist=null;await guardarArchivo(`cotizacion-${folio}.html`,cotHTMLDoc(q));renderMain();break}
     case 'cot-abrir':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(q)await guardarArchivo(`cotizacion-${q.folio}.html`,cotHTMLDoc(q));break}
