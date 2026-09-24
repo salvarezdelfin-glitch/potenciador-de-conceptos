@@ -132,6 +132,7 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 
 .chips{display:flex;flex-wrap:wrap;gap:6px;min-height:28px}
 .chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface2);border-radius:14px;padding:3px 4px 3px 10px;font-size:13px}
+.chip.on{background:var(--accent);color:var(--accent-ink)}
 .chip button{border:0;background:transparent;cursor:pointer;color:var(--ink3);padding:0 4px;font-size:14px;line-height:1}
 .kwcat{border-top:3px solid var(--line)}
 
@@ -635,7 +636,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf6p2uk').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufux8m2').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -902,6 +903,7 @@ function renderSide(){
     <div class="plist">
       ${nav('inicio','home','Inicio')}
       ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
+      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
@@ -959,6 +961,7 @@ function renderMainInner(){
   if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
   if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
   if(S.vista==='avisos'){m.innerHTML=vAvisos();return}
+  if(S.vista==='nombres'){m.innerHTML=vNombres();return}
   if(S.vista==='redes'){m.innerHTML=vRedes();return}
   if(S.vista==='cobros'){m.innerHTML=vCobros();return}
   if(S.vista==='ruta'){m.innerHTML=vRuta();return}
@@ -1017,7 +1020,7 @@ function vBrief(p){return `
   </div>
   <div id="nombres-guardados">${nombresHTML(p)}</div>
   <div class="box"><h3>Historia o guion</h3><p class="hint">Opcional. Pega la sinopsis, el lore o el guion: el asesor lo usa para nombres, encuadres y crítica.</p>${ta('brief.historia',p.brief.historia||'','Quién es, de dónde viene, qué quiere, qué le pasa…')}</div>
-  ${S.sample?`<div class="asesor"><div class="top"><div><b>Asesor: nombres</b><p class="muted" style="margin:2px 0 0">Nombres para el personaje y títulos para el proyecto a partir de tu imagen, tu historia o tu concepto, con su significado.</p></div>
+  ${S.sample?`<div class="asesor"><div class="top"><div><b>Asesor: nombres</b> <button class="btn ghost sm" data-act="nom-taller">Taller completo →</button><p class="muted" style="margin:2px 0 0">Nombres para el personaje y títulos para el proyecto a partir de tu imagen, tu historia o tu concepto, con su significado.</p></div>
     <div class="prow"><label class="btn sm" for="f-nomimg">${S.nomImg?'✓ Imagen lista':'Adjuntar PNG'}</label><input type="file" id="f-nomimg" accept="image/png,image/jpeg,image/webp" hidden>
     ${S.aiBusy.nombres?'<button class="btn sm" data-act="ai-stop" data-k="nombres">Detener</button>':'<button class="btn sm pri" data-act="ai" data-k="nombres">Proponer nombres</button>'}</div></div>
     ${S.aiBusy.nombres?'<p class="muted">Pensando…</p>':S.ai.nombres?.error?`<p class="muted">${esc(S.ai.nombres.error)}</p>`:S.ai.nombres?aiRender('nombres',S.ai.nombres):''}</div>`:''}
@@ -1319,7 +1322,7 @@ const ROL_CRITICA='Eres un panel de revisión de un estudio de la industria: un 
 const ROL='Eres un director de arte y mentor de concept art con experiencia en cine y videojuegos. Le hablas en español, de tú, a un ilustrador que quiere mejorar su conceptualización y su proceso de referencias. Sé específico, directo y útil; nada genérico.';
 
 async function preguntar(kind){
-  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg','ruta','adaptar'].includes(kind)))return;
+  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg','ruta','adaptar','nombres2'].includes(kind)))return;
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
@@ -1340,6 +1343,13 @@ async function preguntar(kind){
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
       const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
+    }else if(kind==='nombres2'){
+      const d=nomDraft(),pr=S.P[d.pid];let images;
+      const img=S.nomImg2||(pr?.piezas?.length?await blobDeRef(pr.piezas.at(-1)).catch(()=>null):null);
+      try{const lim=await S.sample.limits();if(lim?.images&&img)images=[img]}catch{}
+      const previos=(S.ai.nombres2?.data?.opciones||[]).map(o=>o.nombre).join(', ');
+      const r=await S.sample.json(`${ROL}\n\nEres también el equipo narrativo de un estudio. Propón nombres para: ${d.para}.\n${pr?ctxProyecto(pr)+(pr.brief.historia?'\nHistoria: '+pr.brief.historia.slice(0,3000):''):''}\nDescripción de lo que se nombra: ${d.desc||'(usa el contexto del proyecto)'}\nTono deseado: ${d.estilos.join(', ')||'libre'}.\nIdioma: ${d.idioma==='Ambos'?'nombre principal en español o en la lengua de raíz, con versión en inglés para portafolio':d.idioma}.\n${images?'Adjunto una imagen: basa los nombres también en lo que ves (forma, material, actitud, cultura visual).':''}\n${previos?'No repitas estos: '+previos+'.':''}\nReglas: con intención y significado; que suenen bien y se pronuncien fácil; nada de nombres de personajes o franquicias famosas existentes; varía fórmulas (dos sustantivos en tensión, epíteto, una palabra fuerte, raíz náhuatl/maya/otra lengua coherente, inventado creíble). Si usas una palabra de una lengua originaria, da su significado y cómo se pronuncia; si no estás seguro del significado, dilo.\nResponde SOLO con JSON: {"opciones":[{"nombre":"","en":"versión en inglés o igual","raiz":"lengua o fórmula","pronunciacion":"cómo se dice, si hace falta","significado":"","porque":"por qué encaja"}],"consejos":["2 consejos breves para elegir"]} con 12 opciones.`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      S.nomImg2=null;S.ai[kind]={data:r};
     }else if(kind==='adaptar'){
       const d=adaptarDraft();if((d.texto||'').trim().length<60){S.ai[kind]={error:'Pega el texto de la vacante (responsabilidades y requisitos).'};delete S.aiBusy[kind];renderMain();return}
       const ev=(S.ajustes.niveles||[]).slice().sort((a,b)=>a.ts-b.ts).at(-1);
@@ -2292,6 +2302,47 @@ function vAvisos(){
     <div class="field"><label for="av-email">Correo</label><input type="text" id="av-email" data-avisos="email" value="${esc(c.email||'salvarezdelfin@gmail.com')}"><small class="muted">Debe ser el mismo correo de tu cuenta de Resend.</small></div>
     <div class="prow"><button class="btn" data-act="av-prueba" ${con?'':'disabled'}>${S.avPrueba==='enviando'?'Enviando…':'Enviarme un correo de prueba'}</button>${S.avPrueba&&S.avPrueba!=='enviando'?`<span class="muted">${esc(S.avPrueba)}</span>`:''}</div></div>`}`}
 
+/* ============ Taller de nombres y títulos ============ */
+const NOM_PARA=['Proyecto','Personaje','Criatura','Lugar o mundo','Arma u objeto','Pieza (keyframe o ilustración)','Serie o colección','Facción, clan o cultura'];
+const NOM_ESTILOS=['Épico','Poético','Oscuro','Corto (1 palabra)','Epíteto ("El que…")','Raíz en lengua originaria','Inventado pero creíble','En inglés para portafolio'];
+const NOM_FORMULAS=[
+  ['[Sustantivo] y [Material]','Sangre y Obsidiana · Plumas y Ceniza','Dos palabras en tensión: la antítesis ya está en el título.'],
+  ['El/La [epíteto]','La que Devora el Sol · El Último Jaguar','Presenta al personaje por lo que hace, no por cómo se llama.'],
+  ['[Lugar]: [subtítulo]','Tenochtitlan: el Espejo Roto','Mundo primero, conflicto después. Bueno para series.'],
+  ['Una palabra fuerte','Obsidiana · Xibalbá · Ceniza','Fácil de recordar y de buscar; revisa que no la use una franquicia famosa.'],
+  ['[Nombre propio] + [rol]','Itzli, Guardián del Filo','Nombre con significado + función: se entiende y suena a personaje.'],
+  ['Palabra en lengua original + traducción','Tezcatl (espejo)','Da identidad; verifica siempre el significado en una fuente seria.']
+];
+function nomDraft(){return S.nom=S.nom||{para:'Personaje',pid:S.cur&&S.P[S.cur]?S.cur:'',desc:'',estilos:['Épico','Raíz en lengua originaria'],idioma:'Ambos'}}
+function vNombres(){
+  const d=nomDraft(),favs=S.ajustes.nombresFav||[],r=S.ai.nombres2?.data,p=S.P[d.pid];
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Nombres y títulos</h1>
+  <p class="intro">Un buen título hace que un proyecto se recuerde y se busque. Aquí nombras todo: proyectos, personajes, criaturas, lugares, armas, piezas y series. Elige qué nombras, da contexto y el tono, y quédate con tus favoritos.</p>
+  <div class="grid2">
+    <div class="box"><h3>Qué vas a nombrar</h3>
+      <div class="stepper" style="padding:0;flex-wrap:wrap">${NOM_PARA.map(x=>`<button class="step ${d.para===x?'on':''}" data-act="nom-para" data-v="${esc(x)}"><span class="st">${esc(x)}</span></button>`).join('')}</div>
+      <div class="field"><label for="nom-pid">Proyecto (da contexto: concepto, mood, pilares, historia)</label><select id="nom-pid" data-nom="pid"><option value="">Ninguno</option>${ordenados().map(([id,x])=>`<option value="${esc(id)}" ${d.pid===id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></div>
+      <div class="field"><label for="nom-desc">Descríbelo</label><textarea id="nom-desc" data-nom="desc" placeholder="Ej. dios de la guerra colosal, tocado de plumas, báculo de serpiente; sabe que la serpiente lo va a reemplazar">${esc(d.desc)}</textarea></div>
+      <div class="field"><label>Tono</label><div class="chips">${NOM_ESTILOS.map(e=>`<button class="chip ${d.estilos.includes(e)?'on':''}" data-act="nom-estilo" data-v="${esc(e)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(e)}</button>`).join('')}</div></div>
+      <div class="prow"><span class="lbl">Idioma</span>${['Español','Inglés','Ambos'].map(x=>`<button class="btn sm ${d.idioma===x?'pri':''}" data-act="nom-idioma" data-v="${x}">${x}</button>`).join('')}</div>
+      <div class="prow"><label class="btn sm" for="nom-img">${S.nomImg2?'✓ Imagen lista':'Adjuntar imagen (opcional)'}</label><input type="file" id="nom-img" accept="image/png,image/jpeg,image/webp" hidden>
+        ${S.sample?(S.aiBusy.nombres2?'<button class="btn" data-act="ai-stop" data-k="nombres2">Detener</button><span class="muted">Buscando nombres…</span>':'<button class="btn pri" data-act="ai" data-k="nombres2">Proponer 12 opciones</button>'):''}</div>
+      ${S.ai.nombres2?.error?`<p class="muted">${esc(S.ai.nombres2.error)}</p>`:''}</div>
+    <div class="box"><h3>Fórmulas que funcionan</h3><ul class="list">${NOM_FORMULAS.map(([f,e,w])=>`<li style="grid-template-columns:1fr"><span><b>${esc(f)}</b> · <i>${esc(e)}</i><br><span class="muted">${esc(w)}</span></span></li>`).join('')}</ul>
+      <p class="hint" style="margin:0"><b>Un buen título:</b> se pronuncia sin dudar, dice el tono del proyecto, se busca en Google sin chocar con una franquicia famosa y funciona en inglés para tu portafolio.</p></div>
+  </div>
+  ${r?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Opciones · ${esc(d.para)}${p?' · '+esc(p.nombre):''}</h3><button class="btn sm" data-act="ai" data-k="nombres2">Otras 12</button></div>
+    <div class="opts">${(r.opciones||[]).map((o,i)=>{const q=encodeURIComponent(o.nombre);return `<div class="opt"><b style="font-size:19px;text-transform:uppercase">${esc(o.nombre)}</b>
+      ${o.en&&o.en!==o.nombre?`<span class="muted">EN: ${esc(o.en)}</span>`:''}
+      <span class="q">${esc(o.raiz||'')}${o.pronunciacion?' · '+esc(o.pronunciacion):''}</span>
+      <span>${esc(o.significado||'')}</span><small class="muted">${esc(o.porque||'')}</small>
+      <div class="prow"><button class="btn sm pri" data-act="nom-fav" data-i="${i}">★ Guardar</button>${d.para==='Proyecto'&&p?`<button class="btn sm" data-act="nom-usar" data-i="${i}">Usar como título</button>`:''}
+        <a class="btn ghost sm" href="https://www.google.com/search?q=%22${q}%22" target="_blank" rel="noopener" title="¿Ya existe?">¿Existe? ↗</a></div></div>`}).join('')}</div>
+    ${(r.consejos||[]).length?`<p class="hint" style="margin:8px 0 0">${r.consejos.map(esc).join(' · ')}</p>`:''}
+    <p class="hint" style="margin:4px 0 0">Los significados en náhuatl, maya u otras lenguas pueden tener errores: confírmalos con un diccionario o una fuente seria antes de usarlos en serio.</p></div>`:''}
+  <div class="box"><h3>Tus favoritos · ${favs.length}</h3>${favs.length?Object.entries(favs.reduce((g,f,i)=>{const k=(f.proyecto||'Sin proyecto')+' · '+f.para;(g[k]=g[k]||[]).push([f,i]);return g},{})).map(([k,fs])=>`<span class="lbl">${esc(k)}</span><ul class="list">${fs.map(([f,i])=>`<li><span><b>${esc(f.nombre)}</b>${f.en&&f.en!==f.nombre?` <span class="muted">(${esc(f.en)})</span>`:''}<br><span class="muted">${esc(f.significado||'')}</span></span><span class="prow" style="flex-wrap:nowrap"><button class="btn ghost sm" data-act="nom-copiar" data-i="${i}">Copiar</button><button class="btn ghost sm danger" data-act="nom-fav-del" data-i="${i}">✕</button></span></li>`).join('')}</ul>`).join(''):'<p class="muted">Guarda con ★ los que te gusten; quedan agrupados por proyecto.</p>'}</div>`}
+
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2607,6 +2658,7 @@ document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
+  if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
@@ -2642,6 +2694,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};marcarAj();renderMain()}).catch(()=>toast('No se pudo subir'))}
+  if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
 });
@@ -2738,6 +2791,16 @@ async function accion(a,el){
     case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await S.db.doc('ajustes/principios').set(clone(S.ajustes));S.ajDirty=false}catch{}
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
+    case 'nom-taller':S.nom={...nomDraft(),pid:S.cur||'',para:'Proyecto'};S.vista='nombres';render();break;
+    case 'nom-para':nomDraft().para=ds.v;renderMain();break;
+    case 'nom-idioma':nomDraft().idioma=ds.v;renderMain();break;
+    case 'nom-estilo':{const d=nomDraft(),i=d.estilos.indexOf(ds.v);if(i>=0)d.estilos.splice(i,1);else d.estilos.push(ds.v);renderMain();break}
+    case 'nom-fav':{const o=S.ai.nombres2?.data?.opciones?.[+ds.i],d=nomDraft();if(!o)return;S.ajustes.nombresFav=S.ajustes.nombresFav||[];
+      if(!S.ajustes.nombresFav.some(f=>f.nombre===o.nombre&&f.para===d.para))S.ajustes.nombresFav.push({nombre:String(o.nombre),en:String(o.en||''),significado:String(o.significado||''),raiz:String(o.raiz||''),para:d.para,pid:d.pid||'',proyecto:S.P[d.pid]?.nombre||''});
+      marcarAj();el.textContent='★ Guardado';el.disabled=true;renderSide();break}
+    case 'nom-fav-del':S.ajustes.nombresFav.splice(+ds.i,1);marcarAj();renderMain();break;
+    case 'nom-copiar':{const f=S.ajustes.nombresFav?.[+ds.i];if(!f)return;try{await navigator.clipboard.writeText(f.nombre);toast('Copiado')}catch{toast('No se pudo copiar')}break}
+    case 'nom-usar':{const o=S.ai.nombres2?.data?.opciones?.[+ds.i],pid=nomDraft().pid;if(!o||!S.P[pid])return;S.P[pid].nombre=String(o.nombre);marcarPid(pid);render();toast('Título aplicado al proyecto');break}
     case 'vac-adaptar':{const x=(S.vac?.items||[]).find(v=>v.id===ds.id);if(!x)return;S.adp={estudio:x.company||'',puesto:x.title||'',link:x.url||'',texto:''};S.adpVer=null;S.vista='adaptar';render();toast('Abre la vacante, copia su texto y pégalo aquí');break}
     case 'post-adaptar':{const x=itemDe('postulaciones',ds.id);if(!x)return;S.adp={estudio:x.estudio||'',puesto:x.puesto||'',link:x.link||'',texto:''};S.adpVer=null;S.vista='adaptar';render();break}
     case 'adp-ver':S.adpVer=+ds.i;renderMain();window.scrollTo({top:0});break;
