@@ -211,7 +211,14 @@
       tieneLlave=true;v.remove();});
   }
 
+  async function vacantes(){
+    const {data:{session}}=await sb.auth.getSession();
+    const r=await fetch(`${SUPA_URL}/functions/v1/pc-vacantes`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:'{}'});
+    if(!r.ok)throw new Error('vacantes '+r.status);return r.json();
+  }
+
   window.PC_SHIM={
+    vacantes,
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
     async signOut(){await sb.auth.signOut();location.reload()},
     openSettings:ajustes

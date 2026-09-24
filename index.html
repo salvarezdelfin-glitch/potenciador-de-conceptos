@@ -595,7 +595,14 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
       tieneLlave=true;v.remove();});
   }
 
+  async function vacantes(){
+    const {data:{session}}=await sb.auth.getSession();
+    const r=await fetch(`${SUPA_URL}/functions/v1/pc-vacantes`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:'{}'});
+    if(!r.ok)throw new Error('vacantes '+r.status);return r.json();
+  }
+
   window.PC_SHIM={
+    vacantes,
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
     async signOut(){await sb.auth.signOut();location.reload()},
     openSettings:ajustes
@@ -603,7 +610,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf5kftz').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf5y1ir').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -686,6 +693,7 @@ const ICO={
   target:svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>'),
   frame:svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>'),
   coin:svg('<circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.6-.9-1.7-1.5-3-1.5-1.9 0-3 1-3 2.3 0 3.2 6 1.8 6 5 0 1.4-1.2 2.4-3 2.4-1.4 0-2.6-.6-3.2-1.6M12 5.5V7m0 10v1.5"/>'),
+  search:svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'),
   cal:svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
   grid:svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'),
   brief:svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>'),
@@ -800,7 +808,7 @@ async function arrancar(){
         S.P[d.id]=normaliza(clone(data));if(d.id===S.cur)tocoActual=true;
       }
       for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty))delete S.P[id];
-      if(primera){primera=false;elegirInicial();render();return}
+      if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);return}
       renderSide();
       if(tocoActual&&!document.activeElement?.closest('#main'))renderMain();
     },e=>{S.modo='error';render()});
@@ -878,6 +886,7 @@ function renderSide(){
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Carrera</span>
       ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
+      ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
       ${nav('mensajes','mail','Mensajes en inglés')}
@@ -913,6 +922,7 @@ function renderMainInner(){
   if(S.vista==='diario'){m.innerHTML=vDiario();return}
   if(S.vista==='retos'){m.innerHTML=vRetos();return}
   if(S.vista==='nivel'){m.innerHTML=vNivel();return}
+  if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
   if(S.vista==='postulaciones'){m.innerHTML=vPostulaciones();return}
   if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
   if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
@@ -1953,6 +1963,85 @@ function vCalendario(){
       <p class="hint" style="margin:0">La app no manda notificaciones: los pendientes aparecen en Inicio cada vez que la abres.</p></div>
   </div>`}
 
+/* ============ Vacantes ============ */
+const BOLSAS=[
+  ['LinkedIn · junior concept (remoto)','https://www.linkedin.com/jobs/search/?keywords=junior%20concept%20artist&f_WT=2'],
+  ['LinkedIn · concept artist México','https://www.linkedin.com/jobs/search/?keywords=concept%20artist&location=Mexico'],
+  ['ArtStation Jobs','https://www.artstation.com/jobs'],
+  ['Hitmarker · concept art','https://hitmarker.net/game-concept-art-jobs'],
+  ['Work With Indies','https://www.workwithindies.com/'],
+  ['Indeed México · concept artist','https://mx.indeed.com/jobs?q=concept+artist'],
+  ['Indeed EE. UU. · junior concept (remoto)','https://www.indeed.com/jobs?q=junior+concept+artist&l=remote'],
+  ['Glassdoor México · concept art','https://www.glassdoor.com.mx/Empleo/m%C3%A9xico-concept-art-empleos-SRCH_IL.0,6_IN169_KO7,18.htm'],
+  ['OCC Mundial · ilustrador','https://www.occ.com.mx/empleos/de-ilustrador/'],
+  ['Computrabajo · ilustrador digital','https://mx.computrabajo.com/trabajo-de-ilustrador-digital'],
+  ['Behance Jobs · illustration','https://www.behance.net/joblist?field=illustration'],
+  ['Games Jobs Direct · artist','https://www.gamesjobsdirect.com/results?keywords=concept%20artist']
+];
+function encaje(v){
+  // Qué tanto encaja con su perfil: la disciplina pesa más que el nivel
+  const t=((v.title||'')+' '+(v.level||'')).toLowerCase();let s=0;
+  if(/concept/.test(t))s+=4;
+  if(/environment|keyframe|key art|visual ?dev|matte|world ?build|background/.test(t))s+=3;
+  if(/illustrat|2d|painter|splash|cover/.test(t))s+=2;
+  if(/character|creature|prop/.test(t))s+=1;
+  if(/3d|model|technical|ui|level artist|set designer/.test(t))s-=2;
+  if(/director|manager|head of|principal/.test(t))s-=2;
+  if(/junior|jr|entry|graduate|intern|trainee|associate|intermediate|mid/.test(t))s+=1;
+  if(v.remote)s+=1;
+  if(/m[eé]xico|latam|latin america|americas/i.test(v.loc||''))s+=1;
+  return s;
+}
+const encajeTxt=s=>s>=5?['Alto','var(--ok)']:s>=2?['Medio','var(--c-tecnica)']:['Bajo','var(--ink3)'];
+async function cargarVacantes(forzar){
+  if(!S.db){S.vac={items:[],sin:true};renderMain();return}
+  if(!S.vac)S.vac={cargando:true};
+  try{const d=await S.db.doc('vacantes/cache').get();if(d.exists)S.vac={...d.data()}}catch{}
+  const viejo=!S.vac?.ts||Date.now()-S.vac.ts>12*36e5;
+  if(window.PC_SHIM?.vacantes&&(forzar||viejo)){
+    S.vac={...(S.vac||{}),actualizando:true};renderMain();
+    try{S.vac={...await window.PC_SHIM.vacantes()}}catch{S.vac={...(S.vac||{}),error:'No se pudo actualizar. Intenta de nuevo en un rato.'}}
+  }
+  if(S.vac)S.vac.cargando=false;
+  if(S.vista==='vacantes')renderMain();
+}
+function vVacantes(){
+  const v=S.vac,f=S.vacF=S.vacF||{nivel:'todos',remoto:false,q:'',src:''},desc=new Set(S.ajustes.vacDesc||[]),ya=new Set(lista('postulaciones').map(x=>x.link));
+  let items=(v?.items||[]).filter(x=>!desc.has(x.id)).map(x=>({...x,s:encaje(x)}));
+  if(f.nivel==='junior')items=items.filter(x=>/junior|\bjr\b|entry|graduate|intern|trainee|associate/i.test(x.title+' '+x.level));
+  if(f.nivel==='sin-senior')items=items.filter(x=>!/senior|\bsr\b|lead|principal|director|manager|head of/i.test(x.title));
+  if(f.remoto)items=items.filter(x=>x.remote);
+  if(f.src)items=items.filter(x=>x.src===f.src);
+  if(f.q){const q=f.q.toLowerCase();items=items.filter(x=>(x.title+' '+x.company+' '+x.loc).toLowerCase().includes(q))}
+  items.sort((a,b)=>b.s-a.s||String(b.date).localeCompare(String(a.date)));
+  const hace=v?.ts?Math.round((Date.now()-v.ts)/36e5):null;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Vacantes</h1>
+  <p class="intro">Vacantes de arte de <b>ArtStation, Hitmarker, RemoteOK, Remotive y Arbeitnow</b>, juntas y ordenadas por qué tanto encajan con tu perfil (concept, entornos, keyframes, visual development, ilustración; remoto y México suman). Todos los niveles: tú decides a cuál aplicar. Se actualizan <b>solas todos los días</b> y cada vez que entras si tienen más de 12 horas.</p>
+  ${v?.sin?`<div class="banner">La búsqueda automática vive en tu app de GitHub. Aquí tienes las búsquedas de un clic.</div>`:`
+  <div class="box"><div class="prow" style="justify-content:space-between">
+    <span class="muted">${v?.actualizando?'Buscando en todas las bolsas…':hace!=null?`Actualizado ${hace<1?'hace menos de 1 hora':'hace '+hace+' h'} · ${Object.entries(v.fuentes||{}).map(([k,n])=>`${k} ${n}`).join(' · ')}`:v?.cargando?'Cargando…':'Sin datos todavía'}</span>
+    ${window.PC_SHIM?`<button class="btn sm pri" data-act="vac-actualizar" ${v?.actualizando?'disabled':''}>Actualizar ahora</button>`:''}</div>
+    ${v?.error?`<p class="muted">${esc(v.error)}</p>`:''}
+    <div class="stepper" style="padding:0">${[['todos','Todos los niveles'],['junior','Solo Jr y entrada'],['sin-senior','Sin senior ni lead']].map(([k,n])=>`<button class="step ${f.nivel===k?'on':''}" data-act="vac-nivel" data-v="${k}"><span class="st">${n}</span></button>`).join('')}</div>
+    <div class="grid3" style="gap:10px">
+      <div class="field"><label for="vf-q">Buscar</label><input type="text" id="vf-q" data-vacf="q" value="${esc(f.q)}" placeholder="environment, remote, Canada…"></div>
+      <div class="field"><label for="vf-nivel">Nivel</label><select id="vf-nivel" data-vacf="nivel"><option value="todos" ${f.nivel==='todos'?'selected':''}>Todos los niveles</option><option value="sin-senior" ${f.nivel==='sin-senior'?'selected':''}>Sin senior ni lead</option><option value="junior" ${f.nivel==='junior'?'selected':''}>Solo junior y entrada</option></select></div>
+      <div class="field"><label for="vf-src">Fuente</label><select id="vf-src" data-vacf="src"><option value="">Todas</option>${Object.keys(v?.fuentes||{}).map(k=>`<option ${f.src===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
+    <label class="chk" style="align-self:flex-start"><input type="checkbox" id="vf-remoto" data-vacf="remoto" ${f.remoto?'checked':''}><span><b>Solo remoto</b></span></label></div>
+  <p class="muted" style="margin:0">${items.length} vacante${items.length===1?'':'s'}</p>
+  <div class="vacs">${items.map(x=>{const [et,ec]=encajeTxt(x.s),guardada=ya.has(x.url);return `<div class="vac">
+    <div class="prow" style="justify-content:space-between;align-items:flex-start"><span><b>${esc(x.title)}</b><br><span class="muted">${esc(x.company)}${x.loc?' · '+esc(x.loc):''}</span></span><span class="nivel" style="color:${ec};border-color:${ec};flex:0 0 auto">${et}</span></div>
+    <div class="prow" style="font-size:12px;gap:6px">${x.remote?'<span class="chip">Remoto</span>':''}${x.type?`<span class="chip">${esc(x.type)}</span>`:''}${x.salary?`<span class="chip">${esc(x.salary)}</span>`:''}<span class="muted">${esc(x.src)}${x.date?' · '+fecha(Date.parse(x.date)):''}</span></div>
+    <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Ver vacante ↗</a>${guardada?'<span class="muted" style="font-size:12px">En postulaciones ✓</span>':`<button class="btn sm pri" data-act="vac-guardar" data-id="${esc(x.id)}">A postulaciones</button>`}<button class="btn sm ghost" data-act="vac-desc" data-id="${esc(x.id)}">Descartar</button></div></div>`}).join('')||'<div class="empty">Nada con estos filtros.</div>'}</div>`}
+  <div class="box"><h3>Busca también en</h3><p class="hint">Estas bolsas no dejan leerse automáticamente; los links ya van con la búsqueda hecha.</p>
+    <div class="prow">${BOLSAS.map(([n,u])=>`<a class="btn sm" href="${u}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join('')}</div></div>
+  <div class="box"><h3>Antes de aplicar</h3><ul style="margin:0;padding-left:18px;line-height:1.6">
+    <li>Aplica aunque pidan 1–2 años: si tu portafolio encaja con el proyecto, cuenta más que los años.</li>
+    <li>Adapta el portafolio a cada vacante: pon primero las 3 piezas que más se parecen a su juego.</li>
+    <li>Mensaje corto en inglés (usa <a href="#" data-act="vista" data-v="mensajes" style="color:var(--accent)">Mensajes</a>) y registra todo en <a href="#" data-act="vista" data-v="postulaciones" style="color:var(--accent)">Postulaciones</a>.</li>
+    <li>Meta realista: 5–10 postulaciones buenas por semana, no 50 genéricas.</li></ul></div>`}
+
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2267,6 +2356,7 @@ function aMarkdown(p){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
+  if(t.dataset.vacf!==undefined){S.vacF=S.vacF||{};S.vacF[t.dataset.vacf]=t.type==='checkbox'?t.checked:t.value;const foc=t.id,pos=t.selectionStart;renderMain();const el=$('#'+foc);if(el&&t.type==='text'){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.li){const [k,id,fld]=t.dataset.li.split('|'),x=itemDe(k,id);if(!x)return;x[fld]=t.value;marcarAj();if(t.tagName==='SELECT'||t.type==='date')renderMain();return}
   if(t.dataset.msg){msgVars();S.msg[t.dataset.msg]=t.value;S.msgTexto=null;const v=msgVars(),tp=MSGS.find(x=>x.k===v.k)||MSGS[0],ta=$('#ms-texto');if(ta)ta.value=tp.en(v);return}
   if(t.dataset.msgtexto){S.msgTexto=t.value;return}
@@ -2327,7 +2417,7 @@ async function accion(a,el){
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();break;
+    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);break;
     case 'tab':S.tab=ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
@@ -2388,6 +2478,11 @@ async function accion(a,el){
     case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
     case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
     case 'cot-hist':cargarCotHist();break;
+    case 'vac-actualizar':cargarVacantes(true);break;
+    case 'vac-nivel':S.vacF=S.vacF||{};S.vacF.nivel=ds.v;renderMain();break;
+    case 'vac-guardar':{const x=(S.vac?.items||[]).find(v=>v.id===ds.id);if(!x)return;
+      lista('postulaciones').push({id:uid(),estudio:x.company||x.src,puesto:x.title,link:x.url,contacto:'',estado:'Por aplicar',fecha:hoyKey(),seguimiento:'',notas:`${x.loc||''}${x.remote?' · remoto':''} · vía ${x.src}`});marcarAj();renderMain();renderSide();toast('Guardada en Postulaciones como "Por aplicar"');break}
+    case 'vac-desc':{S.ajustes.vacDesc=S.ajustes.vacDesc||[];S.ajustes.vacDesc.push(ds.id);if(S.ajustes.vacDesc.length>600)S.ajustes.vacDesc=S.ajustes.vacDesc.slice(-600);marcarAj();renderMain();break}
     case 'li-del':{if(S.confirmLi!==ds.id){S.confirmLi=ds.id;renderMain();return}S.confirmLi=null;const L=lista(ds.k),i=L.findIndex(x=>x.id===ds.id);if(i>=0)L.splice(i,1);marcarAj();render();break}
     case 'post-add':{const v=k=>$('#po-n-'+k)?.value.trim()||'';if(!v('estudio')){toast('Escribe el estudio');return}
       const fechaA=v('fecha')||hoyKey(),seg=new Date();seg.setDate(seg.getDate()+8);
