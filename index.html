@@ -662,7 +662,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufxgif8').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufxp239').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2511,7 +2511,7 @@ const kv=(()=>{let dbp;const open=()=>dbp=dbp||new Promise((ok,ko)=>{const r=ind
   return {get:k=>tx('readonly',s=>s.get(k)).catch(()=>null),set:(k,v)=>tx('readwrite',s=>s.put(v,k)).catch(()=>{})}})();
 const normN=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 function etapaDeCarpeta(n){n=normN(n);return /boceto|sketch|thumb|silueta/.test(n)?'Boceto':/gris|valor|value|gray|grey/.test(n)?'Valores':/final/.test(n)?'Final':/versi|color|render|wip|iter/.test(n)?'Color':null}
-async function* recorrer(dir,ruta=[]){for await(const [nombre,h] of dir.entries()){if(nombre.startsWith('.'))continue;if(h.kind==='directory')yield* recorrer(h,[...ruta,nombre]);else if(/\.(png|jpe?g|webp|gif)$/i.test(nombre))yield {h,ruta,nombre}}}
+async function* recorrer(dir,ruta=[]){for await(const [nombre,h] of dir.entries()){if(nombre.startsWith('.'))continue;if(h.kind==='directory'){if(/moodboard/i.test(nombre))continue;yield* recorrer(h,[...ruta,nombre])}else if(/\.(png|jpe?g|webp|gif)$/i.test(nombre))yield {h,ruta,nombre}}}
 async function sincronizarCarpeta(elegir){
   if(!SYNC_OK){toast('La sincronización funciona en Chrome o Edge de tu compu, desde la app de GitHub');return}
   if(S.sync?.corriendo)return;
@@ -2543,7 +2543,7 @@ async function sincronizarCarpeta(elegir){
           const prev=(p.piezas||[]).find(x=>x.origen===it.clave);
           if(prev)Object.assign(prev,img,{creado:base.creado});else p.piezas.push({id:uid(),etapa,grupo,nota:'',...base,...img,origen:it.clave});
           marcarPid(pid);
-        }else{
+        }else if(normN(top)==='ilustraciones'){
           const g=lista('galeria'),prev=g.find(x=>x.origen===it.clave);
           if(prev)Object.assign(prev,img);else g.push({id:uid(),titulo:base.nombre.replace(/[-_]+/g,' '),tipo:'Ilustración',anio:String(new Date(base.creado).getFullYear()),pid:'',nota:'',etapa:'Final',creado:base.creado,...img,origen:it.clave});
         }
@@ -2830,7 +2830,7 @@ function exportBox(p){
   if(!p.refs.length)return '';
   return `<div class="box"><h3>Llevar a PureRef</h3>
     <p class="hint"><b>ZIP:</b> descomprime y arrastra la carpeta a PureRef. Cada capa llega con su lámina de título y las imágenes nombradas con su porqué. <b>PNG:</b> todo el moodboard en una sola imagen de alta resolución, con columnas, pilares y porqués. <b>Copiar</b> en cada imagen: Ctrl+V directo en PureRef.</p>
-    <div class="prow"><button class="btn pri" data-act="exp-zip" ${S.exp?'disabled':''}>Descargar carpeta (.zip)</button><button class="btn" data-act="exp-png" ${S.exp?'disabled':''}>Moodboard en PNG</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div></div>`}
+    <div class="prow">${SYNC_OK?`<button class="btn pri" data-act="exp-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta de la compu</button>`:''}<button class="btn ${SYNC_OK?'':'pri'}" data-act="exp-zip" ${S.exp?'disabled':''}>Descargar carpeta (.zip)</button><button class="btn" data-act="exp-png" ${S.exp?'disabled':''}>Moodboard en PNG</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div></div>`}
 function expStatus(t){S.exp=t;const el=$('#exp-status');if(el)el.textContent=t||''}
 async function blobDeRef(r){if(r.asset&&S.assets?.blob)return S.assets.blob(r.asset);const res=await fetch(refSrc(r));if(!res.ok)throw new Error('img');return res.blob()}
 function slug(s,n=48){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,n).replace(/-+$/,'')||'ref'}
@@ -2850,29 +2850,56 @@ async function laminaCapa(p,l){
   return aBlob(c);
 }
 
+// Arma los archivos del moodboard para PureRef y los entrega a escribir(ruta, blob)
+async function armarMoodboard(p,escribir){
+  await document.fonts?.ready;let n=0,fallos=0;
+  const capas=LAYERS.filter(l=>p.refs.some(r=>r.capa===l.k));
+  for(const [ci,l] of capas.entries()){
+    const carpeta=`${ci+1}_${slug(capaNombre(p,l.k),40)}`;
+    await escribir([carpeta,'00_TITULO.png'],await laminaCapa(p,l));
+    const rs=p.refs.filter(r=>r.capa===l.k);
+    for(const [i,r] of rs.entries()){
+      expStatus(`Preparando ${++n} de ${p.refs.length}…`);
+      try{const b=await blobDeRef(r);const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');
+        await escribir([carpeta,`${String(i+1).padStart(2,'0')}_${slug(r.porque)}.${ext}`],b)}catch{fallos++}
+    }
+  }
+  // proceso: la última imagen de cada etapa
+  const orden=['bocetos','grises','versiones','final'];
+  for(const [k,nom] of orden.map(k=>[k,CARPS.find(c=>c[0]===k)[1]])){const x=(p.piezas||[]).filter(z=>carpDe(z)===k).sort((a,b)=>a.creado-b.creado).at(-1);
+    if(x)try{const b=await blobDeRef(x);await escribir(['9_Proceso',`${orden.indexOf(k)+1}_${slug(nom,20)}.${(b.type.split('/')[1]||'jpg').replace('jpeg','jpg')}`],b)}catch{}}
+  expStatus('Armando moodboard…');
+  try{await escribir(['00_MOODBOARD.png'],await moodboardPNG(p))}catch{}
+  await escribir(['00_HOJA.md'],new Blob([aMarkdown(p)],{type:'text/markdown'}));
+  return fallos;
+}
 async function exportZip(){
   const p=S.P[S.cur];if(!p||S.exp)return;
   if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
-  await document.fonts?.ready;
-  const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60));let n=0,fallos=0;
-  const capas=LAYERS.filter(l=>p.refs.some(r=>r.capa===l.k));
-  for(const [ci,l] of capas.entries()){
-    const f=raiz.folder(`${ci+1}_${slug(capaNombre(p,l.k),40)}`);
-    f.file('00_TITULO.png',await laminaCapa(p,l));
-    const rs=p.refs.filter(r=>r.capa===l.k);
-    for(const [i,r] of rs.entries()){
-      expStatus(`Empaquetando ${++n} de ${p.refs.length}…`);
-      try{const b=await blobDeRef(r);const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');
-        f.file(`${String(i+1).padStart(2,'0')}_${slug(r.porque)}.${ext}`,b)}catch{fallos++}
-    }
-  }
-  expStatus('Armando moodboard…');
-  try{raiz.file('00_MOODBOARD.png',await moodboardPNG(p))}catch{}
-  raiz.file('00_HOJA.md',aMarkdown(p));
+  const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60));
+  const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=raiz;for(const c of ruta.slice(0,-1))d=d.folder(c);d.file(ruta.at(-1),b)});
   expStatus('Comprimiendo…');
   const blob=await zip.generateAsync({type:'blob'});
   expStatus('');await guardarArchivo(slug(p.nombre,60)+'_pureref.zip',blob);
   if(fallos)toast(`${fallos} imagen(es) no se pudieron incluir`);
+}
+// Guarda el moodboard directo en PROYECTOS/<proyecto>/MOODBOARD PUREREF/imagenes de la carpeta de la compu
+async function exportCarpeta(){
+  const p=S.P[S.cur];if(!p||S.exp)return;
+  let root=await kv.get('raiz');
+  try{if(!root){root=await window.showDirectoryPicker({id:'potenciador',mode:'readwrite'});await kv.set('raiz',root)}
+    if(await root.queryPermission({mode:'readwrite'})!=='granted'&&await root.requestPermission({mode:'readwrite'})!=='granted'){toast('Sin permiso para escribir en tu carpeta');return}}
+  catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir tu carpeta');return}
+  const nombreOk=(p.nombre||'Proyecto').replace(/[<>:"/\|?*]+/g,' ').trim()||'Proyecto';
+  try{
+    const proy=await (await root.getDirectoryHandle('PROYECTOS',{create:true})).getDirectoryHandle(nombreOk,{create:true});
+    const mb=await proy.getDirectoryHandle('MOODBOARD PUREREF',{create:true});
+    try{await mb.removeEntry('imagenes',{recursive:true})}catch{}
+    const base=await mb.getDirectoryHandle('imagenes',{create:true});
+    const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=base;for(const c of ruta.slice(0,-1))d=await d.getDirectoryHandle(c,{create:true});
+      const fh=await d.getFileHandle(ruta.at(-1),{create:true}),w=await fh.createWritable();await w.write(b);await w.close()});
+    expStatus('');toast(`Listo en PROYECTOS/${nombreOk}/MOODBOARD PUREREF`+(fallos?` (${fallos} sin incluir)`:''));
+  }catch(e){expStatus('');toast('No se pudo guardar en tu carpeta')}
 }
 async function exportPNG(){
   const p=S.P[S.cur];if(!p||S.exp)return;
@@ -3257,6 +3284,7 @@ async function accion(a,el){
     case 'ai-dir-emp':{const x=S.ai.ideas?.data?.direcciones?.[+ds.i];if(x){p.concepto.empujes.push(`${x.titulo}: ${x.idea}`);marcar();el.textContent='Guardado';el.disabled=true}break}
     case 'exp-zip':exportZip().catch(()=>{expStatus('');toast('No se pudo armar el ZIP')});break;
     case 'exp-png':exportPNG();break;
+    case 'exp-carpeta':exportCarpeta();break;
     case 'ref-copy':{const r=p.refs.find(x=>x.id===ds.id);if(r)copiarRef(r,el);break}
     case 'copiar-md':{const txt=aMarkdown(p);try{await navigator.clipboard.writeText(txt);toast('Copiado')}catch{toast('No se pudo copiar')}break}
     case 'exportar-md':{const txt=aMarkdown(p);
