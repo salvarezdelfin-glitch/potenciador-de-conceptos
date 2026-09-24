@@ -644,7 +644,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufwebcj').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufwi4iy').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -846,7 +846,7 @@ async function arrancar(){
         S.P[d.id]=normaliza(clone(data));if(d.id===S.cur)tocoActual=true;
       }
       for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty))delete S.P[id];
-      if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);return}
+      if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);setTimeout(syncAlAbrir,1500);return}
       renderSide();
       if(tocoActual&&!document.activeElement?.closest('#main'))renderMain();
     },e=>{S.modo='error';render()});
@@ -2398,6 +2398,7 @@ function vGaleria(){
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis ilustraciones</h1>
   <p class="intro">Todo lo que haces, esté o no en un proyecto. Cada ilustración alimenta <b>Mi estilo</b> y <b>Mi nivel</b>, puede recibir <b>crítica</b> y la puedes proponer a tu <b>portafolio</b>. También puedes pedirme en una conversación con Claude que las revise todas.</p>
+  ${syncBox()}
   <div class="drop" id="drop-gal">
     <div><b>Arrastra tus ilustraciones aquí</b> <span class="muted">o súbelas (varias a la vez)</span></div>
     <div class="prow"><select id="gal-def-tipo" data-galdef="tipo" style="width:auto">${GAL_TIPOS.map(t=>`<option ${t===(S.galDef?.tipo||'Ilustración')?'selected':''}>${t}</option>`).join('')}</select>
@@ -2435,6 +2436,7 @@ function vCarpetas(p){
   const pr=(p.procesos||[]).filter(x=>(x.grupo||'')===g).at(-1),d=pr?.data;
   return `
   <p class="intro">Sube cada etapa en su carpeta: así el asesor ve tu <b>proceso completo</b>, no solo el resultado. La <b>crítica de proceso</b> compara boceto → grises → versiones → final y te dice qué mejoró, qué se perdió y qué cambiar en tu método.</p>
+  ${syncBox()}
   <div class="prow" style="justify-content:space-between">
     <div class="stepper" style="padding:0;flex-wrap:wrap"><button class="step ${!g?'on':''}" data-act="carp-g" data-v=""><span class="st">General · ${piezasGrupo(p,'').length}</span></button>${grupos.map(x=>`<button class="step ${g===x?'on':''}" data-act="carp-g" data-v="${esc(x)}"><span class="st">${esc(x)} · ${piezasGrupo(p,x).length}</span></button>`).join('')}</div>
     <span class="prow"><input type="text" id="carp-nuevo" placeholder="Nueva subcarpeta (ej. Dios, Guerrero)" style="width:220px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:6px 10px" data-enter="carp-add"><button class="btn sm" data-act="carp-add">＋ Subcarpeta</button>
@@ -2477,6 +2479,69 @@ function metodologiaHTML(){
       ${(d.checklist||[]).length?`<div><span class="lbl">Checklist antes de dar por terminada una pieza</span><ul style="margin:4px 0;padding-left:18px">${d.checklist.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`
     :procs.length?`<p class="muted" style="margin:0">${procs.length} análisis de proceso guardados.</p>`:'<p class="muted" style="margin:0">Todavía no hay análisis de proceso. Sube tus etapas en <b>Carpetas</b> dentro de un proyecto y pide la crítica de proceso.</p>'}
     ${procs.slice(0,4).map(x=>`<div class="learn"><small>${esc(x.proyecto)}${x.grupo?' · '+esc(x.grupo):''} · ${fecha(x.ts)}</small>${esc((x.data.metodologia?.cambios||[])[0]||x.data.siguiente_paso||'')}</div>`).join('')}</div>`}
+
+/* ============ Sincronizar la carpeta de la compu (Chrome/Edge de escritorio) ============ */
+// PROYECTOS/<proyecto>/<1 Bocetos|2 Escala de grises|3 Versiones|4 Final>/[subcarpeta]/imagen → piezas del proyecto
+// ILUSTRACIONES/…/imagen → Mis ilustraciones. Solo sube lo nuevo o lo modificado.
+const SYNC_OK=typeof window.showDirectoryPicker==='function'&&!!window.PC_SHIM;
+const kv=(()=>{let dbp;const open=()=>dbp=dbp||new Promise((ok,ko)=>{const r=indexedDB.open('pc-carpeta',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)});
+  const tx=async(m,fn)=>{const db=await open();return new Promise((ok,ko)=>{const t=db.transaction('kv',m),q=fn(t.objectStore('kv'));t.oncomplete=()=>ok(q?.result);t.onerror=()=>ko(t.error)})};
+  return {get:k=>tx('readonly',s=>s.get(k)).catch(()=>null),set:(k,v)=>tx('readwrite',s=>s.put(v,k)).catch(()=>{})}})();
+const normN=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+function etapaDeCarpeta(n){n=normN(n);return /boceto|sketch|thumb|silueta/.test(n)?'Boceto':/gris|valor|value|gray|grey/.test(n)?'Valores':/final/.test(n)?'Final':/versi|color|render|wip|iter/.test(n)?'Color':null}
+async function* recorrer(dir,ruta=[]){for await(const [nombre,h] of dir.entries()){if(nombre.startsWith('.'))continue;if(h.kind==='directory')yield* recorrer(h,[...ruta,nombre]);else if(/\.(png|jpe?g|webp|gif)$/i.test(nombre))yield {h,ruta,nombre}}}
+async function sincronizarCarpeta(elegir){
+  if(!SYNC_OK){toast('La sincronización funciona en Chrome o Edge de tu compu, desde la app de GitHub');return}
+  if(S.sync?.corriendo)return;
+  let root=await kv.get('raiz');
+  try{
+    if(!root||elegir){root=await window.showDirectoryPicker({id:'potenciador',mode:'read'});await kv.set('raiz',root)}
+    if(await root.queryPermission({mode:'read'})!=='granted'&&await root.requestPermission({mode:'read'})!=='granted'){toast('Sin permiso para leer la carpeta');return}
+  }catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir la carpeta');return}
+  S.sync={corriendo:true,n:0,total:0,msg:'Revisando tu carpeta…'};renderMain();
+  const hechos=S.ajustes.sync=S.ajustes.sync||{},nuevos=[];
+  try{
+    for await(const it of recorrer(root)){
+      const f=await it.h.getFile(),clave=[...it.ruta,it.nombre].join('/'),firma=f.size+'-'+f.lastModified;
+      if(hechos[clave]===firma)continue;
+      if(f.size>20*1024*1024){continue}
+      nuevos.push({...it,f,clave,firma});
+    }
+    S.sync.total=nuevos.length;
+    for(const it of nuevos){
+      S.sync.msg=`Subiendo ${++S.sync.n} de ${S.sync.total}: ${it.nombre}`;const el=$('#sync-msg');if(el)el.textContent=S.sync.msg;
+      const [top,proy,carp,...resto]=it.ruta,base={nombre:it.nombre.replace(/\.[^.]+$/,''),creado:it.f.lastModified||Date.now()};
+      try{
+        const img=await guardarImagen(it.f);
+        if(normN(top)==='proyectos'&&proy){
+          let pid=Object.keys(S.P).find(id=>normN(S.P[id].nombre)===normN(proy));
+          if(!pid){pid=uid();S.P[pid]=nuevoProyecto(proy);S.P[pid].encargo='Desde tu carpeta'}
+          const p=S.P[pid],etapa=etapaDeCarpeta(carp)||'Color',grupo=resto.length?resto[0]:(etapaDeCarpeta(carp)?'':(carp||''));
+          if(grupo){p.grupos=p.grupos||[];if(!p.grupos.includes(grupo))p.grupos.push(grupo)}
+          const prev=(p.piezas||[]).find(x=>x.origen===it.clave);
+          if(prev)Object.assign(prev,img,{creado:base.creado});else p.piezas.push({id:uid(),etapa,grupo,nota:'',...base,...img,origen:it.clave});
+          marcarPid(pid);
+        }else{
+          const g=lista('galeria'),prev=g.find(x=>x.origen===it.clave);
+          if(prev)Object.assign(prev,img);else g.push({id:uid(),titulo:base.nombre.replace(/[-_]+/g,' '),tipo:'Ilustración',anio:String(new Date(base.creado).getFullYear()),pid:'',nota:'',etapa:'Final',creado:base.creado,...img,origen:it.clave});
+        }
+        hechos[it.clave]=it.firma;
+      }catch(e){toast('No se pudo subir '+it.nombre)}
+    }
+    S.ajustes.syncTs=Date.now();marcarAj();
+    S.sync={corriendo:false,msg:nuevos.length?`Listo: ${S.sync.n} ${S.sync.n===1?'imagen nueva':'imágenes nuevas'} desde tu carpeta.`:'Todo al día: no hay imágenes nuevas.'};
+  }catch(e){S.sync={corriendo:false,msg:'Se interrumpió la sincronización. Intenta de nuevo.'}}
+  render();
+}
+// Al abrir la app: si Chrome ya recuerda el permiso, sincroniza sola sin preguntar
+async function syncAlAbrir(){if(!SYNC_OK)return;try{const root=await kv.get('raiz');if(root&&await root.queryPermission({mode:'read'})==='granted')sincronizarCarpeta(false)}catch{}}
+function syncBox(){
+  if(!window.PC_SHIM)return '';
+  if(!SYNC_OK)return '<div class="banner">Para sincronizar tu carpeta de la compu, abre la app en <b>Chrome o Edge de tu computadora</b>. En el iPhone y el iPad se sube con los botones normales.</div>';
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><div><h3>Tu carpeta de la compu</h3><p class="hint" style="margin:0">PROYECTOS/&lt;proyecto&gt;/1 Bocetos · 2 Escala de grises · 3 Versiones · 4 Final (con subcarpetas) e ILUSTRACIONES/. Solo sube lo nuevo o lo que cambió.</p></div>
+    <span class="prow"><button class="btn pri" data-act="sync" ${S.sync?.corriendo?'disabled':''}>Sincronizar mi carpeta</button><button class="btn ghost sm" data-act="sync-elegir">Elegir otra carpeta</button></span></div>
+    <p class="muted" id="sync-msg" style="margin:0">${esc(S.sync?.msg||(S.ajustes.syncTs?'Última sincronización: '+new Date(S.ajustes.syncTs).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'La primera vez elige la carpeta "SEBASTIAN ALVAREZ DELFIN CONCEPT ARTIST".'))}</p></div>`;
+}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -2939,6 +3004,8 @@ async function accion(a,el){
     case 'carp-add':{const v=($('#carp-nuevo')?.value||'').trim();if(!v)return;p.grupos=p.grupos||[];if(!p.grupos.includes(v))p.grupos.push(v);S.carpG=v;marcar();renderMain();break}
     case 'carp-del':{const k='g:'+ds.v;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;p.grupos=(p.grupos||[]).filter(x=>x!==ds.v);(p.piezas||[]).forEach(x=>{if(x.grupo===ds.v)x.grupo=''});S.carpG='';marcar();renderMain();break}
     case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
+    case 'sync':sincronizarCarpeta(false);break;
+    case 'sync-elegir':sincronizarCarpeta(true);break;
     case 'gal-f':S.galF=ds.v;renderMain();break;
     case 'gal-critica':{const x=itemDe('galeria',ds.id);if(x)pedirCritica(x.id,x);break}
     case 'gal-pf':{const x=itemDe('galeria',ds.id);if(!x)return;if(!x.pf){proponer(x,{titulo:x.titulo,disciplina:x.tipo==='Entorno'?'Environment Concept':x.tipo==='Keyframe'?'Keyframe':x.tipo,seccion:/Personaje|Criatura/.test(x.tipo)?'characters':'projects'});marcarAj();toast('Propuesta: revísala con tu asesor en Portafolio')}else{S.vista='portafolio';render()}renderMain();break}
