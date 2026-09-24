@@ -261,6 +261,10 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .nivelbar span{flex:1 1 70px;text-align:center;font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;padding:6px 4px;border-radius:6px;background:var(--surface3);color:var(--ink3)}
 .nivelbar span.pas{background:var(--accent-soft);color:var(--ink2)}
 .nivelbar span.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.escalas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.escalas>div{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.escalas b{font-family:var(--display);font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.escalas b small{font-size:16px;color:var(--ink3)}
 .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .etapa{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
 .etapa b{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1}
@@ -582,7 +586,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf56eb4').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf5c6ic').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1250,7 +1254,7 @@ async function preguntar(kind){
       const url=S.ajustes.portafolioUrl||PF_URL_DEF,imgs=await imagenesPortafolio(url);
       let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
-      const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\nSé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
     }else if(kind==='diario'){
       const {orden,prom}=debilidades(),ult=Object.values(S.P).flatMap(q=>q.piezas||[]).filter(x=>x.feedback).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];
@@ -1696,6 +1700,7 @@ function vNivel(){
   <p class="intro">Tu portafolio evaluado contra el estándar de la industria (estudios de videojuegos, cine y outsourcing), con un plan por meses. Evalúalo cada 2–3 meses: la gráfica muestra si de verdad estás creciendo.</p>
   <div class="box"><div class="prow" style="align-items:flex-end">
     <div class="field" style="flex:1 1 280px"><label for="f-pfurl">Link de tu portafolio</label><input type="text" id="f-pfurl" data-aj="portafolioUrl" value="${esc(url)}"></div>
+    <div class="field" style="flex:1 1 100%"><label for="f-profes">Lo que te dicen tus profesores y asesores</label><textarea id="f-profes" data-aj="notasProfes" placeholder="Ej. buen nivel, falta pulir valores; la composición de Aldea funciona…">${esc(a.notasProfes||'')}</textarea></div>
     <div class="field" style="width:170px"><label for="f-hsem">Horas de estudio por semana</label><input type="text" inputmode="decimal" id="f-hsem" data-aj="horasSemana" value="${esc(a.horasSemana||10)}"></div>
     <a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Ver portafolio ↗</a>
     ${S.sample?(S.aiBusy.nivel?'<button class="btn" data-act="ai-stop" data-k="nivel">Detener</button><span class="muted">Revisando tu portafolio…</span>':'<button class="btn pri" data-act="ai" data-k="nivel">Evaluar mi nivel</button>'):''}</div>
@@ -1704,7 +1709,10 @@ function vNivel(){
   <div class="grid2">
     <div class="box"><span class="lbl">Evaluación del ${fecha(u.ts)}${u.fuente?' · '+esc(u.fuente):''}</span>
       <div class="nivelbar">${NIVELES.map((n,i)=>`<span class="${i<idx?'pas':i===idx?'on':''}">${n}</span>`).join('')}</div>
-      <div class="prow" style="align-items:baseline;gap:14px"><b class="cotbig">${esc(d.nivel)}</b><span class="lbl">${+d.puntuacion||0}/100</span></div>
+      <b class="cotbig">${esc(d.nivel)}</b>
+      <div class="escalas">
+        ${d.escuela?`<div><span class="lbl">Frente a estudiantes y egresados</span><b>${+d.escuela.puntuacion||0}<small>/100</small></b><small class="muted">${esc(d.escuela.texto||'')}</small></div>`:''}
+        <div><span class="lbl">Frente a la industria</span><b>${+d.puntuacion||0}<small>/100</small></b><small class="muted">100 = senior AAA · Junior contratado ≈ 55–65</small></div></div>
       <p style="margin:0">${esc(d.resumen)}</p>
       ${d.contratable?`<p class="next" style="margin:0">${esc(d.contratable)}</p>`:''}</div>
     <div class="box"><span class="lbl">Tu crecimiento</span>${ev.length>1?lineaSVG(ev.map(e=>({v:+e.data.puntuacion||0,t:new Date(e.ts).toLocaleDateString('es-MX',{month:'short',year:'2-digit'})}))):'<p class="muted">Tu primera medición. Vuelve a evaluar en 2–3 meses para ver la curva.</p>'}
