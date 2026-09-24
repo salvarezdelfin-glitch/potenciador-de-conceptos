@@ -5,7 +5,18 @@
   const SUPA_URL='https://smjktuithhvfmexysvkf.supabase.co';
   const SUPA_KEY='sb_publishable_h7YxlJXIADT1827fFx6hyg_jtjmnmGZ';
   const BUCKET='potenciador';
-  const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+  // Sesión guardada en dos lugares (localStorage + IndexedDB): el iPhone a veces vacía uno de los dos
+  // en las apps web de pantalla de inicio; con esto no te vuelve a pedir la contraseña.
+  const IDB=(()=>{let dbp;const open=()=>dbp=dbp||new Promise((ok,ko)=>{const r=indexedDB.open('pc-sesion',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)});
+    const tx=async(modo,fn)=>{const db=await open();return new Promise((ok,ko)=>{const t=db.transaction('kv',modo),st=t.objectStore('kv'),req=fn(st);t.oncomplete=()=>ok(req?.result);t.onerror=()=>ko(t.error)})};
+    return {get:k=>tx('readonly',st=>st.get(k)).catch(()=>null),set:(k,v)=>tx('readwrite',st=>st.put(v,k)).catch(()=>{}),del:k=>tx('readwrite',st=>st.delete(k)).catch(()=>{})}})();
+  const almacen={
+    async getItem(k){let v=null;try{v=localStorage.getItem(k)}catch{}if(v==null){v=await IDB.get(k);if(v!=null)try{localStorage.setItem(k,v)}catch{}}return v??null},
+    async setItem(k,v){try{localStorage.setItem(k,v)}catch{}await IDB.set(k,v)},
+    async removeItem(k){try{localStorage.removeItem(k)}catch{}await IDB.del(k)}
+  };
+  try{navigator.storage?.persist?.()}catch{}
+  const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true,storage:almacen,storageKey:'pc-auth'}});
   let listo;const ready=new Promise(r=>listo=r);
   let tieneLlave=false;
 
@@ -31,10 +42,11 @@
   /* ---------- login ---------- */
   function pantallaLogin(msg){
     document.querySelector('.pcx.login')?.remove();
-    const v=el(`<div class="pcx login"><form class="pcx-card" id="pcx-login">
-      <h1>Potenciador<br>de Conceptos</h1><p>Tu sistema privado. Entra con tu cuenta.</p>
-      <input type="email" id="pcx-email" autocomplete="username" placeholder="Correo" required>
-      <input type="password" id="pcx-pass" autocomplete="current-password" placeholder="Contraseña" required>
+    let recordado='';try{recordado=localStorage.getItem('pc-email')||''}catch{}
+    const v=el(`<div class="pcx login"><form class="pcx-card" id="pcx-login" method="post" action="#" autocomplete="on">
+      <h1>Potenciador<br>de Conceptos</h1><p>Tu sistema privado. Entra una vez: la sesión se queda abierta en este aparato.</p>
+      <input type="email" id="pcx-email" name="email" autocomplete="username" inputmode="email" autocapitalize="off" placeholder="Correo" value="${escH(recordado)}" required>
+      <input type="password" id="pcx-pass" name="password" autocomplete="current-password" placeholder="Contraseña" required>
       <div class="pcx-err" id="pcx-err">${escH(msg||'')}</div>
       <button class="btn pri" type="submit">Entrar</button>
       <button class="pcx-link" type="button" id="pcx-olvide">¿Olvidaste tu contraseña?</button></form></div>`);
@@ -42,8 +54,12 @@
     const err=t=>v.querySelector('#pcx-err').textContent=t;
     v.querySelector('form').addEventListener('submit',async e=>{
       e.preventDefault();err('Entrando…');
-      const {error}=await sb.auth.signInWithPassword({email:v.querySelector('#pcx-email').value.trim(),password:v.querySelector('#pcx-pass').value});
+      const email=v.querySelector('#pcx-email').value.trim(),password=v.querySelector('#pcx-pass').value;
+      const {error}=await sb.auth.signInWithPassword({email,password});
       if(error){err(error.message.includes('Invalid')?'Correo o contraseña incorrectos.':error.message);return}
+      try{localStorage.setItem('pc-email',email)}catch{}
+      // Ofrece guardar la contraseña en el llavero del aparato (navegadores que lo soportan)
+      try{if(window.PasswordCredential&&navigator.credentials?.store)await navigator.credentials.store(new PasswordCredential({id:email,password,name:'Potenciador de Conceptos'}))}catch{}
       await tras_login();
     });
     v.querySelector('#pcx-olvide').onclick=async()=>{
