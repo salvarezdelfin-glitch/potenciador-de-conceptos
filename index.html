@@ -86,6 +86,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .btn.danger{color:var(--warn)}
 .btn[disabled]{opacity:.5;cursor:default}
 a.btn{color:inherit;text-decoration:none}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 /* main */
 .main{min-width:0;display:flex;flex-direction:column;gap:20px}
 .phead{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
@@ -644,7 +645,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufwi4iy').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufx6i86').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1000,7 +1001,8 @@ function renderMainInner(){
         <label class="lbl prow" for="f-entrega" style="gap:6px">Entrega <input type="date" id="f-entrega" data-b="entrega" value="${esc(p.entrega||'')}"></label>
       </div>
     </div>
-    <div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+    <div class="prow" style="gap:10px"><div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+      <button class="btn sm ${S.confirmDel?'danger':'ghost'}" data-act="borrar" title="Borrar proyecto (queda en la Papelera)">${ICO.trash} ${S.confirmDel?'¿Borrar? Toca otra vez':'Borrar'}</button>${S.confirmDel?'<button class="btn sm ghost" data-act="cancel-del">Cancelar</button>':''}</div>
   </div>
   <div class="seiswrap"><div class="seishead"><span class="lbl">Lo que siempre tienes que sacar · Concepto · Mood · Técnica · 3 pilares</span>
     ${S.sample?'<button class="btn sm pri" data-act="seis-go">Sácalos conmigo</button>':''}</div>
@@ -1252,7 +1254,7 @@ function vPapelera(){
   const pp=S.papelera;
   return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Papelera</h1>
   <p class="intro">Proyectos que borraste. Se recupera su última versión guardada, con sus imágenes.</p>
-  <div class="box">${!pp||pp.cargando?'<p class="muted">Cargando…</p>':pp.error?'<p class="muted">No se pudo cargar la papelera.</p>':pp.lista.length?`<ul class="list">${pp.lista.map(h=>`<li><span><b>${esc(h.nombre)}</b><br><span class="muted">Última versión: ${new Date(h.ts).toLocaleString('es-MX',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · ${h.refs} refs</span></span><button class="btn sm pri" data-act="pap-rest" data-pid="${esc(h.pid)}">Recuperar</button></li>`).join('')}</ul>`:'<p class="muted">La papelera está vacía.</p>'}</div>`}
+  <div class="box">${!pp||pp.cargando?'<p class="muted">Cargando…</p>':pp.error?'<p class="muted">No se pudo cargar la papelera.</p>':pp.lista.length?`<ul class="list">${pp.lista.map(h=>`<li><span><b>${esc(h.nombre)}</b><br><span class="muted">Última versión: ${new Date(h.ts).toLocaleString('es-MX',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · ${h.refs} refs</span></span><span class="prow" style="flex-wrap:nowrap"><button class="btn sm pri" data-act="pap-rest" data-pid="${esc(h.pid)}">Recuperar</button><button class="btn sm ghost danger" data-act="pap-del" data-pid="${esc(h.pid)}">${S.confirmLi==='pap:'+h.pid?'¿Para siempre? No se puede deshacer':'Borrar para siempre'}</button></span></li>`).join('')}</ul>`:'<p class="muted">La papelera está vacía.</p>'}</div>`}
 
 function guias(){return (S.ajustes.referentes||[]).map((r,i)=>({r,i})).filter(x=>x.r.fav)}
 function guiasTexto(){return guias().map(({r})=>r.nombre+(r.leccion?` (aprender: ${r.leccion})`:'')+(r.nocopiar?` (no copiar: ${r.nocopiar})`:'')).join('; ')}
@@ -2957,6 +2959,11 @@ async function accion(a,el){
       const id=S.cur;clearTimeout(saveT);await snapshot(id,true);S.dirty=false;delete S.P[id];S.confirmDel=false;
       try{if(S.db)await S.db.collection('proyectos').doc(id).delete();else lsSet()}catch{}
       S.cur=ordenados()[0]?.[0]||null;if(!S.cur)S.vista='inicio';recordar();render();toast('Proyecto borrado');break}
+    case 'pap-del':{const k='pap:'+ds.pid;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;
+      try{if(S.db){for(const h of await histDe(ds.pid))await S.db.collection('historial').doc(h.pid+'~'+h.ts).delete()}
+        else{try{localStorage.setItem('cdc.hist',JSON.stringify(histLocal().filter(x=>x.pid!==ds.pid)))}catch{}}
+        toast('Borrado para siempre')}catch{toast('No se pudo borrar')}
+      verPapelera();break}
     case 'cancel-del':S.confirmDel=false;renderMain();break;
     case 'taller-start':turnoTaller('Empecemos. Hazme la primera pregunta.');break;
     case 'taller':{const t=$('#f-taller'),v=t?.value.trim();if(v)turnoTaller(v);break}
