@@ -316,6 +316,14 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .msg p{margin:4px 0}.msg ul,.msg ol{margin:4px 0;padding-left:18px}
 .msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px;white-space:pre-wrap}
 .msg.assistant{align-self:flex-start;background:var(--surface3);border-bottom-left-radius:4px}
+.carps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+@media (max-width:1100px){.carps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.carps{grid-template-columns:minmax(0,1fr)}}
+.carp{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.carp .desc{font-size:12px;color:var(--ink3);margin:-4px 0 0}
+.cimg{background:var(--bg);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:5px}
+.cimg img{width:100%;border-radius:6px;display:block;cursor:zoom-in;background:var(--surface2)}
+.cimg input,.cimg select{width:100%;border:1px solid var(--line2);background:var(--surface);border-radius:6px;padding:4px 6px;font-size:12px;min-width:0}
 .stepper{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .stepper::-webkit-scrollbar{display:none}
 .step{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px 6px 6px;cursor:pointer;color:var(--ink2);font-size:13px}
@@ -636,13 +644,13 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufvufnp').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufwebcj').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['brief','Brief'],['concepto','Concepto'],['mundo','Mundo'],['keywords','Keywords'],
-  ['direccion','Mood · Técnica · AD'],['refs','Referencias'],['produccion','Producción'],['critica','Crítica'],['revision','Revisión'],['hoja','Hoja']
+  ['direccion','Mood · Técnica · AD'],['refs','Referencias'],['produccion','Producción'],['carpetas','Carpetas'],['critica','Crítica'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TIPOS = ['Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
@@ -998,7 +1006,7 @@ function renderMainInner(){
     ${S.sample?'<button class="btn sm pri" data-act="seis-go">Sácalos conmigo</button>':''}</div>
     <div class="seisgrid" id="seis">${seisHTML(p)}</div></div>
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({brief:vBrief,concepto:vConcepto,mundo:vMundo,keywords:vKeywords,direccion:vDireccion,refs:vRefs,produccion:vProduccion,critica:vCritica,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({brief:vBrief,concepto:vConcepto,mundo:vMundo,keywords:vKeywords,direccion:vDireccion,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],
@@ -1291,6 +1299,7 @@ function vProgreso(){
   <div class="box"><h3>Proyectos</h3><div class="tbl"><table><thead><tr><th>Proyecto</th><th>Tipo</th><th>Estado</th><th>Tensión</th><th style="text-align:right">Refs</th><th style="text-align:right">Salud</th></tr></thead>
     <tbody>${ps.map(([id,p,s])=>`<tr><td><button class="btn ghost sm" data-act="abrir" data-id="${esc(id)}">${esc(p.nombre)}</button></td><td>${esc(p.tipo)}</td><td>${esc(p.estado)}</td><td>${esc(p.concepto.tension||'—')}</td><td class="num">${s.refs}</td><td class="num">${s.pct}%</td></tr>`).join('')}</tbody></table></div>
     ${Object.keys(tens).length?`<p class="muted">Tensiones que usas: ${Object.entries(tens).map(([t,n])=>`${esc(t)} (${n})`).join(', ')}. Prueba una que nunca hayas usado.</p>`:''}</div>
+  ${metodologiaHTML()}
   <div class="box"><h3>Lo que he aprendido</h3>${aprend.length?aprend.map(([,p])=>`<div class="learn"><small>${esc(p.nombre)} · ${fecha(p.actualizado)}</small>${p.retro.aprendi?esc(p.retro.aprendi):''}${p.retro.mejorar?`<div class="muted">A mejorar: ${esc(p.retro.mejorar)}</div>`:''}</div>`).join(''):'<p class="muted">Cuando cierres un proyecto, llena su retro en Revisión y aparecerá aquí.</p>'}</div>`}
 
 /* ============ Asesor (Claude) ============ */
@@ -1325,7 +1334,7 @@ const ROL_CRITICA='Eres un panel de revisión de un estudio de la industria: un 
 const ROL='Eres un director de arte y mentor de concept art con experiencia en cine y videojuegos. Le hablas en español, de tú, a un ilustrador que quiere mejorar su conceptualización y su proceso de referencias. Sé específico, directo y útil; nada genérico.';
 
 async function preguntar(kind){
-  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg','ruta','adaptar','nombres2'].includes(kind)))return;
+  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg','ruta','adaptar','nombres2','metodo'].includes(kind)))return;
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
@@ -1346,6 +1355,21 @@ async function preguntar(kind){
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
       const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
+    }else if(kind==='proceso'){
+      const g=S.carpG&&(p.grupos||[]).includes(S.carpG)?S.carpG:'',orden=['bocetos','grises','versiones','final'];
+      const xs=piezasGrupo(p,g).slice().sort((a,b)=>orden.indexOf(carpDe(a))-orden.indexOf(carpDe(b))||a.creado-b.creado);
+      // hasta 8 imágenes repartidas en todas las etapas: primera y última de cada carpeta
+      let sel=[];for(const k of orden){const c=xs.filter(x=>carpDe(x)===k);if(c.length)sel.push(...(c.length>2?[c[0],c.at(-1)]:c))}
+      sel=sel.slice(0,8);
+      let images=[];try{const lim=await S.sample.limits();if(lim?.images){for(const x of sel.slice(0,lim.images.maxCount))try{images.push(await blobDeRef(x))}catch{}}}catch{}
+      const lista_=sel.map((x,i)=>`Imagen ${i+1}: carpeta ${CARPS.find(c=>c[0]===carpDe(x))[1]} (${x.etapa}), ${fecha(x.creado)}${x.nota?', nota: '+x.nota:''}${x.feedback?.siguiente_paso?', su crítica pedía: '+x.feedback.siguiente_paso:''}`).join('\n');
+      const r=await S.sample.json(`${ROL_CRITICA}\n\n${ctxProyecto(p)}${g?'\nSubcarpeta: '+g:''}\n\nAnaliza su PROCESO completo, no una sola imagen. Te paso sus etapas en orden (bocetos → escala de grises → versiones → final):\n${lista_}\n${images.length?`Van adjuntas ${images.length} imágenes en ese mismo orden.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nCompara etapa contra etapa: qué mejoró, qué se perdió en el camino (energía del boceto, estructura de valores de los grises, foco, silueta), si las correcciones de sus críticas se aplicaron, y qué debe cambiar en su MÉTODO de trabajo (cuántos thumbnails, cuándo decidir, cuándo pasar a color, cómo cuidar valores) para el próximo proyecto. Sé específico y honesto.\nResponde SOLO con JSON: {"resumen":"3 frases sobre su proceso","evolucion":[{"etapa":"ej. Bocetos → Grises","mejoro":"","perdio":""}],"valores":"si la estructura de valores de los grises sobrevivió al color y al final, y dónde se rompió","decisiones":["decisiones de su proceso que funcionaron"],"metodologia":{"fortalezas":["lo que ya hace bien en su método"],"cambios":["3-4 cambios concretos a su método para el próximo proyecto"]},"siguiente_paso":"la acción más importante ahora en esta pieza"}`,{signal:ctl.signal,cache:false,modelTier:'complex',images:images.length?images:undefined});
+      p.procesos=p.procesos||[];p.procesos.push({ts:Date.now(),grupo:g,n:images.length||sel.length,data:r});if(p.procesos.length>30)p.procesos.shift();marcar();S.ai[kind]=null;
+    }else if(kind==='metodo'){
+      const procs=Object.values(S.P).flatMap(x=>(x.procesos||[]).map(y=>`- ${x.nombre}${y.grupo?' / '+y.grupo:''} (${fecha(y.ts)}): ${y.data.resumen||''} Valores: ${y.data.valores||''} Fortalezas: ${(y.data.metodologia?.fortalezas||[]).join('; ')} Cambios: ${(y.data.metodologia?.cambios||[]).join('; ')}`)).join('\n').slice(0,12000);
+      const {orden}=debilidades();
+      const r=await S.sample.json(`${ROL_CRITICA}\n\n${ctxGeneral()}\nSus debilidades según sus críticas: ${orden.slice(0,4).map(k=>SKILLS[k]).join(', ')}.\n\nEstos son los análisis de proceso de sus proyectos:\n${procs}\n\nDetecta los PATRONES que se repiten en su forma de trabajar y conviértelos en reglas de trabajo concretas y medibles (como las de un estudio), más un checklist corto para antes de dar una pieza por terminada.\nResponde SOLO con JSON: {"resumen":"2-3 frases sobre su método","patrones":["patrones que se repiten, buenos y malos"],"reglas":[{"regla":"regla de trabajo concreta, en imperativo","porque":"de qué patrón sale"}],"checklist":["5-7 puntos"]} con 5-7 reglas.`,{signal:ctl.signal,cache:false,modelTier:'complex'});
+      S.ajustes.metodologia={ts:Date.now(),data:r};marcarAj();S.ai[kind]=null;
     }else if(kind==='nombres2'&&nomDraft().pid==='__todos'){
       const d=nomDraft(),est=S.ajustes.estiloAnalisis?.data;
       const lst=ordenados().filter(([,x])=>x.estado!=='Archivado').map(([id,x])=>`- id=${id} · "${x.nombre}" (${x.tipo}): ${x.concepto.frase||x.concepto.nucleos.filter(Boolean).join(' / ')||x.brief.texto.slice(0,200)} · keywords: ${KWCATS.flatMap(([k])=>x.keywords[k]||[]).slice(0,12).join(', ')||'—'} · pilares: ${x.pilares.map(q=>q.t).filter(Boolean).join(', ')||'—'}`).join('\n').slice(0,9000);
@@ -2395,6 +2419,65 @@ function vGaleria(){
       ${fb?feedbackHTML(fb,i,'galeria'):''}
     </div></div></div>`}).join(''):'<div class="empty">Sube tus ilustraciones: finales, bocetos, estudios. Entre más subas, mejor te conoce el asesor.</div>'}`}
 
+/* ============ Carpetas del proyecto: bocetos → grises → versiones → final ============ */
+const CARPS=[['bocetos','Bocetos',['Thumbnail','Boceto'],'Boceto','Thumbnails, siluetas, bocetos de idea y composición'],['grises','Escala de grises',['Valores'],'Valores','Estudios de valor: 3–4 grupos, lectura del foco'],['versiones','Versiones',['Color','Render'],'Color','Cada iteración de color y render, en orden'],['final','Final',['Final'],'Final','La pieza terminada']];
+const carpDe=x=>(CARPS.find(c=>c[2].includes(x.etapa))||CARPS[3])[0];
+async function subirCarpeta(files,carp){
+  const p=S.P[S.cur];if(!p)return;const c=CARPS.find(k=>k[0]===carp);
+  const fs_=[...files].filter(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));if(!fs_.length){toast('Sube imágenes PNG, JPG o WEBP');return}
+  let n=0;setStatus(`Subiendo ${fs_.length}…`);
+  for(const f of fs_){try{p.piezas.push({id:uid(),etapa:c[3],grupo:S.carpG||'',nota:'',nombre:f.name.replace(/\.[^.]+$/,''),creado:Date.now()+n,...await guardarImagen(f)});n++}catch(e){toast(e?.code==='too_large'?'Una imagen pesa más de 20 MB':'No se pudo subir una imagen')}}
+  if(n){marcar();renderMain();toast(`${n} imagen${n>1?'es':''} en ${c[1]}`)}
+}
+function piezasGrupo(p,g){return (p.piezas||[]).filter(x=>(x.grupo||'')===g)}
+function vCarpetas(p){
+  const grupos=p.grupos||[],g=grupos.includes(S.carpG)?S.carpG:'',ps=piezasGrupo(p,g);
+  const pr=(p.procesos||[]).filter(x=>(x.grupo||'')===g).at(-1),d=pr?.data;
+  return `
+  <p class="intro">Sube cada etapa en su carpeta: así el asesor ve tu <b>proceso completo</b>, no solo el resultado. La <b>crítica de proceso</b> compara boceto → grises → versiones → final y te dice qué mejoró, qué se perdió y qué cambiar en tu método.</p>
+  <div class="prow" style="justify-content:space-between">
+    <div class="stepper" style="padding:0;flex-wrap:wrap"><button class="step ${!g?'on':''}" data-act="carp-g" data-v=""><span class="st">General · ${piezasGrupo(p,'').length}</span></button>${grupos.map(x=>`<button class="step ${g===x?'on':''}" data-act="carp-g" data-v="${esc(x)}"><span class="st">${esc(x)} · ${piezasGrupo(p,x).length}</span></button>`).join('')}</div>
+    <span class="prow"><input type="text" id="carp-nuevo" placeholder="Nueva subcarpeta (ej. Dios, Guerrero)" style="width:220px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:6px 10px" data-enter="carp-add"><button class="btn sm" data-act="carp-add">＋ Subcarpeta</button>
+    ${g?`<button class="btn ghost sm danger" data-act="carp-del" data-v="${esc(g)}">${S.confirmLi==='g:'+g?'¿Quitar subcarpeta? (las imágenes pasan a General)':'Quitar subcarpeta'}</button>`:''}</span></div>
+  <div class="carps">${CARPS.map(([k,n,etapas,def,desc])=>{const xs=ps.filter(x=>carpDe(x)===k).sort((a,b)=>a.creado-b.creado);return `<div class="carp">
+    <div class="colh"><b>${n}</b><span>${xs.length}</span></div><p class="desc">${desc}</p>
+    <label class="btn sm" for="cf-${k}">＋ Subir</label><input type="file" id="cf-${k}" data-carp="${k}" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+    ${xs.map((x,j)=>{const i=p.piezas.indexOf(x);return `<div class="cimg"><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom">
+      <div class="prow" style="justify-content:space-between;gap:4px"><span class="lbl">${k==='versiones'?'v'+(j+1):esc(x.etapa)} · ${fecha(x.creado)}</span>${x.feedback?`<span class="nivel" style="font-size:9.5px">${esc(x.feedback.nivel||'')}</span>`:''}</div>
+      <input type="text" id="cn-${x.id}" data-b="piezas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Nota: qué cambiaste">
+      <div class="prow" style="gap:4px"><select id="ce-${x.id}" data-b="piezas.${i}.etapa" aria-label="Mover a" style="flex:1">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
+        ${grupos.length?`<select id="cg-${x.id}" data-b="piezas.${i}.grupo" aria-label="Subcarpeta" style="flex:1"><option value="">General</option>${grupos.map(gg=>`<option ${gg===(x.grupo||'')?'selected':''}>${esc(gg)}</option>`).join('')}</select>`:''}
+        <button class="btn ghost sm" data-act="tab" data-tab="critica" title="Ver o pedir su crítica">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
+  ${S.sample?`<div class="asesor"><div class="top"><div><b>Crítica de proceso${g?' · '+esc(g):''}</b><p class="muted" style="margin:2px 0 0">Compara tus etapas en orden: qué mejoró, qué se perdió (¿los valores de tus grises llegaron vivos al final?) y qué cambiar en tu método para el próximo proyecto.</p></div>
+    ${S.aiBusy.proceso?'<button class="btn sm" data-act="ai-stop" data-k="proceso">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="proceso" ${ps.length<2?'disabled title="Sube al menos 2 imágenes de distintas etapas"':''}>${d?'Analizar de nuevo':'Analizar mi proceso'}</button>`}</div>
+    ${S.aiBusy.proceso?'<p class="muted">Revisando tu proceso completo…</p>':S.ai.proceso?.error?`<p class="muted">${esc(S.ai.proceso.error)}</p>`:''}
+    ${d?procesoHTML(pr):''}</div>`:''}`}
+function procesoHTML(pr){
+  const d=pr.data;
+  return `<div class="fb"><span class="lbl">${fecha(pr.ts)} · ${pr.n} imágenes vistas</span>
+    <p style="margin:0">${esc(d.resumen||'')}</p>
+    ${(d.evolucion||[]).length?`<div class="revs">${d.evolucion.map(e=>`<div class="rev"><h4>${esc(e.etapa)}</h4>${e.mejoro?`<p style="margin:0;color:var(--ok)">↑ ${esc(e.mejoro)}</p>`:''}${e.perdio?`<p style="margin:0;color:var(--warn)">↓ ${esc(e.perdio)}</p>`:''}</div>`).join('')}</div>`:''}
+    ${d.valores?`<p style="margin:0"><b>Valores de grises → final:</b> ${esc(d.valores)}</p>`:''}
+    ${(d.decisiones||[]).length?`<div><h4 style="margin:6px 0">Decisiones que funcionaron</h4><ul style="margin:0;padding-left:18px">${d.decisiones.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+    ${d.metodologia?`<div class="grid2"><div class="rev"><h4>Tu método: lo que ya haces bien</h4><ul style="margin:0;padding-left:18px">${(d.metodologia.fortalezas||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div class="rev"><h4>Cambia esto en tu método</h4><ul style="margin:0;padding-left:18px">${(d.metodologia.cambios||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>`:''}
+    ${d.siguiente_paso?`<p class="next"><b>Siguiente paso:</b> ${esc(d.siguiente_paso)}</p>`:''}</div>`}
+
+/* ---- Mi metodología: lo aprendido de todos los procesos ---- */
+function metodologiaHTML(){
+  const procs=Object.entries(S.P).flatMap(([id,p])=>(p.procesos||[]).map(x=>({...x,proyecto:p.nombre}))).sort((a,b)=>b.ts-a.ts);
+  const m=S.ajustes.metodologia,d=m?.data;
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Mi metodología</h3>
+    ${S.sample&&procs.length?(S.aiBusy.metodo?'<span class="muted">Revisando todos tus procesos…</span>':'<button class="btn sm pri" data-act="ai" data-k="metodo">'+(d?'Actualizar':'Sacar mis reglas de trabajo')+'</button>'):''}</div>
+    <p class="hint" style="margin:0">Cada "Crítica de proceso" de tus carpetas se junta aquí. Con varias, el asesor detecta tus patrones y los vuelve reglas de trabajo.</p>
+    ${S.ai.metodo?.error?`<p class="muted">${esc(S.ai.metodo.error)}</p>`:''}
+    ${d?`<p style="margin:0">${esc(d.resumen||'')}</p>
+      ${(d.patrones||[]).length?`<div><span class="lbl">Patrones que se repiten</span><ul style="margin:4px 0;padding-left:18px">${d.patrones.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+      <div><span class="lbl">Tus reglas de trabajo</span><ul class="list">${(d.reglas||[]).map((r,i)=>`<li><span><b>${esc(r.regla)}</b><br><span class="muted">${esc(r.porque||'')}</span></span><button class="btn sm" data-act="met-principio" data-i="${i}" ${(S.ajustes.principios||[]).includes(r.regla)?'disabled':''}>${(S.ajustes.principios||[]).includes(r.regla)?'En tus principios':'A mis principios'}</button></li>`).join('')}</ul></div>
+      ${(d.checklist||[]).length?`<div><span class="lbl">Checklist antes de dar por terminada una pieza</span><ul style="margin:4px 0;padding-left:18px">${d.checklist.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`
+    :procs.length?`<p class="muted" style="margin:0">${procs.length} análisis de proceso guardados.</p>`:'<p class="muted" style="margin:0">Todavía no hay análisis de proceso. Sube tus etapas en <b>Carpetas</b> dentro de un proyecto y pide la crítica de proceso.</p>'}
+    ${procs.slice(0,4).map(x=>`<div class="learn"><small>${esc(x.proyecto)}${x.grupo?' · '+esc(x.grupo):''} · ${fecha(x.ts)}</small>${esc((x.data.metodologia?.cambios||[])[0]||x.data.siguiente_paso||'')}</div>`).join('')}</div>`}
+
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2752,6 +2835,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};marcarAj();renderMain()}).catch(()=>toast('No se pudo subir'))}
+  if(e.target.dataset?.carp){subirCarpeta(e.target.files,e.target.dataset.carp);e.target.value=''}
   if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
@@ -2851,6 +2935,10 @@ async function accion(a,el){
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
     case 'nom-taller':S.nom={...nomDraft(),pid:S.cur||'',para:'Proyecto'};S.vista='nombres';render();break;
+    case 'carp-g':S.carpG=ds.v;renderMain();break;
+    case 'carp-add':{const v=($('#carp-nuevo')?.value||'').trim();if(!v)return;p.grupos=p.grupos||[];if(!p.grupos.includes(v))p.grupos.push(v);S.carpG=v;marcar();renderMain();break}
+    case 'carp-del':{const k='g:'+ds.v;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;p.grupos=(p.grupos||[]).filter(x=>x!==ds.v);(p.piezas||[]).forEach(x=>{if(x.grupo===ds.v)x.grupo=''});S.carpG='';marcar();renderMain();break}
+    case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
     case 'gal-f':S.galF=ds.v;renderMain();break;
     case 'gal-critica':{const x=itemDe('galeria',ds.id);if(x)pedirCritica(x.id,x);break}
     case 'gal-pf':{const x=itemDe('galeria',ds.id);if(!x)return;if(!x.pf){proponer(x,{titulo:x.titulo,disciplina:x.tipo==='Entorno'?'Environment Concept':x.tipo==='Keyframe'?'Keyframe':x.tipo,seccion:/Personaje|Criatura/.test(x.tipo)?'characters':'projects'});marcarAj();toast('Propuesta: revísala con tu asesor en Portafolio')}else{S.vista='portafolio';render()}renderMain();break}
