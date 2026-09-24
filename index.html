@@ -662,7 +662,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufxp239').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufy1zrq').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -670,7 +670,8 @@ const TABS = [
   ['brief','Brief'],['concepto','Concepto'],['mundo','Mundo'],['keywords','Keywords'],
   ['direccion','Mood · Técnica · AD'],['refs','Referencias'],['produccion','Producción'],['carpetas','Carpetas'],['critica','Crítica'],['revision','Revisión'],['hoja','Hoja']
 ];
-const TIPOS = ['Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
+const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
+const GRUPOS_MUNDO=['Personajes','Criaturas','Entornos','Props','Keyframes'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
 const TENSIONES = [
   ['Antítesis','Dos ideas opuestas en el mismo diseño. Ojo: sola se queda plana.'],
@@ -2722,7 +2723,19 @@ const PIPE={
     E('Presentación','Sheet final del prop.',['Hoja clara','Callouts','Lista para portafolio'],'¿Se entiende en 10 segundos?')
   ]
 };
-function pipeDe(p){const t=p.tipo;return t==='Personaje'?PIPE.personaje:t==='Criatura'?PIPE.criatura:t==='Entorno'?PIPE.entorno:/Prop|Vehículo/.test(t)?PIPE.prop:PIPE.ilustracion}
+PIPE.completo=[
+  E('Premisa y mundo','Una página: premisa en 2 líneas, tono, época, reglas del mundo (qué es posible y qué no) y el conflicto central.',['Premisa en 2 líneas','Reglas del mundo (magia, tecnología, sociedad)','Conflicto central y quién lo vive'],'¿Qué hace a este mundo distinto de cualquier otro de fantasía o sci-fi?'),
+  E('Investigación y moodboard maestro','Referencias reales de cultura, historia, naturaleza y materiales, por capas y con porqué.',['Fuentes reales (museos, arquitectura, naturaleza)','Moodboard por capas con porqué','Lo que NO es este mundo (referencias a evitar)'],'¿Qué fuente real le da autenticidad y qué cliché vas a evitar?'),
+  E('Guía de estilo (style guide)','Una lámina: shape language, paleta, materiales, tratamiento de luz y nivel de estilización común a todo el mundo.',['3 pilares de dirección de arte','Shape language del mundo','Paleta y materiales','Nivel de estilización (igual para personajes y entornos)'],'Si alguien diseñara una taza de este mundo, ¿qué reglas seguiría?'),
+  E('Exploración del mundo','Thumbnails de los lugares clave y, si aplica, un mapa o esquema de cómo se conectan.',['20+ thumbnails de lugares','Lugares clave elegidos','Mapa o esquema del mundo'],'¿Qué lugar cuenta mejor la historia del mundo sin personajes?'),
+  E('Elenco en silueta','Lineup de personajes y criaturas en silueta, con jerarquía de tamaño y forma.',['Lineup de siluetas','Cada uno se distingue en negro','Relaciones y jerarquía claras'],'¿Se entiende quién manda, quién sirve y quién amenaza solo por la silueta?'),
+  E('Personajes y criaturas','Diseños finales con variaciones, callouts, orthos y expresiones.',['Variaciones de cada uno','Callouts de vestuario, armas y materiales','Orthos (frente, perfil, espalda)','Escala entre ellos'],'¿Cada diseño obedece la guía de estilo y cuenta su rol?'),
+  E('Props y cultura material','Armas, herramientas, arquitectura menor y objetos rituales que hacen creíble la cultura.',['Props clave con callouts','Símbolos y patrones propios','Desgaste y uso'],'¿Qué objetos revelan cómo vive y qué cree esta cultura?'),
+  E('Entornos','Diseño de los lugares clave con blockout, luz y callouts.',['Blockout de los lugares clave','Luz y mood keys','Callouts de arquitectura'],'¿El entorno actúa como personaje en la historia?'),
+  E('Keyframes','Los 2–4 momentos clave de la historia, con personajes en su mundo.',['Thumbnails de composición','Estudio de valores de cada keyframe','Keyframes finales'],'¿Qué momentos venden el mundo a un estudio en tres imágenes?'),
+  E('Biblia de arte','Presentación final: premisa, guía de estilo, elenco, props, entornos y keyframes, lista para portafolio o pitch.',['Orden de la presentación','Láminas limpias y consistentes','Versión para portafolio'],'¿Un director de arte podría producir este mundo solo con tu biblia?')
+];
+function pipeDe(p){const t=p.tipo;return /Proyecto completo/.test(t)?PIPE.completo:t==='Personaje'?PIPE.personaje:t==='Criatura'?PIPE.criatura:t==='Entorno'?PIPE.entorno:/Prop|Vehículo/.test(t)?PIPE.prop:PIPE.ilustracion}
 function vProduccion(p){
   const pipe=pipeDe(p),pr=p.prod||{},et=Math.min(pr.etapa||0,pipe.length-1),e=pipe[et];
   const hechos=(i)=>pipe[i].check.filter((c,j)=>pr.hechos?.[i+'-'+j]).length;
@@ -3002,7 +3015,9 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
-    setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);marcar();
+    setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);
+    if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
+    marcar();
     if(t.dataset.b==='nombre')renderSide();
     const sg=$('#seis');if(sg)sg.innerHTML=seisHTML(p);
     if(t.type==='color')t.parentElement.style.background=t.value;
@@ -3110,7 +3125,7 @@ async function accion(a,el){
       S.cur=id;S.vista='proyecto';S.tab='brief';recordar();marcar();render();toast('Reto convertido en proyecto');break}
     case 'pz-proponer':{const x=p.piezas.find(z=>z.id===ds.id);if(!x)return;
       if(x.pf){S.vista='portafolio';render();return}
-      proponer(x,{titulo:p.nombre,disciplina:p.tipo==='Entorno'?'Environment Concept':p.tipo==='Key art'?'Keyframe / Key Art':p.tipo+' Design',seccion:/Personaje|Criatura/.test(p.tipo)?'characters':'projects'});marcar();renderMain();toast('Propuesta: revísala con tu asesor en Portafolio');break}
+      proponer(x,{titulo:p.nombre,disciplina:/Proyecto completo/.test(p.tipo)?'Visual Development / Worldbuilding':p.tipo==='Entorno'?'Environment Concept':p.tipo==='Key art'?'Keyframe / Key Art':p.tipo+' Design',seccion:/Personaje|Criatura/.test(p.tipo)?'characters':'projects'});marcar();renderMain();toast('Propuesta: revísala con tu asesor en Portafolio');break}
     case 'est-proponer':{const x=S.ajustes.estiloImgs?.[+ds.i];if(!x)return;if(!x.pf){proponer(x,{});marcarAj();toast('Propuesta para portafolio')}S.vista='portafolio';render();break}
     case 'pf-ok':{const k=ds.k,{x}=pfDe(k);if(!x?.pf)return;if(!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor))return;
       if(S.confirmPf!==k){S.confirmPf=k;renderMain();return}S.confirmPf=null;x.pf.estado='aprobada';x.pf.aprobado=Date.now();guardarPf(k);render();toast('Visto bueno dado');break}
