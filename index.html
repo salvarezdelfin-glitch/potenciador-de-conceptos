@@ -574,7 +574,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf4q8wc').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf4u8pi').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1162,8 +1162,10 @@ function vArtistas(){
       <a class="btn sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" style="align-self:flex-start">ArtStation ↗</a></div>`).join('')}</div>`:'<div class="empty">Todavía no eliges guías. Marca con ★ a tus favoritos en la lista de abajo.</div>'}</div>
   <div class="box"><h3>Mi gusto</h3><p class="hint">Tu estilo, lo que te atrae y lo que no. El asesor lo toma en cuenta en cada recomendación y crítica.</p>
     <textarea id="f-gusto" data-aj="gusto" placeholder="Ej. diseño de criaturas con anatomía creíble, entornos atmosféricos con niebla, paletas desaturadas con un acento cálido, render pictórico y no fotográfico…">${esc(a.gusto||'')}</textarea></div>
-  <div class="box"><h3>Los que sigues</h3>
-    <ul class="list">${a.referentes.map((r,i)=>`<li style="grid-template-columns:auto minmax(120px,200px) 1fr auto auto"><button class="star ${r.fav?'on':''}" data-act="fav" data-i="${i}" aria-label="${r.fav?'Quitar de':'Agregar a'} guías fundamentales" ${!r.fav&&guias().length>=6?'disabled title="Máximo 6 guías"':''}>${r.fav?'★':'☆'}</button><input type="text" id="rn-${i}" data-aj="referentes.${i}.nombre" value="${esc(r.nombre)}" placeholder="Nombre"><input type="text" id="rw-${i}" data-aj="referentes.${i}.porque" value="${esc(r.porque)}" placeholder="Qué estudiar de su trabajo"><a class="btn ghost sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" title="Ver en ArtStation">ArtStation ↗</a><button class="btn ghost sm" data-act="rf-del" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul>
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Los que sigues · ${a.referentes.length}</h3>
+    <input type="text" id="f-artbuscar" placeholder="Buscar artista…" style="flex:0 1 240px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:7px 10px"></div>
+    <p class="hint">De tu ArtStation e Instagram. Pídele a Claude "actualiza mis artistas" cuando sigas a gente nueva.</p>
+    <ul class="list">${a.referentes.map((r,i)=>`<li style="grid-template-columns:auto minmax(120px,200px) 1fr auto auto"><button class="star ${r.fav?'on':''}" data-act="fav" data-i="${i}" aria-label="${r.fav?'Quitar de':'Agregar a'} guías fundamentales" ${!r.fav&&guias().length>=6?'disabled title="Máximo 6 guías"':''}>${r.fav?'★':'☆'}</button><input type="text" id="rn-${i}" data-aj="referentes.${i}.nombre" value="${esc(r.nombre)}" placeholder="Nombre"><input type="text" id="rw-${i}" data-aj="referentes.${i}.porque" value="${esc(r.porque)}" placeholder="Qué estudiar de su trabajo"><span class="prow" style="gap:2px;flex-wrap:nowrap">${r.ig?`<a class="btn ghost sm" href="https://www.instagram.com/${encodeURIComponent(r.ig)}/" target="_blank" rel="noopener" title="@${esc(r.ig)} en Instagram">IG ↗</a>`:''}<a class="btn ghost sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" title="Buscar en ArtStation">AS ↗</a></span><button class="btn ghost sm" data-act="rf-del" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul>
     <div><button class="btn sm" data-act="rf-add">＋ Artista</button></div></div>`}
 
 function vProgreso(){
@@ -1908,6 +1910,7 @@ function aMarkdown(p){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
+  if(t.id==='f-artbuscar'){const q=t.value.toLowerCase();t.closest('.box').querySelectorAll('.list li').forEach(li=>{const v=[...li.querySelectorAll('input')].map(i=>i.value).join(' ')+' '+(li.querySelector('a[title^="@"]')?.title||'');li.hidden=!!q&&!v.toLowerCase().includes(q)});return}
   if(t.dataset.cot){cotDraft()[t.dataset.cot]=t.value;const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(S.cot,cotCalc(S.cot),cotBase());return}
   if(t.dataset.cotestado){const q=S.cotHist?.lista?.find(x=>x.folio===t.dataset.cotestado);if(q){q.estado=t.value;S.db?.collection('cotizaciones').doc(q.folio).set(clone(q)).catch(()=>toast('No se pudo guardar'))}return}
   if(t.dataset.pf){const {x}=pfDe(t.dataset.pf);if(!x?.pf)return;x.pf[t.dataset.pk]=t.type==='checkbox'?t.checked:t.value;guardarPf(t.dataset.pf);
