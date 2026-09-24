@@ -256,6 +256,31 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .corr input{margin-top:4px;accent-color:var(--accent)}
 .corr small{display:block;color:var(--ink2)}
 .corr:has(input:checked) span{opacity:.5;text-decoration:line-through}
+.timer{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.timer b{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.cal{display:grid;grid-template-columns:repeat(7,22px);gap:5px}
+.dia{width:22px;height:22px;border-radius:5px;background:var(--surface3)}
+.dia.on{background:var(--accent)}
+.dia.hoy{outline:2px solid var(--ink3);outline-offset:1px}
+.kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:1000px){.kanban{grid-template-columns:minmax(0,1fr)}}
+.kcol{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}
+.pfcard{background:var(--bg);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.pfcard>img{width:100%;max-height:240px;object-fit:cover;cursor:zoom-in;background:var(--surface2)}
+.pfb{padding:10px;display:flex;flex-direction:column;gap:8px}
+.pfb input,.pfb select,.pfb textarea{width:100%;border:1px solid var(--line2);background:var(--surface);border-radius:8px;padding:7px 9px;font-size:13px;min-width:0}
+.pfb textarea{min-height:48px}
+.pfb .prow>input{flex:1}
+.pfrev{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px}
+.cotbig{font-family:var(--display);font-weight:900;font-size:clamp(40px,6vw,64px);line-height:1;font-variant-numeric:tabular-nums}
+.desg{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.desg span{color:var(--ink2)}.desg b{text-align:right;font-variant-numeric:tabular-nums}
+.guias{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.guia{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.guia b{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1}
+.guia textarea{min-height:44px;font-size:13px}
+.star{border:0;background:none;cursor:pointer;font-size:18px;color:var(--ink3);padding:0 4px}
+.star.on{color:var(--accent)}
 .chat{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow-y:auto;padding-right:4px}
 .msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5}
 .msg p{margin:4px 0}.msg ul,.msg ol{margin:4px 0;padding-left:18px}
@@ -549,7 +574,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf49lwo').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf4q8wc').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -628,6 +653,10 @@ const ICO={
   folder:svg('<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/>'),
   spark:svg('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>'),
   out:svg('<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/>'),
+  flame:svg('<path d="M12 22c4 0 7-2.8 7-7 0-3.5-2.2-6-4-8 0 2.5-1.2 4-2.7 4.5C12.8 8 11.5 4.5 9 2c.3 3.5-4 6.6-4 13 0 4.2 3 7 7 7z"/>'),
+  target:svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>'),
+  frame:svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>'),
+  coin:svg('<circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.6-.9-1.7-1.5-3-1.5-1.9 0-3 1-3 2.3 0 3.2 6 1.8 6 5 0 1.4-1.2 2.4-3 2.4-1.4 0-2.6-.6-3.2-1.6M12 5.5V7m0 10v1.5"/>'),
   eye:svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>')
 };
 /* ============ Utilidades ============ */
@@ -801,10 +830,18 @@ function renderSide(){
     <div class="brand">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div class="plist">
       ${nav('inicio','home','Inicio')}
+    </div>
+    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
+      ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
+      ${nav('retos','target','Retos de estudio')}
       ${nav('estilo','eye','Mi estilo')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
       ${nav('principios','book','Mis principios')}
       ${nav('progreso','chart','Mi progreso')}
+    </div>
+    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Carrera</span>
+      ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
+      ${nav('cotizador','coin','Cotizador freelance')}
     </div>
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
@@ -833,6 +870,10 @@ function renderMainInner(){
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
   if(S.vista==='papelera'){m.innerHTML=vPapelera();return}
   if(S.vista==='estilo'){m.innerHTML=vEstilo();return}
+  if(S.vista==='diario'){m.innerHTML=vDiario();return}
+  if(S.vista==='retos'){m.innerHTML=vRetos();return}
+  if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
+  if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
   if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
   if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
   if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
@@ -1082,7 +1123,7 @@ function vEstilo(){
   <p class="intro">Tu voz como artista se forma decidiendo, no copiando. Sube tus mejores piezas (también se usan las que subes a Crítica en cada proyecto), escribe tu gusto en <b>Artistas a seguir</b> y analiza: qué ya es tuyo, qué todavía es influencia y hacia dónde empujarlo.</p>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Mis piezas</h3>
     <span class="prow"><label class="btn pri" for="f-estilo">Subir piezas</label><input type="file" id="f-estilo" accept="image/png,image/jpeg,image/webp" multiple hidden></span></div>
-    ${imgs.length?`<div class="estilo-imgs">${imgs.map((x,i)=>`<figure><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom"><button class="btn sm" data-act="est-del" data-i="${i}" aria-label="Quitar">✕</button></figure>`).join('')}</div>`:'<p class="muted">Sube 4–8 piezas que sientas más tuyas: finales, bocetos o estudios.</p>'}
+    ${imgs.length?`<div class="estilo-imgs">${imgs.map((x,i)=>`<figure><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom"><button class="btn sm" data-act="est-del" data-i="${i}" aria-label="Quitar">✕</button><button class="btn sm" data-act="est-proponer" data-i="${i}" style="left:4px;right:auto" title="Proponer para portafolio">${x.pf?'★':'☆'}</button></figure>`).join('')}</div>`:'<p class="muted">Sube 4–8 piezas que sientas más tuyas: finales, bocetos o estudios.</p>'}
     <p class="muted" style="margin:0">${imgs.length} aquí · ${piezas} en tus proyectos</p></div>
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Analizar mi estilo</b><p class="muted" style="margin:2px 0 0">Lee tus piezas, proyectos, gusto y artistas que sigues. Dice qué ya es tu sello y cómo desarrollarlo sin perder empleabilidad.</p></div>
     <div class="prow">${S.aiBusy.estilo?'<button class="btn sm" data-act="ai-stop" data-k="estilo">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="estilo">${d?'Analizar de nuevo':'Analizar'}</button>`}</div></div>
@@ -1102,6 +1143,8 @@ function vPapelera(){
   <p class="intro">Proyectos que borraste. Se recupera su última versión guardada, con sus imágenes.</p>
   <div class="box">${!pp||pp.cargando?'<p class="muted">Cargando…</p>':pp.error?'<p class="muted">No se pudo cargar la papelera.</p>':pp.lista.length?`<ul class="list">${pp.lista.map(h=>`<li><span><b>${esc(h.nombre)}</b><br><span class="muted">Última versión: ${new Date(h.ts).toLocaleString('es-MX',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · ${h.refs} refs</span></span><button class="btn sm pri" data-act="pap-rest" data-pid="${esc(h.pid)}">Recuperar</button></li>`).join('')}</ul>`:'<p class="muted">La papelera está vacía.</p>'}</div>`}
 
+function guias(){return (S.ajustes.referentes||[]).map((r,i)=>({r,i})).filter(x=>x.r.fav)}
+function guiasTexto(){return guias().map(({r})=>r.nombre+(r.leccion?` (aprender: ${r.leccion})`:'')+(r.nocopiar?` (no copiar: ${r.nocopiar})`:'')).join('; ')}
 function vArtistas(){
   const a=S.ajustes;
   return `
@@ -1111,10 +1154,16 @@ function vArtistas(){
     <div class="prow"><input type="text" id="f-tema" value="${esc(S.tema||'')}" placeholder="Tema, estilo o tipo de diseño" style="flex:1 1 260px;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 10px" data-enter="descubrir">
     ${S.aiBusy.descubrir?'<button class="btn sm" data-act="ai-stop" data-k="descubrir">Detener</button>':'<button class="btn pri sm" data-act="descubrir">Recomendar</button>'}</div>
     ${S.aiBusy.descubrir?'<p class="muted">Pensando…</p>':S.ai.descubrir?.error?`<p class="muted">${esc(S.ai.descubrir.error)}</p>`:S.ai.descubrir?aiRender('artistas',S.ai.descubrir,'descubrir'):''}</div>`:''}
+  <div class="box"><h3>Mis guías fundamentales</h3><p class="hint">Tus favoritos: el nivel al que quieres llegar. Marca con ★ en la lista de abajo (máximo 6 para que sean de verdad tus guías). Escribe qué vas a aprender de cada uno y qué <b>no</b> vas a copiar: así se forma un estilo propio. El asesor te compara con ellos en Mi estilo, la crítica y el estudio diario.</p>
+    ${guias().length?`<div class="guias">${guias().map(({r,i})=>`<div class="guia"><div class="prow" style="justify-content:space-between"><b>${esc(r.nombre)}</b><button class="star on" data-act="fav" data-i="${i}" aria-label="Quitar de guías">★</button></div>
+      <label class="lbl" for="gl-${i}">Qué aprendo de su trabajo</label><textarea id="gl-${i}" data-fav="${i}" data-fk="leccion" placeholder="Ej. cómo separa planos con atmósfera; su economía de detalle">${esc(r.leccion||'')}</textarea>
+      <label class="lbl" for="gn-${i}">Qué NO voy a copiar</label><textarea id="gn-${i}" data-fav="${i}" data-fk="nocopiar" placeholder="Ej. su paleta exacta; su pincel firma">${esc(r.nocopiar||'')}</textarea>
+      <label class="lbl" for="gp-${i}">Pieza clave para estudiar</label><input type="text" id="gp-${i}" data-fav="${i}" data-fk="pieza" value="${esc(r.pieza||'')}" placeholder="Título o link">
+      <a class="btn sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" style="align-self:flex-start">ArtStation ↗</a></div>`).join('')}</div>`:'<div class="empty">Todavía no eliges guías. Marca con ★ a tus favoritos en la lista de abajo.</div>'}</div>
   <div class="box"><h3>Mi gusto</h3><p class="hint">Tu estilo, lo que te atrae y lo que no. El asesor lo toma en cuenta en cada recomendación y crítica.</p>
     <textarea id="f-gusto" data-aj="gusto" placeholder="Ej. diseño de criaturas con anatomía creíble, entornos atmosféricos con niebla, paletas desaturadas con un acento cálido, render pictórico y no fotográfico…">${esc(a.gusto||'')}</textarea></div>
   <div class="box"><h3>Los que sigues</h3>
-    <ul class="list">${a.referentes.map((r,i)=>`<li style="grid-template-columns:minmax(120px,200px) 1fr auto auto"><input type="text" id="rn-${i}" data-aj="referentes.${i}.nombre" value="${esc(r.nombre)}" placeholder="Nombre"><input type="text" id="rw-${i}" data-aj="referentes.${i}.porque" value="${esc(r.porque)}" placeholder="Qué estudiar de su trabajo"><a class="btn ghost sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" title="Ver en ArtStation">ArtStation ↗</a><button class="btn ghost sm" data-act="rf-del" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul>
+    <ul class="list">${a.referentes.map((r,i)=>`<li style="grid-template-columns:auto minmax(120px,200px) 1fr auto auto"><button class="star ${r.fav?'on':''}" data-act="fav" data-i="${i}" aria-label="${r.fav?'Quitar de':'Agregar a'} guías fundamentales" ${!r.fav&&guias().length>=6?'disabled title="Máximo 6 guías"':''}>${r.fav?'★':'☆'}</button><input type="text" id="rn-${i}" data-aj="referentes.${i}.nombre" value="${esc(r.nombre)}" placeholder="Nombre"><input type="text" id="rw-${i}" data-aj="referentes.${i}.porque" value="${esc(r.porque)}" placeholder="Qué estudiar de su trabajo"><a class="btn ghost sm" href="${asLink(r.nombre)}" target="_blank" rel="noopener" title="Ver en ArtStation">ArtStation ↗</a><button class="btn ghost sm" data-act="rf-del" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul>
     <div><button class="btn sm" data-act="rf-add">＋ Artista</button></div></div>`}
 
 function vProgreso(){
@@ -1162,6 +1211,7 @@ function ctxProyecto(p,{refs=false}={}){
   if(refs)L.push('Referencias:\n'+p.refs.map((r,i)=>`${i+1}. [${capaNombre(p,r.capa)}] ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`).join('\n'));
   L.push('Principios del artista: '+S.ajustes.principios.join(' | '));
   if(S.ajustes.gusto)L.push('Su gusto y estilo: '+S.ajustes.gusto);
+  if(guiasTexto())L.push('Sus guías fundamentales (a quienes quiere llegar): '+guiasTexto());
   if(S.ajustes.referentes.length)L.push('Artistas que sigue: '+S.ajustes.referentes.map(r=>r.nombre).filter(Boolean).slice(0,30).join(', '));
   return L.filter(Boolean).join('\n').slice(0,14000);
 }
@@ -1169,7 +1219,7 @@ const ROL_CRITICA='Eres un panel de revisión de un estudio de la industria: un 
 const ROL='Eres un director de arte y mentor de concept art con experiencia en cine y videojuegos. Le hablas en español, de tú, a un ilustrador que quiere mejorar su conceptualización y su proceso de referencias. Sé específico, directo y útil; nada genérico.';
 
 async function preguntar(kind){
-  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo'].includes(kind)))return;
+  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto'].includes(kind)))return;
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
@@ -1184,12 +1234,20 @@ async function preguntar(kind){
       const pipe=pipeDe(p),i=+kind.split('-')[1],e=pipe[i];
       const r=await S.sample.json(`${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nEstá en la etapa ${i+1} de ${pipe.length} del pipeline de producción de ${p.tipo}: "${e.n}". Entrega esperada: ${e.entrega}. Pregunta de diseño: ${e.diseno}\nSus notas de esta etapa: ${p.prod?.notas?.[i]||'(ninguna)'}\nEnséñale a DISEÑAR, no solo a dibujar: cómo se hace esta etapa en un estudio profesional aplicada a SU proyecto, qué decisiones tomar y en qué orden.\nResponde SOLO con JSON: {"objetivo":"qué tiene que lograr en esta etapa, en una frase","pasos":["pasos concretos y ordenados, aplicados a su proyecto (5-7)"],"decisiones":[{"pregunta":"decisión de diseño que debe tomar","opciones":"2-3 opciones concretas para su proyecto"}],"errores":["errores comunes en esta etapa (3-4)"],"estudio":"cómo lo hace un estudio (tiempos, cantidad, qué se presenta al director de arte)","listo_si":"cómo sabe que ya puede pasar a la siguiente etapa"}`,{signal:ctl.signal,cache:false});
       S.ai[kind]={data:r};
+    }else if(kind==='diario'){
+      const {orden,prom}=debilidades(),ult=Object.values(S.P).flatMap(q=>q.piezas||[]).filter(x=>x.feedback).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];
+      const r=await S.sample.json(`${ROL}\n\nDiseña su ejercicio de estudio de HOY (30 minutos).\nSus habilidades más débiles, de peor a mejor: ${orden.slice(0,4).map(k=>SKILLS[k]+(prom[k]?` (${prom[k].toFixed(1)}/10)`:'')).join(', ')}.\n${ult?`Su última crítica le dijo: ${ult.feedback.siguiente_paso||''} ${ult.feedback.ejercicio||''}`:''}\n${S.ajustes.estiloAnalisis?.data?`Huecos de su estilo: ${(S.ajustes.estiloAnalisis.data.huecos||[]).join('; ')}`:''}\nSu gusto: ${S.ajustes.gusto||'—'}\nGuías fundamentales: ${guiasTexto()||'—'}\nUn ejercicio concreto, cronometrado y medible, que ataque la debilidad principal usando temas que le gustan.\nResponde SOLO con JSON: {"ejercicio":"título corto","pasos":["3-5 pasos con minutos"],"objetivo":"qué debería notar al terminar"}`,{signal:ctl.signal,cache:false,modelTier:'quick'});
+      S.ai[kind]={data:r};
+    }else if(kind==='reto'){
+      const {orden}=debilidades();
+      const r=await S.sample.json(`${ROL}\n\nEscribe un brief de práctica REALISTA, como los que manda un estudio de videojuegos o cine a un concept artist (freelance o prueba de arte). Adáptalo a su meta y gusto, y que ataque una de sus debilidades.\nSu gusto: ${S.ajustes.gusto||'—'}\nDebilidades: ${orden.slice(0,3).map(k=>SKILLS[k]).join(', ')}\nUsa un estudio y un proyecto FICTICIOS (no nombres reales).\nResponde SOLO con JSON: {"estudio":"nombre ficticio","proyecto":"nombre del juego o película y qué se diseña","tipo":"Entorno|Personaje|Criatura|Prop / arma|Key art","brief":"2-4 frases con contexto de mundo y lo que se necesita","contexto_ad":["3 notas del director de arte"],"entregables":["lista"],"restricciones":["2-3"],"min":tiempo total en minutos,"criterios":["cómo se evaluará"]}`,{signal:ctl.signal,cache:false});
+      if(r&&r.tipo)S.retoAI={...r,min:+r.min||120,restricciones:r.restricciones||[]};S.timer=null;S.ai[kind]=null;
     }else if(kind==='estilo'){
       const imgs=[];for(const x of (S.ajustes.estiloImgs||[]).slice(-6))try{imgs.push(await blobDeRef(x))}catch{}
       for(const pr of Object.values(S.P))for(const x of pr.piezas.slice(-1))if(imgs.length<8)try{imgs.push(await blobDeRef(x))}catch{}
       let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
       const proys=Object.values(S.P).map(x=>`- ${x.nombre} (${x.tipo}): ${x.concepto.frase||x.concepto.nucleos.filter(Boolean).join(' / ')}; mood ${x.mood.sensacion||'—'}; técnica ${x.tecnica.medio||'—'}; pilares ${x.pilares.map(q=>q.t).filter(Boolean).join(', ')}`).join('\n').slice(0,6000);
-      const r=await S.sample.json(`${ROL_CRITICA}\n\nAyúdalo a descubrir y formar su ESTILO PROPIO como concept artist e ilustrador.\nSu gusto: ${S.ajustes.gusto||'(sin escribir)'}\nArtistas que sigue: ${S.ajustes.referentes.map(r=>r.nombre).join(', ')||'—'}\nSus proyectos:\n${proys||'—'}\n${images?`Adjunto ${images.length} de sus piezas: analízalas con detalle (forma, trazo, valores, color, temas, composición).`:'No hay imágenes adjuntas: básate en sus proyectos y gusto, y dilo.'}\nSé honesto y concreto: qué ya es suyo, qué todavía es imitación de sus referentes, y cómo empujar una voz propia sin perder empleabilidad en la industria.\nResponde SOLO con JSON: {"resumen":"su estilo hoy en 2-3 frases","rasgos":[{"rasgo":"","evidencia":"dónde se ve"}],"fortalezas":["3"],"huecos":["3 cosas que le faltan o repite"],"firma":"lo que podría convertirse en su sello, en una frase","influencias":"de quién se nota la influencia y cómo diferenciarse","direccion":["3 direcciones para desarrollar su estilo propio"],"ejercicios":[{"nombre":"","como":"ejercicio concreto de 1-2 semanas"}],"artistas_adn":[{"artista":"concept artist real con ADN parecido","por_que":""}],"nicho":"en qué tipo de estudio o trabajo encajaría hoy y a cuál podría apuntar"}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nAyúdalo a descubrir y formar su ESTILO PROPIO como concept artist e ilustrador.\nSu gusto: ${S.ajustes.gusto||'(sin escribir)'}\nArtistas que sigue: ${S.ajustes.referentes.map(r=>r.nombre).join(', ')||'—'}\nSus GUÍAS FUNDAMENTALES (el nivel al que quiere llegar; compáralo con ellas, di qué ya tiene de cada una y qué le falta): ${guiasTexto()||'—'}\nSus proyectos:\n${proys||'—'}\n${images?`Adjunto ${images.length} de sus piezas: analízalas con detalle (forma, trazo, valores, color, temas, composición).`:'No hay imágenes adjuntas: básate en sus proyectos y gusto, y dilo.'}\nSé honesto y concreto: qué ya es suyo, qué todavía es imitación de sus referentes, y cómo empujar una voz propia sin perder empleabilidad en la industria.\nResponde SOLO con JSON: {"resumen":"su estilo hoy en 2-3 frases","rasgos":[{"rasgo":"","evidencia":"dónde se ve"}],"fortalezas":["3"],"huecos":["3 cosas que le faltan o repite"],"firma":"lo que podría convertirse en su sello, en una frase","influencias":"de quién se nota la influencia y cómo diferenciarse","direccion":["3 direcciones para desarrollar su estilo propio"],"ejercicios":[{"nombre":"","como":"ejercicio concreto de 1-2 semanas"}],"artistas_adn":[{"artista":"concept artist real con ADN parecido","por_que":""}],"nicho":"en qué tipo de estudio o trabajo encajaría hoy y a cuál podría apuntar"}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.estiloAnalisis={ts:Date.now(),data:r,n:images?.length||0};marcarAj();S.ai[kind]={data:r};
     }else if(kind==='nombres'){
       let images;const img=S.nomImg||(p.piezas.length?await blobDeRef(p.piezas.at(-1)).catch(()=>null):null);
@@ -1288,6 +1346,253 @@ async function subir(files){
   }
   if(n){marcar();renderMain();toast(`${n} referencia${n>1?'s':''} añadida${n>1?'s':''}: escribe su porqué`)}
 }
+
+/* ============ Guardado de otros proyectos (portafolio edita piezas de varios) ============ */
+const otrosT={};
+function marcarPid(pid){
+  if(pid===S.cur){marcar();return}
+  const p=S.P[pid];if(!p)return;p.actualizado=Date.now();setStatus('Guardando…');clearTimeout(otrosT[pid]);
+  otrosT[pid]=setTimeout(async()=>{try{if(S.db)await S.db.collection('proyectos').doc(pid).set(clone(p));else lsSet();setStatus('Guardado')}catch{setStatus('No se pudo guardar')}},700);
+}
+const hoyKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+/* ============ Temporizador compartido (estudio diario y retos) ============ */
+function timerHTML(min,label){
+  const t=S.timer,rest=t?Math.max(0,(t.fin?t.fin-Date.now():t.resta)):min*60e3;
+  const mm=String(Math.floor(rest/60e3)).padStart(2,'0'),ss=String(Math.floor(rest/1e3)%60).padStart(2,'0');
+  return `<div class="timer"><span class="lbl">${esc(label)}</span><b id="timer">${mm}:${ss}</b>
+    <div class="prow">${t?.fin?'<button class="btn sm" data-act="t-pausa">Pausa</button>':`<button class="btn sm pri" data-act="t-go" data-min="${t?0:min}">${t?'Seguir':'Empezar'}</button>`}${t?'<button class="btn sm ghost" data-act="t-reset">Reiniciar</button>':''}</div></div>`}
+setInterval(()=>{const t=S.timer,el=$('#timer');if(!t?.fin||!el)return;const r=Math.max(0,t.fin-Date.now());
+  el.textContent=String(Math.floor(r/60e3)).padStart(2,'0')+':'+String(Math.floor(r/1e3)%60).padStart(2,'0');
+  if(r===0){S.timer={resta:0};toast('¡Tiempo! Suelta el lápiz y revisa en miniatura.');renderMain()}},500);
+
+/* ============ Estudio diario ============ */
+const SKILLS={valores:'Valores',silueta:'Silueta y lectura',composicion:'Composición',color:'Color y luz',perspectiva:'Forma y perspectiva',diseno:'Diseño de forma',storytelling:'Storytelling',anatomia:'Anatomía y estructura'};
+const CRIT2SKILL={'Idea y diseño':'diseno','Silueta y lectura':'silueta','Composición y punto focal':'composicion','Valores':'valores','Color y luz':'color','Forma y perspectiva':'perspectiva','Storytelling':'storytelling','Pilares y mood':'diseno'};
+const EJERCICIOS={
+  valores:['Master study de valores: toma un keyframe de un artista que sigues y redúcelo a 3 valores en 10 minutos. Repite con 3 imágenes distintas.','20 thumbnails de 5×3 cm de un mismo entorno, solo con 3 valores: cambia únicamente dónde cae la luz.','Pinta esfera, cubo y cilindro con luz dura y luz de ambiente; después aplica lo mismo a un objeto real de tu cuarto.'],
+  silueta:['30 siluetas del mismo personaje en negro, 1 minuto cada una. Marca las 3 que se leen mejor a 2 cm y escribe por qué.','Rediseña solo la silueta de 3 personajes conocidos para que sigan reconociéndose en negro total.','20 siluetas de criaturas combinando 2 animales reales cada una, en 30 minutos.'],
+  composicion:['Toma 5 fotogramas de una película que te guste y dibuja su estructura: horizonte, líneas guía, masas y punto focal.','Un mismo sujeto en 6 encuadres: contrapicado, cenital, primer plano, gran angular, tele y fuera de centro.','Rehaz la composición de una pieza tuya vieja en 4 thumbnails distintos y elige el más fuerte.'],
+  color:['Color study de 3 fotos: paleta de máximo 5 colores y temperatura cálido/frío, 10 minutos cada una.','La misma escena en 4 horas del día (amanecer, mediodía, atardecer, noche) en thumbnails de color.','Sobre un thumbnail en valores prueba 3 paletas y elige una escribiendo el porqué.'],
+  perspectiva:['10 cajas en perspectiva de 2 y 3 puntos, rotadas; conviértelas en edificios o props.','Blockout rápido en Blender de una escena simple y paintover encima en 15 minutos.','Dibuja un objeto real desde 5 ángulos (cafetera, silla, herramienta) cuidando la construcción.'],
+  diseno:['Shape language: diseña el mismo prop 3 veces (círculo, cuadrado, triángulo) y escribe qué comunica cada uno.','Rediseña un objeto cotidiano para 3 culturas o épocas distintas.','Hoja de jerarquía 70/20/10: un diseño con forma grande, mediana y pequeña claramente separadas.'],
+  storytelling:['Un entorno que cuente qué pasó ahí sin personajes: 3 thumbnails.','Un personaje en 4 momentos: antes, durante, después y años después de su conflicto.','Agrega 5 detalles narrativos (desgaste, objetos, marcas) a un diseño que ya tengas.'],
+  anatomia:['Gesture drawing: 20 poses de 1 minuto y 5 de 5 minutos con referencia.','Anatomía comparada: pata humana, de perro y de caballo; aplícalo a una criatura.','Manos y pies desde referencia: 15 minutos cada uno.']
+};
+function debilidades(){
+  const suma={},n={};
+  for(const p of Object.values(S.P))for(const x of p.piezas||[])for(const s of x.feedback?.puntajes||[]){const k=CRIT2SKILL[s.criterio];if(!k)continue;suma[k]=(suma[k]||0)+(+s.nota||0);n[k]=(n[k]||0)+1}
+  const conDatos=Object.keys(n).map(k=>[k,suma[k]/n[k]]).sort((a,b)=>a[1]-b[1]);
+  const resto=Object.keys(SKILLS).filter(k=>!n[k]);
+  return {orden:[...conDatos.map(x=>x[0]),...resto],prom:Object.fromEntries(conDatos)};
+}
+function ejercicioDeHoy(){
+  const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},hoy=r.dias[hoyKey()];
+  if(hoy)return hoy;
+  const {orden}=debilidades(),d=hoyN(),skill=orden[d%Math.min(3,orden.length)],i=d%3;
+  return {skill,texto:EJERCICIOS[skill][i],i};
+}
+function racha(){
+  const dias=S.ajustes.rutina?.dias||{};let n=0,d=new Date();
+  if(!dias[hoyKey(d)]?.hecho)d.setDate(d.getDate()-1);
+  while(dias[hoyKey(d)]?.hecho){n++;d.setDate(d.getDate()-1)}
+  return n;
+}
+function vDiario(){
+  const e=ejercicioDeHoy(),dias=S.ajustes.rutina?.dias||{},hoy=dias[hoyKey()],{prom}=debilidades();
+  const ult=Object.values(S.P).flatMap(p=>p.piezas||[]).filter(x=>x.feedback?.ejercicio).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];
+  const cal=[];for(let i=34;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=hoyKey(d);cal.push(`<span class="dia ${dias[k]?.hecho?'on':''} ${i===0?'hoy':''}" title="${k}${dias[k]?.hecho?' · '+esc(SKILLS[dias[k].skill]||''):''}"></span>`)}
+  const total=Object.values(dias).filter(x=>x.hecho).length;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudio diario</h1>
+  <p class="intro">30 minutos al día atacando tu punto más débil. El ejercicio sale de las calificaciones de tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.</p>
+  <div class="stats"><div class="stat"><b>🔥 ${racha()}</b><span>días seguidos</span></div><div class="stat"><b>${total}</b><span>días de estudio</span></div>
+    ${Object.entries(prom).slice(0,2).map(([k,v])=>`<div class="stat"><b>${v.toFixed(1)}</b><span>${SKILLS[k]} (tu promedio)</span></div>`).join('')}</div>
+  <div class="grid2">
+    <div class="box"><span class="lbl">Hoy · ${esc(SKILLS[e.skill])}</span><p class="provo" style="margin:0">${esc(e.texto)}</p>
+      ${ult&&!hoy?`<p class="muted" style="margin:0">O el que te dejó tu última crítica: <button class="btn ghost sm" data-act="d-usar-crit" style="text-align:left;color:var(--accent)">${esc(ult.feedback.ejercicio)}</button></p>`:''}
+      <div class="field"><label for="d-nota">¿Qué aprendiste?</label><textarea id="d-nota" placeholder="Una frase para tu yo de mañana">${esc(hoy?.nota||'')}</textarea></div>
+      <div class="prow">${hoy?.hecho?'<span class="nivel" style="color:var(--ok);border-color:var(--ok)">Hecho hoy ✓</span><button class="btn sm ghost" data-act="d-deshacer">Deshacer</button>':'<button class="btn pri" data-act="d-hecho">Marcar como hecho</button><button class="btn ghost" data-act="d-otro">Otro ejercicio</button>'}
+        <label class="btn sm" for="d-img">${hoy?.img?'✓ Resultado subido':'Subir resultado'}</label><input type="file" id="d-img" accept="image/png,image/jpeg,image/webp" hidden></div>
+      ${hoy?.img?`<img ${imgAttrs(hoy.img)} alt="Resultado de hoy" style="max-height:220px;width:auto;border-radius:8px" data-act="zoom">`:''}</div>
+    <div class="box">${timerHTML(30,'Temporizador · 30 min')}
+      <span class="lbl">Últimos 35 días</span><div class="cal">${cal.join('')}</div>
+      ${S.sample?`<div class="prow">${S.aiBusy.diario?'<span class="muted">Pensando…</span>':'<button class="btn sm" data-act="ai" data-k="diario">Personalizar con Claude</button>'}</div>${S.ai.diario?.data?`<div class="aiout"><p><b>${esc(S.ai.diario.data.ejercicio)}</b></p><ol style="margin:0;padding-left:20px">${(S.ai.diario.data.pasos||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p class="muted">${esc(S.ai.diario.data.objetivo||'')}</p><button class="btn sm" data-act="d-usar-ai">Usar este de hoy</button></div>`:S.ai.diario?.error?`<p class="muted">${esc(S.ai.diario.error)}</p>`:''}`:''}
+    </div>
+  </div>`}
+
+/* ============ Retos de estudio ============ */
+const RETO={
+  estudios:['Estudio Umbra','Cenote Games','Ferro Studio','Niebla Pictures','Atlas Norte','Pixel Tierra','Brasa Interactive'],
+  generos:['fantasía oscura','sci-fi industrial','post-apocalíptico','mitología mesoamericana','fantasía nórdica','steampunk','horror cósmico','fantasía épica','cyberpunk tropical','western sobrenatural','Japón feudal','biopunk'],
+  sujetos:{Entorno:['una aldea abandonada','la entrada a un templo olvidado','un mercado nocturno','una fortaleza en un acantilado','un bosque que reclama una ciudad','una estación minera','un puerto en ruinas'],
+    Personaje:['un cazador de reliquias','una sacerdotisa de guerra','un mercenario veterano','el guardián de una puerta','un mensajero entre reinos','una reina exiliada','un herrero de armas sagradas'],
+    Criatura:['un depredador de cuevas','una bestia de carga','un guardián ancestral','un parásito gigante','un carroñero volador','la mascota de un villano'],
+    'Prop / arma':['el arma ceremonial de un líder','una herramienta de minería','un vehículo de exploración','un artefacto sagrado','el escudo de una orden caída'],
+    'Key art':['el momento en que el héroe llega a la ciudad','la batalla final vista desde lejos','el primer encuentro con la criatura','la traición en el salón del trono']},
+  entregas:{Entorno:['3 thumbnails en valores + 1 keyframe en color',120],Personaje:['20 siluetas + 3 variaciones + 1 diseño en color',120],Criatura:['20 siluetas + 1 diseño con callouts de anatomía',150],'Prop / arma':['15 siluetas + 1 diseño con 2 vistas y callouts',90],'Key art':['6 thumbnails de composición + 1 key art en color',180]},
+  restr:['paleta de máximo 4 colores','una sola fuente de luz','cámara en contrapicado','sin negro puro','incluir una figura humana para escala','debe leerse en blanco y negro','formas triangulares dominantes','clima extremo','hora dorada','interior iluminado solo por fuego','shape language circular dominante','el mundo tiene que actuar como personaje']
+};
+const pick=(a,s)=>a[Math.abs(Math.floor(s))%a.length];
+function retoLocal(seed){
+  const tipos=Object.keys(RETO.sujetos),tipo=pick(tipos,seed),s=seed*7+3;
+  const r1=pick(RETO.restr,s),r2=pick(RETO.restr.filter(x=>x!==r1),s*3+1);
+  return {estudio:pick(RETO.estudios,s*5),tipo,genero:pick(RETO.generos,s*11),sujeto:pick(RETO.sujetos[tipo],s*13),
+    entrega:RETO.entregas[tipo][0],min:RETO.entregas[tipo][1],restricciones:[r1,r2]};
+}
+function vRetos(){
+  S.retoSeed=S.retoSeed??hoyN();
+  const r=S.retoAI||retoLocal(S.retoSeed),hist=S.ajustes.retos||[];
+  const titulo=r.proyecto||`${r.sujeto[0].toUpperCase()+r.sujeto.slice(1)}, ${r.genero}`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Retos de estudio</h1>
+  <p class="intro">Encargos como los de un estudio, con entregables, restricciones y tiempo límite. Así se entrena para el trabajo real: decidir rápido y entregar.</p>
+  <div class="grid2">
+    <div class="box brief"><span class="lbl">Brief · ${esc(r.estudio)}</span><h3>${esc(titulo)}</h3>
+      ${r.brief?`<p style="margin:0">${esc(r.brief)}</p>`:`<p style="margin:0">Diseña <b>${esc(r.sujeto)}</b> para un proyecto de <b>${esc(r.genero)}</b>.</p>`}
+      ${(r.contexto_ad||[]).length?`<div><span class="lbl">Notas del director de arte</span><ul style="margin:4px 0;padding-left:18px">${r.contexto_ad.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+      <p style="margin:0"><b>Entrega:</b> ${esc(Array.isArray(r.entregables)?r.entregables.join(' · '):r.entrega)}</p>
+      <p style="margin:0"><b>Restricciones:</b> ${esc((r.restricciones||[]).join(' · '))}</p>
+      ${(r.criterios||[]).length?`<p class="muted" style="margin:0"><b>Se evaluará:</b> ${esc(r.criterios.join(' · '))}</p>`:''}
+      <div class="prow"><button class="btn pri" data-act="reto-proyecto">Convertir en proyecto</button><button class="btn" data-act="reto-otro">Otro reto</button>
+        ${S.sample?(S.aiBusy.reto?'<span class="muted">Escribiendo el brief…</span>':'<button class="btn" data-act="ai" data-k="reto">Brief de estudio con Claude</button>'):''}</div>
+      ${S.ai.reto?.error?`<p class="muted">${esc(S.ai.reto.error)}</p>`:''}</div>
+    <div class="box">${timerHTML(r.min||120,`Tiempo límite · ${Math.round((r.min||120)/60*10)/10} h`)}
+      <p class="hint">Trabaja con el reloj corriendo. Cuando acabe, sube lo que tengas a Crítica, aunque no esté terminado: así se trabaja en un estudio.</p></div>
+  </div>
+  ${hist.length?`<div class="box"><h3>Retos que has hecho</h3><ul class="list">${hist.slice().reverse().slice(0,20).map(h=>`<li><span><b>${esc(h.titulo)}</b><br><span class="muted">${fecha(h.ts)}</span></span>${S.P[h.pid]?`<button class="btn sm" data-act="abrir" data-id="${esc(h.pid)}">Abrir</button>`:''}</li>`).join('')}</ul></div>`:''}`}
+
+/* ============ Portafolio con visto bueno ============ */
+function candidatas(){
+  const out=[];
+  for(const [pid,p] of Object.entries(S.P))(p.piezas||[]).forEach((x,i)=>{if(x.pf)out.push({pid,p,x,i,kind:'pieza',pf:x.pf})});
+  (S.ajustes.estiloImgs||[]).forEach((x,i)=>{if(x.pf)out.push({pid:null,x,i,kind:'estilo',pf:x.pf})});
+  return out;
+}
+function proponer(x,base){x.pf={estado:'candidata',titulo:base.titulo||'',anio:String(new Date().getFullYear()),disciplina:base.disciplina||'',seccion:base.seccion||'projects',desc:'',asesor:'',notasAsesor:'',revisada:false,mejor:false,ts:Date.now()}}
+function pfCard(c){
+  const {pf,x}=c,key=`${c.kind}|${c.pid||''}|${c.i}`,f=x.feedback;
+  const altas=f?(f.revisores||[]).flatMap(r=>r.correcciones||[]).filter(k=>k.prioridad==='alta'&&!k.hecho).length:null;
+  const inp=(k,ph)=>`<input type="text" id="pf-${k}-${esc(key)}" data-pf="${esc(key)}" data-pk="${k}" value="${esc(pf[k]||'')}" placeholder="${ph}">`;
+  const puede=pf.titulo.trim()&&pf.revisada&&pf.mejor;
+  return `<div class="pfcard"><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom">
+    <div class="pfb">
+      ${c.p?`<span class="lbl">${esc(c.p.nombre)} · ${esc(x.etapa||'')}</span>`:'<span class="lbl">Mi estilo</span>'}
+      ${f?`<span class="nivel">${esc(f.nivel||'')}</span>`:'<span class="muted" style="font-size:12px">Sin crítica todavía</span>'}
+      ${pf.estado==='candidata'?`
+        ${inp('titulo','Título')}<div class="prow">${inp('anio','Año')}<select id="pf-sec-${esc(key)}" data-pf="${esc(key)}" data-pk="seccion"><option value="projects" ${pf.seccion==='projects'?'selected':''}>Projects</option><option value="characters" ${pf.seccion==='characters'?'selected':''}>Characters</option></select></div>
+        ${inp('disciplina','Disciplina (ej. Environment Concept)')}
+        <textarea id="pf-desc-${esc(key)}" data-pf="${esc(key)}" data-pk="desc" placeholder="Descripción corta (opcional)">${esc(pf.desc||'')}</textarea>
+        <div class="pfrev"><span class="lbl">Revisión con tu asesor</span>${inp('asesor','¿Quién la revisó?')}
+          <textarea id="pf-na-${esc(key)}" data-pf="${esc(key)}" data-pk="notasAsesor" placeholder="Qué te dijo">${esc(pf.notasAsesor||'')}</textarea>
+          <label class="chk"><input type="checkbox" id="pf-rv-${esc(key)}" data-pf="${esc(key)}" data-pk="revisada" ${pf.revisada?'checked':''}><span><b>Mi asesor ya la revisó</b></span></label>
+          <label class="chk"><input type="checkbox" id="pf-mj-${esc(key)}" data-pf="${esc(key)}" data-pk="mejor" ${pf.mejor?'checked':''}><span><b>Es mi mejor versión</b>${altas?`<small style="color:var(--warn)">Tiene ${altas} corrección${altas>1?'es':''} de prioridad alta sin resolver</small>`:''}</span></label></div>
+        <div class="prow"><button class="btn pri" data-act="pf-ok" data-k="${esc(key)}" ${puede?'':'disabled'}>${S.confirmPf===key?'¿Confirmas tu visto bueno?':'Dar visto bueno'}</button><button class="btn ghost sm" data-act="pf-quitar" data-k="${esc(key)}">Quitar</button></div>
+        ${puede?'':'<small class="muted">Para darle visto bueno: título, revisión de tu asesor y "es mi mejor versión".</small>'}`
+      :`<b style="font-family:var(--display);font-size:20px;text-transform:uppercase">${esc(pf.titulo)}</b><span class="muted" style="font-size:13px">${esc(pf.disciplina)} · ${esc(pf.anio)} · ${pf.seccion==='characters'?'Characters':'Projects'}</span>
+        ${pf.asesor?`<span class="muted" style="font-size:12px">Revisada por ${esc(pf.asesor)}</span>`:''}
+        <span class="muted" style="font-size:12px">Visto bueno: ${fecha(pf.aprobado)}</span>
+        <div class="prow">${pf.estado==='aprobada'?`<button class="btn sm" data-act="pf-publicada" data-k="${esc(key)}">Ya está en mi portafolio</button><button class="btn sm ghost" data-act="pf-revocar" data-k="${esc(key)}">Quitar visto bueno</button>`:`<button class="btn sm ghost" data-act="pf-revocar" data-k="${esc(key)}">Regresar a candidatas</button>`}</div>`}
+    </div></div>`}
+function vPortafolio(){
+  const cs=candidatas(),col=e=>cs.filter(c=>c.pf.estado===e);
+  const cand=col('candidata'),apr=col('aprobada'),pub=col('publicada');
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Portafolio</h1>
+  <div class="banner" style="background:var(--accent-soft)"><b>Nada se publica solo.</b> Una pieza entra a tu portafolio únicamente si tú le das el visto bueno después de revisarla con tu asesor. Después, tú decides cuándo subir el paquete.</div>
+  <p class="intro">Propón piezas desde <b>Crítica</b> (en cada proyecto) o desde <b>Mi estilo</b>.</p>
+  <div class="kanban">
+    <div class="kcol"><div class="colh"><b>Candidatas</b><span>${cand.length}</span></div>${cand.map(pfCard).join('')||'<div class="empty">Sin candidatas. Usa "Proponer para portafolio" en una pieza.</div>'}</div>
+    <div class="kcol"><div class="colh"><b>Con visto bueno</b><span>${apr.length}</span></div>
+      ${apr.length?`<button class="btn pri" data-act="pf-paquete" ${S.exp?'disabled':''}>Descargar paquete (${apr.length})</button><p class="hint" style="margin:0">Después dile a Claude: <i>"sube el paquete de portafolio"</i>. Te enseñará cómo queda antes de publicar.</p>`:''}
+      ${apr.map(pfCard).join('')||'<div class="empty">Aquí llegan las piezas que apruebes.</div>'}</div>
+    <div class="kcol"><div class="colh"><b>Publicadas</b><span>${pub.length}</span></div>${pub.map(pfCard).join('')||'<div class="empty">Todavía nada publicado desde aquí.</div>'}</div>
+  </div>`}
+function pfDe(key){const [kind,pid,i]=key.split('|');const x=kind==='pieza'?S.P[pid]?.piezas?.[+i]:S.ajustes.estiloImgs?.[+i];return {kind,pid,x}}
+function guardarPf(key){const {kind,pid}=pfDe(key);if(kind==='pieza')marcarPid(pid);else marcarAj()}
+async function paquetePortafolio(){
+  if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
+  const apr=candidatas().filter(c=>c.pf.estado==='aprobada');if(!apr.length)return;
+  const zip=new JSZip(),raiz=zip.folder('portafolio-paquete'),entradas=[];let n=0;
+  for(const c of apr){
+    expStatus(`Empaquetando ${++n} de ${apr.length}…`);
+    try{const b=await blobDeRef(c.x),ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg'),carpeta=slug(c.pf.titulo,50).toLowerCase(),nombre=`${carpeta}/final.${ext}`;
+      raiz.file(nombre,b);
+      entradas.push({title:c.pf.titulo,year:c.pf.anio,discipline:c.pf.disciplina,section:c.pf.seccion,description:c.pf.desc,images:[nombre],proyecto:c.p?.nombre||null,revisadaPor:c.pf.asesor||null,notasAsesor:c.pf.notasAsesor||null,vistoBueno:new Date(c.pf.aprobado).toISOString()})}
+    catch{toast('No se pudo incluir: '+c.pf.titulo)}
+  }
+  raiz.file('entradas.json',JSON.stringify(entradas,null,2));
+  raiz.file('LEEME.txt',`Paquete para tu portafolio (${fecha(Date.now())})\n\nCada pieza tiene tu visto bueno.\nPara publicarlas, abre Claude Code y di: "sube el paquete de portafolio".\nClaude te mostrará cómo quedan antes de publicar nada.\n\n`+entradas.map(e=>`- ${e.title} (${e.year}) · ${e.discipline}`).join('\n'));
+  expStatus('Comprimiendo…');const blob=await zip.generateAsync({type:'blob'});expStatus('');
+  await guardarArchivo(`portafolio-paquete-${hoyKey()}.zip`,blob);
+}
+
+/* ============ Cotizador freelance ============ */
+const COT_TIPOS=[['Personaje (diseño completo)',10,18,30],['Criatura',10,20,34],['Entorno / keyframe',8,16,28],['Key art / ilustración a color',12,22,40],['Prop / arma',5,10,18],['Ilustración editorial',6,12,20],['Portada (libro o álbum)',12,22,36],['Paquete de thumbnails / exploración',3,6,10],['Turnaround / orthos (adicional)',4,8,14]];
+const COT_CLIENTE=[['Personal / indie',.8],['Estudio de videojuegos o animación',1],['Editorial',.9],['Publicidad / marca',1.4]];
+const COT_USO=[['Portafolio / uso personal',1],['Comercial limitado',1.25],['Comercial amplio',1.6],['Exclusivo / cesión total',2]];
+const COT_URG=[['Normal',1],['Rápida',1.3],['Urgente',1.6]];
+function cotBase(){const a=S.ajustes.cot||{};return {tarifa:+a.tarifa||400,tc:+a.tc||18.5,nombre:a.nombre||'Sebastián Álvarez',contacto:a.contacto||'salvarezdelfin@gmail.com'}}
+function cotDraft(){return S.cot=S.cot||{cliente:'',proyecto:'',tipo:2,compl:1,cant:1,rev:2,cliTipo:1,uso:1,urg:0,entrega:'',extraHoras:0,notas:''}}
+function cotCalc(d){
+  const b=cotBase(),t=COT_TIPOS[d.tipo]||COT_TIPOS[0],horasU=t[1+(+d.compl)]+(+d.extraHoras||0),cant=Math.max(1,+d.cant||1);
+  const desc=Math.min(.2,(cant-1)*.05),horas=horasU*cant*(1-desc);
+  const revExtra=Math.max(0,(+d.rev||0)-2)*.1;
+  const mult=COT_CLIENTE[d.cliTipo][1]*COT_USO[d.uso][1]*COT_URG[d.urg][1]*(1+revExtra);
+  const base=horas*b.tarifa,total=Math.round(base*mult/50)*50;
+  return {horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/50)*50,usd:Math.round(total/b.tc),anticipo:Math.round(total/2),desc};
+}
+const mxn=n=>'$'+Math.round(n).toLocaleString('es-MX')+' MXN';
+function vCotizador(){
+  const d=cotDraft(),b=cotBase(),c=cotCalc(d),hist=S.cotHist;
+  const sel=(k,arr,lab)=>`<div class="field"><label for="ct-${k}">${lab}</label><select id="ct-${k}" data-cot="${k}">${arr.map((o,i)=>`<option value="${i}" ${+d[k]===i?'selected':''}>${esc(Array.isArray(o)?o[0]:o)}</option>`).join('')}</select></div>`;
+  const inp=(k,lab,type='text',ph='')=>`<div class="field"><label for="ct-${k}">${lab}</label><input type="${type==='number'?'text':'text'}" inputmode="${type==='number'?'decimal':'text'}" id="ct-${k}" data-cot="${k}" value="${esc(d[k])}" placeholder="${ph}"></div>`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cotizador freelance</h1>
+  <p class="intro">Cotiza encargos de concept e ilustración con lógica de industria: horas por complejidad × tu tarifa, ajustado por tipo de cliente, uso o licencia, urgencia y revisiones. Los multiplicadores son un punto de partida: tú decides el precio final.</p>
+  <div class="grid2">
+    <div class="box"><h3>El encargo</h3>
+      <div class="grid2" style="gap:10px">${inp('cliente','Cliente','text','Nombre o estudio')}${inp('proyecto','Proyecto','text','Ej. 3 criaturas para juego indie')}</div>
+      <div class="grid2" style="gap:10px">${sel('tipo',COT_TIPOS,'Tipo de pieza')}${sel('compl',['Simple','Media','Alta'],'Complejidad')}</div>
+      <div class="grid2" style="gap:10px">${inp('cant','Cantidad de piezas','number')}${inp('rev','Rondas de revisión incluidas','number')}</div>
+      <div class="grid2" style="gap:10px">${sel('cliTipo',COT_CLIENTE,'Tipo de cliente')}${sel('uso',COT_USO,'Uso / licencia')}</div>
+      <div class="grid2" style="gap:10px">${sel('urg',COT_URG,'Urgencia')}${inp('entrega','Fecha de entrega','text','Ej. 15 de octubre')}</div>
+      <div class="grid2" style="gap:10px">${inp('extraHoras','Horas extra por pieza (opcional)','number')}<div class="field"><label for="ct-notas">Notas para el cliente</label><input type="text" id="ct-notas" data-cot="notas" value="${esc(d.notas)}" placeholder="Incluye archivos PSD, etc."></div></div>
+    </div>
+    <div class="box" id="cot-res">${cotResHTML(d,c,b)}</div>
+  </div>
+  <div class="box"><h3>Tus datos</h3><div class="grid3">
+    <div class="field"><label for="ca-tarifa">Tu tarifa por hora (MXN)</label><input type="text" inputmode="decimal" id="ca-tarifa" data-aj="cot.tarifa" value="${esc(b.tarifa)}"></div>
+    <div class="field"><label for="ca-tc">Tipo de cambio USD</label><input type="text" inputmode="decimal" id="ca-tc" data-aj="cot.tc" value="${esc(b.tc)}"></div>
+    <div class="field"><label for="ca-nombre">Nombre en la cotización</label><input type="text" id="ca-nombre" data-aj="cot.nombre" value="${esc(b.nombre)}"></div>
+    <div class="field"><label for="ca-contacto">Contacto</label><input type="text" id="ca-contacto" data-aj="cot.contacto" value="${esc(b.contacto)}"></div></div></div>
+  <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${mxn(q.total)}</td>
+    <td><select id="cq-${esc(q.folio)}" data-cotestado="${esc(q.folio)}">${['Enviada','Aceptada','Rechazada','Pagada'].map(e=>`<option ${q.estado===e?'selected':''}>${e}</option>`).join('')}</select></td>
+    <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
+function cotResHTML(d,c,b){
+  return `<span class="lbl">Precio recomendado</span><b class="cotbig">${mxn(c.total)}</b>
+    <span class="muted">≈ US$${c.usd.toLocaleString('en-US')} · mínimo sugerido ${mxn(c.minimo)}</span>
+    <div class="desg"><span>Horas estimadas</span><b>${c.horas} h${c.desc?` (−${Math.round(c.desc*100)}% por volumen)`:''}</b>
+      <span>Base (${c.horas} h × ${mxn(b.tarifa)})</span><b>${mxn(c.base)}</b>
+      <span>Ajuste cliente · uso · urgencia · revisiones</span><b>×${c.mult.toFixed(2)}</b>
+      <span>Anticipo 50%</span><b>${mxn(c.anticipo)}</b></div>
+    <div class="prow"><button class="btn pri" data-act="cot-guardar">Guardar y descargar</button><button class="btn" data-act="cot-copiar">Copiar texto</button></div>`}
+function cotTexto(q){
+  const t=COT_TIPOS[q.d.tipo][0];
+  return `COTIZACIÓN ${q.folio} · ${fecha(q.ts)}\n${q.nombre} · ${q.contacto}\n\nCliente: ${q.d.cliente||'—'}\nProyecto: ${q.d.proyecto||'—'}\n\n${q.d.cant} × ${t} (complejidad ${['simple','media','alta'][q.d.compl]})\nUso: ${COT_USO[q.d.uso][0]}\nRevisiones incluidas: ${q.d.rev}\nEntrega: ${q.d.entrega||'por definir'}\n\nTOTAL: ${mxn(q.total)} (≈ US$${q.usd})\nAnticipo 50% para iniciar: ${mxn(q.total/2)}\n\nCondiciones:\n- Se inicia con el 50% de anticipo; el resto contra entrega final.\n- Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.\n- Los derechos de uso aplican según lo indicado una vez liquidado el pago total.\n- El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.\n- Vigencia de la cotización: 15 días.${q.d.notas?'\n\nNotas: '+q.d.notas:''}`}
+function cotHTMLDoc(q){
+  const e=s=>esc(s),t=COT_TIPOS[q.d.tipo][0];
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Cotización ${e(q.folio)}</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#15171b}h1{font-size:34px;letter-spacing:.02em;margin:0}.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid #ff6a3d;padding-bottom:14px}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}.tot{font-size:26px;font-weight:700}small{color:#666}ul{padding-left:18px;line-height:1.6}</style></head><body>
+  <div class="top"><div><h1>COTIZACIÓN</h1><small>${e(q.folio)} · ${fecha(q.ts)}</small></div><div style="text-align:right"><b>${e(q.nombre)}</b><br><small>${e(q.contacto)}</small></div></div>
+  <p><b>Cliente:</b> ${e(q.d.cliente||'—')}<br><b>Proyecto:</b> ${e(q.d.proyecto||'—')}</p>
+  <table><tr><th>Concepto</th><th>Cantidad</th><th style="text-align:right">Importe</th></tr><tr><td>${e(t)} · complejidad ${['simple','media','alta'][q.d.compl]}<br><small>Uso: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ronda(s) de revisión · entrega ${e(q.d.entrega||'por definir')}</small></td><td>${q.d.cant}</td><td style="text-align:right">${mxn(q.total)}</td></tr>
+  <tr><td colspan="2" class="tot">Total</td><td class="tot" style="text-align:right">${mxn(q.total)}</td></tr></table>
+  <p><small>Equivalente aproximado: US$${q.usd.toLocaleString('en-US')}</small></p>
+  <h3>Condiciones</h3><ul><li>Se inicia con el 50% de anticipo (${mxn(q.total/2)}); el resto contra entrega final.</li><li>Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.</li><li>Los derechos de uso aplican según lo indicado una vez liquidado el pago total.</li><li>El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.</li><li>Vigencia: 15 días.</li></ul>
+  ${q.d.notas?`<p><b>Notas:</b> ${e(q.d.notas)}</p>`:''}</body></html>`}
+async function cargarCotHist(){S.cotHist={cargando:true};renderMain();
+  try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};S.cotHist={lista:s.docs.map(x=>x.data()).sort((a,b)=>b.ts-a.ts)}}
+  catch{S.cotHist={lista:[]}}renderMain()}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -1435,6 +1740,7 @@ function piezaHTML(p,x,i){
     <div class="pzbody">
       <div class="prow" style="justify-content:space-between"><span class="lbl">${esc(x.etapa)} · ${fecha(x.creado)}</span>
         <span class="prow"><select id="pe-${x.id}" data-b="piezas.${i}.etapa" aria-label="Etapa" style="font-size:12px;padding:3px">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
+        <button class="btn sm" data-act="pz-proponer" data-id="${x.id}" title="Proponer para portafolio">${x.pf?(x.pf.estado==='candidata'?'☆ Candidata':x.pf.estado==='aprobada'?'★ Con visto bueno':'★ Publicada'):'☆ Portafolio'}</button>
         <button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></span></div>
       ${x.nota?`<p class="muted" style="margin:0">Pediste: ${esc(x.nota)}</p>`:''}
       ${S.sample?`<div class="prow">${busy?'<button class="btn sm" data-act="crit-stop">Detener</button><span class="muted">El estudio está revisando tu pieza…</span>':`<button class="btn sm pri" data-act="critica" data-id="${x.id}">${f?'Pedir otra crítica':'Pedir crítica'}</button>`}</div>`:''}
@@ -1602,6 +1908,11 @@ function aMarkdown(p){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
+  if(t.dataset.cot){cotDraft()[t.dataset.cot]=t.value;const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(S.cot,cotCalc(S.cot),cotBase());return}
+  if(t.dataset.cotestado){const q=S.cotHist?.lista?.find(x=>x.folio===t.dataset.cotestado);if(q){q.estado=t.value;S.db?.collection('cotizaciones').doc(q.folio).set(clone(q)).catch(()=>toast('No se pudo guardar'))}return}
+  if(t.dataset.pf){const {x}=pfDe(t.dataset.pf);if(!x?.pf)return;x.pf[t.dataset.pk]=t.type==='checkbox'?t.checked:t.value;guardarPf(t.dataset.pf);
+    if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
+  if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
     setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);marcar();
     if(t.dataset.b==='nombre')renderSide();
@@ -1614,12 +1925,13 @@ document.addEventListener('input',e=>{
     if(t.dataset.rk==='capa')renderMain();
     else if(t.dataset.rk==='porque'){const card=t.closest('.ref');const ok=t.value.trim().length>=8;card.classList.toggle('nowhy',!ok)}
     return}
-  if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.value);marcarAj()}
+  if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.value);marcarAj();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
 });
 document.addEventListener('change',e=>{
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
+  if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};marcarAj();renderMain()}).catch(()=>toast('No se pudo subir'))}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
 });
@@ -1680,6 +1992,45 @@ async function accion(a,el){
     case 'taller-reset':if(!S.confirmTaller){S.confirmTaller=true;renderMain();return}S.confirmTaller=false;p.taller=[];marcar();renderMain();break;
     case 'taller-aplicar':{const ult=[...(p.taller||[])].reverse().find(m=>m.role==='assistant'),x=pilaresDe(ult?.content);if(!x)return;
       p.pilares=x.map(q=>({t:String(q.t||''),f:String(q.f||'')}));marcar();renderMain();toast('Pilares aplicados');break}
+    case 't-go':{const t=S.timer;S.timer={fin:Date.now()+(t?t.resta:(+ds.min||30)*60e3)};if(S.timer.fin<=Date.now())S.timer={fin:Date.now()+(+ds.min||30)*60e3};renderMain();break}
+    case 't-pausa':S.timer={resta:Math.max(0,S.timer.fin-Date.now())};renderMain();break;
+    case 't-reset':S.timer=null;renderMain();break;
+    case 'd-hecho':case 'd-deshacer':case 'd-otro':case 'd-usar-crit':case 'd-usar-ai':{
+      const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey(),cur=ejercicioDeHoy(),nota=$('#d-nota')?.value||'';
+      if(a==='d-hecho')r.dias[k]={...cur,nota,hecho:true,ts:Date.now()};
+      else if(a==='d-deshacer'){if(r.dias[k])r.dias[k].hecho=false}
+      else if(a==='d-otro'){const i=((cur.i??0)+1)%3;r.dias[k]={skill:cur.skill,texto:EJERCICIOS[cur.skill][i],i,nota}}
+      else if(a==='d-usar-crit'){const u=Object.values(S.P).flatMap(p=>p.piezas||[]).filter(x=>x.feedback?.ejercicio).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];if(u)r.dias[k]={skill:cur.skill,texto:u.feedback.ejercicio,nota}}
+      else{const d=S.ai.diario?.data;if(d)r.dias[k]={skill:cur.skill,texto:d.ejercicio+(d.pasos?.length?' — '+d.pasos.join(' / '):''),nota}}
+      marcarAj();renderSide();renderMain();if(a==='d-hecho')toast(`Hecho. Racha: ${racha()} día${racha()===1?'':'s'}`);break}
+    case 'reto-otro':S.retoAI=null;S.retoSeed=(S.retoSeed||0)+1+Math.floor(Math.random()*97);S.timer=null;renderMain();break;
+    case 'reto-proyecto':{const r=S.retoAI||retoLocal(S.retoSeed),id=uid(),tipo=r.tipo==='Key art'?'Key art':r.tipo;
+      const titulo=r.proyecto||`${r.sujeto[0].toUpperCase()+r.sujeto.slice(1)}, ${r.genero}`;
+      const np=nuevoProyecto('Reto · '+titulo);np.tipo=TIPOS.includes(tipo)?tipo:'Ilustración';np.encargo=r.estudio+' (reto de estudio)';
+      np.brief.texto=(r.brief||`Diseña ${r.sujeto} para un proyecto de ${r.genero}.`)+(r.contexto_ad?.length?'\nNotas de AD: '+r.contexto_ad.join('; '):'');
+      np.brief.entregable=Array.isArray(r.entregables)?r.entregables.join(' · '):r.entrega;np.brief.restricciones=(r.restricciones||[]).join(' · ')+` · Tiempo: ${Math.round((r.min||120)/60*10)/10} h`;
+      S.P[id]=np;S.ajustes.retos=S.ajustes.retos||[];S.ajustes.retos.push({ts:Date.now(),titulo,pid:id});marcarAj();
+      S.cur=id;S.vista='proyecto';S.tab='brief';recordar();marcar();render();toast('Reto convertido en proyecto');break}
+    case 'pz-proponer':{const x=p.piezas.find(z=>z.id===ds.id);if(!x)return;
+      if(x.pf){S.vista='portafolio';render();return}
+      proponer(x,{titulo:p.nombre,disciplina:p.tipo==='Entorno'?'Environment Concept':p.tipo==='Key art'?'Keyframe / Key Art':p.tipo+' Design',seccion:/Personaje|Criatura/.test(p.tipo)?'characters':'projects'});marcar();renderMain();toast('Propuesta: revísala con tu asesor en Portafolio');break}
+    case 'est-proponer':{const x=S.ajustes.estiloImgs?.[+ds.i];if(!x)return;if(!x.pf){proponer(x,{});marcarAj();toast('Propuesta para portafolio')}S.vista='portafolio';render();break}
+    case 'pf-ok':{const k=ds.k,{x}=pfDe(k);if(!x?.pf)return;if(!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor))return;
+      if(S.confirmPf!==k){S.confirmPf=k;renderMain();return}S.confirmPf=null;x.pf.estado='aprobada';x.pf.aprobado=Date.now();guardarPf(k);render();toast('Visto bueno dado');break}
+    case 'pf-revocar':{const {x}=pfDe(ds.k);if(!x?.pf)return;x.pf.estado='candidata';delete x.pf.aprobado;guardarPf(ds.k);render();break}
+    case 'pf-publicada':{const {x}=pfDe(ds.k);if(!x?.pf)return;x.pf.estado='publicada';x.pf.publicada=Date.now();guardarPf(ds.k);render();break}
+    case 'pf-quitar':{const {x}=pfDe(ds.k);if(!x)return;delete x.pf;guardarPf(ds.k);render();break}
+    case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
+    case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
+    case 'cot-hist':cargarCotHist();break;
+    case 'cot-copiar':{const d=cotDraft(),c=cotCalc(d),b=cotBase();const txt=cotTexto({folio:'(borrador)',ts:Date.now(),d,total:c.total,usd:c.usd,nombre:b.nombre,contacto:b.contacto});try{await navigator.clipboard.writeText(txt);toast('Copiada')}catch{toast('No se pudo copiar')}break}
+    case 'cot-guardar':{const d=clone(cotDraft()),c=cotCalc(d),b=cotBase();
+      let n=1;try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};n=1+s.docs.reduce((m,x)=>Math.max(m,+(String(x.id).split('-')[1])||0),0)}catch{}
+      const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto};
+      try{if(S.db)await S.db.collection('cotizaciones').doc(folio).set(q)}catch{toast('No se pudo guardar en el historial')}
+      S.cotHist=null;await guardarArchivo(`cotizacion-${folio}.html`,cotHTMLDoc(q));renderMain();break}
+    case 'cot-abrir':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(q)await guardarArchivo(`cotizacion-${q.folio}.html`,cotHTMLDoc(q));break}
+    case 'cot-del':{if(S.confirmCot!==ds.f){S.confirmCot=ds.f;renderMain();return}S.confirmCot=null;try{await S.db?.collection('cotizaciones').doc(ds.f).delete()}catch{}S.cotHist.lista=S.cotHist.lista.filter(x=>x.folio!==ds.f);renderMain();break}
     case 'etapa':p.prod=p.prod||{};p.prod.etapa=+ds.i;marcar();renderMain();break;
     case 'est-del':S.ajustes.estiloImgs.splice(+ds.i,1);marcarAj();renderMain();break;
     case 'nom-titulo':p.nombre=ds.v;marcar();render();toast('Título aplicado');break;
