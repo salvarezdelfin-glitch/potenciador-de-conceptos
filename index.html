@@ -374,6 +374,22 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .toast{background:var(--ink);color:var(--bg);border-radius:10px;font-weight:500}
 @media (max-width:860px){.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}.phead{position:static;background:none;margin:0;padding:0}}
 @media (hover:none){.sw button{display:block}}
+.present{position:fixed;inset:0;z-index:60;background:#07080a;color:#eceef2;display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(14px + env(safe-area-inset-bottom,0px))}
+.present .sl{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:auto}
+.present .sl>div{width:min(1200px,100%);max-height:100%}
+.pres-bar{display:flex;gap:8px;align-items:center;justify-content:center;padding-top:10px}
+.sl-portada{position:relative;display:flex;align-items:flex-end;min-height:70vh;border-radius:12px;overflow:hidden;background:#111}
+.sl-portada img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.sl-portada::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.8));pointer-events:none}
+.sl-tit{position:relative;z-index:1;padding:clamp(20px,4vw,48px)}
+.sl-tit h1,.sl-txt h2,.sl-refs h2{font-family:var(--display);font-weight:900;text-transform:uppercase;line-height:.95;margin:6px 0 12px}
+.sl-tit h1{font-size:clamp(44px,8vw,110px)}.sl-tit p{font-size:clamp(16px,2vw,22px);max-width:60ch;margin:6px 0}
+.sl-cierre{min-height:50vh;background:linear-gradient(135deg,#1a0f0b,#07080a)}
+.sl-txt{max-width:900px}.sl-txt h2,.sl-refs h2{font-size:clamp(34px,5vw,64px)}.sl-txt h2 em{color:var(--accent);font-style:normal}.sl-txt p{font-size:clamp(15px,1.6vw,19px);line-height:1.6}
+.sl-pil{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.sl-pil>div{border-top:3px solid var(--c-ad);padding-top:10px}.sl-pil b{display:block;font-family:var(--display);font-size:26px;text-transform:uppercase}
+.sl-grid{columns:4 180px;column-gap:10px}.sl-grid figure{break-inside:avoid;margin:0 0 10px}.sl-grid img,.sl-proc img{width:100%;border-radius:6px;display:block}.sl-grid figcaption,.sl-proc figcaption{font-size:12px;color:#a9afba;padding-top:4px}
+.sl-proc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.sl-proc figure{margin:0}
+.sl-full{display:flex;flex-direction:column;align-items:center;gap:8px;max-height:100%}.sl-full img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:6px}
 .lightbox{position:fixed;inset:0;background:rgba(8,9,12,.88);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50;cursor:zoom-out}
 .lightbox img{max-width:100%;max-height:100%;object-fit:contain}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:14px;z-index:60}
@@ -627,9 +643,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
     if(!r.ok)throw new Error('vacantes '+r.status);return r.json();
   }
 
-  async function llamar(fn){
+  async function llamar(fn,cuerpo){
     const {data:{session}}=await sb.auth.getSession();
-    const r=await fetch(`${SUPA_URL}/functions/v1/${fn}`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:'{}'});
+    const r=await fetch(`${SUPA_URL}/functions/v1/${fn}`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+session?.access_token},body:JSON.stringify(cuerpo||{})});
     const out=await r.json().catch(()=>({}));if(!r.ok)throw out;return out;
   }
 
@@ -638,6 +654,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
     async hasSecret(n){const {data}=await sb.rpc('pc_has_named_secret',{p_name:n});return data===true},
     async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
     avisarAhora:()=>llamar('pc-avisos'),
+    avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
     async signOut(){await sb.auth.signOut();location.reload()},
     openSettings:ajustes
@@ -645,7 +662,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufx6i86').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufxgif8').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1002,6 +1019,7 @@ function renderMainInner(){
       </div>
     </div>
     <div class="prow" style="gap:10px"><div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+      <button class="btn sm" data-act="presentar" title="Presentar el proyecto en pantalla completa">▶ Presentar</button>
       <button class="btn sm ${S.confirmDel?'danger':'ghost'}" data-act="borrar" title="Borrar proyecto (queda en la Papelera)">${ICO.trash} ${S.confirmDel?'¿Borrar? Toca otra vez':'Borrar'}</button>${S.confirmDel?'<button class="btn sm ghost" data-act="cancel-del">Cancelar</button>':''}</div>
   </div>
   <div class="seiswrap"><div class="seishead"><span class="lbl">Lo que siempre tienes que sacar · Concepto · Mood · Técnica · 3 pilares</span>
@@ -1133,6 +1151,7 @@ function vRefs(p){
     return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
     ${qs.length?`<div class="colq">${qs.map(b=>`<a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗ ${esc(b.q)}</a>`).join('')}</div>`:''}
     ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
+  ${refsBuscaHTML(p)}
   ${exportBox(p)}
   ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
   <div class="box"><h3>Tus búsquedas</h3>${busquedasHTML(p)}</div>
@@ -2335,8 +2354,9 @@ function vAvisos(){
       <button class="btn pri" data-act="av-key">Guardar</button>${con?'<button class="btn danger" data-act="av-quitar">Desconectar</button>':''}</div></div>
   <div class="box"><h3>2 · Tus avisos</h3>
     <label class="chk"><input type="checkbox" id="av-activo" data-avisos="activo" ${c.activo!==false?'checked':''}><span><b>Mandarme el resumen diario</b><small>8:00 am, solo si hay pendientes o vacantes nuevas.</small></span></label>
+    <label class="chk"><input type="checkbox" id="av-mensual" data-avisos="mensual" ${c.mensual!==false?'checked':''}><span><b>Mandarme el resumen de cada mes</b><small>El día 1 a las 9:00 am: días de estudio, imágenes, críticas, nivel, postulaciones, cobros y qué ajustar el próximo mes.</small></span></label>
     <div class="field"><label for="av-email">Correo</label><input type="text" id="av-email" data-avisos="email" value="${esc(c.email||'salvarezdelfin@gmail.com')}"><small class="muted">Debe ser el mismo correo de tu cuenta de Resend.</small></div>
-    <div class="prow"><button class="btn" data-act="av-prueba" ${con?'':'disabled'}>${S.avPrueba==='enviando'?'Enviando…':'Enviarme un correo de prueba'}</button>${S.avPrueba&&S.avPrueba!=='enviando'?`<span class="muted">${esc(S.avPrueba)}</span>`:''}</div></div>`}`}
+    <div class="prow"><button class="btn" data-act="av-prueba" ${con?'':'disabled'}>${S.avPrueba==='enviando'?'Enviando…':'Enviarme un correo de prueba'}</button><button class="btn" data-act="av-mes" ${con?'':'disabled'}>Resumen de este mes (hasta hoy)</button>${S.avPrueba&&S.avPrueba!=='enviando'?`<span class="muted">${esc(S.avPrueba)}</span>`:''}</div></div>`}`}
 
 /* ============ Taller de nombres y títulos ============ */
 const NOM_PARA=['Proyecto','Personaje','Criatura','Lugar o mundo','Arma u objeto','Pieza (keyframe o ilustración)','Serie o colección','Facción, clan o cultura'];
@@ -2544,6 +2564,77 @@ function syncBox(){
     <span class="prow"><button class="btn pri" data-act="sync" ${S.sync?.corriendo?'disabled':''}>Sincronizar mi carpeta</button><button class="btn ghost sm" data-act="sync-elegir">Elegir otra carpeta</button></span></div>
     <p class="muted" id="sync-msg" style="margin:0">${esc(S.sync?.msg||(S.ajustes.syncTs?'Última sincronización: '+new Date(S.ajustes.syncTs).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'La primera vez elige la carpeta "SEBASTIAN ALVAREZ DELFIN CONCEPT ARTIST".'))}</p></div>`;
 }
+
+/* ============ Buscar referencias visuales (The Met + Wikimedia Commons) ============ */
+async function buscarWikimedia(q){
+  const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:bitmap')}&gsrlimit=24&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=480&format=json&origin=*`;
+  const j=await (await fetch(u)).json();
+  return Object.values(j.query?.pages||{}).sort((a,b)=>a.index-b.index).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{};
+    return {id:'wm-'+p.pageid,src:ii.thumburl||ii.url,full:ii.url,big:(ii.thumburl||'').replace('/480px-','/1280px-')||ii.url,titulo:(md.ObjectName?.value||p.title.replace(/^File:/,'').replace(/\.[a-z]+$/i,'')).replace(/<[^>]+>/g,'').slice(0,90),fuente:'Wikimedia Commons',link:ii.descriptionurl||`https://commons.wikimedia.org/wiki/${encodeURIComponent(p.title)}`}}).filter(x=>x.src&&!/\.(svg|pdf|tif)/i.test(x.full||''));
+}
+async function buscarMet(q){
+  const s=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=${encodeURIComponent(q)}`)).json();
+  const ids=(s.objectIDs||[]).slice(0,16);
+  const objs=await Promise.all(ids.map(id=>fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`).then(r=>r.ok?r.json():null).catch(()=>null)));
+  return objs.filter(o=>o?.primaryImageSmall).map(o=>({id:'met-'+o.objectID,src:o.primaryImageSmall,full:o.primaryImage||o.primaryImageSmall,big:o.primaryImageSmall,titulo:[o.title,o.culture||o.artistDisplayName,o.objectDate].filter(Boolean).join(' · ').slice(0,110),fuente:'The Met',link:o.objectURL}));
+}
+async function buscarRefs(){
+  const b=S.refB=S.refB||{};const q=(b.q||'').trim();if(!q){toast('Escribe qué buscar');return}
+  b.cargando=true;b.error='';b.items=[];renderMain();
+  const tareas=b.src==='met'?[buscarMet(q)]:b.src==='wm'?[buscarWikimedia(q)]:[buscarMet(q),buscarWikimedia(q)];
+  const res=await Promise.allSettled(tareas);
+  const listas=res.filter(r=>r.status==='fulfilled').map(r=>r.value);
+  const mezcla=[];for(let i=0;i<30;i++)for(const l of listas)if(l[i])mezcla.push(l[i]);
+  b.items=mezcla;b.cargando=false;if(!mezcla.length)b.error=res.some(r=>r.status==='rejected')?'No se pudo buscar ahora (¿sin internet?).':'Sin resultados: prueba en inglés o con otras palabras (ej. "obsidian", "aztec sculpture", "jaguar").';
+  renderMain();
+}
+function refsBuscaHTML(p){
+  const b=S.refB=S.refB||{},sug=[...new Set([...(p.busquedas||[]).map(x=>x.q),...KWCATS.flatMap(([k])=>p.keywords[k]||[])])].slice(0,10),q=encodeURIComponent(b.q||'');
+  const ya=new Set((p.refs||[]).map(r=>r.src));
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">Museos (The Met) y Wikimedia Commons</span></div>
+    <p class="hint" style="margin:0">Piezas reales de museo (armas, esculturas, textiles, pintura) y fotos de arquitectura, naturaleza y materiales. Búscalas mejor en inglés. Se agregan a la capa que elijas; luego escribe su porqué.</p>
+    <div class="prow"><input type="text" id="rb-q" data-refb="q" value="${esc(b.q||'')}" placeholder="aztec obsidian knife, jaguar sculpture, volcanic rock…" style="flex:1 1 260px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px" data-enter="rb-buscar">
+      <select id="rb-src" data-refb="src" style="width:auto"><option value="">Todas</option><option value="met" ${b.src==='met'?'selected':''}>Museo (The Met)</option><option value="wm" ${b.src==='wm'?'selected':''}>Wikimedia</option></select>
+      <select id="rb-capa" data-refb="capa" style="width:auto">${LAYERS.map(l=>`<option value="${l.k}" ${(b.capa||S.destinoCapa)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
+      <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
+    ${sug.length?`<div class="chips">${sug.map(s=>`<button class="chip" data-act="rb-sug" data-v="${esc(s)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(s)}</button>`).join('')}</div>`:''}
+    ${b.q?`<div class="prow" style="font-size:12.5px"><span class="muted">También en:</span><a class="btn ghost sm" href="https://www.pinterest.com/search/pins/?q=${q}" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}+site%3Aartstation.com" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">Google Imágenes ↗</a></div>`:''}
+    ${b.cargando?'<p class="muted">Buscando…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
+    ${(b.items||[]).length?`<div class="bib">${b.items.map((x,i)=>`<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
+      <figcaption><span>${esc(x.titulo)}</span><small class="muted">${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
+      ${ya.has(x.big)||ya.has(x.src)?'<span class="muted" style="font-size:12px">En tu moodboard ✓</span>':`<button class="btn sm pri" data-act="rb-add" data-i="${i}" style="align-self:flex-start">＋ A ${esc(capaNombre(p,b.capa||S.destinoCapa))}</button>`}</figcaption></figure>`).join('')}</div>`:''}
+  </div>`}
+
+/* ============ Modo presentación ============ */
+function slidesDe(p){
+  const s=[],c=p.concepto,orden=['bocetos','grises','versiones','final'];
+  const piezas=(p.piezas||[]).slice().sort((a,b)=>orden.indexOf(carpDe(a))-orden.indexOf(carpDe(b))||a.creado-b.creado);
+  const fin=piezas.filter(x=>carpDe(x)==='final').at(-1)||piezas.at(-1);
+  s.push(`<div class="sl-portada">${fin?`<img ${imgAttrs(fin)} alt="">`:''}<div class="sl-tit"><span class="lbl">${esc(p.tipo)}${p.encargo?' · '+esc(p.encargo):''}</span><h1>${esc(p.nombre)}</h1>${c.frase?`<p>${esc(c.frase)}</p>`:''}</div></div>`);
+  if(p.brief.texto)s.push(`<div class="sl-txt"><span class="lbl">Brief</span><h2>El encargo</h2><p>${esc(p.brief.texto).replace(/\n/g,'<br>')}</p>${p.brief.entregable?`<p class="muted"><b>Entregables:</b> ${esc(p.brief.entregable)}</p>`:''}</div>`);
+  if(c.nucleos.some(Boolean))s.push(`<div class="sl-txt"><span class="lbl">Concepto</span><h2>${c.nucleos.filter(Boolean).map(esc).join(' <em>/</em> ')}</h2>${c.tension?`<p class="nivel" style="display:inline-block">${esc(c.tension)}</p>`:''}<p>${esc(c.tensionTexto||'')}</p></div>`);
+  if(p.pilares.some(x=>x.t)||p.mood.sensacion)s.push(`<div class="sl-txt"><span class="lbl">Dirección de arte</span><h2>Mood · Técnica · Pilares</h2>
+    <div class="sl-pil">${p.pilares.filter(x=>x.t).map((x,i)=>`<div><span class="lbl">Pilar ${i+1}</span><b>${esc(x.t)}</b><p>${esc(x.f)}</p></div>`).join('')}</div>
+    <div class="prow" style="gap:18px;align-items:flex-start;margin-top:18px"><div style="flex:1"><span class="lbl">Mood</span><p>${esc(p.mood.sensacion||'—')}</p><div class="pal">${p.mood.paleta.map(x=>`<span style="width:44px;height:44px;border-radius:6px;background:${esc(x)}"></span>`).join('')}</div></div>
+    <div style="flex:1"><span class="lbl">Técnica</span><p>${esc(p.tecnica.medio||'—')}</p></div></div></div>`);
+  const mundo=MUNDO_Q.filter(([k])=>p.mundo[k]);
+  if(mundo.length)s.push(`<div class="sl-txt"><span class="lbl">El mundo como personaje</span><h2>El mundo</h2>${mundo.slice(0,4).map(([k,q])=>`<p><span class="muted">${esc(q)}</span><br>${esc(p.mundo[k])}</p>`).join('')}</div>`);
+  if((p.refs||[]).length)s.push(`<div class="sl-refs"><span class="lbl">Referencias</span><h2>Moodboard</h2><div class="sl-grid">${p.refs.slice(0,12).map(r=>`<figure><img ${imgAttrs(r)} alt=""><figcaption>${esc(capaNombre(p,r.capa))}${r.porque?' — '+esc(r.porque):''}</figcaption></figure>`).join('')}</div></div>`);
+  const proc=orden.map(k=>[k,piezas.filter(x=>carpDe(x)===k)]).filter(([,xs])=>xs.length);
+  if(proc.length>1)s.push(`<div class="sl-refs"><span class="lbl">Proceso</span><h2>Del boceto al final</h2><div class="sl-proc">${proc.map(([k,xs])=>`<figure><img ${imgAttrs(xs.at(-1))} alt=""><figcaption>${CARPS.find(c=>c[0]===k)[1]}${xs.length>1?` · ${xs.length}`:''}</figcaption></figure>`).join('')}</div></div>`);
+  for(const x of piezas.filter(z=>carpDe(z)==='final'))s.push(`<div class="sl-full"><img ${imgAttrs(x)} alt=""><span class="lbl">${esc(x.nombre||x.etapa)}${x.grupo?' · '+esc(x.grupo):''}</span></div>`);
+  s.push(`<div class="sl-portada sl-cierre"><div class="sl-tit"><h1>${esc(p.nombre)}</h1><p>${esc(cotBase().nombre)} · Concept Artist</p><p class="muted">${esc(S.ajustes.portafolioUrl||PF_URL_DEF)}</p></div></div>`);
+  return s;
+}
+function presentar(i){
+  const p=S.P[S.cur];if(!p)return;const s=S.pres?.slides||slidesDe(p);i=Math.max(0,Math.min(s.length-1,i));S.pres={slides:s,i};
+  $('#overlay').innerHTML=`<div class="present" id="present"><div class="sl">${s[i]}</div>
+    <div class="pres-bar"><button class="btn sm" data-act="pres-prev" ${i?'':'disabled'} aria-label="Anterior">←</button><span class="lbl">${i+1} / ${s.length}</span><button class="btn sm" data-act="pres-next" ${i<s.length-1?'':'disabled'} aria-label="Siguiente">→</button><button class="btn sm" data-act="pres-full">Pantalla completa</button><button class="btn sm" data-act="pres-salir">Salir</button></div></div>`;
+  S.assets?.hydrate?.();
+}
+function salirPresentacion(){S.pres=null;$('#overlay').innerHTML='';try{if(document.fullscreenElement)document.exitFullscreen()}catch{}}
+document.addEventListener('keydown',e=>{if(!S.pres)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();presentar(S.pres.i+1)}else if(e.key==='ArrowLeft'){presentar(S.pres.i-1)}else if(e.key==='Escape'){salirPresentacion()}});
+{let x0=null;document.addEventListener('touchstart',e=>{if(S.pres)x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(!S.pres||x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)presentar(S.pres.i+(dx<0?1:-1));x0=null},{passive:true})}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -2867,6 +2958,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
+  if(t.dataset.refb){S.refB=S.refB||{};S.refB[t.dataset.refb]=t.value;if(t.tagName==='SELECT'&&t.dataset.refb==='src'&&S.refB.q)buscarRefs();return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
@@ -2920,7 +3012,7 @@ document.addEventListener('click',e=>{
   if(b.tagName==='IMG'&&b.dataset.act==='zoom'){$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img src="${esc(b.currentSrc||b.src)}" alt=""></div>`;return}
   accion(b.dataset.act,b);
 });
-document.addEventListener('keyup',e=>{if(e.key==='Escape')$('#overlay').innerHTML=''});
+document.addEventListener('keyup',e=>{if(e.key==='Escape'){$('#overlay').innerHTML='';S.pres=null}});
 document.addEventListener('paste',e=>{
   if(S.vista!=='proyecto'||S.tab!=='refs')return;
   const files=[...(e.clipboardData?.files||[])];if(files.length){e.preventDefault();subir(files)}
@@ -3003,6 +3095,7 @@ async function accion(a,el){
     case 'cot-hist':cargarCotHist();break;
     case 'av-key':{const k=$('#av-key')?.value.trim();if(!/^re_/.test(k||'')){toast('Esa no parece una clave de Resend (empieza con re_)');return}try{await window.PC_SHIM.setSecret('resend',k);S.avisosKey=true;S.ajustes.avisos={activo:true,email:'salvarezdelfin@gmail.com',...(S.ajustes.avisos||{})};marcarAj();renderMain();toast('Correo conectado')}catch{toast('No se pudo guardar')}break}
     case 'av-quitar':{try{await window.PC_SHIM.setSecret('resend','');S.avisosKey=false;renderMain()}catch{}break}
+    case 'av-mes':{S.avPrueba='enviando';renderMain();try{const r=await window.PC_SHIM.avisarMes();S.avPrueba=r.enviado?'Resumen del mes enviado a '+r.para+'.':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}renderMain();break}
     case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await S.db.doc('ajustes/principios').set(clone(S.ajustes));S.ajDirty=false}catch{}
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
@@ -3013,6 +3106,15 @@ async function accion(a,el){
     case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
     case 'sync':sincronizarCarpeta(false);break;
     case 'sync-elegir':sincronizarCarpeta(true);break;
+    case 'rb-buscar':{const v=$('#rb-q')?.value;if(v!=null){S.refB=S.refB||{};S.refB.q=v}buscarRefs();break}
+    case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;buscarRefs();break;
+    case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;const capa=S.refB.capa||S.destinoCapa;
+      p.refs.push({id:uid(),capa,porque:'',fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now()});marcar();renderMain();toast('Agregada: escribe su porqué en el moodboard');break}
+    case 'presentar':S.pres=null;presentar(0);try{document.documentElement.requestFullscreen?.()}catch{}break;
+    case 'pres-prev':presentar(S.pres.i-1);break;
+    case 'pres-next':presentar(S.pres.i+1);break;
+    case 'pres-full':try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch{}break;
+    case 'pres-salir':salirPresentacion();break;
     case 'gal-f':S.galF=ds.v;renderMain();break;
     case 'gal-critica':{const x=itemDe('galeria',ds.id);if(x)pedirCritica(x.id,x);break}
     case 'gal-pf':{const x=itemDe('galeria',ds.id);if(!x)return;if(!x.pf){proponer(x,{titulo:x.titulo,disciplina:x.tipo==='Entorno'?'Environment Concept':x.tipo==='Keyframe'?'Keyframe':x.tipo,seccion:/Personaje|Criatura/.test(x.tipo)?'characters':'projects'});marcarAj();toast('Propuesta: revísala con tu asesor en Portafolio')}else{S.vista='portafolio';render()}renderMain();break}
