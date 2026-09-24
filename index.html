@@ -325,6 +325,14 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .cimg{background:var(--bg);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:5px}
 .cimg img{width:100%;border-radius:6px;display:block;cursor:zoom-in;background:var(--surface2)}
 .cimg input,.cimg select{width:100%;border:1px solid var(--line2);background:var(--surface);border-radius:6px;padding:4px 6px;font-size:12px;min-width:0}
+.hojadir{border-top:3px solid var(--c-ad)}
+.hd-pilares{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.hd-pilares{grid-template-columns:minmax(0,1fr)}}
+.hd-pil{background:var(--bg);border-top:3px solid var(--c-ad);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.hd-pil .num{font-family:var(--mono);font-size:11px;color:var(--c-ad);letter-spacing:.08em}
+.hd-pil input{font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase}
+.hd-pil textarea{min-height:60px}
+.hd-caja{background:var(--bg);border-top:3px solid var(--lc);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
 .stepper{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .stepper::-webkit-scrollbar{display:none}
 .step{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px 6px 6px;cursor:pointer;color:var(--ink2);font-size:13px}
@@ -662,7 +670,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufy1zrq').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufy73gh').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -785,7 +793,7 @@ function nuevoProyecto(nombre){
     concepto:{nucleos:['','',''],tension:'',tensionTexto:'',frase:'',empujes:[]},
     mundo:{},keywords:{forma:[],material:[],emocion:[],cultura:[],luz:[]},busquedas:[],
     mood:{sensacion:'',palabras:'',paleta:['#1b1d22','#6b2f2a','#c9b27a']},
-    tecnica:{medio:'',acabado:'',referentes:''},
+    tecnica:{medio:'',acabado:'',referentes:''},ad:'',guia:{formas:'',materiales:'',estilizacion:'',luz:''},
     pilares:[{t:'',f:''},{t:'',f:''},{t:'',f:''}],
     refs:[],piezas:[],encuadres:[],diseno:{},retro:{funciono:'',mejorar:'',aprendi:''}};
 }
@@ -905,6 +913,7 @@ function salud(p){
     ['Búsquedas específicas (5+)',p.busquedas.length>=5,'keywords'],
     ['Mood: sensación y paleta',(p.mood.sensacion||'').trim().length>10&&p.mood.paleta.length>=3,'direccion'],
     ['Técnica definida',(p.tecnica.medio||'').trim().length>3,'direccion'],
+    ['Qué quiero comunicar (AD)',(p.ad||'').trim().length>15,'direccion'],
     ['3 pilares con intención',p.pilares.every(x=>x.t.trim()&&x.f.trim().length>10),'direccion'],
     ['12+ referencias',refs.length>=12,'refs'],
     ['Cada referencia con su porqué',refs.length>0&&conP===refs.length,'refs'],
@@ -1030,11 +1039,11 @@ function renderMainInner(){
   <section class="panel">${({brief:vBrief,concepto:vConcepto,mundo:vMundo,keywords:vKeywords,direccion:vDireccion,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
-  const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],
+  const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
     ['mood','Mood',p.mood.sensacion||p.mood.palabras,'direccion'],['tecnica','Técnica',p.tecnica.medio||p.tecnica.acabado,'direccion'],
     ...p.pilares.map((x,i)=>['p'+(i+1),'Pilar '+(i+1),x.t?x.t+(x.f?' — '+x.f:''):'','direccion'])];
   return slots.map(([k,n,v,tab])=>{const nr=p.refs.filter(r=>r.capa===k).length;
-    return `<button class="seis layer-${k}" data-act="tab" data-tab="${tab}"><span class="lbl">${n}</span><span class="v">${v?esc(v):'<i>Falta definir</i>'}</span><span class="nr">${nr} ref${nr===1?'':'s'}${nr<2?' · faltan':''}</span></button>`}).join('')}
+    return `<button class="seis layer-${k==='ad'?'p1':k}" data-act="tab" data-tab="${tab}"><span class="lbl">${n}</span><span class="v">${v?esc(v):'<i>Falta definir</i>'}</span><span class="nr">${k==='ad'?'Art Direction':`${nr} ref${nr===1?'':'s'}${nr<2?' · faltan':''}`}</span></button>`}).join('')}
 const ta=(path,val,ph='',id)=>`<textarea id="${id||'f-'+path.replace(/\./g,'-')}" data-b="${path}" placeholder="${esc(ph)}">${esc(val)}</textarea>`;
 const it=(path,val,ph='',id)=>`<input type="text" id="${id||'f-'+path.replace(/\./g,'-')}" data-b="${path}" value="${esc(val)}" placeholder="${esc(ph)}">`;
 
@@ -1128,7 +1137,9 @@ function vDireccion(p){return `
     </div>
   </div>
   ${tallerHTML(p)}
-  <div class="box"><h3>Art Direction · qué quiero comunicar</h3><p class="hint">Tres pilares que no se repiten entre sí. Cada uno es una intención, no una cosa: "Lo sagrado pesa", no "serpiente".</p>
+  <div class="box"><h3>Art Direction · qué quiero comunicar</h3>
+    <div class="field"><label for="f-ad">En una frase: ¿qué quieres que la gente entienda y sienta con este proyecto?</label>${ta('ad',p.ad||'','Ej. Que el poder de la guerra se sienta sagrado y condenado a la vez: el dios sabe que su propia arma lo va a devorar.','f-ad')}</div>
+    <p class="hint">Tres pilares que no se repiten entre sí. Cada uno es una intención, no una cosa: "Lo sagrado pesa", no "serpiente".</p>
     <div class="grid3">${p.pilares.map((x,i)=>`<div class="box pillar"><span class="num">PILAR ${i+1}</span>
       <input type="text" id="f-pil-t-${i}" data-b="pilares.${i}.t" value="${esc(x.t)}" placeholder="Nombre corto">
       <textarea id="f-pil-f-${i}" data-b="pilares.${i}.f" placeholder="Qué comunica y cómo se va a notar en el diseño">${esc(x.f)}</textarea></div>`).join('')}</div>
@@ -1343,7 +1354,9 @@ function ctxProyecto(p,{refs=false}={}){
     `Keywords: ${KWCATS.map(([k,n])=>n+': '+(p.keywords[k]||[]).join(', ')).join('; ')}`,
     `Mood: ${p.mood.sensacion} (${p.mood.palabras}); paleta ${p.mood.paleta.join(' ')}`,
     `Técnica: ${p.tecnica.medio}; acabado ${p.tecnica.acabado}; referentes ${p.tecnica.referentes}`,
-    ...p.pilares.map((x,i)=>`Pilar ${i+1}: ${x.t} — ${x.f}`)];
+    p.ad&&`Qué quiere comunicar (Art Direction): ${p.ad}`,
+    ...p.pilares.map((x,i)=>`Pilar ${i+1}: ${x.t} — ${x.f}`),
+    p.guia&&Object.values(p.guia).some(Boolean)&&`Guía de estilo: formas ${p.guia.formas||'—'}; materiales ${p.guia.materiales||'—'}; estilización ${p.guia.estilizacion||'—'}; luz ${p.guia.luz||'—'}`];
   if(refs)L.push('Referencias:\n'+p.refs.map((r,i)=>`${i+1}. [${capaNombre(p,r.capa)}] ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`).join('\n'));
   L.push('Principios del artista: '+S.ajustes.principios.join(' | '));
   if(S.ajustes.gusto)L.push('Su gusto y estilo: '+S.ajustes.gusto);
@@ -2614,10 +2627,10 @@ function slidesDe(p){
   s.push(`<div class="sl-portada">${fin?`<img ${imgAttrs(fin)} alt="">`:''}<div class="sl-tit"><span class="lbl">${esc(p.tipo)}${p.encargo?' · '+esc(p.encargo):''}</span><h1>${esc(p.nombre)}</h1>${c.frase?`<p>${esc(c.frase)}</p>`:''}</div></div>`);
   if(p.brief.texto)s.push(`<div class="sl-txt"><span class="lbl">Brief</span><h2>El encargo</h2><p>${esc(p.brief.texto).replace(/\n/g,'<br>')}</p>${p.brief.entregable?`<p class="muted"><b>Entregables:</b> ${esc(p.brief.entregable)}</p>`:''}</div>`);
   if(c.nucleos.some(Boolean))s.push(`<div class="sl-txt"><span class="lbl">Concepto</span><h2>${c.nucleos.filter(Boolean).map(esc).join(' <em>/</em> ')}</h2>${c.tension?`<p class="nivel" style="display:inline-block">${esc(c.tension)}</p>`:''}<p>${esc(c.tensionTexto||'')}</p></div>`);
-  if(p.pilares.some(x=>x.t)||p.mood.sensacion)s.push(`<div class="sl-txt"><span class="lbl">Dirección de arte</span><h2>Mood · Técnica · Pilares</h2>
+  if(p.pilares.some(x=>x.t)||p.mood.sensacion)s.push(`<div class="sl-txt"><span class="lbl">Dirección de arte</span><h2>Mood · Técnica · Pilares</h2>${p.ad?`<p style="font-size:clamp(18px,2.2vw,26px);max-width:60ch">${esc(p.ad)}</p>`:''}
     <div class="sl-pil">${p.pilares.filter(x=>x.t).map((x,i)=>`<div><span class="lbl">Pilar ${i+1}</span><b>${esc(x.t)}</b><p>${esc(x.f)}</p></div>`).join('')}</div>
     <div class="prow" style="gap:18px;align-items:flex-start;margin-top:18px"><div style="flex:1"><span class="lbl">Mood</span><p>${esc(p.mood.sensacion||'—')}</p><div class="pal">${p.mood.paleta.map(x=>`<span style="width:44px;height:44px;border-radius:6px;background:${esc(x)}"></span>`).join('')}</div></div>
-    <div style="flex:1"><span class="lbl">Técnica</span><p>${esc(p.tecnica.medio||'—')}</p></div></div></div>`);
+    <div style="flex:1"><span class="lbl">Técnica</span><p>${esc(p.tecnica.medio||'—')}</p></div></div>${p.guia&&Object.values(p.guia).some(Boolean)?`<div class="sl-pil" style="margin-top:14px">${[['formas','Formas'],['materiales','Materiales'],['estilizacion','Estilización'],['luz','Luz']].filter(([k])=>p.guia[k]).map(([k,n])=>`<div style="border-top-color:var(--accent)"><span class="lbl">${n}</span><p>${esc(p.guia[k])}</p></div>`).join('')}</div>`:''}</div>`);
   const mundo=MUNDO_Q.filter(([k])=>p.mundo[k]);
   if(mundo.length)s.push(`<div class="sl-txt"><span class="lbl">El mundo como personaje</span><h2>El mundo</h2>${mundo.slice(0,4).map(([k,q])=>`<p><span class="muted">${esc(q)}</span><br>${esc(p.mundo[k])}</p>`).join('')}</div>`);
   if((p.refs||[]).length)s.push(`<div class="sl-refs"><span class="lbl">Referencias</span><h2>Moodboard</h2><div class="sl-grid">${p.refs.slice(0,12).map(r=>`<figure><img ${imgAttrs(r)} alt=""><figcaption>${esc(capaNombre(p,r.capa))}${r.porque?' — '+esc(r.porque):''}</figcaption></figure>`).join('')}</div></div>`);
@@ -2636,6 +2649,33 @@ function presentar(i){
 function salirPresentacion(){S.pres=null;$('#overlay').innerHTML='';try{if(document.fullscreenElement)document.exitFullscreen()}catch{}}
 document.addEventListener('keydown',e=>{if(!S.pres)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();presentar(S.pres.i+1)}else if(e.key==='ArrowLeft'){presentar(S.pres.i-1)}else if(e.key==='Escape'){salirPresentacion()}});
 {let x0=null;document.addEventListener('touchstart',e=>{if(S.pres)x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(!S.pres||x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)presentar(S.pres.i+(dx<0?1:-1));x0=null},{passive:true})}
+
+/* ============ Hoja de dirección (etapa Guía de estilo) ============ */
+// Mismos campos que la pestaña Mood · Técnica · AD: se editan aquí o allá y es el mismo dato.
+function hojaDireccion(p){
+  const g=p.guia||{},campo=(path,val,lab,ph,alto)=>`<div class="field"><label for="hd-${path.replace(/\./g,'-')}">${lab}</label><textarea id="hd-${path.replace(/\./g,'-')}" data-b="${path}" placeholder="${esc(ph)}" style="min-height:${alto||56}px">${esc(val||'')}</textarea></div>`;
+  return `<div class="box hojadir"><div class="prow" style="justify-content:space-between"><div><span class="lbl">Hoja de dirección · la base de todo el mundo</span><h3>Qué quiero comunicar</h3></div>
+    <span class="prow">${S.sample?'<button class="btn sm pri" data-act="seis-go">Sácalos conmigo</button>':''}<button class="btn sm" data-act="tab" data-tab="direccion">Taller de pilares →</button></span></div>
+    ${campo('ad',p.ad,'En una frase: ¿qué quieres que la gente entienda y sienta?','Ej. Que el poder de la guerra se sienta sagrado y condenado a la vez.',64)}
+    <div class="hd-pilares">${p.pilares.map((x,i)=>`<div class="hd-pil"><span class="num">PILAR ${i+1}</span>
+      <input type="text" id="hd-pt-${i}" data-b="pilares.${i}.t" value="${esc(x.t)}" placeholder="Nombre corto (una intención)">
+      <textarea id="hd-pf-${i}" data-b="pilares.${i}.f" placeholder="Qué comunica y cómo se nota en el diseño">${esc(x.f)}</textarea></div>`).join('')}</div>
+    <div class="grid3" style="gap:12px">
+      <div class="hd-caja" style="--lc:var(--c-mood)"><span class="lbl">Mood · la sensación</span>
+        ${campo('mood.sensacion',p.mood.sensacion,'¿Qué tiene que sentir quien lo vea?','Opresión sagrada, calma antes del golpe…')}
+        <div class="field"><label for="hd-mood-palabras">3 palabras</label><input type="text" id="hd-mood-palabras" data-b="mood.palabras" value="${esc(p.mood.palabras||'')}" placeholder="solemne, húmedo, inevitable"></div>
+        <div class="pal">${p.mood.paleta.map(c=>`<span style="width:28px;height:28px;border-radius:5px;background:${esc(c)};border:1px solid var(--line)"></span>`).join('')}<button class="btn ghost sm" data-act="tab" data-tab="direccion">Editar paleta</button></div></div>
+      <div class="hd-caja" style="--lc:var(--c-tecnica)"><span class="lbl">Técnica · cómo está hecho</span>
+        ${campo('tecnica.medio',p.tecnica.medio,'Medio y proceso','Blockout en Blender + paintover, pincel seco…')}
+        <div class="field"><label for="hd-tecnica-acabado">Acabado</label><input type="text" id="hd-tecnica-acabado" data-b="tecnica.acabado" value="${esc(p.tecnica.acabado||'')}" placeholder="Render pictórico, sketch pintado…"></div></div>
+      <div class="hd-caja" style="--lc:var(--accent)"><span class="lbl">Guía de estilo</span>
+        ${campo('guia.formas',g.formas,'Formas (shape language)','Triángulos y verticales para el poder; curvas de serpiente para la amenaza…')}
+        ${campo('guia.materiales',g.materiales,'Materiales','Obsidiana pulida, piedra volcánica, plumas, oro martillado…')}</div>
+    </div>
+    <div class="grid2" style="gap:12px">
+      ${campo('guia.estilizacion',g.estilizacion,'Nivel de estilización (igual para personajes y entornos)','Ej. proporciones exageradas de animación, pero materiales creíbles y luz pictórica')}
+      ${campo('guia.luz',g.luz,'Luz','Ej. fuego cálido contra el vacío frío de la obsidiana; una sola fuente dominante')}
+    </div></div>`}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -2751,6 +2791,7 @@ function vProduccion(p){
     <div class="box"><span class="lbl">Pregunta de diseño</span><p class="provo" style="margin:0">${esc(e.diseno)}</p>
       <div class="field"><label for="pn-${et}">Tu respuesta y notas de esta etapa</label><textarea id="pn-${et}" data-b="prod.notas.${et}" placeholder="Decide aquí antes de dibujar">${esc(pr.notas?.[et]||'')}</textarea></div></div>
   </div>
+  ${/Guía de estilo/.test(e.n)?hojaDireccion(p):''}
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Asesor: guíame en esta etapa</b><p class="muted" style="margin:2px 0 0">Cómo se hace ${esc(e.n.toLowerCase())} en un estudio, aplicado a tu proyecto: pasos, decisiones de diseño y errores comunes.</p></div>
     <div class="prow">${S.aiBusy[k]?`<button class="btn sm" data-act="ai-stop" data-k="${k}">Detener</button>`:`<button class="btn sm pri" data-act="ai" data-k="${k}">${S.ai[k]?'Volver a preguntar':'Guíame'}</button>`}</div></div>
     ${S.aiBusy[k]?'<p class="muted">Pensando…</p>':S.ai[k]?.error?`<p class="muted">${esc(S.ai[k].error)}</p>`:S.ai[k]?aiRender('guia',S.ai[k]):''}</div>`:''}`}
