@@ -636,7 +636,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufvpqdr').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufvufnp').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -904,6 +904,7 @@ function renderSide(){
       ${nav('inicio','home','Inicio')}
       ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
+      ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
@@ -962,6 +963,7 @@ function renderMainInner(){
   if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
   if(S.vista==='avisos'){m.innerHTML=vAvisos();return}
   if(S.vista==='nombres'){m.innerHTML=vNombres();return}
+  if(S.vista==='galeria'){m.innerHTML=vGaleria();return}
   if(S.vista==='redes'){m.innerHTML=vRedes();return}
   if(S.vista==='cobros'){m.innerHTML=vCobros();return}
   if(S.vista==='ruta'){m.innerHTML=vRuta();return}
@@ -1385,7 +1387,7 @@ async function preguntar(kind){
       if(r&&r.tipo)S.retoAI={...r,min:+r.min||120,restricciones:r.restricciones||[]};S.timer=null;S.ai[kind]=null;
     }else if(kind==='estilo'){
       const imgs=[];try{for(const b of (await imagenesPortafolio(S.ajustes.portafolioUrl||PF_URL_DEF)).slice(0,6))imgs.push(b)}catch{}
-      for(const x of (S.ajustes.estiloImgs||[]).slice(-4))try{imgs.push(await blobDeRef(x))}catch{}
+      for(const x of [...(S.ajustes.galeria||[]).slice(-4),...(S.ajustes.estiloImgs||[]).slice(-2)])try{imgs.push(await blobDeRef(x))}catch{}
       for(const pr of Object.values(S.P))for(const x of pr.piezas.slice(-1))if(imgs.length<8)try{imgs.push(await blobDeRef(x))}catch{}
       let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
       const proys=Object.values(S.P).map(x=>`- ${x.nombre} (${x.tipo}): ${x.concepto.frase||x.concepto.nucleos.filter(Boolean).join(' / ')}; mood ${x.mood.sensacion||'—'}; técnica ${x.tecnica.medio||'—'}; pilares ${x.pilares.map(q=>q.t).filter(Boolean).join(', ')}`).join('\n').slice(0,6000);
@@ -1609,6 +1611,7 @@ function candidatas(){
   const out=[];
   for(const [pid,p] of Object.entries(S.P))(p.piezas||[]).forEach((x,i)=>{if(x.pf)out.push({pid,p,x,i,kind:'pieza',pf:x.pf})});
   (S.ajustes.estiloImgs||[]).forEach((x,i)=>{if(x.pf)out.push({pid:null,x,i,kind:'estilo',pf:x.pf})});
+  (S.ajustes.galeria||[]).forEach((x,i)=>{if(x.pf)out.push({pid:null,p:S.P[x.pid]||null,x,i,kind:'galeria',pf:x.pf})});
   return out;
 }
 function proponer(x,base){x.pf={estado:'candidata',titulo:base.titulo||'',anio:String(new Date().getFullYear()),disciplina:base.disciplina||'',seccion:base.seccion||'projects',desc:'',asesor:'',notasAsesor:'',revisada:false,mejor:false,ts:Date.now()}}
@@ -1650,7 +1653,7 @@ function vPortafolio(){
       ${apr.map(pfCard).join('')||'<div class="empty">Aquí llegan las piezas que apruebes.</div>'}</div>
     <div class="kcol"><div class="colh"><b>Publicadas</b><span>${pub.length}</span></div>${pub.map(pfCard).join('')||'<div class="empty">Todavía nada publicado desde aquí.</div>'}</div>
   </div>`}
-function pfDe(key){const [kind,pid,i]=key.split('|');const x=kind==='pieza'?S.P[pid]?.piezas?.[+i]:S.ajustes.estiloImgs?.[+i];return {kind,pid,x}}
+function pfDe(key){const [kind,pid,i]=key.split('|');const x=kind==='pieza'?S.P[pid]?.piezas?.[+i]:kind==='galeria'?S.ajustes.galeria?.[+i]:S.ajustes.estiloImgs?.[+i];return {kind,pid,x}}
 function guardarPf(key){const {kind,pid}=pfDe(key);if(kind==='pieza')marcarPid(pid);else marcarAj()}
 async function paquetePortafolio(){
   if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
@@ -1856,7 +1859,7 @@ async function imagenesPortafolio(url){
     const orden=[...srcs.filter(s=>/cover/.test(s)),...srcs.filter(s=>!/cover/.test(s))].map(s=>s.replace(/(-sm)?\.(jpe?g|png|webp)$/i,'-sm.$2'));
     for(const s of [...new Set(orden)].slice(0,10)){try{const b=await (await fetch(new URL(s,base))).blob();if(/^image\//.test(b.type))out.push(b)}catch{}if(out.length>=8)break}
   }catch{}
-  if(out.length<3){for(const x of (S.ajustes.estiloImgs||[]).slice(-6))try{out.push(await blobDeRef(x))}catch{}
+  if(out.length<3){for(const x of [...(S.ajustes.galeria||[]).slice(-6),...(S.ajustes.estiloImgs||[]).slice(-6)].slice(0,8))try{out.push(await blobDeRef(x))}catch{}
     for(const p of Object.values(S.P))for(const x of (p.piezas||[]).slice(-1))if(out.length<8)try{out.push(await blobDeRef(x))}catch{}}
   return out;
 }
@@ -2356,6 +2359,42 @@ function vNombres(){
     <p class="hint" style="margin:4px 0 0">Los significados en náhuatl, maya u otras lenguas pueden tener errores: confírmalos con un diccionario o una fuente seria antes de usarlos en serio.</p></div>`:''}
   <div class="box"><h3>Tus favoritos · ${favs.length}</h3>${favs.length?Object.entries(favs.reduce((g,f,i)=>{const k=(f.proyecto||'Sin proyecto')+' · '+f.para;(g[k]=g[k]||[]).push([f,i]);return g},{})).map(([k,fs])=>`<span class="lbl">${esc(k)}</span><ul class="list">${fs.map(([f,i])=>`<li><span><b>${esc(f.nombre)}</b>${f.en&&f.en!==f.nombre?` <span class="muted">(${esc(f.en)})</span>`:''}<br><span class="muted">${esc(f.significado||'')}</span></span><span class="prow" style="flex-wrap:nowrap"><button class="btn ghost sm" data-act="nom-copiar" data-i="${i}">Copiar</button><button class="btn ghost sm danger" data-act="nom-fav-del" data-i="${i}">✕</button></span></li>`).join('')}</ul>`).join(''):'<p class="muted">Guarda con ★ los que te gusten; quedan agrupados por proyecto.</p>'}</div>`}
 
+/* ============ Mis ilustraciones (galería) ============ */
+const GAL_TIPOS=['Ilustración','Keyframe','Entorno','Personaje','Criatura','Prop','Estudio','Boceto'];
+async function subirGaleria(files){
+  const fs_=[...files].filter(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));if(!fs_.length){toast('Sube imágenes PNG, JPG o WEBP');return}
+  const g=lista('galeria'),def=S.galDef||{};let n=0;setStatus(`Subiendo ${fs_.length}…`);
+  for(const f of fs_){try{g.push({id:uid(),titulo:f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim(),tipo:def.tipo||'Ilustración',anio:String(new Date().getFullYear()),pid:def.pid||'',nota:'',etapa:'Final',creado:Date.now(),...await guardarImagen(f)});n++}catch(e){toast(e?.code==='too_large'?'Una imagen pesa más de 20 MB':'No se pudo subir una imagen')}}
+  if(n){marcarAj();renderMain();renderSide();toast(`${n} ilustración${n>1?'es':''} subida${n>1?'s':''}`)}
+}
+function vGaleria(){
+  const g=lista('galeria').slice().sort((a,b)=>b.creado-a.creado),f=S.galF||'';
+  const items=f?g.filter(x=>x.tipo===f||x.pid===f):g;
+  const busy=S.critBusy;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis ilustraciones</h1>
+  <p class="intro">Todo lo que haces, esté o no en un proyecto. Cada ilustración alimenta <b>Mi estilo</b> y <b>Mi nivel</b>, puede recibir <b>crítica</b> y la puedes proponer a tu <b>portafolio</b>. También puedes pedirme en una conversación con Claude que las revise todas.</p>
+  <div class="drop" id="drop-gal">
+    <div><b>Arrastra tus ilustraciones aquí</b> <span class="muted">o súbelas (varias a la vez)</span></div>
+    <div class="prow"><select id="gal-def-tipo" data-galdef="tipo" style="width:auto">${GAL_TIPOS.map(t=>`<option ${t===(S.galDef?.tipo||'Ilustración')?'selected':''}>${t}</option>`).join('')}</select>
+      <select id="gal-def-pid" data-galdef="pid" style="width:auto"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${S.galDef?.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select>
+      <label class="btn pri" for="gal-file">Subir ilustraciones</label><input type="file" id="gal-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden></div></div>
+  ${g.length?`<div class="stepper" style="padding:0"><button class="step ${!f?'on':''}" data-act="gal-f" data-v=""><span class="st">Todas · ${g.length}</span></button>${GAL_TIPOS.filter(t=>g.some(x=>x.tipo===t)).map(t=>`<button class="step ${f===t?'on':''}" data-act="gal-f" data-v="${t}"><span class="st">${t} · ${g.filter(x=>x.tipo===t).length}</span></button>`).join('')}</div>`:''}
+  ${items.length?items.map(x=>{const i=lista('galeria').indexOf(x),fb=x.feedback;return `<div class="box pieza"><div class="pz">
+    <div class="pzimg"><img ${imgAttrs(x)} alt="${esc(x.titulo)}" loading="lazy" data-act="zoom"></div>
+    <div class="pzbody">
+      <input type="text" id="gal-t-${x.id}" data-aj="galeria.${i}.titulo" value="${esc(x.titulo)}" placeholder="Título" style="font-family:var(--display);font-size:22px;font-weight:800;text-transform:uppercase">
+      <div class="grid3" style="gap:8px"><select id="gal-tipo-${x.id}" data-aj="galeria.${i}.tipo">${GAL_TIPOS.map(t=>`<option ${t===x.tipo?'selected':''}>${t}</option>`).join('')}</select>
+        <input type="text" id="gal-a-${x.id}" data-aj="galeria.${i}.anio" value="${esc(x.anio||'')}" placeholder="Año">
+        <select id="gal-p-${x.id}" data-aj="galeria.${i}.pid"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${x.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
+      <textarea id="gal-n-${x.id}" data-aj="galeria.${i}.nota" placeholder="Notas o qué quieres que revise la crítica">${esc(x.nota||'')}</textarea>
+      <div class="prow">${S.sample?(busy===x.id?'<button class="btn sm" data-act="crit-stop">Detener</button><span class="muted">Revisando…</span>':`<button class="btn sm pri" data-act="gal-critica" data-id="${x.id}">${fb?'Pedir otra crítica':'Pedir crítica'}</button>`):''}
+        <button class="btn sm" data-act="gal-pf" data-id="${x.id}">${x.pf?(x.pf.estado==='candidata'?'☆ Candidata':'★ '+(x.pf.estado==='aprobada'?'Con visto bueno':'Publicada')):'☆ Portafolio'}</button>
+        <button class="btn ghost sm danger" data-act="gal-del" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar?':'✕'}</button></div>
+      ${S.critErr?.[x.id]?`<p class="muted">${esc(S.critErr[x.id])}</p>`:''}
+      ${fb?feedbackHTML(fb,i,'galeria'):''}
+    </div></div></div>`}).join(''):'<div class="empty">Sube tus ilustraciones: finales, bocetos, estudios. Entre más subas, mejor te conoce el asesor.</div>'}`}
+
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2509,14 +2548,14 @@ function piezaHTML(p,x,i){
       ${S.critErr?.[x.id]?`<p class="muted">${esc(S.critErr[x.id])}</p>`:''}
       ${f?feedbackHTML(f,i):''}
     </div></div></div>`}
-function feedbackHTML(f,i){
+function feedbackHTML(f,i,base){const attr=base?'data-aj':'data-b';base=base||'piezas';
   return `<div class="fb">
     <div class="fbtop"><span class="nivel">${esc(f.nivel||'')}</span><p style="margin:0"><b>Se lee en 3 segundos:</b> ${esc(f.lectura||'')}</p>
       ${f.industria?`<p style="margin:0"><b>Nivel industria:</b> ${esc(f.industria)}</p>`:''}</div>
     ${(f.puntajes||[]).length?`<div class="scores">${f.puntajes.map(s=>{const n=Math.max(0,Math.min(10,+s.nota||0));return `<div class="score" title="${esc(s.comentario||'')}"><span>${esc(s.criterio)}</span><div class="bar" style="width:auto;flex:1"><i style="width:${n*10}%;background:${n>=8?'var(--ok)':n>=5?'var(--c-tecnica)':'var(--warn)'}"></i></div><b>${n}</b><small>${esc(s.comentario||'')}</small></div>`}).join('')}</div>`:''}
     <div class="revs">${(f.revisores||[]).map((r,j)=>`<div class="rev"><h4>${esc(r.rol)}</h4>
       ${(r.fortalezas||[]).length?`<p class="muted" style="margin:0 0 6px">✓ ${r.fortalezas.map(esc).join(' · ')}</p>`:''}
-      ${(r.correcciones||[]).map((c,k)=>`<label class="corr"><input type="checkbox" id="c-${i}-${j}-${k}" data-b="piezas.${i}.feedback.revisores.${j}.correcciones.${k}.hecho" ${c.hecho?'checked':''}>
+      ${(r.correcciones||[]).map((c,k)=>`<label class="corr"><input type="checkbox" id="c-${i}-${j}-${k}" ${attr}="${base}.${i}.feedback.revisores.${j}.correcciones.${k}.hecho" ${c.hecho?'checked':''}>
         <span><b style="color:${PRIO[c.prioridad]||'var(--ink3)'}">${esc(c.prioridad||'')}</b> ${esc(c.problema)}<small>→ ${esc(c.solucion)}</small></span></label>`).join('')}</div>`).join('')}</div>
     ${(f.encuadres||[]).length?`<div><h4 style="margin:6px 0">Encuadres alternativos</h4><ul style="margin:0;padding-left:18px">${f.encuadres.map(e=>`<li><b>${esc(e.nombre)}:</b> ${esc(e.descripcion)}</li>`).join('')}</ul></div>`:''}
     ${f.paintover?(Array.isArray(f.paintover)?`<div><h4 style="margin:6px 0">Paintover, paso a paso</h4><ol style="margin:0;padding-left:20px">${f.paintover.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>`:`<p style="margin:0"><b>Paintover:</b> ${esc(f.paintover)}</p>`):''}
@@ -2524,14 +2563,19 @@ function feedbackHTML(f,i){
     ${f.ejercicio?`<p style="margin:0"><b>Ejercicio de estudio:</b> ${esc(f.ejercicio)}</p>`:''}
     ${f.siguiente_paso?`<p class="next"><b>Siguiente iteración:</b> ${esc(f.siguiente_paso)}</p>`:''}
   </div>`}
-async function pedirCritica(id){
-  const p=S.P[S.cur],x=p?.piezas.find(z=>z.id===id);if(!x||!S.sample||S.critBusy)return;
+function ctxGeneral(){
+  const e=S.ajustes.estiloAnalisis?.data;
+  return [`Su gusto: ${S.ajustes.gusto||'—'}`,e?`Su estilo: ${e.firma}. ${e.resumen}`:'',guiasTexto()?'Sus guías: '+guiasTexto():'','Principios: '+(S.ajustes.principios||[]).join(' | ')].filter(Boolean).join('\n');
+}
+async function pedirCritica(id,gal){
+  // gal = ilustración de la galería (puede no tener proyecto)
+  const p=gal?S.P[gal.pid]:S.P[S.cur],x=gal||p?.piezas.find(z=>z.id===id);if(!x||!S.sample||S.critBusy)return;
   const ctl=new AbortController();S.critCtl=ctl;S.critBusy=id;S.critErr={...S.critErr,[id]:''};renderMain();
   try{
     let images;try{const lim=await S.sample.limits();if(lim?.images)images=[await blobDeRef(x)]}catch{}
-    const prev=p.piezas.filter(z=>z.feedback&&z.creado<x.creado).slice(-1)[0];
-    const r=await S.sample.json(`${ROL_CRITICA}\n\n${ctxProyecto(p)}\n\nTe muestra una pieza en etapa: ${x.etapa}.${x.nota?' Pide revisar específicamente: '+x.nota:''}${prev?`\nEn la iteración anterior (${prev.etapa}) le pidieron: ${prev.feedback.siguiente_paso||''}. Di explícitamente si lo resolvió.`:''}\n${images?'La imagen va adjunta. Obsérvala con detalle antes de opinar.':'Si no ves la imagen adjunta, dilo en "lectura" y no inventes lo que contiene.'}\n\nCritícala como en una revisión real de estudio (dailies de visual development en un estudio AAA o de cine), con tres revisores:\n1) Visual Development lead: lenguaje de formas, silueta y lectura en miniatura, diseño de forma grande/mediana/pequeña, ritmo, coherencia con el mundo.\n2) Concept Artist senior: diseño funcional y creíble (cómo se mueve, cómo se usa, cómo está construido), estructura/anatomía/perspectiva, storytelling en el diseño, detalle concentrado donde importa, materiales.\n3) Director de Arte: si comunica los 3 pilares y el mood, jerarquía y punto focal, composición, estructura de valores, temperatura y armonía de color, control de bordes, lógica de luz, y si sirve para producción (¿un modelador 3D o un equipo podría ejecutarlo?) y para un portafolio que contrate un estudio.\nReglas: juzga contra el estándar de la industria, no contra un estudiante; sé honesto aunque duela, sin inflar. Adapta la exigencia a la etapa (a un thumbnail se le pide lectura, idea y composición, no render). Cada corrección debe decir DÓNDE (zona de la imagen) y QUÉ hacer exactamente (ej. "baja el valor del fondo a la derecha 2 pasos para separar la silueta del hombro"). Nada genérico como "mejora la composición".\nResponde SOLO con JSON: {"lectura":"qué se lee en 3 segundos y si coincide con la intención","nivel":"una de: arranque | prometedor | sólido | listo para portafolio | nivel producción","industria":"a qué nivel profesional corresponde hoy y qué le falta exactamente para estar al nivel de un portafolio contratable en un estudio AAA o de cine","puntajes":[{"criterio":"Idea y diseño","nota":1-10,"comentario":"una línea"},{"criterio":"Silueta y lectura"},{"criterio":"Composición y punto focal"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Forma y perspectiva"},{"criterio":"Storytelling"},{"criterio":"Pilares y mood"}],"revisores":[{"rol":"Visual Development","fortalezas":["2 cosas concretas"],"correcciones":[{"problema":"dónde y qué falla","solucion":"acción concreta","prioridad":"alta|media|baja"}]},{"rol":"Concept Artist",...},{"rol":"Director de Arte",...}],"encuadres":[{"nombre":"","descripcion":"cámara, lente y composición alternativa"}],"paintover":["pasos concretos en orden de un paintover que harías sobre esta imagen"],"referentes":[{"artista":"concept artist real de la industria","que_mirar":"qué pieza o aspecto de su trabajo resuelve este problema"}],"ejercicio":"un ejercicio de estudio corto (30-60 min) que ataque su mayor debilidad en esta pieza","siguiente_paso":"la acción más importante para la siguiente iteración"} con 3-4 correcciones por revisor, 3 encuadres y 2-3 referentes.`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
-    x.feedback=r;x.fbFecha=Date.now();marcar();
+    const prev=gal?null:p.piezas.filter(z=>z.feedback&&z.creado<x.creado).slice(-1)[0];
+    const r=await S.sample.json(`${ROL_CRITICA}\n\n${p?ctxProyecto(p):ctxGeneral()}\n\n${gal?`Es una ilustración suya${x.titulo?' titulada "'+x.titulo+'"':''} (${x.tipo||'ilustración'}${x.anio?', '+x.anio:''}). `:''}Te muestra una pieza en etapa: ${x.etapa||'Final'}.${x.nota?' Pide revisar específicamente: '+x.nota:''}${prev?`\nEn la iteración anterior (${prev.etapa}) le pidieron: ${prev.feedback.siguiente_paso||''}. Di explícitamente si lo resolvió.`:''}\n${images?'La imagen va adjunta. Obsérvala con detalle antes de opinar.':'Si no ves la imagen adjunta, dilo en "lectura" y no inventes lo que contiene.'}\n\nCritícala como en una revisión real de estudio (dailies de visual development en un estudio AAA o de cine), con tres revisores:\n1) Visual Development lead: lenguaje de formas, silueta y lectura en miniatura, diseño de forma grande/mediana/pequeña, ritmo, coherencia con el mundo.\n2) Concept Artist senior: diseño funcional y creíble (cómo se mueve, cómo se usa, cómo está construido), estructura/anatomía/perspectiva, storytelling en el diseño, detalle concentrado donde importa, materiales.\n3) Director de Arte: si comunica los 3 pilares y el mood, jerarquía y punto focal, composición, estructura de valores, temperatura y armonía de color, control de bordes, lógica de luz, y si sirve para producción (¿un modelador 3D o un equipo podría ejecutarlo?) y para un portafolio que contrate un estudio.\nReglas: juzga contra el estándar de la industria, no contra un estudiante; sé honesto aunque duela, sin inflar. Adapta la exigencia a la etapa (a un thumbnail se le pide lectura, idea y composición, no render). Cada corrección debe decir DÓNDE (zona de la imagen) y QUÉ hacer exactamente (ej. "baja el valor del fondo a la derecha 2 pasos para separar la silueta del hombro"). Nada genérico como "mejora la composición".\nResponde SOLO con JSON: {"lectura":"qué se lee en 3 segundos y si coincide con la intención","nivel":"una de: arranque | prometedor | sólido | listo para portafolio | nivel producción","industria":"a qué nivel profesional corresponde hoy y qué le falta exactamente para estar al nivel de un portafolio contratable en un estudio AAA o de cine","puntajes":[{"criterio":"Idea y diseño","nota":1-10,"comentario":"una línea"},{"criterio":"Silueta y lectura"},{"criterio":"Composición y punto focal"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Forma y perspectiva"},{"criterio":"Storytelling"},{"criterio":"Pilares y mood"}],"revisores":[{"rol":"Visual Development","fortalezas":["2 cosas concretas"],"correcciones":[{"problema":"dónde y qué falla","solucion":"acción concreta","prioridad":"alta|media|baja"}]},{"rol":"Concept Artist",...},{"rol":"Director de Arte",...}],"encuadres":[{"nombre":"","descripcion":"cámara, lente y composición alternativa"}],"paintover":["pasos concretos en orden de un paintover que harías sobre esta imagen"],"referentes":[{"artista":"concept artist real de la industria","que_mirar":"qué pieza o aspecto de su trabajo resuelve este problema"}],"ejercicio":"un ejercicio de estudio corto (30-60 min) que ataque su mayor debilidad en esta pieza","siguiente_paso":"la acción más importante para la siguiente iteración"} con 3-4 correcciones por revisor, 3 encuadres y 2-3 referentes.`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+    x.feedback=r;x.fbFecha=Date.now();if(gal)marcarAj();else marcar();
   }catch(e){
     if(e?.code!=='cancelled')S.critErr={...S.critErr,[id]:e?.code==='rate_limited'?'Demasiadas críticas seguidas. Espera un momento.':e?.code==='image_rejected'?'La imagen no se pudo enviar: prueba con un JPG más ligero.':'No se pudo pedir la crítica. Intenta de nuevo.'};
   }
@@ -2672,6 +2716,7 @@ document.addEventListener('input',e=>{
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
@@ -2699,7 +2744,7 @@ document.addEventListener('input',e=>{
     if(t.dataset.rk==='capa')renderMain();
     else if(t.dataset.rk==='porque'){const card=t.closest('.ref');const ok=t.value.trim().length>=8;card.classList.toggle('nowhy',!ok)}
     return}
-  if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.value);marcarAj();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
+  if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.type==='checkbox'?t.checked:t.value);marcarAj();if(t.type==='checkbox'||(t.tagName==='SELECT'&&t.dataset.aj.startsWith('galeria.')))renderMain();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
 });
 document.addEventListener('change',e=>{
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
@@ -2707,6 +2752,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};marcarAj();renderMain()}).catch(()=>toast('No se pudo subir'))}
+  if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
@@ -2728,9 +2774,9 @@ document.addEventListener('paste',e=>{
   if(S.vista!=='proyecto'||S.tab!=='refs')return;
   const files=[...(e.clipboardData?.files||[])];if(files.length){e.preventDefault();subir(files)}
 });
-document.addEventListener('dragover',e=>{const d=e.target.closest?.('#drop,.board');if(d&&S.tab==='refs'){e.preventDefault();$('#drop')?.classList.add('over')}});
+document.addEventListener('dragover',e=>{const g=e.target.closest?.('#drop-gal');if(g){e.preventDefault();g.classList.add('over');return}const d=e.target.closest?.('#drop,.board');if(d&&S.tab==='refs'){e.preventDefault();$('#drop')?.classList.add('over')}});
 document.addEventListener('dragleave',e=>{if(e.target.id==='drop')e.target.classList.remove('over')});
-document.addEventListener('drop',e=>{const d=e.target.closest?.('#drop,.board');if(d&&S.tab==='refs'){e.preventDefault();$('#drop')?.classList.remove('over');subir(e.dataTransfer.files)}});
+document.addEventListener('drop',e=>{const g=e.target.closest?.('#drop-gal');if(g){e.preventDefault();g.classList.remove('over');subirGaleria(e.dataTransfer.files);return}const d=e.target.closest?.('#drop,.board');if(d&&S.tab==='refs'){e.preventDefault();$('#drop')?.classList.remove('over');subir(e.dataTransfer.files)}});
 
 async function accion(a,el){
   const p=S.P[S.cur],ds=el.dataset;
@@ -2805,6 +2851,10 @@ async function accion(a,el){
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
     case 'nom-taller':S.nom={...nomDraft(),pid:S.cur||'',para:'Proyecto'};S.vista='nombres';render();break;
+    case 'gal-f':S.galF=ds.v;renderMain();break;
+    case 'gal-critica':{const x=itemDe('galeria',ds.id);if(x)pedirCritica(x.id,x);break}
+    case 'gal-pf':{const x=itemDe('galeria',ds.id);if(!x)return;if(!x.pf){proponer(x,{titulo:x.titulo,disciplina:x.tipo==='Entorno'?'Environment Concept':x.tipo==='Keyframe'?'Keyframe':x.tipo,seccion:/Personaje|Criatura/.test(x.tipo)?'characters':'projects'});marcarAj();toast('Propuesta: revísala con tu asesor en Portafolio')}else{S.vista='portafolio';render()}renderMain();break}
+    case 'gal-del':{if(S.confirmLi!==ds.id){S.confirmLi=ds.id;renderMain();return}S.confirmLi=null;const L=lista('galeria'),k=L.findIndex(x=>x.id===ds.id);if(k>=0)L.splice(k,1);marcarAj();render();break}
     case 'nom-para':nomDraft().para=ds.v;renderMain();break;
     case 'nom-idioma':nomDraft().idioma=ds.v;renderMain();break;
     case 'nom-estilo':{const d=nomDraft(),i=d.estilos.indexOf(ds.v);if(i>=0)d.estilos.splice(i,1);else d.estilos.push(ds.v);renderMain();break}
