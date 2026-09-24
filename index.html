@@ -670,7 +670,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufy73gh').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufybqh7').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1123,6 +1123,7 @@ function capaNombre(p,k){const m=/^p(\d)$/.exec(k);if(m){const t=p?.pilares?.[+m
 
 function vDireccion(p){return `
   <p class="intro">Así se ordena el tablero: <strong>Mood</strong> es la sensación, <strong>Técnica</strong> es cómo está hecho y la <strong>Art Direction</strong> es qué quieres comunicar, sostenida por <strong>3 pilares</strong>. Cada referencia va a responder a una de estas capas.</p>
+  ${borradorBox(p)}
   ${asesor('seis','Asesor: sácame los 6','Te propone 3 opciones para el Concepto, el Mood, la Técnica y cada uno de los 3 pilares, con búsquedas para encontrar sus referencias. Usa las que te sirvan y edítalas.')}
   <div class="grid2">
     <div class="box layer-mood" style="border-top:4px solid var(--c-mood)"><h3>Mood · la sensación</h3>
@@ -1390,6 +1391,22 @@ async function preguntar(kind){
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
       const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
+    }else if(kind==='borrador'){
+      let images;const img=(p.piezas||[]).at(-1)||(p.refs||[]).at(-1);
+      try{const lim=await S.sample.limits();if(lim?.images&&img)images=[await blobDeRef(img)]}catch{}
+      const r=await S.sample.json(`${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n${images?'Adjunto una imagen del proyecto: úsala.':''}\n\nComo su director de arte, escribe el BORRADOR COMPLETO de la dirección de este proyecto, para que él lo ajuste. Parte de su brief, su concepto, la tensión y su estilo. Hazlo fuerte y específico, no genérico: la tensión debe ser consciente y en confrontación, el mundo actúa como personaje, y todo debe notarse en el diseño.\nResponde SOLO con JSON: {"ad":"qué quiere comunicar, en 1-2 frases","frase":"Es un ___ que ___ porque ___","pilares":[{"t":"nombre corto: una intención, no un objeto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}],"mood":{"sensacion":"qué debe sentir quien lo vea","palabras":"3 palabras","paleta":["5 hex"]},"tecnica":{"medio":"","acabado":""},"guia":{"formas":"shape language","materiales":"","estilizacion":"igual para personajes y entornos","luz":""},"preguntas":["2-3 preguntas para afinarlo con él"]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      // solo llena lo vacío: nunca pisa lo que él ya escribió
+      const vacio=v=>!String(v||'').trim();let n=0;
+      if(vacio(p.ad)&&r.ad){p.ad=String(r.ad);n++}
+      if(vacio(p.concepto.frase)&&r.frase){p.concepto.frase=String(r.frase);n++}
+      (r.pilares||[]).slice(0,3).forEach((x,i)=>{if(vacio(p.pilares[i].t)&&x?.t){p.pilares[i]={t:String(x.t),f:String(x.f||'')};n++}});
+      if(vacio(p.mood.sensacion)&&r.mood?.sensacion){p.mood.sensacion=String(r.mood.sensacion);n++}
+      if(vacio(p.mood.palabras)&&r.mood?.palabras){p.mood.palabras=String(r.mood.palabras);n++}
+      const pal=(r.mood?.paleta||[]).filter(c=>/^#[0-9a-f]{6}$/i.test(c));if(pal.length>=3&&!p.mood.paletaPropia){p.mood.paleta=pal;n++}
+      if(vacio(p.tecnica.medio)&&r.tecnica?.medio){p.tecnica.medio=String(r.tecnica.medio);n++}
+      if(vacio(p.tecnica.acabado)&&r.tecnica?.acabado){p.tecnica.acabado=String(r.tecnica.acabado);n++}
+      p.guia=p.guia||{};for(const k of ['formas','materiales','estilizacion','luz'])if(vacio(p.guia[k])&&r.guia?.[k]){p.guia[k]=String(r.guia[k]);n++}
+      marcar();S.ai[kind]={data:{preguntas:r.preguntas||[],n}};
     }else if(kind==='proceso'){
       const g=S.carpG&&(p.grupos||[]).includes(S.carpG)?S.carpG:'',orden=['bocetos','grises','versiones','final'];
       const xs=piezasGrupo(p,g).slice().sort((a,b)=>orden.indexOf(carpDe(a))-orden.indexOf(carpDe(b))||a.creado-b.creado);
@@ -2650,11 +2667,16 @@ function salirPresentacion(){S.pres=null;$('#overlay').innerHTML='';try{if(docum
 document.addEventListener('keydown',e=>{if(!S.pres)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();presentar(S.pres.i+1)}else if(e.key==='ArrowLeft'){presentar(S.pres.i-1)}else if(e.key==='Escape'){salirPresentacion()}});
 {let x0=null;document.addEventListener('touchstart',e=>{if(S.pres)x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(!S.pres||x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)presentar(S.pres.i+(dx<0?1:-1));x0=null},{passive:true})}
 
+function borradorBox(p){
+  if(!S.sample)return '';const r=S.ai.borrador?.data,busy=S.aiBusy.borrador;
+  return `<div class="asesor"><div class="top"><div><b>Borrador completo con Claude</b><p class="muted" style="margin:2px 0 0">Escribe de un clic qué quieres comunicar, la frase, los 3 pilares, mood, técnica y guía de estilo a partir de tu brief, tu concepto y tu estilo. Solo llena lo que esté vacío: lo que ya ajustaste no se toca.</p></div>
+    ${busy?'<button class="btn sm" data-act="ai-stop" data-k="borrador">Detener</button>':'<button class="btn sm pri" data-act="ai" data-k="borrador">Hacer borrador</button>'}</div>
+    ${busy?'<p class="muted">Escribiendo tu dirección de arte…</p>':S.ai.borrador?.error?`<p class="muted">${esc(S.ai.borrador.error)}</p>`:r?`<p style="margin:0">${r.n?`Llené ${r.n} campo${r.n===1?'':'s'} vacío${r.n===1?'':'s'}. Ahora ajústalo a tu gusto.`:'Todo ya estaba lleno: no cambié nada.'}</p>${(r.preguntas||[]).length?`<div><span class="lbl">Para afinarlo, piensa esto</span><ul style="margin:4px 0;padding-left:18px">${r.preguntas.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`:''}`:''}</div>`}
 /* ============ Hoja de dirección (etapa Guía de estilo) ============ */
 // Mismos campos que la pestaña Mood · Técnica · AD: se editan aquí o allá y es el mismo dato.
 function hojaDireccion(p){
   const g=p.guia||{},campo=(path,val,lab,ph,alto)=>`<div class="field"><label for="hd-${path.replace(/\./g,'-')}">${lab}</label><textarea id="hd-${path.replace(/\./g,'-')}" data-b="${path}" placeholder="${esc(ph)}" style="min-height:${alto||56}px">${esc(val||'')}</textarea></div>`;
-  return `<div class="box hojadir"><div class="prow" style="justify-content:space-between"><div><span class="lbl">Hoja de dirección · la base de todo el mundo</span><h3>Qué quiero comunicar</h3></div>
+  return `${borradorBox(p)}<div class="box hojadir"><div class="prow" style="justify-content:space-between"><div><span class="lbl">Hoja de dirección · la base de todo el mundo</span><h3>Qué quiero comunicar</h3></div>
     <span class="prow">${S.sample?'<button class="btn sm pri" data-act="seis-go">Sácalos conmigo</button>':''}<button class="btn sm" data-act="tab" data-tab="direccion">Taller de pilares →</button></span></div>
     ${campo('ad',p.ad,'En una frase: ¿qué quieres que la gente entienda y sienta?','Ej. Que el poder de la guerra se sienta sagrado y condenado a la vez.',64)}
     <div class="hd-pilares">${p.pilares.map((x,i)=>`<div class="hd-pil"><span class="num">PILAR ${i+1}</span>
@@ -3058,6 +3080,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
     setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);
     if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
+    if(t.dataset.b.startsWith('mood.paleta'))p.mood.paletaPropia=true;
     marcar();
     if(t.dataset.b==='nombre')renderSide();
     const sg=$('#seis');if(sg)sg.innerHTML=seisHTML(p);
