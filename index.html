@@ -581,7 +581,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
       body:JSON.stringify({messages:aMensajes(input),images,tier:opts.modelTier||'default'})})}
     catch(e){throw{code:e?.name==='AbortError'?'cancelled':'upstream_error',message:String(e)}}
     const out=await r.json().catch(()=>({}));
-    if(!r.ok){if(out.code==='no_key'||out.code==='bad_key'){tieneLlave=false;return puente(input,opts,out.code==='bad_key'?'Tu API key no funcionó. Revísala en "Conexión con Claude".':'')}
+    if(!r.ok){if(out.code==='no_key'||out.code==='bad_key'){tieneLlave=false;throw {code:'pedir_claude',message:out.code}}
       throw{code:out.code==='rate_limited'?'rate_limited':'upstream_error',message:out.message||''}}
     return{text:out.text,truncated:!!out.truncated};
   }
@@ -618,7 +618,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
     throw{code:'invalid_json',text:t};
   }
   async function sample(input,opts={}){
-    const r=tieneLlave?await directo(input,opts):await puente(input,opts);
+    // Sin conexión directa no mostramos la pregunta técnica: la app le dice qué pedirle a Claude en su chat
+    if(!tieneLlave)throw {code:'pedir_claude',message:'Sin conexión directa con Claude'};
+    const r=await directo(input,opts);
     opts.onText?.({text:r.text,delta:r.text});return r;
   }
   sample.json=async(input,opts={})=>{
@@ -670,7 +672,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufybqh7').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mufz5jxw').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -773,7 +775,7 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7
 const clone = o => JSON.parse(JSON.stringify(o));
 function getPath(o,p){return p.split('.').reduce((a,k)=>a==null?a:a[k],o)}
 function setPath(o,p,v){const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++){if(a[ks[i]]==null)a[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};a=a[ks[i]]}a[ks.at(-1)]=v}
-function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+function toast(msg,ms){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),ms||2200)}
 function fecha(ts){try{return new Date(ts).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})}catch{return ''}}
 function md(txt){
   const lines=esc(txt).split(/\n/);let out='',inUl=false;
@@ -1502,7 +1504,8 @@ async function preguntar(kind){
       S.ai[kind]={text};
     }
   }catch(e){
-    if(e?.code==='cancelled')S.ai[kind]=S.ai[kind]?.stream?{text:S.ai[kind].stream}:null;
+    if(e?.code==='pedir_claude')S.ai[kind]={error:pedirTexto(kind,p)};
+    else if(e?.code==='cancelled')S.ai[kind]=S.ai[kind]?.stream?{text:S.ai[kind].stream}:null;
     else if(['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e?.code)){S.sample=null}
     else S.ai[kind]={error:e?.code==='rate_limited'?'Demasiadas preguntas seguidas. Espera un momento y vuelve a intentar.':e?.code==='invalid_json'?'La respuesta no llegó bien. Vuelve a preguntar.':'No se pudo consultar al asesor. Intenta de nuevo.'};
   }
@@ -2699,6 +2702,20 @@ function hojaDireccion(p){
       ${campo('guia.luz',g.luz,'Luz','Ej. fuego cálido contra el vacío frío de la obsidiana; una sola fuente dominante')}
     </div></div>`}
 
+/* ============ Sin conexión directa: qué pedirle a Claude en su chat ============ */
+function pedirTexto(kind,p,x){
+  const n=p?.nombre?`"${p.nombre}"`:'mi proyecto';
+  const m={ideas:`potencia la idea de ${n}`,borrador:`haz el borrador de dirección de ${n}: qué comunicar, pilares, mood, técnica y guía de estilo`,seis:`sácame concepto, mood, técnica y los 3 pilares de ${n}`,
+    concepto:`empuja el concepto de ${n}`,keywords:`dame keywords y búsquedas de referencias para ${n}`,direccion:`revisa mis pilares de ${n}`,refs:`revisa el moodboard de ${n}`,
+    artistas:`recomiéndame artistas para ${n}`,descubrir:`recomiéndame artistas de ${S.tema||'este tema'}`,encuadres:`dame ideas de encuadre para ${n}`,
+    nombres:`dame nombres para ${n}`,nombres2:`dame nombres para ${S.nom?.para?.toLowerCase()||'mi proyecto'}${S.nom?.pid==='__todos'?' de todos mis proyectos':' de '+n}`,
+    critica:`critica mi pieza${x?.etapa?' ('+x.etapa.toLowerCase()+')':''} de ${n}`,proceso:`critica el proceso de ${n} (mis carpetas)`,metodo:'saca mis reglas de trabajo de mis procesos',
+    estilo:'analiza mi estilo',nivel:'evalúa mi nivel con mi portafolio',diario:'dame el ejercicio de estudio de hoy',reto:'dame un reto de estudio',prueba:'dame una prueba de arte',
+    msg:'pule mi mensaje en inglés',ruta:'arma mi plan de estudio de 8 semanas',adaptar:'adapta mi portafolio a esta vacante (te la paso)',taller:`trabajemos los pilares de ${n}`};
+  const k=kind.startsWith('guia-')?'guia':kind;
+  const frase=m[k]||(k==='guia'?`guíame en la etapa de producción de ${n}`:`ayúdame con ${n}`);
+  return `Pídemelo en tu chat de Claude: «${frase}». Lo hago y lo dejo guardado aquí en tu app.`;
+}
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
 function pilaresDe(txt){const m=/PILARES:\s*(\[[\s\S]*\])/.exec(txt||'');if(!m)return null;try{const a=JSON.parse(m[1]);return Array.isArray(a)&&a.length>=3?a.slice(0,3):null}catch{return null}}
@@ -2723,6 +2740,7 @@ async function turnoTaller(texto){
     p.taller.push({role:'assistant',content:text});marcar();
   }catch(e){
     if(e?.code==='cancelled'){if(S.tallerLive)p.taller.push({role:'assistant',content:S.tallerLive})}
+    else if(e?.code==='pedir_claude'){p.taller.pop();toast(pedirTexto('taller',p),6000)}
     else{p.taller.pop();toast(e?.code==='rate_limited'?'Demasiados mensajes seguidos. Espera un momento.':'No se pudo enviar. Intenta de nuevo.')}
   }
   delete S.aiBusy.taller;S.tallerLive='';renderMain();setTimeout(()=>{$('#f-taller')?.focus({preventScroll:true})},0);
@@ -2894,7 +2912,8 @@ async function pedirCritica(id,gal){
     const r=await S.sample.json(`${ROL_CRITICA}\n\n${p?ctxProyecto(p):ctxGeneral()}\n\n${gal?`Es una ilustración suya${x.titulo?' titulada "'+x.titulo+'"':''} (${x.tipo||'ilustración'}${x.anio?', '+x.anio:''}). `:''}Te muestra una pieza en etapa: ${x.etapa||'Final'}.${x.nota?' Pide revisar específicamente: '+x.nota:''}${prev?`\nEn la iteración anterior (${prev.etapa}) le pidieron: ${prev.feedback.siguiente_paso||''}. Di explícitamente si lo resolvió.`:''}\n${images?'La imagen va adjunta. Obsérvala con detalle antes de opinar.':'Si no ves la imagen adjunta, dilo en "lectura" y no inventes lo que contiene.'}\n\nCritícala como en una revisión real de estudio (dailies de visual development en un estudio AAA o de cine), con tres revisores:\n1) Visual Development lead: lenguaje de formas, silueta y lectura en miniatura, diseño de forma grande/mediana/pequeña, ritmo, coherencia con el mundo.\n2) Concept Artist senior: diseño funcional y creíble (cómo se mueve, cómo se usa, cómo está construido), estructura/anatomía/perspectiva, storytelling en el diseño, detalle concentrado donde importa, materiales.\n3) Director de Arte: si comunica los 3 pilares y el mood, jerarquía y punto focal, composición, estructura de valores, temperatura y armonía de color, control de bordes, lógica de luz, y si sirve para producción (¿un modelador 3D o un equipo podría ejecutarlo?) y para un portafolio que contrate un estudio.\nReglas: juzga contra el estándar de la industria, no contra un estudiante; sé honesto aunque duela, sin inflar. Adapta la exigencia a la etapa (a un thumbnail se le pide lectura, idea y composición, no render). Cada corrección debe decir DÓNDE (zona de la imagen) y QUÉ hacer exactamente (ej. "baja el valor del fondo a la derecha 2 pasos para separar la silueta del hombro"). Nada genérico como "mejora la composición".\nResponde SOLO con JSON: {"lectura":"qué se lee en 3 segundos y si coincide con la intención","nivel":"una de: arranque | prometedor | sólido | listo para portafolio | nivel producción","industria":"a qué nivel profesional corresponde hoy y qué le falta exactamente para estar al nivel de un portafolio contratable en un estudio AAA o de cine","puntajes":[{"criterio":"Idea y diseño","nota":1-10,"comentario":"una línea"},{"criterio":"Silueta y lectura"},{"criterio":"Composición y punto focal"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Forma y perspectiva"},{"criterio":"Storytelling"},{"criterio":"Pilares y mood"}],"revisores":[{"rol":"Visual Development","fortalezas":["2 cosas concretas"],"correcciones":[{"problema":"dónde y qué falla","solucion":"acción concreta","prioridad":"alta|media|baja"}]},{"rol":"Concept Artist",...},{"rol":"Director de Arte",...}],"encuadres":[{"nombre":"","descripcion":"cámara, lente y composición alternativa"}],"paintover":["pasos concretos en orden de un paintover que harías sobre esta imagen"],"referentes":[{"artista":"concept artist real de la industria","que_mirar":"qué pieza o aspecto de su trabajo resuelve este problema"}],"ejercicio":"un ejercicio de estudio corto (30-60 min) que ataque su mayor debilidad en esta pieza","siguiente_paso":"la acción más importante para la siguiente iteración"} con 3-4 correcciones por revisor, 3 encuadres y 2-3 referentes.`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
     x.feedback=r;x.fbFecha=Date.now();if(gal)marcarAj();else marcar();
   }catch(e){
-    if(e?.code!=='cancelled')S.critErr={...S.critErr,[id]:e?.code==='rate_limited'?'Demasiadas críticas seguidas. Espera un momento.':e?.code==='image_rejected'?'La imagen no se pudo enviar: prueba con un JPG más ligero.':'No se pudo pedir la crítica. Intenta de nuevo.'};
+    if(e?.code==='pedir_claude')S.critErr={...S.critErr,[id]:pedirTexto('critica',p,x)};
+    else if(e?.code!=='cancelled')S.critErr={...S.critErr,[id]:e?.code==='rate_limited'?'Demasiadas críticas seguidas. Espera un momento.':e?.code==='image_rejected'?'La imagen no se pudo enviar: prueba con un JPG más ligero.':'No se pudo pedir la crítica. Intenta de nuevo.'};
   }
   S.critBusy=null;renderMain();
 }

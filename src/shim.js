@@ -163,7 +163,7 @@
       body:JSON.stringify({messages:aMensajes(input),images,tier:opts.modelTier||'default'})})}
     catch(e){throw{code:e?.name==='AbortError'?'cancelled':'upstream_error',message:String(e)}}
     const out=await r.json().catch(()=>({}));
-    if(!r.ok){if(out.code==='no_key'||out.code==='bad_key'){tieneLlave=false;return puente(input,opts,out.code==='bad_key'?'Tu API key no funcionó. Revísala en "Conexión con Claude".':'')}
+    if(!r.ok){if(out.code==='no_key'||out.code==='bad_key'){tieneLlave=false;throw {code:'pedir_claude',message:out.code}}
       throw{code:out.code==='rate_limited'?'rate_limited':'upstream_error',message:out.message||''}}
     return{text:out.text,truncated:!!out.truncated};
   }
@@ -200,7 +200,9 @@
     throw{code:'invalid_json',text:t};
   }
   async function sample(input,opts={}){
-    const r=tieneLlave?await directo(input,opts):await puente(input,opts);
+    // Sin conexión directa no mostramos la pregunta técnica: la app le dice qué pedirle a Claude en su chat
+    if(!tieneLlave)throw {code:'pedir_claude',message:'Sin conexión directa con Claude'};
+    const r=await directo(input,opts);
     opts.onText?.({text:r.text,delta:r.text});return r;
   }
   sample.json=async(input,opts={})=>{
