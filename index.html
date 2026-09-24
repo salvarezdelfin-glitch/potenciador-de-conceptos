@@ -610,7 +610,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf5y1ir').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muf687xl').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -693,6 +693,10 @@ const ICO={
   target:svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>'),
   frame:svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>'),
   coin:svg('<circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.6-.9-1.7-1.5-3-1.5-1.9 0-3 1-3 2.3 0 3.2 6 1.8 6 5 0 1.4-1.2 2.4-3 2.4-1.4 0-2.6-.6-3.2-1.6M12 5.5V7m0 10v1.5"/>'),
+  map:svg('<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>'),
+  mega:svg('<path d="M3 10v4h4l6 5V5L7 10z"/><path d="M17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/>'),
+  wallet:svg('<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>'),
+  doc:svg('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>'),
   search:svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'),
   cal:svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
   grid:svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'),
@@ -878,6 +882,7 @@ function renderSide(){
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
+      ${nav('ruta','map','Ruta de aprendizaje')}
       ${nav('estilo','eye','Mi estilo')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
       ${nav('principios','book','Mis principios')}
@@ -887,10 +892,14 @@ function renderSide(){
       ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
+      ${nav('adaptar','target','Adaptar a vacante')}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
       ${nav('mensajes','mail','Mensajes en inglés')}
+      ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
       ${nav('cotizador','coin','Cotizador freelance')}
+      ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
+      ${nav('contratos','doc','Contratos')}
     </div>
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
@@ -923,6 +932,11 @@ function renderMainInner(){
   if(S.vista==='retos'){m.innerHTML=vRetos();return}
   if(S.vista==='nivel'){m.innerHTML=vNivel();return}
   if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
+  if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
+  if(S.vista==='redes'){m.innerHTML=vRedes();return}
+  if(S.vista==='cobros'){m.innerHTML=vCobros();return}
+  if(S.vista==='ruta'){m.innerHTML=vRuta();return}
+  if(S.vista==='contratos'){m.innerHTML=vContratos();return}
   if(S.vista==='postulaciones'){m.innerHTML=vPostulaciones();return}
   if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
   if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
@@ -1279,7 +1293,7 @@ const ROL_CRITICA='Eres un panel de revisión de un estudio de la industria: un 
 const ROL='Eres un director de arte y mentor de concept art con experiencia en cine y videojuegos. Le hablas en español, de tú, a un ilustrador que quiere mejorar su conceptualización y su proceso de referencias. Sé específico, directo y útil; nada genérico.';
 
 async function preguntar(kind){
-  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg'].includes(kind)))return;
+  const p=S.P[S.cur];if(!S.sample||(!p&&!['descubrir','estilo','diario','reto','nivel','prueba','msg','ruta','adaptar'].includes(kind)))return;
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
@@ -1300,6 +1314,18 @@ async function preguntar(kind){
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
       const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
+    }else if(kind==='adaptar'){
+      const d=adaptarDraft();if((d.texto||'').trim().length<60){S.ai[kind]={error:'Pega el texto de la vacante (responsabilidades y requisitos).'};delete S.aiBusy[kind];renderMain();return}
+      const ev=(S.ajustes.niveles||[]).slice().sort((a,b)=>a.ts-b.ts).at(-1);
+      const imgs=await imagenesPortafolio(S.ajustes.portafolioUrl||PF_URL_DEF);let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,Math.min(6,lim.images.maxCount))}catch{}
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nCompara esta VACANTE con el portafolio de este concept artist y dile cómo adaptar su postulación.\nEstudio: ${d.estudio||'—'} · Puesto: ${d.puesto||'—'}\nVacante:\n${d.texto.slice(0,8000)}\n\nSu portafolio: ${S.ajustes.portafolioUrl||PF_URL_DEF}\nSus piezas y proyectos: ${piezasPortafolio().join(' | ')||'—'}\n${ev?`Su nivel evaluado: ${ev.data.nivel} (${ev.data.puntuacion}/100 industria). Fortalezas: ${(ev.data.fortalezas||[]).join('; ')}. Frenos: ${(ev.data.frenos||[]).join('; ')}.`:''}\nSu gusto: ${S.ajustes.gusto||'—'}\n${images?`Adjunto ${images.length} piezas de su portafolio.`:''}\nSé honesto: si el encaje es bajo, dilo y di si vale la pena aplicar igual. No inventes experiencia que no tiene. La carta: en inglés, 120-180 palabras, específica a ESTE estudio y ESTE puesto, menciona 2 piezas concretas, sin clichés, firma ${cotBase().nombre}, con link al portafolio.\nResponde SOLO con JSON: {"encaje":0-100,"resumen":"2-3 frases","aplicar":"recomendación: aplica ya / aplica después de X / no conviene y por qué","requisitos":[{"req":"requisito de la vacante","cumples":"sí|parcial|no","evidencia":"qué pieza lo demuestra o qué falta"}],"orden_piezas":[{"pieza":"","porque":""}],"quitar":["piezas a quitar o mandar al final para esta vacante"],"falta":[{"que":"","como":"cómo cubrirlo en 1-2 semanas"}],"asunto":"asunto del correo en inglés","carta":"cover letter en inglés","prueba":["3-4 cosas a preparar para su prueba de arte o entrevista"]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      S.ajustes.adaptaciones=S.ajustes.adaptaciones||[];S.ajustes.adaptaciones.push({ts:Date.now(),estudio:d.estudio,puesto:d.puesto,link:d.link,data:r});if(S.ajustes.adaptaciones.length>40)S.ajustes.adaptaciones.shift();
+      S.adpVer=null;marcarAj();S.ai[kind]=null;
+    }else if(kind==='ruta'){
+      const {orden}=debilidades(),r=S.ajustes.ruta||{};
+      const recursos=Object.entries(RUTA).flatMap(([k,a])=>a.map(([tipo,t,au])=>`${t} (${au}, ${tipo}) [${k}] — ${r[k+'|'+t]||'Pendiente'}`)).join('\n');
+      const d=await S.sample.json(`${ROL}\n\nArma un plan de estudio de 8 semanas para él, con ${S.ajustes.horasSemana||10} horas por semana.\nSus debilidades de mayor a menor: ${orden.slice(0,4).map(k=>SKILLS[k]).join(', ')}. Meta: Environment & Keyframe Concept Artist.\nRecursos disponibles (usa estos, respeta los terminados):\n${recursos}\nCada semana: un foco, qué leer/ver (con capítulo o tema concreto) y un ejercicio práctico aplicado a entornos. Incluye repaso y una pieza de portafolio al final.\nResponde SOLO con JSON: {"semanas":[{"semana":"1","foco":"","tareas":["3-4 tareas concretas con horas"]}]}`,{signal:ctl.signal,cache:false});
+      S.ajustes.rutaPlan=(d.semanas||[]).slice(0,8);marcarAj();S.ai[kind]=null;
     }else if(kind==='prueba'){
       const r=await S.sample.json(`${ROL}\n\nWrite a REALISTIC art test like the ones game and film studios send to junior concept artist candidates. Write it in ENGLISH. Tailor it to his goal and taste, and make it attack one of his weaknesses.\nHis taste: ${S.ajustes.gusto||'—'}\nWeaknesses: ${debilidades().orden.slice(0,3).map(k=>SKILLS[k]).join(', ')}\nUse a FICTIONAL studio name.\nReply ONLY with JSON: {"estudio":"fictional studio","puesto":"role title","tipo":"Entorno|Personaje|Criatura|Prop / arma|Key art","brief":"3-5 sentences","entregables":["list"],"ad":["3 art director notes"],"horas":48 or 72}`,{signal:ctl.signal,cache:false});
       if(r?.brief){S.pruebaProp={...r,horas:+r.horas||48,entregables:r.entregables||[],ad:r.ad||[]}}S.ai[kind]=null;
@@ -1702,7 +1728,7 @@ function vCotizar(){
     <div class="field"><label for="ca-contacto">Contacto</label><input type="text" id="ca-contacto" data-aj="cot.contacto" value="${esc(b.contacto)}"></div></div></div>
   <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${dinero(q.total,q.mon||'MXN')}</td>
     <td><select id="cq-${esc(q.folio)}" data-cotestado="${esc(q.folio)}">${['Enviada','Aceptada','Rechazada','Pagada'].map(e=>`<option ${q.estado===e?'selected':''}>${e}</option>`).join('')}</select></td>
-    <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
+    <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm" data-act="cot-cobro" data-f="${esc(q.folio)}" title="Crear cobro">Cobro</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
 function cotResHTML(d,c,b){
   const r=MERCADOS[c.m].t[c.disc][0];
   return `<span class="lbl">Precio recomendado · ${MERCADOS[c.m].n}</span><b class="cotbig">${dinero(c.total,c.mon)}</b>
@@ -1825,7 +1851,7 @@ function vPostulaciones(){
         <span class="prow">${x.link?`<a class="btn ghost sm" href="${esc(x.link)}" target="_blank" rel="noopener">Vacante ↗</a>`:''}<button class="btn ghost sm danger" data-act="li-del" data-k="postulaciones" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar?':'✕'}</button></span></div>
       <div class="grid3" style="gap:8px">${li(x,'puesto','Puesto')}<select id="po-estado-${x.id}" data-li="postulaciones|${x.id}|estado">${POST_EST.map(s=>`<option ${s===x.estado?'selected':''}>${s}</option>`).join('')}</select>${li(x,'contacto','Contacto')}</div>
       <div class="grid3" style="gap:8px"><label class="lbl">Aplicaste ${li(x,'fecha','','date')}</label><label class="lbl" style="${dd!=null&&dd<=0&&!['Oferta','Rechazado'].includes(x.estado)?'color:var(--warn)':''}">Seguimiento ${li(x,'seguimiento','','date')}</label>
-        <div class="prow" style="align-items:flex-end"><button class="btn sm" data-act="post-msg" data-id="${x.id}">Escribir seguimiento (inglés)</button></div></div>
+        <div class="prow" style="align-items:flex-end"><button class="btn sm" data-act="post-adaptar" data-id="${x.id}">Adaptar portafolio</button><button class="btn sm" data-act="post-msg" data-id="${x.id}">Escribir seguimiento (inglés)</button></div></div>
       <textarea id="po-notas-${x.id}" data-li="postulaciones|${x.id}|notas" placeholder="Notas: qué pidieron, qué dijeron, qué piezas mandaste">${esc(x.notas||'')}</textarea></div>`}).join('')}</div></div>`).join('')
   :'<div class="empty">Todavía no registras postulaciones. Empieza por 5 estudios de outsourcing donde tu estilo encaje.</div>'}`}
 
@@ -1931,10 +1957,11 @@ function eventos(){
   for(const [pid,p] of Object.entries(S.P)){if(p.entrega&&p.estado!=='Archivado')ev.push({fecha:p.entrega,titulo:'Entrega · '+p.nombre,tipo:'entrega',pid})}
   for(const x of lista('pruebas'))if(x.estado==='En curso')ev.push({fecha:hoyKey(new Date(x.limite)),titulo:'Prueba de arte · '+x.estudio,tipo:'prueba',pid:x.pid});
   for(const x of lista('postulaciones'))if(x.seguimiento&&!['Oferta','Rechazado'].includes(x.estado))ev.push({fecha:x.seguimiento,titulo:'Seguimiento · '+x.estudio,tipo:'post'});
+  for(const x of lista('posts'))if(x.estado!=='Publicado')ev.push({fecha:x.fecha,titulo:'Publicar · '+(x.titulo||'')+' ('+x.tipo+')',tipo:'red'});
   for(const x of lista('eventos'))ev.push({fecha:x.fecha,titulo:x.titulo,tipo:'propio',id:x.id});
   return ev.filter(e=>e.fecha).sort((a,b)=>a.fecha.localeCompare(b.fecha));
 }
-const EV_COL={entrega:'var(--accent)',prueba:'var(--c-tecnica)',post:'var(--c-concepto)',propio:'var(--c-ad)'};
+const EV_COL={entrega:'var(--accent)',prueba:'var(--c-tecnica)',post:'var(--c-concepto)',propio:'var(--c-ad)',red:'var(--c-mood)'};
 function proximos(n=6){const h=hoyKey();return eventos().filter(e=>e.fecha>=h).slice(0,n)}
 function vCalendario(){
   const base=S.calMes?new Date(S.calMes):new Date();base.setDate(1);
@@ -1955,7 +1982,7 @@ function vCalendario(){
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>${base.toLocaleDateString('es-MX',{month:'long',year:'numeric'})}</h3>
     <span class="prow"><button class="btn sm" data-act="cal-mes" data-d="-1">←</button><button class="btn sm" data-act="cal-mes" data-d="0">Hoy</button><button class="btn sm" data-act="cal-mes" data-d="1">→</button></span></div>
     <div class="cal-grid">${['L','M','M','J','V','S','D'].map(d=>`<div class="cdh">${d}</div>`).join('')}${celdas.join('')}</div>
-    <div class="prow" style="font-size:12px">${[['entrega','Entregas'],['prueba','Pruebas de arte'],['post','Seguimientos'],['propio','Tus fechas']].map(([k,n])=>`<span class="prow" style="gap:4px"><i style="width:10px;height:10px;border-radius:2px;background:${EV_COL[k]};display:inline-block"></i>${n}</span>`).join('')}</div></div>
+    <div class="prow" style="font-size:12px">${[['entrega','Entregas'],['prueba','Pruebas de arte'],['post','Seguimientos'],['red','Publicaciones'],['propio','Tus fechas']].map(([k,n])=>`<span class="prow" style="gap:4px"><i style="width:10px;height:10px;border-radius:2px;background:${EV_COL[k]};display:inline-block"></i>${n}</span>`).join('')}</div></div>
   <div class="grid2">
     <div class="box"><h3>Próximos</h3>${proximos(10).length?`<ul class="list">${proximos(10).map(e=>`<li><span><b>${fechaCorta(e.fecha)}</b> · ${esc(e.titulo)}</span>${e.tipo==='propio'?`<button class="btn ghost sm" data-act="li-del" data-k="eventos" data-id="${e.id}">${S.confirmLi===e.id?'¿Borrar?':'✕'}</button>`:e.pid&&S.P[e.pid]?`<button class="btn ghost sm" data-act="abrir" data-id="${esc(e.pid)}">Abrir</button>`:''}</li>`).join('')}</ul>`:'<p class="muted">Nada próximo.</p>'}</div>
     <div class="box"><h3>Agregar fecha</h3><div class="field"><label for="ev-titulo">Qué</label><input type="text" id="ev-titulo" placeholder="Ej. Revisión con mi asesor"></div>
@@ -2033,7 +2060,7 @@ function vVacantes(){
   <div class="vacs">${items.map(x=>{const [et,ec]=encajeTxt(x.s),guardada=ya.has(x.url);return `<div class="vac">
     <div class="prow" style="justify-content:space-between;align-items:flex-start"><span><b>${esc(x.title)}</b><br><span class="muted">${esc(x.company)}${x.loc?' · '+esc(x.loc):''}</span></span><span class="nivel" style="color:${ec};border-color:${ec};flex:0 0 auto">${et}</span></div>
     <div class="prow" style="font-size:12px;gap:6px">${x.remote?'<span class="chip">Remoto</span>':''}${x.type?`<span class="chip">${esc(x.type)}</span>`:''}${x.salary?`<span class="chip">${esc(x.salary)}</span>`:''}<span class="muted">${esc(x.src)}${x.date?' · '+fecha(Date.parse(x.date)):''}</span></div>
-    <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Ver vacante ↗</a>${guardada?'<span class="muted" style="font-size:12px">En postulaciones ✓</span>':`<button class="btn sm pri" data-act="vac-guardar" data-id="${esc(x.id)}">A postulaciones</button>`}<button class="btn sm ghost" data-act="vac-desc" data-id="${esc(x.id)}">Descartar</button></div></div>`}).join('')||'<div class="empty">Nada con estos filtros.</div>'}</div>`}
+    <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Ver vacante ↗</a>${guardada?'<span class="muted" style="font-size:12px">En postulaciones ✓</span>':`<button class="btn sm pri" data-act="vac-guardar" data-id="${esc(x.id)}">A postulaciones</button>`}<button class="btn sm" data-act="vac-adaptar" data-id="${esc(x.id)}">Adaptar</button><button class="btn sm ghost" data-act="vac-desc" data-id="${esc(x.id)}">Descartar</button></div></div>`}).join('')||'<div class="empty">Nada con estos filtros.</div>'}</div>`}
   <div class="box"><h3>Busca también en</h3><p class="hint">Estas bolsas no dejan leerse automáticamente; los links ya van con la búsqueda hecha.</p>
     <div class="prow">${BOLSAS.map(([n,u])=>`<a class="btn sm" href="${u}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join('')}</div></div>
   <div class="box"><h3>Antes de aplicar</h3><ul style="margin:0;padding-left:18px;line-height:1.6">
@@ -2041,6 +2068,184 @@ function vVacantes(){
     <li>Adapta el portafolio a cada vacante: pon primero las 3 piezas que más se parecen a su juego.</li>
     <li>Mensaje corto en inglés (usa <a href="#" data-act="vista" data-v="mensajes" style="color:var(--accent)">Mensajes</a>) y registra todo en <a href="#" data-act="vista" data-v="postulaciones" style="color:var(--accent)">Postulaciones</a>.</li>
     <li>Meta realista: 5–10 postulaciones buenas por semana, no 50 genéricas.</li></ul></div>`}
+
+/* ============ Plan de publicación en redes ============ */
+const POST_TIPOS=['Final','Proceso (breakdown)','Detalles / crops','WIP / thumbnails','Timelapse','Estudio'];
+const POST_ESTADOS=['Idea','Programado','Publicado'];
+const HASHTAGS={
+  base:'#conceptart #digitalpainting #artstation #illustration #conceptartist',
+  Entorno:'#environmentdesign #environmentconcept #keyframe #worldbuilding #mattepainting',
+  'Key art':'#keyframe #keyart #visualdevelopment #storytelling #cinematic',
+  Personaje:'#characterdesign #characterconcept #visualdevelopment #charactersheet',
+  Criatura:'#creaturedesign #creatureconcept #monsterdesign #fantasyart',
+  mx:'#artemexicano #conceptartmexico #ilustradormexicano'
+};
+function hashtagsDe(tipo){return [HASHTAGS.base,HASHTAGS[tipo]||HASHTAGS['Key art'],HASHTAGS.mx].join(' ')}
+function planLocal(){
+  // 4 semanas, lunes/miércoles/viernes: proceso → final → detalles de cada proyecto con piezas
+  const ps=Object.entries(S.P).filter(([,p])=>p.estado!=='Archivado'&&((p.piezas||[]).length||(p.refs||[]).length)).slice(0,4);
+  if(!ps.length)return 0;
+  const d=new Date();while(d.getDay()!==1)d.setDate(d.getDate()+1);
+  const dias=[];for(let w=0;w<4;w++)for(const o of [0,2,4]){const x=new Date(d);x.setDate(d.getDate()+w*7+o);dias.push(hoyKey(x))}
+  const sec=['Proceso (breakdown)','Final','Detalles / crops'];let n=0;
+  ps.forEach(([pid,p],i)=>sec.forEach((t,j)=>{const f=dias[i*3+j];if(!f)return;
+    lista('posts').push({id:uid(),fecha:f,red:'Instagram + ArtStation',tipo:t,pid,titulo:p.nombre,es:'',en:'',hashtags:hashtagsDe(p.tipo),estado:'Idea'});n++}));
+  return n;
+}
+function vRedes(){
+  const L=lista('posts').slice().sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||'')),hoy=hoyKey();
+  const semana=L.filter(x=>x.estado==='Publicado'&&diasHasta(x.fecha)>=-7&&diasHasta(x.fecha)<=0).length;
+  const li=(x,f,ph,type='text')=>`<input type="${type}" id="rs-${f}-${x.id}" data-li="posts|${x.id}|${f}" value="${esc(x[f]||'')}" placeholder="${ph}">`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Plan de publicación</h1>
+  <p class="intro">Los reclutadores y directores de arte te encuentran por <b>ArtStation</b> e <b>Instagram</b>. Publicar con constancia (2–3 veces por semana) y mostrando proceso vale más que subir mucho de golpe. Cada publicación aparece en tu Calendario.</p>
+  <div class="stats"><div class="stat"><b>${semana}</b><span>publicadas en los últimos 7 días</span></div><div class="stat"><b>${L.filter(x=>x.estado!=='Publicado'&&x.fecha>=hoy).length}</b><span>próximas</span></div><div class="stat"><b>${L.filter(x=>x.estado==='Publicado').length}</b><span>publicadas en total</span></div></div>
+  <div class="box"><div class="prow"><button class="btn pri" data-act="rs-plan">Armar plan de 4 semanas</button><button class="btn" data-act="rs-add">＋ Publicación</button>
+    <a class="btn ghost" href="https://www.instagram.com/sebasalvarez.art/" target="_blank" rel="noopener">Tu Instagram ↗</a><a class="btn ghost" href="https://www.artstation.com/ssebasalvarez" target="_blank" rel="noopener">Tu ArtStation ↗</a></div>
+    <p class="hint" style="margin:0">El plan usa tus proyectos con piezas: primero el proceso, luego el final, luego los detalles, lunes, miércoles y viernes.</p></div>
+  ${L.length?`<div class="postlist">${L.map(x=>`<div class="post" style="border-left-color:${x.estado==='Publicado'?'var(--ok)':x.fecha<hoy?'var(--warn)':'var(--accent)'}">
+    <div class="prow" style="justify-content:space-between"><b style="font-family:var(--display);font-size:20px;text-transform:uppercase">${fechaCorta(x.fecha)} · ${esc(x.titulo||'Publicación')}</b>
+      <span class="prow">${S.sample?`<button class="btn sm" data-act="rs-ai" data-id="${x.id}" ${S.aiBusy['rs-'+x.id]?'disabled':''}>${S.aiBusy['rs-'+x.id]?'Escribiendo…':'Escribir textos con Claude'}</button>`:''}<button class="btn ghost sm danger" data-act="li-del" data-k="posts" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar?':'✕'}</button></span></div>
+    <div class="grid3" style="gap:8px">${li(x,'fecha','','date')}<select id="rs-tipo-${x.id}" data-li="posts|${x.id}|tipo">${POST_TIPOS.map(t=>`<option ${t===x.tipo?'selected':''}>${t}</option>`).join('')}</select><select id="rs-est-${x.id}" data-li="posts|${x.id}|estado">${POST_ESTADOS.map(t=>`<option ${t===x.estado?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="grid2" style="gap:8px"><textarea id="rs-en-${x.id}" data-li="posts|${x.id}|en" placeholder="Texto en inglés">${esc(x.en||'')}</textarea><textarea id="rs-es-${x.id}" data-li="posts|${x.id}|es" placeholder="Texto en español">${esc(x.es||'')}</textarea></div>
+    <div class="prow">${li(x,'hashtags','#conceptart …')}<button class="btn sm" data-act="rs-copiar" data-id="${x.id}">Copiar texto completo</button></div></div>`).join('')}</div>`
+  :'<div class="empty">Sin publicaciones planeadas. Arma el plan de 4 semanas.</div>'}
+  <div class="box"><h3>Lo que funciona en el medio</h3><ul style="margin:0;padding-left:18px;line-height:1.6">
+    <li><b>Carrusel:</b> primera imagen, la final; después proceso y detalles. En ArtStation, un proyecto por pieza con su breakdown.</li>
+    <li><b>Texto en inglés primero</b> (tu mercado es internacional) y español abajo.</li>
+    <li>Menciona el software y el proceso: a los estudios les importa cómo trabajas.</li>
+    <li>Etiqueta a los artistas o cursos que te influyeron cuando aplique; no pidas "follow for follow".</li>
+    <li>Constancia antes que volumen: 2–3 por semana durante meses.</li></ul></div>`}
+
+/* ============ Cobros y clientes ============ */
+function cobroPagado(c){return (c.pagos||[]).reduce((n,p)=>n+(+p.monto||0),0)}
+function aMxn(monto,mon){return (+monto||0)*(cotBase().tc[mon||'MXN']||1)}
+function vCobros(){
+  const L=lista('cobros'),mes=hoyKey().slice(0,7);
+  const ingresosMes=L.reduce((n,c)=>n+(c.pagos||[]).filter(p=>(p.fecha||'').startsWith(mes)).reduce((m,p)=>m+aMxn(p.monto,c.mon),0),0);
+  const porCobrar=L.filter(c=>c.estado!=='Cancelado').reduce((n,c)=>n+Math.max(0,aMxn(c.total-cobroPagado(c),c.mon)),0);
+  const anio=hoyKey().slice(0,4),ingresosAnio=L.reduce((n,c)=>n+(c.pagos||[]).filter(p=>(p.fecha||'').startsWith(anio)).reduce((m,p)=>m+aMxn(p.monto,c.mon),0),0);
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cobros</h1>
+  <p class="intro">Qué te debe cada cliente, anticipos y pagos. Se crea un cobro desde una cotización aceptada (Cotizador → Historial) o a mano. Todo se convierte a MXN con tus tipos de cambio.</p>
+  <div class="stats"><div class="stat"><b>${mxn(ingresosMes)}</b><span>cobrado este mes</span></div><div class="stat"><b>${mxn(porCobrar)}</b><span>por cobrar</span></div><div class="stat"><b>${mxn(ingresosAnio)}</b><span>cobrado en ${anio}</span></div></div>
+  <div class="box"><h3>Nuevo cobro</h3><div class="grid3" style="gap:10px">
+    <div class="field"><label for="cb-cliente">Cliente</label><input type="text" id="cb-cliente"></div>
+    <div class="field"><label for="cb-proyecto">Proyecto</label><input type="text" id="cb-proyecto"></div>
+    <div class="field"><label for="cb-total">Total</label><div class="prow" style="flex-wrap:nowrap"><input type="text" inputmode="decimal" id="cb-total" style="flex:1"><select id="cb-mon">${['MXN','USD','CAD','EUR'].map(m=>`<option>${m}</option>`).join('')}</select></div></div></div>
+    <div class="prow"><button class="btn pri" data-act="cb-add">Agregar</button><button class="btn ghost" data-act="cb-csv" ${L.length?'':'disabled'}>Exportar CSV (para tu Libro Mayor)</button></div></div>
+  ${L.length?`<div class="postlist">${L.slice().reverse().map(c=>{const pag=cobroPagado(c),falta=Math.max(0,c.total-pag),pct=c.total?Math.min(100,Math.round(pag/c.total*100)):0;return `<div class="post" style="border-left-color:${c.estado==='Cancelado'?'var(--ink3)':falta<=0?'var(--ok)':pag>0?'var(--c-tecnica)':'var(--warn)'}">
+    <div class="prow" style="justify-content:space-between"><b style="font-family:var(--display);font-size:20px;text-transform:uppercase">${esc(c.cliente)}${c.folio?` <small class="muted">${esc(c.folio)}</small>`:''}</b>
+      <span class="prow"><select id="cb-est-${c.id}" data-li="cobros|${c.id}|estado" style="width:auto">${['Activo','Pagado','Cancelado'].map(e=>`<option ${e===(c.estado||'Activo')?'selected':''}>${e}</option>`).join('')}</select><button class="btn ghost sm danger" data-act="li-del" data-k="cobros" data-id="${c.id}">${S.confirmLi===c.id?'¿Borrar?':'✕'}</button></span></div>
+    <span class="muted">${esc(c.proyecto||'')}</span>
+    <div class="desg" style="border:0;padding:0"><span>Total</span><b>${dinero(c.total,c.mon)}</b><span>Cobrado</span><b>${dinero(pag,c.mon)} (${pct}%)</b><span>Falta</span><b style="color:${falta>0?'var(--warn)':'var(--ok)'}">${dinero(falta,c.mon)}</b></div>
+    <div class="bar" style="width:100%"><i style="width:${pct}%;background:var(--ok)"></i></div>
+    ${(c.pagos||[]).length?`<ul class="list">${c.pagos.map((p,i)=>`<li><span>${fechaCorta(p.fecha)} · ${dinero(p.monto,c.mon)} · ${esc(p.nota||'')}</span><button class="btn ghost sm" data-act="cb-pago-del" data-id="${c.id}" data-i="${i}">✕</button></li>`).join('')}</ul>`:''}
+    ${c.estado!=='Cancelado'&&falta>0?`<div class="prow"><input type="text" inputmode="decimal" id="cbp-m-${c.id}" placeholder="${pag?dinero(falta,c.mon):'Anticipo '+dinero(c.total/2,c.mon)}" style="flex:1 1 120px"><input type="date" id="cbp-f-${c.id}" value="${hoyKey()}" style="flex:0 1 160px"><input type="text" id="cbp-n-${c.id}" placeholder="${pag?'Pago final':'Anticipo 50%'}" style="flex:1 1 140px"><button class="btn sm pri" data-act="cb-pago" data-id="${c.id}">Registrar pago</button></div>`:''}</div>`}).join('')}</div>`
+  :'<div class="empty">Sin cobros todavía.</div>'}`}
+
+/* ============ Ruta de aprendizaje ============ */
+const RUTA={
+  valores:[['libro','Color and Light','James Gurney'],['curso','Fundamentals of Lighting','Schoolism · Sam Nielson'],['youtube','Values and light','Marco Bucci']],
+  silueta:[['libro','The Silver Way','Stephen Silver'],['youtube','Design Cinema','Feng Zhu (FZD)'],['curso','Character Design','Schoolism · Stephen Silver']],
+  composicion:[['libro','Framed Ink','Marcos Mateu-Mestre'],['libro','Picture This','Molly Bang'],['youtube','Composition','Marco Bucci']],
+  color:[['libro','Color and Light','James Gurney'],['youtube','Color theory for painters','Marco Bucci'],['curso','Color & Light','Schoolism · Nathan Fowkes']],
+  perspectiva:[['libro','How to Draw','Scott Robertson'],['libro','Framed Perspective 1 y 2','Marcos Mateu-Mestre'],['youtube','Blender para concept art','Blender Guru / Ian Hubert']],
+  diseno:[['libro','How to Draw','Scott Robertson'],['youtube','Design Cinema','Feng Zhu (FZD)'],['curso','Concept design','Robotpencil · Anthony Jones']],
+  storytelling:[['libro','The Skillful Huntsman','Mike Yamada, Khang Le, Felix Yoon'],['libro','Directing the Story','Francis Glebas'],['libro','Framed Ink','Marcos Mateu-Mestre']],
+  anatomia:[['curso','Anatomy','Proko'],['libro','Force: Dynamic Life Drawing','Michael Mattesi'],['libro','Figure Drawing: Design and Invention','Michael Hampton']],
+  entornos:[['libro','The Skillful Huntsman','Mike Yamada, Khang Le, Felix Yoon'],['youtube','Environment design','Feng Zhu (FZD)'],['curso','Environment Design','CGMA']]
+};
+const RUTA_EST=['Pendiente','En curso','Terminado'];
+function vRuta(){
+  const {orden,prom}=debilidades(),r=S.ajustes.ruta=S.ajustes.ruta||{};
+  const skills=[...orden.slice(0,3),'entornos',...orden.slice(3)].filter((k,i,a)=>a.indexOf(k)===i&&RUTA[k]);
+  const nombre=k=>k==='entornos'?'Diseño de entornos (tu meta)':SKILLS[k];
+  const total=Object.values(RUTA).flat().length,hechos=Object.values(r).filter(v=>v==='Terminado').length;
+  const link=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ruta de aprendizaje</h1>
+  <p class="intro">Libros, cursos y canales de referencia en la industria, ordenados por tus puntos más débiles (según tus críticas y tu evaluación). Hazlos de uno en uno y aplícalos en el Estudio diario.</p>
+  <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
+  ${skills.map((k,i)=>`<div class="box"><div class="prow" style="justify-content:space-between"><h3>${i<3?`<span style="color:var(--accent)">Prioridad ${i+1} · </span>`:''}${esc(nombre(k))}</h3></div>
+    <ul class="list">${RUTA[k].map(([tipo,t,a])=>{const key=k+'|'+t,e=r[key]||'Pendiente';return `<li style="grid-template-columns:1fr auto"><span><span class="tag" style="--lc:var(--ink3)">${tipo}</span> <b>${esc(t)}</b> · <span class="muted">${esc(a)}</span></span>
+      <span class="prow" style="flex-wrap:nowrap"><a class="btn ghost sm" href="${link(t,a)}" target="_blank" rel="noopener">Buscar ↗</a><select id="ru-${esc(key)}" data-ruta="${esc(key)}" style="width:auto">${RUTA_EST.map(s=>`<option ${s===e?'selected':''}>${s}</option>`).join('')}</select></span></li>`}).join('')}</ul></div>`).join('')}
+  ${S.sample?`<div class="asesor"><div class="top"><div><b>Plan de estudio de 8 semanas</b><p class="muted" style="margin:2px 0 0">Combina estos recursos, tus debilidades y tus horas por semana en un plan semana por semana.</p></div>
+    ${S.aiBusy.ruta?'<span class="muted">Armando tu plan…</span>':'<button class="btn sm pri" data-act="ai" data-k="ruta">Armar plan</button>'}</div>
+    ${S.ai.ruta?.error?`<p class="muted">${esc(S.ai.ruta.error)}</p>`:S.ajustes.rutaPlan?`<div class="plan">${S.ajustes.rutaPlan.map(s=>`<div class="etapa"><span class="lbl">Semana ${esc(s.semana)}</span><b>${esc(s.foco)}</b><ul style="margin:0;padding-left:18px">${(s.tareas||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}</div>`:''}</div>`:''}`}
+
+/* ============ Contratos ============ */
+function contratoDraft(){return S.ctr=S.ctr||{idioma:'es',cliente:'',proyecto:'',alcance:'',revisiones:'2',anticipo:'50',total:'',mon:'MXN',inicio:hoyKey(),entrega:'',uso:1,cancelacion:'30',ciudad:'Ciudad de México'}}
+function contratoTexto(c){
+  const b=cotBase(),en=c.idioma==='en',u=COT_USO[+c.uso]?.[0]||'',m=c.total?dinero(+c.total,c.mon):'[monto]';
+  const usoEn=['Portfolio / personal use','Limited commercial use','Broad commercial use','Exclusive / full buyout'][+c.uso];
+  if(en)return `FREELANCE ILLUSTRATION / CONCEPT ART AGREEMENT\n\nArtist: ${b.nombre} (${b.contacto})\nClient: ${c.cliente||'[client]'}\nProject: ${c.proyecto||'[project]'}\nDate: ${new Date().toLocaleDateString('en-US')}\n\n1. SCOPE. The Artist will deliver: ${c.alcance||'[deliverables]'}. Anything outside this scope will be quoted separately.\n2. SCHEDULE. Start: ${c.inicio||'[date]'}. Final delivery: ${c.entrega||'[date]'}. Deadlines move if the Client's feedback or materials are delayed.\n3. REVISIONS. Includes ${c.revisiones} round(s) of revisions. Additional rounds are billed separately.\n4. FEES AND PAYMENT. Total fee: ${m}. A ${c.anticipo}% deposit is due before work starts; the balance is due on final delivery. Final files are delivered after full payment.\n5. USAGE RIGHTS. Upon full payment the Client receives: ${usoEn}. The Artist keeps the copyright unless a full buyout is stated above.\n6. PORTFOLIO. The Artist may show the work in their portfolio and social media once the project is public, unless a separate NDA says otherwise.\n7. CANCELLATION. If the Client cancels after work has started, the deposit is non-refundable and work completed beyond it is billed; minimum kill fee: ${c.cancelacion}% of the total.\n8. CONFIDENTIALITY. The Artist will not share confidential project information before it is public.\n9. CREDIT. The Artist will be credited when the work is published, where possible.\n\nArtist: ______________________    Client: ______________________\nDate: _______________              Date: _______________`;
+  return `CONTRATO DE PRESTACIÓN DE SERVICIOS DE ILUSTRACIÓN / CONCEPT ART\n\nArtista: ${b.nombre} (${b.contacto})\nCliente: ${c.cliente||'[cliente]'}\nProyecto: ${c.proyecto||'[proyecto]'}\nLugar y fecha: ${c.ciudad}, ${new Date().toLocaleDateString('es-MX')}\n\n1. ALCANCE. El Artista entregará: ${c.alcance||'[entregables]'}. Todo lo que quede fuera de este alcance se cotiza por separado.\n2. FECHAS. Inicio: ${c.inicio||'[fecha]'}. Entrega final: ${c.entrega||'[fecha]'}. Las fechas se recorren si el Cliente retrasa su retroalimentación o materiales.\n3. REVISIONES. Incluye ${c.revisiones} ronda(s) de revisión. Las rondas adicionales se cobran aparte.\n4. HONORARIOS Y PAGO. Total: ${m}. Se paga un anticipo del ${c.anticipo}% antes de iniciar y el resto contra entrega final. Los archivos finales se entregan con el pago completo.\n5. DERECHOS DE USO. Al liquidar el pago, el Cliente obtiene: ${u}. El Artista conserva los derechos de autor, salvo que arriba se indique cesión total.\n6. PORTAFOLIO. El Artista podrá mostrar el trabajo en su portafolio y redes una vez que el proyecto sea público, salvo acuerdo de confidencialidad por separado.\n7. CANCELACIÓN. Si el Cliente cancela ya iniciado el trabajo, el anticipo no es reembolsable y se cobra el trabajo realizado adicional; cargo mínimo por cancelación: ${c.cancelacion}% del total.\n8. CONFIDENCIALIDAD. El Artista no compartirá información confidencial del proyecto antes de que sea pública.\n9. CRÉDITO. Se dará crédito al Artista cuando el trabajo se publique, siempre que sea posible.\n\nArtista: ______________________    Cliente: ______________________\nFecha: _______________             Fecha: _______________`;
+}
+function vContratos(){
+  const c=contratoDraft(),hist=S.cotHist?.lista||[];
+  const f=(k,lab,ph='')=>`<div class="field"><label for="ct2-${k}">${lab}</label><input type="text" id="ct2-${k}" data-ctr="${k}" value="${esc(c[k])}" placeholder="${ph}"></div>`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Contratos</h1>
+  <div class="banner">Plantilla de punto de partida, no asesoría legal. Para encargos grandes, cesión de derechos o clientes corporativos, que la revise un abogado.</div>
+  <p class="intro">Nunca empieces un encargo sin algo firmado, aunque sea por correo. Llénalo desde una cotización o a mano, en español o inglés, y descárgalo para firmar.</p>
+  <div class="grid2">
+    <div class="box"><h3>Datos</h3>
+      <div class="prow"><div class="stepper" style="padding:0">${[['es','Español'],['en','English']].map(([k,n])=>`<button class="step ${c.idioma===k?'on':''}" data-act="ctr-idioma" data-v="${k}"><span class="st">${n}</span></button>`).join('')}</div>
+        ${hist.length?`<select id="ctr-desde" data-ctrdesde="1" style="width:auto"><option value="">Llenar desde cotización…</option>${hist.map(q=>`<option value="${esc(q.folio)}">${esc(q.folio)} · ${esc(q.cliente||'')}</option>`).join('')}</select>`:`<button class="btn sm" data-act="cot-hist-ctr">Cargar cotizaciones</button>`}</div>
+      <div class="grid2" style="gap:10px">${f('cliente','Cliente')}${f('proyecto','Proyecto')}</div>
+      <div class="field"><label for="ct2-alcance">Alcance / entregables</label><textarea id="ct2-alcance" data-ctr="alcance" placeholder="Ej. 3 diseños de criatura con callouts y 1 keyframe en color, PSD y PNG en 4K">${esc(c.alcance)}</textarea></div>
+      <div class="grid3" style="gap:10px">${f('total','Total')}<div class="field"><label for="ct2-mon">Moneda</label><select id="ct2-mon" data-ctr="mon">${['MXN','USD','CAD','EUR'].map(m=>`<option ${m===c.mon?'selected':''}>${m}</option>`).join('')}</select></div>${f('anticipo','Anticipo %')}</div>
+      <div class="grid3" style="gap:10px">${f('revisiones','Revisiones')}${f('inicio','Inicio','AAAA-MM-DD')}${f('entrega','Entrega','AAAA-MM-DD')}</div>
+      <div class="grid3" style="gap:10px"><div class="field"><label for="ct2-uso">Uso / licencia</label><select id="ct2-uso" data-ctr="uso">${COT_USO.map((o,i)=>`<option value="${i}" ${+c.uso===i?'selected':''}>${esc(o[0])}</option>`).join('')}</select></div>${f('cancelacion','Cargo por cancelación %')}${f('ciudad','Ciudad')}</div></div>
+    <div class="box"><div class="prow" style="justify-content:space-between"><h3>Contrato</h3><span class="prow"><button class="btn sm" data-act="ctr-copiar">Copiar</button><button class="btn sm pri" data-act="ctr-bajar">Descargar</button></span></div>
+      <textarea id="ctr-texto" readonly style="min-height:520px;font-size:12.5px;line-height:1.5">${esc(contratoTexto(c))}</textarea></div>
+  </div>`}
+function contratoHTML(c){
+  const t=esc(contratoTexto(c)).replace(/\n/g,'<br>');
+  return `<!doctype html><html lang="${c.idioma}"><head><meta charset="utf-8"><title>${c.idioma==='en'?'Agreement':'Contrato'} · ${esc(c.cliente||'')}</title><style>body{font-family:Georgia,serif;max-width:720px;margin:48px auto;padding:0 24px;line-height:1.6;color:#15171b}</style></head><body>${t}</body></html>`;
+}
+
+/* ============ Adaptar el portafolio a una vacante ============ */
+function adaptarDraft(){return S.adp=S.adp||{estudio:'',puesto:'',link:'',texto:''}}
+function piezasPortafolio(){
+  const ev=(S.ajustes.niveles||[]).slice().sort((a,b)=>a.ts-b.ts).at(-1);
+  const pf=(ev?.data?.piezas||[]).map(x=>`${x.pieza} (${x.decision}: ${x.nota})`);
+  const ps=Object.values(S.P).filter(p=>(p.piezas||[]).length).map(p=>`${p.nombre} (${p.tipo}, proyecto en curso${p.piezas.at(-1)?.feedback?.nivel?', crítica: '+p.piezas.at(-1).feedback.nivel:''})`);
+  return [...pf,...ps];
+}
+function vAdaptar(){
+  const d=adaptarDraft(),hist=(S.ajustes.adaptaciones||[]).slice().reverse(),a=S.adpVer!=null?hist[S.adpVer]:hist[0],r=a?.data;
+  const col=n=>n>=70?'var(--ok)':n>=45?'var(--c-tecnica)':'var(--warn)';
+  const cumple={sí:'var(--ok)',si:'var(--ok)',parcial:'var(--c-tecnica)',no:'var(--warn)'};
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Adaptar a una vacante</h1>
+  <p class="intro">Pega la vacante y el asesor la compara con tu portafolio: qué tanto encajas, qué piezas poner primero para <b>ese</b> estudio, qué te falta y tu carta de presentación en inglés. Un portafolio adaptado vale más que diez postulaciones genéricas.</p>
+  <div class="box"><div class="grid3" style="gap:10px">
+    <div class="field"><label for="adp-estudio">Estudio</label><input type="text" id="adp-estudio" data-adp="estudio" value="${esc(d.estudio)}"></div>
+    <div class="field"><label for="adp-puesto">Puesto</label><input type="text" id="adp-puesto" data-adp="puesto" value="${esc(d.puesto)}"></div>
+    <div class="field"><label for="adp-link">Link de la vacante</label><input type="text" id="adp-link" data-adp="link" value="${esc(d.link)}"></div></div>
+    <div class="field"><label for="adp-texto">Texto de la vacante</label><textarea id="adp-texto" data-adp="texto" style="min-height:160px" placeholder="Abre la vacante, copia responsabilidades y requisitos, y pégalos aquí">${esc(d.texto)}</textarea></div>
+    <div class="prow">${d.link?`<a class="btn ghost" href="${esc(d.link)}" target="_blank" rel="noopener">Abrir vacante ↗</a>`:''}
+      ${S.sample?(S.aiBusy.adaptar?'<button class="btn" data-act="ai-stop" data-k="adaptar">Detener</button><span class="muted">Comparando con tu portafolio…</span>':'<button class="btn pri" data-act="ai" data-k="adaptar">Analizar y adaptar</button>'):'<span class="muted">El análisis necesita la conexión con Claude.</span>'}</div>
+    ${S.ai.adaptar?.error?`<p class="muted">${esc(S.ai.adaptar.error)}</p>`:''}</div>
+  ${r?`
+  <div class="grid2">
+    <div class="box"><span class="lbl">${esc(a.estudio)} · ${esc(a.puesto)} · ${fecha(a.ts)}</span>
+      <div class="prow" style="align-items:baseline;gap:12px"><b class="cotbig" style="color:${col(+r.encaje||0)}">${+r.encaje||0}%</b><span class="lbl">encaje</span></div>
+      <p style="margin:0">${esc(r.resumen||'')}</p>
+      ${r.aplicar?`<p class="next" style="margin:0">${esc(r.aplicar)}</p>`:''}
+      <div class="prow"><button class="btn sm" data-act="adp-post">Guardar en Postulaciones</button></div></div>
+    <div class="box"><h3>Pon primero</h3><ol style="margin:0;padding-left:20px;line-height:1.6">${(r.orden_piezas||[]).map(x=>`<li><b>${esc(x.pieza)}</b> — <span class="muted">${esc(x.porque)}</span></li>`).join('')}</ol>
+      ${(r.quitar||[]).length?`<p style="margin:0"><b>Quita o manda al final:</b> ${r.quitar.map(esc).join(' · ')}</p>`:''}</div>
+  </div>
+  <div class="box"><h3>Requisitos contra tu portafolio</h3><ul class="list">${(r.requisitos||[]).map(x=>`<li style="grid-template-columns:1fr auto"><span><b>${esc(x.req)}</b><br><span class="muted">${esc(x.evidencia||'')}</span></span><span class="nivel" style="color:${cumple[(x.cumples||'').toLowerCase()]||'var(--ink3)'};border-color:${cumple[(x.cumples||'').toLowerCase()]||'var(--ink3)'}">${esc(x.cumples||'')}</span></li>`).join('')}</ul></div>
+  ${(r.falta||[]).length?`<div class="box"><h3>Qué te falta y cómo cubrirlo rápido</h3><ul class="list">${r.falta.map(x=>`<li style="grid-template-columns:1fr"><span><b>${esc(x.que)}</b><br><span class="muted">${esc(x.como)}</span></span></li>`).join('')}</ul></div>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Carta de presentación (inglés)</h3><button class="btn sm pri" data-act="adp-copiar">Copiar</button></div>
+    ${r.asunto?`<p style="margin:0"><span class="lbl">Asunto</span> ${esc(r.asunto)}</p>`:''}
+    <textarea id="adp-carta" style="min-height:260px;line-height:1.5">${esc(r.carta||'')}</textarea></div>
+  ${(r.prueba||[]).length?`<div class="box"><h3>Prepárate para su prueba o entrevista</h3><ul style="margin:0;padding-left:18px;line-height:1.6">${r.prueba.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`:''}
+  ${hist.length>1?`<div class="box"><h3>Análisis anteriores</h3><ul class="list">${hist.map((h,i)=>`<li><span><b>${esc(h.estudio)}</b> · ${esc(h.puesto)} · ${+h.data.encaje||0}% · <span class="muted">${fecha(h.ts)}</span></span><button class="btn sm" data-act="adp-ver" data-i="${i}">Ver</button></li>`).join('')}</ul></div>`:''}`}
 
 /* ============ Taller de pilares: se construyen juntos ============ */
 function reglasTaller(p){return `${ROL}\n\n${ctxProyecto(p)}\n${p.brief.historia?'Historia: '+p.brief.historia.slice(0,3000):''}\n\nVas a construir CON él los 3 pilares de Art Direction de este proyecto. Los pilares son fundamentales: guían cada decisión. NO los decidas tú solo.\n- Haz UNA pregunta a la vez, corta y concreta, que parta de sus respuestas anteriores. Cuando ayude, ofrece 2-3 opciones de ejemplo para que reaccione.\n- Máximo 5 preguntas antes de proponer. Cubre: qué debe sentir quien lo vea, la verdad central del concepto, qué NUNCA debe pasar en el diseño, qué referencia o momento lo captura mejor, y qué lo hace distinto.\n- Al proponer, usa SUS palabras, di de qué respuesta sale cada pilar y pídele que los ajuste. Si pide cambios, ajústalos y explica qué cambió.\n- Un buen pilar: es una intención, no un objeto ("lo sagrado pesa", no "serpiente"); se nota visualmente; los 3 no se repiten; sirve para decir que no a una idea.\n- Siempre que propongas o ajustes pilares, termina el mensaje con una línea exacta: PILARES: [{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño"},{"t":"","f":""},{"t":"","f":""}]`}
@@ -2356,6 +2561,10 @@ function aMarkdown(p){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
+  if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
+  if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
+  if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
+  if(t.dataset.ctrdesde){const q=S.cotHist?.lista?.find(x=>x.folio===t.value);if(q){const c=contratoDraft();Object.assign(c,{cliente:q.cliente||'',proyecto:q.proyecto||'',total:String(q.total||''),mon:q.mon||'MXN',revisiones:String(q.d?.rev??2),uso:q.d?.uso??1,entrega:q.d?.entrega||'',alcance:q.d?`${q.d.cant} × ${COT_TIPOS[q.d.tipo]?.[0]||''} (complejidad ${['simple','media','alta'][q.d.compl]||''})`:c.alcance});renderMain()}return}
   if(t.dataset.vacf!==undefined){S.vacF=S.vacF||{};S.vacF[t.dataset.vacf]=t.type==='checkbox'?t.checked:t.value;const foc=t.id,pos=t.selectionStart;renderMain();const el=$('#'+foc);if(el&&t.type==='text'){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.li){const [k,id,fld]=t.dataset.li.split('|'),x=itemDe(k,id);if(!x)return;x[fld]=t.value;marcarAj();if(t.tagName==='SELECT'||t.type==='date')renderMain();return}
   if(t.dataset.msg){msgVars();S.msg[t.dataset.msg]=t.value;S.msgTexto=null;const v=msgVars(),tp=MSGS.find(x=>x.k===v.k)||MSGS[0],ta=$('#ms-texto');if(ta)ta.value=tp.en(v);return}
@@ -2478,6 +2687,35 @@ async function accion(a,el){
     case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
     case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
     case 'cot-hist':cargarCotHist();break;
+    case 'vac-adaptar':{const x=(S.vac?.items||[]).find(v=>v.id===ds.id);if(!x)return;S.adp={estudio:x.company||'',puesto:x.title||'',link:x.url||'',texto:''};S.adpVer=null;S.vista='adaptar';render();toast('Abre la vacante, copia su texto y pégalo aquí');break}
+    case 'post-adaptar':{const x=itemDe('postulaciones',ds.id);if(!x)return;S.adp={estudio:x.estudio||'',puesto:x.puesto||'',link:x.link||'',texto:''};S.adpVer=null;S.vista='adaptar';render();break}
+    case 'adp-ver':S.adpVer=+ds.i;renderMain();window.scrollTo({top:0});break;
+    case 'adp-copiar':{const t=$('#adp-carta')?.value||'';try{await navigator.clipboard.writeText(t);toast('Copiada')}catch{$('#adp-carta')?.select();toast('Selecciona y copia')}break}
+    case 'adp-post':{const h=(S.ajustes.adaptaciones||[]).slice().reverse()[S.adpVer??0];if(!h)return;
+      const ex=lista('postulaciones').find(x=>x.link&&x.link===h.link);const nota=`Encaje ${h.data.encaje}% · Primero: ${(h.data.orden_piezas||[]).map(x=>x.pieza).slice(0,3).join(', ')}`;
+      if(ex){ex.notas=[ex.notas,nota].filter(Boolean).join('\n')}else lista('postulaciones').push({id:uid(),estudio:h.estudio,puesto:h.puesto,link:h.link,contacto:'',estado:'Por aplicar',fecha:hoyKey(),seguimiento:'',notas:nota});
+      marcarAj();renderSide();toast('Guardado en Postulaciones');break}
+    case 'rs-plan':{const n=planLocal();if(!n){toast('Primero sube piezas o referencias a algún proyecto');return}marcarAj();render();toast(`${n} publicaciones planeadas`);break}
+    case 'rs-add':lista('posts').push({id:uid(),fecha:hoyKey(),red:'Instagram + ArtStation',tipo:'Final',titulo:'',es:'',en:'',hashtags:hashtagsDe(''),estado:'Idea'});marcarAj();renderMain();break;
+    case 'rs-copiar':{const x=itemDe('posts',ds.id);if(!x)return;const t=[x.en,x.es,x.hashtags].filter(Boolean).join('\n\n');try{await navigator.clipboard.writeText(t);toast('Copiado')}catch{toast('No se pudo copiar')}break}
+    case 'rs-ai':{const x=itemDe('posts',ds.id);if(!x||!S.sample)return;const k='rs-'+x.id,pr=S.P[x.pid];S.aiBusy[k]=true;renderMain();
+      try{const r=await S.sample.json(`${ROL}\n\nEscribe el texto para una publicación de arte en Instagram y ArtStation.\nPieza/proyecto: ${x.titulo||'—'} (${pr?.tipo||''}). Tipo de publicación: ${x.tipo}.\n${pr?`Concepto: ${pr.concepto.frase||pr.concepto.nucleos.filter(Boolean).join(' / ')}. Mood: ${pr.mood.sensacion||''}. Técnica: ${pr.tecnica.medio||''}. Pilares: ${pr.pilares.map(q=>q.t).filter(Boolean).join(', ')}.`:''}\nSu gusto: ${S.ajustes.gusto||''}\nTono: profesional y cercano, de concept artist; cuenta la intención y el proceso, sin exagerar ni pedir follows. 2-4 frases. Incluye 1 pregunta corta al final solo si es natural.\nResponde SOLO con JSON: {"en":"texto en inglés","es":"texto en español","hashtags":"10-15 hashtags relevantes del medio, en una línea"}`,{cache:false,modelTier:'quick'});
+        Object.assign(x,{en:String(r.en||x.en),es:String(r.es||x.es),hashtags:String(r.hashtags||x.hashtags)});marcarAj()}catch{toast('No se pudo escribir el texto')}
+      delete S.aiBusy[k];renderMain();break}
+    case 'cb-add':{const v=k=>$('#cb-'+k)?.value.trim()||'';const total=parseFloat(v('total').replace(/[^\d.]/g,''));if(!v('cliente')||!total){toast('Escribe cliente y total');return}
+      lista('cobros').push({id:uid(),cliente:v('cliente'),proyecto:v('proyecto'),total,mon:$('#cb-mon').value,pagos:[],estado:'Activo',ts:Date.now()});marcarAj();render();break}
+    case 'cot-cobro':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(!q)return;if(lista('cobros').some(c=>c.folio===q.folio)){S.vista='cobros';render();return}
+      lista('cobros').push({id:uid(),folio:q.folio,cliente:q.cliente||'',proyecto:q.proyecto||'',total:q.total,mon:q.mon||'MXN',pagos:[],estado:'Activo',ts:Date.now()});marcarAj();S.vista='cobros';render();toast('Cobro creado desde '+q.folio);break}
+    case 'cb-pago':{const c=itemDe('cobros',ds.id);if(!c)return;const m=parseFloat(($('#cbp-m-'+c.id)?.value||'').replace(/[^\d.]/g,''));if(!m){toast('Escribe el monto');return}
+      c.pagos=c.pagos||[];c.pagos.push({monto:m,fecha:$('#cbp-f-'+c.id)?.value||hoyKey(),nota:$('#cbp-n-'+c.id)?.value.trim()||(c.pagos.length?'Pago':'Anticipo')});if(cobroPagado(c)>=c.total)c.estado='Pagado';marcarAj();render();toast('Pago registrado');break}
+    case 'cb-pago-del':{const c=itemDe('cobros',ds.id);if(!c)return;c.pagos.splice(+ds.i,1);if(cobroPagado(c)<c.total&&c.estado==='Pagado')c.estado='Activo';marcarAj();render();break}
+    case 'cb-csv':{const filas=[['fecha','cliente','proyecto','folio','monto','moneda','monto_mxn','nota']];
+      for(const c of lista('cobros'))for(const p of c.pagos||[])filas.push([p.fecha,c.cliente,c.proyecto,c.folio||'',p.monto,c.mon,Math.round(aMxn(p.monto,c.mon)),p.nota||'']);
+      const csv=filas.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');await guardarArchivo(`cobros-${hoyKey()}.csv`,csv);break}
+    case 'ctr-idioma':contratoDraft().idioma=ds.v;renderMain();break;
+    case 'ctr-copiar':{try{await navigator.clipboard.writeText(contratoTexto(contratoDraft()));toast('Copiado')}catch{toast('No se pudo copiar')}break}
+    case 'ctr-bajar':{const c=contratoDraft();await guardarArchivo(`${c.idioma==='en'?'agreement':'contrato'}-${slug(c.cliente||'cliente',30)}.html`,contratoHTML(c));break}
+    case 'cot-hist-ctr':await cargarCotHist();S.vista='contratos';renderMain();break;
     case 'vac-actualizar':cargarVacantes(true);break;
     case 'vac-nivel':S.vacF=S.vacF||{};S.vacF.nivel=ds.v;renderMain();break;
     case 'vac-guardar':{const x=(S.vac?.items||[]).find(v=>v.id===ds.id);if(!x)return;
