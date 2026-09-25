@@ -531,6 +531,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 .rcur-b{padding:8px 10px;display:flex;flex-direction:column;gap:3px;font-size:13px}
 .tagp{align-self:flex-start;font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;background:var(--surface3);color:var(--ink2)}.tagp.free{background:var(--ok-bg);color:var(--ok)}
 .dirr{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.dirc{background:var(--bg);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:5px;text-decoration:none;color:var(--ink);border:1px solid transparent;font-size:13.5px}.dirc:hover{border-color:var(--line2)}.dirc b{font-size:15px}
+.plan7{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}.plan7 li{background:var(--bg);border-radius:8px;padding:8px 10px}.plan7 li.hecho{opacity:.6}.plan7 small{display:block;margin-top:3px}.plan7 a{color:var(--accent)}
 .fmt code{font-family:var(--mono);font-size:12px}.fmt li{line-height:1.5}
 .fmtck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}.fmtck li{padding:6px 10px;border-radius:0 6px 6px 0;border-left:3px solid var(--ink3);background:var(--bg)}.fmtck li.ok{border-color:var(--ok)}.fmtck li.warn{border-color:var(--c-tecnica)}.fmtck li.no{border-color:var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
@@ -805,7 +806,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhdw34p').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhe4spm').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1094,6 +1095,7 @@ function renderSide(){
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
       ${nav('ruta','map','Ruta de aprendizaje')}
+      ${nav('potenciar','target','Potenciar mi punto débil')}
       ${nav('recursos','grid','Recursos y pinceles')}
       ${nav('estilo','eye','Mi estilo')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
@@ -1167,6 +1169,7 @@ function renderMainInner(){
   if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
   if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
   if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
+  if(S.vista==='potenciar'){m.innerHTML=vPotenciar();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
@@ -1783,7 +1786,9 @@ function debilidades(){
   for(const p of Object.values(S.P))for(const x of p.piezas||[])for(const s of x.feedback?.puntajes||[]){const k=CRIT2SKILL[s.criterio];if(!k)continue;suma[k]=(suma[k]||0)+(+s.nota||0);n[k]=(n[k]||0)+1}
   const conDatos=Object.keys(n).map(k=>[k,suma[k]/n[k]]).sort((a,b)=>a[1]-b[1]);
   const resto=Object.keys(SKILLS).filter(k=>!n[k]);
-  return {orden:[...conDatos.map(x=>x[0]),...resto],prom:Object.fromEntries(conDatos)};
+  const MAP={color:'color',valores:'valores',perspectiva:'perspectiva',composicion:'composicion',anatomia:'anatomia',diseno:'diseno',silueta:'silueta',materiales:'diseno'},man=(S.ajustes.debiles||[]).map(k=>MAP[k]).filter(Boolean);
+  const orden=[...man,...conDatos.map(x=>x[0]),...resto].filter((k,i,a)=>a.indexOf(k)===i);
+  return {orden,prom:Object.fromEntries(conDatos)};
 }
 function ejercicioDeHoy(){
   const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},hoy=r.dias[hoyKey()];
@@ -4889,7 +4894,7 @@ function vRecursos(){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''},R=
     <div class="rcur-b"><b>${esc(corto(x.nombre,48))}</b><span class="muted">${esc(x.tipo)} · ${esc(x.fuente)}</span><span class="tagp ${/Gratis/.test(x.precio)?'free':''}">${esc(x.precio)}</span>${x.licencia?`<small class="muted">${esc(corto(x.licencia,40))}</small>`:''}
     <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a><button class="btn ghost sm" data-act="recu-fav" data-id="${esc(x.id)}">${fav?'★':'☆'}</button></div></div></div>`};
   return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Recursos y pinceles</h1>
-  <p class="intro">Pinceles para Photoshop y Procreate, cosas para <strong>Blender</strong> y <strong>ZBrush</strong>, texturas, HDRIs y modelos, <strong>de gratis a de paga</strong>. Las novedades se actualizan solas cada día desde Poly Haven, ambientCG, BlenderKit, Sketchfab y Blender Extensions.</p>
+  <p class="intro">Pinceles para Photoshop y Procreate, cosas para <strong>Blender</strong> y <strong>ZBrush</strong>, texturas, HDRIs y modelos, <strong>de gratis a de paga</strong>. Las novedades se actualizan solas cada día desde Poly Haven, ambientCG, BlenderKit, Sketchfab y Blender Extensions. <button class="btn ghost sm" data-act="vista" data-v="potenciar">Usar mis recursos para mi punto débil →</button></p>
   <div class="box"><div class="chips">${REC_CATS.map(c=>`<button class="ch ${f.cat===c?'on':''}" data-act="recu-cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
     <div class="prow"><span class="lbl">Precio</span>${['Todos','Gratis','Paga'].map(c=>`<button class="ch xs ${f.precio===c?'on':''}" data-act="recu-precio" data-v="${c}">${c}</button>`).join('')}
       <input type="text" id="recu-q" data-recq="1" value="${esc(f.q)}" placeholder="Buscar: roca, jaguar, niebla…" style="flex:1 1 200px"></div></div>
@@ -4906,6 +4911,72 @@ async function accionRec(a,el,p,ds){const f=S.recF=S.recF||{cat:'Todos',precio:'
   switch(a){case 'recu-cat':f.cat=ds.v;S.recuN=36;renderMain();return true;case 'recu-precio':f.precio=ds.v;renderMain();return true;
     case 'recu-act':cargarRecursos(true);return true;case 'recu-mas':S.recuN=(S.recuN||36)+36;renderMain();return true;
     case 'recu-fav':{const L=S.ajustes.recursosFav=S.ajustes.recursosFav||[],i=L.findIndex(v=>v.id===ds.id);if(i>=0)L.splice(i,1);else{const x=(S.recu?.items||[]).find(v=>v.id===ds.id);if(x)L.push({...x})}marcarAj();renderMain();return true}}
+  return false}
+
+/* =====================================================================
+   POTENCIAR MI PUNTO DÉBIL · tus recursos + ejercicios + plan de 7 días
+   ===================================================================== */
+const HAB=[['color','Iluminación y color'],['valores','Valores'],['perspectiva','Perspectiva y forma'],['composicion','Composición'],['anatomia','Anatomía'],['diseno','Diseño de forma'],['silueta','Silueta'],['materiales','Materiales y texturas'],['entornos','Entornos'],['3d','3D']];
+const HAB_EJ={color:['color','claves','bl_luz'],valores:['valores','claves'],perspectiva:['perspectiva','escala','bl_blockout','profundidad'],composicion:['composicion','bl_luz'],anatomia:['anatomia','zb_anatomia'],diseno:['diseno','zb_forma'],silueta:['silueta','zb_forma'],materiales:['diseno','zb_hard','bl_paint'],entornos:['escala','atmosfera','profundidad','bl_blockout'],'3d':['bl_blockout','bl_luz','bl_paint','zb_forma']};
+const REC_TIPOS2=['Pincel / set de pinceles','Plugin o add-on','App o programa','Libro','Curso o tutorial','Textura / HDRI / modelo','Otro'];
+/* conocimiento de herramientas conocidas: cómo usarlas para cada habilidad */
+const KB=[
+ [/colou?r ?constructor/i,{color:'Antes de pintar arma una escena: tu luz principal (ej. fuego naranja), la luz de ambiente (cielo o selva) y los colores locales de tus materiales. Exporta los swatches (PNG) y úsalos como paleta: cada material en luz, en sombra y en luz rebotada.',valores:'Revisa los swatches de sombra de todos tus materiales: deben quedar agrupados en valor. Si una sombra sale muy clara, tu luz de ambiente es demasiado fuerte.',composicion:'Usa la misma escena con 2 luces (principal fuerte y relleno débil) y define qué material recibe el acento: ahí va tu foco.',materiales:'Prueba el mismo color local bajo 3 luces (fuego, luna, nublado) y guarda cada escena en LightScenes: así aprendes cómo reacciona cada material.',entornos:'Una escena por hora del día de tu entorno (amanecer, mediodía, noche): tu color script sale de ahí.'}],
+ [/blender/i,{perspectiva:'Blockout con cubos + cámara y pinta encima: la perspectiva sale correcta sola. Controla la distorsión con la distancia focal (18 mm exagera, 50 mm neutro, 85 mm comprime).',color:'Una luz principal + un HDRI de Poly Haven; captura en Eevee y úsalo como guía de valores y temperatura para pintar.',composicion:'Mueve solo la cámara dentro del mismo blockout y captura 6 encuadres: elige el más fuerte.','3d':'Blockout → luz → cámara → render → paintover.',entornos:'Blockout del entorno para escala y luz; pinta encima.'}],
+ [/procreate/i,{perspectiva:'Acciones → Lienzo → Guía de dibujo → Perspectiva (1, 2 o 3 puntos) con «Asistencia de dibujo» activada en la capa.',color:'Ajustes → Mapa de degradado para probar claves de luz; capa en Multiplicar para sombras y en Añadir o Sobreexponer color para la luz.',valores:'Capa encima en modo Color rellena de gris: ves tus valores sin color.'}],
+ [/photoshop|\bps\b/i,{perspectiva:'Filtro → Punto de fuga para planos en perspectiva; traza guías desde tus puntos de fuga con la herramienta Línea; ajusta con Deformación de perspectiva.',color:'Capa de ajuste Mapa de degradado para la clave; Multiplicar para sombra, Sobreexponer color para luz; capa Blanco y negro encima para revisar valores.',valores:'Capa de ajuste Blanco y negro arriba de todo, encendida y apagada mientras pintas.'}],
+ [/clip ?studio|csp/i,{perspectiva:'Reglas de perspectiva (Capa → Regla/Marco → Crear regla de perspectiva) y dibuja con ajuste a regla.',color:'Capas de ajuste de mapa de degradado y modos de fusión para luz y sombra.'}],
+ [/coolorus|magic ?picker|rueda|color ?wheel|gamut/i,{color:'Máscara de gama (gamut mask): limita tu paleta a una forma dentro de la rueda para que la luz y el color se vean coherentes.'}],
+ [/lumenzia|luminos/i,{valores:'Máscaras de luminosidad: selecciona luces o sombras y ajústalas sin tocar el resto.',color:'Aísla las luces con una máscara y cálientalas; las sombras, enfríalas.'}],
+ [/pureref/i,{color:'Tablero de referencias de luz agrupado por tipo: contraluz, fuego, nublado, luz de luna.',perspectiva:'Tablero de fotos con perspectivas extremas: dibuja encima sus líneas de fuga.',composicion:'Tablero de fotogramas de cine: marca el foco y las líneas guía de cada uno.'}],
+ [/gurney|color and light/i,{color:'Un capítulo por día + el estudio de 20 minutos que describe (luz de ambiente, luz reflejada, temperatura).'}],
+ [/robertson|how to draw|how to render/i,{perspectiva:'Un capítulo por semana: cajas en perspectiva, elipses y secciones. Repite sus ejercicios hasta hacerlos sin regla.',color:'«How to Render»: luz sobre formas básicas, sombras proyectadas y reflejos.'}],
+ [/bucci/i,{color:'Sus videos de color y valores: pausa y repite el ejercicio con una foto tuya.',valores:'Sus videos de valores y agrupamiento de formas.'}],
+ [/mateu|framed/i,{composicion:'Haz los ejercicios de cada capítulo sobre fotogramas de películas que te gusten.',perspectiva:'«Framed Perspective»: perspectiva aplicada a escenas con personajes.'}],
+ [/hdri|poly ?haven/i,{color:'Mismo modelo o blockout con 3 HDRIs distintos: compara temperatura y dirección de la luz.'}],
+ [/zbrush/i,{diseno:'Esculpe masas grandes y juzga la silueta en Flat Color.',anatomia:'Estudio de anatomía en bloques grandes antes del detalle.',color:'Render BPR con una sola luz rasante para estudiar cómo la forma recibe la luz.',perspectiva:'Gira tu escultura y dibújala desde 3 ángulos: entrenas la forma en 3D.'}],
+ [/sketchup/i,{perspectiva:'Arquitectura rápida en bloque; exporta la vista y dibuja encima.'}],
+ [/perspective|perspectiva|grid|rejilla/i,{perspectiva:'Úsalo para trazar 1, 2 y 3 puntos antes de dibujar; al final intenta el mismo ejercicio sin la guía.'}]];
+function tipsDe(r,hab){const t=[];for(const [re,m] of KB){if(re.test(r.nombre+' '+(r.app||''))&&m[hab])t.push(m[hab])}
+  if(!t.length){const tp=r.tipo||'';t.push(/Pincel/.test(tp)?`Úsalo en el ejercicio del día; antes, haz una tira de prueba (presión, textura, borde) y anota para qué sirve en ${HAB.find(h=>h[0]===hab)?.[1].toLowerCase()}.`:/Libro|Curso/.test(tp)?'Un capítulo o lección por día + su ejercicio aplicado a tu proyecto actual.':/Textura|HDRI|modelo/i.test(tp)?'Úsalo en un blockout o como referencia de cómo cae la luz sobre ese material.':/Plugin|add-on|App/i.test(tp)?'Ábrelo en el ejercicio del día y anota qué te resolvió; si no te sirve para esto, desmárcalo.':'Úsalo en el ejercicio del día y anota qué aprendiste.')}
+  if(r.nota)t.push('Tu nota: '+r.nota);return t}
+function misRecursos(){const L=(S.ajustes.misRecursos||[]).map(r=>({...r,propio:true}));
+  for(const f of S.ajustes.recursosFav||[]){const habs=/HDRI/.test(f.tipo)?['color']:/Textura|Material/.test(f.tipo)?['materiales','color']:/Modelo/.test(f.tipo)?['perspectiva','entornos','3d']:/Add-on/.test(f.tipo)?['3d']:['3d'];L.push({id:f.id,nombre:f.nombre,tipo:f.tipo,app:f.app||'',url:f.url,habs,guardado:true})}
+  return L}
+function planDe(hab){const R=misRecursos().filter(r=>(r.habs||[]).includes(hab)),ej=HAB_EJ[hab]||[hab],sug=[...(RUTA[hab==='3d'?'blender':hab==='materiales'?'color':hab]||[]).map(([tipo,t,a])=>({nombre:t+' · '+a,tipo:tipo==='libro'?'Libro':'Curso o tutorial',url:gq(t+' '+a),sug:true}))];
+  if(hab==='perspectiva'||hab==='entornos')sug.unshift({nombre:'Blender (blockout + cámara)',tipo:'App o programa',app:'Blender',url:'https://www.blender.org/',sug:true});
+  if(hab==='color'||hab==='valores')sug.unshift({nombre:'HDRIs de Poly Haven',tipo:'Textura / HDRI / modelo',url:'https://polyhaven.com/hdris',sug:true});
+  const pool=[...R,...sug],dias=[];for(let d=0;d<7;d++){const k=ej[d%ej.length],r=pool[d%Math.max(1,pool.length)];dias.push({d:d+1,skill:k,ej:(EJERCICIOS[k]||[])[d%3]||'',rec:r,tip:r?tipsDe(r,hab)[0]:''})}
+  return {R,sug,dias}}
+function vPotenciar(){const deb=S.ajustes.debiles||[],hab=S.potH||deb[0]||'color',P=planDe(hab),pl=S.ajustes.planDebil||{},hechos=(pl.hab===hab&&pl.hechos)||{},mis=S.ajustes.misRecursos||[],d=S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Potenciar mi punto débil</h1>
+  <p class="intro">Dime qué te falla y qué recursos tienes (pinceles, plugins, apps, libros, cursos). Te armo un plan de 7 días que usa <strong>tus</strong> recursos, con ejercicios concretos y cómo usar cada herramienta para esa habilidad.</p>
+  <div class="box"><h3>¿Qué te falla?</h3><div class="chips">${HAB.map(([k,n])=>`<button class="ch ${deb.includes(k)?'on':''}" data-act="deb-tog" data-v="${k}">${n}</button>`).join('')}</div>
+    <p class="hint">Lo que marques se vuelve prioridad en tu Estudio diario y en tu Ruta de aprendizaje.</p></div>
+  <div class="box"><h3>Mis recursos <span class="lbl">${mis.length}</span></h3>
+    <div class="grid2" style="gap:8px"><div class="field"><label for="mr-n">Nombre</label><input type="text" id="mr-n" data-mr="nombre" value="${esc(d.nombre)}" placeholder="Color Constructor, set de pinceles de…, Blender…"></div>
+      <div class="field"><label for="mr-t">Tipo</label><select id="mr-t" data-mr="tipo"><option value="">—</option>${REC_TIPOS2.map(t=>`<option ${d.tipo===t?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="field"><label for="mr-a">¿En qué app?</label><input type="text" id="mr-a" data-mr="app" value="${esc(d.app)}" placeholder="Photoshop, Procreate, Blender…"></div>
+      <div class="field"><label for="mr-u">Enlace (opcional)</label><input type="text" id="mr-u" data-mr="url" value="${esc(d.url)}" placeholder="https://…"></div></div>
+    <div class="field"><label>¿Para qué habilidades te sirve?</label><div class="chips">${HAB.map(([k,n])=>`<button class="ch xs ${d.habs.includes(k)?'on':''}" data-act="mr-hab" data-v="${k}">${n}</button>`).join('')}</div></div>
+    <div class="field"><label for="mr-nota">¿Cómo lo usas? (opcional)</label><input type="text" id="mr-nota" data-mr="nota" value="${esc(d.nota)}" placeholder="Ej. armo paletas de luz cálida/fría antes de pintar"></div>
+    <div class="prow"><button class="btn pri" data-act="mr-add">＋ Agregar recurso</button>${d.nombre&&KB.some(([re])=>re.test(d.nombre+' '+d.app))?'<span class="ok-box sm">La conozco: te daré tips específicos para usarla.</span>':''}</div>
+    ${mis.length?`<ul class="list">${mis.map((r,i)=>`<li><span><b>${esc(r.nombre)}</b> <span class="muted">${esc(r.tipo||'')}${r.app?' · '+esc(r.app):''}</span><br><span class="chips">${(r.habs||[]).map(k=>`<span class="tagp">${esc(HAB.find(h=>h[0]===k)?.[1]||k)}</span>`).join('')}</span></span><span class="prow">${r.url?`<a class="btn ghost sm" href="${esc(r.url)}" target="_blank" rel="noopener">↗</a>`:''}<button class="btn ghost sm danger" data-act="mr-del" data-i="${i}">✕</button></span></li>`).join('')}</ul>`:'<p class="muted">Agrega lo que ya tienes. También cuentan los que guardaste con ★ en Recursos y pinceles.</p>'}</div>
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Plan de 7 días · ${esc(HAB.find(h=>h[0]===hab)?.[1]||hab)}</h3><div class="chips">${(deb.length?deb:HAB.map(h=>h[0])).map(k=>`<button class="ch xs ${k===hab?'on':''}" data-act="pot-h" data-v="${k}">${esc(HAB.find(h=>h[0]===k)?.[1]||k)}</button>`).join('')}</div></div>
+    ${P.R.length?`<p class="hint">Usa tus recursos: ${P.R.map(r=>'<b>'+esc(r.nombre)+'</b>').join(', ')}.</p>`:`<p class="nd-box sm">No tienes recursos marcados para esta habilidad. El plan usa sugerencias; agrega los tuyos arriba y se reemplazan.</p>`}
+    <ol class="plan7">${P.dias.map(x=>`<li class="${hechos[x.d]?'hecho':''}"><label class="chk"><input type="checkbox" data-act="plan-dia" data-d="${x.d}" data-h="${hab}" ${hechos[x.d]?'checked':''}><span><b>Día ${x.d} · ${esc(SKILLS[x.skill]||x.skill)}</b><small>${esc(x.ej)}</small>
+      ${x.rec?`<small><b>Con:</b> ${x.rec.url?`<a href="${esc(x.rec.url)}" target="_blank" rel="noopener">${esc(x.rec.nombre)} ↗</a>`:esc(x.rec.nombre)}${x.rec.sug?' <span class="tagp">sugerido</span>':''} — ${esc(x.tip)}</small>`:''}</span></label></li>`).join('')}</ol>
+    <p class="muted">Sube el resultado de cada día en Estudio diario (enfoque del día) o en Crítica para que te dé feedback medido. ${Object.keys(hechos).length}/7 hechos.</p></div>
+  ${P.R.length?`<div class="box"><h3>Cómo usar tus recursos para ${esc((HAB.find(h=>h[0]===hab)?.[1]||hab).toLowerCase())}</h3><div class="dirr">${P.R.map(r=>`<div class="dirc"><b>${esc(r.nombre)}</b><span class="muted">${esc(r.tipo||'')}${r.app?' · '+esc(r.app):''}</span><ul class="why-l">${tipsDe(r,hab).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}</div></div>`:''}`}
+async function accionPot(a,el,p,ds){const d=S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};
+  switch(a){
+    case 'deb-tog':{const L=S.ajustes.debiles=S.ajustes.debiles||[],i=L.indexOf(ds.v);i>=0?L.splice(i,1):L.push(ds.v);if(i<0)S.potH=ds.v;marcarAj();renderMain();return true}
+    case 'pot-h':S.potH=ds.v;renderMain();return true;
+    case 'mr-hab':{const i=d.habs.indexOf(ds.v);i>=0?d.habs.splice(i,1):d.habs.push(ds.v);renderMain();return true}
+    case 'mr-add':{if(!d.nombre.trim()){toast('Escribe el nombre del recurso');return true}if(!d.habs.length){for(const [re,m] of KB)if(re.test(d.nombre+' '+d.app))d.habs.push(...Object.keys(m).filter(k=>!d.habs.includes(k)))}if(!d.habs.length){toast('Marca para qué habilidades te sirve');return true}
+      (S.ajustes.misRecursos=S.ajustes.misRecursos||[]).push({id:uid(),...d,nombre:d.nombre.trim()});S.recNuevo=null;marcarAj();renderMain();toast('Recurso agregado a tu plan');return true}
+    case 'mr-del':S.ajustes.misRecursos.splice(+ds.i,1);marcarAj();renderMain();return true;
+    case 'plan-dia':{const pl=S.ajustes.planDebil=S.ajustes.planDebil&&S.ajustes.planDebil.hab===ds.h?S.ajustes.planDebil:{hab:ds.h,hechos:{}};pl.hechos[ds.d]=!pl.hechos[ds.d];if(!pl.hechos[ds.d])delete pl.hechos[ds.d];marcarAj();renderMain();return true}}
   return false}
 
 /* ============ Eventos ============ */
@@ -4932,6 +5003,7 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.dxq){S.decQ=t.value;const pos=t.selectionStart;renderMain();const el=$('#dec-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
+  if(t.dataset.mr){S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};S.recNuevo[t.dataset.mr]=t.value;return}
   if(t.dataset.recq){S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};S.recF.q=t.value;const pos=t.selectionStart;renderMain();const el=$('#recu-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;return}
   if(t.dataset.pub){S.pub=S.pub||{};S.pub[t.dataset.pub]=t.value;return}
@@ -5238,7 +5310,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
