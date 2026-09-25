@@ -526,6 +526,11 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 .rc{margin:0;background:var(--bg);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
 .rc img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#000}.rc figcaption{padding:6px 8px;font-size:12.5px}
 .rc.fuera{outline:2px solid var(--warn)}
+.rcurs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.rcur{background:var(--bg);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}.rcur img,.rcur-ph{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--surface2);display:flex;align-items:center;justify-content:center;color:var(--ink3);font-family:var(--mono);font-size:12px}
+.rcur-b{padding:8px 10px;display:flex;flex-direction:column;gap:3px;font-size:13px}
+.tagp{align-self:flex-start;font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;background:var(--surface3);color:var(--ink2)}.tagp.free{background:var(--ok-bg);color:var(--ok)}
+.dirr{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.dirc{background:var(--bg);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:5px;text-decoration:none;color:var(--ink);border:1px solid transparent;font-size:13.5px}.dirc:hover{border-color:var(--line2)}.dirc b{font-size:15px}
 .fmt code{font-family:var(--mono);font-size:12px}.fmt li{line-height:1.5}
 .fmtck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}.fmtck li{padding:6px 10px;border-radius:0 6px 6px 0;border-left:3px solid var(--ink3);background:var(--bg)}.fmtck li.ok{border-color:var(--ok)}.fmtck li.warn{border-color:var(--c-tecnica)}.fmtck li.no{border-color:var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
@@ -790,6 +795,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
     vacantes,
     async hasSecret(n){const {data}=await sb.rpc('pc_has_named_secret',{p_name:n});return data===true},
     async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
+    recursos:()=>llamar('pc-recursos'),
     avisarAhora:()=>llamar('pc-avisos'),
     avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
@@ -799,7 +805,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhdprps').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhdw34p').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1088,6 +1094,7 @@ function renderSide(){
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
       ${nav('ruta','map','Ruta de aprendizaje')}
+      ${nav('recursos','grid','Recursos y pinceles')}
       ${nav('estilo','eye','Mi estilo')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
       ${nav('principios','book','Mis principios')}
@@ -1159,6 +1166,7 @@ function renderMainInner(){
   if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
   if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
   if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
+  if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
@@ -4839,6 +4847,67 @@ Object.assign(RUTA,{
   blender:[['youtube','Blender Beginner Tutorial (la dona)','Blender Guru · Andrew Price'],['youtube','Tutoriales para principiantes y modelado','Grant Abbitt'],['youtube','Lazy Tutorials (entornos rápidos)','Ian Hubert'],['curso','Cursos oficiales','Blender Studio'],['youtube','Blender para concept art','Jama Jurabaev']],
   zbrush:[['youtube','ZBrush Guides','Michael Pavlovich'],['libro','Anatomy for Sculptors','Uldis Zarins'],['youtube','Tutoriales de escultura','FlippedNormals'],['youtube','ZBrushLIVE / ZClassroom (oficial)','Maxon ZBrush']]});
 
+/* =====================================================================
+   RECURSOS Y PINCELES · novedades en vivo (API) + directorio curado
+   ===================================================================== */
+const gq=q=>`https://www.google.com/search?q=${encodeURIComponent(q)}`;
+const REC_DIR=[
+ /* [categoría, nombre, precio, qué es, para qué te sirve, url] */
+ ['Pinceles 2D','Pinceles de Kyle T. Webster (Adobe)','Gratis con Photoshop','Cientos de pinceles oficiales de Photoshop.','Base sólida para pintura digital y texturas sin comprar nada.',gq('Kyle T. Webster brushes Photoshop Adobe descargar')],
+ ['Pinceles 2D','Procreate Folio','Gratis','Comunidad oficial de Procreate: pinceles compartidos por artistas.','Pinceles para iPad probados por otros artistas.','https://folio.procreate.com/brushes'],
+ ['Pinceles 2D','Gumroad (sets de artistas)','Gratis · paga lo que quieras · paga','Muchos concept artists venden o regalan sus pinceles aquí.','Pinceles hechos por artistas de la industria, a menudo con precio libre.','https://gumroad.com/discover?query=concept%20art%20brushes'],
+ ['Pinceles 2D','ArtStation Marketplace · pinceles','Gratis y paga','Tienda de ArtStation: pinceles, tutoriales y kits de artistas profesionales.','Pinceles de concept artists que trabajan en estudios.',gq('site:artstation.com/marketplace concept art brushes')],
+ ['Pinceles 2D','Brusheezy','Gratis (revisa licencia)','Pinceles gratuitos de Photoshop.','Texturas y efectos (humo, follaje, polvo) para experimentar.','https://www.brusheezy.com/'],
+ ['Pinceles 2D','Creative Market · Design Cuts','Paga (paquetes)','Tiendas de recursos con bundles frecuentes.','Buenos paquetes en oferta; revisa que sean para pintura y no para diseño gráfico.','https://creativemarket.com/add-ons/brushes'],
+ ['ZBrush','Pinceles incluidos en ZBrush','Incluido','ZBrush trae cientos de pinceles y alphas.','Domina Move, ClayBuildup, DamStandard, hPolish y TrimDynamic antes de comprar más.','https://www.maxon.net/zbrush'],
+ ['ZBrush','FlippedNormals Marketplace','Gratis y paga','Pinceles, alphas y kits de artistas 3D profesionales.','Pinceles de criaturas, anatomía y hard surface.','https://flippednormals.com/'],
+ ['ZBrush','ArtStation Marketplace · ZBrush','Gratis y paga','Pinceles IMM, alphas de piel y escamas, kitbash.','Detalle de criaturas (escamas, piel) y ornamento.',gq('site:artstation.com/marketplace zbrush brushes')],
+ ['ZBrush','Gumroad · ZBrush','Gratis · paga lo que quieras · paga','Pinceles de escultores independientes.','Busca sets gratuitos para empezar sin gastar.','https://gumroad.com/discover?query=zbrush%20brushes'],
+ ['Blender','Blender Extensions (oficial)','Gratis','Repositorio oficial de add-ons, integrado en Blender 4.2+.','Instalas add-ons desde Blender mismo, seguros y actualizados.','https://extensions.blender.org/'],
+ ['Blender','Superhive (antes Blender Market)','Gratis y paga','La tienda más grande de add-ons y assets para Blender.','Add-ons de scatter, terreno, iluminación y kitbash para entornos.','https://superhivemarket.com/'],
+ ['Blender','BlenderKit','Gratis con cuenta · suscripción','Biblioteca de modelos, materiales y HDRIs dentro de Blender (add-on).','Arrastras assets a tu blockout directo desde Blender.','https://www.blenderkit.com/'],
+ ['Texturas / materiales','Poly Haven','Gratis (CC0)','HDRIs, texturas y modelos de muy alta calidad, sin restricciones.','Luz realista con HDRIs y materiales para blockouts.','https://polyhaven.com/'],
+ ['Texturas / materiales','ambientCG','Gratis (CC0)','Materiales PBR escaneados, sin restricciones.','Piedra, madera, tierra: materiales de entornos en minutos.','https://ambientcg.com/'],
+ ['Texturas / materiales','Fab (Epic Games)','Gratis y paga','Tienda de Epic que incluye Megascans (escaneos fotogramétricos).','Assets escaneados de altísima calidad; revisa la licencia para uso fuera de Unreal.','https://www.fab.com/'],
+ ['Texturas / materiales','Textures.com','Gratis limitado · paga','Fotos de texturas y referencias de materiales.','Textura fotográfica para photobash y overpaint.','https://www.textures.com/'],
+ ['Modelos 3D','Sketchfab (descargables)','Gratis y paga','Millones de modelos; filtra por «descargable» y revisa la licencia.','Props, ruinas y rocas para tu blockout.','https://sketchfab.com/search?features=downloadable&type=models'],
+ ['Modelos 3D','Kitbash3D','Paga','Kits de entornos completos (ciudades, templos, ruinas).','Blockouts de entornos grandes en horas.','https://kitbash3d.com/']];
+const REC_CATS=['Todos','Pinceles 2D','ZBrush','Blender','Texturas / materiales','HDRI','Modelos 3D','Add-ons'];
+async function cargarRecursos(forzar){if(!S.db){S.recu={items:[],sin:true};renderMain();return}
+  if(!S.recu)S.recu={cargando:true};try{const d=await S.db.doc('recursos/cache').get();if(d.exists)S.recu={...d.data()}}catch{}
+  const viejo=!S.recu?.ts||Date.now()-S.recu.ts>24*36e5;
+  if(window.PC_SHIM?.recursos&&(forzar||viejo)){S.recu={...(S.recu||{}),actualizando:true};renderMain();
+    try{await window.PC_SHIM.recursos();const d=await S.db.doc('recursos/cache').get();if(d.exists)S.recu={...d.data()}}catch{S.recu={...(S.recu||{}),error:'No se pudo actualizar. Intenta más tarde.'}}}
+  if(S.recu)S.recu.cargando=false;if(S.vista==='recursos')renderMain()}
+function recCatDe(x){return /HDRI/.test(x.tipo)?'HDRI':/Textura|Material/.test(x.tipo)?'Texturas / materiales':/Add-on/.test(x.tipo)?'Add-ons':/Pincel/.test(x.tipo)?'Blender':/Modelo/.test(x.tipo)?'Modelos 3D':'Blender'}
+function vRecursos(){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''},R=S.recu||{},favs=S.ajustes.recursosFav||[],qn=nz(f.q);
+  const pasa=(cat,precio,txt)=>(f.cat==='Todos'||f.cat===cat||(f.cat==='Blender'&&/Blender/.test(txt))||(f.cat==='ZBrush'&&/ZBrush/.test(txt)))&&(f.precio==='Todos'||(f.precio==='Gratis'?/Gratis|Incluido/.test(precio):/[Pp]aga|suscrip/.test(precio)))&&(!qn||nz(txt).includes(qn));
+  const vivos=(R.items||[]).filter(x=>pasa(recCatDe(x),x.precio,[x.nombre,x.tipo,x.fuente,x.app].join(' '))).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+  const dir=REC_DIR.filter(d=>pasa(d[0],d[2],d.join(' ')));
+  const refs=[...guias().map(({r})=>r.nombre),...(S.ajustes.referentes||[]).map(r=>r.nombre)].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,10);
+  const card=x=>{const fav=favs.some(v=>v.id===x.id);return `<div class="rcur"><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.thumb?`<img src="${esc(x.thumb)}" alt="" loading="lazy">`:`<div class="rcur-ph">${esc(x.fuente)}</div>`}</a>
+    <div class="rcur-b"><b>${esc(corto(x.nombre,48))}</b><span class="muted">${esc(x.tipo)} · ${esc(x.fuente)}</span><span class="tagp ${/Gratis/.test(x.precio)?'free':''}">${esc(x.precio)}</span>${x.licencia?`<small class="muted">${esc(corto(x.licencia,40))}</small>`:''}
+    <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a><button class="btn ghost sm" data-act="recu-fav" data-id="${esc(x.id)}">${fav?'★':'☆'}</button></div></div></div>`};
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Recursos y pinceles</h1>
+  <p class="intro">Pinceles para Photoshop y Procreate, cosas para <strong>Blender</strong> y <strong>ZBrush</strong>, texturas, HDRIs y modelos, <strong>de gratis a de paga</strong>. Las novedades se actualizan solas cada día desde Poly Haven, ambientCG, BlenderKit, Sketchfab y Blender Extensions.</p>
+  <div class="box"><div class="chips">${REC_CATS.map(c=>`<button class="ch ${f.cat===c?'on':''}" data-act="recu-cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <div class="prow"><span class="lbl">Precio</span>${['Todos','Gratis','Paga'].map(c=>`<button class="ch xs ${f.precio===c?'on':''}" data-act="recu-precio" data-v="${c}">${c}</button>`).join('')}
+      <input type="text" id="recu-q" data-recq="1" value="${esc(f.q)}" placeholder="Buscar: roca, jaguar, niebla…" style="flex:1 1 200px"></div></div>
+  ${favs.length?`<div class="box"><h3>Tus guardados <span class="lbl">${favs.length}</span></h3><div class="rcurs">${favs.map(card).join('')}</div></div>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Novedades · se actualiza cada día</h3><span class="prow"><span class="lbl">${R.ts?'Actualizado '+new Date(R.ts).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span>${window.PC_SHIM?`<button class="btn sm" data-act="recu-act">${R.actualizando?'Actualizando…':'Actualizar ahora'}</button>`:''}</span></div>
+    ${R.sin?'<p class="muted">Las novedades en vivo funcionan en la app de GitHub (con tu cuenta).</p>':R.cargando?'<p class="muted">Cargando…</p>':R.error?`<p class="muted">${esc(R.error)}</p>`:''}
+    ${vivos.length?`<div class="rcurs">${vivos.slice(0,S.recuN||36).map(card).join('')}</div>${vivos.length>(S.recuN||36)?`<button class="btn" data-act="recu-mas">Ver más (${vivos.length-(S.recuN||36)})</button>`:''}`:R.items?'<p class="muted">Nada con esos filtros.</p>':''}</div>
+  <div class="box"><h3>Directorio · dónde conseguir pinceles y assets</h3><p class="hint">Las tiendas donde se mueven los artistas de la industria. Los enlaces de búsqueda siempre te muestran lo más nuevo.</p>
+    <div class="dirr">${dir.map(([cat,n,precio,que,para,url])=>`<a class="dirc" href="${esc(url)}" target="_blank" rel="noopener"><span class="lbl">${esc(cat)}</span><b>${esc(n)} ↗</b><span class="tagp ${/^Gratis|Incluido/.test(precio)?'free':''}">${esc(precio)}</span><span>${esc(que)}</span><small class="muted">${esc(para)}</small></a>`).join('')||'<p class="muted">Nada con esos filtros.</p>'}</div></div>
+  ${refs.length?`<div class="box"><h3>Pinceles de tus referentes</h3><p class="hint">Muchos concept artists venden o regalan sus pinceles. Búscalos directo: es la forma más rápida de entender cómo logran su textura.</p>
+    <div class="chips">${refs.map(n=>`<a class="ch" href="${gq(n+' brushes gumroad OR artstation')}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join('')}</div></div>`:''}
+  <p class="muted">Antes de usar un asset en un proyecto de portafolio o comercial, revisa su licencia (CC0 = libre; «personal use» = solo práctica).</p>`}
+async function accionRec(a,el,p,ds){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};
+  switch(a){case 'recu-cat':f.cat=ds.v;S.recuN=36;renderMain();return true;case 'recu-precio':f.precio=ds.v;renderMain();return true;
+    case 'recu-act':cargarRecursos(true);return true;case 'recu-mas':S.recuN=(S.recuN||36)+36;renderMain();return true;
+    case 'recu-fav':{const L=S.ajustes.recursosFav=S.ajustes.recursosFav||[],i=L.findIndex(v=>v.id===ds.id);if(i>=0)L.splice(i,1);else{const x=(S.recu?.items||[]).find(v=>v.id===ds.id);if(x)L.push({...x})}marcarAj();renderMain();return true}}
+  return false}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -4863,6 +4932,7 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.dxq){S.decQ=t.value;const pos=t.selectionStart;renderMain();const el=$('#dec-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
+  if(t.dataset.recq){S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};S.recF.q=t.value;const pos=t.selectionStart;renderMain();const el=$('#recu-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;return}
   if(t.dataset.pub){S.pub=S.pub||{};S.pub[t.dataset.pub]=t.value;return}
   if(t.dataset.rectag){S.ajustes.recTags=S.ajustes.recTags||{};S.ajustes.recTags[t.dataset.rectag]=t.value;marcarAj();renderMain();return}
@@ -4931,7 +5001,7 @@ async function accion(a,el){
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();break;
+    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();break;
     case 'tab':S.tab=TAB_ALIAS[ds.tab]||ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
@@ -5168,7 +5238,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
