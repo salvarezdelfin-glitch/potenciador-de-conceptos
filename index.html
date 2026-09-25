@@ -525,7 +525,9 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 .rcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
 .rc{margin:0;background:var(--bg);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
 .rc img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#000}.rc figcaption{padding:6px 8px;font-size:12.5px}
-.rc.fuera{outline:2px solid var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
+.rc.fuera{outline:2px solid var(--warn)}
+.fmt code{font-family:var(--mono);font-size:12px}.fmt li{line-height:1.5}
+.fmtck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}.fmtck li{padding:6px 10px;border-radius:0 6px 6px 0;border-left:3px solid var(--ink3);background:var(--bg)}.fmtck li.ok{border-color:var(--ok)}.fmtck li.warn{border-color:var(--c-tecnica)}.fmtck li.no{border-color:var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
 </style>
 </head>
@@ -797,7 +799,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhd5vyw').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhdprps').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1096,6 +1098,7 @@ function renderSide(){
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('reclutador','eye','Revisión de reclutador')}
+      ${nav('formatos','frame','Formatos y entrega')}
       ${nav('adaptar','target','Adaptar a vacante')}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
@@ -1155,6 +1158,7 @@ function renderMainInner(){
   if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
   if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
   if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
+  if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
@@ -1778,7 +1782,8 @@ function ejercicioDeHoy(){
   if(hoy)return hoy;
   const {orden}=debilidades(),d=hoyN(),i=d%3;
   if(S.ajustes.diarioEnfoque==='env'){const ENV=['escala','atmosfera','claves','profundidad','blockout','composicion','valores'],skill=ENV[d%ENV.length];return {skill,texto:EJERCICIOS[skill][i],i}}
-  const gen=orden.filter(k=>!SKILLS_ENV[k]),skill=gen[d%Math.min(3,gen.length)];
+  if(S.ajustes.diarioEnfoque==='3d'){const K=Object.keys(SKILLS_3D),skill=K[d%K.length];return {skill,texto:EJERCICIOS[skill][i],i}}
+  const gen=orden.filter(k=>!SKILLS_ENV[k]&&!(k in SKILLS_3D)),skill=gen[d%Math.min(3,gen.length)];
   return {skill,texto:EJERCICIOS[skill][i],i};
 }
 function racha(){
@@ -1794,8 +1799,8 @@ function vDiario(){
   const total=Object.values(dias).filter(x=>x.hecho).length;
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudio diario</h1>
-  <p class="intro">30 minutos al día. ${S.ajustes.diarioEnfoque==='env'?'Enfoque <strong>Environment & Keyframe</strong>: escala, perspectiva atmosférica, claves de luz, profundidad, blockout 3D, composición y valores, en rotación.':`Ataca tu punto más débil según tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.`}</p>
-  <div class="prow"><span class="lbl">Enfoque</span>${[['general','General'],['env','Environment & Keyframe']].map(([k,n])=>`<button class="ch ${(S.ajustes.diarioEnfoque||'general')===k?'on':''}" data-act="d-enfoque" data-v="${k}">${n}</button>`).join('')}</div>
+  <p class="intro">30 minutos al día. ${S.ajustes.diarioEnfoque==='3d'?'Enfoque <strong>3D</strong>: Blender (blockout, luz y cámara, render + paintover) y ZBrush (forma, anatomía, hard surface), en rotación. Sube una captura o render y te doy feedback de silueta, valores y luz.':S.ajustes.diarioEnfoque==='env'?'Enfoque <strong>Environment & Keyframe</strong>: escala, perspectiva atmosférica, claves de luz, profundidad, blockout 3D, composición y valores, en rotación.':`Ataca tu punto más débil según tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.`}</p>
+  <div class="prow"><span class="lbl">Enfoque</span>${[['general','General'],['env','Environment & Keyframe'],['3d','3D (Blender + ZBrush)']].map(([k,n])=>`<button class="ch ${(S.ajustes.diarioEnfoque||'general')===k?'on':''}" data-act="d-enfoque" data-v="${k}">${n}</button>`).join('')}</div>
   <div class="stats"><div class="stat"><b>🔥 ${racha()}</b><span>días seguidos</span></div><div class="stat"><b>${total}</b><span>días de estudio</span></div>
     ${Object.entries(prom).slice(0,2).map(([k,v])=>`<div class="stat"><b>${v.toFixed(1)}</b><span>${SKILLS[k]} (tu promedio)</span></div>`).join('')}</div>
   <div class="grid2">
@@ -2453,8 +2458,8 @@ const RUTA={
 const RUTA_EST=['Pendiente','En curso','Terminado'];
 function vRuta(){
   const {orden,prom}=debilidades(),r=S.ajustes.ruta=S.ajustes.ruta||{};
-  const skills=[...orden.slice(0,3),'entornos',...orden.slice(3)].filter((k,i,a)=>a.indexOf(k)===i&&RUTA[k]);
-  const nombre=k=>k==='entornos'?'Diseño de entornos (tu meta)':SKILLS[k];
+  const skills=[...orden.filter(k=>!(k in SKILLS_3D)&&RUTA[k]).slice(0,3),'entornos','blender','zbrush',...orden.slice(3)].filter((k,i,a)=>a.indexOf(k)===i&&RUTA[k]);
+  const nombre=k=>k==='entornos'?'Diseño de entornos (tu meta)':k==='blender'?'Blender · blockout, luz y render para concept':k==='zbrush'?'ZBrush · escultura de criaturas, personajes y props':SKILLS[k];
   const total=Object.values(RUTA).flat().length,hechos=Object.values(r).filter(v=>v==='Terminado').length;
   const link=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`;
   return `
@@ -4722,7 +4727,7 @@ function vReclutador(){const R=S.rec,chk=S.ajustes.recCheck||{},tags=S.ajustes.r
 
 /* ---------- vista de láminas (proyecto) ---------- */
 function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=sel=>`<option value="">— sin imagen —</option>${pz.map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.etapa)} · ${fecha(x.creado)}${x.grupo?' · '+esc(x.grupo):''}</option>`).join('')}`,pub=S.pub=S.pub||{img:'',titulo:''};
-  return `<p class="intro"><b>Presentación de estudio.</b> Hojas con el formato que se usa en producción, el breakdown de tu proceso y el paquete listo para publicar.</p>
+  return `<p class="intro"><b>Presentación de estudio.</b> Hojas con el formato que se usa en producción, el breakdown de tu proceso y el paquete listo para publicar. <button class="btn ghost sm" data-act="vista" data-v="formatos">¿En qué formato? →</button></p>
   <div class="box"><h3>Plantillas de producción · 4K</h3>
     <div class="chips">${LAM_TIPOS.map(([k,n])=>`<button class="ch ${d.tipo===k?'on':''}" data-act="lam-tipo" data-v="${k}">${n}</button>`).join('')}</div>
     <div class="prow" style="align-items:flex-end">
@@ -4759,6 +4764,80 @@ async function accionPro(a,el,p,ds){
     case 'd-enfoque':{S.ajustes.diarioEnfoque=ds.v;const r=S.ajustes.rutina?.dias;if(r&&r[hoyKey()]&&!r[hoyKey()].hecho&&!r[hoyKey()].img)delete r[hoyKey()];marcarAj();renderMain();return true}
   }
   return false}
+
+/* =====================================================================
+   FORMATOS Y ENTREGA · en qué resolución y archivo luce cada pieza
+   ===================================================================== */
+const FMT_DEST=[
+ ['artstation','ArtStation / portafolio web'],['instagram','Instagram'],['estudio','Prueba de arte / estudio'],
+ ['impresion','Impresión (A4, A3, póster)'],['pitch','Pitch de cine o animación'],['pantalla','Pantalla 4K / fondo']];
+const FMT_TIPO=[['keyframe','Keyframe / entorno'],['hoja','Hoja de personaje / turnaround'],['vertical','Ilustración vertical'],['props','Props / callouts'],['render','Render 3D para paintover']];
+const FMT_HERR=[['ps','Photoshop'],['procreate','Procreate (iPad)'],['csp','Clip Studio'],['3d','Blender / ZBrush']];
+const LIENZOS={keyframe:[3840,2160,'16:9 · 4K UHD'],hoja:[3840,2160,'16:9 · 4K (hoja horizontal)'],vertical:[2480,3508,'A4 vertical a 300 ppi'],props:[3840,2160,'16:9 · 4K'],render:[3840,2160,'16:9 · 4K']};
+function fmtDraft(){return S.fmt=S.fmt||{dest:['artstation','instagram'],tipo:'keyframe',herr:'ps'}}
+function fmtRecomendacion(d){const R=[],add=(t,items)=>R.push({t,items}),dest=d.dest,has=k=>dest.includes(k);
+  let [w,h,nom]=LIENZOS[d.tipo]||LIENZOS.keyframe;
+  if(has('pitch')&&d.tipo==='keyframe'){w=4096;h=1716;nom='2.39:1 · Cinemascope (4096×1716)'}
+  if(has('impresion')&&d.tipo!=='vertical'&&w<4961){const r=h/w;w=4961;h=Math.round(w*r);nom+=' → escalado a 4961 px de ancho para imprimir en A3 a 300 ppi'}
+  add('Lienzo de trabajo',[`<b>${w} × ${h} px</b> (${nom}).`,
+    'Trabaja siempre al tamaño final o más grande: agrandar después no agrega detalle, solo lo difumina.',
+    has('impresion')?'Para imprimir: 300 ppi al tamaño real. A4 = 2480×3508 · A3 = 3508×4961 · póster 45×60 cm = 5315×7087.':'Para pantalla los ppi no importan: cuentan los píxeles. 72 o 300 ppi se ven igual en pantalla.',
+    'HD (1920×1080) está bien para thumbnails y pruebas rápidas, pero en portafolio se ve chico al hacer zoom. 4K (3840×2160) es el estándar actual. 8K (7680×4320) solo vale la pena para impresión grande o matte painting: pesa 4 veces más y en pantalla casi no se nota.']);
+  const ex=[];
+  if(has('artstation'))ex.push('<b>ArtStation:</b> JPG de alta calidad (90–100%), 3840 px en el lado largo, sRGB. Sube además crops de detalle y el proceso como imágenes aparte.');
+  if(has('instagram'))ex.push('<b>Instagram:</b> 1080×1350 (4:5) para ocupar más pantalla; carrusel con la pieza completa + detalles. JPG sRGB. Las horizontales se ven chicas: recórtalas en 4:5 o ponlas sobre fondo.');
+  if(has('estudio'))ex.push('<b>Prueba de arte:</b> lo que pida el estudio manda. Si no dicen nada: JPG/PNG en 1920 px o más para revisar + PSD con capas nombradas y ordenadas. Nombra los archivos: nombre_estudio_prueba_v01.');
+  if(has('impresion'))ex.push('<b>Impresión:</b> TIFF o PNG sin compresión, 16 bits si hay degradados suaves. Trabaja en RGB y pregunta a la imprenta si quieren CMYK: la conversión cambia los colores saturados (rojos y verdes intensos se apagan).');
+  if(has('pitch'))ex.push('<b>Pitch:</b> 2.39:1 o 1.85:1 para cine, 16:9 para animación y videojuegos. Entrega en PDF con una imagen por página, más JPG sueltos.');
+  if(has('pantalla'))ex.push('<b>Pantalla 4K / fondo:</b> 3840×2160 exacto, PNG o JPG al 100%.');
+  add('Exportar según destino',ex.length?ex:['Elige al menos un destino arriba.']);
+  const fx=[];
+  if(d.herr==='ps')fx.push('<b>Photoshop:</b> guarda el PSD con capas (tu archivo maestro) y exporta aparte. Si pasa de 2 GB usa PSB. Exporta con «Exportar como» o «Guardar para web» en sRGB.');
+  if(d.herr==='procreate')fx.push('<b>Procreate:</b> el .procreate solo abre en Procreate; para compartir o seguir en PC exporta <b>PSD</b> (conserva capas). Al crear el lienzo, Procreate te dice cuántas capas máximas tendrás: si con 4K te da muy pocas para tu proceso, trabaja a 3840×2160 con capas agrupadas y combina las que ya cerraste. Elige perfil sRGB si va a web; si trabajaste en Display P3, al exportar los colores pueden verse distintos fuera del iPad.','Exporta el final en PNG (sin pérdida) y de ahí saca los JPG para redes.');
+  if(d.herr==='csp')fx.push('<b>Clip Studio:</b> guarda el .clip como maestro y exporta PSD si lo necesita otra persona. Revisa que la exportación esté en RGB 8 bits sRGB para web.');
+  if(d.herr==='3d')fx.push('<b>Blender:</b> renderiza al tamaño final (Propiedades de salida → 3840×2160, 100%) en PNG 16 bits o EXR. Saca pases para el paintover: Mist o Z (profundidad para niebla), AO y un pase de IDs/Cryptomatte para máscaras rápidas.','<b>ZBrush:</b> renderiza con BPR al doble del tamaño del documento y baja a la mitad (antialias limpio). Exporta pases de profundidad, AO y máscaras de material para pintar encima.');
+  fx.push('<b>Formatos:</b> PSD = capas, tu maestro · PNG = final sin pérdida (hojas, texto, colores planos) · JPG = web, pesa poco · TIFF = impresión · PDF = presentación de proyecto o portafolio.');
+  add('Tu herramienta y tus archivos',fx);
+  add('Organización profesional',['Nombre: <code>sebastian-alvarez_proyecto_pieza_v03.psd</code>. Nunca «final_final2».','Guarda versiones (v01, v02…) y un maestro por pieza; la pestaña Láminas ya exporta con nombres así.','Capas nombradas y agrupadas (fondo, plano medio, personaje, luz, FX): así las pide un estudio.']);
+  return R}
+function relacion(w,h){const r=w/h,L=[[16/9,'16:9'],[4/5,'4:5'],[2.39,'2.39:1 (cinemascope)'],[1.85,'1.85:1'],[3/2,'3:2'],[1,'1:1'],[1/1.414,'A (vertical)'],[1.414,'A (horizontal)'],[9/16,'9:16 (vertical)']];return L.sort((a,b)=>Math.abs(a[0]-r)-Math.abs(b[0]-r))[0][1]}
+function fmtCheck(k){const {w,h,nombre,tipo,peso}=k,largo=Math.max(w,h),O=[],cm=px=>(px/300*2.54).toFixed(1);
+  O.push(['info',`${w} × ${h} px · relación ${relacion(w,h)}${peso?` · ${(peso/1048576).toFixed(1)} MB`:''}${tipo?` · ${tipo.replace('image/','').toUpperCase()}`:''}`]);
+  O.push(largo>=3840?['ok','4K o más: se ve nítido en ArtStation y aguanta zoom.']:largo>=1920?['warn',`HD (${largo} px en el lado largo): aceptable en web, pero en portafolio el zoom se ve suave. Para piezas nuevas trabaja a 3840 px.`]:['no',`Muy chica (${largo} px): se ve poco profesional en portafolio. No la agrandes con escalado: repinta o rehaz a mayor tamaño.`]);
+  O.push(['info',`Impresión máxima a 300 ppi: ${cm(w)} × ${cm(h)} cm${w>=2480&&h>=3508||h>=2480&&w>=3508?' (alcanza para A4)':''}${w>=3508&&h>=4961||h>=3508&&w>=4961?' · alcanza para A3':''}.`]);
+  if(Math.abs(w/h-4/5)>.05)O.push(['info','Para Instagram, recórtala o ponla sobre fondo en 4:5 (1080×1350). La pestaña Láminas → Exportar para publicar lo hace sola.']);
+  if(/jpe?g/.test(tipo||'')&&largo<1920)O.push(['warn','JPG pequeño: si tienes el PSD, exporta de nuevo desde el maestro.']);
+  return O}
+function vFormatos(){const d=fmtDraft(),R=fmtRecomendacion(d),k=S.fmtK,piezas=[...Object.entries(S.P).flatMap(([pid,p])=>(p.piezas||[]).map(x=>({x,label:`${p.nombre} · ${x.etapa}`}))),...(S.ajustes.galeria||[]).map(x=>({x,label:'Mis ilustraciones · '+(x.titulo||x.tipo||'')}))];S.fmtPz=piezas;
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Formatos y entrega</h1>
+  <p class="intro">En qué tamaño trabajar, en qué formato guardar y cómo exportar cada pieza para que luzca: HD, 4K, 8K, PSD, Procreate, PNG, JPG, TIFF, según su destino.</p>
+  <div class="box"><h3>¿Para dónde es la pieza?</h3>${`<div class="chips">${FMT_DEST.map(([k2,n])=>`<button class="ch ${d.dest.includes(k2)?'on':''}" data-act="fmt-dest" data-v="${k2}">${n}</button>`).join('')}</div>`}
+    <span class="lbl">Tipo de pieza</span><div class="chips">${FMT_TIPO.map(([k2,n])=>`<button class="ch ${d.tipo===k2?'on':''}" data-act="fmt-tipo" data-v="${k2}">${n}</button>`).join('')}</div>
+    <span class="lbl">Herramienta</span><div class="chips">${FMT_HERR.map(([k2,n])=>`<button class="ch ${d.herr===k2?'on':''}" data-act="fmt-herr" data-v="${k2}">${n}</button>`).join('')}</div></div>
+  <div class="grid2">${R.map(s=>`<div class="box"><h3>${esc(s.t)}</h3><ul class="why-l fmt">${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>
+  <div class="box"><h3>Revisa una pieza tuya</h3><p class="hint">Te digo su resolución real, dónde luce y hasta qué tamaño se puede imprimir.</p>
+    <div class="prow"><select id="fmt-pz"><option value="">Elige una pieza…</option>${piezas.map((q,i)=>`<option value="${i}">${esc(q.label)}</option>`).join('')}</select><span class="muted">o</span><label class="btn sm" for="fmt-file">Subir archivo</label><input type="file" id="fmt-file" accept="image/*" hidden></div>
+    ${k?`<ul class="fmtck">${fmtCheck(k).map(([c,t])=>`<li class="${c}">${esc(t)}</li>`).join('')}</ul>`:''}</div>`}
+async function fmtMedir(src,meta){try{const bm=await cargarBitmap(src);S.fmtK={w:bm.width,h:bm.height,...meta};bm.close?.()}catch{toast('No pude leer esa imagen')}renderMain()}
+async function accionFmt(a,el,p,ds){const d=fmtDraft();
+  switch(a){case 'fmt-dest':{const i=d.dest.indexOf(ds.v);i>=0?d.dest.splice(i,1):d.dest.push(ds.v);renderMain();return true}
+    case 'fmt-tipo':d.tipo=ds.v;renderMain();return true;case 'fmt-herr':d.herr=ds.v;renderMain();return true}
+  return false}
+
+/* ---------- 3D: ruta y estudio diario (Blender + ZBrush) ---------- */
+const SKILLS_3D={bl_blockout:'Blender · blockout de entornos',bl_luz:'Blender · luz y cámara',bl_paint:'Blender · render + paintover',zb_forma:'ZBrush · forma y silueta',zb_anatomia:'ZBrush · anatomía y criaturas',zb_hard:'ZBrush · hard surface y props'};
+const EJ_3D={
+  bl_blockout:['Blockout de un templo o ruina solo con cubos, cilindros y el modificador Array en 25 min. Captura 3 cámaras.','Kitbash: arma un entorno con 10 piezas simples duplicadas y reescaladas. Enfócate en escala y ritmo, no en detalle.','Terreno con un plano subdividido + Displace y una textura de ruido; coloca 3 masas grandes y un personaje de escala.'],
+  bl_luz:['Una escena, 3 luces: sol duro, cielo nublado (HDRI) y fuego (luz de área naranja). Captura cada una en Eevee.','Prueba 3 lentes (18, 35 y 85 mm) en el mismo blockout y compara cómo cambia la escala.','Niebla volumétrica: Volume Scatter en el mundo; ajusta densidad hasta que los planos lejanos se separen.'],
+  bl_paint:['Render en Eevee de un blockout + pase Mist; píntalo encima 30 min en Photoshop o Procreate usando la niebla como máscara.','Render con Cryptomatte o colores planos por objeto; úsalo como máscaras para pintar materiales rápido.','Mismo blockout, 3 paintovers de 15 min con 3 moods distintos.'],
+  zb_forma:['DynaMesh a resolución baja: esculpe 5 cabezas de criatura en 10 min cada una usando solo Move, ClayBuildup y Dam Standard.','ZSpheres: arma 3 siluetas de personaje en 15 min y juzga solo la silueta en negro (Flat Color).','Esculpe la misma forma con lenguaje de formas distinto: todo curvas, todo ángulos.'],
+  zb_anatomia:['Estudio de un cráneo de jaguar o de otro animal real desde referencia, 30 min.','Anatomía comparada: pata humana contra pata felina, esculpida en bloques grandes.','Busto de criatura combinando 2 animales reales; primero masas, después planos, al final detalle.'],
+  zb_hard:['Prop con ZModeler: arma o herramienta simple en 20 min, con bisel limpio.','Talla una hoja de obsidiana con Trim y Clip brushes: planos de fractura y filo.','Kitbash de 3 piezas de ornamento; ensámblalas en un prop coherente.']};
+Object.assign(SKILLS,SKILLS_3D);Object.assign(EJERCICIOS,EJ_3D);
+Object.assign(EJ_SKILL,{bl_blockout:'Captura tu blockout en solo 3 valores: si las masas no se separan, el problema es de composición, no de detalle.',bl_luz:'Repite con una sola fuente dominante y compara la clave.',bl_paint:'Compara render contra paintover con la vista 3 VALORES: el paintover debe simplificar, no agregar ruido.',zb_forma:'Renderiza en Flat Color (silueta pura) y mírala a 5 cm.',zb_anatomia:'Pon la referencia al lado en la misma vista y compara solo las masas grandes.',zb_hard:'Revisa la silueta en negro: un prop se reconoce por su contorno.'});
+Object.assign(RUTA,{
+  blender:[['youtube','Blender Beginner Tutorial (la dona)','Blender Guru · Andrew Price'],['youtube','Tutoriales para principiantes y modelado','Grant Abbitt'],['youtube','Lazy Tutorials (entornos rápidos)','Ian Hubert'],['curso','Cursos oficiales','Blender Studio'],['youtube','Blender para concept art','Jama Jurabaev']],
+  zbrush:[['youtube','ZBrush Guides','Michael Pavlovich'],['libro','Anatomy for Sculptors','Uldis Zarins'],['youtube','Tutoriales de escultura','FlippedNormals'],['youtube','ZBrushLIVE / ZClassroom (oficial)','Maxon ZBrush']]});
 
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
@@ -4819,6 +4898,8 @@ document.addEventListener('change',e=>{
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
+  if(e.target.id==='fmt-file'){const f=e.target.files[0];e.target.value='';if(f)fmtMedir(f,{nombre:f.name,tipo:f.type,peso:f.size})}
+  if(e.target.id==='fmt-pz'){const q=S.fmtPz?.[+e.target.value];if(q)fmtMedir(q.x,{nombre:q.label})}
   if(e.target.id==='an-file'){const f=e.target.files[0];e.target.value='';if(f)analizarYMostrar(f,{etapa:S.anEtapa||'Boceto',nota:S.anNota||''})}
   if(e.target.id==='an-pieza'){const p=S.P[S.cur],x=p?.piezas.find(z=>z.id===e.target.value);if(x)analizarYMostrar(x,{etapa:x.etapa,nota:x.nota||'',pieza:x})}
 });
@@ -5087,7 +5168,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
