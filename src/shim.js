@@ -210,6 +210,7 @@
     const i=typeof input==='string'?input+extra:input;
     return parseJSON((await sample(i,opts)).text);
   };
+  sample.conectado=()=>tieneLlave;
   sample.limits=async()=>({maxPromptBytes:65536,images:{maxCount:5,maxInputBytes:20971520,mediaTypes:['image/png','image/jpeg','image/webp','image/gif']}});
 
   function ajustes(){
