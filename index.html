@@ -532,6 +532,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 .tagp{align-self:flex-start;font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;background:var(--surface3);color:var(--ink2)}.tagp.free{background:var(--ok-bg);color:var(--ok)}
 .dirr{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.dirc{background:var(--bg);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:5px;text-decoration:none;color:var(--ink);border:1px solid transparent;font-size:13.5px}.dirc:hover{border-color:var(--line2)}.dirc b{font-size:15px}
 .plan7{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}.plan7 li{background:var(--bg);border-radius:8px;padding:8px 10px}.plan7 li.hecho{opacity:.6}.plan7 small{display:block;margin-top:3px}.plan7 a{color:var(--accent)}
+.tbocs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}.tboc{background:var(--bg);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}.tboc img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#000}.tboc-b{padding:8px 10px;display:flex;flex-direction:column;gap:6px;font-size:13px}
 .fmt code{font-family:var(--mono);font-size:12px}.fmt li{line-height:1.5}
 .fmtck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}.fmtck li{padding:6px 10px;border-radius:0 6px 6px 0;border-left:3px solid var(--ink3);background:var(--bg)}.fmtck li.ok{border-color:var(--ok)}.fmtck li.warn{border-color:var(--c-tecnica)}.fmtck li.no{border-color:var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
@@ -806,7 +807,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muheoqqq').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhlcvwe').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1009,6 +1010,7 @@ async function arrancar(){
     S.db=db;S.modo='db';
     let primera=true;
     db.collection('proyectos').onSnapshot(snap=>{
+      if(S.bloqueo&&!primera)return;
       let tocoActual=false;
       for(const d of snap.docs){
         const data=d.data();
@@ -1023,7 +1025,7 @@ async function arrancar(){
       if(tocoActual&&!document.activeElement?.closest('#main'))renderMain();
     },e=>{S.modo='error';render()});
     db.doc('ajustes/principios').onSnapshot(d=>{
-      if(S.ajDirty)return;S.ajustes={...clone(AJUSTES_BASE),...(d.exists?clone(d.data()):{})};
+      if(S.ajDirty||S.bloqueo)return;S.ajustes={...clone(AJUSTES_BASE),...(d.exists?clone(d.data()):{})};
       if(S.vista!=='proyecto'&&!document.activeElement?.closest('#main'))renderMain();
     },()=>{});
   }else{
@@ -1093,6 +1095,7 @@ function renderSide(){
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
+      ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
       ${nav('ruta','map','Ruta de aprendizaje')}
       ${nav('potenciar','target','Potenciar mi punto débil')}
@@ -1170,6 +1173,7 @@ function renderMainInner(){
   if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
   if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
   if(S.vista==='potenciar'){m.innerHTML=vPotenciar();return}
+  if(S.vista==='taller'){m.innerHTML=vTaller();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
@@ -1440,6 +1444,7 @@ function vEstilo(){
     <span class="prow"><label class="btn pri" for="f-estilo">Subir piezas</label><input type="file" id="f-estilo" accept="image/png,image/jpeg,image/webp" multiple hidden></span></div>
     ${imgs.length?`<div class="estilo-imgs">${imgs.map((x,i)=>`<figure><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom"><button class="btn sm" data-act="est-del" data-i="${i}" aria-label="Quitar">✕</button><button class="btn sm" data-act="est-proponer" data-i="${i}" style="left:4px;right:auto" title="Proponer para portafolio">${x.pf?'★':'☆'}</button></figure>`).join('')}</div>`:'<p class="muted">Sube 4–8 piezas que sientas más tuyas: finales, bocetos o estudios.</p>'}
     <p class="muted" style="margin:0">${imgs.length} aquí · ${piezas} en tus proyectos</p></div>
+  ${estiloMedidoHTML()}
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Analizar mi estilo</b><p class="muted" style="margin:2px 0 0">Lee tus piezas, proyectos, gusto y artistas que sigues. Dice qué ya es tu sello y cómo desarrollarlo sin perder empleabilidad.</p></div>
     <div class="prow">${S.aiBusy.estilo?'<button class="btn sm" data-act="ai-stop" data-k="estilo">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="estilo">${d?'Analizar de nuevo':'Analizar'}</button>`}</div></div>
     ${S.aiBusy.estilo?'<p class="muted">Analizando tu trabajo…</p>':S.ai.estilo?.error?`<p class="muted">${esc(S.ai.estilo.error)}</p>`:''}</div>`:''}
@@ -2655,6 +2660,7 @@ function vGaleria(){
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis ilustraciones</h1>
   <p class="intro">Todo lo que haces, esté o no en un proyecto. Cada ilustración alimenta <b>Mi estilo</b> y <b>Mi nivel</b>, puede recibir <b>crítica</b> y la puedes proponer a tu <b>portafolio</b>. También puedes pedirme en una conversación con Claude que las revise todas.</p>
   ${syncBox()}
+  <div class="prow"><span class="muted">Sube viejas y actuales y ponles año: con eso la app mide tu estilo y tu evolución.</span><button class="btn sm" data-act="vista" data-v="estilo">Ver mi estilo y evolución →</button></div>
   <div class="drop" id="drop-gal">
     <div><b>Arrastra tus ilustraciones aquí</b> <span class="muted">o súbelas (varias a la vez)</span></div>
     <div class="prow"><select id="gal-def-tipo" data-galdef="tipo" style="width:auto">${GAL_TIPOS.map(t=>`<option ${t===(S.galDef?.tipo||'Ilustración')?'selected':''}>${t}</option>`).join('')}</select>
@@ -2754,7 +2760,7 @@ async function sincronizarCarpeta(elegir){
     if(!root||elegir){root=await window.showDirectoryPicker({id:'potenciador',mode:'read'});await kv.set('raiz',root)}
     if(await root.queryPermission({mode:'read'})!=='granted'&&await root.requestPermission({mode:'read'})!=='granted'){toast('Sin permiso para leer la carpeta');return}
   }catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir la carpeta');return}
-  S.sync={corriendo:true,n:0,total:0,msg:'Revisando tu carpeta…'};renderMain();
+  S.sync={corriendo:true,n:0,total:0,msg:'Revisando tu carpeta…'};bloquear();renderMain();
   const hechos=S.ajustes.sync=S.ajustes.sync||{},nuevos=[];
   try{
     for await(const it of recorrer(root)){
@@ -2772,6 +2778,8 @@ async function sincronizarCarpeta(elegir){
         if(normN(top)==='proyectos'&&proy){
           let pid=Object.keys(S.P).find(id=>normN(S.P[id].nombre)===normN(proy));
           if(!pid){pid=uid();S.P[pid]=nuevoProyecto(proy);S.P[pid].encargo='Desde tu carpeta'}
+          if(/referen|refs|moodboard/.test(normN(carp||''))){const p=S.P[pid],sub=normN(resto[0]||''),capa=/mood|ambient|atmos/.test(sub)?'mood':/style|estilo|tecnic/.test(sub)?'tecnica':'concepto';
+            if(!(p.refs||[]).some(r=>r.origen===it.clave)){p.refs.push({id:uid(),capa,porque:'',fuente:(resto[0]?resto[0]+' · ':'')+base.nombre,...img,origen:it.clave,creado:base.creado})}marcarPid(pid);hechos[it.clave]=it.firma;continue}
           const p=S.P[pid],etapa=etapaDeCarpeta(carp)||'Color',grupo=resto.length?resto[0]:(etapaDeCarpeta(carp)?'':(carp||''));
           if(grupo){p.grupos=p.grupos||[];if(!p.grupos.includes(grupo))p.grupos.push(grupo)}
           const prev=(p.piezas||[]).find(x=>x.origen===it.clave);
@@ -2787,7 +2795,7 @@ async function sincronizarCarpeta(elegir){
     S.ajustes.syncTs=Date.now();marcarAj();
     S.sync={corriendo:false,msg:nuevos.length?`Listo: ${S.sync.n} ${S.sync.n===1?'imagen nueva':'imágenes nuevas'} desde tu carpeta.`:'Todo al día: no hay imágenes nuevas.'};
   }catch(e){S.sync={corriendo:false,msg:'Se interrumpió la sincronización. Intenta de nuevo.'}}
-  render();
+  desbloquear();render();
 }
 // Al abrir la app: si Chrome ya recuerda el permiso, sincroniza sola sin preguntar
 async function syncAlAbrir(){if(!SYNC_OK)return;try{const root=await kv.get('raiz');if(root&&await root.queryPermission({mode:'read'})==='granted')sincronizarCarpeta(false)}catch{}}
@@ -3039,9 +3047,12 @@ function vProduccion(p){
 /* ============ Crítica profesional ============ */
 const ETAPAS=['Thumbnail','Boceto','Valores','Color','Render','Final'];
 const PRIO={alta:'var(--warn)',media:'var(--c-tecnica)',baja:'var(--ink3)'};
+/* Mientras se sube algo, la app no reemplaza tus datos con lo del servidor (evita perder lo recién subido) */
+function bloquear(){S.bloqueo=(S.bloqueo||0)+1}
+function desbloquear(ms=2500){setTimeout(()=>{S.bloqueo=Math.max(0,(S.bloqueo||1)-1)},ms)}
 async function guardarImagen(f){
-  if(S.assets){const up=await S.assets.upload(f);return {asset:up.id}}
-  return {src:await comprimir(f,1400,.82)};
+  bloquear();try{if(S.assets){const up=await S.assets.upload(f);return {asset:up.id}}
+  return {src:await comprimir(f,1400,.82)}}finally{desbloquear()}
 }
 async function subirPieza(files){
   const p=S.P[S.cur];if(!p)return;const f=[...files].find(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));
@@ -3517,7 +3528,8 @@ const TR={personaje:'character',criatura:'creature',prop:'prop',arma:'weapon',ve
   melancolia:'melancholic',solemne:'solemn',amenaza:'menacing',inquietud:'unsettling',calma:'calm',tension:'tense',soledad:'lonely',asombro:'awe',terror:'dread',nostalgia:'nostalgic',decadencia:'decaying',reverencia:'reverent',opresion:'oppressive',misterio:'mysterious',
   niebla:'fog',lluvia:'rain',tormenta:'storm',nieve:'snow',humo:'smoke',polvo:'dust',ceniza:'ash',fuego:'firelight',luna:'moonlight',atardecer:'sunset',amanecer:'dawn',contraluz:'backlight',cenital:'top light',vela:'candlelight',
   azteca:'aztec',mexica:'mexica',maya:'maya',olmeca:'olmec',tolteca:'toltec',inca:'inca',egipcio:'egyptian',griego:'greek',romano:'roman',nordico:'norse',vikingo:'viking',japones:'japanese',chino:'chinese',persa:'persian',bizantino:'byzantine',gotico:'gothic',barroco:'baroque',victoriano:'victorian',medieval:'medieval',celta:'celtic',brutalista:'brutalist',sovietico:'soviet',mesoamericano:'mesoamerican',prehispanico:'pre-columbian',africano:'african',samurai:'samurai'};
-const tr=w=>{const n=nz(w).trim();if(TR[n])return TR[n];const s=n.replace(/(es|s)$/,'');return TR[s]||w.trim()};
+Object.assign(TR,{estacion:'station',orbital:'orbital',espacial:'space',abandonada:'abandoned',abandonado:'abandoned',ciudad:'city',pueblo:'village',castillo:'castle',cueva:'cave',isla:'island',rio:'river',lago:'lake',volcan:'volcano',selva:'rainforest',bosque:'forest',desierto:'desert',montana:'mountain',playa:'beach',puerto:'harbor',fabrica:'factory',barco:'ship',tren:'train',robot:'robot',maquina:'machine',mercado:'market',casa:'house',iglesia:'church',catedral:'cathedral',puente:'bridge',muralla:'wall',jardin:'garden',cementerio:'cemetery',mina:'mine',submarino:'submarine',faro:'lighthouse',granja:'farm',tormenta:'storm',nubes:'clouds',oceano:'ocean',mar:'sea',hielo:'ice',niebla:'fog',noche:'night',luna:'moonlight',sol:'sunlight',nieve:'snow',ruina:'ruins',ruinas:'ruins',oxido:'rust',oxidado:'rusted',vegetacion:'vegetation',raices:'roots',arbol:'tree',arboles:'trees',hongos:'mushrooms',coral:'coral',cristal:'crystal'});
+const tr=w=>{const n=nz(w).trim();if(TR[n])return TR[n];const s=n.replace(/(es|s)$/,'');if(TR[s])return TR[s];const r=typeof NOMR!=='undefined'&&NOMR.find(x=>x.det.some(d=>d.length>3&&n.startsWith(d)));return r?.en?r.en.toLowerCase():w.trim()};
 const CULTURAS=['azteca','mexica','maya','olmeca','tolteca','inca','egipcio','griego','romano','nordico','vikingo','japones','chino','persa','bizantino','gotico','barroco','victoriano','medieval','celta','brutalista','sovietico','mesoamericano','prehispanico','africano','samurai'];
 function sujetosDe(p){const t=toks([queDe(p),...p.concepto.nucleos,p.brief.texto,p.que?.funcion].join(' '));
   const an=[...new Set(t.map(w=>ANIMALES.find(a=>w.startsWith(a))).filter(Boolean))];
@@ -3860,8 +3872,8 @@ function lienzoA(w,h){const c=document.createElement('canvas');c.width=w;c.heigh
 
 /* ---------- de medidas a crítica, según etapa, proyecto y (opcional) habilidad del día ---------- */
 const ETAPA_SIN_COLOR=/Thumbnail|Boceto|Valores/;
-function criticaImagen(a,p,{etapa='Boceto',skill=null,nota=''}={}){
-  const F=[],P=[],Q=[],M=[],X=[],pct=v=>Math.round(v*100)+'%',tipo=p?(p.que?.tipo||p.tipo):'',conFig=!/Environment|Entorno|Mundo|Arquitect|Keyframe|Ilustra/.test(tipo);
+function criticaImagen(a,p,{etapa='Boceto',skill=null,nota='',tema=''}={}){
+  const F=[],P=[],Q=[],M=[],X=[],pct=v=>Math.round(v*100)+'%',tipo=p?(p.que?.tipo||p.tipo):'',conFig=!tema&&!/Environment|Entorno|Mundo|Arquitect|Keyframe|Ilustra/.test(tipo);
   const D=p?DX(p):null,I=D?.I;
   /* silueta y lectura */
   if(conFig){if(a.complej<2.6&&a.llenado>.08)F.push(`Silueta compacta (complejidad ${a.complej.toFixed(1)}): se lee rápido en negro.`);
@@ -4167,7 +4179,8 @@ function refsBalanceHTML(p){const R=p.refs||[],cats={};R.forEach(r=>(r.estudio||
   return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Balance de investigación</h3><span class="lbl">${R.length} refs · ${prim} reales · ${sec} artísticas</span></div>
     <p class="hint"><b>Referencia primaria (real)</b>: anatomía, fotografía, museos, naturaleza, materiales, ingeniería → estudias <b>cómo funcionan las cosas</b>. <b>Secundaria (artística)</b>: concept artists, cine, videojuegos → estudias <b>qué decisiones visuales tomó otro artista</b>. Diseña con la primera; aprende oficio con la segunda.</p>
     <div class="bal">${REF_POR.map(c=>`<div class="bal-r ${cats[c]?'':'cero'}"><span>${c}</span><i style="width:${(cats[c]||0)/max*100}%"></i><b>${cats[c]||0}</b></div>`).join('')}</div>
-    ${msgs.map(m=>`<p class="nd-box sm">${esc(m)}</p>`).join('')}</div>`}
+    ${msgs.map(m=>`<p class="nd-box sm">${esc(m)}</p>`).join('')}
+    <div class="prow"><button class="btn pri" data-act="auto-refs">${S.autoRef?'Buscando…':'Llenar mi moodboard con referencias reales'}</button><span class="muted" id="auto-prog">${S.autoRef?`Buscando ${S.autoRef.n} de ${S.autoRef.t}…`:'Busca según lo que definiste (forma, material, luz, cultura, anatomía, mood) en museos y Wikimedia, solo con licencia libre, y agrega cada una con su porqué.'}</span></div></div>`}
 const OBJS=['Forma','Anatomía','Material','Luz','Color','Cultura','Composición','Técnica','Mood','Arquitectura','Storytelling','Pilares'];
 function generadorHTML(p){const o=S.bqObj||'Forma',L=busquedasGen(p,o);
   return `<div class="box"><h3>Generador de búsquedas por objetivo</h3><p class="hint">No combina palabras al azar: arma la búsqueda según lo que necesitas estudiar y lo que ya definiste (sujeto, materiales, luz, cultura, mood).</p>
@@ -4992,6 +5005,138 @@ async function accionPot(a,el,p,ds){const d=S.recNuevo=S.recNuevo||{nombre:'',ti
     case 'plan-dia':{const pl=S.ajustes.planDebil=S.ajustes.planDebil&&S.ajustes.planDebil.hab===ds.h?S.ajustes.planDebil:{hab:ds.h,hechos:{}};pl.hechos[ds.d]=!pl.hechos[ds.d];if(!pl.hechos[ds.d])delete pl.hechos[ds.d];marcarAj();renderMain();return true}}
   return false}
 
+/* =====================================================================
+   1 · MI ESTILO MEDIDO (sin IA de pago) · 2 · LLENAR MOODBOARD · 3 · TAREAS DEL TALLER
+   ===================================================================== */
+/* ---------- 1 · estilo medido desde tus ilustraciones ---------- */
+function fuentesEstilo(){const out=[];for(const x of S.ajustes.galeria||[])out.push({id:'g'+x.id,ref:x,anio:x.anio||'',tipo:x.tipo||'',titulo:x.titulo||''});
+  for(const x of S.ajustes.estiloImgs||[])out.push({id:'e'+x.id,ref:x,anio:'',tipo:'Estilo',titulo:''});
+  for(const p of Object.values(S.P))for(const x of p.piezas||[])if(/Final|Render|Color/.test(x.etapa||''))out.push({id:'p'+x.id,ref:x,anio:new Date(x.creado||Date.now()).getFullYear()+'',tipo:p.nombre,titulo:p.nombre});
+  return out.slice(-40)}
+async function medirEstilo(){const F=fuentesEstilo();if(!F.length){toast('Sube ilustraciones primero');return}S.estBusy={n:0,t:F.length};renderMain();const items=[];
+  for(const f of F){try{const a=await analizarImagen(f.ref);items.push({id:f.id,anio:f.anio,tipo:f.tipo,titulo:f.titulo,m:{mean:+a.mean.toFixed(3),std:+a.std.toFixed(3),msat:+a.msat.toFixed(3),warm:+a.warm.toFixed(3),detalle:+a.detalle.toFixed(3),complej:+a.complej.toFixed(2),dom:+Math.max(...a.tres).toFixed(3),separ:+a.separ.toFixed(3),foco2:!!a.foco2},pal:a.dom.filter(d=>d.pct>.06).map(d=>d.hex).slice(0,4),mini:a.vistas.mini});registrarMetrica(a,'estilo','')}catch{}S.estBusy.n++;const el=$('#est-prog');if(el)el.textContent=`Midiendo ${S.estBusy.n} de ${S.estBusy.t}…`}
+  S.ajustes.estiloMedido={ts:Date.now(),items:items.map(({mini,...x})=>x)};S.estMinis=Object.fromEntries(items.map(x=>[x.id,x.mini]));S.estBusy=null;marcarAj();renderMain()}
+function firmaMedida(items){if(!items.length)return null;const av=k=>items.reduce((s,x)=>s+x.m[k],0)/items.length,sd=k=>{const a=av(k);return Math.sqrt(items.reduce((s,x)=>s+(x.m[k]-a)**2,0)/items.length)};
+  const mean=av('mean'),std=av('std'),sat=av('msat'),warm=av('warm'),det=av('detalle'),comp=av('complej'),dom=av('dom'),T=[];
+  T.push(`Clave ${mean<.38?'baja: trabajas en la sombra y haces que la luz se gane':mean>.62?'alta: imágenes claras y aireadas':'media: ni muy oscuro ni muy claro'}.`);
+  T.push(`Temperatura ${warm>.25?'cálida: tus imágenes tienden a naranjas, ocres y rojos':warm<-.25?'fría: tiendes a azules y verdes':'equilibrada entre cálido y frío'}.`);
+  T.push(`Saturación ${sat>.45?'alta: color intenso':sat<.2?'baja: paletas contenidas':'media'}; contraste ${std>.25?'alto':std<.14?'suave':'moderado'}.`);
+  T.push(det>.55?'Concentras el detalle en el foco: buena jerarquía.':det<.35?'Repartes el detalle parejo en toda la imagen: a veces falta jerarquía.':'Reparto de detalle intermedio.');
+  if(dom<.5)T.push('En promedio ningún valor domina: tus imágenes suelen tener tres grupos de valor con peso parecido. Es tu hueco más claro.');
+  const pal=[];for(const x of items)for(const h of x.pal){const r=[1,3,5].map(k=>parseInt(h.slice(k,k+2),16));const c=pal.find(q=>Math.hypot(q.r[0]-r[0],q.r[1]-r[1],q.r[2]-r[2])<48);if(c)c.n++;else pal.push({h,r,n:1})}
+  const cons=['mean','warm','msat'].map(k=>sd(k)),incons=cons[0]>.14||cons[1]>.4||cons[2]>.18;
+  return {T,pal:pal.sort((a,b)=>b.n-a.n).slice(0,8).map(x=>x.h),incons,av:{mean,std,sat,warm,det,comp,dom}}}
+function estiloMedidoHTML(){const E=S.ajustes.estiloMedido,items=E?.items||[],f=firmaMedida(items),minis=S.estMinis||{};
+  const anios={};items.forEach(x=>{const a=x.anio||'Sin año';(anios[a]=anios[a]||[]).push(x)});const ks=Object.keys(anios).sort();
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Tu estilo, medido en tus ilustraciones</h3><button class="btn ${E?'':'pri'}" data-act="est-medir">${S.estBusy?'Midiendo…':E?'Medir de nuevo':'Medir mi estilo'}</button></div>
+    <p class="hint">Mide tus ilustraciones (Mis ilustraciones, piezas finales de tus proyectos y las de esta sección): clave, temperatura, saturación, contraste, reparto de detalle y tu paleta real. No interpreta temas ni personajes: dice cómo pintas, con números. <span id="est-prog">${S.estBusy?`Midiendo ${S.estBusy.n} de ${S.estBusy.t}…`:''}</span></p>
+    ${f?`<p class="lbl">${items.length} piezas · ${fecha(E.ts)}</p><ul class="why-l">${f.T.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+      <span class="lbl">Tu paleta real (los colores que más repites)</span><div class="palbar" style="height:36px">${f.pal.map(h=>`<span style="flex:1;background:${h}" title="${h}"></span>`).join('')}</div>
+      ${f.incons?'<p class="nd-box sm">Tus piezas varían mucho entre sí en clave, temperatura o saturación: todavía no hay un idioma visual fijo. Revisa en Revisión de reclutador cuáles se salen.</p>':'<p class="ok-box sm">Tus piezas se parecen entre sí en clave y color: ya hay un idioma visual reconocible.</p>'}
+      ${ks.length>1?`<span class="lbl">Tu evolución por año</span><div class="tbl"><table class="comp-t"><thead><tr><th>Año</th><th>Piezas</th><th>Valor dominante</th><th>Separación figura/fondo</th><th>Detalle en foco</th><th>Contraste</th></tr></thead><tbody>${ks.map(a=>{const L=anios[a],av=k=>L.reduce((s,x)=>s+x.m[k],0)/L.length;return `<tr><td><b>${esc(a)}</b></td><td>${L.length}</td><td>${Math.round(av('dom')*100)}%</td><td>${Math.round(av('separ')*100)}%</td><td>${Math.round(av('detalle')*100)}%</td><td>${av('std').toFixed(2)}</td></tr>`}).join('')}</tbody></table></div>
+        <p class="muted">Ponle año a cada ilustración en Mis ilustraciones para ver tu evolución real.</p>`:'<p class="muted">Ponle año a tus ilustraciones (viejas y actuales) en Mis ilustraciones y aquí verás tu evolución año por año.</p>'}
+      ${Object.keys(minis).length?`<div class="rcs">${items.slice(-12).map(x=>minis[x.id]?`<figure class="rc"><img src="${minis[x.id]}" alt="" style="aspect-ratio:auto"><figcaption>${esc(x.titulo||x.tipo)} ${x.anio?'· '+esc(x.anio):''}</figcaption></figure>`:'').join('')}</div>`:''}`:''}</div>`}
+
+/* ---------- 2 · llenar el moodboard de cualquier proyecto ---------- */
+const OBJ2EST={Forma:'Forma',Anatomía:'Anatomía',Material:'Material',Luz:'Luz',Color:'Color',Cultura:'Cultura',Composición:'Composición',Técnica:'Técnica',Mood:'Mood',Arquitectura:'Arquitectura',Storytelling:'Storytelling',Pilares:'Forma'};
+const limpiaQ=q=>q.replace(/\b(reference|references|concept art|design|shape language|cinematic|photo|photography|texture macro|museum collection|film still|color palette|storytelling details|worn used|silhouette|low key|wide shot|low angle)\b/gi,' ').replace(/\s+/g,' ').trim();
+async function wmLibre(q,n){const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:bitmap')}&gsrlimit=10&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1280&format=json&origin=*`;
+  const j=await (await fetch(u)).json();return Object.values(j.query?.pages||{}).sort((a,b)=>a.index-b.index).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{},lic=(md.LicenseShortName?.value||'').replace(/<[^>]+>/g,'');return {src:ii.thumburl||ii.url,link:ii.descriptionurl,titulo:p.title.replace(/^File:/,'').replace(/\.[a-z]+$/i,''),lic,fuente:'Wikimedia'}}).filter(x=>x.src&&/CC|Public domain|PD/i.test(x.lic)).slice(0,n)}
+async function metLibre(q,n){const s=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=${encodeURIComponent(q)}`)).json();const out=[];
+  for(const id of (s.objectIDs||[]).slice(0,14)){if(out.length>=n)break;try{const o=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`)).json();if(o.isPublicDomain&&o.primaryImageSmall)out.push({src:o.primaryImageSmall,link:o.objectURL,titulo:[o.title,o.culture,o.objectDate].filter(Boolean).join(' · '),lic:'Dominio público (The Met)',fuente:'The Met'})}catch{}}return out}
+/* búsquedas "de fotógrafo": lo que existe en museos y en Wikimedia, no términos de diseño */
+function busquedasFoto(p){const s=sujetosDe(p),Q=[],add=(q,capa,obj,busco,estudiar,met)=>{q=q.replace(/\s+/g,' ').trim();if(q&&!Q.some(x=>x.q===q))Q.push({q,capa,obj,busco,estudiar,met})};
+  const en=t=>toks(t).map(tr).filter(w=>/^[a-z -]+$/i.test(w)&&!STOP.has(w)).slice(0,3).join(' ');
+  const suj=en([p.que?.que,...p.concepto.nucleos].filter(Boolean).join(' ')),edad=vecDe(intTextos(p)).A.v;
+  if(suj)add(suj,'concepto','Forma','El sujeto real: '+(p.que?.que||p.nombre),'Cómo es de verdad: estructura, proporción y qué lo hace reconocible.');
+  s.an.slice(0,2).forEach(a=>{add(tr(a)+' animal','concepto','Anatomía',`${cap(a)} real`,'Proporciones, dónde carga el peso y cómo se articula.');add(tr(a)+' skull','concepto','Anatomía',`Cráneo de ${a}`,'La estructura debajo de la forma.')});
+  (p.materiales||[]).slice(0,3).forEach(m=>add(`${edad>.3?'weathered ':edad<-.3?'polished ':''}${tr(m)}`,'concepto','Material',`${m} real`,'Cómo refleja la luz, dónde se desgasta y cómo se ve de lejos contra de cerca.'));
+  s.cult.slice(0,2).forEach(c=>{add(tr(c),'concepto','Cultura',`Piezas de la cultura ${c}`,'Motivos, proporciones y materiales auténticos.',true);add(tr(c)+' ruins','mood','Arquitectura',`Arquitectura ${c}`,'Cómo construían y cómo envejece.')});
+  const luz=toks([p.guia?.luz,p.mood.luz].join(' ')).map(tr).filter(w=>/moonlight|sunlight|firelight|fire|fog|sunset|dawn|night|storm|candle|smoke/.test(w));
+  if(luz.length)add(luz.slice(0,2).join(' ')+(s.tipo==='Personaje'?' portrait':' landscape'),'mood','Luz','La luz de tu mood en la realidad','Dirección de la fuente, temperatura de luz contra sombra, qué se pierde en la sombra.');
+  const clima=toks([p.mood.clima,p.mood.atmosfera,...tresMood(p)].join(' ')).map(tr).filter(w=>/fog|mist|rain|storm|snow|smoke|ash|dust|clouds|ice|desert|ocean|forest|rainforest/.test(w));
+  if(clima.length)add(clima.slice(0,2).join(' ')+' landscape','mood','Mood','Tu atmósfera en fotografía','Qué hace que se sienta así: clima, distancia, escala, valor.');
+  if(suj&&/Environment|Mundo|Arquitect|Keyframe/.test(s.tipo))add(suj+' interior','mood','Arquitectura','El espacio por dentro','Escala humana, cómo entra la luz, qué se repite.');
+  return Q.slice(0,10)}
+async function llenarMoodboard(p){if(S.autoRef)return;const B=busquedasFoto(p);if(!B.length){toast('Define qué es, materiales, mood o cultura del proyecto primero');return}
+  S.autoRef={n:0,t:B.length,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  for(const b of B){try{const q=b.q,L=[...(b.met?await metLibre(q,1).catch(()=>[]):[]),...await wmLibre(q,2).catch(()=>[])];
+      for(const x of L.slice(0,2)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:`${b.busco}. Estudia: ${b.estudiar}`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    S.autoRef.n++;const el=$('#auto-prog');if(el)el.textContent=`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`}
+  const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias agregadas: revísalas y quita las que no sirvan`:'No encontré referencias libres para esas búsquedas')}
+
+/* ---------- 3 · tareas del taller ---------- */
+const GUIA_TEMA=[
+ [/vegeta|planta|hoja|selva|bosque|arbol|árbol|follaje|raiz|raíz|liana|helecho/i,'Vegetación',['Empieza por familias de silueta, no por hojas sueltas: 3 tipos (vertical como palmera, radial como helecho, colgante como liana).','Jerarquía grande · mediana · pequeña: una masa dominante, dos medianas y detalle solo en el foco.','Agrupa hojas en racimos con forma (triángulo, abanico); dibuja el racimo, luego sugiere 3–4 hojas del borde.','Ritmo y dirección: todas las plantas «crecen» hacia la luz; las curvas deben llevar la mirada al foco.','Superposición y planos: primer plano oscuro que enmarca, plano medio con forma, fondo claro y simple.','Deja espacio negativo: un claro entre follaje es donde respira la imagen.','Conecta con tu concepto: ¿esta vegetación reclama, protege o esconde algo? Una raíz rompiendo piedra cuenta más que 100 hojas.']],
+ [/personaje|character|guerrero|heroe|héroe/i,'Personaje',['Silueta primero: 10 siluetas en negro de 1 minuto.','Una forma dominante (rectángulo, triángulo, círculo) que diga quién es.','Función: ¿qué hace y qué carga? El vestuario sale de eso.','Proporción: exagera una sola cosa.']],
+ [/criatura|creature|bestia|monstruo|animal/i,'Criatura',['Parte de 2 animales reales y su anatomía.','Silueta y peso: dónde carga y cómo se mueve.','Una sola característica protagonista.','Función en su ecosistema: qué come, de qué se esconde.']],
+ [/entorno|environment|paisaje|escenario|lugar/i,'Entorno',['Thumbnails de 5 minutos en 3 valores.','Primer plano, medio y fondo claros.','Una figura de escala conocida.','Un foco y un camino para la mirada.']],
+ [/arquitect|templo|edificio|ruina|ciudad/i,'Arquitectura',['Módulo que se repite y cómo se rompe.','Cómo carga el peso y cómo envejece.','Escala con una figura humana.']],
+ [/prop|arma|objeto|herramienta/i,'Prop',['Función antes que forma: cómo se agarra y se usa.','Silueta reconocible en negro.','Materiales creíbles y desgaste por uso.']]];
+function temasDe(t){return GUIA_TEMA.filter(([re])=>re.test(t||''))}
+function requisitosDe(t){return String(t||'').split(/\n|•|;|\.(?=\s|$)/).map(s=>s.replace(/^[\s\-*\d.)]+/,'').trim()).filter(s=>s.length>3).map(s=>{const m=/(\d+)\s*(bocetos?|thumbnails?|dibujos?|estudios?|variaciones?|siluetas?|ideas?|láminas?|laminas?)/i.exec(s);return {id:uid(),t:s,meta:m?+m[1]:0,ok:false}})}
+function tareaActiva(){const L=S.ajustes.tareas||[];return L.find(x=>x.id===S.tareaSel)||L[0]||null}
+function refsParaTarea(t,p){if(!p)return [];const tem=temasDe(t.enunciado),pal=toks(t.enunciado).filter(w=>w.length>4);
+  return (p.refs||[]).map(r=>{const txt=nz([r.porque,r.fuente,(r.estudio||[]).join(' '),(r.aplica||[]).join(' ')].join(' '));let s=pal.filter(w=>txt.includes(w)).length*2;
+    if(tem.some(([,n])=>n==='Vegetación')&&/vegeta|raic|raiz|liana|helecho|ceiba|hoja|musgo|selva|bromel|monstera|arbol/.test(txt))s+=5;if(r.capa==='p3'||r.capa==='mood')s+=1;return {r,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,12).map(x=>x.r)}
+function vTaller(){const L=S.ajustes.tareas=S.ajustes.tareas||[],t=tareaActiva(),p=t?S.P[t.pid]:null;
+  if(!t)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Tareas del taller</h1><p class="intro">Escribe lo que te pidieron en tu taller o asesoría y la app te guía: requisitos, referencias de tu proyecto, cómo bajar la idea y feedback de cada boceto hasta que cumplas lo que se pide.</p>${nuevaTareaHTML()}`;
+  const hechos=t.bocetos.length,meta=Math.max(0,...t.reqs.map(r=>r.meta||0)),tem=temasDe(t.enunciado),R=refsParaTarea(t,p);
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Tareas del taller</h1>
+  <div class="chips">${L.map(x=>`<button class="ch ${x.id===t.id?'on':''}" data-act="tar-sel" data-id="${x.id}">${esc(corto(x.titulo,30))}${x.entrega?' · '+esc(x.entrega):''}</button>`).join('')}<button class="ch" data-act="tar-nueva">＋ Nueva tarea</button></div>
+  ${S.tarNueva?nuevaTareaHTML():''}
+  <div class="box big-q"><div class="prow" style="justify-content:space-between"><h3>1 · Lo que te pidieron</h3><span class="lbl">${p?'Proyecto: '+esc(p.nombre):'Sin proyecto'}${t.entrega?' · entrega '+esc(t.entrega):''}</span></div>
+    <p style="white-space:pre-wrap;margin:0">${esc(t.enunciado)}</p>
+    <span class="lbl">Requisitos (palomea lo que ya cumples)</span>
+    <ul class="list">${t.reqs.map((r,i)=>`<li><label class="chk"><input type="checkbox" data-act="tar-req" data-i="${i}" ${r.ok?'checked':''}><span>${esc(r.t)}${r.meta?` <b style="color:${hechos>=r.meta?'var(--ok)':'var(--accent)'}">${Math.min(hechos,r.meta)}/${r.meta}</b>`:''}</span></label><button class="btn ghost sm" data-act="tar-req-del" data-i="${i}">✕</button></li>`).join('')}</ul>
+    <div class="prow"><input type="text" id="tar-req-t" placeholder="Agregar requisito + Enter" data-enter="tar-req-add" style="flex:1 1 220px"><button class="btn sm" data-act="tar-req-add">＋</button></div></div>
+  <div class="box"><h3>2 · De tus referencias a la idea</h3>${R.length?`<p class="hint">Las referencias de tu proyecto que más sirven para esta tarea. De cada una toma solo lo que dice abajo.</p><div class="rcs">${R.map(r=>`<figure class="rc"><img ${imgAttrs(r)} alt="" loading="lazy" data-act="zoom"><figcaption><small>${esc(corto(r.porque||r.fuente,110))}</small></figcaption></figure>`).join('')}</div>`:`<p class="muted">${p?'No encontré referencias de tu proyecto que encajen. Usa «Llenar mi moodboard» en Referencias.':'Liga la tarea a un proyecto para usar sus referencias.'}</p>`}
+    ${tem.map(([,n,tips])=>`<div class="an-sec exp"><h4>Cómo bajar la idea · ${esc(n)}</h4><ol>${tips.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}
+    ${p&&p.pilares.some(q=>q.t)?`<div class="an-sec q"><h4>Que tus bocetos sirvan a tu proyecto</h4><ul>${p.pilares.filter(q=>q.t).map(q=>`<li><b>${esc(q.t)}</b>${q.como?' — '+esc(corto(q.como,110)):''}</li>`).join('')}</ul></div>`:''}</div>
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>3 · Tus bocetos ${meta?`<span class="lbl">${hechos}/${meta}</span>`:`<span class="lbl">${hechos}</span>`}</h3><span class="prow"><label class="btn pri" for="tar-file">Subir bocetos</label><input type="file" id="tar-file" accept="image/*" multiple hidden></span></div>
+    ${S.tarBusy?`<p class="muted">${esc(S.tarBusy)}</p>`:''}
+    ${t.bocetos.length?`<div class="tbocs">${t.bocetos.slice().reverse().map(b=>{const i=t.bocetos.indexOf(b);return `<div class="tboc"><img ${imgAttrs(b)} alt="" loading="lazy" data-act="zoom">
+      <div class="tboc-b"><span class="lbl">Boceto ${i+1} · ${fecha(b.ts)}</span>
+      ${b.cr?`${b.cr.problemas.length?`<p class="nd-box sm">${esc(b.cr.problemas[0])}</p>`:''}${b.cr.funciona.length?`<p class="ok-box sm">${esc(b.cr.funciona[0])}</p>`:''}<small class="muted">Siguiente: ${esc(b.cr.experimentos[0]||'')}</small>`:''}
+      <span class="lbl">¿Qué requisito cumple?</span><div class="chips">${t.reqs.map((r,j)=>`<button class="ch xs ${(b.cumple||[]).includes(r.id)?'on':''}" data-act="tar-cumple" data-b="${i}" data-r="${r.id}">${esc(corto(r.t,26))}</button>`).join('')}</div>
+      <input type="text" data-tarnota="${i}" value="${esc(b.nota||'')}" placeholder="¿Qué idea de las refs usaste aquí?" style="font-size:13px">
+      <button class="btn ghost sm danger" data-act="tar-boc-del" data-i="${i}">✕</button></div></div>`}).join('')}</div>`:'<p class="muted">Sube tus bocetos conforme los haces (foto del cuaderno o captura). Cada uno recibe feedback al momento y queda también en las Carpetas de tu proyecto.</p>'}</div>
+  <div class="box"><h3>4 · ¿Listo para entregar?</h3>${(()=>{const faltan=t.reqs.filter(r=>!(r.ok||(r.meta&&hechos>=r.meta)||t.bocetos.some(b=>(b.cumple||[]).includes(r.id))));return faltan.length?`<p class="nd-box">Te falta: ${faltan.map(r=>esc(r.t)).join(' · ')}</p>`:'<p class="ok-box">Cumples todos los requisitos. Arma tu lámina y entrégala.</p>'})()}
+    <div class="prow"><button class="btn pri" data-act="tar-lamina">Descargar lámina de entrega (PNG)</button><button class="btn ghost sm danger" data-act="tar-del">${S.confirmLi==='t'+t.id?'¿Borrar tarea?':'Borrar tarea'}</button></div></div>`}
+function nuevaTareaHTML(){const d=S.tarD=S.tarD||{titulo:'',pid:S.cur||'',entrega:'',enunciado:''};
+  return `<div class="box"><h3>Nueva tarea</h3><div class="grid2" style="gap:8px"><div class="field"><label for="tn-t">Título</label><input type="text" id="tn-t" data-tard="titulo" value="${esc(d.titulo)}" placeholder="Bocetos de vegetación"></div>
+    <div class="field"><label for="tn-p">Proyecto</label><select id="tn-p" data-tard="pid"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${d.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
+    <div class="field"><label for="tn-e">Entrega</label><input type="date" id="tn-e" data-tard="entrega" value="${esc(d.entrega)}"></div></div>
+    <div class="field"><label for="tn-x">¿Qué te pidieron exactamente? (cópialo tal cual; una indicación por línea)</label><textarea id="tn-x" data-tard="enunciado" style="min-height:90px" placeholder="Hacer 10 bocetos de vegetación a partir de las referencias.\nEmpezar a bajar ideas de las imágenes del moodboard.\nTraer 3 bocetos más trabajados.">${esc(d.enunciado)}</textarea></div>
+    <div class="prow"><button class="btn pri" data-act="tar-crear">Crear tarea</button>${S.tarNueva?'<button class="btn ghost" data-act="tar-cancel">Cancelar</button>':''}</div></div>`}
+async function subirBocetosTarea(files){const t=tareaActiva();if(!t)return;const fs_=[...files].filter(f=>/^image\//.test(f.type));if(!fs_.length)return;bloquear();
+  try{let k=0;for(const f of fs_){k++;S.tarBusy=`Subiendo y revisando ${k} de ${fs_.length}…`;renderMain();
+    try{const img=await guardarImagen(f),a=await analizarImagen(f),p=S.P[t.pid],cr=criticaImagen(a,p||null,{etapa:'Boceto',nota:t.titulo,tema:temasDe(t.enunciado)[0]?.[1]||''});registrarMetrica(a,'tarea',t.pid);
+      const tt=tareaActiva();tt.bocetos.push({id:uid(),...img,ts:Date.now(),nota:'',cumple:[],cr:{funciona:cr.funciona.slice(0,3),problemas:cr.problemas.slice(0,3),experimentos:cr.experimentos.slice(0,2)}});
+      if(p){p.grupos=p.grupos||[];if(!p.grupos.includes(t.titulo))p.grupos.push(t.titulo);p.piezas.push({id:uid(),etapa:'Boceto',grupo:t.titulo,nota:'Tarea: '+t.titulo,creado:Date.now(),...img,analisis:{ts:Date.now(),...cr}});marcarPid(t.pid)}
+      marcarAj()}catch(e){toast('No se pudo subir un boceto')}}}
+  finally{S.tarBusy='';desbloquear();renderMain()}}
+async function laminaTarea(t){await document.fonts?.ready;const B=t.bocetos;if(!B.length){toast('Sube bocetos primero');return}const cols=Math.min(4,Math.ceil(Math.sqrt(B.length))),rows=Math.ceil(B.length/cols),W=3840,cw=(W-160-(cols-1)*40)/cols,ch=cw*0.75,H=260+rows*(ch+90)+60,cv=lienzo(W,H),c=cv.getContext('2d');
+  c.fillStyle=PRO.bg;c.fillRect(0,0,W,H);tx2(c,t.titulo.toUpperCase(),80,50,90,PRO.ink,{w:'800',f:DISP});tx2(c,`${PRO_ARTISTA} · ${S.P[t.pid]?.nombre||''} · ${fecha(Date.now())}`,80,160,32,PRO.ink2,{f:MONO});
+  for(let i=0;i<B.length;i++){const x=80+(i%cols)*(cw+40),y=260+Math.floor(i/cols)*(ch+90);c.fillStyle=PRO.panel;c.fillRect(x,y,cw,ch);try{fitImg(c,await cargarBitmap(B[i]),x,y,cw,ch)}catch{}tx2(c,String(i+1).padStart(2,'0')+(B[i].nota?'  ·  '+corto(B[i].nota,70):''),x,y+ch+18,28,PRO.ink2)}
+  await bajarBlob(`${slugP(PRO_ARTISTA)}_${slugP(t.titulo)}_lamina.png`,await aBlob(cv))}
+async function accionExt(a,el,p,ds){const L=S.ajustes.tareas=S.ajustes.tareas||[],t=tareaActiva();
+  switch(a){
+    case 'est-medir':if(!S.estBusy)medirEstilo();return true;
+    case 'auto-refs':llenarMoodboard(p);return true;
+    case 'tar-nueva':S.tarNueva=true;S.tarD=null;renderMain();return true;case 'tar-cancel':S.tarNueva=false;renderMain();return true;
+    case 'tar-sel':S.tareaSel=ds.id;renderMain();return true;
+    case 'tar-crear':{const d=S.tarD||{};if(!(d.enunciado||'').trim()){toast('Escribe qué te pidieron');return true}const nt={id:uid(),titulo:(d.titulo||'').trim()||corto(d.enunciado.split('\n')[0],40),pid:d.pid||'',entrega:d.entrega||'',enunciado:d.enunciado.trim(),reqs:requisitosDe(d.enunciado),bocetos:[],ts:Date.now()};
+      L.unshift(nt);S.tareaSel=nt.id;S.tarNueva=false;S.tarD=null;if(nt.entrega)(S.ajustes.eventos=S.ajustes.eventos||[]).push({id:'tar-'+nt.id,titulo:'Taller · '+nt.titulo,fecha:nt.entrega});marcarAj();renderMain();return true}
+    case 'tar-req':{const r=t?.reqs[+ds.i];if(r){r.ok=!r.ok;marcarAj();renderMain()}return true}
+    case 'tar-req-del':t?.reqs.splice(+ds.i,1);marcarAj();renderMain();return true;
+    case 'tar-req-add':{const v=$('#tar-req-t')?.value.trim();if(!v||!t)return true;t.reqs.push(...requisitosDe(v));marcarAj();renderMain();return true}
+    case 'tar-cumple':{const b=t?.bocetos[+ds.b];if(!b)return true;b.cumple=b.cumple||[];const i=b.cumple.indexOf(ds.r);i>=0?b.cumple.splice(i,1):b.cumple.push(ds.r);marcarAj();renderMain();return true}
+    case 'tar-boc-del':{const k='tb'+ds.i;if(S.confirmLi!==k){S.confirmLi=k;el.textContent='¿Quitar?';return true}S.confirmLi=null;t.bocetos.splice(+ds.i,1);marcarAj();renderMain();return true}
+    case 'tar-lamina':if(t)laminaTarea(t).catch(()=>toast('No se pudo armar la lámina'));return true;
+    case 'tar-del':{const k='t'+t.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;L.splice(L.indexOf(t),1);S.tareaSel=null;marcarAj();renderMain();return true}}
+  return false}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -5016,6 +5161,8 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.dxq){S.decQ=t.value;const pos=t.selectionStart;renderMain();const el=$('#dec-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
+  if(t.dataset.tard){S.tarD=S.tarD||{titulo:'',pid:S.cur||'',entrega:'',enunciado:''};S.tarD[t.dataset.tard]=t.value;return}
+  if(t.dataset.tarnota!==undefined){const tt=tareaActiva(),b=tt?.bocetos[+t.dataset.tarnota];if(b){b.nota=t.value;marcarAj()}return}
   if(t.dataset.mr){S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};S.recNuevo[t.dataset.mr]=t.value;return}
   if(t.dataset.recq){S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};S.recF.q=t.value;const pos=t.selectionStart;renderMain();const el=$('#recu-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;return}
@@ -5053,6 +5200,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-destino')S.destinoCapa=e.target.value;
+  if(e.target.id==='tar-file'){subirBocetosTarea(e.target.files);e.target.value=''}
   if(e.target.id==='fmt-file'){const f=e.target.files[0];e.target.value='';if(f)fmtMedir(f,{nombre:f.name,tipo:f.type,peso:f.size})}
   if(e.target.id==='fmt-pz'){const q=S.fmtPz?.[+e.target.value];if(q)fmtMedir(q.x,{nombre:q.label})}
   if(e.target.id==='an-file'){const f=e.target.files[0];e.target.value='';if(f)analizarYMostrar(f,{etapa:S.anEtapa||'Boceto',nota:S.anNota||''})}
@@ -5324,7 +5472,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
