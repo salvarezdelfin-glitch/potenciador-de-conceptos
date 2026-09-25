@@ -781,7 +781,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhb1nul').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhbd553').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1187,7 +1187,7 @@ function vBrief(p){return `
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Asesor: nombres</b> <button class="btn ghost sm" data-act="nom-taller">Taller completo →</button><p class="muted" style="margin:2px 0 0">Nombres para el personaje y títulos para el proyecto a partir de tu imagen, tu historia o tu concepto, con su significado.</p></div>
     <div class="prow"><label class="btn sm" for="f-nomimg">${S.nomImg?'✓ Imagen lista':'Adjuntar PNG'}</label><input type="file" id="f-nomimg" accept="image/png,image/jpeg,image/webp" hidden>
     ${S.aiBusy.nombres?'<button class="btn sm" data-act="ai-stop" data-k="nombres">Detener</button>':'<button class="btn sm pri" data-act="ai" data-k="nombres">Proponer nombres</button>'}</div></div>
-    ${S.aiBusy.nombres?'<p class="muted">Pensando…</p>':S.ai.nombres?.error?`<p class="muted">${esc(S.ai.nombres.error)}</p>`:S.ai.nombres?aiRender('nombres',S.ai.nombres):''}</div>`:''}
+    ${S.aiBusy.nombres?'<p class="muted">Pensando…</p>':S.ai.nombres?.error?`<p class="muted">${esc(S.ai.nombres.error)}</p>`:S.ai.nombres?aiRender('nombres',S.ai.nombres):''}</div>`:'<div class="asesor"><div class="top"><div><b>Nombres y títulos</b><p class="muted" style="margin:2px 0 0">Nombres con significado para el personaje y títulos para el proyecto, a partir de tu concepto, keywords e imagen.</p></div><button class="btn sm pri" data-act="nom-taller">Proponer nombres →</button></div></div>'}
   ${asesor('ideas','Asesor: potencia mi idea','Escribe tu idea arriba, aunque sea en bruto. Te propone 5 direcciones distintas, cada una con núcleos, tensión, 3 pilares, el mundo como personaje y búsquedas. Elige una y se llena tu proyecto.')}`}
 
 function vConcepto(p){
@@ -2560,7 +2560,7 @@ function vNombres(){
       <div class="field"><label>Tono</label><div class="chips">${NOM_ESTILOS.map(e=>`<button class="chip ${d.estilos.includes(e)?'on':''}" data-act="nom-estilo" data-v="${esc(e)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(e)}</button>`).join('')}</div></div>
       <div class="prow"><span class="lbl">Idioma</span>${['Español','Inglés','Ambos'].map(x=>`<button class="btn sm ${d.idioma===x?'pri':''}" data-act="nom-idioma" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="prow"><label class="btn sm" for="nom-img">${S.nomImg2?'✓ Imagen lista':'Adjuntar imagen (opcional)'}</label><input type="file" id="nom-img" accept="image/png,image/jpeg,image/webp" hidden>
-        ${S.sample?(S.aiBusy.nombres2?'<button class="btn" data-act="ai-stop" data-k="nombres2">Detener</button><span class="muted">Buscando nombres…</span>':'<button class="btn pri" data-act="ai" data-k="nombres2">Proponer 12 opciones</button>'):''}</div>
+        ${S.sample?(S.aiBusy.nombres2?'<button class="btn" data-act="ai-stop" data-k="nombres2">Detener</button><span class="muted">Buscando nombres…</span>':'<button class="btn pri" data-act="ai" data-k="nombres2">Proponer 12 opciones</button>'):(S.aiBusy.nombres2?'<span class="muted">Leyendo tu imagen…</span>':'<button class="btn pri" data-act="nom-local">Proponer 12 opciones</button>')}</div>
       ${S.ai.nombres2?.error?`<p class="muted">${esc(S.ai.nombres2.error)}</p>`:''}</div>
     <div class="box"><h3>Fórmulas que funcionan</h3><ul class="list">${NOM_FORMULAS.map(([f,e,w])=>`<li style="grid-template-columns:1fr"><span><b>${esc(f)}</b> · <i>${esc(e)}</i><br><span class="muted">${esc(w)}</span></span></li>`).join('')}</ul>
       <p class="hint" style="margin:0"><b>Un buen título:</b> se pronuncia sin dudar, dice el tono del proyecto, se busca en Google sin chocar con una franquicia famosa y funciona en inglés para tu portafolio.</p></div>
@@ -4300,6 +4300,138 @@ async function accionDir(a,el,p,ds){
   }
 }
 
+/* =====================================================================
+   GENERADOR DE NOMBRES LOCAL (sin IA de pago)
+   Raíces reales por idioma + reglas de composición de cada lengua.
+   Lo compuesto se marca para verificar; lo que coincide con un nombre
+   histórico o mitológico real se avisa.
+   ===================================================================== */
+/* clave | detectar | es | en | latín nom | latín gen | griego (forma de combinación) | náhuatl palabra | náhuatl raíz | japonés */
+const NOMR=`guerra|guerr,batall,combat,war|Guerra|War|Bellum|belli|Polemo|yaotl|yao|Sensō
+dios|dios,divin,deidad,sagrad,god|Dios|God|Deus|dei|Theo|teotl|teo|Kami
+serpiente|serpient,vibora,culebra,snake,serpent|Serpiente|Serpent|Serpens|serpentis|Ophio|coatl|coa|Hebi
+jaguar|jaguar,felin,ocelot|Jaguar|Jaguar|Onca|oncae|Pardalo|ocelotl|ocelo|
+obsidiana|obsidian|Obsidiana|Obsidian|||Melanolitho|itztli|itz|
+sangre|sangr,blood|Sangre|Blood|Sanguis|sanguinis|Haimo|eztli|ez|Chi
+fuego|fuego,llama,brasa,fire,flam|Fuego|Fire|Ignis|ignis|Pyro|tletl|tle|Homura
+agua|agua,water|Agua|Water|Aqua|aquae|Hydro|atl|a|Mizu
+noche|noche,nocturn,night|Noche|Night|Nox|noctis|Nycto|yohualli|yohual|Yoru
+sombra|sombra,oscur,tinieb,shadow,dark|Sombra|Shadow|Umbra|umbrae|Skio|tlilli|tlil|Kage
+muerte|muert,muerte,death,cadaver,calaver|Muerte|Death|Mors|mortis|Thanato|miquiztli|miquiz|Shi
+luna|luna,lunar,moon|Luna|Moon|Luna|lunae|Seleno|metztli|metz|Tsuki
+sol|sol,solar,sun|Sol|Sun|Sol|solis|Helio|tonatiuh|tona|Taiyō
+estrella|estrell,star|Estrella|Star|Stella|stellae|Astro|citlalli|citlal|Hoshi
+espejo|espejo,reflej,mirror|Espejo|Mirror|Speculum|speculi|Katoptro|tezcatl|tezca|Kagami
+piedra|piedra,roca,stone,rock|Piedra|Stone|Lapis|lapidis|Litho|tetl|te|Ishi
+montana|montan,cerro,mountain|Montaña|Mountain|Mons|montis|Oreo|tepetl|tepe|Yama
+flor|flor,petal,flower|Flor|Flower|Flos|floris|Antho|xochitl|xochi|Hana
+pluma|pluma,plumaj,penach,feather|Pluma|Feather|Penna|pennae|Ptero|quetzalli|quetzal|Hane
+aguila|aguila,eagle|Águila|Eagle|Aquila|aquilae|Aeto|cuauhtli|cuauh|Washi
+hueso|hueso,esquelet,bone|Hueso|Bone|Os|ossis|Osteo|omitl|omi|Hone
+corazon|corazon,heart|Corazón|Heart|Cor|cordis|Kardio|yollotl|yollo|Kokoro
+viento|viento,wind|Viento|Wind|Ventus|venti|Anemo|ehecatl|ehe|Kaze
+tierra|tierra,earth|Tierra|Earth|Terra|terrae|Geo|tlalli|tlal|Tsuchi
+jade|jade,turques|Jade|Jade|||Iaspido|chalchihuitl|chalchiuh|Hisui
+oro|oro,dorad,gold|Oro|Gold|Aurum|auri|Chryso|teocuitlatl|teocuitla|Kin
+lluvia|lluvia,rain|Lluvia|Rain|Pluvia|pluviae|Hyeto|quiahuitl|quiauh|Ame
+nube|nube,niebla,bruma,cloud,fog|Nube|Cloud|Nubes|nubis|Nepho|mixtli|mix|Kumo
+cielo|cielo,celest,sky|Cielo|Sky|Caelum|caeli|Ourano|ilhuicatl|ilhuica|Sora
+mar|mar,marin,ocean,sea|Mar|Sea|Mare|maris|Thalasso|||Umi
+abismo|abism,fosa,abyss|Abismo|Abyss|Abyssus|abyssi|Abysso|||Fuchi
+hielo|hielo,helad,glaci,ice|Hielo|Ice|Glacies|glaciei|Krystallo|cetl|ce|Kōri
+soledad|soled,solitar,aislam,aislad,lonel|Soledad|Solitude|Solitudo|solitudinis|Eremo|||Kodoku
+memoria|memori,recuerd,memory|Memoria|Memory|Memoria|memoriae|Mnemo|||Kioku
+sueno|sueno,onir,dream|Sueño|Dream|Somnium|somnii|Oneiro|temictli|temic|Yume
+ceniza|ceniza,ash|Ceniza|Ash|Cinis|cineris|Tephro|nextli|nex|Hai
+hierro|hierro,metal,acero,iron,steel|Hierro|Iron|Ferrum|ferri|Sidero|||Tetsu
+rey|rey,reina,trono,imperi,king|Rey|King|Rex|regis|Basileo|tlatoani|tlatoani|Ō
+guerrero|guerrer,soldad,warrior|Guerrero|Warrior|Bellator|bellatoris|Polemisto|||Senshi
+cazador|cazad,caza,hunter|Cazador|Hunter|Venator|venatoris|Agreo|||Kariudo
+lobo|lobo,wolf|Lobo|Wolf|Lupus|lupi|Lyko|cuetlachtli|cuetlach|Ōkami
+cuervo|cuervo,raven,crow|Cuervo|Raven|Corvus|corvi|Korako|||Karasu
+dragon|dragon|Dragón|Dragon|Draco|draconis|Drako|||Ryū
+bestia|bestia,monstru,beast|Bestia|Beast|Bestia|bestiae|Therio|||Kemono
+espiritu|espirit,fantasm,alma,spirit,ghost|Espíritu|Spirit|Spiritus|spiritus|Pneumato|||Rei
+luz|luz,lumin,brill,light|Luz|Light|Lux|lucis|Photo|||Hikari
+esperanza|esperanz,hope|Esperanza|Hope|Spes|spei|Elpido|||Kibō
+olvido|olvid,oblivion|Olvido|Oblivion|Oblivio|oblivionis|Letho|||
+dolor|dolor,sufr,pain|Dolor|Pain|Dolor|doloris|Algo|||Itami
+destino|destin,fate|Destino|Fate|Fatum|fati|Moiro|||Unmei
+tiempo|tiempo,tempor,time|Tiempo|Time|Tempus|temporis|Chrono|||Toki
+templo|templo,altar,temple|Templo|Temple|Templum|templi|Nao|teocalli|teocal|Tera
+bosque|bosque,selva,forest,jungle|Bosque|Forest|Silva|silvae|Hylo|||Mori
+raiz|raiz,raice,root|Raíz|Root|Radix|radicis|Rhizo|nelhuatl|nelhua|Ne
+corona|corona,crown|Corona|Crown|Corona|coronae|Stephano|||Kanmuri
+mascara|mascara,mask|Máscara|Mask|Persona|personae|Prosopo|xayacatl|xayaca|Men
+filo|cuchill,daga,espada,filo,blade,knife,sword|Filo|Blade|Culter|cultri|Machairo|tecpatl|tecpa|Yaiba
+escudo|escudo,shield|Escudo|Shield|Scutum|scuti|Aspido|chimalli|chimal|Tate
+sacrificio|sacrific,ofrend,sacrifice|Sacrificio|Sacrifice|Sacrificium|sacrificii|Thysio|||Ikenie
+fe|fe,creenc,faith|Fe|Faith|Fides|fidei|Pisto|||Shinkō
+caos|caos,caotic,chaos|Caos|Chaos|Chaos|chaos|Chao|||Konton
+invierno|inviern,winter|Invierno|Winter|Hiems|hiemis|Cheimo|||Fuyu
+vacio|vacio,void|Vacío|Void|Inane|inanis|Keno|||Kū
+rojo|rojo,roja,carmes,escarlat,red,crimson|Carmesí|Crimson|Ruber|rubri|Erythro|chichiltic|chichil|Aka
+negro|negro,negra,black|Negro|Black|Niger|nigri|Melano|tlilli|tlil|Kuro
+blanco|blanco,blanca,white|Blanco|White|Albus|albi|Leuko|iztac|iztac|Shiro
+humo|humo,smoke|Humo|Smoke|Fumus|fumi|Kapno|poctli|poc|Kemuri
+tormenta|torment,tempest,storm|Tormenta|Storm|Tempestas|tempestatis|Thyello|||Arashi
+ruina|ruina,escombr,ruin|Ruina|Ruin|Ruina|ruinae|Ereipio|||Haikyo`.split('\n').map(l=>{const [k,det,es,en,la,lag,gr,na,nar,ja]=l.split('|');return {k,det:det.split(','),es,en,la,lag,gr,na,nar,ja}});
+const NAH_REALES={itzcoatl:'Itzcóatl, tlatoani mexica (1427–1440)',quetzalcoatl:'Quetzalcóatl, deidad mesoamericana',xiuhcoatl:'Xiuhcóatl, serpiente de fuego de Huitzilopochtli',mixcoatl:'Mixcóatl, deidad de la caza',teocalli:'teocalli: templo',cuauhtemoc:'Cuauhtémoc, último tlatoani mexica',citlalcoatl:'nombre usado en fuentes modernas'};
+const EPITETO_V=[['Devora','Devourer of'],['Carga','Bearer of'],['Guarda','Keeper of'],['Rompe','Breaker of'],['Espera','Who Waits for'],['Canta','Singer of'],['Caza','Hunter of'],['Recuerda','Who Remembers'],['Bebe','Drinker of'],['Teme','Who Fears']];
+function conceptosDe(txt){const t=toks(txt),out=[];for(const w of t){const c=NOMR.find(r=>r.det.some(d=>d.length<=3?(w===d||w===d+'s'||w===d+'es'):w.startsWith(d)));if(c&&!out.includes(c))out.push(c)}return out}
+async function conceptosDeImagen(f){try{const a=await analizarImagen(f),c=[],R=[];
+  if(a.mean<.38){c.push('noche','sombra');R.push('clave baja (oscura)')}else if(a.mean>.62){c.push('luz');R.push('clave alta (clara)')}
+  for(const d of a.dom.slice(0,3)){const h=hexHsl(d.hex);if(!h)continue;if(h.s<.15){c.push(h.l<.2?'negro':h.l>.8?'blanco':'ceniza');continue}
+    const hu=h.h;c.push(hu<15||hu>340?(h.l<.35?'sangre':'rojo'):hu<45?(h.l<.4?'ceniza':'fuego'):hu<70?'oro':hu<170?'jade':hu<250?(a.mean<.4?'abismo':'cielo'):'sueno')}
+  if(a.warm>.3)R.push('temperatura cálida');else if(a.warm<-.3)R.push('temperatura fría');if(a.complej>5)c.push('filo');
+  R.push('colores '+a.dom.slice(0,3).map(d=>d.hex).join(' '));
+  return {cs:[...new Set(c)].map(k=>NOMR.find(r=>r.k===k)).filter(Boolean),lectura:R.join(' · ')}}catch{return {cs:[],lectura:''}}}
+function genNombres(d,p,extra){
+  const est=d.estilos||[],idioma=d.idioma||'Ambos',para=d.para||'Personaje',esTitulo=/Proyecto|Serie|Pieza/.test(para);
+  const txt=[d.kw,d.desc,...(p?[queDe(p),p.que?.tema,p.que?.funcion,p.ad,...p.concepto.nucleos,...p.pilares.map(x=>x.t),...tresMood(p),...(p.materiales||[]),p.brief.texto,p.brief.historia,...KWCATS.flatMap(([k])=>p.keywords[k]||[]),...(p.elementos||[]).map(e=>e.k+' '+e.sig)]:[])].join(' ');
+  const C=conceptosDe(txt);(extra?.cs||[]).forEach(c=>{if(!C.includes(c))C.push(c)});
+  if(C.length<2)return {opciones:[],vacio:true,consejos:[`Necesito al menos 2 ideas que reconozca (leí ${C.length}). Escribe palabras clave como: ${NOMR.slice(0,16).map(r=>r.es.toLowerCase()).join(', ')}…`]};
+  let s=((S.nomSeed=(S.nomSeed||0)+1)*7919+C.length*104729)%233280;const rnd=()=>(s=(s*9301+49297)%233280)/233280,pick=a=>a[Math.floor(rnd()*a.length)];
+  const par=()=>{const a=pick(C);let b=pick(C);for(let i=0;i<8&&b===a;i++)b=pick(C);return [a,b]};
+  const O=[],add=o=>{if(o&&o.nombre&&!O.some(x=>nz(x.nombre)===nz(o.nombre)))O.push(o)};
+  const quiere=e=>!est.length||est.includes(e),es=idioma!=='Inglés',en=idioma!=='Español';
+  const FEM=['noche','muerte','sangre','serpiente','nube','flor','fe','raíz','luz','fuente'],MASC=['agua','águila','día','mar','dios','carmesí'];
+  const art=w=>{const l=w.toLowerCase();return MASC.includes(l)?'El':FEM.includes(l)||/(a|ión|dad|tad|tud|umbre)$/i.test(l)?'La':'El'};
+  const ABS=['Fate','Death','War','Time','Chaos','Hope','Oblivion','Pain','Faith','Blood','Fire','Night','Sacrifice','Memory','Solitude','Light','Shadow','Ash','Smoke','Rain','Ice','Gold','Iron','Water','Earth'];
+  const theEn=w=>ABS.includes(w)?w:'the '+w;let nEp=0;
+  const pl=w=>/[aeiouáéó]$/i.test(w)?w+'s':/z$/i.test(w)?w.slice(0,-1)+'ces':w+'es';
+  const de=(w)=>{const a=art(w);return a==='El'?'del '+w.toLowerCase():'de la '+w.toLowerCase()};
+  for(let n=0;n<90&&O.length<16;n++){const [a,b]=par(),r=rnd();
+    if(esTitulo){
+      if(r<.18&&es)add({nombre:`${a.es} y ${b.es}`,en:`${a.en} & ${b.en}`,raiz:'Español',significado:`Dos ideas en tensión: ${a.es.toLowerCase()} y ${b.es.toLowerCase()}.`,porque:'Antítesis: el conflicto ya está en el título.'});
+      else if(r<.33&&es)add({nombre:`${art(a.es)} ${a.es} ${de(b.es)}`,en:`The ${a.en} of ${b.en}`,raiz:'Español',significado:`${a.es} que pertenece a ${b.es.toLowerCase()}.`,porque:'Suena a crónica o mito; funciona para series.'});
+      else if(r<.48&&a.la&&b.lag)add({nombre:`${a.la} ${cap(b.lag)}`,en:`${a.en} of ${b.en}`,raiz:`Latín: ${a.la.toLowerCase()} (${a.es.toLowerCase()}) + ${b.lag} (de ${b.es.toLowerCase()})`,significado:`"${a.es} ${de(b.es)}" en latín (nominativo + genitivo, gramática correcta).`,porque:'Gravedad épica; en portafolio acompáñalo de subtítulo en inglés.'});
+      else if(r<.6&&en)add({nombre:(a.en+b.en).length<=12?a.en+b.en.toLowerCase():`${a.en} & ${b.en}`,en:'',raiz:'Inglés (compuesto)',significado:`${a.es} + ${b.es.toLowerCase()}.`,porque:'Corto y buscable; revisa que no sea un juego o película existente.'});
+      else if(r<.72&&a.ja&&b.ja&&quiere('Poético'))add({nombre:`${b.ja} no ${a.ja}`,en:`${a.en} of the ${b.en}`,raiz:`Japonés: ${b.ja} (${b.es.toLowerCase()}) + no (de) + ${a.ja} (${a.es.toLowerCase()})`,significado:`"${a.es} ${de(b.es)}".`,porque:'Poético; úsalo solo si lo japonés tiene sentido en tu mundo.'});
+      else if(r<.86&&es)add({nombre:`${pick(['Bajo','Tras','Contra','Entre'])} ${art(a.es).toLowerCase()} ${a.es.toLowerCase()}`,en:'',raiz:'Español',significado:'Título de situación: frente a qué ocurre la historia.',porque:'Deja una pregunta abierta en quien lo lee.'});
+      else if(es&&['dios','serpiente','jaguar','estrella','espejo','montana','flor','aguila','lobo','cuervo','dragon','bestia','guerrero','cazador','rey','templo','corona','mascara','escudo','raiz','bosque','espiritu','ruina'].includes(b.k))add({nombre:`${art(b.es)==='La'?'Las Últimas':'Los Últimos'} ${pl(b.es)}`,en:`The Last ${b.en}s`,raiz:'Español',significado:`Algo que se está extinguiendo: ${b.es.toLowerCase()}.`,porque:'La pérdida ya está contada en el título.'});
+      continue}
+    if(r<.2&&a.na&&quiere('Raíz en lengua originaria'))add({nombre:cap(a.na),en:a.en,raiz:`Náhuatl: ${a.na}`,significado:`"${a.es}" en náhuatl (palabra real).`,porque:'Palabra real: identidad fuerte. Confirma grafía y acento con un diccionario.'});
+    else if(r<.42&&a.nar&&b.na&&a!==b&&quiere('Raíz en lengua originaria')){const w=(a.nar+b.na).toLowerCase(),real=NAH_REALES[w];
+      add({nombre:cap(w),en:`${b.en} of ${a.en}`,raiz:`Náhuatl: ${a.nar}- (${a.es.toLowerCase()}) + ${b.na} (${b.es.toLowerCase()})`,significado:`"${b.es} ${de(a.es)}".`,porque:real?`⚠ Ya existe: ${real}. Úsalo solo si la referencia es intencional.`:'Compuesto con raíces reales (en náhuatl el modificador va primero). Verifícalo con un diccionario o hablante.'})}
+    else if(r<.57&&a.gr&&b.gr&&a!==b&&quiere('Inventado pero creíble')){let base=a.gr.replace(/o$/,'')+b.gr.toLowerCase().replace(/o$/,'');base+=/[aeiouy]$/.test(base)?'s':pick(['os','on','is']);if(base.length<=12)
+      add({nombre:base,en:'',raiz:`Griego: ${a.gr.toLowerCase()}- (${a.es.toLowerCase()}) + ${b.gr.toLowerCase()} (${b.es.toLowerCase()})`,significado:`"${a.es}-${b.es.toLowerCase()}".`,porque:'Inventado con raíces griegas: suena antiguo. Pruébalo en voz alta.'})}
+    else if(r<.7&&nEp<3&&quiere('Epíteto ("El que…")')){const [v,ve]=pick(EPITETO_V),g=/Personaje|Criatura/.test(para)?'El que':'Lo que';nEp++;
+      add({nombre:`${g} ${v} ${art(b.es)==='La'?'la':'el'} ${b.es}`,en:`${ve} ${theEn(b.en)}`,raiz:'Epíteto',significado:'Lo presenta por lo que hace, no por cómo se llama.',porque:'Úsalo como título junto a un nombre propio.'})}
+    else if(r<.82&&a.la&&quiere('Épico')){const base=a.la.replace(/(us|um|is|es|a|x|s)$/i,'');if(base.length>=3)add({nombre:cap(base.toLowerCase()+pick(['us','ar','ax','or','ion'])),en:'',raiz:`Latín: ${a.la.toLowerCase()} (${a.es.toLowerCase()})`,significado:`Inventado a partir de "${a.es.toLowerCase()}".`,porque:'Suena clásico y pesado; bueno para dioses, reyes y armas.'})}
+    else if(r<.92&&b.la&&quiere('Oscuro')){const base=b.la.slice(0,Math.max(3,Math.ceil(b.la.length*.6)));add({nombre:cap(base.toLowerCase()+pick(['oth','yx','ul','eth','ak'])),en:'',raiz:`Latín: ${b.la.toLowerCase()} (${b.es.toLowerCase()})`,significado:`Inventado a partir de "${b.es.toLowerCase()}" con terminación dura.`,porque:'Consonantes duras = amenaza.'})}
+    else if(a.ja&&quiere('Poético'))add({nombre:a.ja,en:a.en,raiz:`Japonés: ${a.ja}`,significado:`"${a.es}" en japonés (palabra real).`,porque:'Corto y sonoro; solo si encaja con el mundo.'});
+    else if(en&&a!==b&&(a.en+b.en).length<=12)add({nombre:a.en+b.en.toLowerCase(),en:'',raiz:'Inglés (compuesto)',significado:`${a.es} + ${b.es.toLowerCase()}.`,porque:'Se entiende al instante en un portafolio internacional.'});
+  }
+  if(est.includes('Corto (1 palabra)'))O.sort((x,y)=>x.nombre.split(' ').length-y.nombre.split(' ').length||x.nombre.length-y.nombre.length);
+  return {opciones:O.slice(0,12),consejos:[`Ideas que leí: ${C.map(c=>c.es.toLowerCase()).join(', ')}${extra?.lectura?` · de tu imagen: ${extra.lectura}`:''}`,'Dilo en voz alta 3 veces y búscalo en Google antes de quedártelo.','Lo compuesto o inventado: verifícalo antes de usarlo en serio.']};
+}
+async function nombresLocal(){const d=nomDraft();let extra=null;if(S.nomImg2){S.aiBusy.nombres2=true;renderMain();extra=await conceptosDeImagen(S.nomImg2);delete S.aiBusy.nombres2}
+  if(d.pid==='__todos'){const proyectos=ordenados().map(([id,p])=>({id,opciones:genNombres({...d,para:'Proyecto'},p,null).opciones.slice(0,5)})).filter(g=>g.opciones.length);
+    S.ai.nombres2={data:{proyectos,consejos:['Los proyectos sin ideas reconocibles no aparecen: agrega tema, núcleos o keywords en su pestaña Concepto.']}}}
+  else{const r=genNombres(d,S.P[d.pid],extra);S.ai.nombres2=r.vacio?{error:r.consejos[0]}:{data:r}}
+  renderMain()}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -4571,7 +4703,8 @@ async function accion(a,el){
     case 'pr-del':S.ajustes.principios.splice(+ds.i,1);marcarAj();renderMain();break;
     case 'rf-add':S.ajustes.referentes.push({nombre:'',porque:''});marcarAj();renderMain();break;
     case 'rf-del':S.ajustes.referentes.splice(+ds.i,1);marcarAj();renderMain();break;
-    case 'ai':preguntar(ds.k);break;
+    case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}preguntar(ds.k);break;
+    case 'nom-local':nombresLocal();break;
     case 'ai-stop':S.aiBusy[ds.k]?.abort();break;
     case 'ai-empuje':{const x=S.ai.concepto?.data?.empujes?.[+ds.i];if(x){p.concepto.empujes.push(x.idea);marcar();el.textContent='Guardado';el.disabled=true;renderSide()}break}
     case 'ai-kw':{const ws=S.ai.keywords?.data?.[ds.kw]||[];ws.forEach(w=>{if(!p.keywords[ds.kw].includes(w))p.keywords[ds.kw].push(String(w))});marcar();renderMain();break}
