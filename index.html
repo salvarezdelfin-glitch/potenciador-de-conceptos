@@ -510,6 +510,22 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .btn.why{color:var(--accent)}
 details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var(--ink3)}
 .motor{font-size:12px;color:var(--ink3)}
+/* ---------- Profesional ---------- */
+.lam-prev{width:100%;border-radius:8px;border:1px solid var(--line)}
+.ronda{background:var(--bg);border-radius:8px;padding:10px 12px}.ronda summary{cursor:pointer}
+.ronda .bar{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}.ronda .bar i{display:block;height:100%;background:var(--ok)}
+.notas{margin:6px 0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.notas li{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;align-items:center}
+.notas li.corregida span:first-child{text-decoration:line-through;color:var(--ink3)}.notas li.descartada span:first-child{color:var(--ink3);font-style:italic}
+.comp{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.comp-img{display:grid;grid-template-columns:1fr 1fr;gap:10px}.comp-img figure{margin:0}.comp-img img{width:100%;border-radius:6px;background:#000}.comp-img figcaption{font-family:var(--mono);font-size:12px;color:var(--ink3)}
+.comp-t{border-collapse:collapse;font-size:13.5px}.comp-t td{padding:4px 10px;border-bottom:1px solid var(--line)}
+.comp-t tr.ok b{color:var(--ok)}.comp-t tr.no b{color:var(--warn)}
+.metric{background:var(--bg);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.rcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.rc{margin:0;background:var(--bg);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.rc img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#000}.rc figcaption{padding:6px 8px;font-size:12.5px}
+.rc.fuera{outline:2px solid var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
 </style>
 </head>
@@ -781,13 +797,13 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhbmxo4').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhd5vyw').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['cerebro','Cerebro'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],
-  ['refs','Referencias'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['revision','Revisión'],['hoja','Hoja']
+  ['refs','Referencias'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
@@ -1079,6 +1095,7 @@ function renderSide(){
       ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
+      ${nav('reclutador','eye','Revisión de reclutador')}
       ${nav('adaptar','target','Adaptar a vacante')}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
@@ -1137,6 +1154,7 @@ function renderMainInner(){
   if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
   if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
   if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
+  if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
@@ -1160,7 +1178,7 @@ function renderMainInner(){
   </div>
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -1458,6 +1476,7 @@ function vProgreso(){
   const aprend=ps.filter(([,p])=>p.retro.aprendi||p.retro.mejorar);
   return `
   <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mi progreso</h1>
+  ${progresoMedidoHTML()}
   <div class="stats">
     <div class="stat"><b>${ps.length}</b><span>proyectos</span></div>
     <div class="stat"><b>${prom}%</b><span>salud de proceso promedio</span></div>
@@ -1729,9 +1748,15 @@ setInterval(()=>{const t=S.timer,el=$('#timer');if(!t?.fin||!el)return;const r=M
   if(r===0){S.timer={resta:0};toast('¡Tiempo! Suelta el lápiz y revisa en miniatura.');renderMain()}},500);
 
 /* ============ Estudio diario ============ */
-const SKILLS={valores:'Valores',silueta:'Silueta y lectura',composicion:'Composición',color:'Color y luz',perspectiva:'Forma y perspectiva',diseno:'Diseño de forma',storytelling:'Storytelling',anatomia:'Anatomía y estructura'};
+const SKILLS_ENV={escala:'Escala',atmosfera:'Perspectiva atmosférica',claves:'Claves de luz',blockout:'Blockout 3D',profundidad:'Lectura de profundidad'};
+const SKILLS={...SKILLS_ENV,valores:'Valores',silueta:'Silueta y lectura',composicion:'Composición',color:'Color y luz',perspectiva:'Forma y perspectiva',diseno:'Diseño de forma',storytelling:'Storytelling',anatomia:'Anatomía y estructura'};
 const CRIT2SKILL={'Idea y diseño':'diseno','Silueta y lectura':'silueta','Composición y punto focal':'composicion','Valores':'valores','Color y luz':'color','Forma y perspectiva':'perspectiva','Storytelling':'storytelling','Pilares y mood':'diseno'};
 const EJERCICIOS={
+  escala:['Un mismo entorno en 3 thumbnails: pon una figura humana chica, mediana y diminuta. Escribe cuál cuenta mejor la escala y por qué.','Estructura monumental (templo, árbol, máquina): usa solo 3 pistas de escala (figura, puerta, escalón) y quita todo lo demás.','Master study de 20 min de un keyframe con escala épica: marca con flechas cada pista de tamaño que usa el artista.'],
+  atmosfera:['5 planos de montañas o árboles en valores: cada plano más claro y con menos contraste que el anterior. 15 minutos.','La misma escena con niebla densa, bruma ligera y aire limpio: 3 thumbnails, compara cómo cambia la profundidad.','Color study de una foto de paisaje: fíjate cómo el azul del cielo contamina los planos lejanos.'],
+  claves:['La misma escena en clave baja, media y alta (3 thumbnails de 5 min).','Una sola fuente de luz dominante: fuego, luna o ventana. 70% sombra, la luz se gana.','Contraluz: figura oscura contra fondo brillante, 4 variaciones de 5 minutos.'],
+  blockout:['Blockout en Blender de un entorno simple con cubos y cilindros en 20 min; prueba 3 cámaras y 2 luces, y captura cada una.','Blockout + paintover rápido: 15 min de 3D, 20 min pintando encima solo en valores.','Encuentra 3 composiciones fuertes moviendo solo la cámara y el lente dentro del mismo blockout.'],
+  profundidad:['Divide una foto en primer plano, plano medio y fondo con 3 valores planos. Hazlo con 5 fotos.','Entorno con capas de primer plano que enmarquen (hojas, rocas, columnas) y un fondo que respire.','Thumbnail donde la profundidad se lea solo por superposición y tamaño, sin perspectiva lineal.'],
   valores:['Master study de valores: toma un keyframe de un artista que sigues y redúcelo a 3 valores en 10 minutos. Repite con 3 imágenes distintas.','20 thumbnails de 5×3 cm de un mismo entorno, solo con 3 valores: cambia únicamente dónde cae la luz.','Pinta esfera, cubo y cilindro con luz dura y luz de ambiente; después aplica lo mismo a un objeto real de tu cuarto.'],
   silueta:['30 siluetas del mismo personaje en negro, 1 minuto cada una. Marca las 3 que se leen mejor a 2 cm y escribe por qué.','Rediseña solo la silueta de 3 personajes conocidos para que sigan reconociéndose en negro total.','20 siluetas de criaturas combinando 2 animales reales cada una, en 30 minutos.'],
   composicion:['Toma 5 fotogramas de una película que te guste y dibuja su estructura: horizonte, líneas guía, masas y punto focal.','Un mismo sujeto en 6 encuadres: contrapicado, cenital, primer plano, gran angular, tele y fuera de centro.','Rehaz la composición de una pieza tuya vieja en 4 thumbnails distintos y elige el más fuerte.'],
@@ -1751,7 +1776,9 @@ function debilidades(){
 function ejercicioDeHoy(){
   const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},hoy=r.dias[hoyKey()];
   if(hoy)return hoy;
-  const {orden}=debilidades(),d=hoyN(),skill=orden[d%Math.min(3,orden.length)],i=d%3;
+  const {orden}=debilidades(),d=hoyN(),i=d%3;
+  if(S.ajustes.diarioEnfoque==='env'){const ENV=['escala','atmosfera','claves','profundidad','blockout','composicion','valores'],skill=ENV[d%ENV.length];return {skill,texto:EJERCICIOS[skill][i],i}}
+  const gen=orden.filter(k=>!SKILLS_ENV[k]),skill=gen[d%Math.min(3,gen.length)];
   return {skill,texto:EJERCICIOS[skill][i],i};
 }
 function racha(){
@@ -1767,7 +1794,8 @@ function vDiario(){
   const total=Object.values(dias).filter(x=>x.hecho).length;
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudio diario</h1>
-  <p class="intro">30 minutos al día atacando tu punto más débil. El ejercicio sale de las calificaciones de tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.</p>
+  <p class="intro">30 minutos al día. ${S.ajustes.diarioEnfoque==='env'?'Enfoque <strong>Environment & Keyframe</strong>: escala, perspectiva atmosférica, claves de luz, profundidad, blockout 3D, composición y valores, en rotación.':`Ataca tu punto más débil según tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.`}</p>
+  <div class="prow"><span class="lbl">Enfoque</span>${[['general','General'],['env','Environment & Keyframe']].map(([k,n])=>`<button class="ch ${(S.ajustes.diarioEnfoque||'general')===k?'on':''}" data-act="d-enfoque" data-v="${k}">${n}</button>`).join('')}</div>
   <div class="stats"><div class="stat"><b>🔥 ${racha()}</b><span>días seguidos</span></div><div class="stat"><b>${total}</b><span>días de estudio</span></div>
     ${Object.entries(prom).slice(0,2).map(([k,v])=>`<div class="stat"><b>${v.toFixed(1)}</b><span>${SKILLS[k]} (tu promedio)</span></div>`).join('')}</div>
   <div class="grid2">
@@ -3793,7 +3821,8 @@ async function analizarImagen(src){
   const fo=lienzoA(W,H),fox=fo.getContext('2d');fox.drawImage(cv,0,0);fox.fillStyle='rgba(0,0,0,.45)';fox.fillRect(0,0,W,H);
   [[f1,'#ff6a3d'],compiten?[f2,'#ffd166']:null].filter(Boolean).forEach(([k,col],j)=>{const x=(k.gx+.5)*cw,y=(k.gy+.5)*ch,r=Math.max(cw,ch)*1.4;fox.save();fox.beginPath();fox.arc(x,y,r,0,7);fox.clip();fox.drawImage(cv,0,0);fox.restore();fox.strokeStyle=col;fox.lineWidth=3;fox.beginPath();fox.arc(x,y,r,0,7);fox.stroke();fox.fillStyle=col;fox.font='bold 16px sans-serif';fox.fillText(j?'2':'1',x+r+4,y)});
   fox.strokeStyle='rgba(255,255,255,.25)';fox.lineWidth=1;[1,2].forEach(k=>{fox.beginPath();fox.moveTo(W*k/3,0);fox.lineTo(W*k/3,H);fox.moveTo(0,H*k/3);fox.lineTo(W,H*k/3);fox.stroke()});
-  return {W,H,mean,std,tres,c,complej,llenado,separ,figOscura,foco:{x:fx,y:fy,zona:zona(fx,fy),tercios,centro,borde},foco2:compiten?{zona:zona((f2.gx+.5)/G,(f2.gy+.5)/G)}:null,detalle:top,warm:ws?warm/ws:0,msat,dom,acento,
+  const bandas=[0,1,2].map(b=>{let s=0,s2=0,n=0;for(let y=Math.floor(b*H/3);y<Math.floor((b+1)*H/3);y++)for(let x=0;x<W;x+=2){const l=L[y*W+x];s+=l;s2+=l*l;n++}const m=s/n;return {m,sd:Math.sqrt(Math.max(0,s2/n-m*m))}});
+  return {bandas,W,H,mean,std,tres,c,complej,llenado,separ,figOscura,foco:{x:fx,y:fy,zona:zona(fx,fy),tercios,centro,borde},foco2:compiten?{zona:zona((f2.gx+.5)/G,(f2.gy+.5)/G)}:null,detalle:top,warm:ws?warm/ws:0,msat,dom,acento,
     vistas:{original:cv.toDataURL('image/jpeg',.85),gris,valores,silueta,borroso,mini:mini.toDataURL('image/png'),espejo:es.toDataURL('image/jpeg',.85),foco:fo.toDataURL('image/jpeg',.85)}};
 }
 function lienzoA(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
@@ -3847,13 +3876,18 @@ function criticaImagen(a,p,{etapa='Boceto',skill=null,nota=''}={}){
   if(P.some(x=>/focos compiten|detalle está repartido|borde/.test(x)))E.push('Duplica la capa y borra el 50% del detalle fuera del foco. Si la imagen mejora, el detalle sobraba.');
   if(P.some(x=>/acento|paleta|temperatura|cálida|fría|saturación/.test(x)))E.push('3 versiones de color de 5 minutos sobre el mismo gris: dominante + un solo acento en el foco.');
   E.push('Mira la vista ESPEJO: todo lo que se vea torcido o raro es un error de proporción o de balance que tu ojo ya normalizó.','Miniatura a 5 cm (vista MINI): si no sabes qué es en 2 segundos, el problema es de diseño, no de render.');
+  if(skill==='atmosfera'||skill==='profundidad'){const [t,,b]=a.bandas||[];if(t&&b){if(t.sd<b.sd*.8)F.push(`Los planos lejanos (arriba) tienen menos contraste que los cercanos (${t.sd.toFixed(2)} contra ${b.sd.toFixed(2)}): la profundidad se lee.`);else P.push(`El fondo tiene tanto contraste como el primer plano (${t.sd.toFixed(2)} contra ${b.sd.toFixed(2)}): aplana la profundidad. Baja el contraste de lo lejano y acércalo al valor del cielo.`);
+    if(Math.abs(t.m-b.m)<.08)P.push('Arriba y abajo tienen casi el mismo valor: separa los planos con valor, no solo con línea.')}}
+  if(skill==='claves'){const cl=a.mean<.38?'baja':a.mean>.62?'alta':'media';(mx>=.55?F:P).push(`Clave ${cl}: ${mx>=.55?'un grupo de valor manda, la clave se lee.':'ningún valor manda; una clave necesita ~60% de un solo grupo.'}`)}
+  if(skill==='escala')Q.unshift('¿Hay un elemento de escala conocida (figura humana, puerta, escalón, árbol)? Sin él, lo monumental se ve chico.');
+  if(skill==='blockout'){if(a.detalle>.6)F.push('Masas simples con el detalle concentrado: buen blockout.');else P.push('El detalle está muy repartido para un blockout: en esta etapa solo cuentan masas, cámara y luz.')}
   if(skill)E.unshift(EJ_SKILL[skill]||'');
   return {funciona:F,problemas:P,cuestionar:Q.slice(0,6),falta:M,experimentos:[...new Set(E.filter(Boolean))].slice(0,3)};
 }
 const zona2=a=>`${a.y<.34?'arriba':a.y>.66?'abajo':'al centro'}${a.x<.34?' a la izquierda':a.x>.66?' a la derecha':''}`.replace('al centro al','al');
-const EJ_SKILL={valores:'Repite el estudio con 3 valores exactos (sin grises intermedios) y compara con la vista VALORES.',silueta:'De tus siluetas, voltea las 3 mejores en espejo y míralas a 5 cm: la que siga leyéndose es la buena.',composicion:'Rehaz el encuadre moviendo el foco al tercio opuesto y compara las dos vistas FOCO.',color:'Haz la misma imagen con la mitad de colores: una dominante, un secundario, un acento.',perspectiva:'Traza encima las líneas de fuga: donde no converjan, está el error.',diseno:'Rediseña la forma dominante con el tipo de forma opuesto (curva ↔ recta) y compara lectura.',storytelling:'Agrega una sola huella narrativa (desgaste, objeto, marca) en el foco y quita dos que estén fuera.',anatomia:'Dibuja encima la estructura (esqueleto y masas) en otro color: donde no encaje, corrige antes de detallar.'};
+const EJ_SKILL={escala:'Rehaz la pieza con una figura humana al doble y a la mitad de tamaño: compara cuál vende mejor la escala.',atmosfera:'Duplica la capa del fondo y súbele valor y bájale contraste un 30%: compara la profundidad.',claves:'Posteriza tu imagen a 3 valores y empuja uno hasta que ocupe ~60%.',blockout:'Mueve solo la cámara en tu blockout: 3 capturas con lentes distintos, elige la más fuerte.',profundidad:'Pinta 3 máscaras (primer plano, medio, fondo) con valores planos y revisa si se separan.',valores:'Repite el estudio con 3 valores exactos (sin grises intermedios) y compara con la vista VALORES.',silueta:'De tus siluetas, voltea las 3 mejores en espejo y míralas a 5 cm: la que siga leyéndose es la buena.',composicion:'Rehaz el encuadre moviendo el foco al tercio opuesto y compara las dos vistas FOCO.',color:'Haz la misma imagen con la mitad de colores: una dominante, un secundario, un acento.',perspectiva:'Traza encima las líneas de fuga: donde no converjan, está el error.',diseno:'Rediseña la forma dominante con el tipo de forma opuesto (curva ↔ recta) y compara lectura.',storytelling:'Agrega una sola huella narrativa (desgaste, objeto, marca) en el foco y quita dos que estén fuera.',anatomia:'Dibuja encima la estructura (esqueleto y masas) en otro color: donde no encaje, corrige antes de detallar.'};
 /* enfoque por habilidad del estudio diario: qué medir primero */
-const SKILL_FOCO={valores:/valor|clave|Contraste|separación|funden/i,silueta:/Silueta|figura|contorno|funden/i,composicion:/foco|borde|detalle|masa/i,color:/color|paleta|temperatura|acento|saturación|monocrom/i};
+const SKILL_FOCO={atmosfera:/planos|fondo|profundidad|contraste/i,profundidad:/planos|fondo|profundidad|valor/i,claves:/clave|valor|Contraste/i,blockout:/blockout|detalle|masa|Silueta/i,escala:/escala|figura|foco/i,valores:/valor|clave|Contraste|separación|funden/i,silueta:/Silueta|figura|contorno|funden/i,composicion:/foco|borde|detalle|masa/i,color:/color|paleta|temperatura|acento|saturación|monocrom/i};
 function analisisHTML(a,cr,{id='an',guardar='',skill=null}={}){
   const V=a.vistas,tab=S.anVista?.[id]||'foco',vs=[['foco','Foco'],['silueta','Silueta'],['valores','3 valores'],['gris','Sin color'],['borroso','Borroso'],['espejo','Espejo'],['original','Original']];
   const f=skill&&SKILL_FOCO[skill],ordena=l=>f?[...l.filter(x=>f.test(x)),...l.filter(x=>!f.test(x))]:l;
@@ -4163,16 +4197,17 @@ function vCritica2(p){const an=S.anP?.[S.cur],cc=S.ccRes?.[S.cur],piezas=(p.piez
       <label class="btn pri" for="an-file">Subir boceto</label><input type="file" id="an-file" accept="image/*" hidden>
       ${piezas.length?`<select id="an-pieza" aria-label="O analiza una pieza subida"><option value="">…o una pieza ya subida</option>${piezas.map(x=>`<option value="${x.id}">${esc(x.etapa)} · ${fecha(x.creado)}</option>`).join('')}</select>`:''}</div>
     ${S.anBusy?'<p class="muted">Analizando…</p>':''}
-    ${an?analisisHTML(an.a,an.cr,{id:'p',guardar:`<div class="prow">${an.guardada?'<span class="ok-box sm">✓ Guardada en críticas y en tus piezas</span>':'<button class="btn sm pri" data-act="an-guardar">Guardar crítica (y el boceto en Carpetas)</button>'}</div>`}):''}</div>
+    ${an?analisisHTML(an.a,an.cr,{id:'p',guardar:`<div class="prow">${an.guardada?'<span class="ok-box sm">✓ Guardada en críticas y en tus piezas</span>':'<button class="btn sm pri" data-act="an-guardar">Guardar crítica (y el boceto en Carpetas)</button>'}<button class="btn sm" data-act="an-ronda">Convertir problemas en ronda</button></div>`}):''}</div>
+  ${rondasHTML(p)}
   <div class="box"><h3>Criticar mi concepto</h3><p class="hint">Describe tu diseño con palabras. Reviso claridad, función, silueta, originalidad, coherencia, material, mood, storytelling, Art Direction y referencias. No halago por default.</p>
     <textarea id="cc-txt" placeholder="Un guerrero con máscara de jaguar, armadura de obsidiana y plumas; carga dos cuchillos curvos…" style="min-height:80px">${esc(S.ccTxt||'')}</textarea>
     <div class="prow"><button class="btn pri" data-act="cc">Criticar</button></div>
     ${cc?`<div class="an-txt">${[['Lo que funciona',cc.funciona,'ok'],['Lo que no está claro',cc.noClaro,'no'],['Lo que parece genérico',cc.generico,'no'],['Qué decisión cuestionaría',cc.cuestionar,'q'],['Qué explorar después',cc.explorar,'exp']].map(([t,l,k])=>l.length?`<div class="an-sec ${k}"><h4>${t}</h4><ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'').join('')}<div class="prow">${cc.guardada?'<span class="ok-box sm">✓ Guardada</span>':'<button class="btn sm" data-act="cc-guardar">Guardar crítica</button>'}</div></div>`:''}</div>
   ${(p.criticas||[]).length?`<div class="box"><h3>Historial de críticas <span class="lbl">${p.criticas.length}</span></h3><div class="crits">${p.criticas.slice().reverse().map(c=>{const i=p.criticas.indexOf(c);return `<details><summary><b>${esc(c.tipo)}</b> · ${fecha(c.ts)} ${c.titulo?'· '+esc(corto(c.titulo,60)):''}</summary>${c.img?`<img src="${esc(c.img)}" alt="" style="max-height:160px;width:auto;border-radius:6px">`:''}
-    ${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}<button class="btn ghost sm danger" data-act="crit-del" data-i="${i}">Borrar</button></details>`}).join('')}</div></div>`:''}
+    ${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}<div class="prow"><button class="btn sm" data-act="crit-ronda" data-i="${i}">Convertir en ronda</button><button class="btn ghost sm danger" data-act="crit-del" data-i="${i}">Borrar</button></div></details>`}).join('')}</div></div>`:''}
   ${vCritica(p)}`}
 async function analizarYMostrar(src,{etapa,nota,pieza}={}){const p=S.P[S.cur];if(!p)return;S.anBusy=true;renderMain();
-  try{const a=await analizarImagen(src),cr=criticaImagen(a,p,{etapa:etapa||'Boceto',nota});S.anP=S.anP||{};S.anP[S.cur]={a,cr,etapa,nota,file:src instanceof Blob?src:null,pieza};
+  try{const a=await analizarImagen(src),cr=criticaImagen(a,p,{etapa:etapa||'Boceto',nota});registrarMetrica(a,'boceto',S.cur);S.anP=S.anP||{};S.anP[S.cur]={a,cr,etapa,nota,file:src instanceof Blob?src:null,pieza};
     if(pieza)pieza.analisis={ts:Date.now(),...cr}}
   catch(e){toast('No pude leer esa imagen. Prueba con PNG o JPG.')}
   S.anBusy=false;renderMain();document.querySelector('.analisis')?.scrollIntoView({behavior:'smooth',block:'start'})}
@@ -4292,7 +4327,7 @@ async function accionDir(a,el,p,ds){
     case 'cc-guardar':{const c=S.ccRes?.[S.cur];if(!c)return;p.criticas.push({tipo:'Concepto escrito',ts:Date.now(),titulo:S.ccTxt||'',r:{'Lo que funciona':c.funciona,'Lo que no está claro':c.noClaro,'Lo que parece genérico':c.generico,'Qué cuestionaría':c.cuestionar,'Qué explorar':c.explorar}});c.guardada=true;marcar();renderMain();break}
     case 'crit-del':{const k='c'+ds.i;if(S.confirmLi!==k){S.confirmLi=k;el.textContent='¿Seguro?';return}S.confirmLi=null;p.criticas.splice(+ds.i,1);marcar();renderMain();break}
     case 'd-analizar':{const r=S.ajustes.rutina?.dias?.[hoyKey()];if(!r?.img)return;el.disabled=true;el.textContent='Analizando…';
-      try{const a=await analizarImagen(r.img),e=ejercicioDeHoy(),cr=criticaImagen(a,null,{etapa:e.skill==='color'?'Color':'Valores',skill:e.skill,nota:r.nota||''});S.anD={k:hoyKey(),a,cr}}catch{toast('No pude leer la imagen')}renderMain();break}
+      try{const a=await analizarImagen(r.img),e=ejercicioDeHoy(),cr=criticaImagen(a,null,{etapa:e.skill==='color'?'Color':'Valores',skill:e.skill,nota:r.nota||''});S.anD={k:hoyKey(),a,cr};registrarMetrica(a,'diario','')}catch{toast('No pude leer la imagen')}renderMain();break}
     case 'd-fb-guardar':{const r=S.ajustes.rutina?.dias?.[hoyKey()];if(!r||!S.anD)return;r.fb={ts:Date.now(),funciona:S.anD.cr.funciona,problemas:S.anD.cr.problemas,experimentos:S.anD.cr.experimentos};S.anD.guardado=true;marcarAj();renderMain();break}
     case 'duplicar':duplicarProyecto(p);break;
     case 'ref-f':S.refF=ds.v;renderMain();break;
@@ -4530,6 +4565,201 @@ async function nombresLocal(){const d=nomDraft();let extra=null;if(S.nomImg2){S.
   else{const r=genNombres(d,S.P[d.pid],extra);S.ai.nombres2=r.vacio?{error:r.consejos[0]}:{data:r}}
   renderMain()}
 
+/* =====================================================================
+   PROFESIONAL · láminas de estudio, breakdown, publicar, rondas de
+   feedback, revisión de reclutador, coherencia y progreso medido
+   ===================================================================== */
+const PRO_ARTISTA='Sebastián Álvarez Delfín';
+const PRO={bg:'#101217',panel:'#181b22',ink:'#eceef2',ink2:'#a9afba',ink3:'#6f7683',acc:'#ff6a3d',line:'#2c313c',papel:'#c9c9c9',papel2:'#b9b9b9'};
+async function bajarBlob(nombre,blob){
+  if(S.downloads){try{await S.downloads.save({filename:nombre,data:blob});toast('Listo: '+nombre);return}catch(e){if(e?.code==='declined')return}}
+  try{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=nombre;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);toast('Descargado: '+nombre)}catch{toast('No se pudo descargar')}}
+function tx2(c,t,x,y,size,color,{w='400',f=BODY,al='left',max}={}){c.font=`${w} ${size}px ${f}`;c.fillStyle=color;c.textAlign=al;c.textBaseline='top';max?c.fillText(t,x,y,max):c.fillText(t,x,y);c.textAlign='left'}
+function txW(c,t,x,y,w,size,color,{lh=1.35,max=6,f=BODY,wt='400'}={}){c.font=`${wt} ${size}px ${f}`;c.fillStyle=color;c.textBaseline='top';const L=envolver(c,String(t||''),w).slice(0,max);L.forEach((l,i)=>c.fillText(l,x,y+i*size*lh));return L.length*size*lh}
+function fitImg(c,bm,x,y,w,h,cover){const s=cover?Math.max(w/bm.width,h/bm.height):Math.min(w/bm.width,h/bm.height),dw=bm.width*s,dh=bm.height*s;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.drawImage(bm,x+(w-dw)/2,y+(h-dh)/2,dw,dh);c.restore()}
+function dash(c,x1,y1,x2,y2,col,wd=2,d=[14,10]){c.save();c.strokeStyle=col;c.lineWidth=wd;c.setLineDash(d);c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.restore()}
+function cabecera(c,W,p,titulo,sub){c.fillStyle=PRO.bg;c.fillRect(0,0,W,190);c.fillStyle=PRO.acc;c.fillRect(0,186,W,4);
+  tx2(c,(p.nombre||'').toUpperCase(),80,40,92,PRO.ink,{w:'800',f:DISP});tx2(c,titulo,80,138,30,PRO.acc,{w:'500',f:MONO});
+  tx2(c,PRO_ARTISTA,W-80,52,34,PRO.ink,{w:'600',al:'right'});tx2(c,sub||fecha(Date.now()),W-80,100,26,PRO.ink2,{al:'right',f:MONO})}
+function paletaEn(c,p,x,y,w){tx2(c,'PALETA',x,y,24,PRO.ink3,{w:'500',f:MONO});const pal=(p.mood.paleta||[]).slice(0,8),sw=Math.min(110,(w-(pal.length-1)*12)/Math.max(1,pal.length));
+  pal.forEach((h,i)=>{c.fillStyle=h;c.fillRect(x+i*(sw+12),y+40,sw,sw);tx2(c,h.toUpperCase(),x+i*(sw+12),y+48+sw,18,PRO.ink2,{f:MONO})});return 40+sw+40}
+function notasDir(c,p,x,y,w,maxH){let h=0;const blk=(t,items,col)=>{if(!items.length||h>maxH-80)return;tx2(c,t,x,y+h,24,col||PRO.ink3,{w:'500',f:MONO});h+=38;for(const it of items){if(h>maxH-40)break;h+=txW(c,'· '+it,x,y+h,w,26,PRO.ink2,{max:3})+8}h+=18};
+  blk('ART DIRECTION',p.ad?[corto(p.ad,160)]:[]);blk('PILARES',p.pilares.filter(q=>q.t).map(q=>q.t+(q.como?' — '+corto(q.como,70):'')));
+  blk('REGLAS',(p.lenguaje?.reglas||[]).slice(0,3));blk('EVITAR',(p.evitar||[]).slice(0,3),PRO.acc);return h}
+async function bmPieza(id){const p=S.P[S.cur],x=(p?.piezas||[]).find(z=>z.id===id);if(!x)return null;try{return await cargarBitmap(x)}catch{return null}}
+
+/* ---------- 3 · plantillas de hojas de producción ---------- */
+const LAM_TIPOS=[['turn','Turnaround de personaje'],['env','Hoja de entorno'],['key','Presentación de keyframe'],['proc','Breakdown de proceso']];
+function lamDraft(){const p=S.P[S.cur];return S.lam=S.lam||{tipo:'turn',pers:(p?.grupos||[])[0]||'',cabezas:'8',img:'',sel:{}}}
+async function lamina(p,d){await document.fonts?.ready;const W=3840,H=2160,cv=lienzo(W,H),c=cv.getContext('2d');c.fillStyle=PRO.bg;c.fillRect(0,0,W,H);
+  const bm=d.img?await bmPieza(d.img):null,SX=2800;
+  if(d.tipo==='turn'){cabecera(c,W,p,'CHARACTER TURNAROUND · '+(d.pers||'PERSONAJE').toUpperCase());
+    c.fillStyle=PRO.papel;c.fillRect(0,190,SX,H-190);const top=330,gnd=H-150,n=Math.max(2,Math.min(14,parseFloat(d.cabezas)||8)),u=(gnd-top)/n;
+    for(let i=0;i<=n;i++){const y=gnd-i*u;dash(c,120,y,SX-60,y,i===0?'#555':'#9a9a9a',i===0?4:2,i===0?[]:[10,12]);tx2(c,String(i),60,y-16,24,'#666',{f:MONO})}
+    tx2(c,`${n} cabezas`,60,top-60,24,'#666',{f:MONO});
+    ['FRENTE','PERFIL','ESPALDA'].forEach((t,i)=>{const cx=180+(i+.5)*((SX-240)/3);dash(c,cx,top-20,cx,gnd,'#8d8d8d',2,[4,10]);tx2(c,t,cx,220,40,'#444',{w:'800',f:DISP,al:'center'})});
+    let y=230;if(bm){tx2(c,'DISEÑO ACTUAL',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});fitImg(c,bm,SX+60,y+40,W-SX-120,420);y+=500}
+    tx2(c,'CALLOUTS',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;for(let i=0;i<4;i++){c.strokeStyle=PRO.line;c.lineWidth=3;c.strokeRect(SX+60,y,W-SX-120,150);c.fillStyle=PRO.acc;c.beginPath();c.arc(SX+100,y+40,24,0,7);c.fill();tx2(c,String(i+1),SX+100,y+26,28,'#140905',{w:'700',al:'center'});y+=170}
+    y+=10;y+=paletaEn(c,p,SX+60,y,W-SX-120);notasDir(c,p,SX+60,y+10,W-SX-120,H-y-40)}
+  else if(d.tipo==='env'){cabecera(c,W,p,'ENVIRONMENT DESIGN SHEET');const mw=SX-160,mh=1180;
+    c.fillStyle=PRO.papel;c.fillRect(80,240,mw,mh);if(bm)fitImg(c,bm,80,240,mw,mh,true);else tx2(c,'VISTA PRINCIPAL',80+mw/2,240+mh/2-30,60,'#777',{w:'800',f:DISP,al:'center'});
+    const bw=(mw-60)/3;['PRIMER PLANO','PLANO MEDIO','FONDO'].forEach((t,i)=>{const x=80+i*(bw+30),yy=240+mh+60;c.fillStyle=['#2a2a2a','#6a6a6a','#b0b0b0'][i];c.fillRect(x,yy,bw,H-yy-90);tx2(c,t,x+24,yy+20,30,i<2?'#ddd':'#222',{w:'500',f:MONO})});
+    let y=240;tx2(c,'MATERIALES',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;const mats=(p.materiales||[]).slice(0,6);(mats.length?mats:['Material 1','Material 2','Material 3']).forEach(m=>{c.strokeStyle=PRO.line;c.lineWidth=3;c.strokeRect(SX+60,y,200,130);tx2(c,m,SX+290,y+46,34,PRO.ink,{w:'600'});y+=150});
+    y+=10;y+=paletaEn(c,p,SX+60,y,W-SX-120);tx2(c,'LUZ',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=40+txW(c,p.guia?.luz||p.mood.luz||'—',SX+60,y+40,W-SX-120,26,PRO.ink2,{max:4});notasDir(c,p,SX+60,y+30,W-SX-120,H-y-60)}
+  else if(d.tipo==='key'){cabecera(c,W,p,'KEYFRAME');const mw=SX-160,mh=Math.round(mw*9/16);c.fillStyle=PRO.panel;c.fillRect(80,240,mw,mh);if(bm)fitImg(c,bm,80,240,mw,mh,true);else tx2(c,'KEYFRAME',80+mw/2,240+mh/2,70,PRO.ink3,{w:'800',f:DISP,al:'center'});
+    const otros=(p.piezas||[]).filter(z=>z.id!==d.img).slice(-3),sw=(mw-60)/3,yy=240+mh+40;for(let i=0;i<otros.length;i++){try{const b2=await cargarBitmap(otros[i]);fitImg(c,b2,80+i*(sw+30),yy,sw,H-yy-110,true);tx2(c,(otros[i].etapa||'').toUpperCase(),80+i*(sw+30),H-100,24,PRO.ink2,{f:MONO})}catch{}}
+    let y=240;tx2(c,'QUÉ COMUNICA',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;y+=txW(c,p.ad||queDe(p)||'—',SX+60,y,W-SX-120,40,PRO.ink,{max:6,f:DISP,wt:'700'})+40;y+=paletaEn(c,p,SX+60,y,W-SX-120);notasDir(c,p,SX+60,y,W-SX-120,H-y-60)}
+  else{await breakdown(c,p,d)}
+  return cv}
+async function breakdown(c,p,d){const W=3840,H=2160;cabecera(c,W,p,'PROCESS BREAKDOWN');
+  const sel=ETAPAS.map(e=>(p.piezas||[]).filter(z=>(d.sel||{})[z.id]!==false&&z.etapa===e).slice(-1)[0]).filter(Boolean).slice(0,5);
+  if(!sel.length){tx2(c,'Sube piezas por etapa (Bocetos, Valores, Color, Final) en Carpetas o Crítica.',W/2,H/2,48,PRO.ink2,{al:'center'});return}
+  const n=sel.length,gap=70,x0=100,cw=(W-2*x0-(n-1)*gap)/n,y0=300,bms=[];for(const z of sel){try{bms.push(await cargarBitmap(z))}catch{bms.push(null)}}
+  const ch=Math.min(1250,Math.max(300,...bms.filter(Boolean).map(b=>cw*b.height/b.width)));
+  for(let i=0;i<n;i++){const z=sel[i],x=x0+i*(cw+gap);tx2(c,String(i+1).padStart(2,'0')+'  '+(z.etapa||'').toUpperCase(),x,y0-70,38,PRO.acc,{w:'700',f:DISP});
+    c.fillStyle=PRO.panel;c.fillRect(x,y0,cw,ch);if(bms[i])fitImg(c,bms[i],x,y0,cw,ch);
+    if(i<n-1){c.fillStyle=PRO.acc;c.beginPath();const ax=x+cw+gap/2,ay=y0+ch/2;c.moveTo(ax-18,ay-26);c.lineTo(ax+18,ay);c.lineTo(ax-18,ay+26);c.fill()}
+    const nota=z.nota||z.analisis?.funciona?.[0]||'';if(nota)txW(c,nota,x,y0+ch+30,cw,28,PRO.ink2,{max:4})}
+  const dec=(p.decisiones||[]).filter(q=>q.estado==='Confirmada').slice(0,3).map(q=>q.t+(q.motivo?' — '+corto(q.motivo,70):'')),rg=(p.lenguaje?.reglas||[]).slice(0,2);
+  let y=y0+ch+200;if(dec.length||rg.length){tx2(c,'DECISIONES CLAVE',x0,y,26,PRO.ink3,{w:'500',f:MONO});y+=46;for(const t of [...dec,...rg]){if(y>H-80)break;y+=txW(c,'· '+t,x0,y,W-2*x0,32,PRO.ink,{max:2})+6}}}
+
+/* ---------- 8 · exportar para publicar ---------- */
+function slugP(s){return slug(s||'pieza',40).toLowerCase()}
+async function paquetePublicar(p,d){const x=(p.piezas||[]).find(z=>z.id===d.img);if(!x){toast('Elige una pieza');return}
+  const bm=await cargarBitmap(x),a=await analizarImagen(x).catch(()=>null),zip=new JSZip(),base=`${slugP(PRO_ARTISTA)}_${slugP(p.nombre)}_${slugP(d.titulo||x.etapa)}`;
+  const jpg=async(cv,n)=>zip.file(n,await aBlob(cv,'image/jpeg',.92));
+  {const w=Math.min(3840,bm.width),h=Math.round(bm.height*w/bm.width),cv=lienzo(w,h);cv.getContext('2d').drawImage(bm,0,0,w,h);await jpg(cv,`${base}_artstation.jpg`)}
+  const slide=async(n,fn)=>{const cv=lienzo(1080,1350),c=cv.getContext('2d');c.fillStyle=PRO.bg;c.fillRect(0,0,1080,1350);await fn(c);await jpg(cv,`${base}_instagram_${n}.jpg`)};
+  await slide('01',c=>fitImg(c,bm,0,0,1080,1350,false));
+  const crop=async(n,fx,fy,z)=>slide(n,c=>{const s=Math.max(1080/bm.width,1350/bm.height)*z,dw=bm.width*s,dh=bm.height*s;let ox=540-fx*dw,oy=675-fy*dh;ox=Math.min(0,Math.max(1080-dw,ox));oy=Math.min(0,Math.max(1350-dh,oy));c.drawImage(bm,ox,oy,dw,dh)});
+  if(a){await crop('02',a.foco.x,a.foco.y,2.2);await crop('03',a.foco2?.x??(1-a.foco.x),a.foco2?.y??a.foco.y,1.8)}
+  const proc=(p.piezas||[]).filter(z=>z.id!==x.id).slice(-3);if(proc.length)await slide('04',async c=>{tx2(c,'PROCESO',60,50,40,PRO.acc,{w:'700',f:DISP});const h=(1350-160-40*proc.length)/proc.length;for(let i=0;i<proc.length;i++){try{fitImg(c,await cargarBitmap(proc[i]),60,140+i*(h+40),960,h)}catch{}}});
+  {const cv=lienzo(1080,1080),c=cv.getContext('2d'),fx=a?.foco.x??.5,fy=a?.foco.y??.5,s=Math.max(1080/bm.width,1080/bm.height)*1.15,dw=bm.width*s,dh=bm.height*s;let ox=540-fx*dw,oy=540-fy*dh;ox=Math.min(0,Math.max(1080-dw,ox));oy=Math.min(0,Math.max(1080-dh,oy));c.drawImage(bm,ox,oy,dw,dh);await jpg(cv,`${base}_portada.jpg`)}
+  zip.file(`${base}_texto.txt`,[p.nombre,d.titulo||'',p.ad||'',p.pilares.filter(q=>q.t).map(q=>'· '+q.t).join('\n'),'',hashtagsDe?.(x.etapa==='Final'?'Final':'Proceso (breakdown)')||''].join('\n'));
+  await bajarBlob(`${base}.zip`,await zip.generateAsync({type:'blob'}))}
+
+/* ---------- 4 · rondas de feedback (dailies) ---------- */
+const NOTA_EST=['Pendiente','Corregida','Descartada'];
+function nuevaRonda(p,titulo,notas,v1){p.rondas=p.rondas||[];const r={id:uid(),titulo:titulo||'Ronda '+(p.rondas.length+1),ts:Date.now(),v1:v1||'',v2:'',notas:(notas||[]).map(t=>({id:uid(),t:String(t),estado:'Pendiente'}))};p.rondas.unshift(r);return r}
+function distPal(a,pal){const P=(pal||[]).map(h=>[1,3,5].map(k=>parseInt(h.slice(k,k+2),16)));if(!P.length)return null;const ds=a.dom.filter(x=>x.pct>.05).map(x=>{const r=[1,3,5].map(k=>parseInt(x.hex.slice(k,k+2),16));return Math.min(...P.map(q=>Math.hypot(q[0]-r[0],q[1]-r[1],q[2]-r[2])))});return ds.length?ds.reduce((s,v)=>s+v,0)/ds.length:null}
+function comparar(a1,a2,p){const R=[],row=(n,v1,v2,mejor,fmt,umbral)=>{const d=v2-v1,est=Math.abs(d)<umbral?'igual':(mejor(d)?'mejoró':'empeoró');R.push({n,v1:fmt(v1),v2:fmt(v2),est})};
+  const pct=v=>Math.round(v*100)+'%',n2=v=>v.toFixed(2);
+  row('Valor dominante',Math.max(...a1.tres),Math.max(...a2.tres),d=>d>0,pct,.04);
+  row('Contraste',a1.std,a2.std,d=>a1.std<.28?d>0:d<0,n2,.02);
+  row('Separación figura/fondo',a1.separ,a2.separ,d=>d>0,pct,.03);
+  row('Complejidad de silueta',a1.complej,a2.complej,d=>a1.complej>4?d<0:d>0,v=>v.toFixed(1),.4);
+  row('Detalle en el foco',a1.detalle,a2.detalle,d=>d>0,pct,.04);
+  R.push({n:'Focos que compiten',v1:a1.foco2?'sí':'no',v2:a2.foco2?'sí':'no',est:a1.foco2&&!a2.foco2?'mejoró':!a1.foco2&&a2.foco2?'empeoró':'igual'});
+  const d1=distPal(a1,p?.mood.paleta),d2=distPal(a2,p?.mood.paleta);if(d1!=null&&d2!=null)row('Cercanía a tu paleta',-d1,-d2,d=>d>0,v=>Math.round(-v)+'',8);
+  return R}
+function rondasHTML(p){const L=p.rondas||[],pz=(p.piezas||[]).slice().reverse(),opt=(sel)=>`<option value="">—</option>${pz.map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.etapa)} · ${fecha(x.creado)}${x.nota?' · '+esc(corto(x.nota,30)):''}</option>`).join('')}`;
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Rondas de feedback · como en dailies</h3><span class="prow"><input type="text" id="ron-t" placeholder="Nombre de la ronda (ej. Lineup v1)" style="width:220px" data-enter="ron-add"><button class="btn sm" data-act="ron-add">＋ Ronda</button></span></div>
+    <p class="hint">Cada nota es una tarea: pendiente, corregida o descartada. Al subir la siguiente versión, compara v1 ↔ v2 y te dice qué mejoró de verdad.</p>
+    ${L.length?L.map((r,ri)=>{const c=r.notas.filter(n=>n.estado!=='Pendiente').length;return `<details class="ronda" ${ri===0?'open':''}><summary><b>${esc(r.titulo)}</b> <span class="lbl">${c}/${r.notas.length} cerradas · ${fecha(r.ts)}</span></summary>
+      <div class="bar" style="margin:6px 0"><i style="width:${r.notas.length?c/r.notas.length*100:0}%"></i></div>
+      <ol class="notas">${r.notas.map((n,ni)=>`<li class="${nz(n.estado)}"><span>${esc(n.t)}</span><span class="chips">${NOTA_EST.map(e=>`<button class="ch xs ${n.estado===e?'on':''}" data-act="nota-est" data-r="${ri}" data-n="${ni}" data-v="${e}">${e}</button>`).join('')}</span></li>`).join('')}</ol>
+      <div class="prow"><input type="text" id="ron-n-${ri}" placeholder="Nueva nota + Enter" data-enter="nota-add" data-r="${ri}" style="flex:1 1 220px"><button class="btn sm" data-act="nota-add" data-r="${ri}">＋</button></div>
+      <div class="prow" style="align-items:flex-end"><div class="field"><label for="ron-v1-${ri}">Versión 1</label><select id="ron-v1-${ri}" data-b="rondas.${ri}.v1">${opt(r.v1)}</select></div><div class="field"><label for="ron-v2-${ri}">Versión 2</label><select id="ron-v2-${ri}" data-b="rondas.${ri}.v2">${opt(r.v2)}</select></div><button class="btn sm pri" data-act="ron-comp" data-r="${ri}">Comparar v1 ↔ v2</button>
+        <button class="btn ghost sm danger" data-act="ron-del" data-r="${ri}">${S.confirmLi==='r'+r.id?'¿Borrar?':'Borrar ronda'}</button></div>
+      ${S.comp?.[r.id]?compHTML(S.comp[r.id],r):''}</details>`}).join(''):'<p class="muted">Sin rondas. Crea una, o convierte los problemas de un análisis en ronda.</p>'}</div>`}
+function compHTML(k,r){return `<div class="comp"><div class="comp-img"><figure><img src="${k.m1}" alt="Versión 1"><figcaption>v1</figcaption></figure><figure><img src="${k.m2}" alt="Versión 2"><figcaption>v2</figcaption></figure></div>
+  <table class="comp-t"><tbody>${k.R.map(x=>`<tr class="${x.est==='mejoró'?'ok':x.est==='empeoró'?'no':''}"><td>${esc(x.n)}</td><td>${esc(x.v1)}</td><td>→</td><td>${esc(x.v2)}</td><td><b>${x.est}</b></td></tr>`).join('')}</tbody></table>
+  <p class="muted">Mejoró ${k.R.filter(x=>x.est==='mejoró').length} · empeoró ${k.R.filter(x=>x.est==='empeoró').length}. Las notas de diseño (vestuario, anatomía, símbolos) no se miden en píxeles: márcalas tú arriba.</p></div>`}
+
+/* ---------- 5 · progreso medido ---------- */
+function registrarMetrica(a,fuente,pid){if(!a)return;const L=S.ajustes.metricas=S.ajustes.metricas||[],k=a.W+'x'+a.H+'-'+a.mean.toFixed(4)+'-'+a.std.toFixed(4);if(L.some(m=>m.k===k))return;
+  L.push({k,ts:Date.now(),fuente,pid:pid||'',dom:+Math.max(...a.tres).toFixed(3),std:+a.std.toFixed(3),separ:+a.separ.toFixed(3),complej:+a.complej.toFixed(2),detalle:+a.detalle.toFixed(3),compite:!!a.foco2});if(L.length>300)L.splice(0,L.length-300);marcarAj()}
+function spark(vals,col){if(vals.length<2)return '<span class="muted">Necesito 2+ análisis</span>';const W=260,H=60,mn=Math.min(...vals),mx=Math.max(...vals),r=mx-mn||1,pts=vals.map((v,i)=>[6+i*(W-12)/(vals.length-1),H-6-(v-mn)/r*(H-12)]);
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto" aria-hidden="true"><path d="${pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${col||'var(--accent)'}" stroke-width="2.5"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="2.5" fill="${col||'var(--accent)'}"/>`).join('')}</svg>`}
+function progresoMedidoHTML(){const L=(S.ajustes.metricas||[]).slice().sort((a,b)=>a.ts-b.ts);
+  const M=[['dom','Valor dominante','Un valor que manda (~60%): la imagen tiene clave.',v=>Math.round(v*100)+'%',1],['separ','Separación figura/fondo','Qué tan rápido se despega el sujeto.',v=>Math.round(v*100)+'%',1],['detalle','Detalle en el foco','Jerarquía: detalle concentrado donde miras.',v=>Math.round(v*100)+'%',1],['complej','Complejidad de silueta','Más bajo = lectura más limpia.',v=>v.toFixed(1),-1]];
+  const tend=(k,dir)=>{if(L.length<4)return '';const h=Math.floor(L.length/2),a=L.slice(0,h).reduce((s,m)=>s+m[k],0)/h,b=L.slice(h).reduce((s,m)=>s+m[k],0)/(L.length-h),d=(b-a)*dir;return Math.abs(b-a)<.02?'estable':d>0?'↑ mejorando':'↓ bajando'};
+  const comp=L.filter(m=>m.compite).length;
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Tu progreso medido</h3><span class="lbl">${L.length} análisis de tus imágenes</span></div>
+    <p class="hint">No es una calificación de tu arte: son las mismas medidas del análisis de bocetos, en el tiempo. Se guardan solas cada vez que analizas un boceto, tu estudio diario o comparas versiones.</p>
+    ${L.length?`<div class="grid2">${M.map(([k,n,d,f,dir])=>`<div class="metric"><div class="prow" style="justify-content:space-between"><b>${n}</b><span class="lbl">${f(L.at(-1)[k])} ${tend(k,dir)}</span></div>${spark(L.map(m=>m[k]))}<small class="muted">${d}</small></div>`).join('')}</div>
+    <p class="muted">Focos que compiten en ${comp} de ${L.length} imágenes${L.length>=6?` (últimas 5: ${L.slice(-5).filter(m=>m.compite).length})`:''}.</p>`:'<p class="muted">Analiza un boceto en Crítica o en tu Estudio diario para empezar.</p>'}</div>`}
+
+/* ---------- 2 + 6 · revisión de reclutador + coherencia de estilo ---------- */
+const REC_TIPOS=['Environment','Keyframe','Personaje','Criatura','Prop','Ilustración','Estudio','Fan art'];
+const REC_CHECK=[['nombre','Tu nombre y especialidad (Environment & Keyframe Concept Artist) arriba de todo'],['contacto','Correo visible en un clic'],['contexto','Cada proyecto tiene 1–2 frases de contexto (qué es, para qué)'],['proceso','Al menos 2 proyectos muestran proceso (thumbnails → final)'],['orden','Lo mejor primero y lo más débil fuera: mejor 10 fuertes que 25 mezcladas'],['marca','Sin marcas de agua enormes ni imágenes pixeleadas'],['serie','Al menos un proyecto es una serie coherente (mismo mundo, varios entregables)']];
+async function revisarPortafolio(){S.rec={busy:true};renderMain();const items=[];
+  try{const url=S.ajustes.portafolioUrl||PF_URL_DEF;const bl=await imagenesPortafolio(url);
+    for(let i=0;i<bl.length;i++){try{const a=await analizarImagen(bl[i]);items.push({key:'pf'+i,fuente:'Portafolio',mini:a.vistas.original,foco:a.vistas.foco,a:{...a,vistas:null}})}catch{}}
+    for(const g of (S.ajustes.galeria||[]).slice(-10)){try{const a=await analizarImagen(g);items.push({key:'g'+g.id,fuente:'Mis ilustraciones',titulo:g.titulo,tipoAuto:g.tipo,mini:a.vistas.original,foco:a.vistas.foco,a:{...a,vistas:null}})}catch{}}
+  }catch{}S.rec={items};renderMain()}
+function recAnalisis(items){const tags=S.ajustes.recTags||{},tipo=it=>tags[it.key]||(it.tipoAuto==='Entorno'?'Environment':it.tipoAuto)||'';
+  const F=['mean','std','msat','warm','detalle'],mu={},sd={};F.forEach(f=>{const v=items.map(i=>i.a[f]);mu[f]=v.reduce((s,x)=>s+x,0)/v.length;sd[f]=Math.sqrt(v.reduce((s,x)=>s+(x-mu[f])**2,0)/v.length)||1});
+  const NF={mean:['clave','más clara','más oscura'],std:['contraste','más contrastada','más plana'],msat:['saturación','más saturada','más apagada'],warm:['temperatura','más cálida','más fría'],detalle:['reparto de detalle','con detalle más concentrado','con detalle más repartido']};
+  items.forEach(it=>{it.z=F.map(f=>[f,(it.a[f]-mu[f])/sd[f]]).filter(([,z])=>Math.abs(z)>=1.6);it.fuera=items.length>=5&&it.z.length>=2;
+    it.lectura=it.a.separ*1.5+Math.max(...it.a.tres)*.8+it.a.detalle*.5-(it.a.foco2?.2:0)-Math.max(0,it.a.complej-5)*.04;it.tipo=tipo(it)});
+  const orden=items.slice().sort((a,b)=>b.lectura-a.lectura),obj=['Environment','Keyframe'],primeros=items.slice(0,3),enObj=primeros.filter(i=>obj.includes(i.tipo)).length,conTipo=items.filter(i=>i.tipo).length;
+  const quitar=[...items.filter(i=>i.fuera).map(i=>({it:i,por:'Se sale de tu idioma visual: '+i.z.map(([f,z])=>NF[f][z>0?1:2]).join(', ')+' que el resto.'})),...items.filter(i=>i.tipo==='Fan art').map(i=>({it:i,por:'Fan art: a un estudio le importa tu diseño original.'}))];
+  const cuenta=t=>items.filter(i=>i.tipo===t).length,falta=[];
+  if(conTipo>=items.length*.6){if(cuenta('Environment')<4)falta.push(`Environments: tienes ${cuenta('Environment')}, un junior de Environment necesita al menos 4–6.`);if(cuenta('Keyframe')<3)falta.push(`Keyframes: tienes ${cuenta('Keyframe')}, apunta a 3+ con narrativa clara.`);
+    const off=items.filter(i=>i.tipo&&!obj.includes(i.tipo)&&i.tipo!=='Estudio').length;if(off>items.length*.4)falta.push(`${off} de ${items.length} piezas no son de tu objetivo (Environment & Keyframe). Ponlas en una sección aparte o quítalas.`)}
+  else falta.push('Etiqueta el tipo de cada pieza (abajo) para saber qué te falta.');
+  const proc=Object.values(S.P).filter(p=>new Set((p.piezas||[]).map(x=>x.etapa)).size>=3).length;if(proc<2)falta.push(`Proceso: ${proc} proyecto(s) con 3+ etapas subidas. Los estudios quieren ver cómo piensas: usa el Breakdown de proceso.`);
+  return {orden,primeros,enObj,quitar,falta,items}}
+function vReclutador(){const R=S.rec,chk=S.ajustes.recCheck||{},tags=S.ajustes.recTags||{};
+  let body='';if(R?.busy)body='<p class="muted">Descargando y midiendo tus piezas…</p>';
+  else if(R?.items?.length){const X=recAnalisis(R.items),card=(it,extra='')=>`<figure class="rc"><img src="${it.mini}" alt="" loading="lazy"><figcaption>${it.titulo?esc(corto(it.titulo,28))+' · ':''}<span class="muted">${esc(it.fuente)}</span>${extra}</figcaption></figure>`;
+    body=`<div class="box"><h3>Prueba de los 10 segundos</h3><p class="hint">Un reclutador ve tus primeras 3 piezas y decide. ¿Dicen «Environment & Keyframe»?</p>
+      <div class="rcs">${X.primeros.map(it=>card(it,` · <b>${esc(it.tipo||'sin tipo')}</b>`)).join('')}</div>
+      <p class="${X.enObj>=2?'ok-box':'nd-box'}">${X.enObj>=2?`✓ ${X.enObj} de 3 son de tu especialidad.`:`Solo ${X.enObj} de 3 son Environment o Keyframe${X.primeros.some(i=>!i.tipo)?' (etiqueta las que faltan)':''}. Abre con tu mejor entorno.`}</p></div>
+    <div class="box"><h3>Orden sugerido por lectura en miniatura</h3><p class="hint">No califica tu arte: ordena por qué tan rápido se lee cada pieza a tamaño de miniatura (separación figura/fondo, valor dominante, foco claro).</p>
+      <div class="rcs">${X.orden.map((it,i)=>card(it,` · <b>#${i+1}</b>${it.a.foco2?' · 2 focos':''}`)).join('')}</div></div>
+    <div class="grid2"><div class="box"><h3>Qué quitar o mover <span class="lbl">${X.quitar.length}</span></h3>${X.quitar.length?`<div class="rcs">${X.quitar.map(q=>card(q.it,`<br><small>${esc(q.por)}</small>`)).join('')}</div>`:'<p class="ok-box">Nada se sale claramente de tu idioma visual.</p>'}</div>
+      <div class="box"><h3>Qué te falta</h3>${X.falta.length?`<ul class="why-l">${X.falta.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:'<p class="ok-box">Tienes la cantidad base para tu especialidad.</p>'}</div></div>
+    <div class="box"><h3>Coherencia de estilo · etiqueta cada pieza</h3><p class="hint">Mide clave, contraste, saturación, temperatura y reparto de detalle de todas juntas. Las marcadas se salen del promedio en 2 o más medidas. Es una señal, no un veredicto: una pieza distinta puede ser intencional.</p>
+      <div class="rcs">${X.items.map(it=>`<figure class="rc ${it.fuera?'fuera':''}"><img src="${it.mini}" alt="" loading="lazy"><figcaption>${it.fuera?'<b style="color:var(--warn)">Se sale</b> · ':''}<select data-rectag="${esc(it.key)}" aria-label="Tipo"><option value="">Tipo…</option>${REC_TIPOS.map(t=>`<option ${it.tipo===t?'selected':''}>${t}</option>`).join('')}</select></figcaption></figure>`).join('')}</div></div>`}
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Revisión de reclutador</h1>
+  <p class="intro">Tu portafolio como lo ve un estudio: la prueba de los 10 segundos, qué quitar, qué te falta para <strong>Environment & Keyframe</strong> y si todo habla el mismo idioma visual. Mide tus imágenes de verdad; lo demás es tu checklist.</p>
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Tu portafolio</h3><span class="prow"><input type="text" data-aj="portafolioUrl" id="rec-url" value="${esc(S.ajustes.portafolioUrl||PF_URL_DEF)}" style="width:320px;max-width:100%"><button class="btn pri" data-act="rec-go">${R?.items?'Volver a revisar':'Revisar mi portafolio'}</button></span></div>
+    <p class="hint">Lee las imágenes de tu portafolio (en su orden) y las últimas de Mis ilustraciones.</p></div>
+  ${body}
+  <div class="box"><h3>Checklist de reclutador · ${REC_CHECK.filter(([k])=>chk[k]).length}/${REC_CHECK.length}</h3><div class="checks">${REC_CHECK.map(([k,t])=>`<label class="chk"><input type="checkbox" data-aj="recCheck.${k}" ${chk[k]?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div></div>`}
+
+/* ---------- vista de láminas (proyecto) ---------- */
+function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=sel=>`<option value="">— sin imagen —</option>${pz.map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.etapa)} · ${fecha(x.creado)}${x.grupo?' · '+esc(x.grupo):''}</option>`).join('')}`,pub=S.pub=S.pub||{img:'',titulo:''};
+  return `<p class="intro"><b>Presentación de estudio.</b> Hojas con el formato que se usa en producción, el breakdown de tu proceso y el paquete listo para publicar.</p>
+  <div class="box"><h3>Plantillas de producción · 4K</h3>
+    <div class="chips">${LAM_TIPOS.map(([k,n])=>`<button class="ch ${d.tipo===k?'on':''}" data-act="lam-tipo" data-v="${k}">${n}</button>`).join('')}</div>
+    <div class="prow" style="align-items:flex-end">
+      ${d.tipo==='turn'?`<div class="field"><label for="lam-pers">Personaje</label><input type="text" id="lam-pers" data-lam="pers" value="${esc(d.pers)}" list="lam-grupos" style="width:200px"><datalist id="lam-grupos">${(p.grupos||[]).map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>
+        <div class="field"><label for="lam-cab">Altura en cabezas</label><input type="number" id="lam-cab" data-lam="cabezas" value="${esc(d.cabezas)}" min="2" max="14" step=".5" style="width:90px"></div>`:''}
+      ${d.tipo!=='proc'?`<div class="field"><label for="lam-img">${d.tipo==='turn'?'Diseño actual (referencia)':d.tipo==='env'?'Vista principal':'Keyframe'}</label><select id="lam-img" data-lam="img">${opt(d.img)}</select></div>`:''}
+      <button class="btn" data-act="lam-prev">Vista previa</button><button class="btn pri" data-act="lam-png">Descargar PNG 4K</button></div>
+    ${d.tipo==='proc'?`<div class="field"><label>Etapas incluidas (la más reciente de cada una)</label><div class="chips">${pz.map(x=>`<button class="ch xs ${(d.sel||{})[x.id]===false?'':'on'}" data-act="lam-sel" data-id="${x.id}">${esc(x.etapa)} · ${fecha(x.creado)}</button>`).join('')||'<span class="muted">Sube piezas en Carpetas o Crítica.</span>'}</div></div>`:''}
+    <p class="hint">${d.tipo==='turn'?'Lienzo gris para pintar encima: frente, perfil y espalda con líneas de altura, callouts numerados, tu paleta y tu dirección (pilares, reglas, evitar).':d.tipo==='env'?'Vista principal, llaves de valor por plano, callouts de tus materiales, paleta y luz.':d.tipo==='key'?'Keyframe grande con qué comunica, paleta, dirección y el proceso debajo.':'Tus etapas en orden con flechas, las notas de cada una y tus decisiones confirmadas.'}</p>
+    ${S.lamPrev?`<img class="lam-prev" src="${S.lamPrev}" alt="Vista previa de la lámina">`:''}</div>
+  <div class="box"><h3>Exportar para publicar</h3><p class="hint">Un ZIP con nombres profesionales: ArtStation (3840 px), carrusel de Instagram 1080×1350 (completa + 2 detalles del foco + proceso), portada 1080×1080 centrada en tu foco, y el texto con tus pilares.</p>
+    <div class="prow" style="align-items:flex-end"><div class="field"><label for="pub-img">Pieza</label><select id="pub-img" data-pub="img">${opt(pub.img)}</select></div>
+      <div class="field" style="flex:1 1 200px"><label for="pub-t">Nombre de la pieza</label><input type="text" id="pub-t" data-pub="titulo" value="${esc(pub.titulo)}" placeholder="keyframe-01"></div>
+      <button class="btn pri" data-act="pub-zip">${S.pubBusy?'Armando…':'Descargar paquete'}</button></div>
+    <p class="muted">Archivo: ${esc(slugP(PRO_ARTISTA))}_${esc(slugP(p.nombre))}_${esc(slugP(pub.titulo||'pieza'))}_artstation.jpg …</p></div>`}
+
+/* ---------- acciones ---------- */
+async function accionPro(a,el,p,ds){
+  switch(a){
+    case 'lam-tipo':lamDraft().tipo=ds.v;S.lamPrev=null;renderMain();return true;
+    case 'lam-sel':{const d=lamDraft();d.sel=d.sel||{};d.sel[ds.id]=d.sel[ds.id]===false?true:false;S.lamPrev=null;renderMain();return true}
+    case 'lam-prev':case 'lam-png':{el.disabled=true;el.textContent='Armando…';try{const cv=await lamina(p,lamDraft());if(a==='lam-prev'){const s=lienzo(1280,720);s.getContext('2d').drawImage(cv,0,0,1280,720);S.lamPrev=s.toDataURL('image/jpeg',.85)}else{const t=LAM_TIPOS.find(x=>x[0]===lamDraft().tipo)[1];await bajarBlob(`${slugP(PRO_ARTISTA)}_${slugP(p.nombre)}_${slugP(t)}${lamDraft().tipo==='turn'&&lamDraft().pers?'_'+slugP(lamDraft().pers):''}.png`,await aBlob(cv))}}catch(e){console.error(e);toast('No se pudo armar la lámina')}renderMain();return true}
+    case 'pub-zip':{if(S.pubBusy)return true;S.pubBusy=true;renderMain();try{await paquetePublicar(p,S.pub||{})}catch(e){console.error(e);toast('No se pudo armar el paquete')}S.pubBusy=false;renderMain();return true}
+    case 'ron-add':{const t=$('#ron-t')?.value.trim();nuevaRonda(p,t,[],'');marcar();renderMain();return true}
+    case 'ron-del':{const r=p.rondas[+ds.r];if(!r)return true;const k='r'+r.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;p.rondas.splice(+ds.r,1);marcar();renderMain();return true}
+    case 'nota-add':{const r=p.rondas[+ds.r],t=$('#ron-n-'+ds.r)?.value.trim();if(!r||!t)return true;r.notas.push({id:uid(),t,estado:'Pendiente'});marcar();renderMain();$('#ron-n-'+ds.r)?.focus();return true}
+    case 'nota-est':{const n=p.rondas[+ds.r]?.notas[+ds.n];if(!n)return true;n.estado=ds.v;marcar();renderMain();return true}
+    case 'ron-comp':{const r=p.rondas[+ds.r];if(!r?.v1||!r?.v2){toast('Elige versión 1 y versión 2');return true}el.disabled=true;el.textContent='Midiendo…';
+      try{const x1=p.piezas.find(z=>z.id===r.v1),x2=p.piezas.find(z=>z.id===r.v2),a1=await analizarImagen(x1),a2=await analizarImagen(x2);registrarMetrica(a1,'ronda',S.cur);registrarMetrica(a2,'ronda',S.cur);
+        S.comp=S.comp||{};S.comp[r.id]={m1:a1.vistas.original,m2:a2.vistas.original,R:comparar(a1,a2,p)}}catch(e){console.error(e);toast('No pude leer una de las imágenes')}renderMain();return true}
+    case 'an-ronda':{const an=S.anP?.[S.cur];if(!an)return true;nuevaRonda(p,'Análisis · '+(an.etapa||'Boceto')+' · '+fecha(Date.now()),[...an.cr.problemas,...an.cr.cuestionar.filter(q=>!/^Pediste/.test(q))],an.pieza?.id||'');marcar();renderMain();toast('Ronda creada: márcalas conforme corriges');return true}
+    case 'crit-ronda':{const c=p.criticas[+ds.i];if(!c)return true;const r=c.r||{},L=[...(r['Problemas reales']||[]),...(r['Decisiones que cuestionaría']||[]),...(r['Lo que no está claro']||[])];nuevaRonda(p,c.titulo||c.tipo,L,'');marcar();renderMain();toast('Ronda creada');return true}
+    case 'rec-go':revisarPortafolio();return true;
+    case 'd-enfoque':{S.ajustes.diarioEnfoque=ds.v;const r=S.ajustes.rutina?.dias;if(r&&r[hoyKey()]&&!r[hoyKey()].hecho&&!r[hoyKey()].img)delete r[hoyKey()];marcarAj();renderMain();return true}
+  }
+  return false}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -4554,6 +4784,9 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.dxq){S.decQ=t.value;const pos=t.selectionStart;renderMain();const el=$('#dec-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
+  if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;return}
+  if(t.dataset.pub){S.pub=S.pub||{};S.pub[t.dataset.pub]=t.value;return}
+  if(t.dataset.rectag){S.ajustes.recTags=S.ajustes.recTags||{};S.ajustes.recTags[t.dataset.rectag]=t.value;marcarAj();renderMain();return}
   if(t.dataset.dxan){if(t.dataset.dxan==='etapa')S.anEtapa=t.value;else S.anNota=t.value;return}
   if(t.dataset.blk){S.blk=S.blk||{};S.blk[t.dataset.blk]=t.value;return}
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
@@ -4854,7 +5087,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
