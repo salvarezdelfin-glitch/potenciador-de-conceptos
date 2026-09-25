@@ -806,7 +806,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhe4spm').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muheoqqq').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1205,8 +1205,10 @@ const ta=(path,val,ph='',id)=>`<textarea id="${id||'f-'+path.replace(/\./g,'-')}
 const it=(path,val,ph='',id)=>`<input type="text" id="${id||'f-'+path.replace(/\./g,'-')}" data-b="${path}" value="${esc(val)}" placeholder="${esc(ph)}">`;
 
 function nombresHTML(p){
-  if(!(p.nombres||[]).length)return '';
-  return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`}
+  const fv=(S.ajustes.nombresFav||[]).filter(f=>pidDeFav(f)===S.cur);
+  const favBox=fv.length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Nombres favoritos de este proyecto <span class="lbl">${fv.length}</span></h3><button class="btn ghost sm" data-act="nom-taller">Nombres y títulos →</button></div><ul class="list">${fv.map(f=>`<li style="grid-template-columns:1fr"><span><b>${esc(f.nombre)}</b> <span class="muted">${esc(f.para||'')}${f.significado?' · '+esc(f.significado):''}</span></span></li>`).join('')}</ul></div>`:'';
+  if(!(p.nombres||[]).length)return favBox;
+  return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`+favBox}
 function vBrief(p){return `
   <p class="intro">Antes de buscar una sola imagen, <strong>reescribe el encargo con tus palabras</strong>. Si no lo puedes explicar en un párrafo, todavía no sabes qué buscar.</p>
   <div class="box big"><h3>El encargo</h3><p class="hint">¿Qué te piden, para qué es y qué tiene que lograr?</p>${ta('brief.texto',p.brief.texto,'Ej. Diseñar un dios de la guerra ligado a una serpiente…')}</div>
@@ -2624,7 +2626,18 @@ function vNombres(){
         <a class="btn ghost sm" href="https://www.google.com/search?q=%22${q}%22" target="_blank" rel="noopener" title="¿Ya existe?">¿Existe? ↗</a></div></div>`}).join('')}</div>
     ${(r.consejos||[]).length?`<p class="hint" style="margin:8px 0 0">${r.consejos.map(esc).join(' · ')}</p>`:''}
     <p class="hint" style="margin:4px 0 0">Los significados en náhuatl, maya u otras lenguas pueden tener errores: confírmalos con un diccionario o una fuente seria antes de usarlos en serio.</p></div>`:''}
-  <div class="box"><h3>Tus favoritos · ${favs.length}</h3>${favs.length?Object.entries(favs.reduce((g,f,i)=>{const k=(f.proyecto||'Sin proyecto')+' · '+f.para;(g[k]=g[k]||[]).push([f,i]);return g},{})).map(([k,fs])=>`<span class="lbl">${esc(k)}</span><ul class="list">${fs.map(([f,i])=>`<li><span><b>${esc(f.nombre)}</b>${f.en&&f.en!==f.nombre?` <span class="muted">(${esc(f.en)})</span>`:''}<br><span class="muted">${esc(f.significado||'')}</span></span><span class="prow" style="flex-wrap:nowrap"><button class="btn ghost sm" data-act="nom-copiar" data-i="${i}">Copiar</button><button class="btn ghost sm danger" data-act="nom-fav-del" data-i="${i}">✕</button></span></li>`).join('')}</ul>`).join(''):'<p class="muted">Guarda con ★ los que te gusten; quedan agrupados por proyecto.</p>'}</div>`}
+  ${favsPorProyecto(favs,d)}`}
+function pidDeFav(f){if(f.pid&&S.P[f.pid])return f.pid;const m=Object.entries(S.P).find(([,p])=>f.proyecto&&nz(p.nombre)===nz(f.proyecto));return m?m[0]:(f.pid==='__todos'?'':f.pid||'')}
+function favsPorProyecto(favs,d){
+  const grupos={};favs.forEach((f,i)=>{const k=pidDeFav(f)||'_sin';(grupos[k]=grupos[k]||[]).push([f,i])});
+  const keys=Object.keys(grupos).sort((a,b)=>a==='_sin'?1:b==='_sin'?-1:(S.P[b]?.actualizado||0)-(S.P[a]?.actualizado||0));
+  let sel=S.nomFavP;if(!sel||!grupos[sel])sel=grupos[d.pid]?d.pid:keys[0];
+  const nom=k=>k==='_sin'?'Sin proyecto':(S.P[k]?.nombre||favs[grupos[k][0][1]]?.proyecto||'Proyecto borrado');
+  if(!favs.length)return '<div class="box"><h3>Tus favoritos</h3><p class="muted">Guarda con ★ los que te gusten: quedan guardados en su proyecto.</p></div>';
+  const fs=grupos[sel]||[],porPara={};fs.forEach(x=>{(porPara[x[0].para||'Otro']=porPara[x[0].para||'Otro']||[]).push(x)});
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Tus favoritos · ${esc(nom(sel))}</h3><span class="lbl">${favs.length} en total</span></div>
+    <div class="chips">${keys.map(k=>`<button class="ch ${k===sel?'on':''}" data-act="nom-favp" data-v="${esc(k)}">${esc(nom(k))} <small>${grupos[k].length}</small></button>`).join('')}</div>
+    ${Object.entries(porPara).map(([k,fs])=>`<span class="lbl">${esc(k)}</span><ul class="list">${fs.map(([f,i])=>`<li><span><b>${esc(f.nombre)}</b>${f.en&&f.en!==f.nombre?` <span class="muted">(${esc(f.en)})</span>`:''}<br><span class="muted">${esc(f.significado||'')}</span></span><span class="prow" style="flex-wrap:nowrap"><button class="btn ghost sm" data-act="nom-copiar" data-i="${i}">Copiar</button><button class="btn ghost sm danger" data-act="nom-fav-del" data-i="${i}">✕</button></span></li>`).join('')}</ul>`).join('')}</div>`}
 
 /* ============ Mis ilustraciones (galería) ============ */
 const GAL_TIPOS=['Ilustración','Keyframe','Entorno','Personaje','Criatura','Prop','Estudio','Boceto'];
@@ -4984,7 +4997,7 @@ document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
-  if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.refb){S.refB=S.refB||{};S.refB[t.dataset.refb]=t.value;if(t.tagName==='SELECT'&&t.dataset.refb==='src'&&S.refB.q)buscarRefs();return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
@@ -5168,6 +5181,7 @@ async function accion(a,el){
     case 'nom-para':nomDraft().para=ds.v;renderMain();break;
     case 'nom-idioma':nomDraft().idioma=ds.v;renderMain();break;
     case 'nom-estilo':{const d=nomDraft(),i=d.estilos.indexOf(ds.v);if(i>=0)d.estilos.splice(i,1);else d.estilos.push(ds.v);renderMain();break}
+    case 'nom-favp':S.nomFavP=ds.v;renderMain();break;
     case 'nom-fav':{const o=S.ai.nombres2?.data?.opciones?.[+ds.i],d=nomDraft();if(!o)return;S.ajustes.nombresFav=S.ajustes.nombresFav||[];
       if(!S.ajustes.nombresFav.some(f=>f.nombre===o.nombre&&f.para===d.para))S.ajustes.nombresFav.push({nombre:String(o.nombre),en:String(o.en||''),significado:String(o.significado||''),raiz:String(o.raiz||''),para:d.para,pid:d.pid||'',proyecto:S.P[d.pid]?.nombre||''});
       marcarAj();el.textContent='★ Guardado';el.disabled=true;renderSide();break}
