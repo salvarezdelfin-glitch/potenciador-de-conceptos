@@ -349,6 +349,23 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .score b{font-variant-numeric:tabular-nums;text-align:right}
 .score small{grid-column:1/-1;color:var(--ink3);font-size:12px;margin-top:-2px}
 .next{margin:0;padding:10px 12px;border-radius:6px;background:var(--ok-bg)}
+.unlk{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:760px){.unlk{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.unl{border:1px solid var(--line2);background:var(--bg);border-radius:10px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;min-width:0}
+.unl b{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;color:var(--accent)}
+.unl span{font-size:12px;color:var(--ink2);line-height:1.2}
+.unl:hover{border-color:var(--accent)}
+.unl[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.unl[aria-pressed="true"] b,.unl[aria-pressed="true"] span{color:var(--accent-ink)}
+.vida{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+@media (max-width:600px){.vida{grid-template-columns:minmax(0,1fr)}}
+.vida .field input{margin-bottom:6px}
+.combo{font-family:var(--display);font-size:24px;font-weight:700;line-height:1.2;text-wrap:balance}
+.wip{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:8px;background:var(--bg);border-radius:8px}
+.wip img{width:96px;height:64px;object-fit:cover;border-radius:6px;background:var(--surface2);cursor:zoom-in}
+@media (max-width:600px){.wip{grid-template-columns:72px 1fr}.wip img{width:72px;height:52px}.wip>.prow{grid-column:1/-1}}
+.startlist{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.startlist li{padding-left:4px}
 @media (max-width:860px){input,textarea,select{font-size:16px!important}}
 
 /* ---------- acabado de app ---------- */
@@ -807,7 +824,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muhlcvwe').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muj0vb0l').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1094,6 +1111,7 @@ function renderSide(){
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
+      ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
@@ -1147,6 +1165,7 @@ function renderMainInner(){
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
   if(S.vista==='papelera'){m.innerHTML=vPapelera();return}
   if(S.vista==='estilo'){m.innerHTML=vEstilo();return}
+  if(S.vista==='desatorar'){m.innerHTML=vDesatorar();return}
   if(S.vista==='diario'){m.innerHTML=vDiario();return}
   if(S.vista==='retos'){m.innerHTML=vRetos();return}
   if(S.vista==='nivel'){m.innerHTML=vNivel();return}
@@ -1195,6 +1214,7 @@ function renderMainInner(){
       <button class="btn sm" data-act="presentar" title="Presentar el proyecto en pantalla completa">▶ Presentar</button>
       <button class="btn sm ${S.confirmDel?'danger':'ghost'}" data-act="borrar" title="Borrar proyecto (queda en la Papelera)">${ICO.trash} ${S.confirmDel?'¿Borrar? Toca otra vez':'Borrar'}</button>${S.confirmDel?'<button class="btn sm ghost" data-act="cancel-del">Cancelar</button>':''}</div>
   </div>
+  ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
   <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
@@ -1215,6 +1235,13 @@ function nombresHTML(p){
   return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`+favBox}
 function vBrief(p){return `
   <p class="intro">Antes de buscar una sola imagen, <strong>reescribe el encargo con tus palabras</strong>. Si no lo puedes explicar en un párrafo, todavía no sabes qué buscar.</p>
+  <div class="box" style="border-top:3px solid var(--accent)"><h3>Brief de una frase</h3><p class="hint">1 sujeto, 1 lugar, 1 sentimiento. Una sola frase que describa la imagen, y te quedas con ella hasta terminar. Se queda fija arriba del proyecto.</p>
+    <div class="grid3" style="gap:10px">
+      <div class="field"><label for="f-una-sujeto">Sujeto</label>${it('brief.una.sujeto',p.brief.una?.sujeto||'','Un dios de la guerra','f-una-sujeto')}</div>
+      <div class="field"><label for="f-una-lugar">Lugar</label>${it('brief.una.lugar',p.brief.una?.lugar||'','en un templo tragado por la selva','f-una-lugar')}</div>
+      <div class="field"><label for="f-una-sentimiento">Sentimiento</label>${it('brief.una.sentimiento',p.brief.una?.sentimiento||'','reverencia y amenaza','f-una-sentimiento')}</div></div>
+    <div class="field"><label for="f-una-frase">La frase</label>${it('brief.una.frase',p.brief.una?.frase||'','Un dios de la guerra, cansado, en un templo que la selva se está tragando','f-una-frase')}</div>
+    <div class="prow"><button class="btn sm" data-act="una-armar">Armar borrador con los 3</button></div></div>
   <div class="box big"><h3>El encargo</h3><p class="hint">¿Qué te piden, para qué es y qué tiene que lograr?</p>${ta('brief.texto',p.brief.texto,'Ej. Diseñar un dios de la guerra ligado a una serpiente…')}</div>
   <div class="grid3">
     <div class="box"><h3>Entregable</h3>${ta('brief.entregable',p.brief.entregable,'Turnaround, key art, 3 thumbnails, formato, fecha…')}</div>
@@ -1310,10 +1337,25 @@ function vDireccion(p){return `
   </div>
   ${asesor('direccion','Asesor: revisa mi dirección','Revisa si tus pilares son claros y distintos, y si el mood y la técnica los sostienen.')}`}
 
+function bocetosIniciales(p){
+  const pil=p.pilares.map((x,i)=>({i,t:x.t,f:x.f||'',refs:p.refs.filter(r=>r.capa==='p'+(i+1)).length})).filter(x=>x.t);
+  if(!pil.length)return null;
+  const maxR=Math.max(...pil.map(x=>x.refs));
+  const orden=[...pil].sort((a,b)=>(b.f.length+b.refs*20)-(a.f.length+a.refs*20));
+  const L=[];
+  L.push(`Empieza por <b>${esc(orden[0].t)}</b> — tu pilar más desarrollado y con más referencia: 5–8 thumbnails de silueta, sin detalle, buscando que se lea la idea en 2 segundos.`);
+  if(p.concepto.tension)L.push(`Boceta la antítesis: mete "${esc(p.concepto.tension)}" en una sola imagen — que la tensión se sienta en la pose o composición, no solo en lo escrito.`);
+  if(orden[1])L.push(`Sigue con <b>${esc(orden[1].t)}</b>: mismo ejercicio de siluetas, cruzando algo del pilar anterior.`);
+  const debil=[...pil].sort((a,b)=>a.refs-b.refs)[0];
+  if(debil&&debil.refs<maxR)L.push(`Refuerza <b>${esc(debil.t)}</b>: es tu capa con menos referencia (${debil.refs}) — bocetea igual, y usa el boceto para saber qué buscar después.`);
+  if(p.mood.sensacion||p.mood.paleta?.length)L.push(`Prueba paleta rápida: aplica ${p.mood.paleta?.length?p.mood.paleta.join(' '):'tu paleta'} sobre uno de los bocetos para ver si transmite "${esc(p.mood.sensacion||'la sensación buscada')}".`);
+  return L;
+}
 function vRefs(p){
-  const s=salud(p),sin=p.refs.length-s.conP;
+  const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
   return `
   <p class="intro"><strong>La referencia es lo más importante: dale tiempo y sé específico.</strong> Cada imagen lleva su porqué, qué aprendes de ella y dónde la aplicas. Así no acumulas cientos de imágenes sin saber qué estudias.</p>
+  ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
   ${refsBalanceHTML(p)}
   ${generadorHTML(p)}
   <div class="drop" id="drop">
@@ -1349,6 +1391,7 @@ function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div cl
   <input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface)">
   <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
   <button class="btn ghost sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button>
+  <button class="btn ghost sm" data-act="ref-bajar" data-id="${r.id}" title="Descargar esta imagen suelta">Descargar</button>
   <button class="btn ghost sm danger" data-act="ref-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕'}</button></div>${refExtra(p,r)}</div></div>`}
 
 function vRevision(p){
@@ -1415,6 +1458,9 @@ function vInicio(){
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,48px)">Hola, Sebastián</h1>
   <p class="intro">Idea → función → intención → tensión → lenguaje visual → referencias → diseño → revisión. <strong>Cada proyecto tiene su propio cerebro</strong>: recuerda tus decisiones, te pregunta y te marca contradicciones.</p>
+  ${U().soy||U().porque?`<div class="box" style="border-top:3px solid var(--accent)">${U().soy?`<p style="margin:0;font-family:var(--display);font-size:26px;font-weight:800;text-transform:uppercase;line-height:1.1">Soy ${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}${U().porque?`<p style="margin:0"><span class="lbl">Mi porqué</span><br>${esc(U().porque)}</p>`:''}</div>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><span class="lbl">¿Te sientes atorado hoy? ¿Dónde?</span>${estancadas().length?`<span class="muted">${estancadas().length} pieza${estancadas().length===1?'':'s'} sin terminar</span>`:''}</div>
+    <div class="unlk">${UNLOCK.map(u=>`<button class="unl" data-act="unl" data-k="${u.k}"><b>${u.k}</b><span>${esc(u.n)}</span></button>`).join('')}</div></div>
   <div class="grid2">
     ${ult?(()=>{const P=ult[1],D=DX(P),ud=(P.decisiones||[]).find(d=>d.estado!=='Descartada'),v=D.vacios[0];return `<div class="box"><span class="lbl">Continúa donde te quedaste · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
       <div class="health"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
@@ -1542,6 +1588,8 @@ function ctxProyecto(p,{refs=false}={}){
     (p.decisiones||[]).length&&'Decisiones: '+p.decisiones.filter(d=>d.estado!=='Descartada').slice(0,15).map(d=>d.t+(d.motivo?' ('+d.motivo+')':'')).join(' | '))}
   if(refs)L.push('Referencias:\n'+p.refs.map((r,i)=>`${i+1}. [${capaNombre(p,r.capa)}] ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`).join('\n'));
   L.push('Principios del artista: '+S.ajustes.principios.join(' | '));
+  if(p.brief.una?.frase)L.push('Brief de una frase (la pieza no debe salirse de aquí): '+p.brief.una.frase);
+  if(vidaTexto())L.push('De su propia vida (úsalo para que las ideas salgan de él, no de lo que "debería" tener en el portafolio): '+vidaTexto());
   if(S.ajustes.gusto)L.push('Su gusto y estilo: '+S.ajustes.gusto);
   if(guiasTexto())L.push('Sus guías fundamentales (a quienes quiere llegar): '+guiasTexto());
   {const e=S.ajustes.estiloAnalisis?.data;if(e)L.push('Su estilo (análisis de su portafolio): '+(e.firma||'')+'. '+(e.resumen||'')+' Rasgos: '+(e.rasgos||[]).map(r=>r.rasgo).join(', '))}
@@ -1558,7 +1606,7 @@ async function preguntar(kind){
   try{
     if(kind==='ideas'){
       if((p.brief.texto||'').trim().length<10){S.ai[kind]={error:'Primero escribe tu idea en "El encargo", aunque sea una línea.'};delete S.aiBusy[kind];renderMain();return}
-      const r=await S.sample.json(`${ROL}\n\nIdea en bruto del artista (${p.tipo}):\n${p.brief.texto}\n${p.brief.restricciones?'Restricciones: '+p.brief.restricciones:''}\n\nPotencia esta idea. Busca conexiones no obvias (mitología, historia, naturaleza, ciencia, cine, cultura) que den una tensión fuerte y consciente, no una antítesis plana. Haz que el mundo/naturaleza actúe como personaje. Propón 5 direcciones MUY distintas entre sí.\nResponde SOLO con JSON: {"direcciones":[{"titulo":"nombre corto","idea":"la dirección en 1-2 frases, visual y concreta","porque":"qué la hace fuerte","nucleos":["3 ideas núcleo"],"tension":"una de: ${TENSIONES.map(t=>t[0]).join(', ')}","tensionTexto":"qué está en juego","pilares":[{"t":"pilar corto","f":"qué comunica y cómo se nota"}],"mundo":"cómo el mundo actúa como personaje","mood":{"sensacion":"","palabras":"3 palabras","paleta":["#hex x5"]},"tecnica":{"medio":"","acabado":"","referentes":"artistas reales"},"busquedas":[{"q":"búsqueda de 3-6 palabras","capa":"concepto|mood|tecnica|p1|p2|p3"}]}]} con 3 pilares y 5 búsquedas por dirección.`,{signal:ctl.signal,cache:false,modelTier:'complex'});
+      const r=await S.sample.json(`${ROL}\n\nIdea en bruto del artista (${p.tipo}):\n${p.brief.texto}\n${vidaTexto()?'Material de su propia vida (conecta al menos 2 direcciones con esto): '+vidaTexto()+'\n':''}${p.brief.restricciones?'Restricciones: '+p.brief.restricciones:''}\n\nPotencia esta idea. Busca conexiones no obvias (mitología, historia, naturaleza, ciencia, cine, cultura) que den una tensión fuerte y consciente, no una antítesis plana. Haz que el mundo/naturaleza actúe como personaje. Propón 5 direcciones MUY distintas entre sí.\nResponde SOLO con JSON: {"direcciones":[{"titulo":"nombre corto","idea":"la dirección en 1-2 frases, visual y concreta","porque":"qué la hace fuerte","nucleos":["3 ideas núcleo"],"tension":"una de: ${TENSIONES.map(t=>t[0]).join(', ')}","tensionTexto":"qué está en juego","pilares":[{"t":"pilar corto","f":"qué comunica y cómo se nota"}],"mundo":"cómo el mundo actúa como personaje","mood":{"sensacion":"","palabras":"3 palabras","paleta":["#hex x5"]},"tecnica":{"medio":"","acabado":"","referentes":"artistas reales"},"busquedas":[{"q":"búsqueda de 3-6 palabras","capa":"concepto|mood|tecnica|p1|p2|p3"}]}]} con 3 pilares y 5 búsquedas por dirección.`,{signal:ctl.signal,cache:false,modelTier:'complex'});
       S.ai[kind]={data:r};
     }else if(kind==='seis'){
       const r=await S.sample.json(`${ROL}\n\n${ctxProyecto(p)}\n\nSu asesor le pide que en cada proyecto siempre saque 6 cosas: CONCEPTO (la frase: "Es un ___ que ___ porque ___"), MOOD (la sensación), TÉCNICA (cómo está hecho) y ART DIRECTION con 3 PILARES (qué quiere comunicar; cada pilar es una intención distinta, no un objeto, y no se repiten entre sí). Para cada una propón 3 opciones distintas, coherentes con su concepto y tensión; si ya escribió algo, mejóralo en vez de ignorarlo. Cada opción trae 2 búsquedas precisas (3-6 palabras) para encontrar SUS referencias.\nResponde SOLO con JSON: {"concepto":[{"v":"frase","busquedas":["",""]}],"mood":[{"sensacion":"","palabras":"3 palabras","paleta":["#hex x5"],"busquedas":["",""]}],"tecnica":[{"medio":"","acabado":"","referentes":"artistas reales","busquedas":["",""]}],"p1":[{"t":"nombre corto","f":"qué comunica y cómo se nota en el diseño","busquedas":["",""]}],"p2":[...],"p3":[...]} con 3 opciones en cada clave.`,{signal:ctl.signal,cache:false,modelTier:'complex'});
@@ -1837,6 +1885,81 @@ function vDiario(){
     </div>
   </div>
   ${hoy?.img?`<div class="box"><h3>Feedback de tu ejercicio · ${esc(SKILLS[e.skill])}</h3>${diarioFbHTML(hoy,e)}</div>`:`<p class="muted">Sube tu resultado y te doy feedback al momento, enfocado en ${esc(SKILLS[e.skill])}.</p>`}`}
+
+/* ============ Desatorarme (método UNLOCK, basado en la guía "Stuck" de Mick Javaid) ============ */
+const UNLOCK=[
+  {k:'U',n:'Identidad',s:'"Siento que todavía estoy tratando de volverme artista."',c:'Decide quién eres. Te vuelves haciendo.'},
+  {k:'N',n:'Dirección',s:'"Tengo mil ideas y no sé qué hacer."',c:'Elige a dónde vas: una frase por pieza.'},
+  {k:'L',n:'Voz propia',s:'"Hago obra, pero no se siente mía."',c:'Haz lo que solo tú podrías hacer.'},
+  {k:'O',n:'Empezar',s:'"No trabajo si no estoy motivado."',c:'Empieza antes de estar inspirado.'},
+  {k:'C',n:'Terminar',s:'"Empiezo cosas y nunca las termino."',c:'Termínalo, suéltalo, sigue.'},
+  {k:'K',n:'Tu porqué',s:'"Ya ni sé por qué hago esto."',c:'Recuerda para qué es todo esto.'}
+];
+const VIDA=[['obsesiones','3 cosas que te obsesionan','Ej. una época, un deporte, un director'],['lugares','3 lugares que recuerdas vívidamente','Ej. un mercado, la casa de alguien, un viaje'],['experiencias','3 experiencias que nunca olvidarás','Ej. un trabajo, un concierto, un día específico'],['mundos','3 mundos que te gustaría que existieran','Ej. una ciudad donde…']];
+const TAREAS_O=['Busca 5 referencias y escribe su porqué','Haz 3 thumbnails de 5×3 cm','Explora una sola forma: 10 siluetas rápidas','Haz un estudio de valor en 3 tonos','Escribe el brief de una frase y 5 keywords','Corrige UNA cosa de tu última crítica'];
+const U=()=>{const u=S.ajustes.unlock=S.ajustes.unlock||{};u.vida=u.vida||{};return u};
+function vidaItems(){const v=U().vida;return VIDA.flatMap(([k,n])=>(v[k]||[]).map(x=>String(x||'').trim()).filter(Boolean).map(x=>({k,n,x})))}
+function vidaTexto(){const v=U().vida;return VIDA.map(([k,n])=>{const a=(v[k]||[]).map(x=>String(x||'').trim()).filter(Boolean);return a.length?n.replace(/^3 /,'')+': '+a.join(', '):''}).filter(Boolean).join('; ')}
+function estancadas(){
+  const out=[],hoy=Date.now();
+  for(const [pid,p] of Object.entries(S.P)){if(p.estado==='Archivado'||p.estado==='Final')continue;
+    for(const x of p.piezas||[])if(x.etapa!=='Final'&&!x.soltada)out.push({pid,p,x,dias:Math.floor((hoy-(x.creado||hoy))/864e5)})}
+  return out.sort((a,b)=>b.dias-a.dias);
+}
+function terminadas(){let n=0;for(const p of Object.values(S.P))for(const x of p.piezas||[])if(x.etapa==='Final'||x.soltada)n++;return n}
+function vDesatorar(){
+  const u=U(),k=S.unlK||'',card=UNLOCK.find(x=>x.k===k);
+  const ta_=(path,val,ph,id,h=64)=>`<textarea id="${id}" data-aj="${path}" placeholder="${esc(ph)}" style="min-height:${h}px">${esc(val||'')}</textarea>`;
+  const in_=(path,val,ph,id)=>`<input type="text" id="${id}" data-aj="${path}" value="${esc(val||'')}" placeholder="${esc(ph)}">`;
+  let body='';
+  if(k==='U')body=`<div class="grid2">
+    <div class="box"><h3>Yo soy ___</h3><p class="hint">No "quiero ser", no "algún día". ¿Quién decides ser hoy? No necesitas permiso, clientes ni seguidores para decidirlo.</p>
+      ${in_('unlock.soy',u.soy,'Ej. concept artist y diseñador de mundos','un-soy')}
+      <p class="hint" style="margin:0">Aparece en tu Inicio para que lo leas cada vez que abras la app.</p></div>
+    <div class="box"><h3>¿Qué haría ese artista a continuación?</h3><p class="hint">Decidir es la mitad; la otra mitad es hacer. Escribe la siguiente pieza que ese artista haría, y ve a hacerla.</p>
+      ${ta_('unlock.siguiente',u.siguiente,'Ej. terminar la pieza que llevo semanas cargando y publicarla con su breakdown','un-sig')}
+      <div class="prow"><button class="btn pri" data-act="unl-proy-sig">Convertir en proyecto</button></div></div></div>`;
+  if(k==='N'){const ps=ordenados().filter(([,p])=>p.estado!=='Archivado');body=`
+    <div class="box"><h3>Una frase por pieza</h3><p class="hint">Cuando llegas con 40 ideas, eliges UNA: 1 sujeto, 1 lugar, 1 sentimiento, en una frase. Y no le agregas nada a medio camino (si aparece un vaquero, va a otro proyecto). Cada proyecto tiene su "Brief de una frase" en la pestaña Brief.</p>
+      ${ps.length?`<ul class="list">${ps.map(([id,p])=>`<li><span><b>${esc(p.nombre)}</b><br>${p.brief.una?.frase?.trim()?esc(p.brief.una.frase):'<span style="color:var(--warn)">Sin frase todavía</span>'}</span><button class="btn sm ${p.brief.una?.frase?.trim()?'':'pri'}" data-act="abrir-tab" data-id="${esc(id)}" data-tab="brief">${p.brief.una?.frase?.trim()?'Ver':'Escribirla'}</button></li>`).join('')}</ul>`:'<p class="muted">Todavía no tienes proyectos.</p>'}</div>
+    <div class="box"><h3>¿Qué camino recorres ahora?</h3><p class="hint">No es para siempre: es el de ahora. Ej. "character design y visual development para animación 2D".</p>${in_('unlock.camino',u.camino,'El camino que eliges hoy','un-camino')}</div>`}
+  if(k==='L'){const items=vidaItems(),c=S.unlCombo;body=`
+    <div class="box"><h3>Tu vida es el material</h3><p class="hint">Tus mejores piezas no van a salir de lo que "deberías" tener en el portafolio, sino de lo que ya vive en ti. Tu vida normal es suficiente. Llena lo que puedas; el asesor de la app también lo usa para que sus propuestas salgan de ti.</p>
+      <div class="vida">${VIDA.map(([kk,n,ph])=>`<div class="field"><label>${n}</label>${[0,1,2].map(i=>in_(`unlock.vida.${kk}.${i}`,(u.vida[kk]||[])[i],i?'':ph,`un-v-${kk}-${i}`)).join('')}</div>`).join('')}</div></div>
+    <div class="box"><h3>Combina dos</h3><p class="hint">Dos cosas de tu lista, de categorías distintas. Eso es el inicio de algo que solo tú podrías hacer.</p>
+      ${c?`<p class="combo">${esc(c[0].x)} <span style="color:var(--accent)">+</span> ${esc(c[1].x)}</p><p class="muted" style="margin:0">${esc(c[0].n)} · ${esc(c[1].n)}</p>`:''}
+      <div class="prow"><button class="btn ${c?'':'pri'}" data-act="unl-combinar">${c?'Otra combinación':'Combinar al azar'}</button>${c?'<button class="btn pri" data-act="unl-crear">Empezar un proyecto con esto</button>':''}</div></div>`}
+  if(k==='O'){const ps=ordenados().filter(([,p])=>p.estado!=='Archivado'),pid=S.unlPid&&S.P[S.unlPid]?S.unlPid:ps[0]?.[0],p=S.P[pid];
+    const et=p?pipeDe(p)[Math.min(p.prod?.etapa||0,pipeDe(p).length-1)]:null,t=TAREAS_O[(S.unlT??hoyN())%TAREAS_O.length];body=`
+    <div class="grid2">
+      <div class="box"><h3>Solo empieza: 20 minutos</h3><p class="hint">La inspiración y la motivación no son confiables. Celular en otro cuarto, cierra todo lo que no necesitas y comprométete solo a <b>empezar</b>. Al terminar decides si paras. Casi nunca paras.</p>
+        ${ps.length?`<div class="field"><label for="un-pid">Proyecto</label><select id="un-pid" data-unlpid="1">${ps.map(([id,x])=>`<option value="${esc(id)}" ${id===pid?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></div>`:''}
+        <span class="lbl">Tu única tarea</span><p class="provo" style="margin:0">${esc(t)}${p?` · ${esc(p.nombre)}`:''}</p>
+        ${et?`<p class="muted" style="margin:0">Vas en la etapa <b>${esc(et.n)}</b>: ${esc(et.entrega)}</p>`:''}
+        <div class="prow"><button class="btn ghost sm" data-act="unl-otra-t">Otra tarea pequeña</button></div></div>
+      <div class="box">${timerHTML(20,'Temporizador · 20 min')}
+        <div class="prow"><button class="btn" data-act="unl-arranque">Empecé ✓</button><span class="muted">${u.arranques||0} arranque${(u.arranques||0)===1?'':'s'} sin esperar inspiración</span></div></div></div>`}
+  if(k==='C'){const est=estancadas(),sel=S.unlFin?est.find(e=>e.x.id===S.unlFin):null;body=`
+    <div class="stats"><div class="stat"><b>${est.length}</b><span>piezas sin terminar en tus proyectos</span></div><div class="stat"><b>${terminadas()}</b><span>terminadas o soltadas</span></div><div class="stat"><b>${u.soltadas||0}</b><span>soltadas desde aquí</span></div></div>
+    ${sel?`<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Última sesión · ${esc(sel.p.nombre)}</span>
+      <div class="pz"><div class="pzimg"><img ${imgAttrs(sel.x)} alt="" data-act="zoom"></div><div class="pzbody">
+        <p style="margin:0">Una sola sesión más. Cuando acabe el tiempo, <b>paras</b>, exportas y la sueltas: terminado le gana a perfecto.</p>
+        ${timerHTML(90,'Tu última sesión')}
+        ${sel.x.feedback?.siguiente_paso?`<p class="next" style="margin:0"><b>Lo único que corregiría:</b> ${esc(sel.x.feedback.siguiente_paso)}</p>`:''}
+        <span class="lbl">Suéltala (elige al menos una)</span>
+        <div class="prow"><button class="btn" data-act="unl-post" data-pid="${esc(sel.pid)}" data-id="${esc(sel.x.id)}">Publicarla</button><button class="btn" data-act="unl-pf" data-pid="${esc(sel.pid)}" data-id="${esc(sel.x.id)}">${sel.x.pf?'Ya es candidata ✓':'Proponerla a portafolio'}</button><button class="btn pri" data-act="unl-soltar" data-pid="${esc(sel.pid)}" data-id="${esc(sel.x.id)}">La solté: marcar Final</button><button class="btn ghost sm" data-act="unl-fin-sel" data-id="">Elegir otra</button></div></div></div></div>`:''}
+    <div class="box"><h3>Elige una pieza que llevas tiempo cargando</h3><p class="hint">Primero las más viejas. Dale una última sesión y suéltala: expórtala, publícala, mándala o métela al portafolio.</p>
+      ${est.length?est.slice(0,8).map(e=>`<div class="wip"><img ${imgAttrs(e.x)} alt="" loading="lazy" data-act="zoom"><span><b>${esc(e.x.nombre||e.p.nombre)}</b><br><span class="muted">${esc(e.p.nombre)} · ${esc(e.x.etapa)} · ${e.dias===0?'de hoy':e.dias===1?'hace 1 día':'hace '+e.dias+' días'}</span></span><span class="prow"><button class="btn sm ${sel?.x.id===e.x.id?'':'pri'}" data-act="unl-fin-sel" data-id="${esc(e.x.id)}">${sel?.x.id===e.x.id?'Elegida':'Última sesión'}</button></span></div>`).join(''):'<div class="empty">No hay piezas pendientes en tus proyectos. Sube tus WIP en Carpetas o Crítica y aparecerán aquí.</div>'}</div>`}
+  if(k==='K')body=`<div class="grid2">
+    <div class="box"><h3>¿Por qué empezaste a hacer arte antes de que te importara ser bueno?</h3><p class="hint">La primera respuesta honesta. No la que "deberías" dar: la tuya. No tiene que sonar impresionante.</p>
+      ${ta_('unlock.porque',u.porque,'Tu respuesta','un-porque',110)}</div>
+    <div class="box"><h3>¿Cómo te hacía sentir?</h3><p class="hint">Vuelve aquí cuando se te olvide para qué es todo esto.</p>${ta_('unlock.sentia',u.sentia,'Me hacía sentir…','un-sentia',110)}</div></div>`;
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Desatorarme</h1>
+  <p class="intro">Cuando te atoras casi nunca es por técnica: es identidad, dirección, voz, arranque, cierre o el porqué. Elige <b>solo el que más te frena hoy</b> y haz su ejercicio. <span class="muted">Basado en la guía "Stuck" de Mick Javaid (método UNLOCK).</span></p>
+  <div class="unlk">${UNLOCK.map(x=>`<button class="unl" data-act="unl" data-k="${x.k}" aria-pressed="${k===x.k}"><b>${x.k}</b><span>${esc(x.n)}</span></button>`).join('')}</div>
+  ${card?`<div class="banner" style="background:var(--surface2)"><i>${esc(card.s)}</i> → <b>${esc(card.c)}</b></div>${body}`
+    :`<div class="grid3">${UNLOCK.map(x=>`<button class="box" data-act="unl" data-k="${x.k}" style="text-align:left;cursor:pointer"><span class="lbl" style="color:var(--accent)">${x.k} · ${esc(x.n)}</span><span><i>${esc(x.s)}</i></span><b>${esc(x.c)}</b></button>`).join('')}</div>`}`}
 
 /* ============ Retos de estudio ============ */
 const RETO={
@@ -3132,11 +3255,22 @@ async function pedirCritica(id,gal){
 /* ============ Llevar a PureRef ============ */
 const EXP={bg:'#f4f5f7',ink:'#14161a',ink2:'#4b515b',ink3:'#7a818c',concepto:'#2a3ccc',mood:'#962c74',tecnica:'#9c6604',p1:'#0c7563',p2:'#0c7563',p3:'#0c7563'};
 const DISP='"Bricolage Grotesque", "Segoe UI", sans-serif',BODY='"IBM Plex Sans", "Segoe UI", sans-serif',MONO='"IBM Plex Mono", Consolas, monospace';
+function resumenPureRef(p){
+  const c=p.concepto,L=[p.nombre];
+  if(c.frase)L.push(c.frase);
+  const nuc=c.nucleos.filter(Boolean);
+  if(nuc.length||c.tension)L.push([nuc.join(' / '),c.tension].filter(Boolean).join(' — '));
+  p.pilares.forEach((x,i)=>{if(x.t)L.push(`Pilar ${i+1}: ${x.t}`)});
+  if(p.mood.sensacion||p.mood.palabras)L.push(['Mood:',p.mood.sensacion,p.mood.palabras].filter(Boolean).join(' '));
+  const kw=KWCATS.map(([k])=>(p.keywords[k]||[]).join(', ')).filter(Boolean);
+  if(kw.length)L.push('Keywords: '+kw.join(' · '));
+  return L.join('\n');
+}
 function exportBox(p){
   if(!p.refs.length)return '';
   return `<div class="box"><h3>Llevar a PureRef</h3>
-    <p class="hint"><b>ZIP:</b> descomprime y arrastra la carpeta a PureRef. Cada capa llega con su lámina de título y las imágenes nombradas con su porqué. <b>PNG:</b> todo el moodboard en una sola imagen de alta resolución, con columnas, pilares y porqués. <b>Copiar</b> en cada imagen: Ctrl+V directo en PureRef.</p>
-    <div class="prow">${SYNC_OK?`<button class="btn pri" data-act="exp-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta de la compu</button>`:''}<button class="btn ${SYNC_OK?'':'pri'}" data-act="exp-zip" ${S.exp?'disabled':''}>Descargar carpeta (.zip)</button><button class="btn" data-act="exp-png" ${S.exp?'disabled':''}>Moodboard en PNG</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div></div>`}
+    <p class="hint"><b>Carpeta:</b> descomprime (o abre tu carpeta) y arrastra a PureRef: solo tus imágenes sueltas en su formato original, más un <b>00_INFO.txt</b> por capa con el texto real (sin láminas fijas de por medio). <b>Resumen corto:</b> copia pilares, tensión, keywords y mood para pegarlo como nota de texto en PureRef. En cada imagen: <b>Copiar</b> (Ctrl+V directo en PureRef) o <b>Descargar</b> suelta.</p>
+    <div class="prow">${SYNC_OK?`<button class="btn pri" data-act="exp-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta de la compu</button>`:''}<button class="btn ${SYNC_OK?'':'pri'}" data-act="exp-zip" ${S.exp?'disabled':''}>Descargar carpeta (.zip)</button><button class="btn" data-act="copiar-resumen">Copiar resumen (texto corto)</button><button class="btn ghost" data-act="exp-png" ${S.exp?'disabled':''}>Moodboard en PNG</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div></div>`}
 function expStatus(t){S.exp=t;const el=$('#exp-status');if(el)el.textContent=t||''}
 async function blobDeRef(r){if(r.asset&&S.assets?.blob)return S.assets.blob(r.asset);const res=await fetch(refSrc(r));if(!res.ok)throw new Error('img');return res.blob()}
 function slug(s,n=48){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,n).replace(/-+$/,'')||'ref'}
@@ -3156,13 +3290,40 @@ async function laminaCapa(p,l){
   return aBlob(c);
 }
 
+function infoCapa(p,l){
+  const L=[capaNombre(p,l.k).replace(/^P\d · /,''),''];
+  const m=/^p(\d)$/.exec(l.k);
+  if(m){
+    const pl=p.pilares[+m[1]-1]||{};
+    L.push(pl.t||'—');
+    if(pl.f)L.push('',pl.f);
+  }else if(l.k==='concepto'){
+    const c=p.concepto;
+    if(c.frase)L.push(c.frase,'');
+    L.push('Núcleos: '+(c.nucleos.filter(Boolean).join(' / ')||'—'));
+    L.push('Antítesis / tensión: '+(c.tension||'—'));
+    if(c.tensionTexto)L.push('',c.tensionTexto);
+    if(c.empujes?.length)L.push('','Empujes:',...c.empujes.map(e=>'- '+e));
+    L.push('','Keywords:',...KWCATS.map(([k,n])=>`- ${n}: ${(p.keywords[k]||[]).join(', ')||'—'}`));
+  }else if(l.k==='mood'){
+    L.push(p.mood.sensacion||'—');
+    if(p.mood.palabras)L.push('',p.mood.palabras);
+    if(p.mood.paleta?.length)L.push('','Paleta: '+p.mood.paleta.join(' '));
+  }else if(l.k==='tecnica'){
+    L.push(p.tecnica.medio||'—');
+    if(p.tecnica.acabado)L.push('',p.tecnica.acabado);
+    if(p.tecnica.referentes)L.push('',p.tecnica.referentes);
+  }
+  return L.join('\n');
+}
+
 // Arma los archivos del moodboard para PureRef y los entrega a escribir(ruta, blob)
 async function armarMoodboard(p,escribir){
   await document.fonts?.ready;let n=0,fallos=0;
   const capas=LAYERS.filter(l=>p.refs.some(r=>r.capa===l.k));
   for(const [ci,l] of capas.entries()){
     const carpeta=`${ci+1}_${slug(capaNombre(p,l.k),40)}`;
-    await escribir([carpeta,'00_TITULO.png'],await laminaCapa(p,l));
+    await escribir([carpeta,'00_INFO.txt'],new Blob([infoCapa(p,l)],{type:'text/plain;charset=utf-8'}));
     const rs=p.refs.filter(r=>r.capa===l.k);
     for(const [i,r] of rs.entries()){
       expStatus(`Preparando ${++n} de ${p.refs.length}…`);
@@ -3174,20 +3335,22 @@ async function armarMoodboard(p,escribir){
   const orden=['bocetos','grises','versiones','final'];
   for(const [k,nom] of orden.map(k=>[k,CARPS.find(c=>c[0]===k)[1]])){const x=(p.piezas||[]).filter(z=>carpDe(z)===k).sort((a,b)=>a.creado-b.creado).at(-1);
     if(x)try{const b=await blobDeRef(x);await escribir(['9_Proceso',`${orden.indexOf(k)+1}_${slug(nom,20)}.${(b.type.split('/')[1]||'jpg').replace('jpeg','jpg')}`],b)}catch{}}
-  expStatus('Armando moodboard…');
-  try{await escribir(['00_MOODBOARD.png'],await moodboardPNG(p))}catch{}
+  if(fallos&&fallos===p.refs.length)throw new Error('sin-imagenes');
   await escribir(['00_HOJA.md'],new Blob([aMarkdown(p)],{type:'text/markdown'}));
   return fallos;
 }
 async function exportZip(){
   const p=S.P[S.cur];if(!p||S.exp)return;
   if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
-  const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60));
-  const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=raiz;for(const c of ruta.slice(0,-1))d=d.folder(c);d.file(ruta.at(-1),b)});
-  expStatus('Comprimiendo…');
-  const blob=await zip.generateAsync({type:'blob'});
-  expStatus('');await guardarArchivo(slug(p.nombre,60)+'_pureref.zip',blob);
-  if(fallos)toast(`${fallos} imagen(es) no se pudieron incluir`);
+  try{
+    const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60));
+    const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=raiz;for(const c of ruta.slice(0,-1))d=d.folder(c);d.file(ruta.at(-1),b)});
+    expStatus('Comprimiendo…');
+    const blob=await zip.generateAsync({type:'blob'});
+    expStatus('');await guardarArchivo(slug(p.nombre,60)+'_pureref.zip',blob);
+    if(fallos)toast(`${fallos} imagen(es) no se pudieron incluir`);
+  }catch(e){toast(e?.message==='sin-imagenes'?'No se pudo leer ninguna imagen. Recarga la página e intenta de nuevo.':'No se pudo armar el ZIP')}
+  finally{expStatus('')}
 }
 // Guarda el moodboard directo en PROYECTOS/<proyecto>/MOODBOARD PUREREF/imagenes de la carpeta de la compu
 async function exportCarpeta(){
@@ -3205,7 +3368,7 @@ async function exportCarpeta(){
     const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=base;for(const c of ruta.slice(0,-1))d=await d.getDirectoryHandle(c,{create:true});
       const fh=await d.getFileHandle(ruta.at(-1),{create:true}),w=await fh.createWritable();await w.write(b);await w.close()});
     expStatus('');toast(`Listo en PROYECTOS/${nombreOk}/MOODBOARD PUREREF`+(fallos?` (${fallos} sin incluir)`:''));
-  }catch(e){expStatus('');toast('No se pudo guardar en tu carpeta')}
+  }catch(e){expStatus('');toast(e?.message==='sin-imagenes'?'No se pudo leer ninguna imagen. Recarga la página e intenta de nuevo.':'No se pudo guardar en tu carpeta')}
 }
 async function exportPNG(){
   const p=S.P[S.cur];if(!p||S.exp)return;
@@ -3213,10 +3376,22 @@ async function exportPNG(){
   try{const b=await moodboardPNG(p);expStatus('');await guardarArchivo(slug(p.nombre,60)+'_moodboard.png',b)}
   catch{expStatus('');toast('No se pudo armar el PNG')}
 }
+function descargaNativa(nombre,data){
+  try{
+    const blob=data instanceof Blob?data:new Blob([data],{type:'text/plain'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=nombre;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    return true;
+  }catch{return false}
+}
 async function guardarArchivo(nombre,data){
-  if(!S.downloads){toast('La descarga no está disponible en esta vista');return}
-  try{await S.downloads.save({filename:nombre,data});toast('Listo: '+nombre)}
-  catch(e){if(e?.code==='declined')return;toast(e?.code==='extension_not_enabled'?'Este formato no está disponible aquí':'No se pudo descargar')}
+  if(S.downloads){
+    try{await S.downloads.save({filename:nombre,data});toast('Listo: '+nombre);return}
+    catch(e){if(e?.code==='declined')return}
+  }
+  if(descargaNativa(nombre,data))toast('Listo: '+nombre);
+  else toast('No se pudo descargar')
 }
 
 async function moodboardPNG(p){
@@ -3406,7 +3581,7 @@ function pilarObjeto(t){const w=toks(t);if(!w.length||w.length>2)return false;
 /* ---------- lectura del proyecto (ProjectContext) ---------- */
 function tresMood(p){const t=(p.mood.tres||[]).map(x=>String(x||'').trim());if(t.some(Boolean))return t;return String(p.mood.palabras||'').split(/[,;·]/).map(x=>x.trim()).filter(Boolean).slice(0,3)}
 function queDe(p){return p.que?.que||p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / ')||''}
-function intTextos(p){return [p.que?.que,p.que?.tema,p.que?.funcion,p.ad,p.concepto.frase,...p.concepto.nucleos,...p.pilares.flatMap(x=>[x.t,x.f,x.como]),p.mood.emocion,p.mood.sensacion,p.mood.atmosfera,...tresMood(p),p.brief.texto]}
+function intTextos(p){return [p.brief.una?.frase,p.que?.que,p.que?.tema,p.que?.funcion,p.ad,p.concepto.frase,...p.concepto.nucleos,...p.pilares.flatMap(x=>[x.t,x.f,x.como]),p.mood.emocion,p.mood.sensacion,p.mood.atmosfera,...tresMood(p),p.brief.texto]}
 function visTextos(p){const l=p.lenguaje||{};return [...(l.formas||[]),p.guia?.formas,p.forma?.silueta,p.forma?.proporcion,p.forma?.geometria,p.forma?.lenguaje,p.forma?.anatomia,...(p.materiales||[]),p.guia?.materiales,p.materialNota,l.colorDom,l.colorAcento,p.guia?.luz,l.composicion,l.escala,l.silueta]}
 function moodTextos(p){return [p.mood.emocion,p.mood.sensacion,p.mood.atmosfera,p.mood.luz,p.mood.clima,p.mood.color,...tresMood(p)]}
 function hexHsl(h){h=String(h||'').replace('#','');if(h.length!==6)return null;const r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255;
@@ -4265,7 +4440,7 @@ function diarioFbHTML(hoy,e){const r=S.anD;if(!hoy?.img)return '';
 function abrirBloqueado(){const p=S.P[S.cur];if(!p)return;const f=S.blk||{que:queDe(p),tengo:'',nofunciona:'',evitar:(p.evitar||[]).join(', ')};S.blk=f;
   const r=S.blkR;$('#overlay').innerHTML=`<div class="modal" role="dialog" aria-label="Estoy bloqueado"><div class="modal-b"><div class="prow" style="justify-content:space-between"><h3>Estoy bloqueado</h3><button class="btn ghost sm" data-act="modal-x">Cerrar</button></div>
     ${[['que','¿Qué estás intentando diseñar?'],['tengo','¿Qué ya tienes?'],['nofunciona','¿Qué no funciona?'],['evitar','¿Qué quieres evitar?']].map(([k,l])=>`<div class="field"><label for="blk-${k}">${l}</label><textarea id="blk-${k}" data-blk="${k}" style="min-height:44px">${esc(f[k]||'')}</textarea></div>`).join('')}
-    <div class="prow"><button class="btn pri" data-act="blk-go">Ayúdame a pensar</button></div>
+    <div class="prow"><button class="btn pri" data-act="blk-go">Ayúdame a pensar</button><span class="muted">¿El bloqueo no es del diseño sino tuyo (arrancar, terminar, tu voz)?</span><button class="btn sm" data-act="unl" data-k="">Desatorarme</button></div>
     ${r?`<div class="an-txt"><div class="an-sec ok"><h4>Definido</h4><p>${esc(r.definido.join(', ')||'casi nada')}</p></div>
       ${r.falta.length?`<div class="an-sec q"><h4>Falta</h4><p>${esc(r.falta.slice(0,6).join(' · '))}</p></div>`:''}
       ${r.contra.length?`<div class="an-sec no"><h4>Contradicciones</h4><ul>${r.contra.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
@@ -5143,6 +5318,7 @@ document.addEventListener('input',e=>{
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.refb){S.refB=S.refB||{};S.refB[t.dataset.refb]=t.value;if(t.tagName==='SELECT'&&t.dataset.refb==='src'&&S.refB.q)buscarRefs();return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
@@ -5230,7 +5406,7 @@ document.addEventListener('drop',e=>{const an=e.target.closest?.('#drop-an');if(
 
 async function accion(a,el){
   const p=S.P[S.cur],ds=el.dataset;
-  if(['abrir','vista','nuevo','abrir-tab'].includes(a))S.menu=false;
+  if(['abrir','vista','nuevo','abrir-tab','unl'].includes(a))S.menu=false;
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
@@ -5250,6 +5426,27 @@ async function accion(a,el){
       const t=$('#f-bq');if(t){t.value=partes.join(' ');t.focus()}break}
     case 'pal-add':p.mood.paleta.push('#888888');marcar();renderMain();break;
     case 'pal-del':p.mood.paleta.splice(+ds.i,1);marcar();renderMain();break;
+    case 'unl':$('#overlay').innerHTML='';S.unlK=ds.k;S.vista='desatorar';render();window.scrollTo({top:0});break;
+    case 'una-armar':{const u=p.brief.una=p.brief.una||{},partes=[u.sujeto,u.lugar,u.sentimiento].map(x=>(x||'').trim()).filter(Boolean);if(partes.length<2){toast('Llena al menos sujeto y lugar');return}
+      u.frase=partes[0]+' '+partes.slice(1).join(', ');marcar();renderMain();$('#f-una-frase')?.focus();break}
+    case 'unl-combinar':{const it=vidaItems();if(it.length<2){toast('Escribe al menos 2 cosas en tu lista');return}
+      const a=it[Math.floor(Math.random()*it.length)],otras=it.filter(y=>y.k!==a.k&&y.x!==a.x),pool=otras.length?otras:it.filter(y=>y.x!==a.x);if(!pool.length){toast('Escribe cosas distintas');return}
+      S.unlCombo=[a,pool[Math.floor(Math.random()*pool.length)]];renderMain();break}
+    case 'unl-crear':{const c=S.unlCombo;if(!c)return;const id=uid(),np=nuevoProyecto((c[0].x+' + '+c[1].x).slice(0,80));
+      np.encargo='Proyecto personal · de mi vida';np.brief.texto=`Semilla de mi vida: ${c[0].x} (${c[0].n.replace(/^3 /,'')}) + ${c[1].x} (${c[1].n.replace(/^3 /,'')}).\n\nQué me mueve de cada una: `;
+      S.P[id]=np;S.cur=id;S.vista='proyecto';S.tab='brief';S.unlCombo=null;recordar();marcar();render();toast('Proyecto creado: escribe qué te mueve de cada una');break}
+    case 'unl-proy-sig':{const v=(U().siguiente||'').trim();if(!v){toast('Escribe primero qué haría ese artista');return}const id=uid(),np=nuevoProyecto(v.slice(0,70));np.brief.texto=v;np.encargo='Proyecto personal';
+      S.P[id]=np;S.cur=id;S.vista='proyecto';S.tab='brief';recordar();marcar();render();break}
+    case 'unl-otra-t':S.unlT=(S.unlT??hoyN())+1;renderMain();break;
+    case 'unl-arranque':{const u=U();u.arranques=(u.arranques||0)+1;if(!S.timer?.fin)S.timer={fin:Date.now()+20*60e3};marcarAj();renderMain();toast('Empezaste. Eso era lo difícil.');break}
+    case 'unl-fin-sel':S.unlFin=ds.id||null;S.timer=null;renderMain();if(ds.id)window.scrollTo({top:0});break;
+    case 'unl-soltar':{const pr=S.P[ds.pid],x=pr?.piezas?.find(z=>z.id===ds.id);if(!x)return;x.etapa='Final';x.soltada=Date.now();const u=U();u.soltadas=(u.soltadas||0)+1;
+      marcarPid(ds.pid);marcarAj();S.unlFin=null;S.timer=null;render();toast('Soltada. Siguiente.');break}
+    case 'unl-pf':{const pr=S.P[ds.pid],x=pr?.piezas?.find(z=>z.id===ds.id);if(!x||x.pf)return;
+      proponer(x,{titulo:pr.nombre,disciplina:pr.tipo==='Entorno'?'Environment Concept':pr.tipo==='Key art'?'Keyframe / Key Art':pr.tipo+' Design',seccion:/Personaje|Criatura/.test(pr.tipo)?'characters':'projects'});marcarPid(ds.pid);renderMain();toast('Propuesta: revísala con tu asesor en Portafolio');break}
+    case 'unl-post':{const pr=S.P[ds.pid];if(!pr)return;lista('posts').push({id:uid(),fecha:hoyKey(),red:'Instagram + ArtStation',tipo:'Final',pid:ds.pid,titulo:pr.nombre,es:'',en:'',hashtags:hashtagsDe(pr.tipo),estado:'Idea'});marcarAj();S.vista='redes';render();toast('En tu plan de publicación de hoy');break}
+    case 'ref-bajar':{const r=p.refs.find(x=>x.id===ds.id);if(!r)return;try{const b=await blobDeRef(r);const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');await guardarArchivo(slug(r.porque||'referencia')+'.'+ext,b)}catch{toast('No se pudo descargar la imagen')}break}
+    case 'copiar-resumen':{const txt=resumenPureRef(p);try{await navigator.clipboard.writeText(txt);toast('Resumen copiado: pégalo en PureRef')}catch{toast('No se pudo copiar')}break}
     case 'ref-del':{if(S.confirmRef!==ds.id){S.confirmRef=ds.id;renderMain();return}
       const i=p.refs.findIndex(r=>r.id===ds.id);const [r]=p.refs.splice(i,1);S.confirmRef=null;marcar();renderMain();
       break}
