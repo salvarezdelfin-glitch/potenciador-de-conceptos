@@ -444,6 +444,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .dna-h{display:flex;flex-direction:column;padding:2px 4px 8px}.dna-h b{font-family:var(--display);font-size:22px;line-height:1.1}
 .dna-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:start;border-top:1px solid var(--line)}
 .dna-go{display:grid;grid-template-columns:96px 1fr;gap:8px;text-align:left;border:0;background:transparent;padding:6px 4px;cursor:pointer;font-size:13px;line-height:1.4;color:var(--ink);min-width:0}
+.dna-go .lbl .en{font-style:normal;opacity:.6}
+.dna-go{grid-template-columns:118px 1fr!important}
+@media (max-width:600px){.dna-go{grid-template-columns:1fr!important}}
 .dna-cp{margin-top:4px;opacity:.55}.dna-r:hover .dna-cp,.dna-cp:focus-visible{opacity:1}
 @media (hover:none){.dna-cp{opacity:1}}
 @media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
@@ -851,7 +854,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk1xlie').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk212et').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -5370,9 +5373,11 @@ function dnaFilas(p){const l=p.lenguaje||{},t=(p.tensiones||[]).filter(x=>x.a&&x
   if(pj.length)F.push(['Characters',pj.map(c=>{const P=pjPaleta(p,c).pal;return `<b>${esc(c.nombre)}</b> <span class="pal">${P.map(x=>`<i style="background:${x.hex}" title="${x.rol} ${x.hex}"></i>`).join('')}</span>`}).join('<br>'),
     pj.map(c=>`${c.nombre}: `+pjPaleta(p,c).pal.map(x=>`${x.rol} ${x.hex}`).join(', ')).join('\n'),'personajes']);
   return F}
+const DNA_ES={Concept:'Concepto',Theme:'Tema',Function:'Función',Tension:'Tensión',Shape:'Forma',Material:'Material',Color:'Color',Light:'Luz',Mood:'Mood',Story:'Historia','Art Direction':'Dirección de arte',Characters:'Personajes'};
+const dnaLbl=k=>DNA_ES[k]&&DNA_ES[k]!==k?DNA_ES[k]+' / '+k:k;
 function dnaHTML(p){const F=dnaFilas(p);
-  return `<div class="dna"><div class="dna-h"><div class="prow" style="justify-content:space-between"><span class="lbl">Project DNA · se actualiza solo</span><button class="btn ghost sm" data-act="dna-copy" data-k="*" title="Copiar todo el DNA">Copiar todo</button></div><b>${esc(p.nombre)}</b></div>
-    ${F.map(([k,html,txt,tab])=>`<div class="dna-r"><button class="dna-go" data-act="tab" data-tab="${tab}" title="Ir a editar"><span class="lbl">${k}</span><span class="v">${html}</span></button>${txt?`<button class="btn ghost sm dna-cp" data-act="dna-copy" data-k="${k}" title="Copiar ${k}" aria-label="Copiar ${k}">Copiar</button>`:''}</div>`).join('')}
+  return `<div class="dna"><div class="dna-h"><div class="prow" style="justify-content:space-between"><span class="lbl">ADN del proyecto / Project DNA · se actualiza solo</span><button class="btn ghost sm" data-act="dna-copy" data-k="*" title="Copiar todo el DNA">Copiar todo</button></div><b>${esc(p.nombre)}</b></div>
+    ${F.map(([k,html,txt,tab])=>`<div class="dna-r"><button class="dna-go" data-act="tab" data-tab="${tab}" title="Ir a editar"><span class="lbl">${DNA_ES[k]&&DNA_ES[k]!==k?`${DNA_ES[k]}<br><i class="en">${k}</i>`:k}</span><span class="v">${html}</span></button>${txt?`<button class="btn ghost sm dna-cp" data-act="dna-copy" data-k="${k}" title="Copiar ${dnaLbl(k)}" aria-label="Copiar ${dnaLbl(k)}">Copiar</button>`:''}</div>`).join('')}
   </div>`}
 async function copiarTexto(txt,msg){try{await navigator.clipboard.writeText(txt);toast(msg||'Copiado')}catch{
   try{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();toast(msg||'Copiado')}catch{toast('No se pudo copiar')}}}
@@ -5512,8 +5517,8 @@ async function procreateBlob(nombre,pal){if(!window.JSZip)throw new Error('zip')
   const z=new JSZip();z.file('Swatches.json',JSON.stringify([{name:nombre,swatches:pal.map(x=>hsb(x.hex))}]));return z.generateAsync({type:'blob'})}
 async function accionPj(a,el,p,ds){if(!a.startsWith('pj-')&&a!=='dna-copy'&&a!=='hoja-copy')return false;
   if(a==='hoja-copy'){const t=hojaTextos(p)[ds.k];if(t)await copiarTexto(t,'Copiado');return true}
-  if(a==='dna-copy'){const F=dnaFilas(p);const txt=ds.k==='*'?[`PROJECT DNA · ${p.nombre}`,...F.filter(f=>f[2]).map(f=>`${f[0]}: ${f[2]}`)].join('\n'):F.find(f=>f[0]===ds.k)?.[2];
-    if(txt)await copiarTexto(txt,ds.k==='*'?'DNA copiado':ds.k+' copiado');return true}
+  if(a==='dna-copy'){const F=dnaFilas(p);const txt=ds.k==='*'?[`ADN DEL PROYECTO / PROJECT DNA · ${p.nombre}`,...F.filter(f=>f[2]).map(f=>`${dnaLbl(f[0])}: ${f[2]}`)].join('\n'):F.find(f=>f[0]===ds.k)?.[2];
+    if(txt)await copiarTexto(txt,ds.k==='*'?'DNA copiado':dnaLbl(ds.k)+' copiado');return true}
   const pj=p.personajes=p.personajes||[],c=pj.find(x=>x.id===ds.id);
   switch(a){
     case 'pj-add':pj.push(pjNuevo(p));marcar();renderMain();setTimeout(()=>$(`#pj-${pj.at(-1).id}-nombre`)?.focus(),50);break;
