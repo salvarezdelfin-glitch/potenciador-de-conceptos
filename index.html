@@ -448,6 +448,16 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 @media (hover:none){.dna-cp{opacity:1}}
 @media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
 .pj-list{display:flex;flex-direction:column;gap:14px}
+.hsec{display:flex;flex-direction:column;gap:8px}
+.hsec-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.hsec-h h5{margin:0}
+.sheet .cp{opacity:.55;flex:0 0 auto}.sheet .hsec:hover .cp,.sheet .shpil:hover .cp,.sheet .shgrid>div:hover .cp,.sheet .cp:focus-visible{opacity:1}
+@media (hover:none){.sheet .cp{opacity:1}}
+.hpal-row{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.hpal{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.hsw{margin:0;display:flex;flex-direction:column;gap:3px}
+.hsw span{display:block;height:44px;border-radius:6px;border:1px solid var(--line)}
+.hsw figcaption{display:flex;flex-direction:column;font-size:12px;line-height:1.25}.hsw small{font-family:var(--mono);color:var(--ink3);font-size:11px}
 .pj-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
 @media (max-width:900px){.pj-grid{grid-template-columns:minmax(0,1fr)}}
 .pj-form{display:flex;flex-direction:column;gap:8px}
@@ -841,7 +851,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk11vsi').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk1xlie').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1434,24 +1444,45 @@ function vRevision(p){
   </div>
   <div class="box"><h3>Zona de cuidado</h3><p class="hint">Si lo borras, queda en la Papelera y lo puedes recuperar.</p><div class="prow"><button class="btn danger" data-act="borrar">${S.confirmDel?'Sí, borrar proyecto y sus imágenes':'Borrar proyecto'}</button>${S.confirmDel?'<button class="btn ghost" data-act="cancel-del">Cancelar</button>':''}</div></div>`}
 
+/* textos planos de cada sección de la hoja, para copiarlas sueltas */
+function hojaTextos(p){const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim()),T={};
+  T.titulo=[p.nombre,c.frase].filter(Boolean).join('\n');
+  T.tension=[[nuc.join(' / '),c.tension].filter(Boolean).join(' — '),c.tensionTexto].filter(Boolean).join('\n\n');
+  p.pilares.forEach((x,k)=>{if(x.t||x.f)T['pilar'+k]=[`Pilar ${k+1}: ${x.t||'—'}`,x.f,x.como&&'Se ve: '+x.como,x.no&&'Nunca: '+x.no].filter(Boolean).join('\n')});
+  T.mood=['Mood: '+(p.mood.sensacion||'—'),p.mood.palabras,(p.mood.paleta||[]).length&&'Paleta: '+p.mood.paleta.join(' ')].filter(Boolean).join('\n');
+  T.tecnica=['Técnica: '+(p.tecnica.medio||'—'),p.tecnica.acabado,p.tecnica.referentes].filter(Boolean).join('\n');
+  T.keywords='Keywords: '+(KWCATS.flatMap(([k])=>p.keywords[k]||[]).join(', ')||'—');
+  const mq=MUNDO_Q.filter(([k])=>p.mundo[k]);if(mq.length)T.mundo=['El mundo como personaje',...mq.map(([k,q])=>q+'\n'+p.mundo[k])].join('\n\n');
+  if((p.lenguaje?.reglas||[]).length)T.reglas='Reglas visuales:\n'+p.lenguaje.reglas.map((r,k)=>`${k+1}. ${r}`).join('\n');
+  const pj=(p.personajes||[]).filter(x=>x.nombre);
+  T.paletas=[(p.mood.paleta||[]).length&&'Paleta del mundo: '+p.mood.paleta.join(' '),...pj.map(x=>`${x.nombre}: `+pjPaleta(p,x).pal.map(z=>`${z.rol} ${z.hex} (${z.pct}%)`).join(', '))].filter(Boolean).join('\n');
+  return T}
+const cpBtn=k=>`<button class="btn ghost sm cp" data-act="hoja-copy" data-k="${k}" title="Copiar esta parte">Copiar</button>`;
+function hojaPaletasHTML(p){const pj=(p.personajes||[]).filter(x=>x.nombre),mp=p.mood.paleta||[];if(!mp.length&&!pj.length)return '';
+  const sw=(hex,rol,pct)=>`<figure class="hsw"><span style="background:${esc(hex)}"></span><figcaption>${rol?`<b>${esc(rol)}</b>`:''}<small>${esc(hex)}${pct?' · '+pct+'%':''}</small></figcaption></figure>`;
+  return `<div class="hsec"><div class="hsec-h"><h5 style="margin:0">Paletas</h5>${cpBtn('paletas')}</div>
+    ${mp.length?`<div class="hpal-row"><span class="lbl">Mundo</span><div class="hpal">${mp.map(h=>sw(h)).join('')}</div></div>`:''}
+    ${pj.map(x=>{const R=pjPaleta(p,x).pal;return `<div class="hpal-row"><span class="lbl">${esc(x.nombre)}${x.rol?` · ${esc(x.rol)}`:''}</span><div class="hpal">${R.map(z=>sw(z.hex,z.rol,z.pct)).join('')}</div><div class="pj-bar">${R.map(z=>`<i style="background:${z.hex};flex:${z.pct}"></i>`).join('')}</div></div>`}).join('')}
+    ${pj.length?'':`<p class="muted" style="margin:0">Agrega personajes en la pestaña Personajes y su paleta aparece aquí.</p>`}</div>`}
 function vHoja(p){
   const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim());
   return `
-  <div class="prow" style="justify-content:flex-end">${p.refs.length?'<button class="btn" data-act="exp-png">Moodboard PNG</button><button class="btn" data-act="exp-zip">Llevar a PureRef (.zip)</button>':''}<button class="btn" data-act="copiar-md">Copiar como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></div>
+  <div class="prow" style="justify-content:flex-end">${p.refs.length?'<button class="btn" data-act="exp-png">Moodboard PNG</button><button class="btn" data-act="exp-zip">Llevar a PureRef (.zip)</button>':''}<button class="btn" data-act="copiar-md">Copiar todo como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></div>
   <article class="sheet">
     ${dnaHTML(p)}
-    ${(p.lenguaje?.reglas||[]).length?`<div><h5 style="margin:0 0 6px">Reglas visuales</h5><ol class="reglas">${p.lenguaje.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
-    <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">${esc(p.tipo)} · ${esc(p.encargo||'Proyecto personal')} · ${fecha(p.creado)}</span>
+    ${(p.lenguaje?.reglas||[]).length?`<div class="hsec"><div class="hsec-h"><h5 style="margin:0">Reglas visuales</h5>${cpBtn('reglas')}</div><ol class="reglas">${p.lenguaje.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
+    <div class="hsec" style="gap:10px"><div class="hsec-h"><span class="lbl">${esc(p.tipo)} · ${esc(p.encargo||'Proyecto personal')} · ${fecha(p.creado)}</span>${cpBtn('titulo')}</div>
       <h2>${esc(p.nombre)}</h2>${c.frase?`<p class="logline">${esc(c.frase)}</p>`:''}</div>
-    ${nuc.length?`<div class="tension">${nuc.map(esc).join(' <span style="color:var(--ink3)">/</span> ')}${c.tension?`<em>${esc(c.tension)}</em>`:''}</div>${c.tensionTexto?`<p style="margin:-12px 0 0;max-width:70ch;color:var(--ink2)">${esc(c.tensionTexto)}</p>`:''}`:''}
-    <div class="shgrid">${p.pilares.map((x,i)=>`<div class="shpil"><span class="lbl" style="color:var(--c-ad)">Pilar ${i+1}</span><b>${esc(x.t||'—')}</b><p>${esc(x.f)}</p>${x.como?`<p class="muted">Se ve: ${esc(x.como)}</p>`:''}${x.no?`<p class="muted">Nunca: ${esc(x.no)}</p>`:''}</div>`).join('')}</div>
+    ${nuc.length?`<div class="hsec"><div class="hsec-h"><div class="tension">${nuc.map(esc).join(' <span style="color:var(--ink3)">/</span> ')}${c.tension?`<em>${esc(c.tension)}</em>`:''}</div>${cpBtn('tension')}</div>${c.tensionTexto?`<p style="margin:0;max-width:70ch;color:var(--ink2)">${esc(c.tensionTexto)}</p>`:''}</div>`:''}
+    <div class="shgrid">${p.pilares.map((x,i)=>`<div class="shpil"><div class="hsec-h"><span class="lbl" style="color:var(--c-ad)">Pilar ${i+1}</span>${x.t||x.f?cpBtn('pilar'+i):''}</div><b>${esc(x.t||'—')}</b><p>${esc(x.f)}</p>${x.como?`<p class="muted">Se ve: ${esc(x.como)}</p>`:''}${x.no?`<p class="muted">Nunca: ${esc(x.no)}</p>`:''}</div>`).join('')}</div>
     <div class="shgrid">
-      <div class="layer-mood" style="--lc:var(--c-mood)"><h5>Mood</h5><p>${esc(p.mood.sensacion||'—')}</p><p class="muted">${esc(p.mood.palabras)}</p>
-        <div class="pal" style="margin-top:8px">${p.mood.paleta.map(c=>`<span style="width:30px;height:30px;border-radius:4px;background:${esc(c)};border:1px solid var(--line)"></span>`).join('')}</div></div>
-      <div style="--lc:var(--c-tecnica)"><h5>Técnica</h5><p>${esc(p.tecnica.medio||'—')}</p><p class="muted">${esc([p.tecnica.acabado,p.tecnica.referentes].filter(Boolean).join(' · '))}</p></div>
-      <div style="--lc:var(--c-concepto)"><h5>Keywords</h5><p>${KWCATS.flatMap(([k])=>p.keywords[k]||[]).map(esc).join(' · ')||'—'}</p></div>
-      ${MUNDO_Q.some(([k])=>p.mundo[k])?`<div style="--lc:var(--c-ad)"><h5>El mundo como personaje</h5>${MUNDO_Q.filter(([k])=>p.mundo[k]).slice(0,3).map(([k,q])=>`<p><span class="muted">${q}</span><br>${esc(p.mundo[k])}</p>`).join('')}</div>`:''}
+      <div class="layer-mood" style="--lc:var(--c-mood)"><div class="hsec-h"><h5>Mood</h5>${cpBtn('mood')}</div><p>${esc(p.mood.sensacion||'—')}</p><p class="muted">${esc(p.mood.palabras)}</p>
+        <div class="pal" style="margin-top:8px">${p.mood.paleta.map(c=>`<span title="${esc(c)}" style="width:30px;height:30px;border-radius:4px;background:${esc(c)};border:1px solid var(--line)"></span>`).join('')}</div></div>
+      <div style="--lc:var(--c-tecnica)"><div class="hsec-h"><h5>Técnica</h5>${cpBtn('tecnica')}</div><p>${esc(p.tecnica.medio||'—')}</p><p class="muted">${esc([p.tecnica.acabado,p.tecnica.referentes].filter(Boolean).join(' · '))}</p></div>
+      <div style="--lc:var(--c-concepto)"><div class="hsec-h"><h5>Keywords</h5>${cpBtn('keywords')}</div><p>${KWCATS.flatMap(([k])=>p.keywords[k]||[]).map(esc).join(' · ')||'—'}</p></div>
+      ${MUNDO_Q.some(([k])=>p.mundo[k])?`<div style="--lc:var(--c-ad)"><div class="hsec-h"><h5>El mundo como personaje</h5>${cpBtn('mundo')}</div>${MUNDO_Q.filter(([k])=>p.mundo[k]).slice(0,3).map(([k,q])=>`<p><span class="muted">${q}</span><br>${esc(p.mundo[k])}</p>`).join('')}</div>`:''}
     </div>
+    ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:'<p class="muted">Sin referencias todavía.</p>'}
   </article>`}
 
@@ -3477,6 +3508,7 @@ function aMarkdown(p){
   L.push('','## El mundo como personaje',...MUNDO_Q.filter(([k])=>p.mundo[k]).map(([k,q])=>`- **${q}** ${p.mundo[k]}`),'');
   L.push('## Keywords',...KWCATS.map(([k,n])=>`- **${n}:** ${(p.keywords[k]||[]).join(', ')}`),'');
   if(p.busquedas.length)L.push('## Búsquedas',...p.busquedas.map(b=>`- [${capaNombre(p,b.capa)}] ${b.q}`),'');
+  {const pj=(p.personajes||[]).filter(x=>x.nombre);if(pj.length)L.push('## Paletas de personajes',...pj.map(x=>`- **${x.nombre}** (${x.rol||''}): `+pjPaleta(p,x).pal.map(z=>`${z.rol} ${z.hex} ${z.pct}%`).join(', ')),'')}
   L.push('## Mood',p.mood.sensacion,`*${p.mood.palabras}* — paleta ${p.mood.paleta.join(' ')}`,'','## Técnica',p.tecnica.medio,p.tecnica.acabado,p.tecnica.referentes,'');
   L.push('## Art Direction',...p.pilares.map((x,i)=>`${i+1}. **${x.t}** — ${x.f}`),'');
   L.push('## Referencias',...LAYERS.flatMap(l=>{const rs=p.refs.filter(r=>r.capa===l.k);return rs.length?[`### ${capaNombre(p,l.k)}`,...rs.map(r=>`- ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`)]:[]}),'');
@@ -5478,7 +5510,8 @@ function acoBlob(pal){const cols=pal.map(x=>{const h=x.hex.replace('#','');retur
 async function procreateBlob(nombre,pal){if(!window.JSZip)throw new Error('zip');const hsb=hex=>{const h=hex.replace('#',''),r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
     let hh=0;if(d){hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6;if(hh<0)hh+=1}return {hue:hh,saturation:mx?d/mx:0,brightness:mx,alpha:1,colorSpace:0}};
   const z=new JSZip();z.file('Swatches.json',JSON.stringify([{name:nombre,swatches:pal.map(x=>hsb(x.hex))}]));return z.generateAsync({type:'blob'})}
-async function accionPj(a,el,p,ds){if(!a.startsWith('pj-')&&a!=='dna-copy')return false;
+async function accionPj(a,el,p,ds){if(!a.startsWith('pj-')&&a!=='dna-copy'&&a!=='hoja-copy')return false;
+  if(a==='hoja-copy'){const t=hojaTextos(p)[ds.k];if(t)await copiarTexto(t,'Copiado');return true}
   if(a==='dna-copy'){const F=dnaFilas(p);const txt=ds.k==='*'?[`PROJECT DNA · ${p.nombre}`,...F.filter(f=>f[2]).map(f=>`${f[0]}: ${f[2]}`)].join('\n'):F.find(f=>f[0]===ds.k)?.[2];
     if(txt)await copiarTexto(txt,ds.k==='*'?'DNA copiado':ds.k+' copiado');return true}
   const pj=p.personajes=p.personajes||[],c=pj.find(x=>x.id===ds.id);
