@@ -891,7 +891,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk5pky3').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk6lttd').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2861,10 +2861,11 @@ const GAL_TIPOS=['Ilustración','Keyframe','Entorno','Personaje','Criatura','Pro
 async function subirGaleria(files){
   const fs_=[...files].filter(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));if(!fs_.length){toast('Sube imágenes PNG, JPG o WEBP');return}
   const g=lista('galeria'),def=S.galDef||{};let n=0;setStatus(`Subiendo ${fs_.length}…`);
-  for(const f of fs_){try{g.push({id:uid(),titulo:f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim(),tipo:def.tipo||'Ilustración',anio:String(new Date().getFullYear()),pid:def.pid||'',nota:'',etapa:'Final',creado:Date.now(),...await guardarImagen(f)});n++}catch(e){toast(e?.code==='too_large'?'Una imagen pesa más de 20 MB':'No se pudo subir una imagen')}}
+  for(const f of fs_){try{g.push({id:uid(),titulo:f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim(),tipo:def.tipo||'Ilustración',anio:String(new Date().getFullYear()),pid:def.pid||'',nota:'',etapa:'Final',creado:Date.now(),opt:true,...await guardarImagen(f,{mini:true})});n++}catch(e){toast(e?.code==='too_large'?'Una imagen pesa más de 20 MB':'No se pudo subir una imagen')}}
   if(n){marcarAj();renderMain();renderSide();toast(`${n} ilustración${n>1?'es':''} subida${n>1?'s':''}`)}
 }
 function vGaleria(){
+  if((S.ajustes.galeria||[]).some(x=>x.asset&&!x.opt))setTimeout(optimizarGaleria,1200);
   const g=lista('galeria').slice().sort((a,b)=>b.creado-a.creado),f=S.galF||'';
   const items=f?g.filter(x=>x.tipo===f||x.pid===f):g;
   const busy=S.critBusy;
@@ -2880,7 +2881,7 @@ function vGaleria(){
       <label class="btn pri" for="gal-file">Subir ilustraciones</label><input type="file" id="gal-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden></div></div>
   ${g.length?`<div class="stepper" style="padding:0"><button class="step ${!f?'on':''}" data-act="gal-f" data-v=""><span class="st">Todas · ${g.length}</span></button>${GAL_TIPOS.filter(t=>g.some(x=>x.tipo===t)).map(t=>`<button class="step ${f===t?'on':''}" data-act="gal-f" data-v="${t}"><span class="st">${t} · ${g.filter(x=>x.tipo===t).length}</span></button>`).join('')}</div>`:''}
   ${items.length?items.map(x=>{const i=lista('galeria').indexOf(x),fb=x.feedback;return `<div class="box pieza"><div class="pz">
-    <div class="pzimg"><img ${imgAttrs(x)} alt="${esc(x.titulo)}" loading="lazy" data-act="zoom"></div>
+    <div class="pzimg"><img ${imgAttrs(x.mini?{asset:x.mini}:x)}${x.mini?` data-full="${esc(x.asset)}"`:''} alt="${esc(x.titulo)}" loading="lazy" data-act="zoom"></div>
     <div class="pzbody">
       <input type="text" id="gal-t-${x.id}" data-aj="galeria.${i}.titulo" value="${esc(x.titulo)}" placeholder="Título" style="font-family:var(--display);font-size:22px;font-weight:800;text-transform:uppercase">
       <div class="grid3" style="gap:8px"><select id="gal-tipo-${x.id}" data-aj="galeria.${i}.tipo">${GAL_TIPOS.map(t=>`<option ${t===x.tipo?'selected':''}>${t}</option>`).join('')}</select>
@@ -3266,10 +3267,41 @@ const PRIO={alta:'var(--warn)',media:'var(--c-tecnica)',baja:'var(--ink3)'};
 /* Mientras se sube algo, la app no reemplaza tus datos con lo del servidor (evita perder lo recién subido) */
 function bloquear(){S.bloqueo=(S.bloqueo||0)+1}
 function desbloquear(ms=2500){setTimeout(()=>{S.bloqueo=Math.max(0,(S.bloqueo||1)-1)},ms)}
-async function guardarImagen(f){
-  bloquear();try{if(S.assets){const up=await S.assets.upload(f);return {asset:up.id}}
+/* ---------- imágenes: se comprimen antes de subir (WebP, calidad alta) ---------- */
+async function aBlobImg(bm,w,h,q){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(bm,0,0,w,h);
+  let b=await new Promise(r=>c.toBlob(r,'image/webp',q));
+  if(!b||b.type!=='image/webp'){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,w,h);b=await new Promise(r=>c.toBlob(r,'image/jpeg',q))}
+  return b}
+async function optimizarImagen(f,max=2560,q=.86){
+  if(!f||/gif|svg/.test(f.type||''))return f;
+  let bm;try{bm=await createImageBitmap(f)}catch{return f}
+  const k=Math.min(1,max/Math.max(bm.width,bm.height));
+  if(k===1&&f.size<700e3&&!/png/.test(f.type||''))return f;
+  const b=await aBlobImg(bm,Math.round(bm.width*k),Math.round(bm.height*k),q);
+  return b&&b.size<f.size?b:f}
+async function miniDe(f,max=720){try{const bm=await createImageBitmap(f);const k=Math.min(1,max/Math.max(bm.width,bm.height));return await aBlobImg(bm,Math.round(bm.width*k),Math.round(bm.height*k),.8)}catch{return null}}
+async function guardarImagen(f,o={}){
+  bloquear();try{if(S.assets){const opt=await optimizarImagen(f);const up=await S.assets.upload(opt);const r={asset:up.id};
+    if(o.mini){const m=await miniDe(opt);if(m)try{r.mini=(await S.assets.upload(m)).id}catch{}}
+    return r}
   return {src:await comprimir(f,1400,.82)}}finally{desbloquear()}
 }
+/* optimiza las ilustraciones que se subieron antes, sin comprimir (una vez, en segundo plano) */
+async function optimizarGaleria(){
+  if(S.galOpt||!S.assets?.blob||!S.assets?.upload)return;const g=(S.ajustes.galeria||[]).filter(x=>x.asset&&!x.opt);if(!g.length)return;
+  S.galOpt=true;bloquear();let antes=0,despues=0,n=0;const viejos=[];
+  try{for(const x of g){setStatus(`Optimizando ilustraciones ${++n} de ${g.length}…`);
+      try{const b=await S.assets.blob(x.asset);antes+=b.size;const f=new File([b],'img',{type:b.type||'image/png'});const o=await optimizarImagen(f);
+        const nuevo=o!==f?(await S.assets.upload(o)).id:x.asset;despues+=o.size;
+        const m=await miniDe(o);const mini=m?(await S.assets.upload(m)).id:null;
+        if(nuevo!==x.asset)viejos.push(x.asset);x.asset=nuevo;if(mini)x.mini=mini;x.opt=true}catch{}}
+    /* guarda primero; solo después borra los originales pesados que ya nadie usa */
+    if(S.db)await S.db.doc('ajustes/principios').set(clone(S.ajustes));else lsSet();S.ajDirty=false;
+    const usado=JSON.stringify(S.P)+JSON.stringify(S.ajustes);
+    for(const v of viejos)if(!usado.includes(v))try{await S.assets.delete?.(v)}catch{}
+  }finally{desbloquear(5000);S.galOpt=false;setStatus('Guardado')}
+  if(antes&&antes>despues)toast(`Ilustraciones optimizadas: ${(antes/1e6).toFixed(1)} MB → ${(despues/1e6).toFixed(1)} MB`);
+  if(S.vista==='galeria')renderMain()}
 async function subirPieza(files){
   const p=S.P[S.cur];if(!p)return;const f=[...files].find(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));
   if(!f){toast('Sube una imagen PNG, JPG o WEBP');return}
@@ -5998,7 +6030,7 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
-  if(b.tagName==='IMG'&&b.dataset.act==='zoom'){$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img src="${esc(b.currentSrc||b.src)}" alt=""></div>`;return}
+  if(b.tagName==='IMG'&&b.dataset.act==='zoom'){const full=b.dataset.full,fu=full&&S.assets?.url?.(full);$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img ${full&&!fu?`data-asset="${esc(full)}"`:`src="${esc(fu||b.currentSrc||b.src)}"`} alt=""></div>`;if(full&&!fu)S.assets?.hydrate?.();return}
   accion(b.dataset.act,b);
 });
 document.addEventListener('keyup',e=>{if(e.key==='Escape'){$('#overlay').innerHTML='';S.pres=null}});
