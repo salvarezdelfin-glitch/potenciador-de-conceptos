@@ -454,6 +454,12 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 @media (hover:none){.dna-cp{opacity:1}}
 @media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
 .pj-list{display:flex;flex-direction:column;gap:14px}
+.as-box{display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.as-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(210px,100%),1fr));gap:8px}
+.as-a{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line2);background:var(--surface);border-radius:8px;padding:8px 10px;color:var(--ink);min-width:0}
+.as-lk{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.as-lk .btn{padding:2px 7px;font-size:12px}
+.as-a b{font-family:var(--display);font-size:16px;text-transform:uppercase}.as-a small{color:var(--ink3);font-size:12px;line-height:1.3}
+.as-a:hover{border-color:var(--accent)}.as-a.on{border-color:var(--accent);background:var(--accent-soft)}
 .baj-pal{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.baj-pal li{padding:8px 10px;background:var(--bg);border-radius:8px;font-size:14px}
 .baj-kb{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:10px}
 .baj-k{background:var(--bg);border:1px solid var(--line);border-top:3px solid #5fd08a;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
@@ -875,6 +881,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
     async hasSecret(n){const {data}=await sb.rpc('pc_has_named_secret',{p_name:n});return data===true},
     async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
     recursos:()=>llamar('pc-recursos'),
+    artistas:b=>llamar('pc-artistas',b),
     avisarAhora:()=>llamar('pc-avisos'),
     avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
@@ -884,7 +891,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk536h9').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk5pky3').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3028,7 +3035,9 @@ async function buscarMet(q){
 async function buscarRefs(){
   const b=S.refB=S.refB||{};const q=(b.q||'').trim();if(!q){toast('Escribe qué buscar');return}
   b.cargando=true;b.error='';b.items=[];renderMain();
-  const tareas=b.src==='met'?[buscarMet(q)]:b.src==='wm'?[buscarWikimedia(q)]:[buscarMet(q),buscarWikimedia(q)];
+  b.artista=null;b.artistaNom=null;
+  const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});return (r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,as:true,artista:x.artista}))};
+  const tareas=b.src==='met'?[buscarMet(q)]:b.src==='wm'?[buscarWikimedia(q)]:b.src==='as'?[buscarAS(q)]:[buscarMet(q),buscarWikimedia(q)];
   const res=await Promise.allSettled(tareas);
   const listas=res.filter(r=>r.status==='fulfilled').map(r=>r.value);
   const mezcla=[];for(let i=0;i<30;i++)for(const l of listas)if(l[i])mezcla.push(l[i]);
@@ -3041,11 +3050,13 @@ function refsBuscaHTML(p){
   return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">Museos (The Met) y Wikimedia Commons</span></div>
     <p class="hint" style="margin:0">Piezas reales de museo (armas, esculturas, textiles, pintura) y fotos de arquitectura, naturaleza y materiales. Búscalas mejor en inglés. Se agregan a la capa que elijas; luego escribe su porqué.</p>
     <div class="prow"><input type="text" id="rb-q" data-refb="q" value="${esc(b.q||'')}" placeholder="aztec obsidian knife, jaguar sculpture, volcanic rock…" style="flex:1 1 260px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px" data-enter="rb-buscar">
-      <select id="rb-src" data-refb="src" style="width:auto"><option value="">Todas</option><option value="met" ${b.src==='met'?'selected':''}>Museo (The Met)</option><option value="wm" ${b.src==='wm'?'selected':''}>Wikimedia</option></select>
+      <select id="rb-src" data-refb="src" style="width:auto"><option value="">Todas</option><option value="met" ${b.src==='met'?'selected':''}>Museo (The Met)</option><option value="wm" ${b.src==='wm'?'selected':''}>Wikimedia</option><option value="as" ${b.src==='as'?'selected':''}>Artistas (ArtStation)</option></select>
       <select id="rb-capa" data-refb="capa" style="width:auto">${LAYERS.map(l=>`<option value="${l.k}" ${(b.capa||S.destinoCapa)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
       <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
     ${sug.length?`<div class="chips">${sug.map(s=>`<button class="chip" data-act="rb-sug" data-v="${esc(s)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(s)}</button>`).join('')}</div>`:''}
     ${b.q?`<div class="prow" style="font-size:12.5px"><span class="muted">También en:</span><a class="btn ghost sm" href="https://www.pinterest.com/search/pins/?q=${q}" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}+site%3Aartstation.com" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">Google Imágenes ↗</a></div>`:''}
+    ${artistasHTML(p)}
+    <div id="rb-res"></div>${b.artista&&b.artistaNom?`<div class="prow"><span class="lbl">Obras de ${esc(b.artistaNom)}</span><a class="btn ghost sm" href="https://www.artstation.com/${esc(b.artista)}" target="_blank" rel="noopener">Perfil ↗</a><button class="btn ghost sm" data-act="as-cerrar">Volver a la búsqueda</button></div>`:''}
     ${b.cargando?'<p class="muted">Buscando…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
     ${(b.items||[]).length?`<div class="bib">${b.items.map((x,i)=>`<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
       <figcaption><span>${esc(x.titulo)}</span><small class="muted">${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
@@ -5824,6 +5835,8 @@ function vBajar(p){const b=p.bajar=p.bajar||{que:''},que=b.que||'',R=que?bajarRe
     ${R.palancas.length?`<ul class="baj-pal">${R.palancas.map(x=>`<li><span class="tag" style="--lc:var(--accent)">${esc(x.tipo)}</span> ${esc(x.t)}</li>`).join('')}</ul>`:'<p class="nd-box sm">Define tensiones, pilares y materiales para que esto tenga de dónde salir.</p>'}</div>
   ${R.anclas.length?`<div class="box"><h3>Plantas reales que encajan con tu mundo</h3><p class="hint">Datos reales con gancho de diseño. Lo real es lo que lo hace creíble.</p>
     <div class="baj-kb">${R.anclas.map(a=>`<div class="baj-k"><b>${esc(a.n)}</b><p>${esc(a.dato)}</p><p class="baj-g">→ ${esc(a.gancho)}</p><div class="prow"><button class="btn sm" data-act="tp-buscar" data-q="${esc(a.q)}" data-g="mundo">Buscar fotos</button><a class="btn sm ghost" href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(a.q)}" target="_blank" rel="noopener">Google</a></div></div>`).join('')}</div></div>`:''}
+  <div class="box"><h3>Artistas que resuelven ${esc(que)}</h3><p class="hint">Mira cómo lo simplifican: qué forma usan, cuánto detalle ponen y dónde. Toca uno y sus obras aparecen en el buscador de Referencias.</p>
+    <div class="as-list">${artistasPara(p,que).slice(0,8).map(a=>artistaCard(a,que,'bajar-artista')).join('')}</div></div>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Recetas de thumbnail</h3><button class="btn sm" data-act="bajar-otra">Otra tanda</button></div><p class="hint">Referencia + ancla + decisión del proyecto + una regla. Haz una por thumbnail.</p>
     <div class="baj-rec">${R.recetas.map((x,i)=>`<div class="baj-r">${x.r?`<img ${imgAttrs(x.r)} alt="" loading="lazy" data-act="zoom">`:'<div class="baj-noimg">sin ref</div>'}<div><span class="lbl">Thumbnail ${i+1}</span><p><b>${esc(cap(x.txt))}.</b></p>${x.a?`<p class="muted">${esc(x.a.gancho)}</p>`:''}<p class="muted">Regla: ${esc(x.regla)}.</p><button class="btn ghost sm" data-act="bajar-fav" data-i="${i}">${(b.guardadas||[]).some(g=>g.txt===x.txt)?'★ Guardada':'☆ Guardar'}</button></div></div>`).join('')}</div>
     ${R.refs.length?'':'<p class="nd-box sm">No encontré referencias de esto en tu moodboard: busca primero (botones de arriba) y regresa.</p>'}</div>
@@ -5842,11 +5855,65 @@ async function accionBajar(a,el,p,ds){
     case 'bajar-go':{const v=$('#f-baj')?.value;if(v!=null){p.bajar=p.bajar||{};p.bajar.que=v.trim();marcar()}if(!p.bajar?.que){toast('Escribe qué vas a diseñar');return true}renderMain();break}
     case 'bajar-set':p.bajar=p.bajar||{};p.bajar.que=ds.v;S.bajSeed=1;marcar();renderMain();break;
     case 'bajar-otra':S.bajSeed=(S.bajSeed||1)+7;renderMain();break;
+    case 'bajar-artista':S.refB={...(S.refB||{}),q:p.bajar?.que||'',grupo:null,luz:null};S.tab='refs';renderMain();verArtista(p,ds.u,ds.f);break;
     case 'bajar-fav':{const R=bajarRecetas(p,p.bajar.que,S.bajSeed||1),x=R.recetas[+ds.i];if(!x)return true;const g=p.bajar.guardadas=p.bajar.guardadas||[];if(!g.some(y=>y.txt===x.txt))g.push({txt:x.txt,regla:x.regla,ref:x.r?.id||null,ts:Date.now()});marcar();renderMain();break}
     case 'bajar-unfav':p.bajar.guardadas.splice(+ds.i,1);marcar();renderMain();break;
     case 'bajar-tarea':{const t=(S.ajustes.tareas||[]).find(x=>x.id===ds.id);if(!t||!S.P[t.pid])return true;S.cur=t.pid;const pp=S.P[t.pid];pp.bajar=pp.bajar||{};pp.bajar.que=(temasDe(t.enunciado+' '+t.titulo)[0]||[])[1]?.toLowerCase()||t.titulo;marcarPid(t.pid);S.vista='proyecto';S.tab='bajar';recordar();render();window.scrollTo({top:0});break}
     default:return false}
   return true}
+
+/* ============ Artistas (ArtStation) para el buscador de referencias ============ */
+const ARTISTAS=[
+ {u:'nicolasweis',n:'Nicolas Weis',t:['Vegetación','Entorno'],d:'Visual development (The Croods, Cómo entrenar a tu dragón). Bocetos de árboles y vegetación.',f:'tree trees vegetation sketches'},
+ {u:'mdonze',n:'Michel Donze',t:['Vegetación','Entorno'],d:'Art director y concept artist. Bocetos de vegetación estilizada (Absolver).',f:'vegetation tree stylized sketches'},
+ {u:'tohad',n:'Sylvain Sarrailh',t:['Vegetación','Entorno'],d:'Art director / concept artist. Entornos exuberantes, color y luz.',f:'forest jungle tree environment'},
+ {u:'andreasrocha',n:'Andreas Rocha',t:['Vegetación','Entorno'],d:'Concept artist freelance. Paisajes de fantasía, bosques y atmósfera.',f:'forest tree landscape'},
+ {u:'jordangrimmer',n:'Jordan Grimmer',t:['Vegetación','Entorno','Arquitectura'],d:'Senior concept artist. Entornos de fantasía con vegetación y ruinas.',f:'forest ruins temple environment'},
+ {u:'florentlebrun',n:'Florent Lebrun',t:['Entorno','Vegetación'],d:'Concept artist freelance. Entornos y paisajes.',f:'environment forest landscape'},
+ {u:'burda',n:'Alejandro Burdisio',t:['Entorno','Arquitectura'],d:'Estudio Burdisio (profesor en Domestika). Escenarios de fantasía.',f:'environment city scenario'},
+ {u:'pablocarpio',n:'Pablo Carpio',t:['Entorno','Arquitectura'],d:'Concept artist de entornos.',f:'environment ruins landscape'},
+ {u:'theoprins',n:'Theo Prins',t:['Entorno','Arquitectura'],d:'Concept artist de entornos y paisajes.',f:'environment landscape'},
+ {u:'sparth',n:'Sparth',t:['Arquitectura','Entorno'],d:'Art director y concept artist. Estructuras y escala monumental.',f:'structure architecture scale'},
+ {u:'mikehill',n:'Mike Hill',t:['Arquitectura','Entorno','Prop'],d:'Diseñador en Blade Runner 2049 y Dune. Diseño y forma.',f:'design architecture'}];
+function artistaDe(v){v=String(v||'').trim();if(!v)return null;
+  let m=/artstation\.com\/([a-z0-9_-]+)/i.exec(v);if(m)return {u:m[1],n:m[1]};
+  m=/instagram\.com\/([a-z0-9_.]+)/i.exec(v)||/^@([a-z0-9_.]+)$/i.exec(v);if(m)return {ig:m[1],n:'@'+m[1]};
+  m=/pinterest\.[a-z.]+\/([a-z0-9_]+)/i.exec(v);if(m)return {pin:m[1],n:m[1]};
+  if(/^[a-z0-9_-]+$/i.test(v)&&!/\s/.test(v))return {u:v,n:v};
+  return {n:v}}
+function artistasPara(p,q){const c=[...temasDe(q||''),...temasDe(p?.bajar?.que||'')].map(x=>x[1]);
+  const mios=(S.ajustes.artistasAS||[]).map(x=>typeof x==='string'?{u:x,n:x}:x).map(x=>({...x,t:[],d:'Agregado por ti',f:'',mio:true}));
+  const refs=(S.ajustes.referentes||[]).filter(r=>r.nombre&&r.fav).map(r=>({n:r.nombre,ig:r.ig||'',t:[],d:r.porque||'Tu referente',f:''}));
+  const L=ARTISTAS.filter(a=>!c.length||a.t.some(t=>c.includes(t)));const out=[],vistos=new Set();
+  for(const a of [...mios,...refs,...(L.length?L:ARTISTAS)]){const k=nz(a.n);if(!vistos.has(k)){vistos.add(k);out.push(a)}}return out}
+function artistaLinks(a,que){const tema=toks(que||'').map(tr).join(' ')||'concept art',nom=a.n.replace(/^@/,'');
+  const L=[];
+  if(a.u)L.push(['ArtStation','https://www.artstation.com/'+encodeURIComponent(a.u)]);
+  L.push(['Pinterest',a.pin?'https://www.pinterest.com/'+encodeURIComponent(a.pin)+'/':'https://www.pinterest.com/search/pins/?q='+encodeURIComponent(nom+' '+tema)]);
+  L.push(['Google','https://www.google.com/search?tbm=isch&q='+encodeURIComponent('"'+nom+'" '+tema)]);
+  L.push(['Instagram',a.ig?'https://www.instagram.com/'+encodeURIComponent(a.ig)+'/':'https://www.google.com/search?q='+encodeURIComponent(nom+' site:instagram.com')]);
+  return L}
+function artistaCard(a,que,act){const b=S.refB||{},shim=!!window.PC_SHIM?.artistas;
+  return `<div class="as-a ${a.u&&b.artista===a.u?'on':''}"><b>${esc(a.n)}</b><small>${esc(a.d||'')}</small><div class="as-lk">${a.u&&shim?`<button class="btn sm pri" data-act="${act}" data-u="${esc(a.u)}" data-f="${esc(a.f||'')}">Ver aquí</button>`:''}${artistaLinks(a,que).map(([n,h])=>`<a class="btn sm ghost" href="${esc(h)}" target="_blank" rel="noopener">${n}</a>`).join('')}</div></div>`}
+function artistasHTML(p){const b=S.refB||{},q=b.q||p.bajar?.que||'',L=artistasPara(p,q);
+  return `<div class="as-box"><div class="prow" style="justify-content:space-between"><span class="lbl">Artistas que resuelven esto${temasDe(q)[0]?' · '+temasDe(q)[0][1]:''}</span><span class="muted" style="font-size:12px">Busca su nombre + «${esc(q||'tu tema')}» en ArtStation, Pinterest, Google o Instagram</span></div>
+    <div class="as-list">${L.map(a=>artistaCard(a,q,'as-ver')).join('')}</div>
+    <div class="prow"><input type="text" id="as-u" placeholder="Otro artista: nombre, @instagram o link (ArtStation, Instagram, Pinterest)" style="flex:1 1 260px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:7px 10px" data-enter="as-otro"><button class="btn sm" data-act="as-otro">Agregar</button></div></div>`}
+async function verArtista(p,u,f){const b=S.refB=S.refB||{};u=String(u||'').replace(/^.*artstation\.com\//i,'').replace(/[/?#].*$/,'').trim();if(!u){toast('Escribe el usuario o el link de ArtStation');return}
+  if(!window.PC_SHIM?.artistas){window.open('https://www.artstation.com/'+encodeURIComponent(u),'_blank','noopener');return}
+  const q=b.q||'',filtro=[f,...toks(q).map(tr),...toks(p.bajar?.que||'').map(tr)].filter(Boolean).join(' ');
+  b.artista=u;b.cargando=true;b.error='';b.items=[];renderMain();
+  try{const r=await window.PC_SHIM.artistas({usuario:u,filtro});
+    b.items=(r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+(x.artista||u),link:x.link,src:x.src,big:x.big,as:true,artista:x.artista||u}));
+    b.artistaNom=r.artista||u;if(!b.items.length)b.error='No encontré obras públicas de ese artista. Revisa el usuario (lo que va después de artstation.com/).'}
+  catch{b.error='No se pudo cargar ArtStation ahora. Abre su perfil: artstation.com/'+u}
+  b.cargando=false;renderMain();setTimeout(()=>$('#rb-res')?.scrollIntoView({block:'start',behavior:'smooth'}),50)}
+async function accionAs(a,el,p,ds){
+  if(a==='as-ver'){verArtista(p,ds.u,ds.f);return true}
+  if(a==='as-otro'){const x=artistaDe($('#as-u')?.value);if(!x){toast('Escribe un nombre, @usuario o link');return true}
+    const L=(S.ajustes.artistasAS||[]).map(y=>typeof y==='string'?{u:y,n:y}:y);if(!L.some(y=>nz(y.n)===nz(x.n))&&!ARTISTAS.some(y=>y.u&&y.u===x.u)){L.unshift(x);S.ajustes.artistasAS=L.slice(0,16);marcarAj()}
+    if(x.u)verArtista(p,x.u,'');else{renderMain();toast('Agregado: usa sus enlaces a Pinterest, Google o Instagram')}return true}
+  return false}
 
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
@@ -6052,8 +6119,9 @@ async function accion(a,el){
     case 'sync-elegir':sincronizarCarpeta(true);break;
     case 'rb-buscar':{const v=$('#rb-q')?.value;if(v!=null){S.refB=S.refB||{};S.refB.q=v}buscarRefs();break}
     case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;buscarRefs();break;
+    case 'as-cerrar':S.refB.artista=null;S.refB.artistaNom=null;S.refB.items=[];S.refB.q?buscarRefs():renderMain();break;
     case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;const capa=S.refB.capa||S.destinoCapa;
-      p.refs.push({id:uid(),capa,porque:'',fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now(),...(S.refB.grupo?{grupo:S.refB.grupo}:{}),...(S.refB.luz?{luz:S.refB.luz}:{}),tipoRef:'primaria',clase:x.fuente&&/Met/i.test(x.fuente)?'Museo':'Fotografía'});marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+': escribe su porqué');break}
+      p.refs.push({id:uid(),capa,porque:x.as?`De ${x.artista}: tomo `:'',fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now(),...(S.refB.grupo?{grupo:S.refB.grupo}:x.as?{grupo:'tecnica'}:{}),...(S.refB.luz?{luz:S.refB.luz}:{}),tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':x.fuente&&/Met/i.test(x.fuente)?'Museo':'Fotografía'});marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+': escribe su porqué');break}
     case 'presentar':S.pres=null;presentar(0);try{document.documentElement.requestFullscreen?.()}catch{}break;
     case 'pres-prev':presentar(S.pres.i-1);break;
     case 'pres-next':presentar(S.pres.i+1);break;
@@ -6209,7 +6277,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
