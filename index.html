@@ -428,7 +428,10 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .nd-box{margin:0;background:var(--warn-bg);border-left:3px solid var(--warn);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13.5px}
 .ok-box{margin:0;background:var(--ok-bg);border-left:3px solid var(--ok);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13.5px}
 .nd-box.sm,.ok-box.sm{font-size:12.5px;padding:5px 8px}
-.alerta{background:var(--warn-bg);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:14px}
+.alerta{background:var(--warn-bg);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:10px}
+.cfs{display:flex;flex-direction:column;gap:10px}
+.cf{display:flex;flex-direction:column;gap:6px;background:var(--surface);border-radius:8px;padding:10px 12px}
+.cf .pal i{width:18px;height:18px}
 .big-q{border-left:3px solid var(--accent)}
 .stages{display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:thin;padding:2px 0}
 .stg{border:1px solid var(--line);background:var(--surface);color:var(--ink3);border-radius:20px;padding:5px 11px;font-size:12px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer}
@@ -854,7 +857,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk212et').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk282ig').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3647,7 +3650,7 @@ function paletaLectura(pal){const hs=pal.map(hexHsl).filter(Boolean);if(!hs.leng
 function DX(p){ /* diagnóstico completo, se recalcula en cada render (barato) */
   const l=p.lenguaje||{},I=vecDe(intTextos(p)),Vv=vecDe(visTextos(p)),M=vecDe(moodTextos(p));
   const tens=(p.tensiones||[]).filter(t=>t.a&&t.b).map(t=>({...t,va:vecDe([t.a,t.aVis]),vb:vecDe([t.b,t.bVis])}));
-  const ejeTension=a=>tens.some(t=>Math.abs(t.va[a].v-t.vb[a].v)>=.6);
+  const ejeTension=a=>tens.some(t=>t.eje===a||Math.abs(t.va[a].v-t.vb[a].v)>=.6);
   const R={fortalezas:[],conflictos:[],vacios:[],genericos:[],oportunidades:[],preguntas:[],I,V:Vv,M,tens};
   /* vacíos, en el orden de la lógica IDEA → FUNCIÓN → INTENCIÓN → TENSIÓN → LENGUAJE → REFERENCIAS */
   const vac=(n,q,tab)=>R.vacios.push({n,q,tab});
@@ -3675,16 +3678,17 @@ function DX(p){ /* diagnóstico completo, se recalcula en cada render (barato) *
       if(Math.sign(i.v)!==Math.sign(v.v)){
         if(ejeTension(a))R.fortalezas.push(`Tu tensión vive en el eje ${AXN[a][0]} ↔ ${AXN[a][1]}: el concepto dice ${polo(a,i.v)}${evid(i)} y la forma dice ${polo(a,v.v)}${evid(v)}. Es contraste intencional, cuídalo.`);
         else R.conflictos.push({t:`Tu concepto habla de ${polo(a,i.v)}${evid(i)}, pero tu lenguaje visual empuja a ${polo(a,v.v)}${evid(v)}.`,
-          fix:`O ajustas la forma hacia ${visDe(a,i.v)}, o lo vuelves una tensión consciente (${cap(polo(a,i.v))} ↔ ${cap(polo(a,v.v))}) y decides quién domina.`,eje:a});
+          fix:`O ajustas la forma hacia ${visDe(a,i.v)}, o lo vuelves una tensión consciente (${cap(polo(a,i.v))} ↔ ${cap(polo(a,v.v))}) y decides quién domina.`,eje:a,k:'iv-'+a,tipo:'iv',a,de:{v:i.v,w:i.w.filter(o=>Math.sign(o.v)===Math.sign(i.v)).map(o=>o.w)},con:{v:v.v,w:v.w.filter(o=>Math.sign(o.v)===Math.sign(v.v)).map(o=>o.w)}});
       }else R.fortalezas.push(`${cap(polo(a,i.v))} está en la intención${evid(i)} y en la forma${evid(v)}: hablan el mismo idioma.`);
     }}
   for(const a in AXN){const m=M[a],v=Vv[a];if(Math.abs(m.v)>=.4&&Math.abs(v.v)>=.4&&Math.sign(m.v)!==Math.sign(v.v)&&!ejeTension(a)&&!R.conflictos.some(c=>c.eje===a))
-    R.conflictos.push({t:`El mood pide ${polo(a,m.v)}${evid(m)}, el lenguaje visual dice ${polo(a,v.v)}${evid(v)}.`,fix:`Mood y diseño no hablan el mismo idioma en ${AXN[a].join('/')}. Decide cuál manda.`,eje:a})}
+    R.conflictos.push({t:`El mood pide ${polo(a,m.v)}${evid(m)}, el lenguaje visual dice ${polo(a,v.v)}${evid(v)}.`,fix:`Mood y diseño no hablan el mismo idioma en ${AXN[a].join('/')}. Decide cuál manda.`,eje:a,k:'mv-'+a,tipo:'mv',a,de:{v:m.v,w:m.w.filter(o=>Math.sign(o.v)===Math.sign(m.v)).map(o=>o.w)},con:{v:v.v,w:v.w.filter(o=>Math.sign(o.v)===Math.sign(v.v)).map(o=>o.w)}})}
   /* paleta vs mood */
   const pl=paletaLectura(p.mood.paleta||[]);
   if(pl){const mt=M.T.v||I.T.v,mv=M.V.v||I.V.v;
-    if(Math.abs(mt)>=.4&&Math.abs(pl.temp)>=.25&&Math.sign(mt)!==Math.sign(pl.temp))R.conflictos.push({t:`Tu mood es ${polo('T',mt)}${evid(M.T.n?M.T:I.T)}, pero tu paleta es predominantemente ${pl.temp>0?'cálida':'fría'}.`,fix:'Revisa la paleta sugerida en Mood: sale de lo que escribiste.',eje:'T2'});
-    if(Math.abs(mv)>=.5&&((mv<0&&pl.luz>.55)||(mv>0&&pl.luz<.3)))R.conflictos.push({t:`El mood pide ${polo('V',mv)}, pero tu paleta es de valor ${pl.luz>.55?'alto (clara)':'bajo (oscura)'}.`,fix:'Ajusta el valor de la paleta o el mood.',eje:'V2'})}
+    if(Math.abs(mt)>=.4&&Math.abs(pl.temp)>=.25&&Math.sign(mt)!==Math.sign(pl.temp))R.conflictos.push({t:`Tu mood es ${polo('T',mt)}${evid(M.T.n?M.T:I.T)}, pero tu paleta es predominantemente ${pl.temp>0?'cálida':'fría'}.`,fix:'Revisa la paleta sugerida en Mood: sale de lo que escribiste.',eje:'T2',k:'T2',tipo:'pal'});
+    if(Math.abs(mv)>=.5&&((mv<0&&pl.luz>.55)||(mv>0&&pl.luz<.3)))R.conflictos.push({t:`El mood pide ${polo('V',mv)}, pero tu paleta es de valor ${pl.luz>.55?'alto (clara)':'bajo (oscura)'}.`,fix:'Ajusta el valor de la paleta o el mood.',eje:'V2',k:'V2',tipo:'pal'})}
+  R.conflictos=R.conflictos.filter(c=>!(p.resueltos||{})[c.k]);
   /* elementos sin función: lectura abierta */
   const todo=[...intTextos(p),...visTextos(p),p.brief.historia].join(' '),els=elementosEn(todo);
   const definidos=new Set((p.elementos||[]).map(x=>nz(x.k)));
@@ -3714,7 +3718,7 @@ function DX(p){ /* diagnóstico completo, se recalcula en cada render (barato) *
   /* etapa */
   const ei=ETAPAS_P.findIndex(e=>e[0]===(p.etapa||'idea'));
   if(ei>=6){const sin=R.vacios.filter(v=>/Función|Silueta|Qué estás|Pilares|Frase central/.test(v.n));
-    if(sin.length||R.conflictos.length)R.alerta=`Estás en ${ETAPAS_P[ei][1]}, pero ${sin.length?'todavía falta: '+sin.map(v=>v.n.toLowerCase()).join(', '):'hay '+R.conflictos.length+' contradicción(es) sin resolver'}. El polish no arregla un problema de diseño: resuélvelo antes de pulir.`}
+    if(sin.length||R.conflictos.length)R.alerta=`Estás en ${ETAPAS_P[ei][1]}, pero ${[sin.length&&'todavía falta: '+sin.map(v=>v.n.toLowerCase()).join(', '),R.conflictos.length&&'hay '+R.conflictos.length+' contradicción(es) sin resolver (abajo te digo por qué y cómo cambiarlo)'].filter(Boolean).join(' y ')}. El polish no arregla un problema de diseño: resuélvelo antes de pulir.`}
   if(ei>=4&&!(p.que?.funcion||'').trim())R.alerta=R.alerta||'Ya estás buscando referencias sin haber definido la función. Vas a juntar imágenes bonitas sin criterio.';
   R.refs={total:refs.length,prim,sec};
   return R;
@@ -4185,12 +4189,12 @@ function porqueBtn(tema,dec){return `<button class="btn ghost sm why" data-act="
 
 function etapasHTML(p){const cur=p.etapa||'idea',i=ETAPAS_P.findIndex(e=>e[0]===cur),D=DX(p);
   return `<div class="stages" role="list">${ETAPAS_P.map(([k,n,tab],j)=>`<button role="listitem" class="stg ${j<i?'past':''} ${k===cur?'cur':''}" data-act="etapa" data-v="${k}" data-tab="${tab}" title="Ir a ${n} (puedes regresar cuando quieras)">${n}</button>`).join('<span class="stg-ar">→</span>')}</div>
-  ${D.alerta?`<div class="alerta">${esc(D.alerta)}</div>`:''}`}
+  ${D.alerta?`<div class="alerta"><p style="margin:0">${esc(D.alerta)}</p>${D.conflictos.length?`<div class="cfs">${D.conflictos.map(c=>conflHTML(p,c)).join('')}</div>`:''}</div>`:''}`}
 
 
 function auditHTML(p,D){D=D||DX(p);const sec=(t,cls,items,f)=>`<div class="au ${cls}"><h4>${t} <span class="lbl">${items.length}</span></h4>${items.length?`<ul>${items.map(f).join('')}</ul>`:'<p class="muted">—</p>'}</div>`;
   return `<div class="audit">
-    ${sec('Conflictos','no',D.conflictos,c=>`<li>${esc(c.t)}<small>→ ${esc(c.fix)}</small></li>`)}
+    ${sec('Conflictos','no',D.conflictos,c=>`<li>${conflHTML(p,c)}</li>`)}
     ${sec('Vacíos','q',D.vacios,v=>`<li><b>NO DEFINIDO · ${esc(v.n)}</b> — ${esc(v.q)} <button class="btn ghost sm" data-act="tab" data-tab="${v.tab}">Ir</button></li>`)}
     ${sec('Elementos genéricos','no',D.genericos,g=>`<li>${esc(g)}</li>`)}
     ${sec('Fortalezas','ok',D.fortalezas,f=>`<li>${esc(f)}</li>`)}
@@ -5531,6 +5535,38 @@ async function accionPj(a,el,p,ds){if(!a.startsWith('pj-')&&a!=='dna-copy'&&a!==
     default:return false}
   return true}
 
+/* ---------- contradicciones: por qué hay y cómo cambiarlo ---------- */
+const CF_DONDE={iv:['tu concepto / art direction','tu lenguaje visual'],mv:['tu mood','tu lenguaje visual']};
+function conflHTML(p,c){const b=(op,txt,pri)=>`<button class="btn sm ${pri?'pri':''}" data-act="cf" data-k="${esc(c.k||'')}" data-op="${op}">${txt}</button>`;
+  let why='',ops='';
+  if(c.tipo==='iv'||c.tipo==='mv'){const [d1,d2]=CF_DONDE[c.tipo],A=polo(c.a,c.de.v),B=polo(c.a,c.con.v);
+    const w1=c.de.w.length?' con palabras como «'+c.de.w.slice(0,3).join('», «')+'»':'',w2=c.con.w.length?' con «'+c.con.w.slice(0,3).join('», «')+'»':'';
+    why=`En ${d1} dices <b>${esc(A)}</b>${esc(w1)}, y en ${d2} empujas a <b>${esc(B)}</b>${esc(w2)}. Son polos opuestos del mismo eje (${esc(AXN[c.a].join(' ↔ '))}) y nadie decidió cuál manda, así que el diseño va a mandar dos mensajes.`;
+    ops=b('forma',`Que mande ${esc(A)}: ajustar el diseño`,1)+b('intencion',`Que mande ${esc(B)}: cambiar ${c.tipo==='mv'?'el mood':'la intención'}`)+b('tension',`Volverlo tensión: ${esc(cap(A))} ↔ ${esc(cap(B))}`)+b('ok','Es intencional, dejarlo');}
+  else if(c.tipo==='pal'){why=`${esc(c.t)} Lo que escribiste y los colores que elegiste no cuentan lo mismo.`;
+    const sug=paletaSugerida(p).pal;
+    ops=`<span class="pal">${sug.map(x=>`<i style="background:${x.hex}" title="${x.rol} ${x.hex}"></i>`).join('')}</span>`+b('paleta','Usar la paleta que sale de mi mood',1)+b('mood','Cambiar el mood')+b('ok','Es intencional, dejarlo');}
+  else{why=esc(c.t);ops=b('ok','Resuelto')}
+  return `<div class="cf"><p style="margin:0"><b>Por qué:</b> ${why}</p><p class="muted" style="margin:0">${esc(c.fix||'')}</p><div class="prow">${ops}</div>${S.cfOk===c.k?`<div class="prow"><input type="text" id="cf-motivo" placeholder="¿Por qué es intencional? (queda en tus decisiones)" style="flex:1;min-width:200px"><button class="btn sm pri" data-act="cf" data-k="${esc(c.k)}" data-op="ok2">Guardar</button></div>`:''}</div>`}
+async function accionCf(a,el,p,ds){if(a!=='cf')return false;const D=DX(p),c=D.conflictos.find(x=>x.k===ds.k);if(!c&&ds.op!=='ok2')return true;
+  const op=ds.op;
+  if(op==='forma'){const A=polo(c.a,c.de.v),B=polo(c.a,c.con.v),regla=cap(visDe(c.a,c.de.v));p.lenguaje=p.lenguaje||{};p.lenguaje.reglas=p.lenguaje.reglas||[];
+    if(!p.lenguaje.reglas.includes(regla))p.lenguaje.reglas.push(regla);
+    nuevaDecision(p,`${cap(A)} manda sobre ${B}: el diseño se ajusta`,`Contradicción: ${c.t}`,['Forma'],'contradicción','En prueba');marcar();
+    S.tab='lenguaje';renderMain();window.scrollTo({top:0});toast(c.con.w.length?`Agregué la regla. Ahora cambia «${c.con.w.slice(0,3).join('», «')}» en Lenguaje visual`:'Agregué la regla visual: revisa tu Lenguaje visual');return true}
+  if(op==='intencion'){const B=polo(c.a,c.con.v);nuevaDecision(p,`${cap(B)} manda: ${c.tipo==='mv'?'el mood':'la intención'} se ajusta al diseño`,`Contradicción: ${c.t}`,[c.tipo==='mv'?'Mood':'Concepto'],'contradicción','En prueba');marcar();
+    S.tab=c.tipo==='mv'?'mood':'concepto';renderMain();window.scrollTo({top:0});toast(c.de.w.length?`Cambia «${c.de.w.slice(0,3).join('», «')}» por algo que diga ${B}`:`Reescribe para que diga ${B}`);return true}
+  if(op==='tension'){const A=cap(polo(c.a,c.de.v)),B=cap(polo(c.a,c.con.v));p.tensiones=p.tensiones||[];
+    p.tensiones.push({a:A,b:B,aVis:visDe(c.a,c.de.v),bVis:visDe(c.a,c.con.v),como:'',domina:'',eje:c.a});
+    nuevaDecision(p,`Tensión consciente: ${A} ↔ ${B}`,`Venía de una contradicción: ${c.t}`,['Tensión'],'contradicción','En prueba');marcar();
+    S.tab='tension';renderMain();window.scrollTo({top:0});toast('Ahora es una tensión: decide quién domina y cómo se ve');return true}
+  if(op==='paleta'){const sug=paletaSugerida(p).pal.map(x=>x.hex);p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=sug;
+    nuevaDecision(p,'Paleta ajustada al mood',`Antes: ${p.mood.paletaAnterior.join(' ')}`,['Color'],'contradicción','En prueba');marcar();renderMain();toast('Paleta cambiada (la anterior quedó guardada en tus decisiones)');return true}
+  if(op==='mood'){S.tab='mood';renderMain();window.scrollTo({top:0});return true}
+  if(op==='ok'){S.cfOk=c.k;renderMain();setTimeout(()=>$('#cf-motivo')?.focus(),30);return true}
+  if(op==='ok2'){const m=($('#cf-motivo')?.value||'').trim();if(!m){toast('Escribe por qué es intencional');return true}
+    p.resueltos=p.resueltos||{};p.resueltos[ds.k]={ts:Date.now(),motivo:m,t:c?.t||''};nuevaDecision(p,`Contradicción aceptada: ${c?.t||ds.k}`,m,['Concepto'],'contradicción','Confirmada');S.cfOk=null;marcar();renderMain();toast('Guardado en tus decisiones');return true}
+  return true}
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -5891,7 +5927,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
