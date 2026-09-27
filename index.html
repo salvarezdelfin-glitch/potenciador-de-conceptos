@@ -454,7 +454,16 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 @media (hover:none){.dna-cp{opacity:1}}
 @media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
 .pj-list{display:flex;flex-direction:column;gap:14px}
-.luces{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.baj-pal{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.baj-pal li{padding:8px 10px;background:var(--bg);border-radius:8px;font-size:14px}
+.baj-kb{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:10px}
+.baj-k{background:var(--bg);border:1px solid var(--line);border-top:3px solid #5fd08a;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.baj-k b{font-family:var(--display);font-size:19px;text-transform:uppercase}.baj-k p{margin:0}.baj-g{color:var(--ink)}.baj-k p:not(.baj-g){color:var(--ink2)}
+.baj-rec{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:10px}
+.baj-r{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;background:var(--bg);border-radius:10px;padding:8px;font-size:13.5px}
+.baj-r img,.baj-noimg{width:110px;height:110px;object-fit:cover;border-radius:6px;background:var(--surface2);cursor:zoom-in}.baj-noimg{display:grid;place-items:center;color:var(--ink3);font-size:12px}
+.baj-r p{margin:4px 0}
+@media (max-width:420px){.baj-r{grid-template-columns:minmax(0,1fr)}.baj-r img,.baj-noimg{width:100%;height:160px}}
+.luces{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:12px}
 .luz{background:var(--bg);border:1px solid var(--line);border-left:3px solid #e5b04a;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .luz-n{font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;flex:1;min-width:0}
 .tp-audit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
@@ -875,13 +884,13 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk3z81v').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk536h9').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['cerebro','Cerebro'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
+  ['refs','Referencias'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
@@ -1268,7 +1277,7 @@ function renderMainInner(){
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -5329,6 +5338,7 @@ function vTaller(){const L=S.ajustes.tareas=S.ajustes.tareas||[],t=tareaActiva()
     <div class="prow"><input type="text" id="tar-req-t" placeholder="Agregar requisito + Enter" data-enter="tar-req-add" style="flex:1 1 220px"><button class="btn sm" data-act="tar-req-add">＋</button></div></div>
   <div class="box"><h3>2 · De tus referencias a la idea</h3>${R.length?`<p class="hint">Las referencias de tu proyecto que más sirven para esta tarea. De cada una toma solo lo que dice abajo.</p><div class="rcs">${R.map(r=>`<figure class="rc"><img ${imgAttrs(r)} alt="" loading="lazy" data-act="zoom"><figcaption><small>${esc(corto(r.porque||r.fuente,110))}</small></figcaption></figure>`).join('')}</div>`:`<p class="muted">${p?'No encontré referencias de tu proyecto que encajen. Usa «Llenar mi moodboard» en Referencias.':'Liga la tarea a un proyecto para usar sus referencias.'}</p>`}
     ${tem.map(([,n,tips])=>`<div class="an-sec exp"><h4>Cómo bajar la idea · ${esc(n)}</h4><ol>${tips.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}
+    ${p?`<div class="prow"><button class="btn pri" data-act="bajar-tarea" data-id="${t.id}">De la referencia al thumbnail →</button><span class="muted">Recetas con tus refs, plantas reales y lo que decidiste del proyecto</span></div>`:''}
     ${p&&p.pilares.some(q=>q.t)?`<div class="an-sec q"><h4>Que tus bocetos sirvan a tu proyecto</h4><ul>${p.pilares.filter(q=>q.t).map(q=>`<li><b>${esc(q.t)}</b>${q.como?' — '+esc(corto(q.como,110)):''}</li>`).join('')}</ul></div>`:''}</div>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>3 · Tus bocetos ${meta?`<span class="lbl">${hechos}/${meta}</span>`:`<span class="lbl">${hechos}</span>`}</h3><span class="prow"><label class="btn pri" for="tar-file">Subir bocetos</label><input type="file" id="tar-file" accept="image/*" multiple hidden></span></div>
     ${S.tarBusy?`<p class="muted">${esc(S.tarBusy)}</p>`:''}
@@ -5766,6 +5776,78 @@ async function accionTp(a,el,p,ds){
     default:return false}
   return true}
 
+/* ============ Ref → Thumbnail: bajar la idea ============ */
+const VEG_KB=[
+ {n:'Ceiba (yaxché)',bio:['selva','tropic','maya','mesoamer','mexica','azteca','prehispan'],dato:'Árbol sagrado maya: las raíces bajan al inframundo (Xibalbá), el tronco es el mundo humano y la copa el cielo. De joven su tronco está cubierto de espinas cónicas; de vieja tiene raíces tabulares enormes.',gancho:'Árbol héroe, vertical y monumental. Sus espinas pueden rimar con las navajas de obsidiana.',q:'ceiba tree trunk spines'},
+ {n:'Matapalo (higuera estranguladora)',bio:['selva','tropic','ruina','templo','maya','mesoamer'],dato:'Nace sobre otro árbol, lo envuelve con raíces hasta matarlo; sobre ruinas abraza y parte las piedras.',gancho:'La naturaleza reclama con violencia: raíces que envuelven templos, estatuas o armas abandonadas.',q:'strangler fig roots ruins'},
+ {n:'Maguey (agave)',bio:['desierto','altiplano','mexica','azteca','mesoamer','sangre','sacrificio','ritual'],dato:'Sus espinas se usaban en el autosacrificio: los sacerdotes se perforaban para ofrecer sangre. De sus fibras se hacían telas y cuerdas.',gancho:'Planta radial de puntas que une sangre y ritual. Ideal para zonas de sacrificio o templos.',q:'agave maguey spikes'},
+ {n:'Sangre de drago (Croton)',bio:['selva','tropic','sangre','mesoamer'],dato:'Árbol real cuya savia es roja como la sangre; se usa como medicina.',gancho:'«Sangre» literal: árboles que sangran rojo cuando la guerra los hiere. Un acento rojo dentro del verde.',q:'dragon blood tree red sap croton'},
+ {n:'Copal',bio:['selva','mesoamer','maya','mexica','ritual','templo','incienso'],dato:'Su resina se quema como incienso ritual desde hace milenios.',gancho:'Humo ritual y resina ámbar translúcida: une vegetación y templo.',q:'copal resin incense'},
+ {n:'Heliconia',bio:['selva','tropic'],dato:'Brácteas rojas y amarillas en zigzag, de forma angular.',gancho:'Planta de selva con forma angular y colores de guerra: un puente visual entre los dos lados.',q:'heliconia rostrata'},
+ {n:'Bromelias',bio:['selva','tropic'],dato:'Crecen sobre otros árboles y guardan agua en su centro.',gancho:'Rosetas que colonizan todo: sobre estatuas, cascos o armas caídas.',q:'bromeliad on tree branch'},
+ {n:'Helecho arborescente',bio:['selva','tropic','bosque','niebla'],dato:'Helecho con tronco de varios metros; sus brotes se enrollan en espiral.',gancho:'La espiral como lenguaje de la naturaleza. Silueta radial fácil de reconocer.',q:'tree fern fiddlehead spiral'},
+ {n:'Nopal',bio:['desierto','altiplano','mexica','azteca'],dato:'En el mito mexica, el águila sobre el nopal marca la fundación de Tenochtitlan; la tuna roja se asociaba al corazón.',gancho:'Pencas planas y modulares. La tuna roja como corazón ofrendado.',q:'nopal opuntia cactus'},
+ {n:'Cempasúchil',bio:['mexica','azteca','mesoamer','muerte','altiplano'],dato:'Flor naranja ligada a los muertos; guía a las almas.',gancho:'Acento naranja de muerte y memoria: flor que crece donde alguien cayó.',q:'cempasuchil marigold field'},
+ {n:'Manglar',bio:['costa','pantano','manglar','agua'],dato:'Raíces zancudas que salen del agua.',gancho:'Raíces como patas o como jaulas; silueta horizontal sobre el agua.',q:'mangrove roots'},
+ {n:'Oyamel / pino',bio:['bosque','montana','frio','templado','niebla'],dato:'Bosques de altura con niebla y troncos rectos.',gancho:'Verticales repetidas: ritmo y niebla.',q:'fir forest fog'}];
+const BAJAR_GEN={
+ 'Vegetación':['Dibujas la categoría («árbol») y no una planta concreta con historia.','La silueta es una bola sobre un palo: se ve igual que cualquier árbol.','El detalle está parejo en toda la hoja: nada manda.','No hay escala: sin una figura no se sabe si mide 2 m o 60 m.','No toca nada: no rompe piedra, no abraza un templo, no esconde a nadie.','No carga la tensión del proyecto: podría estar en cualquier otro mundo.'],
+ 'Personaje':['Diseñas ropa y no a alguien: falta qué hace y qué le pasó.','La silueta no se reconoce en negro.','Todo tiene el mismo tamaño: no hay una forma que mande.'],
+ 'Criatura':['Es un animal con cosas pegadas, no un ser con función.','No se entiende cómo se mueve ni dónde carga el peso.'],
+ 'Entorno':['No hay foco ni camino para la mirada.','Todos los planos tienen el mismo valor.','No hay escala.'],
+ 'Arquitectura':['No hay un módulo que se repita ni una regla de construcción.','No envejece: no se nota qué le pasó.'],
+ 'Prop':['No se entiende cómo se agarra ni para qué sirve.','Los materiales no tienen desgaste por uso.']};
+function bajarCat(q){return (temasDe(q)[0]||[])[1]||''}
+function bajarAnclas(p,cat){if(cat!=='Vegetación')return [];const t=nz([p.nombre,p.brief.texto,p.brief.historia,p.ad,queDe(p),p.que?.tema,...(p.keywords?.cultura||[]),...(p.materiales||[]),p.mood.clima,p.mood.atmosfera,...(p.tensiones||[]).flatMap(x=>[x.a,x.b,x.aVis,x.bVis])].join(' '));
+  const L=VEG_KB.map(k=>({k,s:k.bio.filter(b=>t.includes(b)).length})).sort((a,b)=>b.s-a.s);const con=L.filter(x=>x.s>0);return (con.length?con:L).slice(0,8).map(x=>x.k)}
+function bajarPalancas(p,que){const P=[],el=que||'el elemento';
+  const dos=v=>String(v||'').split(/,s*/).filter(Boolean).slice(0,2).join(' y ');
+  for(const t of (p.tensiones||[]).filter(x=>x.a&&x.b)){P.push({tipo:'Tensión',c:`la domina ${t.a.toLowerCase()} (${dos(t.aVis)||t.a})`,t:`Estado 1 · domina ${t.a}: ${el} hecha o dañada por ${t.aVis||t.a}.`},{tipo:'Tensión',c:`${t.b.toLowerCase()} rompiendo a ${t.a.toLowerCase()}`,t:`Estado 2 · transición: ${t.b} empezando a romper a ${t.a} (${[t.bVis,t.aVis].filter(Boolean).join(' contra ')}).`},{tipo:'Tensión',c:`la domina ${t.b.toLowerCase()} (${dos(t.bVis)||t.b})`,t:`Estado 3 · domina ${t.b}: ${el} totalmente ${t.bVis||t.b}.`})}
+  p.pilares.filter(x=>x.t).forEach(x=>P.push({tipo:'Pilar',c:`que cumpla «${x.t}»`,t:`«${x.t}» → ¿cómo se ve ${el} que cumple este pilar?${x.como?' Pista: '+corto(x.como,110):''}`}));
+  (p.materiales||[]).slice(0,5).forEach(m=>P.push({tipo:'Material',c:`contaminada de ${m.toLowerCase()}`,t:`¿Y si ${el} estuviera hecha o contaminada de ${m.toLowerCase()}?`}));
+  const lf=p.forma?.lenguaje||(p.lenguaje?.formas||[]).join(', ');if(lf)P.push({tipo:'Formas',t:`Tu lenguaje de formas: ${corto(lf,160)}. Decide qué parte de ${el} usa cada uno.`});
+  (p.elementos||[]).slice(0,3).forEach(e=>P.push({tipo:'Símbolo',c:`con ${e.k.toLowerCase()} como símbolo`,t:`${e.k} significa «${corto(e.sig,70)}» en tu mundo: ¿dónde aparece en ${el}?`}));
+  return P}
+function bajarRecetas(p,que,seed){const cat=bajarCat(que),refs=refsParaTarea({enunciado:que+' '+(cat||'')},p),A=bajarAnclas(p,cat),Pz=bajarPalancas(p,que);
+  let s=seed||1;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};const pick=a=>a.length?a[Math.floor(rnd()*a.length)]:null;
+  const reglas=['silueta que se lea en 2 segundos en negro','una masa grande, dos medianas y detalle solo en el foco','con una figura de escala (el guerrero o el jaguar)','que toque arquitectura: raíz contra piedra','solo 3 valores','exagera una sola cosa ×3'];
+  const out=[];for(let i=0;i<6;i++){const r=pick(refs),a=pick(A),pz=pick(Pz.filter(x=>x.tipo!=='Formas'))||pick(Pz);
+    out.push({r,a,txt:[r?`Forma de «${etiquetaDe(r)||'tu referencia'}»`:'Silueta simple',a?`idea de ${a.n.split(' (')[0].toLowerCase()}`:'',pz?(pz.c||pz.t):''].filter(Boolean).join(' + '),regla:pick(reglas)})}
+  return {refs,anclas:A,palancas:Pz,recetas:out,cat}}
+function vBajar(p){const b=p.bajar=p.bajar||{que:''},que=b.que||'',R=que?bajarRecetas(p,que,S.bajSeed||1):null,cat=R?.cat;
+  return `<p class="intro"><b>De la referencia al thumbnail.</b> Una referencia no se copia: se le saca <b>una forma, una historia o una regla</b> y se cruza con lo que ya decidiste del proyecto (tensión, pilares, materiales). Así deja de parecer «un árbol» y se vuelve <b>tu</b> árbol.</p>
+  <div class="box"><div class="field"><label for="f-baj">¿Qué vas a diseñar?</label><input type="text" id="f-baj" data-b="bajar.que" value="${esc(que)}" placeholder="Ej. vegetación, templo del dios, arma del guerrero, criatura…" data-enter="bajar-go"></div>
+    <div class="prow"><button class="btn pri" data-act="bajar-go">Bajar la idea</button>${['vegetación','arquitectura del templo','arma del guerrero','criatura'].map(x=>`<button class="chip" data-act="bajar-set" data-v="${x}" style="border:0;cursor:pointer;padding:4px 10px">${x}</button>`).join('')}</div></div>
+  ${R?`
+  ${cat&&BAJAR_GEN[cat]?`<div class="box"><h3>Por qué se ve genérico</h3><ul class="why-l">${BAJAR_GEN[cat].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+  <div class="box"><h3>Qué lo hace de ESTE mundo</h3><p class="hint">Sale de lo que ya escribiste. Cada thumbnail tiene que responder una de estas.</p>
+    ${R.palancas.length?`<ul class="baj-pal">${R.palancas.map(x=>`<li><span class="tag" style="--lc:var(--accent)">${esc(x.tipo)}</span> ${esc(x.t)}</li>`).join('')}</ul>`:'<p class="nd-box sm">Define tensiones, pilares y materiales para que esto tenga de dónde salir.</p>'}</div>
+  ${R.anclas.length?`<div class="box"><h3>Plantas reales que encajan con tu mundo</h3><p class="hint">Datos reales con gancho de diseño. Lo real es lo que lo hace creíble.</p>
+    <div class="baj-kb">${R.anclas.map(a=>`<div class="baj-k"><b>${esc(a.n)}</b><p>${esc(a.dato)}</p><p class="baj-g">→ ${esc(a.gancho)}</p><div class="prow"><button class="btn sm" data-act="tp-buscar" data-q="${esc(a.q)}" data-g="mundo">Buscar fotos</button><a class="btn sm ghost" href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(a.q)}" target="_blank" rel="noopener">Google</a></div></div>`).join('')}</div></div>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Recetas de thumbnail</h3><button class="btn sm" data-act="bajar-otra">Otra tanda</button></div><p class="hint">Referencia + ancla + decisión del proyecto + una regla. Haz una por thumbnail.</p>
+    <div class="baj-rec">${R.recetas.map((x,i)=>`<div class="baj-r">${x.r?`<img ${imgAttrs(x.r)} alt="" loading="lazy" data-act="zoom">`:'<div class="baj-noimg">sin ref</div>'}<div><span class="lbl">Thumbnail ${i+1}</span><p><b>${esc(cap(x.txt))}.</b></p>${x.a?`<p class="muted">${esc(x.a.gancho)}</p>`:''}<p class="muted">Regla: ${esc(x.regla)}.</p><button class="btn ghost sm" data-act="bajar-fav" data-i="${i}">${(b.guardadas||[]).some(g=>g.txt===x.txt)?'★ Guardada':'☆ Guardar'}</button></div></div>`).join('')}</div>
+    ${R.refs.length?'':'<p class="nd-box sm">No encontré referencias de esto en tu moodboard: busca primero (botones de arriba) y regresa.</p>'}</div>
+  ${(b.guardadas||[]).length?`<div class="box"><h3>Tus recetas guardadas</h3><ol>${b.guardadas.map((g,i)=>`<li>${esc(g.txt)}. <span class="muted">Regla: ${esc(g.regla)}.</span> <button class="btn ghost sm" data-act="bajar-unfav" data-i="${i}">✕</button></li>`).join('')}</ol></div>`:''}
+  <div class="grid2"><div class="box"><h3>Método · 40 minutos</h3><ol class="startlist">
+    <li><b>20 siluetas en negro</b>, 5×3 cm, 90 segundos cada una. Solo 3 familias: vertical, radial y colgante o rastrera.</li>
+    <li>Cada silueta responde <b>una</b> receta o una pregunta de «Qué lo hace de este mundo». Escríbela abajo del thumbnail.</li>
+    <li>Elige 5. Agrega una <b>figura de escala</b> (el guerrero mide 1.7 m).</li>
+    <li>Pásalas a <b>3 valores</b>: primer plano oscuro, medio con forma y fondo claro.</li>
+    <li>En 1 o 2, haz que la vegetación <b>toque algo</b>: raíz contra templo, planta sobre un arma caída.</li>
+    <li>Sube tus thumbnails para feedback.</li></ol>
+    <div class="prow"><button class="btn" data-act="tab" data-tab="critica">Subir a Crítica</button>${(S.ajustes.tareas||[]).some(t=>t.pid===S.cur)?'<button class="btn" data-act="vista" data-v="taller">Ir a mi tarea del taller</button>':''}</div></div>
+    <div class="box">${timerHTML(40,'Sesión de thumbnails · 40 min')}</div></div>`:''}`}
+async function accionBajar(a,el,p,ds){
+  switch(a){
+    case 'bajar-go':{const v=$('#f-baj')?.value;if(v!=null){p.bajar=p.bajar||{};p.bajar.que=v.trim();marcar()}if(!p.bajar?.que){toast('Escribe qué vas a diseñar');return true}renderMain();break}
+    case 'bajar-set':p.bajar=p.bajar||{};p.bajar.que=ds.v;S.bajSeed=1;marcar();renderMain();break;
+    case 'bajar-otra':S.bajSeed=(S.bajSeed||1)+7;renderMain();break;
+    case 'bajar-fav':{const R=bajarRecetas(p,p.bajar.que,S.bajSeed||1),x=R.recetas[+ds.i];if(!x)return true;const g=p.bajar.guardadas=p.bajar.guardadas||[];if(!g.some(y=>y.txt===x.txt))g.push({txt:x.txt,regla:x.regla,ref:x.r?.id||null,ts:Date.now()});marcar();renderMain();break}
+    case 'bajar-unfav':p.bajar.guardadas.splice(+ds.i,1);marcar();renderMain();break;
+    case 'bajar-tarea':{const t=(S.ajustes.tareas||[]).find(x=>x.id===ds.id);if(!t||!S.P[t.pid])return true;S.cur=t.pid;const pp=S.P[t.pid];pp.bajar=pp.bajar||{};pp.bajar.que=(temasDe(t.enunciado+' '+t.titulo)[0]||[])[1]?.toLowerCase()||t.titulo;marcarPid(t.pid);S.vista='proyecto';S.tab='bajar';recordar();render();window.scrollTo({top:0});break}
+    default:return false}
+  return true}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
@@ -6127,7 +6209,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
