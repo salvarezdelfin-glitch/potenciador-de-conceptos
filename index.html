@@ -442,8 +442,25 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 @media (max-width:1100px){.cerebro{grid-template-columns:minmax(0,1fr)}}
 .dna{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:2px}
 .dna-h{display:flex;flex-direction:column;padding:2px 4px 8px}.dna-h b{font-family:var(--display);font-size:22px;line-height:1.1}
-.dna-r{display:grid;grid-template-columns:96px 1fr;gap:8px;text-align:left;border:0;background:transparent;padding:6px 4px;border-top:1px solid var(--line);cursor:pointer;font-size:13px;line-height:1.4;color:var(--ink)}
-.dna-r:hover{background:var(--surface2)}.dna-r .lbl{padding-top:2px;font-size:10px}.dna-r small{color:var(--ink3)}
+.dna-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:start;border-top:1px solid var(--line)}
+.dna-go{display:grid;grid-template-columns:96px 1fr;gap:8px;text-align:left;border:0;background:transparent;padding:6px 4px;cursor:pointer;font-size:13px;line-height:1.4;color:var(--ink);min-width:0}
+.dna-cp{margin-top:4px;opacity:.55}.dna-r:hover .dna-cp,.dna-cp:focus-visible{opacity:1}
+@media (hover:none){.dna-cp{opacity:1}}
+@media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
+.pj-list{display:flex;flex-direction:column;gap:14px}
+.pj-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
+@media (max-width:900px){.pj-grid{grid-template-columns:minmax(0,1fr)}}
+.pj-form{display:flex;flex-direction:column;gap:8px}
+.pj-out{display:flex;flex-direction:column;gap:8px}
+.pj-pal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pj-sw{display:flex;flex-direction:column;gap:2px;font-size:12px;min-width:0}
+.pj-sw b{font-weight:600}.pj-sw small{font-family:var(--mono);color:var(--ink3);font-size:11px}
+.pj-c{position:relative;display:block;height:54px;border-radius:8px;border:1px solid var(--line2);overflow:hidden;cursor:pointer}
+.pj-c input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.pj-bar{display:flex;height:14px;border-radius:4px;overflow:hidden}.pj-bar i{display:block}
+.pj-bar.gris{height:10px}
+.pj-av{margin:0;padding-left:18px;color:var(--warn);font-size:13px}.pj-rz{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--ink2)}
+.dna-go:hover{background:var(--surface2)}.dna-r .lbl{padding-top:2px;font-size:10px}.dna-r small{color:var(--ink3)}
 .pal i{display:inline-block;width:16px;height:16px;border-radius:3px;border:1px solid var(--line);vertical-align:middle}
 .chat{display:flex;flex-direction:column;gap:10px}
 .chat-log{display:flex;flex-direction:column;gap:10px;max-height:460px;overflow-y:auto;padding-right:4px;scrollbar-width:thin}
@@ -824,12 +841,12 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muj0vb0l').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk11vsi').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
-  ['cerebro','Cerebro'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],
+  ['cerebro','Cerebro'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
   ['refs','Referencias'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
@@ -1217,7 +1234,7 @@ function renderMainInner(){
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -4135,20 +4152,6 @@ function etapasHTML(p){const cur=p.etapa||'idea',i=ETAPAS_P.findIndex(e=>e[0]===
   return `<div class="stages" role="list">${ETAPAS_P.map(([k,n,tab],j)=>`<button role="listitem" class="stg ${j<i?'past':''} ${k===cur?'cur':''}" data-act="etapa" data-v="${k}" data-tab="${tab}" title="Ir a ${n} (puedes regresar cuando quieras)">${n}</button>`).join('<span class="stg-ar">→</span>')}</div>
   ${D.alerta?`<div class="alerta">${esc(D.alerta)}</div>`:''}`}
 
-function dnaHTML(p){const l=p.lenguaje||{},t=(p.tensiones||[]).filter(x=>x.a&&x.b),mw=tresMood(p).filter(Boolean),els=(p.elementos||[]);
-  const row=(k,v,tab)=>`<button class="dna-r" data-act="tab" data-tab="${tab}"><span class="lbl">${k}</span><span class="v">${v}</span></button>`;
-  return `<div class="dna"><div class="dna-h"><span class="lbl">Project DNA · se actualiza solo</span><b>${esc(p.nombre)}</b></div>
-    ${row('Concept',nd(esc(p.que?.tipo||'')+(queDe(p)?(p.que?.tipo?' · ':'')+esc(queDe(p)):'')),'concepto')}
-    ${row('Theme',nd(p.que?.tema),'concepto')}${row('Function',nd(p.que?.funcion),'concepto')}
-    ${row('Tension',t.length?t.map(x=>`${esc(x.a)} ↔ ${esc(x.b)}${x.domina?` <small>(${esc(x.domina.replace('A',x.a).replace(/B/,x.b))})</small>`:''}`).join(' · '):nd(''),'tension')}
-    ${row('Shape',nd([(l.formas||[]).join(', '),p.forma?.silueta].filter(Boolean).map(esc).join(' — ')),'lenguaje')}
-    ${row('Material',nd((p.materiales||[]).join(', ')),'concepto')}
-    ${row('Color',`<span class="pal">${(p.mood.paleta||[]).map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span> ${l.colorDom?esc(l.colorDom)+(l.colorAcento?' · acento '+esc(l.colorAcento):''):'<span class="nd">dominante/acento NO DEFINIDO</span>'}`,'lenguaje')}
-    ${row('Light',nd(p.guia?.luz||p.mood.luz),'mood')}
-    ${row('Mood',mw.length?'Debe sentirse: '+esc(lista3(mw)):nd(''),'mood')}
-    ${row('Story',nd([els.map(e=>`${e.k} = ${e.sig}`).join(' · '),corto(p.brief.historia,120)].filter(Boolean).join(' — ')),'brief')}
-    ${row('Art Direction',p.ad?`${esc(corto(p.ad,140))}${p.pilares.some(x=>x.t)?'<br><small>'+p.pilares.filter(x=>x.t).map(x=>esc(x.t)).join(' · ')+'</small>':''}${(l.reglas||[]).length?`<br><small>${l.reglas.length} regla(s) visual(es)</small>`:''}`:nd(''),'ad')}
-  </div>`}
 
 function auditHTML(p,D){D=D||DX(p);const sec=(t,cls,items,f)=>`<div class="au ${cls}"><h4>${t} <span class="lbl">${items.length}</span></h4>${items.length?`<ul>${items.map(f).join('')}</ul>`:'<p class="muted">—</p>'}</div>`;
   return `<div class="audit">
@@ -5312,12 +5315,192 @@ async function accionExt(a,el,p,ds){const L=S.ajustes.tareas=S.ajustes.tareas||[
     case 'tar-del':{const k='t'+t.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;L.splice(L.indexOf(t),1);S.tareaSel=null;marcarAj();renderMain();return true}}
   return false}
 
+/* ============ Project DNA: filas con texto plano para copiar ============ */
+function dnaFilas(p){const l=p.lenguaje||{},t=(p.tensiones||[]).filter(x=>x.a&&x.b),mw=tresMood(p).filter(Boolean),els=(p.elementos||[]),pj=(p.personajes||[]).filter(c=>c.nombre);
+  const domTxt=x=>x.domina?x.domina.replace('A',x.a).replace(/B/,x.b):'';
+  const concept=[p.que?.tipo||'',queDe(p)].filter(Boolean).join(' · ');
+  const shape=[(l.formas||[]).join(', '),p.forma?.silueta].filter(Boolean).join(' — ');
+  const story=[els.map(e=>`${e.k} = ${e.sig}`).join(' · '),p.brief.historia||''].filter(Boolean).join(' — ');
+  const F=[
+    ['Concept',nd(concept),concept,'concepto'],
+    ['Theme',nd(p.que?.tema),p.que?.tema||'','concepto'],
+    ['Function',nd(p.que?.funcion),p.que?.funcion||'','concepto'],
+    ['Tension',t.length?t.map(x=>`${esc(x.a)} ↔ ${esc(x.b)}${x.domina?` <small>(${esc(domTxt(x))})</small>`:''}`).join(' · '):nd(''),t.map(x=>`${x.a} ↔ ${x.b}${x.domina?` (${domTxt(x)})`:''}`).join(' · '),'tension'],
+    ['Shape',nd(shape),shape,'lenguaje'],
+    ['Material',nd((p.materiales||[]).join(', ')),(p.materiales||[]).join(', '),'concepto'],
+    ['Color',`<span class="pal">${(p.mood.paleta||[]).map(c=>`<i style="background:${esc(c)}" title="${esc(c)}"></i>`).join('')}</span> ${l.colorDom?esc(l.colorDom)+(l.colorAcento?' · acento '+esc(l.colorAcento):''):'<span class="nd">dominante/acento NO DEFINIDO</span>'}`,
+      [(p.mood.paleta||[]).join(' '),l.colorDom?l.colorDom+(l.colorAcento?' · acento '+l.colorAcento:''):''].filter(Boolean).join(' — '),'lenguaje'],
+    ['Light',nd(p.guia?.luz||p.mood.luz),p.guia?.luz||p.mood.luz||'','mood'],
+    ['Mood',mw.length?'Debe sentirse: '+esc(lista3(mw)):nd(''),mw.length?'Debe sentirse: '+lista3(mw):'','mood'],
+    ['Story',nd(corto(story,160)),story,'brief'],
+    ['Art Direction',p.ad?`${esc(corto(p.ad,140))}${p.pilares.some(x=>x.t)?'<br><small>'+p.pilares.filter(x=>x.t).map(x=>esc(x.t)).join(' · ')+'</small>':''}${(l.reglas||[]).length?`<br><small>${l.reglas.length} regla(s) visual(es)</small>`:''}`:nd(''),
+      [p.ad||'',p.pilares.filter(x=>x.t).map((x,i)=>`Pilar ${i+1}: ${x.t}${x.f?' — '+x.f:''}`).join('\n'),(l.reglas||[]).length?'Reglas visuales:\n'+l.reglas.map(r=>'- '+r).join('\n'):''].filter(Boolean).join('\n'),'ad']];
+  if(pj.length)F.push(['Characters',pj.map(c=>{const P=pjPaleta(p,c).pal;return `<b>${esc(c.nombre)}</b> <span class="pal">${P.map(x=>`<i style="background:${x.hex}" title="${x.rol} ${x.hex}"></i>`).join('')}</span>`}).join('<br>'),
+    pj.map(c=>`${c.nombre}: `+pjPaleta(p,c).pal.map(x=>`${x.rol} ${x.hex}`).join(', ')).join('\n'),'personajes']);
+  return F}
+function dnaHTML(p){const F=dnaFilas(p);
+  return `<div class="dna"><div class="dna-h"><div class="prow" style="justify-content:space-between"><span class="lbl">Project DNA · se actualiza solo</span><button class="btn ghost sm" data-act="dna-copy" data-k="*" title="Copiar todo el DNA">Copiar todo</button></div><b>${esc(p.nombre)}</b></div>
+    ${F.map(([k,html,txt,tab])=>`<div class="dna-r"><button class="dna-go" data-act="tab" data-tab="${tab}" title="Ir a editar"><span class="lbl">${k}</span><span class="v">${html}</span></button>${txt?`<button class="btn ghost sm dna-cp" data-act="dna-copy" data-k="${k}" title="Copiar ${k}" aria-label="Copiar ${k}">Copiar</button>`:''}</div>`).join('')}
+  </div>`}
+async function copiarTexto(txt,msg){try{await navigator.clipboard.writeText(txt);toast(msg||'Copiado')}catch{
+  try{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();toast(msg||'Copiado')}catch{toast('No se pudo copiar')}}}
+
+/* ============ Personajes: paleta que se construye con el personaje ============ */
+const PJ_ROLES=['Protagonista','Antagonista','Aliado','Deidad','Criatura','Secundario'];
+/* materiales que no están en COLW (h,s,l) */
+const MATX={piedra:[32,.07,.42],roca:[30,.07,.4],madera:[26,.42,.3],cuero:[22,.45,.28],hierro:[215,.06,.33],acero:[212,.08,.55],barro:[18,.42,.33],arcilla:[18,.45,.42],lino:[40,.25,.72],algodon:[40,.15,.8],cuerda:[35,.3,.5],concha:[20,.35,.8],coral:[8,.6,.55],ceniza:[30,.03,.55],carbon:[0,0,.1],cal:[40,.1,.85],estuco:[35,.15,.78],turquesa:[172,.5,.45],pelaje:[35,.45,.42],escama:[95,.3,.32],plumas:[0,0,0]};
+function matColor(w){for(const k in COLW)if(w.startsWith(k))return {k,hsl:COLW[k]};for(const k in MATX)if(k!=='plumas'&&w.startsWith(k))return {k,hsl:MATX[k]};return null}
+const hueDist=(a,b)=>{const d=Math.abs(((a-b)%360+360)%360);return Math.min(d,360-d)};
+const lumaHex=h=>{h=String(h).replace('#','');const r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255;return .2126*r+.7152*g+.0722*b};
+function pjTextos(c){return [c.nombre,c.lado,c.personalidad,c.materiales,c.colorClave,c.piel,c.forma,c.notas]}
+function pjLadoVis(p,c){/* si el personaje representa un lado de una tensión, usa lo visual de ese lado */
+  const L=nz([c.lado,c.personalidad,c.notas].join(' '));const out=[];
+  for(const t of p.tensiones||[]){if(t.a&&L.includes(nz(t.a)))out.push({lado:t.a,vis:t.aVis||''});if(t.b&&L.includes(nz(t.b)))out.push({lado:t.b,vis:t.bVis||''})}
+  return out}
+function pjPaleta(p,c,todos){
+  const mundo=(p.mood.paleta||[]).map(h=>({hex:h,...(hexHsl(h)||{h:0,s:0,l:.5})}));
+  const lados=pjLadoVis(p,c),txt=[...pjTextos(c),...lados.map(x=>x.vis)];
+  const V=vecDe(txt),T=V.T.v,Vv=V.V.v,E=V.E.v,razones=[],avisos=[];
+  const acerca=(h,s,l,peso=.15)=>{/* armoniza con el mundo: jala el tono al color del mundo más cercano */
+    if(!mundo.length)return [h,s,l];const m=[...mundo].sort((a,b)=>hueDist(a.h,h)-hueDist(b.h,h))[0];if(m.s<.08)return [h,s,l];
+    let d=((m.h-h+540)%360)-180;return [h+d*peso,s,l]};
+  const hx=(h,s,l)=>hslHex(h,s,l);
+  /* 1 · dominante (vestuario / masa grande) */
+  let dom,domR;const cc=colorDe(c.colorClave);
+  const cLado=colorDe([c.lado,c.personalidad,...lados.map(x=>x.vis)].join(' '));
+  if(cc){dom=[cc.hsl[0],cc.hsl[1],cc.hsl[2]];domR=`Dominante «${cc.k}»: es el color que escribiste para ${c.nombre||'él'}.`}
+  else if(cLado){dom=acerca(...cLado.hsl);domR=`Dominante «${cLado.k}»: sale de ${lados.length?'su lado ('+lados.map(x=>x.lado).join(', ')+')':'lo que escribiste de él'}.`}
+  else if(mundo.length){const pool=[...mundo].filter(m=>m.s>.12);const m=(pool.length?pool:mundo).sort((a,b)=>T?(T>0?tempHue(b.h)*b.s-tempHue(a.h)*a.s:tempHue(a.h)*a.s-tempHue(b.h)*b.s):b.s-a.s)[0];
+    dom=[m.h,m.s,m.l];domR=T?`Dominante tomada del mundo: lo describes ${polo('T',T)}${evid(V.T)}, así que usa el color más ${T>0?'cálido':'frío'} de la paleta del proyecto.`:`Dominante tomada de la paleta del proyecto (todavía no escribes su color: NO DEFINIDO).`}
+  else{dom=[T<0?210:28,.35,.4];domR='Dominante provisional: el proyecto no tiene paleta todavía (NO DEFINIDO).'}
+  const cp0=colorDe(c.piel)||matColor(nz(c.piel||'').split(/\s+/).find(w=>matColor(w))||'');
+  const esAnimal0=c.rol==='Criatura'||toks([c.nombre,c.piel,c.notas].join(' ')).some(w=>ANIMALES.some(a=>w.startsWith(a)));
+  if(esAnimal0&&cp0&&!cc){dom=[...cp0.hsl];domR=`Dominante «${cp0.k}»: en una criatura el pelaje o la piel es la masa más grande.`}
+  if(!cc&&!todos){const lista=(p.personajes||[]).filter(o=>o.nombre),yo=lista.findIndex(o=>o.id===c.id),prev=lista.slice(0,Math.max(0,yo)).map(o=>hexHsl(pjPaleta(p,o,true).pal[0].hex)).filter(Boolean);
+    const choca=d=>prev.some(q=>hueDist(q.h,d[0])<18&&Math.abs(q.l-d[2])<.12);
+    if(choca(dom)){const cand=mundo.filter(m=>m.s>.1).map(m=>[m.h,m.s,m.l]).filter(d=>!choca(d)).sort((a,b)=>Math.min(...prev.map(q=>hueDist(q.h,b[0])))-Math.min(...prev.map(q=>hueDist(q.h,a[0]))))[0];
+      const quien=lista.slice(0,yo).find(o=>{const q=hexHsl(pjPaleta(p,o,true).pal[0].hex);return q&&hueDist(q.h,dom[0])<18&&Math.abs(q.l-dom[2])<.12})?.nombre||'otro personaje';
+      if(cand){dom=cand;avisos.push(`Su dominante era casi igual a la de ${quien}: tomé otro color del mundo para que se distingan. Si quieres la misma, escríbela en «Color que lo identifica».`)}
+      else{dom=[dom[0],dom[1],dom[2]<.4?dom[2]+.2:dom[2]-.2];avisos.push(`Su dominante era igual a la de ${quien}: le cambié el valor para que se distingan.`)}}}
+  if(Vv)dom[2]=Math.max(.12,Math.min(.75,dom[2]+Vv*.12));
+  if(E>.3)dom[1]=Math.min(1,dom[1]+.12);if(E<-.3)dom[1]*=.8;
+  razones.push(domR+(Vv?` Valor ${Vv<0?'más oscuro':'más claro'} porque lo describes ${polo('V',Vv)}${evid(V.V)}.`:''));
+  /* 2 · secundario */
+  const sec=[dom[0]+(T>=0?-18:18),dom[1]*.75,Math.min(.8,dom[2]+(dom[2]<.35?.14:-.12))];
+  razones.push('Secundario: vecino de la dominante, un paso de valor aparte, para que la masa grande no se vea plana.');
+  /* 3 · piel / pelaje / base */
+  let piel,pielR;const cp=colorDe(c.piel)||matColor(nz(c.piel||'').split(/\s+/).find(w=>matColor(w))||'');
+  const esAnimal=c.rol==='Criatura'||toks([c.nombre,c.piel,c.notas].join(' ')).some(w=>ANIMALES.some(a=>w.startsWith(a)));
+  if(cp&&esAnimal&&!cc){piel=[cp.hsl[0]+6,cp.hsl[1]*.55,Math.min(.85,cp.hsl[2]+.25)];pielR='Zona clara del pelaje (vientre, pecho, hocico): el mismo tono, más claro y menos saturado.'}
+  else if(cp){piel=[...cp.hsl];pielR=`Piel / base «${cp.k}»: lo escribiste tú.`}
+  else if(c.piel&&/piel|morena|clara|oscura|canela|pálid|palid/i.test(c.piel)){const osc=/oscur|morena|canela/i.test(c.piel),cla=/clara|pálid|palid/i.test(c.piel);piel=[24,.38,osc?.34:cla?.72:.5];pielR=`Piel: «${c.piel}».`}
+  else if(esAnimal){piel=[36,.5,.45];pielR='Pelaje / base provisional (criatura). Escribe su pelaje o piel para afinarlo.'}
+  else{piel=[24,.3,.5];pielR='Piel / base: NO DEFINIDO. Escribe el tono de piel, pelaje o superficie para que no sea un genérico.'}
+  razones.push(pielR);
+  /* 4 · material principal */
+  const mats=String(c.materiales||'').split(/[,;·\/]| y /).map(x=>nz(x).trim()).filter(Boolean);
+  let mat=null,matR='';for(const m of mats){const w=m.split(/\s+/).find(x=>matColor(x));if(w){const mc=matColor(w);mat=[...mc.hsl];matR=`Material «${m}»: color real del material (${mc.k}).`;break}}
+  if(!mat){mat=[dom[0],.08,.28];matR=mats.length?`Material: «${mats[0]}» no tiene color propio en mi lista; usa un neutro oscuro y ajústalo tú.`:'Material: NO DEFINIDO. ¿De qué está hecho lo que lleva? (obsidiana, oro, hueso, cuero…)'}
+  razones.push(matR);
+  /* 5 · sombra del mundo */
+  const osc=mundo.length?[...mundo].sort((a,b)=>a.l-b.l)[0]:{h:dom[0],s:.2,l:.1};
+  const som=[osc.h+((((dom[0]-osc.h)+540)%360)-180)*.25,Math.min(.35,osc.s),Math.min(.16,osc.l+.02)];
+  razones.push('Sombra: la sombra más oscura del mundo, ligeramente hacia su dominante. Así se siente parte del mismo lugar.');
+  /* 6 · acento firma */
+  const ac0=colorDe(p.lenguaje?.colorAcento);const masSat=mundo.length?[...mundo].sort((a,b)=>b.s*(1-Math.abs(b.l-.5))-a.s*(1-Math.abs(a.l-.5)))[0]:null;
+  let acc,accR;
+  if(c.rol==='Antagonista'||c.rol==='Deidad'){const b=ac0?ac0.hsl:masSat?[masSat.h,masSat.s,masSat.l]:[dom[0]+180,.75,.5];acc=[...b];accR=`Acento firma: el acento del proyecto${ac0?' («'+ac0.k+'»)':''}. Como ${c.rol.toLowerCase()}, carga el color que manda en el mundo.`}
+  else{const h=dom[0]+180,cerca=mundo.filter(m=>m.s>.25&&hueDist(m.h,h)<45).sort((a,b)=>hueDist(a.h,h)-hueDist(b.h,h))[0];
+    const lejos=cerca?null:mundo.filter(m=>m.s>.35&&hueDist(m.h,dom[0])>=60).sort((x,y)=>y.s-x.s)[0];
+    acc=cerca?[cerca.h,Math.max(.6,cerca.s),cerca.l]:lejos?[lejos.h,Math.max(.6,lejos.s),Math.max(.4,lejos.l)]:[h,.7,.5];accR=cerca?'Acento firma: complementario de su dominante, tomado de la paleta del mundo.':lejos?'Acento firma: el color más vivo del mundo que contrasta con su dominante (el complementario puro no existe en este mundo).':'Acento firma: complementario de su dominante. Úsalo solo en el foco (ojos, arma, marca).'}
+  if(E>.3)acc[1]=Math.min(1,acc[1]+.1);
+  /* que no choque con los demás personajes */
+  if(!todos){const lista=(p.personajes||[]).filter(o=>o.nombre),yo=lista.findIndex(o=>o.id===c.id);
+    for(const o of lista.slice(0,Math.max(0,yo))){const oa=hexHsl(pjPaleta(p,o,true).pal[5].hex);if(!oa||oa.s<.15)continue;
+      if(hueDist(oa.h,acc[0])<22&&c.rol!=='Antagonista'&&c.rol!=='Deidad'){acc[0]+=38;avisos.push(`Su acento chocaba con el de ${o.nombre}: lo giré para que se distingan en el lineup.`)}}}
+  razones.push(accR);
+  const pal=[
+    {hex:hx(...dom),rol:'Dominante',uso:'vestuario / masa grande',pct:45},
+    {hex:hx(...sec),rol:'Secundario',uso:'segunda masa, telas, detalles grandes',pct:22},
+    {hex:hx(...piel),rol:esAnimal&&cp&&!cc?'Pelaje claro':'Piel / base',uso:esAnimal&&cp&&!cc?'vientre, pecho, hocico':'piel, pelaje o superficie',pct:15},
+    {hex:hx(...mat),rol:'Material',uso:'material principal',pct:8},
+    {hex:hx(...som),rol:'Sombra',uso:'sombra del mundo',pct:5},
+    {hex:hx(...acc),rol:'Acento firma',uso:'solo en el foco',pct:5}];
+  /* lo que él fijó a mano manda */
+  (c.paleta||[]).forEach((x,i)=>{if(x?.lock&&x.hex&&pal[i])pal[i]={...pal[i],hex:x.hex,lock:true}});
+  /* lectura en gris */
+  const Lm=pal.map(x=>lumaHex(x.hex));
+  if(Math.abs(Lm[0]-Lm[2])<.08)avisos.push('En escala de grises la piel y el vestuario casi son el mismo valor: la figura se va a leer como una sola mancha. Separa uno de los dos.');
+  if(Math.abs(Lm[0]-Lm[3])<.05)avisos.push('El material y la dominante tienen el mismo valor: el material no se va a notar.');
+  const grupos=new Set(Lm.map(v=>Math.round(v*4))).size;
+  if(grupos<3)avisos.push(`Solo ${grupos} grupo(s) de valor: poco contraste para leerse a distancia.`);
+  return {pal,razones,avisos,ejes:V}}
+function pjLineup(p){const pj=(p.personajes||[]).filter(c=>c.nombre);if(pj.length<2)return [];const out=[],P=pj.map(c=>({c,pal:pjPaleta(p,c).pal}));
+  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=hexHsl(P[i].pal[0].hex),b=hexHsl(P[j].pal[0].hex);
+    if(hueDist(a.h,b.h)<18&&Math.abs(a.l-b.l)<.12&&a.s>.1&&b.s>.1)out.push(`${P[i].c.nombre} y ${P[j].c.nombre} tienen casi la misma dominante: en el lineup se van a confundir. Cambia el tono o el valor de uno.`)}
+  const ls=P.map(x=>lumaHex(x.pal[0].hex));const r=Math.max(...ls)-Math.min(...ls);
+  if(r<.12)out.push('Todos los personajes tienen el mismo valor dominante: en silueta con valor no se distinguen. Haz a uno claramente más oscuro o más claro.');
+  return out}
+function pjNuevo(p,base){return {id:uid(),nombre:'',rol:'Protagonista',lado:'',personalidad:'',materiales:'',colorClave:'',piel:'',forma:'',notas:'',paleta:[],...(base||{})}}
+function pjDesdeProyecto(p){const l=p.lenguaje||{};return pjNuevo(p,{nombre:queDe(p)||p.nombre,rol:p.tipo==='Criatura'?'Criatura':'Protagonista',personalidad:tresMood(p).join(', '),materiales:(p.materiales||[]).join(', '),colorClave:l.colorDom||'',forma:p.forma?.silueta||''})}
+function pjCardPal(p,c){const R=pjPaleta(p,c);
+  return `<div class="pj-pal">${R.pal.map((x,i)=>`<label class="pj-sw" title="${esc(x.uso)}"><span class="pj-c" style="background:${x.hex}"><input type="color" value="${x.hex}" data-pjc="${c.id}.${i}" aria-label="${esc(x.rol)}"></span><b>${esc(x.rol)}</b><small>${x.hex} · ${x.pct}%</small>${x.lock?`<button class="btn ghost sm" data-act="pj-unlock" data-id="${c.id}" data-i="${i}" title="Volver a la propuesta">🔒 soltar</button>`:''}</label>`).join('')}</div>
+    <div class="pj-bar">${R.pal.map(x=>`<i style="background:${x.hex};flex:${x.pct}"></i>`).join('')}</div>
+    <div class="pj-bar gris" title="Lectura en escala de grises">${R.pal.map(x=>{const v=Math.round(lumaHex(x.hex)*255);return `<i style="background:rgb(${v},${v},${v});flex:${x.pct}"></i>`}).join('')}</div>
+    ${R.avisos.length?`<ul class="pj-av">${R.avisos.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`:''}
+    <details><summary class="muted">Por qué estos colores</summary><ul class="pj-rz">${R.razones.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></details>`}
+function vPersonajes(p){const pj=p.personajes=p.personajes||[],line=pjLineup(p);
+  const fi=(c,k,lab,ph,sel)=>`<div class="field"><label for="pj-${c.id}-${k}">${lab}</label>${sel?`<select id="pj-${c.id}-${k}" data-pj="${c.id}.${k}">${sel.map(o=>`<option ${c[k]===o?'selected':''}>${o}</option>`).join('')}</select>`:`<input type="text" id="pj-${c.id}-${k}" data-pj="${c.id}.${k}" value="${esc(c[k]||'')}" placeholder="${esc(ph)}">`}</div>`;
+  return `<p class="intro">Cada personaje tiene su paleta, y <strong>se arma con lo que escribes de él</strong>: su lado de la tensión, su personalidad, sus materiales y su piel. Todo parte de la paleta del mundo para que pertenezcan al mismo lugar. Es una propuesta: toca un color para fijarlo a mano.</p>
+  ${line.length?`<div class="banner"><b>Lineup:</b> ${line.map(esc).join(' ')}</div>`:''}
+  ${pj.length?'':`<div class="box"><h3>Todavía no hay personajes</h3><p class="hint">Agrega uno por cada personaje o criatura del proyecto.</p><div class="prow"><button class="btn pri" data-act="pj-add">Agregar personaje</button>${/Personaje|Criatura/.test(p.tipo)?'<button class="btn" data-act="pj-desde">Crear desde este proyecto</button>':''}</div></div>`}
+  <div class="pj-list">${pj.map(c=>`<div class="box pj" id="pj-${c.id}">
+    <div class="prow" style="justify-content:space-between"><h3>${esc(c.nombre||'Personaje sin nombre')}</h3><span class="prow"><button class="btn ghost sm" data-act="pj-copy" data-id="${c.id}">Copiar paleta</button><button class="btn ghost sm" data-act="pj-aco" data-id="${c.id}" title="Muestras para Photoshop">.aco</button><button class="btn ghost sm" data-act="pj-procreate" data-id="${c.id}" title="Muestras para Procreate">.swatches</button><button class="btn ghost sm danger" data-act="pj-del" data-id="${c.id}">${S.pjDel===c.id?'¿Borrar?':'✕'}</button></span></div>
+    <div class="pj-grid"><div class="pj-form">
+      <div class="grid2" style="gap:8px">${fi(c,'nombre','Nombre','Ej. El Guerrero')}${fi(c,'rol','Rol','',PJ_ROLES)}</div>
+      ${fi(c,'lado','¿Qué representa / de qué lado está?','Ej. la guerra que se vuelve naturaleza')}
+      ${fi(c,'personalidad','Personalidad (3 palabras)','Ej. tenso, leal, herido')}
+      ${fi(c,'materiales','Materiales que lleva','Ej. obsidiana, cuero, pluma de guacamaya')}
+      <div class="grid2" style="gap:8px">${fi(c,'piel','Piel / pelaje','Ej. piel morena, pelaje ocre con rosetas')}${fi(c,'colorClave','Color que lo identifica (opcional)','Ej. rojo sangre')}</div>
+      ${fi(c,'forma','Forma / silueta','Ej. triángulo invertido delgado')}
+    </div><div class="pj-out" id="pjpal-${c.id}">${pjCardPal(p,c)}</div></div></div>`).join('')}</div>
+  ${pj.length?`<div class="prow"><button class="btn" data-act="pj-add">Agregar personaje</button></div>`:''}`}
+function pjRefresca(p,id){const c=(p.personajes||[]).find(x=>x.id===id);const el=$('#pjpal-'+id);if(c&&el)el.innerHTML=pjCardPal(p,c);
+  const h=$('#pj-'+id+' h3');if(c&&h)h.textContent=c.nombre||'Personaje sin nombre';
+  /* los demás pueden cambiar por choques de acento */
+  for(const o of p.personajes||[])if(o.id!==id){const e=$('#pjpal-'+o.id);if(e)e.innerHTML=pjCardPal(p,o)}}
+/* muestras para Photoshop (.aco v1+v2) y Procreate (.swatches) */
+function acoBlob(pal){const cols=pal.map(x=>{const h=x.hex.replace('#','');return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16),n:x.rol}});
+  const b=[];const u16=v=>b.push((v>>8)&255,v&255);const u32=v=>{u16((v>>>16)&65535);u16(v&65535)};
+  u16(1);u16(cols.length);for(const c of cols){u16(0);u16(c.r*257);u16(c.g*257);u16(c.b*257);u16(0)}
+  u16(2);u16(cols.length);for(const c of cols){u16(0);u16(c.r*257);u16(c.g*257);u16(c.b*257);u16(0);u32(c.n.length+1);for(const ch of c.n)u16(ch.charCodeAt(0));u16(0)}
+  return new Blob([new Uint8Array(b)],{type:'application/octet-stream'})}
+async function procreateBlob(nombre,pal){if(!window.JSZip)throw new Error('zip');const hsb=hex=>{const h=hex.replace('#',''),r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+    let hh=0;if(d){hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6;if(hh<0)hh+=1}return {hue:hh,saturation:mx?d/mx:0,brightness:mx,alpha:1,colorSpace:0}};
+  const z=new JSZip();z.file('Swatches.json',JSON.stringify([{name:nombre,swatches:pal.map(x=>hsb(x.hex))}]));return z.generateAsync({type:'blob'})}
+async function accionPj(a,el,p,ds){if(!a.startsWith('pj-')&&a!=='dna-copy')return false;
+  if(a==='dna-copy'){const F=dnaFilas(p);const txt=ds.k==='*'?[`PROJECT DNA · ${p.nombre}`,...F.filter(f=>f[2]).map(f=>`${f[0]}: ${f[2]}`)].join('\n'):F.find(f=>f[0]===ds.k)?.[2];
+    if(txt)await copiarTexto(txt,ds.k==='*'?'DNA copiado':ds.k+' copiado');return true}
+  const pj=p.personajes=p.personajes||[],c=pj.find(x=>x.id===ds.id);
+  switch(a){
+    case 'pj-add':pj.push(pjNuevo(p));marcar();renderMain();setTimeout(()=>$(`#pj-${pj.at(-1).id}-nombre`)?.focus(),50);break;
+    case 'pj-desde':pj.push(pjDesdeProyecto(p));marcar();renderMain();break;
+    case 'pj-del':if(S.pjDel!==ds.id){S.pjDel=ds.id;renderMain();return true}p.personajes=pj.filter(x=>x.id!==ds.id);S.pjDel=null;marcar();renderMain();break;
+    case 'pj-unlock':if(c?.paleta?.[+ds.i]){c.paleta[+ds.i].lock=false;marcar();pjRefresca(p,c.id)}break;
+    case 'pj-copy':if(c){const P=pjPaleta(p,c).pal;await copiarTexto(`${c.nombre||'Personaje'}\n`+P.map(x=>`${x.rol} (${x.pct}%): ${x.hex}`).join('\n'),'Paleta copiada')}break;
+    case 'pj-aco':if(c)await guardarArchivo(slug(c.nombre||'personaje',40)+'_paleta.aco',acoBlob(pjPaleta(p,c).pal));break;
+    case 'pj-procreate':if(c){try{await guardarArchivo(slug(c.nombre||'personaje',40)+'.swatches',await procreateBlob(c.nombre||'Personaje',pjPaleta(p,c).pal))}catch{toast('No se pudo armar el archivo')}}break;
+    default:return false}
+  return true}
+
 /* ============ Eventos ============ */
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id)}return}
+  if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
   if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.refb){S.refB=S.refB||{};S.refB[t.dataset.refb]=t.value;if(t.tagName==='SELECT'&&t.dataset.refb==='src'&&S.refB.q)buscarRefs();return}
@@ -5366,6 +5549,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.type==='checkbox'?t.checked:t.value);marcarAj();if(t.type==='checkbox'||(t.tagName==='SELECT'&&t.dataset.aj.startsWith('galeria.')))renderMain();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
 });
 document.addEventListener('change',e=>{
+  if(e.target.dataset?.pjc){const p=S.P[S.cur];if(p)pjRefresca(p,e.target.dataset.pjc.split('.')[0]);return}
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
@@ -5669,7 +5853,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
