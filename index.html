@@ -900,7 +900,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulm4qtt').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulpfqly').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1431,10 +1431,11 @@ function vRefs(p){
   const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
   return `
   <p class="intro"><strong>La referencia es lo más importante: dale tiempo y sé específico.</strong> Cada imagen lleva su porqué, qué aprendes de ella y dónde la aplicas. Así no acumulas cientos de imágenes sin saber qué estudias.</p>
+  ${autoLlenadoHTML(p)}
   ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
   ${tableroHTML(p)}
   ${refsBalanceHTML(p)}
-  ${generadorHTML(p)}
+  <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Buscar algo específico por objetivo (manual)</summary>${generadorHTML(p)}</details>
   <div class="drop" id="drop">
     <div><b>Arrastra imágenes aquí</b> <span class="muted">o pégalas con Ctrl+V (copia imagen en Pinterest/ArtStation y pégala aquí)</span></div>
     <div class="prow"><label class="lbl" for="f-destino">Van a</label>
@@ -1449,10 +1450,12 @@ function vRefs(p){
     return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
     ${qs.length?`<div class="colq">${qs.map(b=>`<a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗ ${esc(b.q)}</a>`).join('')}</div>`:''}
     ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
-  ${refsBuscaHTML(p)}
   ${exportBox(p)}
+  <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: buscar por tu cuenta, artistas a seguir, tus búsquedas guardadas</summary>
+  ${refsBuscaHTML(p)}
   ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
   <div class="box"><h3>Tus búsquedas</h3>${busquedasHTML(p)}</div>
+  </details>
   <details class="box"><summary><h3 style="display:inline">Keywords</h3> <span class="lbl">${KWCATS.reduce((n,[k])=>n+(p.keywords[k]||[]).length,0)}</span></summary>
     <div class="grid3">${KWCATS.map(([k,n])=>`<div class="kwcat"><span class="lbl">${n}</span>
     <div class="chips">${(p.keywords[k]||[]).map((w,i)=>`<span class="chip">${esc(w)}<button data-act="kw-del" data-kw="${k}" data-i="${i}" aria-label="Quitar ${esc(w)}">×</button></span>`).join('')}</div>
@@ -3984,46 +3987,46 @@ function bocetoGuiaHTML(p){
 
 /* ============ Elementos concretos: árboles, rocas, armas, etc. — cuadrado/circular, agresivo/suave ============ */
 const ELEMENTOS_FORMA=[
- {n:'Árboles y troncos',ico:'🌳',kw:['arbol','árbol','ceiba','pino','tronco','bosque'],
+ {n:'Árboles y troncos',ico:'🌳',enq:"tropical tree trunk",kw:['arbol','árbol','ceiba','pino','tronco','bosque'],
   geo:{si:'Troncos rectos y verticales; copas partidas en capas o en picos, como si estuvieran construidas.',no:'Troncos curvos y nudosos; copas redondeadas y densas, ramas que ondulan.'},
   en:{si:'Ramas quebradas en ángulo, corteza agrietada, siluetas que cortan.',no:'Ramas que caen suaves, corteza lisa, siluetas amables.'}},
- {n:'Plantas bajas y arbustos',ico:'🌿',kw:['planta','arbusto','matorral','hierba','helecho'],
+ {n:'Plantas bajas y arbustos',ico:'🌿',enq:"jungle undergrowth plants",kw:['planta','arbusto','matorral','hierba','helecho'],
   geo:{si:'Masas compactas y ordenadas, como setos recortados en bloques.',no:'Masas redondas y esponjosas que se agrupan sin orden.'},
   en:{si:'Hojas puntiagudas y espinosas que cortan al tacto.',no:'Hojas curvas y suaves, sin filo.'}},
- {n:'Flores',ico:'🌸',kw:['flor','petalo','pétalo'],
+ {n:'Flores',ico:'🌸',enq:"tropical flower",kw:['flor','petalo','pétalo'],
   geo:{si:'Pétalos simétricos y regulares, como una estrella geométrica.',no:'Pétalos curvos en roseta o espiral.'},
   en:{si:'Pétalos afilados como puntas, centro duro.',no:'Pétalos suaves y translúcidos.'}},
- {n:'Lianas y enredaderas',ico:'🍃',kw:['liana','enreda','trepad','vid'],
+ {n:'Lianas y enredaderas',ico:'🍃',enq:"jungle vines hanging",kw:['liana','enreda','trepad','vid'],
   geo:{si:'Líneas rectas y tensas, como cables o cuerdas.',no:'Curvas colgantes y fluidas, como cabello o humo.'},
   en:{si:'Se quiebran en zigzag, como grietas o cadenas.',no:'Caen sueltas y sin tensión.'}},
- {n:'Musgo, hongos y líquenes',ico:'🍄',kw:['musgo','hongo','liquen','moho'],
+ {n:'Musgo, hongos y líquenes',ico:'🍄',enq:"moss covered stone",kw:['musgo','hongo','liquen','moho'],
   geo:{si:'Capas regulares, como escamas ordenadas sobre la superficie.',no:'Manchas suaves que se funden con lo que cubren.'},
   en:{si:'Costras duras y agrietadas.',no:'Textura esponjosa y húmeda.'}},
- {n:'Rocas y terreno',ico:'🪨',kw:['roca','piedra','montaña','acantilado','terreno','peñasco'],
+ {n:'Rocas y terreno',ico:'🪨',enq:"volcanic rock formation",kw:['roca','piedra','montaña','acantilado','terreno','peñasco'],
   geo:{si:'Fracturas rectas, bloques apilados, estratos regulares.',no:'Cantos rodados y superficies erosionadas.'},
   en:{si:'Aristas y esquirlas filosas, cortes recientes.',no:'Bordes ya pulidos por el agua o el viento.'}},
- {n:'Nubes, humo y niebla',ico:'☁️',kw:['nube','humo','niebla','vapor','bruma'],
+ {n:'Nubes, humo y niebla',ico:'☁️',enq:"fog forest",kw:['nube','humo','niebla','vapor','bruma'],
   geo:{si:'Capas horizontales regulares, como estratos.',no:'Masas sin forma definida.'},
   en:{si:'Bordes duros donde el viento o la luz los corta.',no:'Todo se difumina, sin bordes.'}},
- {n:'Arquitectura y templos',ico:'🏛️',kw:['templo','edificio','arquitect','torre','palacio','pirámide','piramide'],
+ {n:'Arquitectura y templos',ico:'🏛️',enq:"ancient temple architecture",kw:['templo','edificio','arquitect','torre','palacio','pirámide','piramide'],
   geo:{si:'Módulos que se repiten, columnas, simetría fuerte, remates puntiagudos.',no:'Cúpulas, arcos y muros curvos, sin ángulos duros.'},
   en:{si:'Ornamento afilado, picos, esquinas cortantes.',no:'Superficies lisas y acogedoras.'},tipos:['Entorno']},
- {n:'Ruinas y muros',ico:'🧱',kw:['ruina','muro','escombro','fortificacion','fortificación'],
+ {n:'Ruinas y muros',ico:'🧱',enq:"ancient ruins overgrown",kw:['ruina','muro','escombro','fortificacion','fortificación'],
   geo:{si:'Bloques todavía ordenados, hileras reconocibles.',no:'Bordes erosionados y redondeados por el tiempo.'},
   en:{si:'Grietas rectas y fracturas en ángulo.',no:'Todo se ha suavizado y hundido.'}},
- {n:'Armas',ico:'⚔️',kw:['arma','espada','lanza','hacha','cuchillo','daga','maza','flecha','macuahuitl'],
+ {n:'Armas',ico:'⚔️',enq:"ancient weapon blade",kw:['arma','espada','lanza','hacha','cuchillo','daga','maza','flecha','macuahuitl'],
   geo:{si:'Proporciones simétricas y funcionales, sin exageración.',no:'Formas curvas, como garras o colmillos: menos herramienta, más hueso.'},
   en:{si:'Filos rectos y puntas agresivas, nada decorativo suaviza el borde.',no:'Bordes desgastados, más objeto que arma.'},tipos:['Prop / arma']},
- {n:'Herramientas y objetos rituales',ico:'🔨',kw:['herramienta','ritual','altar','ofrenda','incensario','vasija'],
+ {n:'Herramientas y objetos rituales',ico:'🔨',enq:"ceremonial ritual object",kw:['herramienta','ritual','altar','ofrenda','incensario','vasija'],
   geo:{si:'Formas modulares y repetidas, hechas para usarse siempre igual.',no:'Formas talladas a mano, curvas irregulares.'},
   en:{si:'Formas precisas y angulosas, casi mecánicas.',no:'Acabado suave, tallado con calma.'}},
- {n:'Vehículos',ico:'🚗',kw:['vehiculo','vehículo','nave','carro','auto','moto','carruaje'],
+ {n:'Vehículos',ico:'🚗',enq:"vehicle design",kw:['vehiculo','vehículo','nave','carro','auto','moto','carruaje'],
   geo:{si:'Carrocería modular y simétrica, como producido en serie.',no:'Carrocería fluida, curvas continuas, sin esquinas.'},
   en:{si:'Paneles rectos y aristas visibles, agresivo al verlo.',no:'Todo suavizado, aerodinámico y amable.'},tipos:['Vehículo']},
- {n:'Criaturas',ico:'🐾',kw:['criatura','bestia','monstruo'],
+ {n:'Criaturas',ico:'🐾',enq:"wild animal anatomy",kw:['criatura','bestia','monstruo'],
   geo:{si:'Proporciones regulares y simétricas entre los dos lados del cuerpo.',no:'Cuerpo carnoso y curvo, sin partes duras visibles.'},
   en:{si:'Huesos y placas visibles, ángulos marcados en las articulaciones.',no:'Movimiento suave, sin partes que corten.'},tipos:['Criatura']},
- {n:'Vestuario y armadura',ico:'🛡️',kw:['armadura','vestuario','ropa','tela','manto','tunica','túnica','coraza'],
+ {n:'Vestuario y armadura',ico:'🛡️',enq:"ancient armor clothing",kw:['armadura','vestuario','ropa','tela','manto','tunica','túnica','coraza'],
   geo:{si:'Cortes simétricos y repetidos, como un uniforme.',no:'Telas que caen en curvas, sin piezas rígidas.'},
   en:{si:'Placas y picos; hombreras que terminan en punta.',no:'Todo suelto, cómodo, sin bordes duros.'},tipos:['Personaje']}
 ];
@@ -4047,6 +4050,9 @@ function elementoCardHTML(e,V){
     ${en_?`<p class="fd-fam" style="margin-top:2px"><span class="lbl">Energía</span> ${esc(en_)}</p>`:''}
     ${!geo&&!en_?'<p class="fd-vac">Sin dirección clara todavía: usa la forma neutra típica y ajústala cuando definas mood o tensión.</p>':''}
   </div>`}
+function elementoBusca(p,e){const cult=tpCultura?tpCultura(p):'';
+  const culRel=['Armas','Herramientas y objetos rituales','Vestuario y armadura','Arquitectura y templos','Ruinas y muros'].includes(e.n);
+  return {q:(cult&&culRel?cult+' ':'')+(e.enq||e.n),qc:(e.enq||e.n)+' concept art'}}
 function elementosSeccionHTML(p){const els=detectarElementos(p);if(!els.length)return '';
   const V=vecDe([...intTextos(p),...visTextos(p),...moodTextos(p)]);
   return `<div class="fd-sec"><span class="lbl">Elementos de tu proyecto</span><p class="hint" style="margin:2px 0 8px">Detectados en lo que escribiste. Misma lógica que arriba, aplicada a cada cosa concreta.</p>
@@ -4585,7 +4591,13 @@ function refsBalanceHTML(p){const R=p.refs||[],cats={};R.forEach(r=>(r.estudio||
     <p class="hint"><b>Referencia primaria (real)</b>: anatomía, fotografía, museos, naturaleza, materiales, ingeniería → estudias <b>cómo funcionan las cosas</b>. <b>Secundaria (artística)</b>: concept artists, cine, videojuegos → estudias <b>qué decisiones visuales tomó otro artista</b>. Diseña con la primera; aprende oficio con la segunda.</p>
     <div class="bal">${REF_POR.map(c=>`<div class="bal-r ${cats[c]?'':'cero'}"><span>${c}</span><i style="width:${(cats[c]||0)/max*100}%"></i><b>${cats[c]||0}</b></div>`).join('')}</div>
     ${msgs.map(m=>`<p class="nd-box sm">${esc(m)}</p>`).join('')}
-    <div class="prow"><button class="btn pri" data-act="auto-refs">${S.autoRef?'Buscando…':'Llenar mi moodboard con referencias reales'}</button><span class="muted" id="auto-prog">${S.autoRef?`Buscando ${S.autoRef.n} de ${S.autoRef.t}…`:'Busca según lo que definiste (forma, material, luz, cultura, anatomía, mood) en museos y Wikimedia, solo con licencia libre, y agrega cada una con su porqué.'}</span></div></div>`}
+    <p class="hint" style="margin:0">Usa «Llenar mi moodboard automático», arriba del todo, para traer varias de golpe.</p></div>`}
+function autoLlenadoHTML(p){const els=typeof detectarElementos==='function'?detectarElementos(p):[],pj=(p.personajes||[]).filter(c=>c.nombre);
+  return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Llenar mi moodboard automático</h3>
+    <p class="hint">Un clic y te traigo referencias <b>reales</b> (museos, naturaleza, materiales) y de <b>concept art</b> (artistas de ArtStation) para tu tensión, tus pilares, tus personajes${els.length?' y lo que detecté en tu proyecto':''}${els.length?': <b>'+els.map(e=>e.n).join(', ')+'</b>':''}.</p>
+    <div class="prow"><button class="btn pri" data-act="auto-refs" ${S.autoRef?"disabled":""}>${S.autoRef?'Buscando…':'Llenar mi moodboard (real + concept art)'}</button><span class="muted" id="auto-prog">${S.autoRef?`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`:'Revisa y quita después lo que no sirva; a cada una le falta tu porqué.'}</span></div>
+    ${els.length?`<div class="chips" style="margin-top:8px">${els.map(e=>`<button class="chip" ${S.autoRef?"disabled":""} data-act="auto-refs-cat" data-n="${esc(e.n)}" style="border:0;cursor:pointer;padding:4px 10px" title="Solo esta categoría: más rápido">${e.ico} ${esc(e.n)}</button>`).join("")}</div>`:""}
+    ${!els.length&&!pj.length?'<p class="nd-box sm" style="margin:8px 0 0">Para traer más, escribe primero tu tensión, pilares, personajes o de qué está hecho el proyecto.</p>':''}</div>`}
 const OBJS=['Forma','Anatomía','Material','Luz','Color','Cultura','Composición','Técnica','Mood','Arquitectura','Storytelling','Pilares'];
 function generadorHTML(p){const o=S.bqObj||'Forma',L=busquedasGen(p,o);
   return `<div class="box"><h3>Generador de búsquedas por objetivo</h3><p class="hint">No combina palabras al azar: arma la búsqueda según lo que necesitas estudiar y lo que ya definiste (sujeto, materiales, luz, cultura, mood).</p>
@@ -5463,12 +5475,37 @@ function busquedasFoto(p){const s=sujetosDe(p),Q=[],add=(q,capa,obj,busco,estudi
   if(clima.length)add(clima.slice(0,2).join(' ')+' landscape','mood','Mood','Tu atmósfera en fotografía','Qué hace que se sienta así: clima, distancia, escala, valor.');
   if(suj&&/Environment|Mundo|Arquitect|Keyframe/.test(s.tipo))add(suj+' interior','mood','Arquitectura','El espacio por dentro','Escala humana, cómo entra la luz, qué se repite.');
   return Q.slice(0,10)}
-async function llenarMoodboard(p){if(S.autoRef)return;const B=busquedasFoto(p);if(!B.length){toast('Define qué es, materiales, mood o cultura del proyecto primero');return}
-  S.autoRef={n:0,t:B.length,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+/* elementos concretos (vegetación, vestuario, armas…): grupo del tablero según el tipo */
+const ELEM_GRUPO={'Árboles y troncos':'mundo','Plantas bajas y arbustos':'mundo','Flores':'mundo','Lianas y enredaderas':'mundo','Musgo, hongos y líquenes':'mundo','Rocas y terreno':'mundo','Nubes, humo y niebla':'mundo','Arquitectura y templos':'mundo','Ruinas y muros':'mundo'};
+const ELEM_CAPA={'Armas':'concepto','Herramientas y objetos rituales':'concepto','Vehículos':'concepto','Criaturas':'concepto','Vestuario y armadura':'concepto'};
+async function llenarCategoria(p,nombre){if(S.autoRef)return;
+  const e=ELEMENTOS_FORMA.find(x=>x.n===nombre);if(!e){toast('No reconozco esa categoría');return}
+  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  const {q,qc}=elementoBusca(p,e);
+  try{const L=[...await metLibre(q,3).catch(()=>[]),...await wmLibre(q,4).catch(()=>[])];
+    for(const x of L.slice(0,5)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+  S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando concept art de ${nombre}…`;
+  try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});
+    for(const x of (r.items||[]).slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}}catch{}
+  const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias de ${nombre} agregadas`:'No encontré nada libre para esa categoría')}
+
+async function llenarMoodboard(p){if(S.autoRef)return;
+  const B=busquedasFoto(p),els=typeof detectarElementos==='function'?detectarElementos(p).slice(0,10):[];
+  if(!B.length&&!els.length){toast('Define qué es, materiales, mood, tensión o pilares del proyecto primero');return}
+  const total=B.length+els.length*2;S.autoRef={n:0,t:total,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  const marcar_=()=>{S.autoRef.n++;const el=$('#auto-prog');if(el)el.textContent=`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`};
   for(const b of B){try{const q=b.q,L=[...(b.met?await metLibre(q,1).catch(()=>[]):[]),...await wmLibre(q,2).catch(()=>[])];
       for(const x of L.slice(0,2)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:`${b.busco}. Estudia: ${b.estudiar}`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
-    S.autoRef.n++;const el=$('#auto-prog');if(el)el.textContent=`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`}
-  const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias agregadas: revísalas y quita las que no sirvan`:'No encontré referencias libres para esas búsquedas')}
+    marcar_()}
+  for(const e of els){
+    const {q,qc}=elementoBusca(p,e);
+    try{const L=[...await metLibre(q,2).catch(()=>[]),...await wmLibre(q,2).catch(()=>[])];
+      for(const x of L.slice(0,3)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    marcar_();
+    try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});
+      for(const x of (r.items||[]).slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}}catch{}
+    marcar_()}
+  const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias agregadas: revísalas y ajusta lo que no sirva`:'No encontré referencias libres para esas búsquedas')}
 
 /* ---------- 3 · tareas del taller ---------- */
 const GUIA_TEMA=[
@@ -5530,6 +5567,7 @@ async function accionExt(a,el,p,ds){const L=S.ajustes.tareas=S.ajustes.tareas||[
   switch(a){
     case 'est-medir':if(!S.estBusy)medirEstilo();return true;
     case 'auto-refs':llenarMoodboard(p);return true;
+    case 'auto-refs-cat':llenarCategoria(p,ds.n);return true;
     case 'tar-nueva':S.tarNueva=true;S.tarD=null;renderMain();return true;case 'tar-cancel':S.tarNueva=false;renderMain();return true;
     case 'tar-sel':S.tareaSel=ds.id;renderMain();return true;
     case 'tar-crear':{const d=S.tarD||{};if(!(d.enunciado||'').trim()){toast('Escribe qué te pidieron');return true}const nt={id:uid(),titulo:(d.titulo||'').trim()||corto(d.enunciado.split('\n')[0],40),pid:d.pid||'',entrega:d.entrega||'',enunciado:d.enunciado.trim(),reqs:requisitosDe(d.enunciado),bocetos:[],ts:Date.now()};
