@@ -159,6 +159,10 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 .ref{background:var(--bg);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;border:1px solid transparent}
 .ref.nowhy{border-color:var(--warn)}
 .ref img{width:100%;display:block;max-height:260px;object-fit:cover;cursor:zoom-in;background:var(--surface2)}
+.ref-imgw{position:relative}
+.ref-imgw a{display:block}
+.ref-imgw a img{cursor:pointer}
+.ref-lupa{position:absolute;top:6px;right:6px;border:0;background:rgba(8,9,12,.65);color:#fff;border-radius:6px;padding:3px 6px;font-size:13px;cursor:zoom-in;line-height:1}
 .ref .rb{padding:8px;display:flex;flex-direction:column;gap:6px}
 .ref textarea{min-height:52px;font-size:13px;padding:6px 8px;background:var(--surface)}
 .ref .rrow{display:flex;gap:6px;align-items:center}
@@ -905,7 +909,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulqdyxx').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulr4vj0').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1455,7 +1459,6 @@ function vRefs(p){
     return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
     ${qs.length?`<div class="colq">${qs.map(b=>`<div class="colq-r"><button class="colq-b" ${S.autoRef?'disabled':''} data-act="buscar-guardada" data-q="${esc(b.q)}" data-capa="${esc(b.capa)}" data-obj="${esc(b.obj||'')}" data-busco="${esc(b.busco||'')}" data-estudiar="${esc(b.estudiar||'')}" title="Traer referencias reales + concept art de esta búsqueda">↓ ${esc(b.q)}</button><a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗</a></div>`).join('')}</div>`:''}
     ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
-  ${exportBox(p)}
   <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: buscar por tu cuenta, artistas a seguir, tus búsquedas guardadas</summary>
   ${refsBuscaHTML(p)}
   ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
@@ -1470,10 +1473,10 @@ function vRefs(p){
 function refSrc(r){if(r.asset)return S.assets?.url?S.assets.url(r.asset):"/_blob/"+r.asset;return r.src||""}
 function imgAttrs(r){const s=refSrc(r);return (s?`src="${esc(s)}" `:"")+(r.asset?`data-asset="${esc(r.asset)}"`:"")}
 function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div class="ref ${nowhy?'nowhy':''}">
-  <img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" loading="lazy" data-act="zoom">
+  <div class="ref-imgw">${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir la foto o la obra original">`:''}<img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" loading="lazy" data-act="${r.link?'':'zoom'}">${r.link?'</a>':''}${r.link?`<button class="ref-lupa" data-act="zoom" title="Ver más grande aquí">🔍</button>`:''}</div>
   <div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
   ${nowhy?'<span class="warn">Falta el porqué</span>':''}
-  <input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface)">
+  <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
   <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
   <button class="btn ghost sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button>
   <button class="btn ghost sm" data-act="ref-bajar" data-id="${r.id}" title="Descargar esta imagen suelta">Descargar</button>
@@ -1525,7 +1528,7 @@ function hojaPaletasHTML(p){const pj=(p.personajes||[]).filter(x=>x.nombre),mp=p
 function vHoja(p){
   const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim());
   return `
-  <div class="prow" style="justify-content:flex-end">${p.refs.length?'<button class="btn" data-act="exp-png">Moodboard PNG</button><button class="btn" data-act="exp-zip">Llevar a PureRef (.zip)</button>':''}<button class="btn" data-act="copiar-md">Copiar todo como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></div>
+  <div class="prow" style="justify-content:flex-end">${p.refs.length?`<button class="btn" data-act="tp-png">Tablero en PNG</button><button class="btn" data-act="tp-zip">Llevar a PureRef (.zip)</button>${SYNC_OK?'<button class="btn" data-act="tp-carpeta">Guardar en mi carpeta</button>':''}`:''}<button class="btn" data-act="copiar-md">Copiar todo como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></div>
   <article class="sheet">
     ${dnaHTML(p)}
     ${(p.lenguaje?.reglas||[]).length?`<div class="hsec"><div class="hsec-h"><h5 style="margin:0">Reglas visuales</h5>${cpBtn('reglas')}</div><ol class="reglas">${p.lenguaje.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
@@ -2978,7 +2981,7 @@ function metodologiaHTML(){
 const SYNC_OK=typeof window.showDirectoryPicker==='function'&&!!window.PC_SHIM;
 const kv=(()=>{let dbp;const open=()=>dbp=dbp||new Promise((ok,ko)=>{const r=indexedDB.open('pc-carpeta',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)});
   const tx=async(m,fn)=>{const db=await open();return new Promise((ok,ko)=>{const t=db.transaction('kv',m),q=fn(t.objectStore('kv'));t.oncomplete=()=>ok(q?.result);t.onerror=()=>ko(t.error)})};
-  return {get:k=>tx('readonly',s=>s.get(k)).catch(()=>null),set:(k,v)=>tx('readwrite',s=>s.put(v,k)).catch(()=>{})}})();
+  return {get:k=>tx('readonly',s=>s.get(k)).catch(()=>null),set:(k,v)=>tx('readwrite',s=>s.put(v,k)).catch(()=>{}),del:k=>tx('readwrite',s=>s.delete(k)).catch(()=>{})}})();
 const normN=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 function etapaDeCarpeta(n){n=normN(n);return /boceto|sketch|thumb|silueta/.test(n)?'Boceto':/gris|valor|value|gray|grey/.test(n)?'Valores':/final/.test(n)?'Final':/versi|color|render|wip|iter/.test(n)?'Color':null}
 async function* recorrer(dir,ruta=[]){for await(const [nombre,h] of dir.entries()){if(nombre.startsWith('.'))continue;if(h.kind==='directory'){if(/moodboard/i.test(nombre))continue;yield* recorrer(h,[...ruta,nombre])}else if(/\.(png|jpe?g|webp|gif)$/i.test(nombre))yield {h,ruta,nombre}}}
@@ -3397,22 +3400,6 @@ async function pedirCritica(id,gal){
 /* ============ Llevar a PureRef ============ */
 const EXP={bg:'#f4f5f7',ink:'#14161a',ink2:'#4b515b',ink3:'#7a818c',concepto:'#2a3ccc',mood:'#962c74',tecnica:'#9c6604',p1:'#0c7563',p2:'#0c7563',p3:'#0c7563'};
 const DISP='"Bricolage Grotesque", "Segoe UI", sans-serif',BODY='"IBM Plex Sans", "Segoe UI", sans-serif',MONO='"IBM Plex Mono", Consolas, monospace';
-function resumenPureRef(p){
-  const c=p.concepto,L=[p.nombre];
-  if(c.frase)L.push(c.frase);
-  const nuc=c.nucleos.filter(Boolean);
-  if(nuc.length||c.tension)L.push([nuc.join(' / '),c.tension].filter(Boolean).join(' — '));
-  p.pilares.forEach((x,i)=>{if(x.t)L.push(`Pilar ${i+1}: ${x.t}`)});
-  if(p.mood.sensacion||p.mood.palabras)L.push(['Mood:',p.mood.sensacion,p.mood.palabras].filter(Boolean).join(' '));
-  const kw=KWCATS.map(([k])=>(p.keywords[k]||[]).join(', ')).filter(Boolean);
-  if(kw.length)L.push('Keywords: '+kw.join(' · '));
-  return L.join('\n');
-}
-function exportBox(p){
-  if(!p.refs.length)return '';
-  return `<div class="box"><h3>Llevar a PureRef</h3>
-    <p class="hint"><b>Carpeta:</b> descomprime (o abre tu carpeta) y arrastra a PureRef: solo tus imágenes sueltas en su formato original, más un <b>00_INFO.txt</b> por capa con el texto real (sin láminas fijas de por medio). <b>Resumen corto:</b> copia pilares, tensión, keywords y mood para pegarlo como nota de texto en PureRef. En cada imagen: <b>Copiar</b> (Ctrl+V directo en PureRef) o <b>Descargar</b> suelta.</p>
-    <div class="prow">${SYNC_OK?`<button class="btn pri" data-act="exp-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta de la compu</button>`:''}<button class="btn ${SYNC_OK?'':'pri'}" data-act="exp-zip" ${S.exp?'disabled':''}>Descargar carpeta (.zip)</button><button class="btn" data-act="copiar-resumen">Copiar resumen (texto corto)</button><button class="btn ghost" data-act="exp-png" ${S.exp?'disabled':''}>Moodboard en PNG</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div></div>`}
 function expStatus(t){S.exp=t;const el=$('#exp-status');if(el)el.textContent=t||''}
 async function blobDeRef(r){if(r.asset&&S.assets?.blob)return S.assets.blob(r.asset);const res=await fetch(refSrc(r));if(!res.ok)throw new Error('img');return res.blob()}
 function slug(s,n=48){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,n).replace(/-+$/,'')||'ref'}
@@ -3420,163 +3407,6 @@ function envolver(ctx,txt,w){const out=[];for(const par of String(txt||'').split
 function lienzo(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 const aBlob=(c,type='image/png',q)=>new Promise(r=>c.toBlob(r,type,q));
 
-async function laminaCapa(p,l){
-  const c=lienzo(1400,700),x=c.getContext('2d'),col=EXP[l.k];
-  x.fillStyle=EXP.bg;x.fillRect(0,0,1400,700);x.fillStyle=col;x.fillRect(0,0,1400,22);
-  x.fillStyle=col;x.font=`500 28px ${MONO}`;x.fillText(l.k.startsWith('p')?'ART DIRECTION':'CAPA',80,110);
-  x.fillStyle=EXP.ink;x.font=`800 96px ${DISP}`;let y=210;
-  for(const ln of envolver(x,capaNombre(p,l.k).replace(/^P\d · /,''),1240).slice(0,2)){x.fillText(ln,80,y);y+=100}
-  const m=/^p(\d)$/.exec(l.k),desc=m?p.pilares[+m[1]-1]?.f:l.k==='mood'?(p.mood.sensacion||l.d):l.k==='tecnica'?(p.tecnica.medio||l.d):l.d;
-  x.fillStyle=EXP.ink2;x.font=`400 36px ${BODY}`;y+=20;for(const ln of envolver(x,desc,1240).slice(0,6)){x.fillText(ln,80,y);y+=50}
-  if(l.k==='mood')p.mood.paleta.forEach((cl,i)=>{x.fillStyle=cl;x.fillRect(80+i*110,600,90,60)});
-  return aBlob(c);
-}
-
-function infoCapa(p,l){
-  const L=[capaNombre(p,l.k).replace(/^P\d · /,''),''];
-  const m=/^p(\d)$/.exec(l.k);
-  if(m){
-    const pl=p.pilares[+m[1]-1]||{};
-    L.push(pl.t||'—');
-    if(pl.f)L.push('',pl.f);
-  }else if(l.k==='concepto'){
-    const c=p.concepto;
-    if(c.frase)L.push(c.frase,'');
-    L.push('Núcleos: '+(c.nucleos.filter(Boolean).join(' / ')||'—'));
-    L.push('Antítesis / tensión: '+(c.tension||'—'));
-    if(c.tensionTexto)L.push('',c.tensionTexto);
-    if(c.empujes?.length)L.push('','Empujes:',...c.empujes.map(e=>'- '+e));
-    L.push('','Keywords:',...KWCATS.map(([k,n])=>`- ${n}: ${(p.keywords[k]||[]).join(', ')||'—'}`));
-  }else if(l.k==='mood'){
-    L.push(p.mood.sensacion||'—');
-    if(p.mood.palabras)L.push('',p.mood.palabras);
-    if(p.mood.paleta?.length)L.push('','Paleta: '+p.mood.paleta.join(' '));
-  }else if(l.k==='tecnica'){
-    L.push(p.tecnica.medio||'—');
-    if(p.tecnica.acabado)L.push('',p.tecnica.acabado);
-    if(p.tecnica.referentes)L.push('',p.tecnica.referentes);
-  }
-  return L.join('\n');
-}
-
-// Arma los archivos del moodboard para PureRef y los entrega a escribir(ruta, blob)
-async function armarMoodboard(p,escribir){
-  await document.fonts?.ready;let n=0,fallos=0;
-  const capas=LAYERS.filter(l=>p.refs.some(r=>r.capa===l.k));
-  for(const [ci,l] of capas.entries()){
-    const carpeta=`${ci+1}_${slug(capaNombre(p,l.k),40)}`;
-    await escribir([carpeta,'00_INFO.txt'],new Blob([infoCapa(p,l)],{type:'text/plain;charset=utf-8'}));
-    const rs=p.refs.filter(r=>r.capa===l.k);
-    for(const [i,r] of rs.entries()){
-      expStatus(`Preparando ${++n} de ${p.refs.length}…`);
-      try{const b=await blobDeRef(r);const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');
-        await escribir([carpeta,`${String(i+1).padStart(2,'0')}_${slug(r.porque)}.${ext}`],b)}catch{fallos++}
-    }
-  }
-  // proceso: la última imagen de cada etapa
-  const orden=['bocetos','grises','versiones','final'];
-  for(const [k,nom] of orden.map(k=>[k,CARPS.find(c=>c[0]===k)[1]])){const x=(p.piezas||[]).filter(z=>carpDe(z)===k).sort((a,b)=>a.creado-b.creado).at(-1);
-    if(x)try{const b=await blobDeRef(x);await escribir(['9_Proceso',`${orden.indexOf(k)+1}_${slug(nom,20)}.${(b.type.split('/')[1]||'jpg').replace('jpeg','jpg')}`],b)}catch{}}
-  if(fallos&&fallos===p.refs.length)throw new Error('sin-imagenes');
-  await escribir(['00_HOJA.md'],new Blob([aMarkdown(p)],{type:'text/markdown'}));
-  return fallos;
-}
-async function exportZip(){
-  const p=S.P[S.cur];if(!p||S.exp)return;
-  if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
-  try{
-    const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60));
-    const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=raiz;for(const c of ruta.slice(0,-1))d=d.folder(c);d.file(ruta.at(-1),b)});
-    expStatus('Comprimiendo…');
-    const blob=await zip.generateAsync({type:'blob'});
-    expStatus('');await guardarArchivo(slug(p.nombre,60)+'_pureref.zip',blob);
-    if(fallos)toast(`${fallos} imagen(es) no se pudieron incluir`);
-  }catch(e){toast(e?.message==='sin-imagenes'?'No se pudo leer ninguna imagen. Recarga la página e intenta de nuevo.':'No se pudo armar el ZIP')}
-  finally{expStatus('')}
-}
-// Guarda el moodboard directo en PROYECTOS/<proyecto>/MOODBOARD PUREREF/imagenes de la carpeta de la compu
-async function exportCarpeta(){
-  const p=S.P[S.cur];if(!p||S.exp)return;
-  let root=await kv.get('raiz');
-  try{if(!root){root=await window.showDirectoryPicker({id:'potenciador',mode:'readwrite'});await kv.set('raiz',root)}
-    if(await root.queryPermission({mode:'readwrite'})!=='granted'&&await root.requestPermission({mode:'readwrite'})!=='granted'){toast('Sin permiso para escribir en tu carpeta');return}}
-  catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir tu carpeta');return}
-  const nombreOk=(p.nombre||'Proyecto').replace(/[<>:"/\|?*]+/g,' ').trim()||'Proyecto';
-  try{
-    const proy=await (await root.getDirectoryHandle('PROYECTOS',{create:true})).getDirectoryHandle(nombreOk,{create:true});
-    const mb=await proy.getDirectoryHandle('MOODBOARD PUREREF',{create:true});
-    try{await mb.removeEntry('imagenes',{recursive:true})}catch{}
-    const base=await mb.getDirectoryHandle('imagenes',{create:true});
-    const fallos=await armarMoodboard(p,async(ruta,b)=>{let d=base;for(const c of ruta.slice(0,-1))d=await d.getDirectoryHandle(c,{create:true});
-      const fh=await d.getFileHandle(ruta.at(-1),{create:true}),w=await fh.createWritable();await w.write(b);await w.close()});
-    expStatus('');toast(`Listo en PROYECTOS/${nombreOk}/MOODBOARD PUREREF`+(fallos?` (${fallos} sin incluir)`:''));
-  }catch(e){expStatus('');toast(e?.message==='sin-imagenes'?'No se pudo leer ninguna imagen. Recarga la página e intenta de nuevo.':'No se pudo guardar en tu carpeta')}
-}
-async function exportPNG(){
-  const p=S.P[S.cur];if(!p||S.exp)return;
-  expStatus('Armando moodboard…');
-  try{const b=await moodboardPNG(p);expStatus('');await guardarArchivo(slug(p.nombre,60)+'_moodboard.png',b)}
-  catch{expStatus('');toast('No se pudo armar el PNG')}
-}
-function descargaNativa(nombre,data){
-  try{
-    const blob=data instanceof Blob?data:new Blob([data],{type:'text/plain'});
-    const url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download=nombre;document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),4000);
-    return true;
-  }catch{return false}
-}
-async function guardarArchivo(nombre,data){
-  if(S.downloads){
-    try{await S.downloads.save({filename:nombre,data});toast('Listo: '+nombre);return}
-    catch(e){if(e?.code==='declined')return}
-  }
-  if(descargaNativa(nombre,data))toast('Listo: '+nombre);
-  else toast('No se pudo descargar')
-}
-
-async function moodboardPNG(p){
-  await document.fonts?.ready;
-  const capas=LAYERS.filter(l=>p.refs.some(r=>r.capa===l.k));
-  const COLW=560,GAP=48,PAD=96,W=PAD*2+capas.length*COLW+(capas.length-1)*GAP;
-  const imgs={};await Promise.all(p.refs.map(async r=>{try{imgs[r.id]=await createImageBitmap(await blobDeRef(r))}catch{}}));
-  const m=lienzo(10,10).getContext('2d');
-  // cabecera
-  const head=[];m.font=`800 110px ${DISP}`;const tl=envolver(m,p.nombre,W-PAD*2).slice(0,2);
-  m.font=`400 40px ${BODY}`;const fl=p.concepto.frase?envolver(m,p.concepto.frase,Math.min(W-PAD*2,1900)).slice(0,3):[];
-  const nuc=p.concepto.nucleos.filter(Boolean).join('  /  ');
-  let H=PAD+tl.length*118+fl.length*54+(nuc?90:0)+40;
-  const pilY=H;const hasPil=p.pilares.some(x=>x.t);if(hasPil)H+=230;
-  const colY=H+40;
-  // columnas
-  const layout=capas.map(l=>{let y=0;const items=[];m.font=`400 24px ${BODY}`;
-    const desc=envolver(m,(/^p\d$/.test(l.k)?p.pilares[+l.k[1]-1]?.f:l.d)||'',COLW-40).slice(0,4);y+=120+desc.length*32+24;
-    for(const r of p.refs.filter(r=>r.capa===l.k)){const im=imgs[r.id];if(!im)continue;
-      const h=Math.min(im.height*COLW/im.width,COLW*1.6);m.font=`400 22px ${BODY}`;
-      const cap=envolver(m,r.porque||'(sin porqué)',COLW).slice(0,4);items.push({r,im,y,h,cap});y+=h+14+cap.length*30+(r.fuente?30:0)+36}
-    return {l,desc,items,h:y}});
-  H=colY+Math.max(...layout.map(c=>c.h),200)+PAD;
-  const s=Math.min(1,16000/H,16000/W),c=lienzo(Math.round(W*s),Math.round(H*s)),x=c.getContext('2d');x.scale(s,s);
-  x.fillStyle=EXP.bg;x.fillRect(0,0,W,H);x.textBaseline='alphabetic';
-  let y=PAD+90;x.fillStyle=EXP.ink;x.font=`800 110px ${DISP}`;for(const t of tl){x.fillText(t,PAD,y);y+=118}
-  x.fillStyle=EXP.ink2;x.font=`400 40px ${BODY}`;y-=40;for(const t of fl){y+=54;x.fillText(t,PAD,y)}
-  if(nuc){y+=80;x.fillStyle=EXP.ink;x.font=`700 44px ${DISP}`;x.fillText(nuc,PAD,y);
-    if(p.concepto.tension){const w=x.measureText(nuc).width;x.font=`500 24px ${MONO}`;x.fillStyle=EXP.concepto;x.fillText(p.concepto.tension.toUpperCase(),PAD+w+30,y-6)}}
-  if(hasPil){const pw=(W-PAD*2-GAP*2)/3;p.pilares.forEach((pl,i)=>{const px=PAD+i*(pw+GAP),py=pilY+30;
-    x.fillStyle=EXP.p1;x.fillRect(px,py,pw,6);x.font=`500 22px ${MONO}`;x.fillText('PILAR '+(i+1),px,py+46);
-    x.fillStyle=EXP.ink;x.font=`700 40px ${DISP}`;x.fillText(pl.t||'—',px,py+100);
-    x.fillStyle=EXP.ink2;x.font=`400 24px ${BODY}`;envolver(x,pl.f,pw).slice(0,3).forEach((t,j)=>x.fillText(t,px,py+140+j*32))})}
-  layout.forEach((col,ci)=>{const cx=PAD+ci*(COLW+GAP),col0=colY,cl=EXP[col.l.k];
-    x.fillStyle=cl;x.fillRect(cx,col0,COLW,10);x.font=`700 44px ${DISP}`;x.fillStyle=EXP.ink;
-    x.fillText(envolver(x,capaNombre(p,col.l.k),COLW)[0],cx,col0+76);
-    x.fillStyle=EXP.ink3;x.font=`400 24px ${BODY}`;col.desc.forEach((t,j)=>x.fillText(t,cx,col0+114+j*32));
-    for(const it of col.items){const iy=col0+it.y;x.drawImage(it.im,0,0,it.im.width,Math.min(it.im.height,it.h*it.im.width/COLW),cx,iy,COLW,it.h);
-      x.fillStyle=EXP.ink;x.font=`400 22px ${BODY}`;it.cap.forEach((t,j)=>x.fillText(t,cx,iy+it.h+34+j*30));
-      if(it.r.fuente){x.fillStyle=EXP.ink3;x.font=`400 18px ${MONO}`;x.fillText(it.r.fuente,cx,iy+it.h+34+it.cap.length*30)}}});
-  x.fillStyle=EXP.ink3;x.font=`400 20px ${MONO}`;x.fillText('Potenciador de Conceptos · '+fecha(Date.now()),PAD,H-40);
-  return aBlob(c);
-}
 function copiarRef(r,btn){
   try{
     const pngP=blobDeRef(r).then(async b=>{if(b.type==='image/png')return b;const im=await createImageBitmap(b);const c=lienzo(im.width,im.height);c.getContext('2d').drawImage(im,0,0);return aBlob(c)});
@@ -4064,7 +3894,9 @@ const CAT_TAG={'Árboles y troncos':'Vegetación','Plantas bajas y arbustos':'Ve
 function artistaParaCategoria(nombreCat){const tag=CAT_TAG[nombreCat];if(!tag)return null;return ARTISTAS.find(a=>(a.t||[]).includes(tag))||null}
 /* pide varias búsquedas reales en orden y junta resultados, sin detenerse en la primera que falle: así nunca vuelve vacío */
 async function wmMulti(qs,nEach,total){const out=[];for(const q of (qs||[]).filter(Boolean)){if(out.length>=total)break;try{const r=await wmLibre(q,nEach);out.push(...r)}catch{}}return out.slice(0,total)}
-function elementoBusca(p,e){const s=sujetosDe(p),rawCult=s.cult[0],cult=tpCultura?tpCultura(p):'';
+function elementoBusca(p,e){
+  const ov=p.autoQ?.[e.n];if(ov?.q)return {q:ov.q,qc:ov.qc||ov.q,wmQs:[ov.q],metOk:true,artista:null};
+  const s=sujetosDe(p),rawCult=s.cult[0],cult=tpCultura?tpCultura(p):'';
   const culRel=['Armas','Herramientas y objetos rituales','Vestuario y armadura'].includes(e.n);
   const templo=['Arquitectura y templos','Ruinas y muros'].includes(e.n);
   const organica=ORGANICAS.includes(e.n);
@@ -4636,7 +4468,14 @@ function autoLlenadoHTML(p){const els=typeof detectarElementos==='function'?dete
     <div class="prow"><button class="btn pri" data-act="auto-refs" ${S.autoRef?"disabled":""}>${S.autoRef?'Buscando…':'Llenar mi moodboard (real + concept art)'}</button><span class="muted" id="auto-prog">${S.autoRef?`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`:'Revisa y quita después lo que no sirva; a cada una le falta tu porqué.'}</span></div>
     ${els.length?`<div class="chips" style="margin-top:8px">${els.map(e=>`<button class="chip" ${S.autoRef?"disabled":""} data-act="auto-refs-cat" data-n="${esc(e.n)}" style="border:0;cursor:pointer;padding:4px 10px" title="Solo esta categoría: más rápido">${e.ico} ${esc(e.n)}</button>`).join("")}</div>`:""}
     ${pj.length?`<div class="chips" style="margin-top:6px">${pj.map(c=>`<button class="chip" ${S.autoRef?"disabled":""} data-act="auto-refs-pose" data-id="${esc(c.id)}" style="border:0;cursor:pointer;padding:4px 10px" title="Fotos y bocetos de cómo se mueve y carga el peso">🧍 Poses: ${esc(c.nombre)}</button>`).join("")}</div>`:""}
-    ${!els.length&&!pj.length?'<p class="nd-box sm" style="margin:8px 0 0">Para traer más, escribe primero tu tensión, pilares, personajes o de qué está hecho el proyecto.</p>':''}</div>`}
+    ${!els.length&&!pj.length?'<p class="nd-box sm" style="margin:8px 0 0">Para traer más, escribe primero tu tensión, pilares, personajes o de qué está hecho el proyecto.</p>':''}
+    ${els.length?`<details style="margin-top:8px"><summary class="lbl" style="cursor:pointer">✎ Ajustar qué busca cada categoría</summary>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${els.map(e=>{const auto=elementoBusca(p,e),ov=p.autoQ?.[e.n];return `<div class="prow" style="align-items:center;gap:6px"><span style="min-width:150px;font-size:13px">${e.ico} ${esc(e.n)}</span>
+        <input type="text" data-b="autoQ.${esc(e.n)}.q" value="${esc(ov?.q??auto.q)}" placeholder="Qué buscar (foto real)" style="flex:1 1 160px;font-size:12.5px;padding:5px 8px">
+        <input type="text" data-b="autoQ.${esc(e.n)}.qc" value="${esc(ov?.qc??auto.qc)}" placeholder="Qué buscar (concept art)" style="flex:1 1 160px;font-size:12.5px;padding:5px 8px">
+        ${ov?`<button class="btn ghost sm" data-act="autoq-reset" data-n="${esc(e.n)}" title="Volver a la búsqueda automática">↺</button>`:''}</div>`}).join('')}</div>
+      <p class="hint" style="margin:6px 0 0">Se guarda por proyecto. Bórralo con ↺ para que vuelva a calcularse solo.</p></details>`:''}
+    </div>`}
 const OBJS=['Forma','Anatomía','Material','Luz','Color','Cultura','Composición','Técnica','Mood','Arquitectura','Storytelling','Pilares'];
 function generadorHTML(p){const o=S.bqObj||'Forma',L=busquedasGen(p,o);
   return `<div class="box"><h3>Generador de búsquedas por objetivo</h3><p class="hint">No combina palabras al azar: arma la búsqueda según lo que necesitas estudiar y lo que ya definiste (sujeto, materiales, luz, cultura, mood).</p>
@@ -5628,6 +5467,7 @@ async function accionExt(a,el,p,ds){const L=S.ajustes.tareas=S.ajustes.tareas||[
     case 'auto-refs':llenarMoodboard(p);return true;
     case 'auto-refs-cat':llenarCategoria(p,ds.n);return true;
     case 'auto-refs-pose':llenarPosesPersonaje(p,ds.id);return true;
+    case 'autoq-reset':if(p.autoQ)delete p.autoQ[ds.n];marcar();renderMain();return true;
     case 'buscar-guardada':buscarGuardada(p,{q:ds.q,capa:ds.capa,obj:ds.obj,busco:ds.busco,estudiar:ds.estudiar});return true;
     case 'tar-nueva':S.tarNueva=true;S.tarD=null;renderMain();return true;case 'tar-cancel':S.tarNueva=false;renderMain();return true;
     case 'tar-sel':S.tareaSel=ds.id;renderMain();return true;
@@ -6005,16 +5845,22 @@ async function tpZip(){const p=S.P[S.cur];if(!p||S.exp)return;if(!window.JSZip){
   try{const zip=new JSZip(),raiz=zip.folder(slug(p.nombre,60)+'_tablero');const f=await armarTablero(p,async(ruta,b)=>{let d=raiz;for(const c of ruta.slice(0,-1))d=d.folder(c);d.file(ruta.at(-1),b)});
     expStatus('Comprimiendo…');const blob=await zip.generateAsync({type:'blob'});expStatus('');await guardarArchivo(slug(p.nombre,60)+'_tablero.zip',blob);if(f)toast(`${f} imagen(es) no se pudieron incluir`)}
   catch{toast('No se pudo armar el tablero')}finally{expStatus('')}}
-async function tpCarpeta(){const p=S.P[S.cur];if(!p||S.exp)return;let root=await kv.get('raiz');
-  try{if(!root){root=await window.showDirectoryPicker({id:'potenciador',mode:'readwrite'});await kv.set('raiz',root)}
-    if(await root.queryPermission({mode:'readwrite'})!=='granted'&&await root.requestPermission({mode:'readwrite'})!=='granted'){toast('Sin permiso para escribir en tu carpeta');return}}
-  catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir tu carpeta');return}
+/* clave aparte de 'raiz' (que usa solo lectura, para sincronizar Mis ilustraciones): escribir necesita su propio permiso, y si ese permiso ya no sirve, se vuelve a pedir la carpeta en vez de quedarse atorado */
+async function tpRaizEscritura(forzar){let root=forzar?null:await kv.get('raizrw');
+  if(root){const ok=await root.queryPermission({mode:'readwrite'}).catch(()=>'denegado');
+    if(ok==='granted')return root;
+    if(await root.requestPermission({mode:'readwrite'}).catch(()=>'denegado')==='granted')return root;
+    await kv.del?.('raizrw').catch(()=>{});root=null}
+  root=await window.showDirectoryPicker({id:'potenciador-rw',mode:'readwrite'});await kv.set('raizrw',root);return root}
+async function tpCarpeta(){const p=S.P[S.cur];if(!p||S.exp)return;let root;
+  try{root=await tpRaizEscritura(false)}
+  catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir tu carpeta: '+(e?.message||e?.name||'sin permiso'));return}
   const nom=(p.nombre||'Proyecto').replace(/[<>:"/\\|?*]+/g,' ').trim()||'Proyecto';
   try{bloquear();const mb=await (await (await root.getDirectoryHandle('PROYECTOS',{create:true})).getDirectoryHandle(nom,{create:true})).getDirectoryHandle('MOODBOARD PUREREF',{create:true});
     try{await mb.removeEntry('tablero',{recursive:true})}catch{}const base=await mb.getDirectoryHandle('tablero',{create:true});
     const f=await armarTablero(p,async(ruta,b)=>{let d=base;for(const c of ruta.slice(0,-1))d=await d.getDirectoryHandle(c,{create:true});const fh=await d.getFileHandle(ruta.at(-1),{create:true}),w=await fh.createWritable();await w.write(b);await w.close()});
     toast(`Listo en PROYECTOS/${nom}/MOODBOARD PUREREF/tablero`+(f?` (${f} sin incluir)`:''))}
-  catch{toast('No se pudo guardar en tu carpeta')}finally{expStatus('');desbloquear()}}
+  catch(e){toast('No se pudo guardar en tu carpeta: '+(e?.message||e?.name||'error'))}finally{expStatus('');desbloquear()}}
 async function tpPNG(){const p=S.P[S.cur];if(!p||S.exp)return;try{const b=await tableroPNG(p);expStatus('');await guardarArchivo(slug(p.nombre,60)+'_tablero.png',b)}catch{toast('No se pudo armar el PNG')}finally{expStatus('')}}
 function refTableroHTML(p,r){const G=tabGrupos(p),g=grupoDe(p,r),auto=!r.grupo;
   return `<div class="rrow tp-rrow"><select id="rg-${r.id}" data-ref="${r.id}" data-rk="grupo" aria-label="Grupo del tablero" title="Grupo del tablero">${G.map(x=>`<option value="${esc(x.k)}" ${g===x.k?'selected':''}>${auto&&g===x.k?'Auto: ':''}${esc(x.n)}</option>`).join('')}</select>
@@ -6245,7 +6091,8 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
-  if(b.tagName==='IMG'&&b.dataset.act==='zoom'){const full=b.dataset.full,fu=full&&S.assets?.url?.(full);$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img ${full&&!fu?`data-asset="${esc(full)}"`:`src="${esc(fu||b.currentSrc||b.src)}"`} alt=""></div>`;if(full&&!fu)S.assets?.hydrate?.();return}
+  if(b.dataset.act==='zoom'){const img=b.tagName==='IMG'?b:b.closest('.ref-imgw,.pz,figure')?.querySelector('img')||b.previousElementSibling;if(!img)return;
+    const full=img.dataset.full,fu=full&&S.assets?.url?.(full);$('#overlay').innerHTML=`<div class="lightbox" data-act="unzoom"><img ${full&&!fu?`data-asset="${esc(full)}"`:`src="${esc(fu||img.currentSrc||img.src)}"`} alt=""></div>`;if(full&&!fu)S.assets?.hydrate?.();return}
   accion(b.dataset.act,b);
 });
 document.addEventListener('keyup',e=>{if(e.key==='Escape'){$('#overlay').innerHTML='';S.pres=null}});
@@ -6261,6 +6108,8 @@ document.addEventListener('drop',e=>{const an=e.target.closest?.('#drop-an');if(
 async function accion(a,el){
   const p=S.P[S.cur],ds=el.dataset;
   if(['abrir','vista','nuevo','abrir-tab','unl'].includes(a))S.menu=false;
+  /* el selector de carpeta necesita un gesto del usuario recién hecho: se atiende antes que cualquier otra cosa */
+  if(a==='tp-carpeta'){tpCarpeta();return}
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
@@ -6300,7 +6149,6 @@ async function accion(a,el){
       proponer(x,{titulo:pr.nombre,disciplina:pr.tipo==='Entorno'?'Environment Concept':pr.tipo==='Key art'?'Keyframe / Key Art':pr.tipo+' Design',seccion:/Personaje|Criatura/.test(pr.tipo)?'characters':'projects'});marcarPid(ds.pid);renderMain();toast('Propuesta: revísala con tu asesor en Portafolio');break}
     case 'unl-post':{const pr=S.P[ds.pid];if(!pr)return;lista('posts').push({id:uid(),fecha:hoyKey(),red:'Instagram + ArtStation',tipo:'Final',pid:ds.pid,titulo:pr.nombre,es:'',en:'',hashtags:hashtagsDe(pr.tipo),estado:'Idea'});marcarAj();S.vista='redes';render();toast('En tu plan de publicación de hoy');break}
     case 'ref-bajar':{const r=p.refs.find(x=>x.id===ds.id);if(!r)return;try{const b=await blobDeRef(r);const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');await guardarArchivo(slug(r.porque||'referencia')+'.'+ext,b)}catch{toast('No se pudo descargar la imagen')}break}
-    case 'copiar-resumen':{const txt=resumenPureRef(p);try{await navigator.clipboard.writeText(txt);toast('Resumen copiado: pégalo en PureRef')}catch{toast('No se pudo copiar')}break}
     case 'ref-del':{if(S.confirmRef!==ds.id){S.confirmRef=ds.id;renderMain();return}
       const i=p.refs.findIndex(r=>r.id===ds.id);const [r]=p.refs.splice(i,1);S.confirmRef=null;marcar();renderMain();
       break}
@@ -6516,9 +6364,6 @@ async function accion(a,el){
       (o.busquedas||[]).forEach(q=>{q=String(q||'').trim();if(q&&!p.busquedas.some(b=>b.q===q))p.busquedas.push({q,capa:k})});
       marcar();renderMain();toast('Aplicado · sus búsquedas ya están en Referencias');break}
     case 'ai-dir-emp':{const x=S.ai.ideas?.data?.direcciones?.[+ds.i];if(x){p.concepto.empujes.push(`${x.titulo}: ${x.idea}`);marcar();el.textContent='Guardado';el.disabled=true}break}
-    case 'exp-zip':exportZip().catch(()=>{expStatus('');toast('No se pudo armar el ZIP')});break;
-    case 'exp-png':exportPNG();break;
-    case 'exp-carpeta':exportCarpeta();break;
     case 'ref-copy':{const r=p.refs.find(x=>x.id===ds.id);if(r)copiarRef(r,el);break}
     case 'copiar-md':{const txt=aMarkdown(p);try{await navigator.clipboard.writeText(txt);toast('Copiado')}catch{toast('No se pudo copiar')}break}
     case 'exportar-md':{const txt=aMarkdown(p);
