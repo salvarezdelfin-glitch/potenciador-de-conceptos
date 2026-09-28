@@ -900,7 +900,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mull4ier').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulm4qtt').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3957,11 +3957,7 @@ function famFE(f,e){
   return {n:'Mixta',d:'Rectas y curvas a partes iguales: decide en qué parte de la forma va cada una (ej. base geométrica, remate orgánico).',ico:'◈'};
 }
 function formaDirectiva(textos){
-  const V=vecDe(textos),F=V.F,E=V.E;const fam=famFE(F.v,E.v);const extra=[];
-  if(Math.abs(V.P.v)>=.3)extra.push(V.P.v>0?`Masa pesada: base ancha, centro de gravedad bajo${evid(V.P)}.`:`Masa ligera: se afina hacia arriba, huecos y transparencias${evid(V.P)}.`);
-  if(Math.abs(V.O.v)>=.3)extra.push(V.O.v>0?`Simetría y repetición, ejes claros${evid(V.O)}.`:`Asimetría, ritmo roto que se desborda del contorno${evid(V.O)}.`);
-  if(Math.abs(V.A.v)>=.3)extra.push(V.A.v>0?`Desgaste y pátina: bordes erosionados, capas de reparación${evid(V.A)}.`:`Superficies limpias y nuevas, bordes nítidos${evid(V.A)}.`);
-  if(Math.abs(V.X.v)>=.3)extra.push(V.X.v>0?`Composición abierta: espacio negativo generoso${evid(V.X)}.`:`Compacta y cerrada: pocas aberturas${evid(V.X)}.`);
+  const V=vecDe(textos),F=V.F,E=V.E;const fam=famFE(F.v,E.v);const extra=extrasDeVector(V);
   const base=F.n||E.n;const vacio=!base&&!extra.length;
   return {fam,extra,vacio,evF:evid(F),evE:evid(E)};
 }
@@ -3978,12 +3974,83 @@ function bocetoGuiaHTML(p){
   if(pil.length)secciones.push({grupo:'Pilares',items:pil.map(x=>[x.t,[x.t,x.f,x.como,x.no]])});
   const pj=(p.personajes||[]).filter(c=>c.nombre);
   if(pj.length)secciones.push({grupo:'Personajes y criaturas',items:pj.map(c=>[c.nombre,pjTextos(c)])});
-  secciones.push({grupo:'Todo lo demás · mundo, vegetación, props, arquitectura',nota:'Línea base del proyecto: úsala para cualquier elemento que no tenga ya su propia forma arriba.',
+  secciones.push({grupo:'Línea base del proyecto',nota:'Úsala para cualquier elemento que no tenga ya su propia forma arriba o abajo.',
     items:[['Lenguaje general',[...intTextos(p),...visTextos(p),...moodTextos(p)]]]});
   const vacias=secciones.every(s=>s.items.every(([,t])=>formaDirectiva(t).vacio));
-  return `<div class="box"><h3>Cómo bocetar cada cosa</h3><p class="hint">Sale de lo que ya escribiste: si algo debe verse cuadrado o circular, agresivo o suave, pesado o ligero. Aplícalo a cualquier boceto — personaje, criatura, prop, vegetación o arquitectura — según a qué grupo pertenece.</p>
+  return `<div class="box"><h3>Cómo bocetar cada cosa</h3><p class="hint">Sale de lo que ya escribiste: si algo debe verse cuadrado o circular, agresivo o suave, pesado o ligero. Aplícalo a cualquier boceto — personaje, criatura, prop, vegetación o arquitectura.</p>
     ${vacias?'<p class="nd-box sm">Escribe tu tensión, pilares o personajes para que esto tenga de dónde salir.</p>':secciones.filter(s=>s.items.some(([,t])=>!formaDirectiva(t).vacio)||s.items.length<=2).map(s=>`<div class="fd-sec"><span class="lbl">${esc(s.grupo)}</span>${s.nota?`<p class="hint" style="margin:2px 0 8px">${esc(s.nota)}</p>`:''}<div class="fd-grid">${s.items.map(([n,t])=>formaCardHTML(n,t)).join('')}</div></div>`).join('')}
+    ${elementosSeccionHTML(p)}
   </div>`}
+
+/* ============ Elementos concretos: árboles, rocas, armas, etc. — cuadrado/circular, agresivo/suave ============ */
+const ELEMENTOS_FORMA=[
+ {n:'Árboles y troncos',ico:'🌳',kw:['arbol','árbol','ceiba','pino','tronco','bosque'],
+  geo:{si:'Troncos rectos y verticales; copas partidas en capas o en picos, como si estuvieran construidas.',no:'Troncos curvos y nudosos; copas redondeadas y densas, ramas que ondulan.'},
+  en:{si:'Ramas quebradas en ángulo, corteza agrietada, siluetas que cortan.',no:'Ramas que caen suaves, corteza lisa, siluetas amables.'}},
+ {n:'Plantas bajas y arbustos',ico:'🌿',kw:['planta','arbusto','matorral','hierba','helecho'],
+  geo:{si:'Masas compactas y ordenadas, como setos recortados en bloques.',no:'Masas redondas y esponjosas que se agrupan sin orden.'},
+  en:{si:'Hojas puntiagudas y espinosas que cortan al tacto.',no:'Hojas curvas y suaves, sin filo.'}},
+ {n:'Flores',ico:'🌸',kw:['flor','petalo','pétalo'],
+  geo:{si:'Pétalos simétricos y regulares, como una estrella geométrica.',no:'Pétalos curvos en roseta o espiral.'},
+  en:{si:'Pétalos afilados como puntas, centro duro.',no:'Pétalos suaves y translúcidos.'}},
+ {n:'Lianas y enredaderas',ico:'🍃',kw:['liana','enreda','trepad','vid'],
+  geo:{si:'Líneas rectas y tensas, como cables o cuerdas.',no:'Curvas colgantes y fluidas, como cabello o humo.'},
+  en:{si:'Se quiebran en zigzag, como grietas o cadenas.',no:'Caen sueltas y sin tensión.'}},
+ {n:'Musgo, hongos y líquenes',ico:'🍄',kw:['musgo','hongo','liquen','moho'],
+  geo:{si:'Capas regulares, como escamas ordenadas sobre la superficie.',no:'Manchas suaves que se funden con lo que cubren.'},
+  en:{si:'Costras duras y agrietadas.',no:'Textura esponjosa y húmeda.'}},
+ {n:'Rocas y terreno',ico:'🪨',kw:['roca','piedra','montaña','acantilado','terreno','peñasco'],
+  geo:{si:'Fracturas rectas, bloques apilados, estratos regulares.',no:'Cantos rodados y superficies erosionadas.'},
+  en:{si:'Aristas y esquirlas filosas, cortes recientes.',no:'Bordes ya pulidos por el agua o el viento.'}},
+ {n:'Nubes, humo y niebla',ico:'☁️',kw:['nube','humo','niebla','vapor','bruma'],
+  geo:{si:'Capas horizontales regulares, como estratos.',no:'Masas sin forma definida.'},
+  en:{si:'Bordes duros donde el viento o la luz los corta.',no:'Todo se difumina, sin bordes.'}},
+ {n:'Arquitectura y templos',ico:'🏛️',kw:['templo','edificio','arquitect','torre','palacio','pirámide','piramide'],
+  geo:{si:'Módulos que se repiten, columnas, simetría fuerte, remates puntiagudos.',no:'Cúpulas, arcos y muros curvos, sin ángulos duros.'},
+  en:{si:'Ornamento afilado, picos, esquinas cortantes.',no:'Superficies lisas y acogedoras.'},tipos:['Entorno']},
+ {n:'Ruinas y muros',ico:'🧱',kw:['ruina','muro','escombro','fortificacion','fortificación'],
+  geo:{si:'Bloques todavía ordenados, hileras reconocibles.',no:'Bordes erosionados y redondeados por el tiempo.'},
+  en:{si:'Grietas rectas y fracturas en ángulo.',no:'Todo se ha suavizado y hundido.'}},
+ {n:'Armas',ico:'⚔️',kw:['arma','espada','lanza','hacha','cuchillo','daga','maza','flecha','macuahuitl'],
+  geo:{si:'Proporciones simétricas y funcionales, sin exageración.',no:'Formas curvas, como garras o colmillos: menos herramienta, más hueso.'},
+  en:{si:'Filos rectos y puntas agresivas, nada decorativo suaviza el borde.',no:'Bordes desgastados, más objeto que arma.'},tipos:['Prop / arma']},
+ {n:'Herramientas y objetos rituales',ico:'🔨',kw:['herramienta','ritual','altar','ofrenda','incensario','vasija'],
+  geo:{si:'Formas modulares y repetidas, hechas para usarse siempre igual.',no:'Formas talladas a mano, curvas irregulares.'},
+  en:{si:'Formas precisas y angulosas, casi mecánicas.',no:'Acabado suave, tallado con calma.'}},
+ {n:'Vehículos',ico:'🚗',kw:['vehiculo','vehículo','nave','carro','auto','moto','carruaje'],
+  geo:{si:'Carrocería modular y simétrica, como producido en serie.',no:'Carrocería fluida, curvas continuas, sin esquinas.'},
+  en:{si:'Paneles rectos y aristas visibles, agresivo al verlo.',no:'Todo suavizado, aerodinámico y amable.'},tipos:['Vehículo']},
+ {n:'Criaturas',ico:'🐾',kw:['criatura','bestia','monstruo'],
+  geo:{si:'Proporciones regulares y simétricas entre los dos lados del cuerpo.',no:'Cuerpo carnoso y curvo, sin partes duras visibles.'},
+  en:{si:'Huesos y placas visibles, ángulos marcados en las articulaciones.',no:'Movimiento suave, sin partes que corten.'},tipos:['Criatura']},
+ {n:'Vestuario y armadura',ico:'🛡️',kw:['armadura','vestuario','ropa','tela','manto','tunica','túnica','coraza'],
+  geo:{si:'Cortes simétricos y repetidos, como un uniforme.',no:'Telas que caen en curvas, sin piezas rígidas.'},
+  en:{si:'Placas y picos; hombreras que terminan en punta.',no:'Todo suelto, cómodo, sin bordes duros.'},tipos:['Personaje']}
+];
+function detectarElementos(p){
+  const t=nz([p.nombre,p.brief.texto,p.brief.historia,p.que?.que,p.que?.tema,p.que?.funcion,p.ad,p.concepto.frase,...p.concepto.nucleos,
+    ...(p.materiales||[]),p.materialNota,p.forma?.silueta,p.forma?.anatomia,p.forma?.geometria,...(p.lenguaje?.formas||[]),
+    ...KWCATS.flatMap(([k])=>p.keywords[k]||[]),...(p.tensiones||[]).flatMap(x=>[x.a,x.b,x.aVis,x.bVis]),
+    ...(p.personajes||[]).flatMap(pjTextos),p.mood.emocion,p.mood.atmosfera,p.mood.clima].join(' '));
+  return ELEMENTOS_FORMA.filter(e=>e.kw.some(k=>t.includes(k))||(e.tipos||[]).includes(p.tipo));
+}
+function extrasDeVector(V){const extra=[];
+  if(Math.abs(V.P.v)>=.3)extra.push(V.P.v>0?`Masa pesada: base ancha, centro de gravedad bajo${evid(V.P)}.`:`Masa ligera: se afina hacia arriba, huecos y transparencias${evid(V.P)}.`);
+  if(Math.abs(V.O.v)>=.3)extra.push(V.O.v>0?`Simetría y repetición, ejes claros${evid(V.O)}.`:`Asimetría, ritmo roto que se desborda del contorno${evid(V.O)}.`);
+  if(Math.abs(V.A.v)>=.3)extra.push(V.A.v>0?`Desgaste y pátina: bordes erosionados, capas de reparación${evid(V.A)}.`:`Superficies limpias y nuevas, bordes nítidos${evid(V.A)}.`);
+  if(Math.abs(V.X.v)>=.3)extra.push(V.X.v>0?`Composición abierta: espacio negativo generoso${evid(V.X)}.`:`Compacta y cerrada: pocas aberturas${evid(V.X)}.`);
+  return extra}
+function elementoCardHTML(e,V){
+  const geo=Math.abs(V.F.v)>=.15?(V.F.v>0?e.geo.si:e.geo.no)+esc(evid(V.F)):'',en_=Math.abs(V.E.v)>=.15?(V.E.v>0?e.en.si:e.en.no)+esc(evid(V.E)):'';
+  return `<div class="fd"><b>${e.ico} ${esc(e.n)}</b>
+    ${geo?`<p class="fd-fam" style="margin-top:4px"><span class="lbl">Forma</span> ${esc(geo)}</p>`:''}
+    ${en_?`<p class="fd-fam" style="margin-top:2px"><span class="lbl">Energía</span> ${esc(en_)}</p>`:''}
+    ${!geo&&!en_?'<p class="fd-vac">Sin dirección clara todavía: usa la forma neutra típica y ajústala cuando definas mood o tensión.</p>':''}
+  </div>`}
+function elementosSeccionHTML(p){const els=detectarElementos(p);if(!els.length)return '';
+  const V=vecDe([...intTextos(p),...visTextos(p),...moodTextos(p)]);
+  return `<div class="fd-sec"><span class="lbl">Elementos de tu proyecto</span><p class="hint" style="margin:2px 0 8px">Detectados en lo que escribiste. Misma lógica que arriba, aplicada a cada cosa concreta.</p>
+    <div class="fd-grid">${els.map(e=>elementoCardHTML(e,V)).join('')}</div></div>`}
 
 /* ---------- el ASISTENTE: conversa usando solo el contexto del proyecto ---------- */
 const SUGS=['¿Qué le falta a mi diseño?','¿Esto contradice mi Art Direction?','¿Mi mood y mi diseño hablan el mismo idioma?','¿Mi diseño se siente genérico?','¿Qué tensión visual tengo?','¿Qué referencias debería buscar?','¿Qué debería priorizar?','¿Qué no estoy considerando?','¿Qué elementos estoy repitiendo demasiado?','¿Qué debería cuestionar?','Dame 3 caminos visuales diferentes','¿Cómo puedo reforzar el concepto?','Ayúdame a desbloquear este diseño','¿Dónde me quedé?'];
