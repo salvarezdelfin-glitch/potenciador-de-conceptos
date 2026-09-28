@@ -163,6 +163,10 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 .ref-imgw a{display:block}
 .ref-imgw a img{cursor:pointer}
 .ref-lupa{position:absolute;top:6px;right:6px;border:0;background:rgba(8,9,12,.65);color:#fff;border-radius:6px;padding:3px 6px;font-size:13px;cursor:zoom-in;line-height:1}
+.ref-triage{display:flex;gap:4px;padding:6px 8px 0}
+.ref-triage .btn{flex:1;padding:4px 0;font-size:12px}
+.ref-triage .ok-b{border-color:var(--ok);color:var(--ok)}
+.ref-triage .no-b{border-color:var(--warn);color:var(--warn)}
 .ref .rb{padding:8px;display:flex;flex-direction:column;gap:6px}
 .ref textarea{min-height:52px;font-size:13px;padding:6px 8px;background:var(--surface)}
 .ref .rrow{display:flex;gap:6px;align-items:center}
@@ -909,7 +913,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulr4vj0').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulrbr8s').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1474,6 +1478,7 @@ function refSrc(r){if(r.asset)return S.assets?.url?S.assets.url(r.asset):"/_blob
 function imgAttrs(r){const s=refSrc(r);return (s?`src="${esc(s)}" `:"")+(r.asset?`data-asset="${esc(r.asset)}"`:"")}
 function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div class="ref ${nowhy?'nowhy':''}">
   <div class="ref-imgw">${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir la foto o la obra original">`:''}<img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" loading="lazy" data-act="${r.link?'':'zoom'}">${r.link?'</a>':''}${r.link?`<button class="ref-lupa" data-act="zoom" title="Ver más grande aquí">🔍</button>`:''}</div>
+  ${r.auto?`<div class="ref-triage"><button class="btn sm ok-b" data-act="ref-ok" data-id="${r.id}" title="Sirve: la dejo">✓ Sirve</button><button class="btn sm no-b" data-act="ref-no" data-id="${r.id}" title="${r.origen?'No sirve: la quito y busco otra':'No sirve: la quito'}">✗ No sirve</button></div>`:''}
   <div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
   ${nowhy?'<span class="warn">Falta el porqué</span>':''}
   <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
@@ -3915,13 +3920,55 @@ function personajePoseQuery(c){const animal=c.rol==='Criatura';
   /* «wildlife»/«animal» detrás del nombre evita choques con marcas (Jaguar carro, Puma tenis…) */
   const wmQs=animal?(esp?[tr(esp)+' wildlife',tr(esp)+' animal','animal in motion']:['animal in motion']):['warrior action pose','martial arts pose'];
   return {q,wmQs,qc:animal?'creature pose sketch':'character pose sketch gesture drawing'}}
+/* triage de lo que trae automático: ✓ la deja, ✗ la quita y pide una que no haya visto (recuerda lo rechazado por proyecto para no repetirlo) */
+function seedRechazados(p,ya,key){((p.rechazados||{})[key]||[]).forEach(x=>ya.add(x))}
+function seedRechazadosTodos(p,ya){Object.values(p.rechazados||{}).forEach(a=>a.forEach(x=>ya.add(x)))}
+function origenKey(o){return o?(o.tipo==='cat'?'cat:'+o.n:o.tipo==='pose'?'pose:'+o.id:o.tipo==='q'?'q:'+o.q:null):null}
+function aprobarRef(p,id){const r=p.refs.find(x=>x.id===id);if(!r)return;r.auto=false;marcar();renderMain()}
+async function reemplazarRef(p,id){
+  const i=p.refs.findIndex(x=>x.id===id);if(i<0)return;const ref=p.refs[i];
+  const key=origenKey(ref.origen);const rech=p.rechazados=p.rechazados||{};
+  if(key){rech[key]=rech[key]||[];if(ref.src&&!rech[key].includes(ref.src))rech[key].push(ref.src)}
+  p.refs.splice(i,1);marcar();renderMain();
+  if(!key)return; // sin origen conocido (referencia manual o vieja): no hay de dónde sacar un reemplazo
+  const ya=new Set(p.refs.map(r=>r.src));(rech[key]||[]).forEach(x=>ya.add(x));
+  const esConcept=ref.tipoRef==='secundaria';
+  try{
+    if(ref.origen.tipo==='cat'){
+      const e=ELEMENTOS_FORMA.find(x=>x.n===ref.origen.n);if(!e)return;
+      if(esConcept){const items=await buscarConceptArt(e,elementoBusca(p,e).qc);const x=items.find(it=>!ya.has(it.big||it.src));
+        if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otra obra distinta para esta categoría')}
+      else{const {q,wmQs,metOk}=elementoBusca(p,e);const L=[...(metOk?await metLibre(q,5).catch(()=>[]):[]),...await wmMulti(wmQs,5,8)];const x=L.find(it=>!ya.has(it.src));
+        if(x)p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otra foto real distinta para esta categoría')}
+    }else if(ref.origen.tipo==='pose'){
+      const c=(p.personajes||[]).find(x=>x.id===ref.origen.id);if(!c)return;const {qc,wmQs}=personajePoseQuery(c);
+      if(esConcept){if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});const x=(r.items||[]).find(it=>!ya.has(it.big||it.src));
+        if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art`,aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otro boceto de pose distinto')}}
+      else{const L=await wmMulti(wmQs,5,8);const x=L.find(it=>!ya.has(it.src));
+        if(x)p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otra foto de pose distinta')}
+    }else if(ref.origen.tipo==='q'){
+      const b=ref.origen;
+      if(esConcept){if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:b.q+' concept art'});const x=(r.items||[]).find(it=>!ya.has(it.big||it.src));
+        if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:b.q+' en concept art: cómo lo resuelve '+(x.artista||'este artista'),aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otra obra distinta para esa búsqueda')}}
+      else{const L=[...await metLibre(b.q,5).catch(()=>[]),...await wmLibre(b.q,5).catch(()=>[])];const x=L.find(it=>!ya.has(it.src));
+        if(x)p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:(b.busco||b.q)+(b.estudiar?'. Estudia: '+b.estudiar:''),aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
+        else toast('No encontré otra foto real distinta para esa búsqueda')}
+    }
+  }catch{toast('No se pudo buscar un reemplazo ahora')}
+  marcar();renderMain();
+}
 async function buscarGuardada(p,b){if(S.autoRef||!b?.q)return;
-  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'q:'+b.q);
   try{const L=[...await metLibre(b.q,3).catch(()=>[]),...await wmLibre(b.q,4).catch(()=>[])];
-    for(const x of L.slice(0,5)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:(b.busco||b.q)+(b.estudiar?'. Estudia: '+b.estudiar:''),aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of L.slice(0,5)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:(b.busco||b.q)+(b.estudiar?'. Estudia: '+b.estudiar:''),aprendo:'',lic:x.lic,auto:true,origen:{tipo:'q',q:b.q,capa:b.capa,obj:b.obj,busco:b.busco,estudiar:b.estudiar},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent='Buscando concept art…';renderMain();
   try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:b.q+' concept art'});
-    for(const x of (r.items||[]).slice(0,4)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:b.q+' en concept art: cómo lo resuelve '+(x.artista||'este artista'),aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}}catch{}
+    for(const x of (r.items||[]).slice(0,4)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:b.q+' en concept art: cómo lo resuelve '+(x.artista||'este artista'),aprendo:'',auto:true,origen:{tipo:'q',q:b.q,capa:b.capa,obj:b.obj,busco:b.busco,estudiar:b.estudiar},creado:Date.now()});S.autoRef.add++}}}catch{}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias agregadas`:'No encontré nada libre para esa búsqueda')}
 function elementosSeccionHTML(p){const els=detectarElementos(p);if(!els.length)return '';
   const V=vecDe([...intTextos(p),...visTextos(p),...moodTextos(p)]);
@@ -5361,28 +5408,28 @@ async function buscarConceptArt(e,qc){if(!window.PC_SHIM?.artistas)return [];
   try{const r=await window.PC_SHIM.artistas({q:qc});return r.items||[]}catch{return []}}
 async function llenarCategoria(p,nombre){if(S.autoRef)return;
   const e=ELEMENTOS_FORMA.find(x=>x.n===nombre);if(!e){toast('No reconozco esa categoría');return}
-  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'cat:'+e.n);
   const {q,qc,wmQs,metOk}=elementoBusca(p,e);
   try{const L=[...(metOk?await metLibre(q,3).catch(()=>[]):[]),...await wmMulti(wmQs,3,5)];
-    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando bocetos de ${nombre}…`;
   try{const items=await buscarConceptArt(e,qc);
-    for(const x of items.slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of items.slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias de ${nombre} agregadas`:'No encontré nada libre para esa categoría')}
 async function llenarPosesPersonaje(p,id){if(S.autoRef)return;const c=(p.personajes||[]).find(x=>x.id===id);if(!c){toast('No encontré ese personaje');return}
-  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'pose:'+c.id);
   const {qc,wmQs}=personajePoseQuery(c);
   try{const L=await wmMulti(wmQs,3,6);
-    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando bocetos de pose para ${c.nombre}…`;
   try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});
-    for(const x of (r.items||[]).slice(0,5)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}}catch{}
+    for(const x of (r.items||[]).slice(0,5)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}}catch{}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias de pose para ${c.nombre} agregadas`:'No encontré nada libre para esas poses')}
 
 async function llenarMoodboard(p){if(S.autoRef)return;
   const B=busquedasFoto(p),els=typeof detectarElementos==='function'?detectarElementos(p).slice(0,10):[],pjs=(p.personajes||[]).filter(c=>c.nombre).slice(0,6);
   if(!B.length&&!els.length&&!pjs.length){toast('Define qué es, materiales, mood, tensión, pilares o personajes del proyecto primero');return}
-  const total=B.length+els.length*2+pjs.length*2;S.autoRef={n:0,t:total,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));
+  const total=B.length+els.length*2+pjs.length*2;S.autoRef={n:0,t:total,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazadosTodos(p,ya);
   const marcar_=()=>{S.autoRef.n++;const el=$('#auto-prog');if(el)el.textContent=`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`};
   for(const b of B){try{const q=b.q,L=[...(b.met?await metLibre(q,1).catch(()=>[]):[]),...await wmLibre(q,2).catch(()=>[])];
       for(const x of L.slice(0,2)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:`${b.busco}. Estudia: ${b.estudiar}`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
@@ -5390,18 +5437,18 @@ async function llenarMoodboard(p){if(S.autoRef)return;
   for(const e of els){
     const {q,qc,wmQs,metOk}=elementoBusca(p,e);
     try{const L=[...(metOk?await metLibre(q,2).catch(()=>[]):[]),...await wmMulti(wmQs,2,3)];
-      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_();
     try{const items=await buscarConceptArt(e,qc);
-      for(const x of items.slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+      for(const x of items.slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_()}
   for(const c of pjs){
     const {qc,wmQs}=personajePoseQuery(c);
     try{const L=await wmMulti(wmQs,2,3);
-      for(const x of L.slice(0,3)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
+      for(const x of L.slice(0,3)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_();
     try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});
-      for(const x of (r.items||[]).slice(0,3)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art`,aprendo:'',auto:true,creado:Date.now()});S.autoRef.add++}}}catch{}
+      for(const x of (r.items||[]).slice(0,3)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art`,aprendo:'',auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}}catch{}
     marcar_()}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias agregadas: revísalas y ajusta lo que no sirva`:'No encontré referencias libres para esas búsquedas')}
 
@@ -6152,6 +6199,8 @@ async function accion(a,el){
     case 'ref-del':{if(S.confirmRef!==ds.id){S.confirmRef=ds.id;renderMain();return}
       const i=p.refs.findIndex(r=>r.id===ds.id);const [r]=p.refs.splice(i,1);S.confirmRef=null;marcar();renderMain();
       break}
+    case 'ref-ok':aprobarRef(p,ds.id);break;
+    case 'ref-no':reemplazarRef(p,ds.id);break;
     case 'unzoom':$('#overlay').innerHTML='';break;
     case 'borrar':{if(!S.confirmDel){S.confirmDel=true;renderMain();return}
       const id=S.cur;clearTimeout(saveT);await snapshot(id,true);S.dirty=false;delete S.P[id];S.confirmDel=false;
