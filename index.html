@@ -454,6 +454,15 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 @media (hover:none){.dna-cp{opacity:1}}
 @media (max-width:600px){.dna-go{grid-template-columns:1fr;gap:2px}}
 .pj-list{display:flex;flex-direction:column;gap:14px}
+.fd-sec{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.fd-sec:first-child{padding-top:0;border-top:0}
+.fd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:10px}
+.fd{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--c-ad);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;font-size:13.5px}
+.fd b{font-family:var(--display);font-size:16px;text-transform:uppercase}
+.fd-fam{margin:4px 0 0;font-weight:600;display:flex;align-items:center;gap:6px}
+.fd-ico{color:var(--c-ad);font-size:16px}
+.fd-l{margin:6px 0 0;padding-left:18px;color:var(--ink2)}
+.fd-vac{margin:4px 0 0;color:var(--ink3);font-size:12.5px}
 .as-box{display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
 .as-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(210px,100%),1fr));gap:8px}
 .as-a{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line2);background:var(--surface);border-radius:8px;padding:8px 10px;color:var(--ink);min-width:0}
@@ -891,7 +900,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muk6lttd').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mull4ier').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3937,6 +3946,45 @@ function reglasCandidatas(p){
   return [...new Set(R)].filter(r=>!(l.reglas||[]).includes(r));
 }
 
+/* ============ Guía de forma: cómo bocetar cada cosa (cuadrado/circular, agresivo/suave…) ============ */
+function famFE(f,e){
+  if(f>=.28){if(e>=.25)return {n:'Triangular · afilada',d:'Ángulos agudos y puntas que cortan el contorno. Piensa en triángulos, no en curvas.',ico:'▲'};
+    if(e<=-.25)return {n:'Rectangular · geométrica estable',d:'Bloques, módulos y rectas limpias. Estabilidad, no agresión: evita las puntas.',ico:'■'};
+    return {n:'Geométrica',d:'Formas construidas: rectas, módulos, ángulos definidos.',ico:'◆'};}
+  if(f<=-.28){if(e>=.25)return {n:'Orgánica afilada · espinosa',d:'Curvas que terminan en punta: garras, espinas, zigzags. No uses círculos perfectos.',ico:'✦'};
+    if(e<=-.25)return {n:'Circular · redondeada',d:'Curvas suaves, óvalos, sin ángulos dominantes. Nada se siente peligroso.',ico:'●'};
+    return {n:'Orgánica',d:'Curvas irregulares, crecimiento asimétrico, contornos naturales.',ico:'❁'};}
+  return {n:'Mixta',d:'Rectas y curvas a partes iguales: decide en qué parte de la forma va cada una (ej. base geométrica, remate orgánico).',ico:'◈'};
+}
+function formaDirectiva(textos){
+  const V=vecDe(textos),F=V.F,E=V.E;const fam=famFE(F.v,E.v);const extra=[];
+  if(Math.abs(V.P.v)>=.3)extra.push(V.P.v>0?`Masa pesada: base ancha, centro de gravedad bajo${evid(V.P)}.`:`Masa ligera: se afina hacia arriba, huecos y transparencias${evid(V.P)}.`);
+  if(Math.abs(V.O.v)>=.3)extra.push(V.O.v>0?`Simetría y repetición, ejes claros${evid(V.O)}.`:`Asimetría, ritmo roto que se desborda del contorno${evid(V.O)}.`);
+  if(Math.abs(V.A.v)>=.3)extra.push(V.A.v>0?`Desgaste y pátina: bordes erosionados, capas de reparación${evid(V.A)}.`:`Superficies limpias y nuevas, bordes nítidos${evid(V.A)}.`);
+  if(Math.abs(V.X.v)>=.3)extra.push(V.X.v>0?`Composición abierta: espacio negativo generoso${evid(V.X)}.`:`Compacta y cerrada: pocas aberturas${evid(V.X)}.`);
+  const base=F.n||E.n;const vacio=!base&&!extra.length;
+  return {fam,extra,vacio,evF:evid(F),evE:evid(E)};
+}
+function formaCardHTML(nombre,textos){const {fam,extra,vacio}=formaDirectiva(textos);
+  if(vacio)return `<div class="fd"><b>${esc(nombre)}</b><p class="fd-vac">Escribe algo más sobre ${esc(nombre.toLowerCase())} (forma, material, personalidad) para que te dé una dirección concreta.</p></div>`;
+  return `<div class="fd"><b>${esc(nombre)}</b><p class="fd-fam"><span class="fd-ico">${fam.ico}</span>${esc(fam.n)}</p><p class="muted" style="margin:2px 0 0">${esc(fam.d)}</p>
+    ${extra.length?`<ul class="fd-l">${extra.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>`}
+function bocetoGuiaHTML(p){
+  const secciones=[];
+  const tens=(p.tensiones||[]).filter(t=>t.a&&t.b);
+  tens.forEach(t=>secciones.push({grupo:`Tensión · ${t.a} ↔ ${t.b}`,nota:`Úsalo por estado: algo del lado «${t.a}» se boceta con la primera forma; del lado «${t.b}», con la segunda. Algo a medio camino, mezcla ambas.`,
+    items:[[t.a,[t.a,t.aVis]],[t.b,[t.b,t.bVis]]]}));
+  const pil=p.pilares.filter(x=>x.t.trim());
+  if(pil.length)secciones.push({grupo:'Pilares',items:pil.map(x=>[x.t,[x.t,x.f,x.como,x.no]])});
+  const pj=(p.personajes||[]).filter(c=>c.nombre);
+  if(pj.length)secciones.push({grupo:'Personajes y criaturas',items:pj.map(c=>[c.nombre,pjTextos(c)])});
+  secciones.push({grupo:'Todo lo demás · mundo, vegetación, props, arquitectura',nota:'Línea base del proyecto: úsala para cualquier elemento que no tenga ya su propia forma arriba.',
+    items:[['Lenguaje general',[...intTextos(p),...visTextos(p),...moodTextos(p)]]]});
+  const vacias=secciones.every(s=>s.items.every(([,t])=>formaDirectiva(t).vacio));
+  return `<div class="box"><h3>Cómo bocetar cada cosa</h3><p class="hint">Sale de lo que ya escribiste: si algo debe verse cuadrado o circular, agresivo o suave, pesado o ligero. Aplícalo a cualquier boceto — personaje, criatura, prop, vegetación o arquitectura — según a qué grupo pertenece.</p>
+    ${vacias?'<p class="nd-box sm">Escribe tu tensión, pilares o personajes para que esto tenga de dónde salir.</p>':secciones.filter(s=>s.items.some(([,t])=>!formaDirectiva(t).vacio)||s.items.length<=2).map(s=>`<div class="fd-sec"><span class="lbl">${esc(s.grupo)}</span>${s.nota?`<p class="hint" style="margin:2px 0 8px">${esc(s.nota)}</p>`:''}<div class="fd-grid">${s.items.map(([n,t])=>formaCardHTML(n,t)).join('')}</div></div>`).join('')}
+  </div>`}
+
 /* ---------- el ASISTENTE: conversa usando solo el contexto del proyecto ---------- */
 const SUGS=['¿Qué le falta a mi diseño?','¿Esto contradice mi Art Direction?','¿Mi mood y mi diseño hablan el mismo idioma?','¿Mi diseño se siente genérico?','¿Qué tensión visual tengo?','¿Qué referencias debería buscar?','¿Qué debería priorizar?','¿Qué no estoy considerando?','¿Qué elementos estoy repitiendo demasiado?','¿Qué debería cuestionar?','Dame 3 caminos visuales diferentes','¿Cómo puedo reforzar el concepto?','Ayúdame a desbloquear este diseño','¿Dónde me quedé?'];
 const acc=(l,tipo,v)=>({l,tipo,v});
@@ -4359,6 +4407,7 @@ function vAD(p){
     <div class="chips">${(p.debe||[]).map((e,i)=>`<span class="chip">${esc(e)}<button data-act="debe-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')}</div><input type="text" id="debe-t" placeholder="Elemento + Enter" data-enter="debe-add"></div>
     <div class="box"><h3>Debe evitarse</h3><p class="hint">Clichés, lecturas equivocadas, elementos descartados.</p>
     <div class="chips">${(p.evitar||[]).map((e,i)=>`<span class="chip">${esc(e)}<button data-act="evitar-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')}</div><input type="text" id="evitar-t" placeholder="Algo que NO quieres + Enter" data-enter="evitar-add"></div></div>
+  ${bocetoGuiaHTML(p)}
   ${tallerHTML(p)}
   ${asesor('direccion','Asesor Claude: revisa mi dirección','Revisa si tus pilares son claros y distintos, y si el mood y la técnica los sostienen.')}`}
 function vivoAD(p){const a=(p.ad||'').trim();if(!a)return '<p class="nd-box"><b>NO DEFINIDO.</b> Sin esta frase no hay contra qué medir nada.</p>';const O=[];
