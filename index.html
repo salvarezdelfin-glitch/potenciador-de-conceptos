@@ -913,7 +913,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mulrbr8s').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muls63zz').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3060,13 +3060,18 @@ async function buscarMet(q){
 }
 async function buscarRefs(){
   const b=S.refB=S.refB||{};const q=(b.q||'').trim();if(!q){toast('Escribe qué buscar');return}
-  b.cargando=true;b.error='';b.items=[];renderMain();
+  b.cargando=true;b.error='';b.items=[];b.artistasEnc=null;b.artistasQ=q;renderMain();
   b.artista=null;b.artistaNom=null;
-  const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});return (r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,as:true,artista:x.artista}))};
+  const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});return (r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,as:true,artista:x.artista,usuario:x.usuario}))};
   const tareas=b.src==='met'?[buscarMet(q)]:b.src==='wm'?[buscarWikimedia(q)]:b.src==='as'?[buscarAS(q)]:[buscarMet(q),buscarWikimedia(q)];
-  const res=await Promise.allSettled(tareas);
+  /* artistas que de verdad resuelven ESTA búsqueda: se buscan en ArtStation aparte, aunque la fuente elegida sea otra */
+  const pArtistas=(b.src==='as'?Promise.resolve(null):buscarAS(q).catch(()=>[]));
+  const [res,resAS]=await Promise.all([Promise.allSettled(tareas),pArtistas]);
   const listas=res.filter(r=>r.status==='fulfilled').map(r=>r.value);
   const mezcla=[];for(let i=0;i<30;i++)for(const l of listas)if(l[i])mezcla.push(l[i]);
+  const fuenteAS=b.src==='as'?mezcla:(resAS||[]);
+  const vistos=new Set(),artistas=[];for(const x of fuenteAS){if(!x.usuario||vistos.has(x.usuario))continue;vistos.add(x.usuario);artistas.push({u:x.usuario,n:x.artista,muestra:x})}
+  b.artistasEnc=artistas.slice(0,8);
   b.items=mezcla;b.cargando=false;if(!mezcla.length)b.error=res.some(r=>r.status==='rejected')?'No se pudo buscar ahora (¿sin internet?).':'Sin resultados: prueba en inglés o con otras palabras (ej. "obsidian", "aztec sculpture", "jaguar").';
   renderMain();
 }
@@ -6024,8 +6029,9 @@ function artistaDe(v){v=String(v||'').trim();if(!v)return null;
 function artistasPara(p,q){const c=[...temasDe(q||''),...temasDe(p?.bajar?.que||'')].map(x=>x[1]);
   const mios=(S.ajustes.artistasAS||[]).map(x=>typeof x==='string'?{u:x,n:x}:x).map(x=>({...x,t:[],d:'Agregado por ti',f:'',mio:true}));
   const refs=(S.ajustes.referentes||[]).filter(r=>r.nombre&&r.fav).map(r=>({n:r.nombre,ig:r.ig||'',t:[],d:r.porque||'Tu referente',f:''}));
-  const L=ARTISTAS.filter(a=>!c.length||a.t.some(t=>c.includes(t)));const out=[],vistos=new Set();
-  for(const a of [...mios,...refs,...(L.length?L:ARTISTAS)]){const k=nz(a.n);if(!vistos.has(k)){vistos.add(k);out.push(a)}}return out}
+  /* si detectamos categoría (Vegetación, Prop…) solo entran los curados de esa categoría; sin categoría, no forzamos genéricos irrelevantes */
+  const L=c.length?ARTISTAS.filter(a=>a.t.some(t=>c.includes(t))):[];const out=[],vistos=new Set();
+  for(const a of [...mios,...refs,...L]){const k=nz(a.n);if(!vistos.has(k)){vistos.add(k);out.push(a)}}return out}
 function artistaLinks(a,que){const tema=toks(que||'').map(tr).join(' ')||'concept art',nom=a.n.replace(/^@/,'');
   const L=[];
   if(a.u)L.push(['ArtStation','https://www.artstation.com/'+encodeURIComponent(a.u)]);
@@ -6035,9 +6041,13 @@ function artistaLinks(a,que){const tema=toks(que||'').map(tr).join(' ')||'concep
   return L}
 function artistaCard(a,que,act){const b=S.refB||{},shim=!!window.PC_SHIM?.artistas;
   return `<div class="as-a ${a.u&&b.artista===a.u?'on':''}"><b>${esc(a.n)}</b><small>${esc(a.d||'')}</small><div class="as-lk">${a.u&&shim?`<button class="btn sm pri" data-act="${act}" data-u="${esc(a.u)}" data-f="${esc(a.f||'')}">Ver aquí</button>`:''}${artistaLinks(a,que).map(([n,h])=>`<a class="btn sm ghost" href="${esc(h)}" target="_blank" rel="noopener">${n}</a>`).join('')}</div></div>`}
-function artistasHTML(p){const b=S.refB||{},q=b.q||p.bajar?.que||'',L=artistasPara(p,q);
-  return `<div class="as-box"><div class="prow" style="justify-content:space-between"><span class="lbl">Artistas que resuelven esto${temasDe(q)[0]?' · '+temasDe(q)[0][1]:''}</span><span class="muted" style="font-size:12px">Busca su nombre + «${esc(q||'tu tema')}» en ArtStation, Pinterest, Google o Instagram</span></div>
-    <div class="as-list">${L.map(a=>artistaCard(a,q,'as-ver')).join('')}</div>
+function artistasHTML(p){const b=S.refB||{},q=b.q||p.bajar?.que||'';
+  const buscados=b.artistasQ&&b.artistasQ===q?b.artistasEnc:null;
+  const dinamicos=(buscados||[]).map(a=>({n:a.n||a.u,u:a.u,d:`Encontrado buscando «${q}»: ${corto(a.muestra?.titulo||'',60)}`,f:''}));
+  const curados=artistasPara(p,q).filter(a=>!dinamicos.some(d=>d.u&&d.u===a.u));
+  const L=[...dinamicos,...curados];
+  return `<div class="as-box"><div class="prow" style="justify-content:space-between"><span class="lbl">Artistas que resuelven esto${temasDe(q)[0]?' · '+temasDe(q)[0][1]:''}</span>${b.cargando?'<span class="muted" style="font-size:12px">Buscando artistas…</span>':buscados?`<span class="muted" style="font-size:12px">${buscados.length} encontrados buscando «${esc(q)}»</span>`:`<button class="btn ghost sm" data-act="rb-buscar" title="Busca artistas reales para lo que escribiste arriba">Buscar artistas para esto</button>`}</div>
+    <div class="as-list">${L.length?L.map(a=>artistaCard(a,q,'as-ver')).join(''):'<p class="muted" style="margin:0;font-size:12.5px">Escribe qué buscas arriba y toca «Buscar» para encontrar artistas reales de ese tema.</p>'}</div>
     <div class="prow"><input type="text" id="as-u" placeholder="Otro artista: nombre, @instagram o link (ArtStation, Instagram, Pinterest)" style="flex:1 1 260px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:7px 10px" data-enter="as-otro"><button class="btn sm" data-act="as-otro">Agregar</button></div></div>`}
 async function verArtista(p,u,f){const b=S.refB=S.refB||{};u=String(u||'').replace(/^.*artstation\.com\//i,'').replace(/[/?#].*$/,'').trim();if(!u){toast('Escribe el usuario o el link de ArtStation');return}
   if(!window.PC_SHIM?.artistas){window.open('https://www.artstation.com/'+encodeURIComponent(u),'_blank','noopener');return}
