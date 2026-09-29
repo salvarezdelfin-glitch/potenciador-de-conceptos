@@ -913,7 +913,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum36nz8').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum4abqm').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3948,10 +3948,10 @@ async function reemplazarRef(p,id){
     if(ref.origen.tipo==='cat'){
       const e=ELEMENTOS_FORMA.find(x=>x.n===ref.origen.n);if(!e)return;
       if(esConcept){const items=await buscarConceptArt(e,elementoBusca(p,e).qc);const x=items.find(it=>!ya.has(it.big||it.src));
-        if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
+        if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
         else toast('No encontré otra obra distinta para esta categoría')}
       else{const {q,wmQs,metOk}=elementoBusca(p,e);const L=[...(metOk?await metLibre(q,5).catch(()=>[]):[]),...await wmMulti(wmQs,5,8)];const x=L.find(it=>!ya.has(it.src));
-        if(x)p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
+        if(x)p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
         else toast('No encontré otra foto real distinta para esta categoría')}
     }else if(ref.origen.tipo==='pose'){
       const c=(p.personajes||[]).find(x=>x.id===ref.origen.id);if(!c)return;const {qc,wmQs}=personajePoseQuery(c);
@@ -4713,7 +4713,7 @@ async function accionDir(a,el,p,ds){
     case 'ex-del':p.exploraciones.splice(+ds.i,1);marcar();renderMain();break;
     case 'darl':{p.darlings=p.darlings||{};const k=nz(ds.k);p.darlings[k]=p.darlings[k]===ds.v?'':ds.v;
       if(ds.v==='Eliminar'&&p.darlings[k]&&!p.evitar.includes(ds.k))p.evitar.push(ds.k+' (descartado)');
-      if(p.darlings[k]&&ds.v!=='Se queda')nuevaDecision(p,`${cap(ds.k)}: ${ds.v.toLowerCase()}`,'Kill your darlings',['Forma'],'darlings',ds.v==='Eliminar'?'Descartada':'Confirmada');
+      if(p.darlings[k]&&ds.v!=='Se queda')nuevaDecision(p,`${cap(ds.k)}: ${ds.v.toLowerCase()}`,ds.v==='Eliminar'?'Ya no sirve a lo que el proyecto necesita comunicar.':'Se mantiene, pero se ajusta para que cumpla su función.',['Forma'],'darlings',ds.v==='Eliminar'?'Descartada':'Confirmada');
       marcar();renderMain();break}
     case 'an-vista':S.anVista=S.anVista||{};S.anVista[ds.id]=ds.v;renderMain();break;
     case 'an-guardar':{const an=S.anP?.[S.cur];if(!an)return;
@@ -5422,10 +5422,10 @@ async function llenarCategoria(p,nombre){if(S.autoRef)return;
   S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'cat:'+e.n);
   const {q,qc,wmQs,metOk}=elementoBusca(p,e);
   try{const L=[...(metOk?await metLibre(q,3).catch(()=>[]):[]),...await wmMulti(wmQs,3,5)];
-    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando bocetos de ${nombre}…`;
   try{const items=await buscarConceptArt(e,qc);
-    for(const x of items.slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+    for(const x of items.slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias de ${nombre} agregadas`:'No encontré nada libre para esa categoría')}
 async function llenarPosesPersonaje(p,id){if(S.autoRef)return;const c=(p.personajes||[]).find(x=>x.id===id);if(!c){toast('No encontré ese personaje');return}
   S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'pose:'+c.id);
@@ -5434,7 +5434,7 @@ async function llenarPosesPersonaje(p,id){if(S.autoRef)return;const c=(p.persona
     for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:'concepto',grupo:'pj:'+c.id,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:'Fotografía',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre}: cómo carga el peso y se mueve`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando bocetos de pose para ${c.nombre}…`;
   try{if(window.PC_SHIM?.artistas){const r=await window.PC_SHIM.artistas({q:qc});
-    for(const x of (r.items||[]).slice(0,5)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`Pose para ${c.nombre} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}}catch{}
+    for(const x of (r.items||[]).slice(0,5)){const key=x.big||x.src;if(ya.has(key))continue;ya.add(key);p.refs.push({id:uid(),capa:'tecnica',grupo:'pj:'+c.id,src:key,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:['Personaje'],porque:`${cap(x.artista||'Este artista')} resuelve la pose de ${c.nombre} en concept art.`,aprendo:'',auto:true,origen:{tipo:'pose',id:c.id},creado:Date.now()});S.autoRef.add++}}}catch{}
   const n=S.autoRef.add;S.autoRef=null;marcar();renderMain();toast(n?`${n} referencias de pose para ${c.nombre} agregadas`:'No encontré nada libre para esas poses')}
 
 async function llenarMoodboard(p){if(S.autoRef)return;
@@ -5448,10 +5448,10 @@ async function llenarMoodboard(p){if(S.autoRef)return;
   for(const e of els){
     const {q,qc,wmQs,metOk}=elementoBusca(p,e);
     try{const L=[...(metOk?await metLibre(q,2).catch(()=>[]):[]),...await wmMulti(wmQs,2,3)];
-      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`${e.n}, referencia real: cómo es de verdad`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_();
     try{const items=await buscarConceptArt(e,qc);
-      for(const x of items.slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${e.n} en concept art: cómo lo resuelve ${x.artista||'este artista'}`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+      for(const x of items.slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_()}
   for(const c of pjs){
     const {qc,wmQs}=personajePoseQuery(c);
@@ -5738,20 +5738,21 @@ async function accionCf(a,el,p,ds){if(a!=='cf')return false;const D=DX(p),c=D.co
   const op=ds.op;
   if(op==='forma'){const A=polo(c.a,c.de.v),B=polo(c.a,c.con.v),regla=cap(visDe(c.a,c.de.v));p.lenguaje=p.lenguaje||{};p.lenguaje.reglas=p.lenguaje.reglas||[];
     if(!p.lenguaje.reglas.includes(regla))p.lenguaje.reglas.push(regla);
-    nuevaDecision(p,`${cap(A)} manda sobre ${B}: el diseño se ajusta`,`Contradicción: ${c.t}`,['Forma'],'contradicción','En prueba');marcar();
+    nuevaDecision(p,`${cap(A)} manda sobre ${B}: el diseño se ajusta`,`La intención del proyecto pide ${A}; el lenguaje visual se ajusta para hablar el mismo idioma en vez de quedarse en ${B}.`,['Forma'],'contradicción','En prueba');marcar();
     S.tab='lenguaje';renderMain();window.scrollTo({top:0});toast(c.con.w.length?`Agregué la regla. Ahora cambia «${c.con.w.slice(0,3).join('», «')}» en Lenguaje visual`:'Agregué la regla visual: revisa tu Lenguaje visual');return true}
-  if(op==='intencion'){const B=polo(c.a,c.con.v);nuevaDecision(p,`${cap(B)} manda: ${c.tipo==='mv'?'el mood':'la intención'} se ajusta al diseño`,`Contradicción: ${c.t}`,[c.tipo==='mv'?'Mood':'Concepto'],'contradicción','En prueba');marcar();
+  if(op==='intencion'){const B=polo(c.a,c.con.v);nuevaDecision(p,`${cap(B)} manda: ${c.tipo==='mv'?'el mood':'la intención'} se ajusta al diseño`,`El diseño ya se inclina hacia ${B}; se ajusta ${c.tipo==='mv'?'el mood':'la intención'} para que cuente la misma historia.`,[c.tipo==='mv'?'Mood':'Concepto'],'contradicción','En prueba');marcar();
     S.tab=c.tipo==='mv'?'mood':'concepto';renderMain();window.scrollTo({top:0});toast(c.de.w.length?`Cambia «${c.de.w.slice(0,3).join('», «')}» por algo que diga ${B}`:`Reescribe para que diga ${B}`);return true}
   if(op==='tension'){const A=cap(polo(c.a,c.de.v)),B=cap(polo(c.a,c.con.v));p.tensiones=p.tensiones||[];
     p.tensiones.push({a:A,b:B,aVis:visDe(c.a,c.de.v),bVis:visDe(c.a,c.con.v),como:'',domina:'',eje:c.a});
-    nuevaDecision(p,`Tensión consciente: ${A} ↔ ${B}`,`Venía de una contradicción: ${c.t}`,['Tensión'],'contradicción','En prueba');marcar();
+    nuevaDecision(p,`Tensión consciente: ${A} ↔ ${B}`,`${A} y ${B} conviven a propósito: en vez de resolverse, se vuelven una tensión que se balancea pieza por pieza.`,['Tensión'],'contradicción','En prueba');marcar();
     S.tab='tension';renderMain();window.scrollTo({top:0});toast('Ahora es una tensión: decide quién domina y cómo se ve');return true}
   if(op==='paleta'){const sug=paletaSugerida(p).pal.map(x=>x.hex);p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=sug;
     nuevaDecision(p,'Paleta ajustada al mood',`Antes: ${p.mood.paletaAnterior.join(' ')}`,['Color'],'contradicción','En prueba');marcar();renderMain();toast('Paleta cambiada (la anterior quedó guardada en tus decisiones)');return true}
   if(op==='mood'){S.tab='mood';renderMain();window.scrollTo({top:0});return true}
   if(op==='ok'){S.cfOk=c.k;renderMain();setTimeout(()=>$('#cf-motivo')?.focus(),30);return true}
   if(op==='ok2'){const m=($('#cf-motivo')?.value||'').trim();if(!m){toast('Escribe por qué es intencional');return true}
-    p.resueltos=p.resueltos||{};p.resueltos[ds.k]={ts:Date.now(),motivo:m,t:c?.t||''};nuevaDecision(p,`Contradicción aceptada: ${c?.t||ds.k}`,m,['Concepto'],'contradicción','Confirmada');S.cfOk=null;marcar();renderMain();toast('Guardado en tus decisiones');return true}
+    const tit=c&&(c.tipo==='iv'||c.tipo==='mv')?`${cap(polo(c.a,c.de.v))} y ${cap(polo(c.a,c.con.v))} conviven a propósito`:c?.tipo==='pal'?'Paleta y mood conviven a propósito, sin ajustar':'Contraste intencional, sin ajustar';
+    p.resueltos=p.resueltos||{};p.resueltos[ds.k]={ts:Date.now(),motivo:m,t:c?.t||''};nuevaDecision(p,tit,m,['Concepto'],'contradicción','Confirmada');S.cfOk=null;marcar();renderMain();toast('Guardado en tus decisiones');return true}
   return true}
 /* ============ Claves de luz (mood de luces) ============ */
 const LUCES=[
