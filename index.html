@@ -916,7 +916,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum50wiw').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum5vsjr').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3927,7 +3927,17 @@ function elementoBusca(p,e){
   /* varias consultas de respaldo, de la más específica a la más genérica: si la primera no encuentra nada, se usan las siguientes */
   const wmQs=templo&&sitios?sitios.map(s=>s+' temple'):organica&&region?[region+' '+base,base]:culRel&&cult?[cult+' '+base,base]:[base];
   const qc=base+(organica||e.n==='Criaturas'?' sketch':' concept art');
-  return {q,qc,wmQs,metOk:!organica,artista:artistaParaCategoria(e.n)}}
+  /* si el proyecto encaja con plantas reales de la biblioteca (VEG_KB), esas mandan sobre la búsqueda genérica: nombre real, no «tropical tree trunk» */
+  const especies=['Árboles y troncos','Plantas bajas y arbustos','Flores','Lianas y enredaderas'].includes(e.n)?especiesPara(p,e.n):[];
+  return {q,qc,wmQs,metOk:!organica,artista:artistaParaCategoria(e.n),especies}}
+/* plantas reales de VEG_KB que encajan con este proyecto, para esta categoría concreta */
+function especiesPara(p,catName){return (typeof bajarAnclas==='function'?bajarAnclas(p,'Vegetación'):[]).filter(a=>a.cat===catName)}
+/* baja fotos reales especie por especie (no una búsqueda genérica) y firma el porqué con el nombre y el dato real.
+   «vistos» es una copia local: solo evita repetir la misma foto entre dos especies de esta misma tanda; quien llama decide si al final la usa o no. */
+async function fetchEspeciesReales(especies,yaFuera,nEach){const out=[],vistos=new Set(yaFuera);
+  for(const es of especies){try{const L=await wmLibre(es.q,nEach);
+    for(const x of L){if(vistos.has(x.src))continue;vistos.add(x.src);out.push({...x,porque:`${es.n}: ${corto(es.dato,110)}`})}}catch{}}
+  return out}
 /* poses de personaje: referencia real de pose + concept art/gesto, aparte de su vestuario o materiales.
    Consultas cortas (2–3 palabras) de la más específica a la más genérica: Wikimedia exige que TODAS las palabras coincidan, así que una frase larga casi nunca encuentra nada. */
 function personajePoseQuery(c){const animal=c.rol==='Criatura';
@@ -3955,8 +3965,10 @@ async function reemplazarRef(p,id){
       if(esConcept){const items=await buscarConceptArt(e,elementoBusca(p,e).qc);const x=items.find(it=>!ya.has(it.big||it.src));
         if(x)p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:ref.origen,creado:Date.now()});
         else toast('No encontré otra obra distinta para esta categoría')}
-      else{const {q,wmQs,metOk}=elementoBusca(p,e);const L=[...(metOk?await metLibre(q,5).catch(()=>[]):[]),...await wmMulti(wmQs,5,8)];const x=L.find(it=>!ya.has(it.src));
-        if(x)p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
+      else{const {q,wmQs,metOk,especies}=elementoBusca(p,e);
+        const L=especies?.length?await fetchEspeciesReales(especies,ya,5):[...(metOk?await metLibre(q,5).catch(()=>[]):[]),...await wmMulti(wmQs,5,8)].map(x=>({...x,porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`}));
+        const x=L.find(it=>!ya.has(it.src));
+        if(x)p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:x.porque,aprendo:'',lic:x.lic,auto:true,origen:ref.origen,creado:Date.now()});
         else toast('No encontré otra foto real distinta para esta categoría')}
     }else if(ref.origen.tipo==='pose'){
       const c=(p.personajes||[]).find(x=>x.id===ref.origen.id);if(!c)return;const {qc,wmQs}=personajePoseQuery(c);
@@ -5437,9 +5449,9 @@ async function buscarConceptArt(e,qc){if(!window.PC_SHIM?.artistas)return [];
 async function llenarCategoria(p,nombre){if(S.autoRef)return;
   const e=ELEMENTOS_FORMA.find(x=>x.n===nombre);if(!e){toast('No reconozco esa categoría');return}
   S.autoRef={n:0,t:2,add:0};renderMain();const ya=new Set((p.refs||[]).map(r=>r.src));seedRechazados(p,ya,'cat:'+e.n);
-  const {q,qc,wmQs,metOk}=elementoBusca(p,e);
-  try{const L=[...(metOk?await metLibre(q,3).catch(()=>[]):[]),...await wmMulti(wmQs,3,5)];
-    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+  const {q,qc,wmQs,metOk,especies}=elementoBusca(p,e);
+  try{const L=especies?.length?await fetchEspeciesReales(especies,ya,3):[...(metOk?await metLibre(q,3).catch(()=>[]):[]),...await wmMulti(wmQs,3,5)].map(x=>({...x,porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`}));
+    for(const x of L.slice(0,6)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:x.porque,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
   S.autoRef.n=1;const el=$('#auto-prog');if(el)el.textContent=`Buscando bocetos de ${nombre}…`;
   try{const items=await buscarConceptArt(e,qc);
     for(const x of items.slice(0,5)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
@@ -5463,9 +5475,9 @@ async function llenarMoodboard(p){if(S.autoRef)return;
       for(const x of L.slice(0,2)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:b.capa,src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:[OBJ2EST[b.obj]||'Forma'],aplica:[],porque:`${b.busco}. Estudia: ${b.estudiar}`,aprendo:'',lic:x.lic,auto:true,creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_()}
   for(const e of els){
-    const {q,qc,wmQs,metOk}=elementoBusca(p,e);
-    try{const L=[...(metOk?await metLibre(q,2).catch(()=>[]):[]),...await wmMulti(wmQs,2,3)];
-      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
+    const {q,qc,wmQs,metOk,especies}=elementoBusca(p,e);
+    try{const L=especies?.length?await fetchEspeciesReales(especies,ya,2):[...(metOk?await metLibre(q,2).catch(()=>[]):[]),...await wmMulti(wmQs,2,3)].map(x=>({...x,porque:`Cómo se ve de verdad: ${e.n.toLowerCase()}.`}));
+      for(const x of L.slice(0,4)){if(ya.has(x.src))continue;ya.add(x.src);p.refs.push({id:uid(),capa:ELEM_CAPA[e.n]||'mood',grupo:ELEM_GRUPO[e.n],src:x.src,link:x.link,fuente:x.fuente+' · '+corto(x.titulo,70),tipoRef:'primaria',clase:x.fuente==='The Met'?'Museo':'Fotografía',estudio:['Forma'],aplica:[],porque:x.porque,aprendo:'',lic:x.lic,auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
     marcar_();
     try{const items=await buscarConceptArt(e,qc);
       for(const x of items.slice(0,3)){if(ya.has(x.big||x.src))continue;ya.add(x.big||x.src);p.refs.push({id:uid(),capa:'tecnica',grupo:'tecnica',src:x.big||x.src,link:x.link,fuente:'ArtStation · '+(x.artista||''),tipoRef:'secundaria',clase:'Concept artist',estudio:['Forma'],aplica:[],porque:`${cap(x.artista||'Este artista')} resuelve ${e.n.toLowerCase()} en concept art.`,aprendo:'',auto:true,origen:{tipo:'cat',n:e.n},creado:Date.now()});S.autoRef.add++}}catch{}
@@ -5961,18 +5973,18 @@ async function accionTp(a,el,p,ds){
 
 /* ============ Ref → Thumbnail: bajar la idea ============ */
 const VEG_KB=[
- {n:'Ceiba (yaxché)',bio:['selva','tropic','maya','mesoamer','mexica','azteca','prehispan'],dato:'Árbol sagrado maya: las raíces bajan al inframundo (Xibalbá), el tronco es el mundo humano y la copa el cielo. De joven su tronco está cubierto de espinas cónicas; de vieja tiene raíces tabulares enormes.',gancho:'Árbol héroe, vertical y monumental. Sus espinas pueden rimar con las navajas de obsidiana.',q:'ceiba tree trunk spines'},
- {n:'Matapalo (higuera estranguladora)',bio:['selva','tropic','ruina','templo','maya','mesoamer'],dato:'Nace sobre otro árbol, lo envuelve con raíces hasta matarlo; sobre ruinas abraza y parte las piedras.',gancho:'La naturaleza reclama con violencia: raíces que envuelven templos, estatuas o armas abandonadas.',q:'strangler fig roots ruins'},
- {n:'Maguey (agave)',bio:['desierto','altiplano','mexica','azteca','mesoamer','sangre','sacrificio','ritual'],dato:'Sus espinas se usaban en el autosacrificio: los sacerdotes se perforaban para ofrecer sangre. De sus fibras se hacían telas y cuerdas.',gancho:'Planta radial de puntas que une sangre y ritual. Ideal para zonas de sacrificio o templos.',q:'agave maguey spikes'},
- {n:'Sangre de drago (Croton)',bio:['selva','tropic','sangre','mesoamer'],dato:'Árbol real cuya savia es roja como la sangre; se usa como medicina.',gancho:'«Sangre» literal: árboles que sangran rojo cuando la guerra los hiere. Un acento rojo dentro del verde.',q:'dragon blood tree red sap croton'},
- {n:'Copal',bio:['selva','mesoamer','maya','mexica','ritual','templo','incienso'],dato:'Su resina se quema como incienso ritual desde hace milenios.',gancho:'Humo ritual y resina ámbar translúcida: une vegetación y templo.',q:'copal resin incense'},
- {n:'Heliconia',bio:['selva','tropic'],dato:'Brácteas rojas y amarillas en zigzag, de forma angular.',gancho:'Planta de selva con forma angular y colores de guerra: un puente visual entre los dos lados.',q:'heliconia rostrata'},
- {n:'Bromelias',bio:['selva','tropic'],dato:'Crecen sobre otros árboles y guardan agua en su centro.',gancho:'Rosetas que colonizan todo: sobre estatuas, cascos o armas caídas.',q:'bromeliad on tree branch'},
- {n:'Helecho arborescente',bio:['selva','tropic','bosque','niebla'],dato:'Helecho con tronco de varios metros; sus brotes se enrollan en espiral.',gancho:'La espiral como lenguaje de la naturaleza. Silueta radial fácil de reconocer.',q:'tree fern fiddlehead spiral'},
- {n:'Nopal',bio:['desierto','altiplano','mexica','azteca'],dato:'En el mito mexica, el águila sobre el nopal marca la fundación de Tenochtitlan; la tuna roja se asociaba al corazón.',gancho:'Pencas planas y modulares. La tuna roja como corazón ofrendado.',q:'nopal opuntia cactus'},
- {n:'Cempasúchil',bio:['mexica','azteca','mesoamer','muerte','altiplano'],dato:'Flor naranja ligada a los muertos; guía a las almas.',gancho:'Acento naranja de muerte y memoria: flor que crece donde alguien cayó.',q:'cempasuchil marigold field'},
- {n:'Manglar',bio:['costa','pantano','manglar','agua'],dato:'Raíces zancudas que salen del agua.',gancho:'Raíces como patas o como jaulas; silueta horizontal sobre el agua.',q:'mangrove roots'},
- {n:'Oyamel / pino',bio:['bosque','montana','frio','templado','niebla'],dato:'Bosques de altura con niebla y troncos rectos.',gancho:'Verticales repetidas: ritmo y niebla.',q:'fir forest fog'}];
+ {n:'Ceiba (yaxché)',cat:'Árboles y troncos',bio:['selva','tropic','maya','mesoamer','mexica','azteca','prehispan'],dato:'Árbol sagrado maya: las raíces bajan al inframundo (Xibalbá), el tronco es el mundo humano y la copa el cielo. De joven su tronco está cubierto de espinas cónicas; de vieja tiene raíces tabulares enormes.',gancho:'Árbol héroe, vertical y monumental. Sus espinas pueden rimar con las navajas de obsidiana.',q:'ceiba tree trunk spines'},
+ {n:'Matapalo (higuera estranguladora)',cat:'Árboles y troncos',bio:['selva','tropic','ruina','templo','maya','mesoamer'],dato:'Nace sobre otro árbol, lo envuelve con raíces hasta matarlo; sobre ruinas abraza y parte las piedras.',gancho:'La naturaleza reclama con violencia: raíces que envuelven templos, estatuas o armas abandonadas.',q:'strangler fig roots ruins'},
+ {n:'Maguey (agave)',cat:'Plantas bajas y arbustos',bio:['desierto','altiplano','mexica','azteca','mesoamer','sangre','sacrificio','ritual'],dato:'Sus espinas se usaban en el autosacrificio: los sacerdotes se perforaban para ofrecer sangre. De sus fibras se hacían telas y cuerdas.',gancho:'Planta radial de puntas que une sangre y ritual. Ideal para zonas de sacrificio o templos.',q:'agave maguey spikes'},
+ {n:'Sangre de drago (Croton)',cat:'Árboles y troncos',bio:['selva','tropic','sangre','mesoamer'],dato:'Árbol real cuya savia es roja como la sangre; se usa como medicina.',gancho:'«Sangre» literal: árboles que sangran rojo cuando la guerra los hiere. Un acento rojo dentro del verde.',q:'dragon blood tree red sap croton'},
+ {n:'Copal',cat:'Árboles y troncos',bio:['selva','mesoamer','maya','mexica','ritual','templo','incienso'],dato:'Su resina se quema como incienso ritual desde hace milenios.',gancho:'Humo ritual y resina ámbar translúcida: une vegetación y templo.',q:'copal resin incense'},
+ {n:'Heliconia',cat:'Flores',bio:['selva','tropic'],dato:'Brácteas rojas y amarillas en zigzag, de forma angular.',gancho:'Planta de selva con forma angular y colores de guerra: un puente visual entre los dos lados.',q:'heliconia rostrata'},
+ {n:'Bromelias',cat:'Plantas bajas y arbustos',bio:['selva','tropic'],dato:'Crecen sobre otros árboles y guardan agua en su centro.',gancho:'Rosetas que colonizan todo: sobre estatuas, cascos o armas caídas.',q:'bromeliad on tree branch'},
+ {n:'Helecho arborescente',cat:'Plantas bajas y arbustos',bio:['selva','tropic','bosque','niebla'],dato:'Helecho con tronco de varios metros; sus brotes se enrollan en espiral.',gancho:'La espiral como lenguaje de la naturaleza. Silueta radial fácil de reconocer.',q:'tree fern fiddlehead spiral'},
+ {n:'Nopal',cat:'Plantas bajas y arbustos',bio:['desierto','altiplano','mexica','azteca'],dato:'En el mito mexica, el águila sobre el nopal marca la fundación de Tenochtitlan; la tuna roja se asociaba al corazón.',gancho:'Pencas planas y modulares. La tuna roja como corazón ofrendado.',q:'nopal opuntia cactus'},
+ {n:'Cempasúchil',cat:'Flores',bio:['mexica','azteca','mesoamer','muerte','altiplano'],dato:'Flor naranja ligada a los muertos; guía a las almas.',gancho:'Acento naranja de muerte y memoria: flor que crece donde alguien cayó.',q:'cempasuchil marigold field'},
+ {n:'Manglar',cat:'Árboles y troncos',bio:['costa','pantano','manglar','agua'],dato:'Raíces zancudas que salen del agua.',gancho:'Raíces como patas o como jaulas; silueta horizontal sobre el agua.',q:'mangrove roots'},
+ {n:'Oyamel / pino',cat:'Árboles y troncos',bio:['bosque','montana','frio','templado','niebla'],dato:'Bosques de altura con niebla y troncos rectos.',gancho:'Verticales repetidas: ritmo y niebla.',q:'fir forest fog'}];
 const BAJAR_GEN={
  'Vegetación':['Dibujas la categoría («árbol») y no una planta concreta con historia.','La silueta es una bola sobre un palo: se ve igual que cualquier árbol.','El detalle está parejo en toda la hoja: nada manda.','No hay escala: sin una figura no se sabe si mide 2 m o 60 m.','No toca nada: no rompe piedra, no abraza un templo, no esconde a nadie.','No carga la tensión del proyecto: podría estar en cualquier otro mundo.'],
  'Personaje':['Diseñas ropa y no a alguien: falta qué hace y qué le pasó.','La silueta no se reconoce en negro.','Todo tiene el mismo tamaño: no hay una forma que mande.'],
