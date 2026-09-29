@@ -444,6 +444,8 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .nd-box.sm,.ok-box.sm{font-size:12.5px;padding:5px 8px}
 .alerta{background:var(--warn-bg);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:10px}
 .cfs{display:flex;flex-direction:column;gap:10px}
+.orienta-l{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.orienta-ok{border-top:3px solid var(--ok)}
 .cf{display:flex;flex-direction:column;gap:6px;background:var(--surface);border-radius:8px;padding:10px 12px}
 .cf .pal i{width:18px;height:18px}
 .big-q{border-left:3px solid var(--accent)}
@@ -914,7 +916,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum4lwgo').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum4vyqo').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1447,9 +1449,9 @@ function vRefs(p){
   const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
   return `
   <p class="intro"><strong>La referencia es lo más importante: dale tiempo y sé específico.</strong> Cada imagen lleva su porqué, qué aprendes de ella y dónde la aplicas. Así no acumulas cientos de imágenes sin saber qué estudias.</p>
+  ${tableroHTML(p)}
   ${autoLlenadoHTML(p)}
   ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
-  ${tableroHTML(p)}
   ${refsBalanceHTML(p)}
   <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Buscar algo específico por objetivo (manual)</summary>${generadorHTML(p)}</details>
   <div class="drop" id="drop">
@@ -4346,9 +4348,18 @@ function decisionesHTML(p){const q=nz(S.decQ||''),L=(p.decisiones||[]).filter(d=
       ${porqueBtn(d.t,d.id)}<details class="rel"><summary class="btn ghost sm">Relacionado con</summary>${chSel('decisiones.'+i+'.rel',DEC_REL,d.rel)}</details>
       <button class="btn ghost sm danger" data-act="dec-del" data-id="${d.id}">${S.confirmLi==='d'+d.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')}</div>`:'<p class="muted">Todavía no hay decisiones. Se guardan aquí desde el asistente, las referencias, el ¿por qué? y Kill your darlings.</p>'}</div>`}
 
+/* orienta de un vistazo: ¿va bien el proyecto o hay algo fallando? sale de la misma auditoría, arriba de todo */
+function cerebroEstadoHTML(p,D){const s=salud(p),conf=D.conflictos.slice(0,2),vac=D.vacios.slice(0,3);
+  if(!conf.length&&!vac.length)return `<div class="box orienta-ok"><p style="margin:0"><b>✓ Sin contradicciones ni vacíos urgentes ahora mismo.</b> <span class="muted">${s.ok}/${s.total} pasos del proceso completos.</span></p></div>`;
+  return `<div class="box" style="border-top:3px solid ${conf.length?'var(--warn)':'var(--accent)'}">
+    <div class="prow" style="justify-content:space-between"><h3 style="margin:0">¿Cómo va el proyecto?</h3><span class="lbl">${s.ok}/${s.total} pasos · ${conf.length?conf.length+' contradicción(es)':'sin contradicciones'}${vac.length?' · '+D.vacios.length+' vacío(s)':''}</span></div>
+    ${conf.length?`<div class="orienta-l">${conf.map(c=>conflHTML(p,c)).join('')}</div>`:''}
+    ${vac.length?`<div class="orienta-l">${vac.map(v=>`<div class="cf" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>NO DEFINIDO · ${esc(v.n)}</b> — ${esc(v.q)}</p><div class="prow"><button class="btn sm" data-act="tab" data-tab="${v.tab}">Ir a resolverlo</button></div></div>`).join('')}${D.vacios.length>vac.length?`<p class="muted" style="margin:4px 0 0;font-size:12.5px">+${D.vacios.length-vac.length} más en la Auditoría de coherencia, más abajo.</p>`:''}</div>`:''}
+  </div>`}
 function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   return `
   ${dnaHTML(p)}
+  ${cerebroEstadoHTML(p,D)}
   <div class="cerebro">
     <div class="c-main">
       <div class="box asist"><div class="prow" style="justify-content:space-between"><h3>Asistente · director de arte del proyecto</h3><span class="lbl">Local · sin IA de pago · usa solo tu contexto</span></div>${chatHTML(p)}
