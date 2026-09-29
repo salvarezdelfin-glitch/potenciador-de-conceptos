@@ -394,6 +394,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .phead{position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg) 78%,transparent);padding-block:10px 14px;margin-top:-10px}
 .tabs{border-bottom:0;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
+.tab-sep{flex:0 0 auto;width:1px;align-self:stretch;background:var(--line2);margin:4px 4px}
 .tab{border-radius:8px;border-bottom:0;margin:0;padding:8px 12px;font-size:13.5px}
 .tab:hover{color:var(--ink);background:var(--surface2)}
 .tab[aria-selected="true"]{background:var(--surface3);color:var(--ink);border-bottom:0;box-shadow:inset 0 -2px 0 var(--accent)}
@@ -913,7 +914,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum4abqm').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum4lwgo').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -922,6 +923,8 @@ const TABS = [
   ['refs','Referencias'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
+/* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
+const TAB_SEP=new Set(['mood','refs','critica','hoja']);
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
 const GRUPOS_MUNDO=['Personajes','Criaturas','Entornos','Props','Keyframes'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
@@ -1305,7 +1308,7 @@ function renderMainInner(){
   </div>
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
-  <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
+  <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`${TAB_SEP.has(k)?'<span class="tab-sep" aria-hidden="true"></span>':''}<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
   <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
@@ -4345,6 +4348,7 @@ function decisionesHTML(p){const q=nz(S.decQ||''),L=(p.decisiones||[]).filter(d=
 
 function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   return `
+  ${dnaHTML(p)}
   <div class="cerebro">
     <div class="c-main">
       <div class="box asist"><div class="prow" style="justify-content:space-between"><h3>Asistente · director de arte del proyecto</h3><span class="lbl">Local · sin IA de pago · usa solo tu contexto</span></div>${chatHTML(p)}
@@ -4353,7 +4357,7 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
         <p class="hint">Diagnóstico, no calificación. Se recalcula cada vez que cambias algo.</p>${auditHTML(p,D)}</div>
       ${decisionesHTML(p)}
     </div>
-    <div class="c-side">${dnaHTML(p)}
+    <div class="c-side">
       <div class="box"><h3>Preguntas abiertas <span class="lbl">${pq.filter(q=>!q.ok).length}</span></h3>
         <div class="prow"><input type="text" id="preg-t" placeholder="¿Qué tengo que resolver antes de diseñar?" data-enter="preg-add" style="flex:1 1 160px"><button class="btn sm" data-act="preg-add">＋</button></div>
         ${pq.length?`<ul class="list">${pq.map(q=>`<li class="${q.ok?'hecha':''}"><span>${esc(q.t)}</span><span class="prow"><button class="btn ghost sm" data-act="preg-ok" data-id="${q.id}">${q.ok?'Reabrir':'✓'}</button><button class="btn ghost sm" data-act="preg-del" data-id="${q.id}">✕</button></span></li>`).join('')}</ul>`:''}</div>
@@ -5558,12 +5562,15 @@ function dnaFilas(p){const l=p.lenguaje||{},t=(p.tensiones||[]).filter(x=>x.a&&x
     ['Light',nd([p.guia?.luz||p.mood.luz,(p.luces||[]).filter(l=>l.n).map(l=>l.n).join(' · ')].filter(Boolean).join(' — ')),[p.guia?.luz||p.mood.luz,...(p.luces||[]).filter(l=>l.n).map(l=>`${l.n}: ${[l.fuente,l.temp,l.dir,l.uso&&'uso: '+l.uso].filter(Boolean).join(', ')}`)].filter(Boolean).join('\n'),'mood'],
     ['Mood',mw.length?'Debe sentirse: '+esc(lista3(mw)):nd(''),mw.length?'Debe sentirse: '+lista3(mw):'','mood'],
     ['Story',nd(corto(story,160)),story,'brief'],
-    ['Art Direction',p.ad?`${esc(corto(p.ad,140))}${p.pilares.some(x=>x.t)?'<br><small>'+p.pilares.filter(x=>x.t).map(x=>esc(x.t)).join(' · ')+'</small>':''}${(l.reglas||[]).length?`<br><small>${l.reglas.length} regla(s) visual(es)</small>`:''}`:nd(''),
-      [p.ad||'',p.pilares.filter(x=>x.t).map((x,i)=>`Pilar ${i+1}: ${x.t}${x.f?' — '+x.f:''}`).join('\n'),(l.reglas||[]).length?'Reglas visuales:\n'+l.reglas.map(r=>'- '+r).join('\n'):''].filter(Boolean).join('\n'),'ad']];
+    ['Art Direction',p.ad?esc(corto(p.ad,140)):nd(''),p.ad||'','ad'],
+    ['Pillars',p.pilares.some(x=>x.t)?p.pilares.filter(x=>x.t).map(x=>`<b>${esc(x.t)}</b>${x.f?': '+esc(corto(x.f,80)):''}`).join('<br>'):nd(''),
+      p.pilares.filter(x=>x.t).map((x,i)=>`Pilar ${i+1}: ${x.t}${x.f?' — '+x.f:''}`).join('\n'),'ad'],
+    ['Rules',(l.reglas||[]).length?'<ol style="margin:0;padding-left:18px">'+l.reglas.map(r=>`<li>${esc(r)}</li>`).join('')+'</ol>':nd(''),
+      (l.reglas||[]).length?l.reglas.map((r,i)=>`${i+1}. ${r}`).join('\n'):'','lenguaje']];
   if(pj.length)F.push(['Characters',pj.map(c=>{const P=pjPaleta(p,c).pal;return `<b>${esc(c.nombre)}</b> <span class="pal">${P.map(x=>`<i style="background:${x.hex}" title="${x.rol} ${x.hex}"></i>`).join('')}</span>`}).join('<br>'),
     pj.map(c=>`${c.nombre}: `+pjPaleta(p,c).pal.map(x=>`${x.rol} ${x.hex}`).join(', ')).join('\n'),'personajes']);
   return F}
-const DNA_ES={Concept:'Concepto',Theme:'Tema',Function:'Función',Tension:'Tensión',Shape:'Forma',Material:'Material',Color:'Color',Light:'Luz',Mood:'Mood',Story:'Historia','Art Direction':'Dirección de arte',Characters:'Personajes'};
+const DNA_ES={Concept:'Concepto',Theme:'Tema',Function:'Función',Tension:'Tensión',Shape:'Forma',Material:'Material',Color:'Color',Light:'Luz',Mood:'Mood',Story:'Historia','Art Direction':'Dirección de arte',Pillars:'Pilares',Rules:'Reglas visuales',Characters:'Personajes'};
 const dnaLbl=k=>DNA_ES[k]&&DNA_ES[k]!==k?DNA_ES[k]+' / '+k:k;
 function dnaHTML(p){const F=dnaFilas(p);
   return `<div class="dna"><div class="dna-h"><div class="prow" style="justify-content:space-between"><span class="lbl">ADN del proyecto / Project DNA · se actualiza solo</span><button class="btn ghost sm" data-act="dna-copy" data-k="*" title="Copiar todo el DNA">Copiar todo</button></div><b>${esc(p.nombre)}</b></div>
