@@ -913,7 +913,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muls63zz').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum36nz8').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1463,7 +1463,7 @@ function vRefs(p){
     return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
     ${qs.length?`<div class="colq">${qs.map(b=>`<div class="colq-r"><button class="colq-b" ${S.autoRef?'disabled':''} data-act="buscar-guardada" data-q="${esc(b.q)}" data-capa="${esc(b.capa)}" data-obj="${esc(b.obj||'')}" data-busco="${esc(b.busco||'')}" data-estudiar="${esc(b.estudiar||'')}" title="Traer referencias reales + concept art de esta búsqueda">↓ ${esc(b.q)}</button><a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗</a></div>`).join('')}</div>`:''}
     ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
-  <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: buscar por tu cuenta, artistas a seguir, tus búsquedas guardadas</summary>
+  <details id="det-masherr" ${S.refB?.q||S.masHerr?'open':''}><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: buscar por tu cuenta, artistas a seguir, tus búsquedas guardadas</summary>
   ${refsBuscaHTML(p)}
   ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
   <div class="box"><h3>Tus búsquedas</h3>${busquedasHTML(p)}</div>
@@ -3058,6 +3058,12 @@ async function buscarMet(q){
   const objs=await Promise.all(ids.map(id=>fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`).then(r=>r.ok?r.json():null).catch(()=>null)));
   return objs.filter(o=>o?.primaryImageSmall).map(o=>({id:'met-'+o.objectID,src:o.primaryImageSmall,full:o.primaryImage||o.primaryImageSmall,big:o.primaryImageSmall,titulo:[o.title,o.culture||o.artistDisplayName,o.objectDate].filter(Boolean).join(' · ').slice(0,110),fuente:'The Met',link:o.objectURL}));
 }
+/* lleva a Referencias y abre el desplegable de búsqueda manual (si estaba cerrado) y hace scroll hasta ahí.
+   S.masHerr se guarda en el estado porque cada renderMain() reconstruye el <details> desde cero: si solo abriéramos
+   el atributo open en el DOM, el siguiente render (por ejemplo cuando llega la búsqueda) lo volvería a cerrar. */
+function irABuscarRefs(){S.tab='refs';S.masHerr=true;render();
+  setTimeout(()=>$('#rb-q')?.scrollIntoView({block:'center',behavior:'smooth'}),30)}
+document.addEventListener('toggle',e=>{if(e.target.id==='det-masherr')S.masHerr=e.target.open},true);
 async function buscarRefs(){
   const b=S.refB=S.refB||{};const q=(b.q||'').trim();if(!q){toast('Escribe qué buscar');return}
   b.cargando=true;b.error='';b.items=[];b.artistasEnc=null;b.artistasQ=q;renderMain();
@@ -5923,8 +5929,8 @@ async function accionTp(a,el,p,ds){
   switch(a){
     case 'luz-add':{p.luces=p.luces||[];const P=LUCES.find(x=>x.k===ds.k);p.luces.push({id:uid(),k:P?.k||'',n:P?.n||'',fuente:P?.fuente||'',temp:P?.temp||'',dir:P?.dir||'',uso:''});marcar();renderMain();break}
     case 'luz-del':p.luces=(p.luces||[]).filter(l=>l.id!==ds.id);p.refs.forEach(r=>{if(r.luz===ds.id)delete r.luz});marcar();renderMain();break;
-    case 'luz-buscar':{const l=(p.luces||[]).find(x=>x.id===ds.id);if(!l)return true;const P=LUCES.find(x=>x.k===l.k);S.refB={...(S.refB||{}),q:P?.q||tr(l.n)||l.n,grupo:'luz',luz:l.id,capa:'mood',src:'wm'};S.tab='refs';renderMain();buscarRefs().then(()=>$('#rb-q')?.scrollIntoView({block:'center'}));setTimeout(()=>$('#rb-q')?.scrollIntoView({block:'center'}),60);break}
-    case 'tp-buscar':S.refB={...(S.refB||{}),q:ds.q,grupo:ds.g,luz:null,capa:ds.g==='mood'||ds.g==='luz'?'mood':ds.g==='tecnica'?'tecnica':'concepto',src:ds.g==='cultura'?'':S.refB?.src||''};buscarRefs().then(()=>$('#rb-q')?.scrollIntoView({block:'center'}));setTimeout(()=>$('#rb-q')?.scrollIntoView({block:'center'}),60);toast('Lo que agregues de esta búsqueda va a «'+(tabGrupos(p).find(g=>g.k===ds.g)?.n||'')+'»');break;
+    case 'luz-buscar':{const l=(p.luces||[]).find(x=>x.id===ds.id);if(!l)return true;const P=LUCES.find(x=>x.k===l.k);S.refB={...(S.refB||{}),q:P?.q||tr(l.n)||l.n,grupo:'luz',luz:l.id,capa:'mood',src:'wm'};irABuscarRefs();buscarRefs();break}
+    case 'tp-buscar':S.refB={...(S.refB||{}),q:ds.q,grupo:ds.g,luz:null,capa:ds.g==='mood'||ds.g==='luz'?'mood':ds.g==='tecnica'?'tecnica':'concepto',src:ds.g==='cultura'?'':S.refB?.src||''};irABuscarRefs();buscarRefs();toast('Lo que agregues de esta búsqueda va a «'+(tabGrupos(p).find(g=>g.k===ds.g)?.n||'')+'»');break;
     case 'ref-heroe':{const r=p.refs.find(x=>x.id===ds.id);if(!r)return true;const g=grupoDe(p,r),on=!r.heroe;p.refs.forEach(x=>{if(grupoDe(p,x)===g)x.heroe=false});r.heroe=on;marcar();renderMain();break}
     case 'tp-png':tpPNG();break;
     case 'tp-zip':tpZip();break;
@@ -6000,7 +6006,7 @@ async function accionBajar(a,el,p,ds){
     case 'bajar-go':{const v=$('#f-baj')?.value;if(v!=null){p.bajar=p.bajar||{};p.bajar.que=v.trim();marcar()}if(!p.bajar?.que){toast('Escribe qué vas a diseñar');return true}renderMain();break}
     case 'bajar-set':p.bajar=p.bajar||{};p.bajar.que=ds.v;S.bajSeed=1;marcar();renderMain();break;
     case 'bajar-otra':S.bajSeed=(S.bajSeed||1)+7;renderMain();break;
-    case 'bajar-artista':S.refB={...(S.refB||{}),q:p.bajar?.que||'',grupo:null,luz:null};S.tab='refs';renderMain();verArtista(p,ds.u,ds.f);break;
+    case 'bajar-artista':S.refB={...(S.refB||{}),q:p.bajar?.que||'',grupo:null,luz:null};irABuscarRefs();verArtista(p,ds.u,ds.f);break;
     case 'bajar-fav':{const R=bajarRecetas(p,p.bajar.que,S.bajSeed||1),x=R.recetas[+ds.i];if(!x)return true;const g=p.bajar.guardadas=p.bajar.guardadas||[];if(!g.some(y=>y.txt===x.txt))g.push({txt:x.txt,regla:x.regla,ref:x.r?.id||null,ts:Date.now()});marcar();renderMain();break}
     case 'bajar-unfav':p.bajar.guardadas.splice(+ds.i,1);marcar();renderMain();break;
     case 'bajar-tarea':{const t=(S.ajustes.tareas||[]).find(x=>x.id===ds.id);if(!t||!S.P[t.pid])return true;S.cur=t.pid;const pp=S.P[t.pid];pp.bajar=pp.bajar||{};pp.bajar.que=(temasDe(t.enunciado+' '+t.titulo)[0]||[])[1]?.toLowerCase()||t.titulo;marcarPid(t.pid);S.vista='proyecto';S.tab='bajar';recordar();render();window.scrollTo({top:0});break}
