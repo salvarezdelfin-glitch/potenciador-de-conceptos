@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=munmoqyw').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=munmttyx').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2195,44 +2195,57 @@ function vCV(){const cv=cvDatos();
   <div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Descargar</h3></div>
     <p class="hint">Abre tu CV ya formado en una pestaña nueva y lo manda a imprimir: ahí eliges «Guardar como PDF». En Chrome o Edge, activa «Gráficos de fondo» en las opciones de impresión para que se vea igual que aquí.</p>
     <button class="btn pri" data-act="cv-pdf">Descargar CV en PDF</button></div>`}
-function cvDocHTML(cv){const contacto=[cv.email&&['Email',cv.email],cv.whatsapp&&['WhatsApp',cv.whatsapp],cv.artstation&&['ArtStation',cv.artstation],cv.instagram&&['Instagram',cv.instagram],cv.linkedin&&['LinkedIn',cv.linkedin]].filter(Boolean);
+function cvDocHTML(cv){
+  const contacto=[cv.email&&['✉','Email',cv.email,'mailto:'+cv.email],cv.whatsapp&&['📞','WhatsApp',cv.whatsapp,''],cv.artstation&&['◆','ArtStation',cv.artstation,'https://www.artstation.com/'+cv.artstation.replace(/^@/,'')],cv.instagram&&['◇','Instagram',cv.instagram,'https://www.instagram.com/'+cv.instagram.replace(/^@/,'')],cv.linkedin&&['in','LinkedIn',cv.linkedin,''],cv.portafolio&&['↗','Portafolio',cv.portafolio,'https://'+cv.portafolio]].filter(Boolean);
   const sec=(tit,body)=>body?`<section><h2>${esc(tit)}</h2>${body}</section>`:'';
   const lista=(items,f)=>items?.length?`<div class="rows">${items.map(f).join('')}</div>`:'';
+  const fila=x=>`<div class="row"><div class="row-h"><b>${esc(x.t)}</b>${x.a?`<span class="y">${esc(x.a)}</span>`:''}</div>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`;
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(cv.nombre)} · CV</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@page{size:Letter;margin:16mm 18mm}
+@page{size:Letter;margin:0}
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-:root{--bg:#0f0f10;--fg:#ece8e1;--muted:#8f8b84;--soft:#c9c4bb;--line:#27272a;--font:Inter,system-ui,sans-serif;--name:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif}
-html,body{background:var(--bg);margin:0}
-body{color:var(--fg);font:12.5px/1.55 var(--font);padding:26px 8px}
-h1{font:800 40px/.95 var(--name);text-transform:uppercase;letter-spacing:.005em;margin:0}
-.role{color:var(--soft);margin-top:8px;font-size:13.5px}
-.contact{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
-.contact b{color:var(--fg);font-weight:600}
-.bio{max-width:70ch;color:var(--soft);margin-top:16px;font-size:12.5px}
-section{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
-h2{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-.rows{display:grid;gap:10px}
-.row{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:baseline}
-.row b{font-size:13px;font-weight:600}
-.row span.y{color:var(--muted);font-size:11.5px;white-space:nowrap}
-.row small{grid-column:1/-1;color:var(--soft);font-size:11.5px}
-.skills{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;font-size:12px}
-.skills dt{color:var(--muted)}.skills dd{margin:0;color:var(--soft)}
-footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:10.5px}
-@media print{body{padding:0}}
+:root{--bg:#0f0f10;--panel:#18181a;--fg:#ece8e1;--muted:#9a968e;--soft:#c9c4bb;--line:#2c2c2f;--accent:#ff6a3d;--font:Inter,system-ui,sans-serif;--name:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif}
+html,body{background:#e9e6e0;margin:0}
+body{color:var(--fg);font:11.5px/1.5 var(--font);width:216mm;min-height:279mm;margin:0 auto;display:grid;grid-template-columns:70mm 1fr;background:var(--bg)}
+.side{background:var(--panel);padding:16mm 12mm 12mm;display:flex;flex-direction:column;gap:20px;border-right:1px solid var(--line)}
+.main{padding:16mm 14mm 12mm 16mm;display:flex;flex-direction:column;gap:18px}
+h1{font:800 30px/.95 var(--name);text-transform:uppercase;letter-spacing:.01em;margin:0;color:var(--fg)}
+.role{color:var(--accent);margin-top:8px;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.loc{color:var(--muted);margin-top:4px;font-size:11px}
+h2{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.side h2{color:var(--fg);border-bottom:1px solid var(--line);padding-bottom:8px}
+.contact{display:flex;flex-direction:column;gap:7px;font-size:10.5px}
+.contact div{display:flex;gap:7px;align-items:baseline;color:var(--soft)}
+.contact i{font-style:normal;color:var(--accent);width:14px;flex:0 0 auto;text-align:center}
+.side .skills{display:flex;flex-direction:column;gap:11px}
+.side .skills div b{display:block;font-size:11px;color:var(--fg);font-weight:600;margin-bottom:2px}
+.side .skills div span{color:var(--muted);font-size:10.5px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{border:1px solid var(--line);color:var(--soft);font-size:9.5px;padding:3px 8px;border-radius:20px}
+.bio{color:var(--soft);font-size:11.5px;line-height:1.6}
+.rows{display:flex;flex-direction:column;gap:12px}
+.row-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.row b{font-size:12.5px;font-weight:700;color:var(--fg)}
+.row .y{color:var(--accent);font-size:10px;font-weight:600;white-space:nowrap}
+.row small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+footer{margin-top:auto;padding-top:10px;color:var(--muted);font-size:9px}
+@media print{html,body{background:var(--bg)}body{width:auto;min-height:auto}}
 </style></head><body>
-<h1>${esc(cv.nombre)}</h1><div class="role">${esc(cv.rol)}${cv.ubicacion?' · '+esc(cv.ubicacion):''}${cv.idiomas?' · '+esc(cv.idiomas):''}</div>
-<div class="contact">${contacto.map(([k,v])=>`<span><b>${esc(k)}:</b> ${esc(v)}</span>`).join('')}${cv.portafolio?`<span><b>Portafolio:</b> ${esc(cv.portafolio)}</span>`:''}</div>
-${cv.bio?`<p class="bio">${esc(cv.bio)}</p>`:''}
-${sec('Habilidades',cv.skills?.length?`<dl class="skills">${cv.skills.map(s=>`<dt>${esc(s.k)}</dt><dd>${esc(s.v)}</dd>`).join('')}</dl>`:'')}
-${sec('Experiencia',lista(cv.experiencia,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
-${sec('Proyectos destacados',lista(cv.proyectos,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
-${sec('Educación',lista(cv.educacion,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
-<footer>${esc(cv.nombre)} — ${esc(cv.portafolio)}</footer>
-<script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script>
+<aside class="side">
+  <div><h1>${esc(cv.nombre)}</h1><div class="role">${esc(cv.rol)}</div>${cv.ubicacion||cv.idiomas?`<div class="loc">${[cv.ubicacion,cv.idiomas].filter(Boolean).map(esc).join(' · ')}</div>`:''}</div>
+  ${contacto.length?`<div><h2>Contacto</h2><div class="contact">${contacto.map(([ic,k,v])=>`<div><i>${ic}</i><span>${esc(v)}</span></div>`).join('')}</div></div>`:''}
+  ${cv.skills?.length?`<div><h2>Habilidades</h2><div class="skills">${cv.skills.map(s=>`<div><b>${esc(s.k)}</b><span>${esc(s.v)}</span></div>`).join('')}</div></div>`:''}
+  ${cv.educacion?.length?`<div><h2>Educación</h2><div class="rows">${cv.educacion.map(fila).join('')}</div></div>`:''}
+  <footer>${esc(cv.nombre)}</footer>
+</aside>
+<main class="main">
+  ${cv.bio?`<section><h2>Perfil</h2><p class="bio">${esc(cv.bio)}</p></section>`:''}
+  ${sec('Experiencia',lista(cv.experiencia,fila))}
+  ${sec('Proyectos destacados',lista(cv.proyectos,fila))}
+</main>
+<script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
 </body></html>`}
 function vPortafolio(){
   const cs=candidatas(),col=e=>cs.filter(c=>c.pf.estado===e);
