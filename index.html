@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=munmttyx').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=munn30ye').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2161,13 +2161,15 @@ function pfCard(c){
     </div></div>`}
 /* ============ Mi CV: mismo lenguaje visual que el portafolio, descargable en PDF ============ */
 const CV_DEFAULT={
-  nombre:'Sebastián Álvarez Delfín',rol:'Ilustrador y Concept Artist',ubicacion:'Ciudad de México',
+  nombre:'Juan Sebastián Álvarez Delfín',rol:'Concept Artist & Visual Development',ubicacion:'Ciudad de México',
   email:'salvarezdelfin@gmail.com',whatsapp:'+52 55 7980 6805',artstation:'ssebasalvarez',instagram:'@ssebartt',
   linkedin:'Juan Sebastián Álvarez Delfín',portafolio:'sebastianalvarezdelfin.github.io/portafolio',
-  bio:'Ilustrador y Concept Artist especializado en environment design, keyframes y diseño de personajes para animación y videojuegos. Trabajo con blockouts 3D en Blender y pintura digital en Photoshop para llegar a imágenes listas para producción, al servicio de la narrativa.',
-  skills:[{k:'Concept art',v:'Environment design, keyframes, worldbuilding, props'},{k:'Visual development',v:'Character design, visual storytelling, photobashing'},{k:'3D',v:'Blockouts, escultura digital, iluminación'},{k:'Herramientas',v:'Photoshop, Blender, ZBrush, Procreate'}],
-  proyectos:[{t:'Sangre y Obsidiana',a:'2026',d:'Character Design'},{t:'Caperucita Roja',a:'2026',d:'Keyframe'},{t:'Agente Secreto',a:'2025',d:'Keyframes'},{t:'Midnight Incorporated',a:'2025',d:'Keyframes · Environment Design'},{t:'Camino a Senguio',a:'2025',d:'Environment Design'},{t:'Aldea Japonesa',a:'2024',d:'Environment Design'},{t:'Puerta del Infierno',a:'2024',d:'Environment Design'}],
-  experiencia:[],educacion:[],idiomas:''};
+  bio:'Artista visual con formación en animación, ilustración y 3D. Experiencia práctica en producción VFX para series audiovisuales e integración 3D–ilustración 2D. Especializado en concept art de entornos y Visual Development, con un pipeline propio que integra modelado 3D en Blender con ilustración 2D en Photoshop. Adaptable a flujos de trabajo creativos y colaborativos bajo brief de producción.',
+  skills:[{k:'Habilidades',v:'Concept Art, Visual Development, Character Design, Environment Design, Ilustración Digital, VFX / Composición, 3D Modeling & Render'},{k:'Software 2D',v:'Photoshop, After Effects, Illustrator, Toon Boom Harmony'},{k:'Software 3D',v:'Blender, ZBrush'}],
+  proyectos:[{t:'Midnight Incorporated',a:'',d:'Visual Development · Ilustración 2D — Serie de VD con dirección de arte cohesiva. Paleta cinematográfica rojo/azul oscuro. Pipeline Blender 3D + ilustración 2D.'},{t:'Puerta del Infierno',a:'',d:'Concept Art · Temática Mesoamericana — Múltiples piezas de entorno con escala monumental y atmósfera oscura. Mesoamérica como universo visual propio.'},{t:'Aldea Japonesa',a:'',d:'Environment Concept · Blender + Photoshop — Entorno japonés feudal con render 3D en Blender y composición final en Photoshop. Pipeline 3D→2D integrado.'}],
+  experiencia:[{t:'Diseñador Gráfico / Visual Creativo — Tempo Design',a:'2026',d:'Desarrollo de piezas gráficas para medios digitales e impresos. Creación y adaptación de contenido visual alineado a identidad de marca y brief creativo. Apoyo en dirección creativa, layout y comunicación visual.'},{t:'Artista VFX / Composición — White Owl Studio',a:'2025',d:'Composiciones VFX para series audiovisuales; gestión de capas, corrección de color e iluminación en Photoshop y After Effects. Colaboración directa con dirección de arte bajo revisiones iterativas y tiempos ajustados.'}],
+  educacion:[{t:'Lic. Ilustración y Concept Art',a:'2022–2025',d:'ESCENA — Escuela de Animación y Arte Digital'}],
+  idiomas:'Español (nativo), Inglés (B1)'};
 function cvDatos(){if(!S.ajustes.cv)S.ajustes.cv=clone(CV_DEFAULT);const cv=S.ajustes.cv;for(const k in CV_DEFAULT)if(cv[k]==null)cv[k]=clone(CV_DEFAULT[k]);return cv}
 function cvListaHTML(lista,campos,rutaBase,ph){return `<div class="cv-lista">${lista.map((it,i)=>`<div class="cv-it"><div class="grid2" style="gap:6px">${campos.map(([k,lbl])=>`<input type="text" data-aj="${rutaBase}.${i}.${k}" value="${esc(it[k]||'')}" placeholder="${esc(lbl)}">`).join('')}</div><button class="btn ghost sm danger" data-act="cv-del" data-ruta="${rutaBase}" data-i="${i}" aria-label="Quitar">✕</button></div>`).join('')}
     <button class="btn sm" data-act="cv-add" data-ruta="${rutaBase}">＋ ${esc(ph)}</button></div>`}
