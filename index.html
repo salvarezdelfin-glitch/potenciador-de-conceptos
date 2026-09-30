@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muoe4e91').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muoeb6m5').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2623,22 +2623,33 @@ function vMensajes(){
 
 /* ============ 4. Biblioteca de referencias ============ */
 function todasRefs(){const out=[];for(const [pid,p] of Object.entries(S.P))for(const r of p.refs||[])out.push({pid,p,r});return out.sort((a,b)=>(b.r.creado||0)-(a.r.creado||0))}
-function bibGrid(){
-  const b=S.bib||{},q=(b.q||'').toLowerCase();
-  const rs=todasRefs().filter(({p,r})=>(!b.capa||r.capa===b.capa)&&(!b.pid||b.pid===p.nombre)&&(!q||(r.porque+' '+r.fuente+' '+p.nombre).toLowerCase().includes(q)));
-  if(!rs.length)return '<div class="empty">Sin referencias con ese filtro.</div>';
-  return `<p class="muted" style="margin:0">${rs.length} referencia${rs.length===1?'':'s'}</p><div class="bib">${rs.map(({pid,p,r})=>`<figure class="layer-${esc(r.capa)}"><img ${imgAttrs(r)} alt="" loading="lazy" data-act="zoom">
+/* tema = carpeta visual permanente, independiente del proyecto: se auto-sugiere de la categoría detectada (origen.n) pero es editable, para que con los años arme una biblioteca por temas y no solo por proyecto */
+function temaDeRef(r){return (r.tema||'').trim()||r.origen?.n||'Sin tema'}
+function temasConocidos(){const s=new Set(ELEMENTOS_FORMA.map(e=>e.n));todasRefs().forEach(({r})=>s.add(temaDeRef(r)));return [...s].sort()}
+function bibCard({pid,p,r}){return `<figure class="layer-${esc(r.capa)}"><img ${imgAttrs(r)} alt="" loading="lazy" data-act="zoom">
     <figcaption><span class="tag">${esc(capaNombre(p,r.capa))}</span> ${esc(r.porque||'(sin porqué)')}${r.fuente?`<small class="muted"> · ${esc(r.fuente)}</small>`:''}
-    <button class="btn ghost sm" data-act="abrir-tab" data-id="${esc(pid)}" data-tab="refs" style="align-self:flex-start;padding-left:0">${esc(p.nombre)} →</button></figcaption></figure>`).join('')}</div>`}
+    <input type="text" data-bref="${esc(pid)}|${r.id}" value="${esc(r.tema||'')}" placeholder="Tema: ${esc(r.origen?.n||'sin definir')}" list="temas-dl" title="Tema: la carpeta visual a la que pertenece" style="font-size:12px;padding:4px 8px;background:var(--surface)">
+    <button class="btn ghost sm" data-act="abrir-tab" data-id="${esc(pid)}" data-tab="refs" style="align-self:flex-start;padding-left:0">${esc(p.nombre)} →</button></figcaption></figure>`}
+function bibGrid(){
+  const b=S.bib||{},q=(b.q||'').toLowerCase(),filtrado=!!(b.q||b.capa||b.pid||b.tema);
+  const rs=todasRefs().filter(({p,r})=>(!b.capa||r.capa===b.capa)&&(!b.pid||b.pid===p.nombre)&&(!b.tema||temaDeRef(r)===b.tema)&&(!q||(r.porque+' '+r.fuente+' '+p.nombre+' '+temaDeRef(r)).toLowerCase().includes(q)));
+  if(!rs.length)return '<div class="empty">Sin referencias con ese filtro.</div>';
+  if(filtrado)return `<p class="muted" style="margin:0">${rs.length} referencia${rs.length===1?'':'s'}</p><div class="bib">${rs.map(bibCard).join('')}</div>`;
+  const grupos={};rs.forEach(x=>{const t=temaDeRef(x.r);(grupos[t]=grupos[t]||[]).push(x)});
+  const temas=Object.keys(grupos).sort((a,b)=>grupos[b].length-grupos[a].length);
+  return `<p class="muted" style="margin:0">${rs.length} referencia${rs.length===1?'':'s'} en ${temas.length} tema${temas.length===1?'':'s'}</p>${temas.map(t=>`<details class="box" ${b.q||grupos[t].length<=12?'open':''}><summary style="cursor:pointer"><b>${esc(t)}</b> <span class="lbl">${grupos[t].length}</span></summary><div class="bib" style="margin-top:10px">${grupos[t].map(bibCard).join('')}</div></details>`).join('')}`}
 function vBiblioteca(){
-  const b=S.bib||{},nombres=[...new Set(Object.values(S.P).map(p=>p.nombre))];
+  const b=S.bib||{},nombres=[...new Set(Object.values(S.P).map(p=>p.nombre))],temas=temasConocidos(),guardar=todasRefs().filter(({r})=>!r.bibGuardado||r.bibTema!==temaDeRef(r)).length;
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Biblioteca</h1>
-  <p class="intro">Todas tus referencias de todos tus proyectos, con su porqué. Busca por palabra, capa o proyecto: una buena referencia de hace un año te puede servir hoy.</p>
+  <p class="intro">Todas tus referencias de todos tus proyectos, con su porqué. Agrupadas por tema como carpetas: escribe o ajusta el tema de cada una y con los años se va armando una biblioteca visual enorme, no solo un archivo por proyecto.</p>
+  <datalist id="temas-dl">${temas.map(t=>`<option value="${esc(t)}">`).join('')}</datalist>
   <div class="box"><div class="grid3" style="gap:10px">
     <div class="field"><label for="bib-q">Buscar</label><input type="text" id="bib-q" data-bib="q" value="${esc(b.q||'')}" placeholder="obsidiana, niebla, templo…"></div>
     <div class="field"><label for="bib-capa">Capa</label><select id="bib-capa" data-bib="capa"><option value="">Todas</option>${LAYERS.map(l=>`<option value="${l.k}" ${b.capa===l.k?'selected':''}>${l.n}</option>`).join('')}</select></div>
-    <div class="field"><label for="bib-pid">Proyecto</label><select id="bib-pid" data-bib="pid"><option value="">Todos</option>${nombres.map(n=>`<option ${b.pid===n?'selected':''}>${esc(n)}</option>`).join('')}</select></div></div></div>
+    <div class="field"><label for="bib-pid">Proyecto</label><select id="bib-pid" data-bib="pid"><option value="">Todos</option>${nombres.map(n=>`<option ${b.pid===n?'selected':''}>${esc(n)}</option>`).join('')}</select></div></div>
+    <div class="field"><label for="bib-tema">Tema</label><select id="bib-tema" data-bib="tema"><option value="">Todos (agrupados)</option>${temas.map(t=>`<option ${b.tema===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+    ${SYNC_OK?`<div class="prow" style="margin-top:6px"><button class="btn pri" data-act="bib-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta, organizada por tema</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div><p class="hint" style="margin:4px 0 0">${guardar?`${guardar} sin guardar (nuevas o con tema cambiado).`:'Todo guardado con el tema actual.'} Crea BIBLIOTECA/&lt;tema&gt;/ en tu carpeta y solo agrega lo nuevo cada vez, nunca repite.</p>`:''}</div>
   <div id="bibgrid" style="display:flex;flex-direction:column;gap:10px">${bibGrid()}</div>`}
 
 /* ============ 5. Calendario de producción ============ */
@@ -6086,6 +6097,31 @@ async function tpCarpeta(){const p=S.P[S.cur];if(!p||S.exp)return;let root;
     toast(`Listo en PROYECTOS/${nom}/MOODBOARD PUREREF/tablero`+(f?` (${f} sin incluir)`:''))}
   catch(e){toast('No se pudo guardar en tu carpeta: '+(e?.message||e?.name||'error'))}finally{expStatus('');desbloquear()}}
 async function tpPNG(){const p=S.P[S.cur];if(!p||S.exp)return;try{const b=await tableroPNG(p);expStatus('');await guardarArchivo(slug(p.nombre,60)+'_tablero.png',b)}catch{toast('No se pudo armar el PNG')}finally{expStatus('')}}
+/* Biblioteca en carpetas por tema, en tu disco: crece con los años, cruza proyectos, y cada corrida solo agrega lo nuevo (nunca reescribe lo ya guardado, salvo que le cambies el tema a una referencia) */
+async function bibExportarCarpetas(){
+  if(S.exp)return;let root;
+  try{root=await tpRaizEscritura(false)}
+  catch(e){if(e?.name!=='AbortError')toast('No se pudo abrir tu carpeta: '+(e?.message||e?.name||'sin permiso'));return}
+  const todos=todasRefs().filter(({r})=>!r.bibGuardado||r.bibTema!==temaDeRef(r));
+  if(!todos.length){toast('Ya está todo guardado con su tema actual.');return}
+  bloquear();let ok=0,fallos=0,n=0;
+  try{
+    const base=await root.getDirectoryHandle('BIBLIOTECA',{create:true});
+    for(const {pid,r} of todos){
+      expStatus(`Guardando ${++n} de ${todos.length}…`);
+      try{
+        const tema=temaDeRef(r),dir=await base.getDirectoryHandle(slug(tema,50)||'Sin-tema',{create:true});
+        const b=await blobDeRef(r),ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');
+        const nombre=`${slug(etiquetaDe(r)||r.porque||r.fuente||'ref',50)}_${r.id.slice(0,6)}.${ext}`;
+        const fh=await dir.getFileHandle(nombre,{create:true}),w=await fh.createWritable();await w.write(b);await w.close();
+        r.bibGuardado=true;r.bibTema=tema;marcarPid(pid);ok++
+      }catch{fallos++}
+    }
+    if(S.vista==='biblioteca')renderMain();
+    toast(`Biblioteca actualizada: ${ok} nueva${ok===1?'':'s'}${fallos?`, ${fallos} sin poder guardar`:''}`)
+  }catch(e){toast('No se pudo guardar la Biblioteca: '+(e?.message||e?.name||'error'))}
+  finally{expStatus('');desbloquear()}
+}
 function refTableroHTML(p,r){const G=tabGrupos(p),g=grupoDe(p,r),auto=!r.grupo;
   return `<div class="rrow tp-rrow"><select id="rg-${r.id}" data-ref="${r.id}" data-rk="grupo" aria-label="Grupo del tablero" title="Grupo del tablero">${G.map(x=>`<option value="${esc(x.k)}" ${g===x.k?'selected':''}>${auto&&g===x.k?'Auto: ':''}${esc(x.n)}</option>`).join('')}</select>
     <button class="star ${r.heroe?'on':''}" data-act="ref-heroe" data-id="${r.id}" title="Imagen héroe de su grupo" aria-label="Héroe">★</button></div>
@@ -6101,6 +6137,7 @@ async function accionTp(a,el,p,ds){
     case 'tp-png':tpPNG();break;
     case 'tp-zip':tpZip();break;
     case 'tp-carpeta':tpCarpeta();break;
+    case 'bib-carpeta':bibExportarCarpetas();break;
     default:return false}
   return true}
 
@@ -6291,9 +6328,12 @@ document.addEventListener('input',e=>{
     if(t.dataset.rk==='capa'||t.dataset.rk==='grupo'||t.dataset.rk==='luz')renderMain();
     else if(t.dataset.rk==='porque'){const card=t.closest('.ref');const ok=t.value.trim().length>=8;card.classList.toggle('nowhy',!ok)}
     return}
+  if(t.dataset.bref){const [pid,id]=t.dataset.bref.split('|'),p=S.P[pid],r=p?.refs.find(x=>x.id===id);if(!r)return;
+    r.tema=t.value;marcarPid(pid);return}
   if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.type==='checkbox'?t.checked:t.value);marcarAj();if(t.type==='checkbox'||(t.tagName==='SELECT'&&t.dataset.aj.startsWith('galeria.')))renderMain();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
 });
 document.addEventListener('change',e=>{
+  if(e.target.dataset?.bref&&S.vista==='biblioteca'){const g=$('#bibgrid');if(g){g.innerHTML=bibGrid();S.assets?.hydrate?.()}return}
   if(e.target.dataset?.pjc){const p=S.P[S.cur];if(p)pjRefresca(p,e.target.dataset.pjc.split('.')[0]);return}
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
