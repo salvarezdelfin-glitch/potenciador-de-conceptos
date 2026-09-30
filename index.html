@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muodyoo4').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muoe4e91').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1589,15 +1589,16 @@ function vInicio(){
   const regla=a.principios.length?a.principios[hoyN()%a.principios.length]:'';
   const art=a.referentes.length?a.referentes[hoyN()%a.referentes.length]:null;
   const refs=ps.reduce((n,[,p])=>n+p.refs.length,0);
+  const paso=siguientePaso(),mismo=ult&&paso?.pid===ult[0];
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,48px)">Hola, Sebastián</h1>
   <p class="intro">Idea → función → intención → tensión → lenguaje visual → referencias → diseño → revisión. <strong>Cada proyecto tiene su propio cerebro</strong>: recuerda tus decisiones, te pregunta y te marca contradicciones.</p>
   ${U().soy||U().porque?`<div class="box" style="border-top:3px solid var(--accent)">${U().soy?`<p style="margin:0;font-family:var(--display);font-size:26px;font-weight:800;text-transform:uppercase;line-height:1.1">Soy ${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}${U().porque?`<p style="margin:0"><span class="lbl">Mi porqué</span><br>${esc(U().porque)}</p>`:''}</div>`:''}
-  ${siguientePasoHTML()}
+  ${siguientePasoHTML(paso,ult)}
   <div class="grid2">
     <div class="box"><span class="lbl">Empieza algo nuevo</span><h3>¿Tienes una idea?</h3><p class="hint">Escríbela en bruto. El cerebro del proyecto te va preguntando qué es, para qué existe y qué quieres comunicar, y te marca lo que falta.</p>
       <div class="prow"><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>
-    ${ult?(()=>{const P=ult[1];return `<div class="box"><span class="lbl">Último proyecto · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
+    ${ult&&!mismo?(()=>{const P=ult[1];return `<div class="box"><span class="lbl">Último proyecto · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
       <div class="health"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos · ${(P.piezas||[]).filter(x=>x.etapa==='Final'||x.soltada).length} pieza(s) terminada(s)</span></div>
       <div class="prow"><button class="btn" data-act="abrir-tab" data-id="${esc(ult[0])}" data-tab="cerebro">Abrir</button></div></div>`})():''}
     ${regla?`<div class="box"><span class="lbl">La regla de hoy</span><p style="margin:0;font-family:var(--display);font-size:20px;font-weight:500;line-height:1.3">${esc(regla)}</p></div>`:''}
@@ -2056,10 +2057,12 @@ function siguientePaso(){
   if(!dias[hoyKey()]?.hecho)return {tag:'Estudio diario',titulo:'Tus 30 minutos de hoy',texto:'Todavía no haces tu ejercicio de hoy.',v:'diario',accion:'Ir a estudiar'};
   return null;
 }
-function siguientePasoHTML(){
-  const s=siguientePaso();
+function siguientePasoHTML(s,ult){
+  const mismo=ult&&s?.pid===ult[0];
+  const saludBar=mismo?(()=>{const sd=salud(ult[1]);return `<div class="health"><div class="bar"><i style="width:${sd.pct}%"></i></div><span class="lbl">${sd.ok}/${sd.total} pasos · ${(ult[1].piezas||[]).filter(x=>x.etapa==='Final'||x.soltada).length} pieza(s) terminada(s)</span></div>`})():'';
   if(!s)return `<div class="box" style="border-top:3px solid var(--ok)"><span class="lbl">Tu siguiente paso</span><h3>Vas al día ✓</h3><p class="hint" style="margin:0">Sin contradicciones abiertas, sin piezas enfriándose, sin tareas atrasadas. Empieza algo nuevo o sube una pieza a Producción.</p></div>`;
   return `<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Tu siguiente paso · ${esc(s.tag)}</span><h3>${esc(s.titulo)}</h3><p style="margin:0">${esc(s.texto)}</p>
+    ${saludBar}
     <div class="prow">${s.pid?`<button class="btn pri" data-act="abrir-tab" data-id="${esc(s.pid)}" data-tab="${esc(s.tab)}">${esc(s.accion)}</button>`:`<button class="btn pri" data-act="vista" data-v="${esc(s.v)}">${esc(s.accion)}</button>`}</div></div>`;
 }
 function vDesatorar(){
