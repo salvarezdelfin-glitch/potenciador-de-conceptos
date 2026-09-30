@@ -446,6 +446,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .cfs{display:flex;flex-direction:column;gap:10px}
 .orienta-l{display:flex;flex-direction:column;gap:10px;margin-top:10px}
 .orienta-ok{border-top:3px solid var(--ok)}
+.cv-lista{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.cv-it{display:flex;gap:8px;align-items:start}
+.cv-it .grid2{flex:1;min-width:0}
 .cf{display:flex;flex-direction:column;gap:6px;background:var(--surface);border-radius:8px;padding:10px 12px}
 .cf .pal i{width:18px;height:18px}
 .big-q{border-left:3px solid var(--accent)}
@@ -916,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mum5vsjr').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=munmoqyw').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1219,6 +1222,7 @@ function renderSide(){
     </div>
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Carrera</span>
       ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
+      ${nav('cv','doc','Mi CV')}
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('reclutador','eye','Revisión de reclutador')}
@@ -1277,6 +1281,7 @@ function renderMainInner(){
   if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
   if(S.vista==='biblioteca'){m.innerHTML=vBiblioteca();return}
   if(S.vista==='calendario'){m.innerHTML=vCalendario();return}
+  if(S.vista==='cv'){m.innerHTML=vCV();return}
   if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
   if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
   if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
@@ -2154,6 +2159,81 @@ function pfCard(c){
         <span class="muted" style="font-size:12px">Visto bueno: ${fecha(pf.aprobado)}</span>
         <div class="prow">${pf.estado==='aprobada'?`<button class="btn sm" data-act="pf-publicada" data-k="${esc(key)}">Ya está en mi portafolio</button><button class="btn sm ghost" data-act="pf-revocar" data-k="${esc(key)}">Quitar visto bueno</button>`:`<button class="btn sm ghost" data-act="pf-revocar" data-k="${esc(key)}">Regresar a candidatas</button>`}</div>`}
     </div></div>`}
+/* ============ Mi CV: mismo lenguaje visual que el portafolio, descargable en PDF ============ */
+const CV_DEFAULT={
+  nombre:'Sebastián Álvarez Delfín',rol:'Ilustrador y Concept Artist',ubicacion:'Ciudad de México',
+  email:'salvarezdelfin@gmail.com',whatsapp:'+52 55 7980 6805',artstation:'ssebasalvarez',instagram:'@ssebartt',
+  linkedin:'Juan Sebastián Álvarez Delfín',portafolio:'sebastianalvarezdelfin.github.io/portafolio',
+  bio:'Ilustrador y Concept Artist especializado en environment design, keyframes y diseño de personajes para animación y videojuegos. Trabajo con blockouts 3D en Blender y pintura digital en Photoshop para llegar a imágenes listas para producción, al servicio de la narrativa.',
+  skills:[{k:'Concept art',v:'Environment design, keyframes, worldbuilding, props'},{k:'Visual development',v:'Character design, visual storytelling, photobashing'},{k:'3D',v:'Blockouts, escultura digital, iluminación'},{k:'Herramientas',v:'Photoshop, Blender, ZBrush, Procreate'}],
+  proyectos:[{t:'Sangre y Obsidiana',a:'2026',d:'Character Design'},{t:'Caperucita Roja',a:'2026',d:'Keyframe'},{t:'Agente Secreto',a:'2025',d:'Keyframes'},{t:'Midnight Incorporated',a:'2025',d:'Keyframes · Environment Design'},{t:'Camino a Senguio',a:'2025',d:'Environment Design'},{t:'Aldea Japonesa',a:'2024',d:'Environment Design'},{t:'Puerta del Infierno',a:'2024',d:'Environment Design'}],
+  experiencia:[],educacion:[],idiomas:''};
+function cvDatos(){if(!S.ajustes.cv)S.ajustes.cv=clone(CV_DEFAULT);const cv=S.ajustes.cv;for(const k in CV_DEFAULT)if(cv[k]==null)cv[k]=clone(CV_DEFAULT[k]);return cv}
+function cvListaHTML(lista,campos,rutaBase,ph){return `<div class="cv-lista">${lista.map((it,i)=>`<div class="cv-it"><div class="grid2" style="gap:6px">${campos.map(([k,lbl])=>`<input type="text" data-aj="${rutaBase}.${i}.${k}" value="${esc(it[k]||'')}" placeholder="${esc(lbl)}">`).join('')}</div><button class="btn ghost sm danger" data-act="cv-del" data-ruta="${rutaBase}" data-i="${i}" aria-label="Quitar">✕</button></div>`).join('')}
+    <button class="btn sm" data-act="cv-add" data-ruta="${rutaBase}">＋ ${esc(ph)}</button></div>`}
+function vCV(){const cv=cvDatos();
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi CV</h1>
+  <p class="intro">Mismo lenguaje visual que tu portafolio (<a href="https://${esc(cv.portafolio)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(cv.portafolio)}</a>): tipografía, colores y orden. Edita lo que cambie y descárgalo en PDF cuando lo necesites para una postulación.</p>
+  <div class="box"><h3>Quién eres</h3><div class="grid2">
+    <div class="field"><label>Nombre</label><input type="text" data-aj="cv.nombre" value="${esc(cv.nombre)}"></div>
+    <div class="field"><label>Rol</label><input type="text" data-aj="cv.rol" value="${esc(cv.rol)}" placeholder="Ilustrador y Concept Artist"></div>
+    <div class="field"><label>Ubicación</label><input type="text" data-aj="cv.ubicacion" value="${esc(cv.ubicacion)}"></div>
+    <div class="field"><label>Idiomas (opcional)</label><input type="text" data-aj="cv.idiomas" value="${esc(cv.idiomas)}" placeholder="Español (nativo), Inglés (B2)"></div></div>
+    <div class="field"><label>Bio corta (2–3 líneas)</label><textarea data-aj="cv.bio" style="min-height:70px">${esc(cv.bio)}</textarea></div></div>
+  <div class="box"><h3>Contacto</h3><div class="grid2">
+    <div class="field"><label>Email</label><input type="text" data-aj="cv.email" value="${esc(cv.email)}"></div>
+    <div class="field"><label>WhatsApp</label><input type="text" data-aj="cv.whatsapp" value="${esc(cv.whatsapp)}"></div>
+    <div class="field"><label>ArtStation</label><input type="text" data-aj="cv.artstation" value="${esc(cv.artstation)}"></div>
+    <div class="field"><label>Instagram</label><input type="text" data-aj="cv.instagram" value="${esc(cv.instagram)}"></div>
+    <div class="field"><label>LinkedIn</label><input type="text" data-aj="cv.linkedin" value="${esc(cv.linkedin)}"></div>
+    <div class="field"><label>Portafolio (sin https://)</label><input type="text" data-aj="cv.portafolio" value="${esc(cv.portafolio)}"></div></div></div>
+  <div class="box"><h3>Habilidades</h3><p class="hint">Se muestran como en tu «Sobre mí» del portafolio.</p>${cvListaHTML(cv.skills,[['k','Categoría (ej. Concept art)'],['v','Qué incluye']],'cv.skills','Habilidad')}</div>
+  <div class="box"><h3>Proyectos destacados</h3><p class="hint">Ya los prellené con los de tu portafolio; agrega o quita los que quieras que salgan en el CV.</p>${cvListaHTML(cv.proyectos,[['t','Proyecto'],['a','Año'],['d','Categoría']],'cv.proyectos','Proyecto')}</div>
+  <div class="box"><h3>Experiencia (opcional)</h3><p class="hint">Si todavía no tienes experiencia laboral formal, déjalo vacío: el CV se acomoda solo sin esta sección.</p>${cvListaHTML(cv.experiencia,[['t','Puesto / estudio'],['a','Fechas'],['d','Qué hiciste']],'cv.experiencia','Experiencia')}</div>
+  <div class="box"><h3>Educación (opcional)</h3>${cvListaHTML(cv.educacion,[['t','Institución / curso'],['a','Fechas'],['d','Detalle']],'cv.educacion','Educación')}</div>
+  <div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Descargar</h3></div>
+    <p class="hint">Abre tu CV ya formado en una pestaña nueva y lo manda a imprimir: ahí eliges «Guardar como PDF». En Chrome o Edge, activa «Gráficos de fondo» en las opciones de impresión para que se vea igual que aquí.</p>
+    <button class="btn pri" data-act="cv-pdf">Descargar CV en PDF</button></div>`}
+function cvDocHTML(cv){const contacto=[cv.email&&['Email',cv.email],cv.whatsapp&&['WhatsApp',cv.whatsapp],cv.artstation&&['ArtStation',cv.artstation],cv.instagram&&['Instagram',cv.instagram],cv.linkedin&&['LinkedIn',cv.linkedin]].filter(Boolean);
+  const sec=(tit,body)=>body?`<section><h2>${esc(tit)}</h2>${body}</section>`:'';
+  const lista=(items,f)=>items?.length?`<div class="rows">${items.map(f).join('')}</div>`:'';
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(cv.nombre)} · CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:Letter;margin:16mm 18mm}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--bg:#0f0f10;--fg:#ece8e1;--muted:#8f8b84;--soft:#c9c4bb;--line:#27272a;--font:Inter,system-ui,sans-serif;--name:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif}
+html,body{background:var(--bg);margin:0}
+body{color:var(--fg);font:12.5px/1.55 var(--font);padding:26px 8px}
+h1{font:800 40px/.95 var(--name);text-transform:uppercase;letter-spacing:.005em;margin:0}
+.role{color:var(--soft);margin-top:8px;font-size:13.5px}
+.contact{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+.contact b{color:var(--fg);font-weight:600}
+.bio{max-width:70ch;color:var(--soft);margin-top:16px;font-size:12.5px}
+section{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+h2{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:baseline}
+.row b{font-size:13px;font-weight:600}
+.row span.y{color:var(--muted);font-size:11.5px;white-space:nowrap}
+.row small{grid-column:1/-1;color:var(--soft);font-size:11.5px}
+.skills{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;font-size:12px}
+.skills dt{color:var(--muted)}.skills dd{margin:0;color:var(--soft)}
+footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:10.5px}
+@media print{body{padding:0}}
+</style></head><body>
+<h1>${esc(cv.nombre)}</h1><div class="role">${esc(cv.rol)}${cv.ubicacion?' · '+esc(cv.ubicacion):''}${cv.idiomas?' · '+esc(cv.idiomas):''}</div>
+<div class="contact">${contacto.map(([k,v])=>`<span><b>${esc(k)}:</b> ${esc(v)}</span>`).join('')}${cv.portafolio?`<span><b>Portafolio:</b> ${esc(cv.portafolio)}</span>`:''}</div>
+${cv.bio?`<p class="bio">${esc(cv.bio)}</p>`:''}
+${sec('Habilidades',cv.skills?.length?`<dl class="skills">${cv.skills.map(s=>`<dt>${esc(s.k)}</dt><dd>${esc(s.v)}</dd>`).join('')}</dl>`:'')}
+${sec('Experiencia',lista(cv.experiencia,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
+${sec('Proyectos destacados',lista(cv.proyectos,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
+${sec('Educación',lista(cv.educacion,x=>`<div class="row"><b>${esc(x.t)}</b><span class="y">${esc(x.a)}</span>${x.d?`<small>${esc(x.d)}</small>`:''}</div>`))}
+<footer>${esc(cv.nombre)} — ${esc(cv.portafolio)}</footer>
+<script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script>
+</body></html>`}
 function vPortafolio(){
   const cs=candidatas(),col=e=>cs.filter(c=>c.pf.estado===e);
   const cand=col('candidata'),apr=col('aprobada'),pub=col('publicada');
@@ -6295,6 +6375,10 @@ async function accion(a,el){
     case 'pf-publicada':{const {x}=pfDe(ds.k);if(!x?.pf)return;x.pf.estado='publicada';x.pf.publicada=Date.now();guardarPf(ds.k);render();break}
     case 'pf-quitar':{const {x}=pfDe(ds.k);if(!x)return;delete x.pf;guardarPf(ds.k);render();break}
     case 'pf-paquete':paquetePortafolio().catch(()=>{expStatus('');toast('No se pudo armar el paquete')});break;
+    case 'cv-add':{const arr=getPath(S.ajustes,ds.ruta);arr.push(ds.ruta.endsWith('skills')?{k:'',v:''}:{t:'',a:'',d:''});marcarAj();renderMain();break}
+    case 'cv-del':{getPath(S.ajustes,ds.ruta).splice(+ds.i,1);marcarAj();renderMain();break}
+    case 'cv-pdf':{const w=window.open('','_blank');if(!w){toast('Tu navegador bloqueó la ventana: permite pop-ups para este sitio y vuelve a intentar');return}
+      w.document.write(cvDocHTML(cvDatos()));w.document.close();break}
     case 'fav':{const r=S.ajustes.referentes[+ds.i];if(!r)return;r.fav=!r.fav;marcarAj();renderMain();break}
     case 'cot-hist':cargarCotHist();break;
     case 'av-key':{const k=$('#av-key')?.value.trim();if(!/^re_/.test(k||'')){toast('Esa no parece una clave de Resend (empieza con re_)');return}try{await window.PC_SHIM.setSecret('resend',k);S.avisosKey=true;S.ajustes.avisos={activo:true,email:'salvarezdelfin@gmail.com',...(S.ajustes.avisos||{})};marcarAj();renderMain();toast('Correo conectado')}catch{toast('No se pudo guardar')}break}
