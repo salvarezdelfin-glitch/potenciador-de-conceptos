@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muoeb6m5').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mupwv8cp').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1738,7 +1738,14 @@ async function preguntar(kind){
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
-    if(kind==='ideas'){
+    if(kind==='chat-explorar'){
+      const txt=(S.chatExplorarTxt||'').trim();
+      if(!txt){S.ai[kind]={error:'Escribe tu idea en el cuadro de arriba primero.'};delete S.aiBusy[kind];renderMain();return}
+      const hist=(p.chat||[]).slice(-6).map(m=>(m.r==='yo'?'ARTISTA: ':'TÚ: ')+m.t).join('\n');
+      p.chat=p.chat||[];p.chat.push({r:'yo',t:txt,ts:Date.now()});marcar();renderMain();
+      const {text}=await S.sample(`${ROL}\n\nEstás pensando este proyecto JUNTO con el artista, como lo haría un co-guionista o un director de arte senior en una sesión de lluvia de ideas real — no generando una lista de ideas sueltas.\n\nContexto ya confirmado del proyecto (no lo contradigas sin decirlo explícitamente):\n${ctxProyecto(p)}\n${hist?'\nConversación reciente:\n'+hist:''}\n\nLo que te acaba de decir:\n${txt}\n\nCómo pensar esto bien:\n1. Antes de proponer algo nuevo, busca si YA hay algo en su proyecto (brief, tensiones, pilares, personajes) que resuene con la idea nueva. Dilo explícitamente: "esto ya conecta con X que escribiste".\n2. Si hay una bifurcación real (dos o más caminos posibles, no obvio cuál es mejor), nómbralos A/B/C y di la ventaja y el riesgo de cada uno. No elijas por él.\n3. Si hay una cadena causal (X provoca Y, y eso provoca Z), muéstrala corta y clara.\n4. Distingue, sin ponerte pesado con etiquetas todo el tiempo: qué es literalmente lo que él dijo, qué es una conexión que TÚ hiciste ("eso lo estoy infiriendo de..."), y qué es una propuesta tuya nueva ("esto no lo dijiste, pero yo propondría...").\n5. Si mencionas una cultura, mito o periodo histórico real, separa qué es dato real de qué es invención (suya o tuya); si no estás seguro de un dato, dilo en vez de darlo por hecho.\n6. Nombra, si lo ves, el tema o la palabra que atraviesa todo esto.\n7. Termina SIEMPRE con UNA sola pregunta o decisión concreta que haga avanzar el proyecto ahora — no una lista de preguntas.\n\nEscribe en español, de tú, directo, como una conversación real — no como un reporte de viñetas interminables. Si al final hay una frase que resuma la decisión concreta que estás proponiendo, ciérrala en una línea aparte que empiece EXACTAMENTE con "DECISIÓN: ".`,{signal:ctl.signal,cache:false,modelTier:'complex'});
+      aplicarRespuestaExplorar(p,text);S.ai[kind]=null;S.chatExplorarTxt='';
+    }else if(kind==='ideas'){
       if((p.brief.texto||'').trim().length<10){S.ai[kind]={error:'Primero escribe tu idea en "El encargo", aunque sea una línea.'};delete S.aiBusy[kind];renderMain();return}
       const r=await S.sample.json(`${ROL}\n\nIdea en bruto del artista (${p.tipo}):\n${p.brief.texto}\n${vidaTexto()?'Material de su propia vida (conecta al menos 2 direcciones con esto): '+vidaTexto()+'\n':''}${p.brief.restricciones?'Restricciones: '+p.brief.restricciones:''}\n\nPotencia esta idea. Busca conexiones no obvias (mitología, historia, naturaleza, ciencia, cine, cultura) que den una tensión fuerte y consciente, no una antítesis plana. Haz que el mundo/naturaleza actúe como personaje. Propón 5 direcciones MUY distintas entre sí.\nResponde SOLO con JSON: {"direcciones":[{"titulo":"nombre corto","idea":"la dirección en 1-2 frases, visual y concreta","porque":"qué la hace fuerte","nucleos":["3 ideas núcleo"],"tension":"una de: ${TENSIONES.map(t=>t[0]).join(', ')}","tensionTexto":"qué está en juego","pilares":[{"t":"pilar corto","f":"qué comunica y cómo se nota"}],"mundo":"cómo el mundo actúa como personaje","mood":{"sensacion":"","palabras":"3 palabras","paleta":["#hex x5"]},"tecnica":{"medio":"","acabado":"","referentes":"artistas reales"},"busquedas":[{"q":"búsqueda de 3-6 palabras","capa":"concepto|mood|tecnica|p1|p2|p3"}]}]} con 3 pilares y 5 búsquedas por dirección.`,{signal:ctl.signal,cache:false,modelTier:'complex'});
       S.ai[kind]={data:r};
@@ -3317,7 +3324,7 @@ function pedirTexto(kind,p,x){
     nombres:`dame nombres para ${n}`,nombres2:`dame nombres para ${S.nom?.para?.toLowerCase()||'mi proyecto'}${S.nom?.pid==='__todos'?' de todos mis proyectos':' de '+n}`,
     critica:`critica mi pieza${x?.etapa?' ('+x.etapa.toLowerCase()+')':''} de ${n}`,proceso:`critica el proceso de ${n} (mis carpetas)`,metodo:'saca mis reglas de trabajo de mis procesos',
     estilo:'analiza mi estilo',nivel:'evalúa mi nivel con mi portafolio',diario:'dame el ejercicio de estudio de hoy',reto:'dame un reto de estudio',prueba:'dame una prueba de arte',
-    msg:'pule mi mensaje en inglés',ruta:'arma mi plan de estudio de 8 semanas',adaptar:'adapta mi portafolio a esta vacante (te la paso)',taller:`trabajemos los pilares de ${n}`};
+    msg:'pule mi mensaje en inglés',ruta:'arma mi plan de estudio de 8 semanas',adaptar:'adapta mi portafolio a esta vacante (te la paso)',taller:`trabajemos los pilares de ${n}`,'chat-explorar':`ayúdame a pensar a fondo esta idea para ${n}: «${S.chatExplorarTxt||''}»`};
   const k=kind.startsWith('guia-')?'guia':kind;
   const frase=m[k]||(k==='guia'?`guíame en la etapa de producción de ${n}`:`ayúdame con ${n}`);
   return `Pídemelo en tu chat de Claude: «${frase}». Lo hago y lo dejo guardado aquí en tu app.`;
@@ -4479,9 +4486,11 @@ function auditHTML(p,D){D=D||DX(p);const sec=(t,cls,items,f)=>`<div class="au ${
     ${sec('Preguntas pendientes','q',D.preguntas.slice(0,8),q=>`<li>${esc(q.t)}${q.id?` <button class="btn ghost sm" data-act="preg-ok" data-id="${q.id}">Resuelta</button>`:q.elem?` <button class="btn ghost sm" data-act="chat-elem" data-v="${esc(q.elem)}">Responder</button>`:''}</li>`)}
   </div>`}
 
-function chatHTML(p){const ch=p.chat||[];
-  return `<div class="chat"><div class="chat-log" id="chat-log">${ch.length?ch.map((m,i)=>`<div class="msg ${m.r}"><div class="bub">${m.r==='yo'?esc(m.t):md(m.t)}</div>${(m.acc||[]).length?`<div class="acc">${m.acc.map((a,j)=>`<button class="btn sm ${a.tipo==='resp'?'':'ghost'}" data-act="chat-acc" data-m="${i}" data-i="${j}" ${a.hecho?'disabled':''}>${esc(a.hecho?'✓ '+a.l:a.l)}</button>`).join('')}</div>`:''}</div>`).join(''):`<div class="msg dir"><div class="bub">${md(saludo(p))}</div></div>`}</div>
-    <div class="chat-in"><textarea id="chat-txt" placeholder="Pregúntame, cuéntame una idea («quiero ponerle una máscara»), una decisión («decidí X porque Y») o algo a evitar («no quiero…»)" data-enter="chat"></textarea><button class="btn pri" data-act="chat">Enviar</button></div>
+function chatHTML(p){const ch=p.chat||[],ex=S.ai['chat-explorar'],busyEx=S.aiBusy['chat-explorar'];
+  return `<div class="chat"><div class="chat-log" id="chat-log">${ch.length?ch.map((m,i)=>`<div class="msg ${m.r}"><div class="bub">${m.r==='yo'?esc(m.t):md(m.t)}</div>${(m.acc||[]).length?`<div class="acc">${m.acc.map((a,j)=>`<button class="btn sm ${a.tipo==='resp'?'':'ghost'}" data-act="chat-acc" data-m="${i}" data-i="${j}" ${a.hecho?'disabled':''}>${esc(a.hecho?'✓ '+a.l:a.l)}</button>`).join('')}</div>`:''}</div>`).join(''):`<div class="msg dir"><div class="bub">${md(saludo(p))}</div></div>`}${busyEx?`<div class="msg dir"><div class="bub"><p class="muted" style="margin:0">Pensándolo a fondo…</p></div></div>`:''}</div>
+    <div class="chat-in"><textarea id="chat-txt" placeholder="Pregúntame, cuéntame una idea («quiero ponerle una máscara»), una decisión («decidí X porque Y») o algo a evitar («no quiero…»)" data-enter="chat"></textarea>
+      <div class="prow"><button class="btn pri" data-act="chat">Enviar</button>${S.sample?busyEx?`<button class="btn sm" data-act="ai-stop" data-k="chat-explorar">Detener</button>`:`<button class="btn sm" data-act="ai" data-k="chat-explorar" title="Para ideas grandes: busca conexiones, ofrece caminos A/B y termina en una decisión, en vez de una respuesta rápida">Pensarlo a fondo con Claude</button>`:''}</div>
+      ${!S.sample?'<p class="hint" style="margin:4px 0 0">Para pensar ideas grandes a fondo (conexiones, caminos A/B, una pregunta que avance el proyecto): conecta Claude en «Conexión con Claude», en el menú lateral.</p>':ex?.error?`<p class="muted" style="margin:4px 0 0">${esc(ex.error)}</p>`:''}</div>
     <div class="chips sugs">${SUGS.map(s=>`<button class="ch" data-act="chat-sug" data-v="${esc(s)}">${esc(s)}</button>`).join('')}</div>
     ${ch.length?`<div class="prow"><button class="btn ghost sm" data-act="chat-limpiar">${S.confirmChat?'¿Borrar la conversación? (las decisiones se quedan)':'Limpiar conversación'}</button></div>`:''}</div>`}
 function saludo(p){const ds=(p.decisiones||[]).filter(d=>d.estado!=='Descartada'),D=DX(p),v=D.vacios[0];
@@ -4816,6 +4825,12 @@ const VIVO={funcion:p=>vivoFuncion(p),ad:p=>vivoAD(p),pil:(p,i)=>vivoPilar(p,i),
 function dxVivo(p){document.querySelectorAll('[data-vivo]').forEach(el=>{const f=VIVO[el.dataset.vivo];if(f)try{el.innerHTML=f(p,+el.dataset.i)}catch{}})}
 
 /* ---------- acciones del cerebro ---------- */
+function aplicarRespuestaExplorar(p,text){
+  const m=/DECISIÓN:\s*(.+)/i.exec(text);
+  p.chat=p.chat||[];p.chat.push({r:'dir',t:text,acc:m?[{l:'Guardar como decisión',tipo:'dec-txt',v:m[1].trim()}]:[],ts:Date.now()});
+  if(p.chat.length>80)p.chat=p.chat.slice(-80);marcar();
+  const lg=$('#chat-log');if(lg)lg.scrollTop=lg.scrollHeight;
+}
 function chatEnviar(p,txt){txt=String(txt||'').trim();if(!txt)return;p.chat=p.chat||[];p.chat.push({r:'yo',t:txt,ts:Date.now()});
   let r;try{r=responder(p,txt)}catch(e){console.error(e);r={t:'Algo falló al leer tu proyecto. Intenta decirlo de otra forma.',acc:[]}}
   p.chat.push({r:'dir',t:r.t,acc:r.acc,ts:Date.now()});if(p.chat.length>80)p.chat=p.chat.slice(-80);marcar();renderMain();
@@ -6595,7 +6610,7 @@ async function accion(a,el){
     case 'pr-del':S.ajustes.principios.splice(+ds.i,1);marcarAj();renderMain();break;
     case 'rf-add':S.ajustes.referentes.push({nombre:'',porque:''});marcarAj();renderMain();break;
     case 'rf-del':S.ajustes.referentes.splice(+ds.i,1);marcarAj();renderMain();break;
-    case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}preguntar(ds.k);break;
+    case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}if(ds.k==='chat-explorar')S.chatExplorarTxt=$('#chat-txt')?.value||'';preguntar(ds.k);break;
     case 'nom-local':nombresLocal();break;
     case 'ai-stop':S.aiBusy[ds.k]?.abort();break;
     case 'ai-empuje':{const x=S.ai.concepto?.data?.empujes?.[+ds.i];if(x){p.concepto.empujes.push(x.idea);marcar();el.textContent='Guardado';el.disabled=true;renderSide()}break}
