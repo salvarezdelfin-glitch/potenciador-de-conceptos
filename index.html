@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mupwv8cp').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq6jnby').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1103,13 +1103,32 @@ async function verPapelera(){S.papelera={cargando:true};renderMain();
   try{const todos=await histDe(null),vistos=new Set(),lista=[];
     for(const h of todos){if(S.P[h.pid]||vistos.has(h.pid))continue;vistos.add(h.pid);lista.push(h)}
     S.papelera={lista}}catch{S.papelera={error:true}}renderMain()}
-async function guardar(){
+/* evita que una pestaña con datos viejos (tuya en otro aparato, o un cambio hecho por fuera) pise sin avisar un cambio más nuevo */
+async function guardar(forzar){
   const id=S.cur,p=S.P[id];if(!p)return;
   try{
-    if(S.db)await S.db.collection('proyectos').doc(id).set(clone(p));else lsSet();
+    if(S.db){
+      if(!forzar){
+        const base=S._baseAct?.[id];
+        try{
+          const vivo=await S.db.doc('proyectos/'+id).get();
+          const servAct=vivo.exists?vivo.data()?.actualizado:null;
+          if(base!=null&&servAct!=null&&servAct!==base){
+            S.conflicto=S.conflicto||{};S.conflicto[id]=true;setStatus('⚠ Cambió en otro lugar');renderMain();return;
+          }
+        }catch{}
+      }
+      await S.db.collection('proyectos').doc(id).set(clone(p));
+      S._baseAct=S._baseAct||{};S._baseAct[id]=p.actualizado;
+      if(S.conflicto)delete S.conflicto[id];
+    }else lsSet();
     S.dirty=false;setStatus('Guardado');renderSide();snapshot(id);
   }catch(e){setStatus(e.code==='quota_exceeded'?'Sin espacio: borra proyectos viejos':'No se pudo guardar — reintenta editando');}
 }
+function conflictoHTML(id){
+  if(!S.conflicto?.[id])return'';
+  return `<div class="alerta"><p style="margin:0"><b>Este proyecto cambió en otro lugar</b> mientras lo tenías abierto aquí (otra pestaña, otro aparato, o un ajuste hecho por fuera). Si guardas ahora, vas a borrar ese cambio.</p>
+    <div class="prow"><button class="btn pri" data-act="confl-recargar">Traer lo nuevo (pierdo lo que escribí aquí)</button><button class="btn danger" data-act="confl-sobrescribir">Guardar lo mío encima</button></div></div>`}
 function marcarAj(){S.ajDirty=true;setStatus('Guardando…');clearTimeout(ajT);ajT=setTimeout(async()=>{
   try{if(S.db)await S.db.doc('ajustes/principios').set(clone(S.ajustes));else lsSet();S.ajDirty=false;setStatus('Guardado')}catch{setStatus('No se pudo guardar')}
 },700)}
@@ -1132,7 +1151,7 @@ async function arrancar(){
         if(d.id===S.cur&&(S.dirty||snap.metadata.hasPendingWrites))continue;
         const prev=S.P[d.id];
         if(prev&&prev.actualizado===data.actualizado)continue;
-        S.P[d.id]=normaliza(clone(data));if(d.id===S.cur)tocoActual=true;
+        S.P[d.id]=normaliza(clone(data));S._baseAct=S._baseAct||{};S._baseAct[d.id]=data.actualizado;if(d.id===S.cur)tocoActual=true;
       }
       for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty))delete S.P[id];
       if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);setTimeout(syncAlAbrir,1500);return}
@@ -1306,6 +1325,7 @@ function renderMainInner(){
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
   m.innerHTML=`
+  ${conflictoHTML(S.cur)}
   <div class="phead">
     <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:10px">
       <input class="ptitle" id="f-nombre" data-b="nombre" value="${esc(p.nombre)}" aria-label="Nombre del proyecto">
@@ -6153,6 +6173,8 @@ async function accionTp(a,el,p,ds){
     case 'tp-zip':tpZip();break;
     case 'tp-carpeta':tpCarpeta();break;
     case 'bib-carpeta':bibExportarCarpetas();break;
+    case 'confl-sobrescribir':delete S.conflicto[ds.id||S.cur];await guardar(true);break;
+    case 'confl-recargar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(vivo.exists){S.P[id]=normaliza(clone(vivo.data()));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.data().actualizado}delete S.conflicto[id];S.dirty=false;render();toast('Traído lo más nuevo')}catch{toast('No se pudo recargar')}break}
     default:return false}
   return true}
 
