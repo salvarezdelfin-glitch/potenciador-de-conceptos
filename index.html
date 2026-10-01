@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq6jnby').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq6yh55').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1383,7 +1383,10 @@ function vBrief(p){return `
     <div class="prow"><label class="btn sm" for="f-nomimg">${S.nomImg?'✓ Imagen lista':'Adjuntar PNG'}</label><input type="file" id="f-nomimg" accept="image/png,image/jpeg,image/webp" hidden>
     ${S.aiBusy.nombres?'<button class="btn sm" data-act="ai-stop" data-k="nombres">Detener</button>':'<button class="btn sm pri" data-act="ai" data-k="nombres">Proponer nombres</button>'}</div></div>
     ${S.aiBusy.nombres?'<p class="muted">Pensando…</p>':S.ai.nombres?.error?`<p class="muted">${esc(S.ai.nombres.error)}</p>`:S.ai.nombres?aiRender('nombres',S.ai.nombres):''}</div>`:'<div class="asesor"><div class="top"><div><b>Nombres y títulos</b><p class="muted" style="margin:2px 0 0">Nombres con significado para el personaje y títulos para el proyecto, a partir de tu concepto, keywords e imagen.</p></div><button class="btn sm pri" data-act="nom-taller">Proponer nombres →</button></div></div>'}
-  ${asesor('ideas','Asesor: potencia mi idea','Escribe tu idea arriba, aunque sea en bruto. Te propone 5 direcciones distintas, cada una con núcleos, tensión, 3 pilares, el mundo como personaje y búsquedas. Elige una y se llena tu proyecto.')}`}
+  ${S.sample?`<div class="asesor" style="border-color:var(--accent)"><div class="top"><div><b>Explora esta idea a fondo con Claude</b><p class="muted" style="margin:2px 0 0">No es una lista de opciones: es una conversación que busca qué ya conecta con tu idea, te ofrece caminos reales con ventaja y riesgo, y termina en una decisión concreta — como un mentor, no un generador. Sigue hablando con ella en la pestaña Cerebro.</p></div>
+    <div class="prow">${S.aiBusy['chat-explorar']?`<button class="btn sm" data-act="ai-stop" data-k="chat-explorar">Detener</button>`:`<button class="btn sm pri" data-act="brief-explorar">Explorar esta idea →</button>`}</div></div>
+    ${S.aiBusy['chat-explorar']?'<p class="muted">Pensándolo a fondo…</p>':S.ai['chat-explorar']?.error?`<p class="muted">${esc(S.ai['chat-explorar'].error)}</p>`:''}</div>`:''}
+  ${asesor('ideas','Opciones rápidas (5 direcciones distintas)','Si solo quieres ver variantes rápido: 5 direcciones con núcleos, tensión, pilares y búsquedas. No profundiza ni te cuestiona — para eso usa "Explorar esta idea" arriba.')}`}
 
 function vConcepto(p){
   const c=p.concepto;
@@ -1760,7 +1763,7 @@ async function preguntar(kind){
   try{
     if(kind==='chat-explorar'){
       const txt=(S.chatExplorarTxt||'').trim();
-      if(!txt){S.ai[kind]={error:'Escribe tu idea en el cuadro de arriba primero.'};delete S.aiBusy[kind];renderMain();return}
+      if(!txt){S.ai[kind]={error:'Escribe tu idea primero.'};delete S.aiBusy[kind];renderMain();return}
       const hist=(p.chat||[]).slice(-6).map(m=>(m.r==='yo'?'ARTISTA: ':'TÚ: ')+m.t).join('\n');
       p.chat=p.chat||[];p.chat.push({r:'yo',t:txt,ts:Date.now()});marcar();renderMain();
       const {text}=await S.sample(`${ROL}\n\nEstás pensando este proyecto JUNTO con el artista, como lo haría un co-guionista o un director de arte senior en una sesión de lluvia de ideas real — no generando una lista de ideas sueltas.\n\nContexto ya confirmado del proyecto (no lo contradigas sin decirlo explícitamente):\n${ctxProyecto(p)}\n${hist?'\nConversación reciente:\n'+hist:''}\n\nLo que te acaba de decir:\n${txt}\n\nCómo pensar esto bien:\n1. Antes de proponer algo nuevo, busca si YA hay algo en su proyecto (brief, tensiones, pilares, personajes) que resuene con la idea nueva. Dilo explícitamente: "esto ya conecta con X que escribiste".\n2. Si hay una bifurcación real (dos o más caminos posibles, no obvio cuál es mejor), nómbralos A/B/C y di la ventaja y el riesgo de cada uno. No elijas por él.\n3. Si hay una cadena causal (X provoca Y, y eso provoca Z), muéstrala corta y clara.\n4. Distingue, sin ponerte pesado con etiquetas todo el tiempo: qué es literalmente lo que él dijo, qué es una conexión que TÚ hiciste ("eso lo estoy infiriendo de..."), y qué es una propuesta tuya nueva ("esto no lo dijiste, pero yo propondría...").\n5. Si mencionas una cultura, mito o periodo histórico real, separa qué es dato real de qué es invención (suya o tuya); si no estás seguro de un dato, dilo en vez de darlo por hecho.\n6. Nombra, si lo ves, el tema o la palabra que atraviesa todo esto.\n7. Termina SIEMPRE con UNA sola pregunta o decisión concreta que haga avanzar el proyecto ahora — no una lista de preguntas.\n\nEscribe en español, de tú, directo, como una conversación real — no como un reporte de viñetas interminables. Si al final hay una frase que resuma la decisión concreta que estás proponiendo, ciérrala en una línea aparte que empiece EXACTAMENTE con "DECISIÓN: ".`,{signal:ctl.signal,cache:false,modelTier:'complex'});
@@ -6633,6 +6636,7 @@ async function accion(a,el){
     case 'rf-add':S.ajustes.referentes.push({nombre:'',porque:''});marcarAj();renderMain();break;
     case 'rf-del':S.ajustes.referentes.splice(+ds.i,1);marcarAj();renderMain();break;
     case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}if(ds.k==='chat-explorar')S.chatExplorarTxt=$('#chat-txt')?.value||'';preguntar(ds.k);break;
+    case 'brief-explorar':{const txt=(p?.brief.texto||'').trim();if(!txt){toast('Escribe tu idea en "El encargo" primero');return}S.chatExplorarTxt=txt;S.tab='cerebro';renderMain();preguntar('chat-explorar');break}
     case 'nom-local':nombresLocal();break;
     case 'ai-stop':S.aiBusy[ds.k]?.abort();break;
     case 'ai-empuje':{const x=S.ai.concepto?.data?.empujes?.[+ds.i];if(x){p.concepto.empujes.push(x.idea);marcar();el.textContent='Guardado';el.disabled=true;renderSide()}break}
