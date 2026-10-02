@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9dnf6').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9pmsi').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1249,6 +1249,7 @@ function renderSide(){
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
       ${nav('mensajes','mail','Mensajes en inglés')}
       ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
+      ${nav('trabajos','frame','Trabajos')}
       ${nav('cotizador','coin','Cotizador freelance')}
       ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('contratos','doc','Contratos')}
@@ -1318,6 +1319,7 @@ function renderMainInner(){
   if(S.vista==='cv'){m.innerHTML=vCV();return}
   if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
   if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
+  if(S.vista==='trabajos'){m.innerHTML=vTrabajos();return}
   if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
   if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
   if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
@@ -2425,6 +2427,36 @@ function cotCalc(d){
   const red=mon==='MXN'?50:5,base=horas*tarifa,total=Math.round(base*mult/red)*red;
   return {m,mon,disc,tarifa,horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/red)*red,enMxn:Math.round(total*b.tc[mon]),usd:Math.round(total*b.tc[mon]/b.tc.USD),anticipo:Math.round(total/2),desc};
 }
+/* Trabajos: une Cotizaciones + Cobros por folio (o por cliente+proyecto si el cobro se creo a mano) en una sola tira de estado por cliente, sin inventar una base de datos nueva */
+function vTrabajos(){
+  const paso=(ok,label)=>`<span class="nivel" style="color:${ok?'var(--ok)':'var(--ink3)'};border-color:${ok?'var(--ok)':'var(--ink3)'}">${ok?'✓ ':''}${esc(label)}</span>`;
+  if(!S.cotHist)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1><p class="intro">Cada cliente, de un vistazo: cotizado → contrato → cobrado. Se arma solo cruzando tus cotizaciones y tus cobros.</p><div class="box"><button class="btn pri" data-act="cot-hist">Cargar</button></div>`;
+  if(S.cotHist.cargando)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1><p class="muted">Cargando…</p>`;
+  const cots=S.cotHist.lista||[],cobros=lista('cobros'),norm=s=>nz(s||'');
+  const filas=cots.map(q=>{
+    const cobro=cobros.find(c=>c.folio===q.folio)||cobros.find(c=>!c.folio&&norm(c.cliente)===norm(q.cliente)&&norm(c.proyecto)===norm(q.proyecto));
+    const pag=cobro?cobroPagado(cobro):0,falta=cobro?Math.max(0,cobro.total-pag):null;
+    return {q,cobro,pag,falta};
+  });
+  const sueltos=cobros.filter(c=>!c.folio&&!cots.some(q=>norm(q.cliente)===norm(c.cliente)&&norm(q.proyecto)===norm(c.proyecto)));
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1>
+  <p class="intro">Cada cliente, de un vistazo: cotizado → contrato → cobrado. Se arma solo cruzando tus cotizaciones y tus cobros — no es una lista aparte que tengas que llenar.</p>
+  ${filas.length||sueltos.length?`<div class="postlist">
+    ${filas.map(({q,cobro,pag,falta})=>`<div class="post" style="border-left-color:${falta===0?'var(--ok)':'var(--accent)'}">
+      <div class="prow" style="justify-content:space-between"><b style="font-family:var(--display);font-size:18px;text-transform:uppercase">${esc(q.cliente||'—')}</b><span class="muted">${esc(q.folio)}</span></div>
+      <span class="muted">${esc(q.proyecto||'')}</span>
+      <div class="prow" style="margin-top:6px;flex-wrap:wrap">
+        ${paso(true,'Cotizado · '+dinero(q.total,q.mon||'MXN'))}
+        ${paso(!!q.contrato,'Contrato')}
+        ${paso(!!cobro&&falta<=0,cobro?(falta<=0?'Cobrado':'Cobrando '+dinero(pag,cobro.mon)+' / '+dinero(cobro.total,cobro.mon)):'Sin cobro')}
+      </div>
+      <div class="prow" style="margin-top:6px">
+        ${!q.contrato?`<button class="btn sm" data-act="cot-contrato" data-f="${esc(q.folio)}">Generar contrato</button>`:''}
+        ${!cobro?`<button class="btn sm" data-act="cot-cobro" data-f="${esc(q.folio)}">Crear cobro</button>`:`<button class="btn sm ghost" data-act="vista" data-v="cobros">Ver cobro →</button>`}
+      </div></div>`).join('')}
+    ${sueltos.map(c=>`<div class="post" style="border-left-color:var(--ink3)"><div class="prow" style="justify-content:space-between"><b style="font-family:var(--display);font-size:18px;text-transform:uppercase">${esc(c.cliente)}</b><span class="muted">sin cotización</span></div><span class="muted">${esc(c.proyecto||'')}</span></div>`).join('')}
+  </div>`:'<div class="empty">Todavía no tienes cotizaciones ni cobros. Empieza en Cotizador freelance.</div>'}`}
 function vCotizador(){
   const tab=S.cotTab||'cotizar';
   return `
@@ -2493,7 +2525,7 @@ function vCotizar(){
     <div class="field"><label for="ca-contacto">Contacto</label><input type="text" id="ca-contacto" data-aj="cot.contacto" value="${esc(b.contacto)}"></div></div></div>
   <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${dinero(q.total,q.mon||'MXN')}</td>
     <td><select id="cq-${esc(q.folio)}" data-cotestado="${esc(q.folio)}">${['Enviada','Aceptada','Rechazada','Pagada'].map(e=>`<option ${q.estado===e?'selected':''}>${e}</option>`).join('')}</select></td>
-    <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm" data-act="cot-cobro" data-f="${esc(q.folio)}" title="Crear cobro">Cobro</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
+    <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm" data-act="cot-contrato" data-f="${esc(q.folio)}" title="Generar contrato">${q.contrato?'✓ Contrato':'Contrato'}</button><button class="btn sm" data-act="cot-cobro" data-f="${esc(q.folio)}" title="Crear cobro">Cobro</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
 function cotResHTML(d,c,b){
   const r=MERCADOS[c.m].t[c.disc][0];
   return `<span class="lbl">Precio recomendado · ${MERCADOS[c.m].n}</span><b class="cotbig">${dinero(c.total,c.mon)}</b>
@@ -2959,7 +2991,10 @@ function contratoTexto(c){
   if(en)return `FREELANCE ILLUSTRATION / CONCEPT ART AGREEMENT\n\nArtist: ${b.nombre} (${b.contacto})\nClient: ${c.cliente||'[client]'}\nProject: ${c.proyecto||'[project]'}\nDate: ${new Date().toLocaleDateString('en-US')}\n\n1. SCOPE. The Artist will deliver: ${c.alcance||'[deliverables]'}. Anything outside this scope will be quoted separately.\n2. SCHEDULE. Start: ${c.inicio||'[date]'}. Final delivery: ${c.entrega||'[date]'}. Deadlines move if the Client's feedback or materials are delayed.\n3. REVISIONS. Includes ${c.revisiones} round(s) of revisions. Additional rounds are billed separately.\n4. FEES AND PAYMENT. Total fee: ${m}. A ${c.anticipo}% deposit is due before work starts; the balance is due on final delivery. Final files are delivered after full payment.\n5. USAGE RIGHTS. Upon full payment the Client receives: ${usoEn}. The Artist keeps the copyright unless a full buyout is stated above.\n6. PORTFOLIO. The Artist may show the work in their portfolio and social media once the project is public, unless a separate NDA says otherwise.\n7. CANCELLATION. If the Client cancels after work has started, the deposit is non-refundable and work completed beyond it is billed; minimum kill fee: ${c.cancelacion}% of the total.\n8. CONFIDENTIALITY. The Artist will not share confidential project information before it is public.\n9. CREDIT. The Artist will be credited when the work is published, where possible.\n\nArtist: ______________________    Client: ______________________\nDate: _______________              Date: _______________`;
   return `CONTRATO DE PRESTACIÓN DE SERVICIOS DE ILUSTRACIÓN / CONCEPT ART\n\nArtista: ${b.nombre} (${b.contacto})\nCliente: ${c.cliente||'[cliente]'}\nProyecto: ${c.proyecto||'[proyecto]'}\nLugar y fecha: ${c.ciudad}, ${new Date().toLocaleDateString('es-MX')}\n\n1. ALCANCE. El Artista entregará: ${c.alcance||'[entregables]'}. Todo lo que quede fuera de este alcance se cotiza por separado.\n2. FECHAS. Inicio: ${c.inicio||'[fecha]'}. Entrega final: ${c.entrega||'[fecha]'}. Las fechas se recorren si el Cliente retrasa su retroalimentación o materiales.\n3. REVISIONES. Incluye ${c.revisiones} ronda(s) de revisión. Las rondas adicionales se cobran aparte.\n4. HONORARIOS Y PAGO. Total: ${m}. Se paga un anticipo del ${c.anticipo}% antes de iniciar y el resto contra entrega final. Los archivos finales se entregan con el pago completo.\n5. DERECHOS DE USO. Al liquidar el pago, el Cliente obtiene: ${u}. El Artista conserva los derechos de autor, salvo que arriba se indique cesión total.\n6. PORTAFOLIO. El Artista podrá mostrar el trabajo en su portafolio y redes una vez que el proyecto sea público, salvo acuerdo de confidencialidad por separado.\n7. CANCELACIÓN. Si el Cliente cancela ya iniciado el trabajo, el anticipo no es reembolsable y se cobra el trabajo realizado adicional; cargo mínimo por cancelación: ${c.cancelacion}% del total.\n8. CONFIDENCIALIDAD. El Artista no compartirá información confidencial del proyecto antes de que sea pública.\n9. CRÉDITO. Se dará crédito al Artista cuando el trabajo se publique, siempre que sea posible.\n\nArtista: ______________________    Cliente: ______________________\nFecha: _______________             Fecha: _______________`;
 }
+/* marca la cotizacion de origen como 'ya tiene contrato' en cuanto se descarga/copia uno ligado a ella — sin esto, 'Trabajos' no sabria distinguir cotizado de contratado */
+function marcarContrato(){const c=contratoDraft();if(!c.folio)return;const q=S.cotHist?.lista?.find(x=>x.folio===c.folio);if(q&&!q.contrato){q.contrato=true;S.db?.collection('cotizaciones').doc(q.folio).set(clone(q)).catch(()=>{});renderMain()}}
 function vContratos(){
+  if(S.ctrDesdeFolio){const q=(S.cotHist?.lista||[]).find(x=>x.folio===S.ctrDesdeFolio);if(q){const cc=contratoDraft();Object.assign(cc,{cliente:q.cliente||'',proyecto:q.proyecto||'',total:String(q.total||''),mon:q.mon||'MXN',revisiones:String(q.d?.rev??2),uso:q.d?.uso??1,entrega:q.d?.entrega||'',alcance:q.d?`${q.d.cant} × ${COT_TIPOS[q.d.tipo]?.[0]||''} (complejidad ${['simple','media','alta'][q.d.compl]||''})`:cc.alcance,folio:q.folio})}S.ctrDesdeFolio=null}
   const c=contratoDraft(),hist=S.cotHist?.lista||[];
   const f=(k,lab,ph='')=>`<div class="field"><label for="ct2-${k}">${lab}</label><input type="text" id="ct2-${k}" data-ctr="${k}" value="${esc(c[k])}" placeholder="${ph}"></div>`;
   return `
@@ -6437,7 +6472,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
-  if(t.dataset.ctrdesde){const q=S.cotHist?.lista?.find(x=>x.folio===t.value);if(q){const c=contratoDraft();Object.assign(c,{cliente:q.cliente||'',proyecto:q.proyecto||'',total:String(q.total||''),mon:q.mon||'MXN',revisiones:String(q.d?.rev??2),uso:q.d?.uso??1,entrega:q.d?.entrega||'',alcance:q.d?`${q.d.cant} × ${COT_TIPOS[q.d.tipo]?.[0]||''} (complejidad ${['simple','media','alta'][q.d.compl]||''})`:c.alcance});renderMain()}return}
+  if(t.dataset.ctrdesde){const q=S.cotHist?.lista?.find(x=>x.folio===t.value);if(q){const c=contratoDraft();Object.assign(c,{cliente:q.cliente||'',proyecto:q.proyecto||'',total:String(q.total||''),mon:q.mon||'MXN',revisiones:String(q.d?.rev??2),uso:q.d?.uso??1,entrega:q.d?.entrega||'',alcance:q.d?`${q.d.cant} × ${COT_TIPOS[q.d.tipo]?.[0]||''} (complejidad ${['simple','media','alta'][q.d.compl]||''})`:c.alcance,folio:q.folio});renderMain()}return}
   if(t.dataset.vacf!==undefined){S.vacF=S.vacF||{};S.vacF[t.dataset.vacf]=t.type==='checkbox'?t.checked:t.value;const foc=t.id,pos=t.selectionStart;renderMain();const el=$('#'+foc);if(el&&t.type==='text'){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
   if(t.dataset.li){const [k,id,fld]=t.dataset.li.split('|'),x=itemDe(k,id);if(!x)return;x[fld]=t.value;marcarAj();if(t.tagName==='SELECT'||t.type==='date')renderMain();return}
   if(t.dataset.msg){msgVars();S.msg[t.dataset.msg]=t.value;S.msgTexto=null;const v=msgVars(),tp=MSGS.find(x=>x.k===v.k)||MSGS[0],ta=$('#ms-texto');if(ta)ta.value=tp.en(v);return}
@@ -6530,7 +6565,7 @@ async function accion(a,el){
   switch(a){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();break;
+    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
     case 'tab':S.tab=TAB_ALIAS[ds.tab]||ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
@@ -6679,6 +6714,7 @@ async function accion(a,el){
       delete S.aiBusy[k];renderMain();break}
     case 'cb-add':{const v=k=>$('#cb-'+k)?.value.trim()||'';const total=parseFloat(v('total').replace(/[^\d.]/g,''));if(!v('cliente')||!total){toast('Escribe cliente y total');return}
       lista('cobros').push({id:uid(),cliente:v('cliente'),proyecto:v('proyecto'),total,mon:$('#cb-mon').value,pagos:[],estado:'Activo',ts:Date.now()});marcarAj();render();break}
+    case 'cot-contrato':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(!q)return;S.ctrDesdeFolio=q.folio;S.vista='contratos';render();break}
     case 'cot-cobro':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(!q)return;if(lista('cobros').some(c=>c.folio===q.folio)){S.vista='cobros';render();return}
       lista('cobros').push({id:uid(),folio:q.folio,cliente:q.cliente||'',proyecto:q.proyecto||'',total:q.total,mon:q.mon||'MXN',pagos:[],estado:'Activo',ts:Date.now()});marcarAj();S.vista='cobros';render();toast('Cobro creado desde '+q.folio);break}
     case 'cb-pago':{const c=itemDe('cobros',ds.id);if(!c)return;const m=parseFloat(($('#cbp-m-'+c.id)?.value||'').replace(/[^\d.]/g,''));if(!m){toast('Escribe el monto');return}
@@ -6688,8 +6724,8 @@ async function accion(a,el){
       for(const c of lista('cobros'))for(const p of c.pagos||[])filas.push([p.fecha,c.cliente,c.proyecto,c.folio||'',p.monto,c.mon,Math.round(aMxn(p.monto,c.mon)),p.nota||'']);
       const csv=filas.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');await guardarArchivo(`cobros-${hoyKey()}.csv`,csv);break}
     case 'ctr-idioma':contratoDraft().idioma=ds.v;renderMain();break;
-    case 'ctr-copiar':{try{await navigator.clipboard.writeText(contratoTexto(contratoDraft()));toast('Copiado')}catch{toast('No se pudo copiar')}break}
-    case 'ctr-bajar':{const c=contratoDraft();await guardarArchivo(`${c.idioma==='en'?'agreement':'contrato'}-${slug(c.cliente||'cliente',30)}.html`,contratoHTML(c));break}
+    case 'ctr-copiar':{try{await navigator.clipboard.writeText(contratoTexto(contratoDraft()));toast('Copiado');marcarContrato()}catch{toast('No se pudo copiar')}break}
+    case 'ctr-bajar':{const c=contratoDraft();await guardarArchivo(`${c.idioma==='en'?'agreement':'contrato'}-${slug(c.cliente||'cliente',30)}.html`,contratoHTML(c));marcarContrato();break}
     case 'cot-hist-ctr':await cargarCotHist();S.vista='contratos';renderMain();break;
     case 'vac-actualizar':cargarVacantes(true);break;
     case 'vac-nivel':S.vacF=S.vacF||{};S.vacF.nivel=ds.v;renderMain();break;
