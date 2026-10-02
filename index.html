@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq95mo6').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9dnf6').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1620,29 +1620,33 @@ function vInicio(){
   const art=a.referentes.length?a.referentes[hoyN()%a.referentes.length]:null;
   const refs=ps.reduce((n,[,p])=>n+p.refs.length,0);
   const paso=siguientePaso(),mismo=ult&&paso?.pid===ult[0];
+  const hoyTxt=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,48px)">Hola, Sebastián</h1>
-  <p class="intro">Idea → función → intención → tensión → lenguaje visual → referencias → diseño → revisión. <strong>Cada proyecto tiene su propio cerebro</strong>: recuerda tus decisiones, te pregunta y te marca contradicciones.</p>
-  ${U().soy||U().porque?`<div class="box" style="border-top:3px solid var(--accent)">${U().soy?`<p style="margin:0;font-family:var(--display);font-size:26px;font-weight:800;text-transform:uppercase;line-height:1.1">Soy ${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}${U().porque?`<p style="margin:0"><span class="lbl">Mi porqué</span><br>${esc(U().porque)}</p>`:''}</div>`:''}
+  <div class="prow" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap">
+    <h1 class="ptitle" style="font-size:clamp(28px,4.5vw,44px);margin:0">Hola, Sebastián</h1>
+    <span class="muted" style="font-size:13px;text-transform:capitalize">${esc(hoyTxt)}</span>
+  </div>
+  ${U().soy?`<p style="margin:2px 0 0;font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2)">${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}
   ${siguientePasoHTML(paso,ult)}
   <div class="grid2">
-    <div class="box"><span class="lbl">Empieza algo nuevo</span><h3>¿Tienes una idea?</h3><p class="hint">Escríbela en bruto. El cerebro del proyecto te va preguntando qué es, para qué existe y qué quieres comunicar, y te marca lo que falta.</p>
-      <div class="prow"><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>
     ${ult&&!mismo?(()=>{const P=ult[1];return `<div class="box"><span class="lbl">Último proyecto · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
       <div class="health"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos · ${(P.piezas||[]).filter(x=>x.etapa==='Final'||x.soltada).length} pieza(s) terminada(s)</span></div>
       <div class="prow"><button class="btn" data-act="abrir-tab" data-id="${esc(ult[0])}" data-tab="cerebro">Abrir</button></div></div>`})():''}
-    ${regla?`<div class="box"><span class="lbl">La regla de hoy</span><p style="margin:0;font-family:var(--display);font-size:20px;font-weight:500;line-height:1.3">${esc(regla)}</p></div>`:''}
-    ${art?`<div class="box"><span class="lbl">Artista para estudiar hoy</span><h3>${esc(art.nombre)}</h3><p class="hint">${esc(art.porque)}</p><div><a class="btn" href="${asLink(art.nombre)}" target="_blank" rel="noopener">Ver en ArtStation ↗</a></div></div>`:''}
+    <div class="box"><span class="lbl">Empieza algo nuevo</span><h3>¿Tienes una idea?</h3><p class="hint">Escríbela en bruto. El cerebro del proyecto te va preguntando qué es, para qué existe y qué quieres comunicar, y te marca lo que falta.</p>
+      <div class="prow"><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>
   </div>
-  <details><summary class="lbl" style="cursor:pointer">¿No sabes qué elegir? Método para desatorarte ${estancadas().length?`· ${estancadas().length} pieza${estancadas().length===1?'':'s'} sin terminar`:''}</summary>
-    <div class="unlk">${UNLOCK.map(u=>`<button class="unl" data-act="unl" data-k="${u.k}"><b>${u.k}</b><span>${esc(u.n)}</span></button>`).join('')}</div></details>
-  ${proximos(5).length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Próximos</h3><button class="btn sm" data-act="vista" data-v="calendario">Calendario</button></div><ul class="list">${proximos(5).map(e=>{const dd=diasHasta(e.fecha);return `<li><span><b style="color:${dd<=1?'var(--warn)':'inherit'}">${dd===0?'Hoy':dd===1?'Mañana':fechaCorta(e.fecha)}</b> · ${esc(e.titulo)}</span></li>`}).join('')}</ul></div>`:''}
+  ${proximos(5).length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Próximos</h3><button class="btn sm ghost" data-act="vista" data-v="calendario">Calendario</button></div><ul class="list">${proximos(5).map(e=>{const dd=diasHasta(e.fecha);return `<li><span><b style="color:${dd<=1?'var(--warn)':'inherit'}">${dd===0?'Hoy':dd===1?'Mañana':fechaCorta(e.fecha)}</b> · ${esc(e.titulo)}</span></li>`}).join('')}</ul></div>`:''}
   <div class="stats">
     <div class="stat"><b>${terminadas()}</b><span>piezas terminadas</span></div>
     <div class="stat"><b>${ps.length}</b><span>proyectos</span></div>
-    <div class="stat"><b>${refs}</b><span>referencias con porqué y capa</span></div>
-    <div class="stat"><b>${a.referentes.length}</b><span>artistas que sigues</span></div>
-  </div>`}
+    <div class="stat"><b>${refs}</b><span>referencias</span></div>
+  </div>
+  <details><summary class="lbl" style="cursor:pointer">Inspiración y método para desatorarte${estancadas().length?` · ${estancadas().length} pieza${estancadas().length===1?'':'s'} sin terminar`:''}</summary>
+    <div class="grid2" style="margin-top:10px">
+      ${regla?`<div class="box"><span class="lbl">La regla de hoy</span><p style="margin:0;font-family:var(--display);font-size:18px;font-weight:500;line-height:1.3">${esc(regla)}</p></div>`:''}
+      ${art?`<div class="box"><span class="lbl">Artista para estudiar hoy</span><h3 style="margin:0 0 4px">${esc(art.nombre)}</h3><p class="hint" style="margin:0 0 6px">${esc(art.porque)}</p><a class="btn sm" href="${asLink(art.nombre)}" target="_blank" rel="noopener">Ver en ArtStation ↗</a></div>`:''}
+    </div>
+    <div class="unlk" style="margin-top:10px">${UNLOCK.map(u=>`<button class="unl" data-act="unl" data-k="${u.k}"><b>${u.k}</b><span>${esc(u.n)}</span></button>`).join('')}</div></details>`}
 
 function vEstilo(){
   const a=S.ajustes,imgs=a.estiloImgs||[],an=a.estiloAnalisis,d=an?.data;
@@ -1844,8 +1848,9 @@ async function preguntar(kind){
     }else if(kind==='adaptar'){
       const d=adaptarDraft();if((d.texto||'').trim().length<60){S.ai[kind]={error:'Pega el texto de la vacante (responsabilidades y requisitos).'};delete S.aiBusy[kind];renderMain();return}
       const ev=(S.ajustes.niveles||[]).slice().sort((a,b)=>a.ts-b.ts).at(-1);
+      const {prom}=debilidades(),perfilTxt=Object.entries(SKILLS).map(([k,n])=>`${n}: ${prom[k]!=null?(nivelSkill(prom[k])?.[0]||'')+' ('+prom[k].toFixed(1)+'/10)':'sin datos'}`).join('; ');
       const imgs=await imagenesPortafolio(S.ajustes.portafolioUrl||PF_URL_DEF);let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,Math.min(6,lim.images.maxCount))}catch{}
-      const r=await S.sample.json(`${ROL_CRITICA}\n\nCompara esta VACANTE con el portafolio de este concept artist y dile cómo adaptar su postulación.\nEstudio: ${d.estudio||'—'} · Puesto: ${d.puesto||'—'}\nVacante:\n${d.texto.slice(0,8000)}\n\nSu portafolio: ${S.ajustes.portafolioUrl||PF_URL_DEF}\nSus piezas y proyectos: ${piezasPortafolio().join(' | ')||'—'}\n${ev?`Su nivel evaluado: ${ev.data.nivel} (${ev.data.puntuacion}/100 industria). Fortalezas: ${(ev.data.fortalezas||[]).join('; ')}. Frenos: ${(ev.data.frenos||[]).join('; ')}.`:''}\nSu gusto: ${S.ajustes.gusto||'—'}\n${images?`Adjunto ${images.length} piezas de su portafolio.`:''}\nSé honesto: si el encaje es bajo, dilo y di si vale la pena aplicar igual. No inventes experiencia que no tiene. La carta: en inglés, 120-180 palabras, específica a ESTE estudio y ESTE puesto, menciona 2 piezas concretas, sin clichés, firma ${cotBase().nombre}, con link al portafolio.\nResponde SOLO con JSON: {"encaje":0-100,"resumen":"2-3 frases","aplicar":"recomendación: aplica ya / aplica después de X / no conviene y por qué","requisitos":[{"req":"requisito de la vacante","cumples":"sí|parcial|no","evidencia":"qué pieza lo demuestra o qué falta"}],"orden_piezas":[{"pieza":"","porque":""}],"quitar":["piezas a quitar o mandar al final para esta vacante"],"falta":[{"que":"","como":"cómo cubrirlo en 1-2 semanas"}],"asunto":"asunto del correo en inglés","carta":"cover letter en inglés","prueba":["3-4 cosas a preparar para su prueba de arte o entrevista"]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nCompara esta VACANTE contra TRES cosas de este concept artist: sus requisitos vs. su perfil de habilidades (evidencia real de críticas) vs. su portafolio. No es solo "aplica o no": dile exactamente qué requisito ya tiene evidencia fuerte, cuál necesita más evidencia, y cuál le falta por completo, con una acción concreta para cerrar cada hueco.\nEstudio: ${d.estudio||'—'} · Puesto: ${d.puesto||'—'}\nMeta profesional: ${metaTexto()}\nVacante:\n${d.texto.slice(0,8000)}\n\nSu portafolio: ${S.ajustes.portafolioUrl||PF_URL_DEF}\nSus piezas y proyectos: ${piezasPortafolio().join(' | ')||'—'}\nSu PERFIL DE HABILIDADES (evidencia real acumulada de sus críticas, no una sola evaluación): ${perfilTxt}\n${ev?`Su nivel evaluado: ${ev.data.nivel} (${ev.data.puntuacion}/100 industria). Fortalezas: ${(ev.data.fortalezas||[]).join('; ')}. Frenos: ${(ev.data.frenos||[]).join('; ')}.`:''}\nSu gusto: ${S.ajustes.gusto||'—'}\n${images?`Adjunto ${images.length} piezas de su portafolio.`:''}\nSé honesto: si el encaje es bajo, dilo y di si vale la pena aplicar igual. No inventes experiencia que no tiene. La carta: en inglés, 120-180 palabras, específica a ESTE estudio y ESTE puesto, menciona 2 piezas concretas, sin clichés, firma ${cotBase().nombre}, con link al portafolio.\nResponde SOLO con JSON: {"encaje":0-100,"resumen":"2-3 frases","aplicar":"recomendación: aplica ya / aplica después de X / no conviene y por qué","requisitos":[{"req":"requisito de la vacante","veredicto":"fuerte|necesita_evidencia|falta","evidencia":"qué pieza o skill lo demuestra, o qué falta exactamente"}],"orden_piezas":[{"pieza":"","porque":""}],"quitar":["piezas a quitar o mandar al final para esta vacante"],"falta":[{"que":"","como":"acción concreta para cubrirlo en 1-2 semanas"}],"asunto":"asunto del correo en inglés","carta":"cover letter en inglés","prueba":["3-4 cosas a preparar para su prueba de arte o entrevista"]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.adaptaciones=S.ajustes.adaptaciones||[];S.ajustes.adaptaciones.push({ts:Date.now(),estudio:d.estudio,puesto:d.puesto,link:d.link,data:r});if(S.ajustes.adaptaciones.length>40)S.ajustes.adaptaciones.shift();
       S.adpVer=null;marcarAj();S.ai[kind]=null;
     }else if(kind==='ruta'){
@@ -2989,7 +2994,8 @@ function piezasPortafolio(){
 function vAdaptar(){
   const d=adaptarDraft(),hist=(S.ajustes.adaptaciones||[]).slice().reverse(),a=S.adpVer!=null?hist[S.adpVer]:hist[0],r=a?.data;
   const col=n=>n>=70?'var(--ok)':n>=45?'var(--c-tecnica)':'var(--warn)';
-  const cumple={sí:'var(--ok)',si:'var(--ok)',parcial:'var(--c-tecnica)',no:'var(--warn)'};
+  const cumple={fuerte:'var(--ok)',sí:'var(--ok)',si:'var(--ok)',necesita_evidencia:'var(--c-tecnica)',parcial:'var(--c-tecnica)',falta:'var(--warn)',no:'var(--warn)'};
+  const VERE_LBL={fuerte:'Fuerte',necesita_evidencia:'Necesita evidencia',falta:'Falta',sí:'Sí',si:'Sí',parcial:'Parcial',no:'No'};
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Adaptar a una vacante</h1>
   <p class="intro">Pega la vacante y el asesor la compara con tu portafolio: qué tanto encajas, qué piezas poner primero para <b>ese</b> estudio, qué te falta y tu carta de presentación en inglés. Un portafolio adaptado vale más que diez postulaciones genéricas.</p>
@@ -3011,7 +3017,7 @@ function vAdaptar(){
     <div class="box"><h3>Pon primero</h3><ol style="margin:0;padding-left:20px;line-height:1.6">${(r.orden_piezas||[]).map(x=>`<li><b>${esc(x.pieza)}</b> — <span class="muted">${esc(x.porque)}</span></li>`).join('')}</ol>
       ${(r.quitar||[]).length?`<p style="margin:0"><b>Quita o manda al final:</b> ${r.quitar.map(esc).join(' · ')}</p>`:''}</div>
   </div>
-  <div class="box"><h3>Requisitos contra tu portafolio</h3><ul class="list">${(r.requisitos||[]).map(x=>`<li style="grid-template-columns:1fr auto"><span><b>${esc(x.req)}</b><br><span class="muted">${esc(x.evidencia||'')}</span></span><span class="nivel" style="color:${cumple[(x.cumples||'').toLowerCase()]||'var(--ink3)'};border-color:${cumple[(x.cumples||'').toLowerCase()]||'var(--ink3)'}">${esc(x.cumples||'')}</span></li>`).join('')}</ul></div>
+  <div class="box"><h3>Requisitos: vacante vs. tu perfil de habilidades vs. tu portafolio</h3><ul class="list">${(r.requisitos||[]).map(x=>{const k=(x.veredicto||x.cumples||'').toLowerCase(),col=cumple[k]||'var(--ink3)';return `<li style="grid-template-columns:1fr auto"><span><b>${esc(x.req)}</b><br><span class="muted">${esc(x.evidencia||'')}</span></span><span class="nivel" style="color:${col};border-color:${col}">${esc(VERE_LBL[k]||x.veredicto||x.cumples||'')}</span></li>`}).join('')}</ul></div>
   ${(r.falta||[]).length?`<div class="box"><h3>Qué te falta y cómo cubrirlo rápido</h3><ul class="list">${r.falta.map(x=>`<li style="grid-template-columns:1fr"><span><b>${esc(x.que)}</b><br><span class="muted">${esc(x.como)}</span></span></li>`).join('')}</ul></div>`:''}
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Carta de presentación (inglés)</h3><button class="btn sm pri" data-act="adp-copiar">Copiar</button></div>
     ${r.asunto?`<p style="margin:0"><span class="lbl">Asunto</span> ${esc(r.asunto)}</p>`:''}
