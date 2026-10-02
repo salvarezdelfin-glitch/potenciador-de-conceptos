@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9pmsi').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9vna9').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1345,12 +1345,17 @@ function renderMainInner(){
         <label class="lbl prow" for="f-entrega" style="gap:6px">Entrega <input type="date" id="f-entrega" data-b="entrega" value="${esc(p.entrega||'')}"></label>
       </div>
     </div>
-    <div class="prow" style="gap:10px"><div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+    <div class="prow" style="gap:10px;align-items:center">
+      <div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
       <button class="btn sm blk" data-act="blk" title="Revisa tu contexto y te da preguntas, experimentos y direcciones">Estoy bloqueado</button>
-      <button class="btn sm" data-act="duplicar" title="Duplicar para explorar otra dirección sin tocar este">Duplicar</button>
-      <button class="btn sm" data-act="exp-json" title="Exportar todo el proyecto (contexto, decisiones, críticas) en JSON">Exportar</button>
-      <button class="btn sm" data-act="presentar" title="Presentar el proyecto en pantalla completa">▶ Presentar</button>
-      <button class="btn sm ${S.confirmDel?'danger':'ghost'}" data-act="borrar" title="Borrar proyecto (queda en la Papelera)">${ICO.trash} ${S.confirmDel?'¿Borrar? Toca otra vez':'Borrar'}</button>${S.confirmDel?'<button class="btn sm ghost" data-act="cancel-del">Cancelar</button>':''}</div>
+      <details class="phead-mas"><summary class="btn sm ghost" style="list-style:none;cursor:pointer">⋯ Más</summary>
+        <div class="prow" style="margin-top:6px;flex-wrap:wrap">
+          <button class="btn sm" data-act="duplicar" title="Duplicar para explorar otra dirección sin tocar este">Duplicar</button>
+          <button class="btn sm" data-act="exp-json" title="Exportar todo el proyecto (contexto, decisiones, críticas) en JSON">Exportar</button>
+          <button class="btn sm" data-act="presentar" title="Presentar el proyecto en pantalla completa">▶ Presentar</button>
+          <button class="btn sm ${S.confirmDel?'danger':'ghost'}" data-act="borrar" title="Borrar proyecto (queda en la Papelera)">${ICO.trash} ${S.confirmDel?'¿Borrar? Toca otra vez':'Borrar'}</button>${S.confirmDel?'<button class="btn sm ghost" data-act="cancel-del">Cancelar</button>':''}
+        </div></details>
+    </div>
   </div>
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
