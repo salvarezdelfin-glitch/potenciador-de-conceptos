@@ -467,6 +467,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-cols{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
 .esc-mini{display:flex;gap:4px;flex-wrap:wrap}.esc-bola.esc-m{width:40px;height:40px}
 .esc-pj{margin-top:6px;border-top:1px solid var(--line);padding-top:8px}.esc-pj summary{cursor:pointer}
 .esc-sw{height:26px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10.5px}
@@ -945,7 +946,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murl60qp').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murl9i85').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -6430,7 +6431,7 @@ function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
 function escDibuja(){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
   document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
     const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
-function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja()}escRefrescaPj(p)}
+function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);const r=$('#esc-rev');if(r)r.innerHTML=escRevHTML(p);escDibuja()}escRefrescaPj(p)}
 /* personajes: cada color de su paleta, iluminado con la escena */
 const pjItems=(p,c)=>pjPaleta(p,c).pal.slice(0,6).map(x=>({hex:x.hex,rol:x.rol}));
 function pjEscHTML(p,c){const E=escDePj(p,c),sel=c.luzEsc||'';
@@ -6441,6 +6442,36 @@ function pjEscHTML(p,c){const E=escDePj(p,c),sel=c.luzEsc||'';
     <div id="pjesc-cols-${c.id}">${escColsHTML(pjItems(p,c),E,c.id)}</div>
     <div class="prow"><button class="btn ghost sm" data-act="esc-ase-pj" data-id="${c.id}" title="Swatches con luz y sombra de este personaje, para Photoshop">Exportar con luz (.ase)</button></div></details>`}
 function escRefrescaPj(p){(p.personajes||[]).forEach(c=>{const o=$('#pjesc-cols-'+c.id);if(o){o.innerHTML=escColsHTML(pjItems(p,c),escDePj(p,c),c.id);}});escDibuja()}
+/* Revisión: la app dice qué conviene ajustar y lo corrige si tú aceptas (con deshacer) */
+const escLuma=h=>lumaHex(h);
+function escTmp(h){const x=hexHsl(h);if(!x||x.s<.12)return 0;return (x.h<75||x.h>330)?1:(x.h>=150&&x.h<=270)?-1:0}
+function escRevisa(p){const E=escDe(p),R=[],M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),mt=M.T.v||I.T.v,mv=M.V.v||I.V.v,tL=escTmp(E.luz),tA=escTmp(E.amb),mias=(p.luces||[]).map(l=>l.k).filter(k=>ESC_PRE[k]);
+  const poner=(k)=>pp=>{const e=escDe(pp);Object.assign(e,ESC_PRE[k],{k,int:e.int||1});delete e.n};
+  const add=(t,why,lbl,fix)=>R.push({t,why,lbl,fix});
+  const pal=(p.mood.paleta||[]).slice(0,8),ramps=pal.map(c=>escRampa(c,E));
+  if(Math.abs(mt)>=.4&&tL&&Math.sign(mt)!==tL){const cand=Object.keys(ESC_PRE).filter(k=>k!=='neutro'&&escTmp(ESC_PRE[k].luz)===Math.sign(mt)),k=mias.find(m=>cand.includes(m))||(mt>0?'antorcha':'luna');
+    add(`Tu mood pide ${mt>0?'calidez':'frío'}, pero la luz de la escena es ${tL>0?'cálida':'fría'}.`,'Si el mood y la luz dicen cosas distintas, el espectador siente la luz, no tus palabras.',`Cambiar a «${ESC_PRE[k].n}»`,poner(k))}
+  if(tL&&tA===tL&&hexHsl(E.amb).s>=.2&&Math.abs(mt)<.4){const x=hexHsl(E.amb);
+    add(`La sombra y la luz son del mismo tono (${tL>0?'cálido':'frío'}).`,'Casi siempre la sombra va en el tono contrario a la luz: luz cálida, sombra fría. Es lo que da profundidad y evita que se vea plano.','Poner la sombra en el tono contrario',pp=>{const e=escDe(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h+180,Math.max(.3,h.s*.8),Math.min(.4,Math.max(.14,h.l)));e.k=''})}
+  if(mv<=-.4&&(E.int>1.15||E.el>=75))add('Tu mood es oscuro, pero la escena está muy iluminada.','Un mood oscuro necesita poca luz o una sola fuente fuerte, no iluminación pareja.','Bajar la intensidad',pp=>{const e=escDe(pp);e.int=Math.min(e.int,.7);e.k=''});
+  if(mv>=.4&&E.int<.6)add('Tu mood es luminoso, pero la escena está poco iluminada.','El valor de la luz tiene que acompañar lo que quieres sentir.','Subir la intensidad',pp=>{const e=escDe(pp);e.int=1.1;e.k=''});
+  if(ramps.length){const perd=ramps.filter(r=>escLuma(r[4].hex)<.035).length;
+    if(perd>=Math.ceil(ramps.length/2))add(`En ${perd} de ${ramps.length} colores la sombra se pierde en negro.`,'Sin información en la sombra no se lee la forma ni el material. Aclara un poco el color de las sombras.','Aclarar las sombras',pp=>{const e=escDe(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h,h.s,Math.min(.45,h.l+.12));e.k=''});
+    const plano=ramps.filter(r=>escLuma(r[1].hex)-escLuma(r[4].hex)<.08).length;
+    if(plano>=Math.ceil(ramps.length/2))add(`En ${plano} de ${ramps.length} colores casi no hay diferencia entre luz y sombra.`,'Con tan poco contraste la forma se lee plana. Más intensidad en la luz o sombras más oscuras.','Subir el contraste',pp=>{const e=escDe(pp);e.int=Math.min(1.5,(e.int||1)+.25);e.k=''})}
+  if(mias.length&&E.k&&!mias.includes(E.k))add(`La escena no es ninguna de tus claves de luz (${mias.map(k=>ESC_PRE[k].n).join(', ')}).`,'Tu proyecto ya definió su luz en Mood; la escena debería salir de ahí para que tablero, personajes y paleta cuenten lo mismo.',`Usar «${ESC_PRE[mias[0]].n}»`,poner(mias[0]));
+  for(const c of (p.personajes||[]).filter(x=>x.nombre)){const Ec=escDePj(p,c),it=pjItems(p,c),rr=it.map(x=>escRampa(x.hex,Ec));
+    const perd=rr.filter(r=>escLuma(r[4].hex)<.035).length;
+    if(it.length&&perd>=Math.ceil(it.length/2)&&!c.luzEsc)add(`${c.nombre}: la sombra se traga ${perd} de sus ${it.length} colores.`,'Sus colores se pierden en la escena del proyecto; puede tener una escena con sombras más abiertas solo para él.','Darle una escena con sombras más claras',pp=>{const cc=(pp.personajes||[]).find(z=>z.id===c.id),e=escDe(pp),h=hexHsl(e.amb);pp.escenas=pp.escenas||[];const id=uid();pp.escenas.push({id,n:'Para '+c.nombre,luz:e.luz,amb:hslHex(h.h,h.s,Math.min(.45,h.l+.14)),reb:e.reb,ang:e.ang,el:e.el,int:e.int});cc.luzEsc='esc:'+id});
+    for(let i=0;i<it.length;i++)for(let j=i+1;j<it.length;j++){const a=rr[i][1].hex,b=rr[j][1].hex,ha=hexHsl(a),hb=hexHsl(b);
+      if(Math.abs(escLuma(a)-escLuma(b))<.05&&hueDist(ha.h,hb.h)<18&&ha.s>.15)add(`${c.nombre}: «${it[i].rol}» y «${it[j].rol}» se ven casi iguales bajo esta luz.`,'Si dos zonas del personaje se confunden, la silueta de color se pierde. Separa su valor o su tono en la paleta del personaje.','',null)}}
+  return R}
+function escRevHTML(p){const R=escRevisa(p),fix=R.filter(x=>x.fix).length;
+  return `<div class="esc-rev"><div class="prow" style="justify-content:space-between"><b>¿Qué conviene ajustar?</b>${fix>1?'<button class="btn sm pri" data-act="esc-fix-todo">Corregir todo por mí</button>':''}</div>
+    ${R.length?R.map((x,i)=>`<div class="esc-ri"><p style="margin:0"><b>${esc(x.t)}</b></p><p class="hint" style="margin:0">${esc(x.why)}</p>${x.fix?`<div class="prow"><button class="btn sm" data-act="esc-fix" data-i="${i}">${esc(x.lbl)}</button><span class="muted" style="font-size:12px">o ajústalo tú arriba</span></div>`:''}</div>`).join(''):'<p class="muted" style="margin:0">✓ La escena es coherente con tu mood, tus claves de luz y la lectura de los colores.</p>'}
+    ${p.escUndo?'<div class="prow"><button class="btn ghost sm" data-act="esc-undo">Deshacer la última corrección</button></div>':''}</div>`}
+function escAplicaFix(p,x){x.fix(p);nuevaDecision(p,'Luz y color: '+x.lbl,'La app lo sugirió porque: '+x.t+' '+x.why,['Mood'],'luz','En prueba')}
+function escGuardaUndo(p){p.escUndo={escena:clone(escDe(p)),escenas:clone(p.escenas||[]),pj:(p.personajes||[]).map(c=>[c.id,c.luzEsc||''])}}
 /* dibujo para el PNG del tablero: esfera + rampa por color */
 function escDibujaBloque(x,items,E,x0,y0,tam,dry){const sw=26,cw=tam+10;
   if(!dry)items.forEach((it,i)=>{const b=document.createElement('canvas');b.width=b.height=tam;escBola(b,it.hex,E);x.drawImage(b,x0+i*cw,y0);escRampa(it.hex,E).forEach((r,j)=>{x.fillStyle=r.hex;x.fillRect(x0+i*cw,y0+tam+8+j*sw,tam,sw-3)})});
@@ -6450,6 +6481,7 @@ function escHTML(p){const E=escDe(p),mias=new Set((p.luces||[]).map(l=>l.k)),sl=
   return `<div class="box" id="esc-box"><h3>Constructor de luz y color</h3><p class="hint">Cada color de tu paleta, iluminado por la luz de tu escena: ves la esfera y la rampa de luz → sombra → rebote, con el color de la luz y el de las sombras que tú eliges. Elige una de tus claves de luz o ajusta a mano.</p>
     <div class="chips">${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch ${E.k===k?'on':''}" data-act="esc-preset" data-k="${k}" title="${mias.has(k)?'Es una de tus claves de luz':''}">${mias.has(k)?'★ ':''}${esc(v.n)}</button>`).join('')}</div>
     <div class="esc-ctl">${co('luz','Color de la luz')}${co('amb','Sombras / ambiente')}${co('reb','Rebote')}${sl('ang','Giro de la luz',0,360,5)}${sl('el','Altura de la luz',-40,90,5)}${sl('int','Intensidad',0.3,1.6,0.05)}</div>
+    <div id="esc-rev">${escRevHTML(p)}</div>
     <div id="esc-out">${escOutHTML(p)}</div>
     <div class="prow"><button class="btn sm" data-act="esc-guardar">Guardar esta escena</button><button class="btn sm" data-act="esc-png">Exportar PNG</button><button class="btn sm" data-act="esc-ase" title="Swatches que abre Photoshop (Ventana → Muestras → Cargar) y otros programas de Adobe">Exportar swatches (.ase)</button></div>
     ${(p.escenas||[]).length?`<div class="chips"><span class="lbl">Mis escenas</span>${p.escenas.map(s=>`<span class="chip"><button style="color:var(--ink)" data-act="esc-cargar" data-id="${s.id}">${esc(s.n)}</button><button data-act="esc-del" data-id="${s.id}" aria-label="Quitar">×</button></span>`).join('')}</div>`:''}</div>`}
@@ -6647,6 +6679,11 @@ async function accionTp(a,el,p,ds){
     case 'esc-cargar':{const s=(p.escenas||[]).find(x=>x.id===ds.id);if(s){p.escena={k:'',luz:s.luz,amb:s.amb,reb:s.reb,ang:s.ang,el:s.el,int:s.int};marcar();renderMain()}break}
     case 'esc-del':p.escenas=(p.escenas||[]).filter(x=>x.id!==ds.id);marcar();renderMain();break;
     case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
+    case 'esc-fix':{const x=escRevisa(p)[+ds.i];if(!x?.fix)return;escGuardaUndo(p);escAplicaFix(p,x);marcar();renderMain();toast('Corregido: puedes deshacerlo');break}
+    case 'esc-fix-todo':{if(!escRevisa(p).some(x=>x.fix))return;escGuardaUndo(p);const hechos=new Set();
+      for(let i=0;i<5;i++){const x=escRevisa(p).find(y=>y.fix&&!hechos.has(y.lbl));if(!x)break;hechos.add(x.lbl);escAplicaFix(p,x)}
+      marcar();renderMain();toast(`${hechos.size} correcciones aplicadas: puedes deshacerlas`);break}
+    case 'esc-undo':{const u=p.escUndo;if(!u)return;p.escena=u.escena;p.escenas=u.escenas;u.pj.forEach(([id,k])=>{const c=(p.personajes||[]).find(z=>z.id===id);if(c)c.luzEsc=k});p.escUndo=null;marcar();renderMain();toast('Corrección deshecha');break}
     case 'esc-ase-pj':{const c=(p.personajes||[]).find(x=>x.id===ds.id);if(!c)return;const E=escDePj(p,c);bajarBlob(slug(p.nombre+' '+c.nombre,50)+'-luz-y-color.ase',escASE(pjItems(p,c).map(it=>({n:`${c.nombre} · ${it.rol}`,cols:escRampa(it.hex,E).map(r=>({n:`${it.rol} · ${r.n}`,hex:r.hex}))}))));break}
     case 'esc-png':{const cv=escPNG(p);cv.toBlob(b=>b&&bajarBlob(slug(p.nombre,40)+'-luz-y-color.png',b));break}
     case 'esc-ase':{const E=escDe(p),g=(p.mood.paleta||[]).slice(0,8).map(c=>({n:c,cols:escRampa(c,E).map(r=>({n:`${c} · ${r.n}`,hex:r.hex}))}));if(!g.length){toast('Define tu paleta primero');return}bajarBlob(slug(p.nombre,40)+'-luz-y-color.ase',escASE(g));break}
