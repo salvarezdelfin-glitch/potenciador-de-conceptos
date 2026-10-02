@@ -951,7 +951,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murm2hj5').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murm89z0').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -6208,10 +6208,13 @@ function pjLadoVis(p,c){/* si el personaje representa un lado de una tensión, u
   for(const t of p.tensiones||[]){if(t.a&&L.includes(nz(t.a)))out.push({lado:t.a,vis:t.aVis||''});if(t.b&&L.includes(nz(t.b)))out.push({lado:t.b,vis:t.bVis||''})}
   return out}
 /* Si el personaje deja que la luz afecte su paleta, cada color (salvo los que fijaste a mano) pasa a verse como bajo la luz de su escena; pjPaletaBase es el color local, sin luz */
+const pjK=c=>(c.luzK==null||c.luzK===.6)?.85:c.luzK;
 const escMix=(a,b,t)=>{const x=escRgb(a),y=escRgb(b);return escHex(x.map((v,i)=>v*(1-t)+y[i]*t))};
 function pjPaleta(p,c,todos){const R=pjPaletaBase(p,c,todos);if(!c.luzAfecta)return R;
-  const E=escDePj(p,c),k=c.luzK==null?.6:c.luzK,nom=c.luzEsc?(escNombre(p,E)):escNombre(p,escDe(p));
-  const pal=R.pal.map(z=>{if(z.lock)return z;const r=escRampa(z.hex,E);return {...z,local:z.hex,hex:escMix(z.hex,escMix(r[1].hex,r[2].hex,.5),k)}});
+  const E=escDePj(p,c),k=pjK(c),nom=c.luzEsc?(escNombre(p,E)):escNombre(p,escDe(p));
+  /* 1) el color como se ve bajo la luz; 2) las luces se bañan del color de la luz y las sombras del color del ambiente: así el mood de la iluminación se nota */
+  const pal=R.pal.map(z=>{if(z.lock)return z;const r=escRampa(z.hex,E),ap=escMix(z.hex,escMix(r[1].hex,r[2].hex,.5),Math.min(1,k*1.15)),ya=escLuma(ap);
+    return {...z,local:z.hex,hex:ya>.22?escMix(ap,E.luz,.3*k):escMix(ap,E.amb,.35*k)}});
   return {...R,pal,razones:[`La luz «${nom}» afecta su paleta al ${Math.round(k*100)}%: cada color se ve como bajo esa luz (los que fijaste a mano no cambian).`,...(R.razones||[])]}}
 function pjPaletaBase(p,c,todos){
   const mundo=(p.mood.paleta||[]).map(h=>({hex:h,...(hexHsl(h)||{h:0,s:0,l:.5})}));
@@ -6461,7 +6464,7 @@ function pjEscHTML(p,c){const E=escDePj(p,c),sel=c.luzEsc||'';
       ${(p.escenas||[]).length?`<optgroup label="Mis escenas">${p.escenas.map(s=>`<option value="esc:${s.id}" ${sel==='esc:'+s.id?'selected':''}>${esc(s.n)}</option>`).join('')}</optgroup>`:''}
       <optgroup label="Escenas de luz">${Object.entries(ESC_PRE).map(([k,v])=>`<option value="pre:${k}" ${sel==='pre:'+k?'selected':''}>${esc(v.n)}</option>`).join('')}</optgroup></select></label>
     <div class="esc-afecta"><label class="chk"><input type="checkbox" data-pjluz="${c.id}" ${c.luzAfecta?'checked':''}><span><b>Que la luz afecte la paleta de este personaje</b><br><small class="muted">Sus colores pasan a verse como bajo esa luz (el mood de la iluminación los tiñe y los oscurece). Sus colores originales se conservan y los que fijaste a mano no cambian.</small></span></label>
-      ${c.luzAfecta?`<label class="esc-r" style="max-width:320px"><span class="lbl">Cuánto lo afecta · ${Math.round((c.luzK==null?.6:c.luzK)*100)}%</span><input type="range" data-pjluzk="${c.id}" min="0" max="1" step="0.05" value="${c.luzK==null?.6:c.luzK}"></label>`:''}</div>
+      ${c.luzAfecta?`<label class="esc-r" style="max-width:320px"><span class="lbl">Cuánto lo afecta · ${Math.round(pjK(c)*100)}%</span><input type="range" data-pjluzk="${c.id}" min="0" max="1.5" step="0.05" value="${pjK(c)}"></label>`:''}</div>
     <div id="pjesc-cols-${c.id}">${escColsHTML(pjItems(p,c),E,c.id)}</div>
     <div class="prow"><button class="btn ghost sm" data-act="esc-ase-pj" data-id="${c.id}" title="Swatches con luz y sombra de este personaje, para Photoshop">Exportar con luz (.ase)</button></div></details>`}
 function escRefrescaPj(p){(p.personajes||[]).forEach(c=>{const o=$('#pjesc-cols-'+c.id);if(o){o.innerHTML=escColsHTML(pjItems(p,c),escDePj(p,c),c.id);}
@@ -7010,7 +7013,7 @@ document.addEventListener('input',e=>{
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
-  if(t.dataset.pjluz){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluz);if(c){c.luzAfecta=t.checked;if(c.luzK==null)c.luzK=.6;marcar();renderMain()}return}
+  if(t.dataset.pjluz){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluz);if(c){c.luzAfecta=t.checked;if(c.luzK==null||c.luzK===.6)c.luzK=.85;marcar();renderMain()}return}
   if(t.dataset.pjluzk){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluzk);if(c){c.luzK=+t.value;marcar();const l=t.closest('label')?.querySelector('.lbl');if(l)l.textContent='Cuánto lo afecta · '+Math.round(c.luzK*100)+'%';escRefrescaPj(p)}return}
   if(t.dataset.pjesc){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjesc);if(c){c.luzEsc=t.value;marcar();escRefrescaPj(p)}return}
   if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
