@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9vna9').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9y68n').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2365,12 +2365,33 @@ footer{margin-top:auto;padding-top:10px;color:var(--muted);font-size:9px}
 </main>
 <script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
 </body></html>`}
+/* Fase 7: conecta aprendizaje + creacion + carrera - la mezcla real de tu portafolio (lo ya aprobado/publicado) contra tu meta, y un siguiente proyecto concreto si hay un hueco claro */
+function portafolioMezcla(){
+  const vistos=candidatas().filter(c=>['aprobada','publicada'].includes(c.pf.estado));
+  const porTipo={};vistos.forEach(c=>{const t=c.p?.tipo||c.pf.disciplina||'Otro';porTipo[t]=(porTipo[t]||0)+1});
+  return {vistos,porTipo};
+}
+function portafolioGapHTML(){
+  const {vistos,porTipo}=portafolioMezcla(),meta=metaTexto(),metaL=meta.toLowerCase();
+  const entornos=(porTipo['Entorno']||0)+(porTipo['Proyecto completo (mundo)']||0)+(porTipo['Key art']||0);
+  const personajes=(porTipo['Personaje']||0)+(porTipo['Criatura']||0);
+  const quiereEnv=/environment|entorno|visual development|key ?art/.test(metaL);
+  const quierePj=/character|personaje/.test(metaL);
+  let gap=null;
+  if(!vistos.length)gap={texto:'Todavía no tienes ninguna pieza con visto bueno aquí. Termina y aprueba al menos una antes de pensar en huecos de portafolio.'};
+  else if(quiereEnv&&entornos<2&&personajes>entornos+1)gap={tipo:'Entorno',texto:`Tu meta es ${meta}, pero tu portafolio tiene ${personajes} pieza(s) de personaje/criatura y solo ${entornos} de entorno o key art. Un reclutador de ese perfil busca entornos primero.`};
+  else if(quierePj&&personajes<2&&entornos>personajes+1)gap={tipo:'Personaje',texto:`Tu meta es ${meta}, pero tu portafolio tiene ${entornos} pieza(s) de entorno y solo ${personajes} de personaje. Te falta mostrar diseño de personaje.`};
+  const mezclaTxt=Object.entries(porTipo).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${t}: ${n}`).join(' · ')||'—';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Hacia tu meta · ${esc(meta)}</span>
+    <p class="muted" style="margin:0">Mezcla actual (piezas con visto bueno o publicadas): ${esc(mezclaTxt)}</p>
+    ${gap?`<p style="margin:6px 0 0"><b>${gap.tipo?'Hueco detectado: falta '+gap.tipo:'Falta evidencia'}.</b> ${esc(gap.texto)}</p>${gap.tipo?`<div class="prow" style="margin-top:6px"><button class="btn sm pri" data-act="pf-crear-gap" data-tipo="${esc(gap.tipo)}">Crear proyecto de ${esc(gap.tipo)} →</button></div>`:''}`:`<p class="ok-box" style="margin:6px 0 0">Tu mezcla actual cubre bien tu meta. Sigue sumando piezas terminadas.</p>`}</div>`}
 function vPortafolio(){
   const cs=candidatas(),col=e=>cs.filter(c=>c.pf.estado===e);
   const cand=col('candidata'),apr=col('aprobada'),pub=col('publicada');
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Portafolio</h1>
   <div class="banner" style="background:var(--accent-soft)"><b>Nada se publica solo.</b> Una pieza entra a tu portafolio únicamente si tú le das el visto bueno después de revisarla con tu asesor. Después, tú decides cuándo subir el paquete.</div>
+  ${portafolioGapHTML()}
   <p class="intro">Propón piezas desde <b>Crítica</b> (en cada proyecto) o desde <b>Mi estilo</b>.</p>
   <div class="kanban">
     <div class="kcol"><div class="colh"><b>Candidatas</b><span>${cand.length}</span></div>${cand.map(pfCard).join('')||'<div class="empty">Sin candidatas. Usa "Proponer para portafolio" en una pieza.</div>'}</div>
@@ -6787,6 +6808,7 @@ async function accion(a,el){
     case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}if(ds.k==='chat-explorar')S.chatExplorarTxt=$('#chat-txt')?.value||'';preguntar(ds.k);break;
     case 'brief-explorar':{const txt=(p?.brief.texto||'').trim();if(!txt){toast('Escribe tu idea en "El encargo" primero');return}S.chatExplorarTxt=txt;S.tab='cerebro';renderMain();preguntar('chat-explorar');break}
     case 'trat-analizar':S.tratTxt=$('#trat-txt')?.value||'';preguntar('tratamiento');break;
+    case 'pf-crear-gap':{const tipo=ds.tipo;const id=uid(),np=nuevoProyecto('Nuevo '+tipo);np.tipo=tipo;np.brief.texto=`Pieza de ${tipo} pensada para reforzar mi portafolio hacia mi meta: ${metaTexto()}.`;S.P[id]=np;S.cur=id;S.vista='proyecto';S.tab='brief';recordar();marcar();render();toast('Proyecto creado para cerrar el hueco de tu portafolio');break}
     case 'trat-de-chat':{if(!p)return;S.tratTxt=(p.chat||[]).map(m=>(m.r==='yo'?'ARTISTA: ':'DIRECTOR: ')+m.t).join('\n\n');S.tab='cerebro';renderMain();preguntar('tratamiento');break}
     case 'trat-toggle':S.tratSel=S.tratSel||{};S.tratSel[ds.k]=!(S.tratSel[ds.k]!==false);renderMain();break;
     case 'trat-cancelar':S.tratPropuesta=null;S.tratSel={};renderMain();break;
