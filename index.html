@@ -468,6 +468,8 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
+.pf-piezas{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}.pf-pz,.pf-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pf-pz .lbl,.pf-pl .lbl{min-width:84px}
+.pf-det{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pf-det summary{cursor:pointer;font-weight:600}.pf-det[open]{display:flex;flex-direction:column;gap:8px}.pf-det[open] summary{margin-bottom:2px}
 .mp-dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px;display:inline-block}
 .pf{display:flex;flex-direction:column;gap:5px;background:var(--surface2);border-radius:10px;padding:10px;min-width:0}.pf>b{font-family:var(--display);font-size:17px}
 .pf-r{display:flex;align-items:center;gap:6px;font-size:12.5px}.pf-r i{width:16px;height:16px;border-radius:4px;flex:0 0 16px}.pf-r small{color:var(--ink3)}
@@ -949,7 +951,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murlkf3d').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murlqtrk').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -5208,7 +5210,7 @@ async function accionDir(a,el,p,ds){
     case 'regla-add':{const v=ds.v;if(!v)return;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓';el.disabled=true;if(S.tab==='lenguaje')renderMain();break}
     case 'regla-add-t':{const v=$('#regla-t')?.value.trim();if(!v)return;p.lenguaje.reglas.push(v);marcar();renderMain();$('#regla-t')?.focus();break}
     case 'regla-del':p.lenguaje.reglas.splice(+ds.i,1);marcar();renderMain();break;
-    case 'pal-usar':{p.mood.paleta=paletaSugerida(p).pal.map(c=>c.hex);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada: ajústala a tu gusto');break}
+    case 'pal-usar':{const sg=paletaSugerida(p).pal;p.mood.paleta=sg.map(c=>c.hex);p.mood.paletaRoles=sg.map(c=>c.rol);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada: ajústala a tu gusto');break}
     case 'bq-obj':S.bqObj=ds.v;renderMain();break;
     case 'bq-gen-i':{const b=busquedasGen(p,S.bqObj||'Forma')[+ds.i];if(!b)return;if(!p.busquedas.some(z=>z.q===b.q))p.busquedas.push(b);marcar();el.textContent='✓ Guardada';el.disabled=true;break}
     case 'ref-set':{const r=p.refs.find(x=>x.id===ds.id);if(!r)return;r[ds.k]=r[ds.k]===ds.v?'':ds.v;if(ds.k==='tipoRef')r.clase='';marcar();renderMain();break}
@@ -6440,7 +6442,8 @@ function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
   if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
   return escColsHTML(pal.map(hex=>({hex})),E,'')}
 function escDibuja(){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
-  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
+  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
+    if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
     if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
     const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
 function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);const r=$('#esc-rev');if(r)r.innerHTML=escRevHTML(p);escDibuja()}escRefrescaPj(p)}
@@ -6541,9 +6544,69 @@ function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.
       ${v.pal.map(z=>`<div class="pf-r" title="${esc(z.uso)}"><i style="background:${z.hex}"></i><span><b>${esc(z.rol)}</b> <small>${z.pct}% · ${z.hex}</small></span></div>`).join('')}
       <span class="esc-mini">${v.pal.map(z=>`<canvas class="esc-bola esc-m" data-esck="${esc(v.escK)}" data-hex="${z.hex}" width="48" height="48" title="${esc(z.rol)} bajo ${esc(ESC_PRE[v.escK]?.n||'la escena')}"></canvas>`).join('')}</span>
       ${v.notas.map(n=>`<p class="muted" style="margin:0;font-size:12px">${esc(n)}</p>`).join('')}
-      <button class="btn sm pri" data-act="pal-func" data-i="${i}">Usar esta paleta</button></div>`).join('')}</div>
+      <div class="prow"><button class="btn sm pri" data-act="pal-func" data-i="${i}">Usar esta paleta</button><button class="btn ghost sm" data-act="pal-guardar-pieza" data-i="${i}" title="Guárdala solo para este tipo de pieza">Guardar para ${esc(PAL_TIPOS[tipo].split(' ')[0].toLowerCase())}</button></div></div>`).join('')}</div>
+    ${mapaLuzMas(p)}
     ${p.mood.paletaAnterior?.length?`<div class="prow"><span class="lbl">Paleta anterior</span><span class="pal">${p.mood.paletaAnterior.map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span><button class="btn ghost sm" data-act="pal-volver">Volver a la anterior</button></div>`:''}
     <div id="esc-rev">${escRevHTML(p)}</div></div>`}
+/* ---- 1) Paletas por pieza (key / personaje / prop del mismo mundo) ---- */
+function piezasHTML(p){const PP=p.paletasPieza||{};
+  return `<div class="pf-piezas"><b>Paletas por pieza</b><p class="hint" style="margin:0">Key, personaje y prop del mismo mundo comparten familia, pero no la misma paleta. Guarda la variante que te guste para cada uno.</p>
+    ${Object.entries(PAL_TIPOS).map(([k,n])=>{const x=PP[k];return `<div class="pf-pz"><span class="lbl">${n}</span>${x?`<div class="palbar" style="flex:1;min-width:120px">${x.pal.map(z=>`<span style="flex:${z.pct};background:${z.hex}" title="${esc(z.rol)} · ${z.pct}%"></span>`).join('')}</div><span class="muted" style="font-size:12px">${esc(x.n)}</span><button class="btn ghost sm" data-act="pal-pieza-usar" data-k="${k}">Usar en el proyecto</button><button class="btn ghost sm" data-act="pal-pieza-del" data-k="${k}" aria-label="Quitar">✕</button>`:`<span class="muted" style="flex:1">Sin guardar</span><button class="btn ghost sm" data-act="pal-pieza-auto" data-k="${k}">Generarla</button>`}</div>`}).join('')}</div>`}
+/* ---- 2) Valor por plano (perspectiva atmosférica) ---- */
+function planosValor(p){const base=paletaSugerida(p),hb=hexHsl(base.pal[1].hex),M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),v=M.V.n?M.V.v:I.V.v,sh=v<-.3?-.08:v>.3?.12:0,E=escDe(p),hl=hexHsl(E.luz)||hb,
+    def=[['Primer plano','Más oscuro, con más contraste y más saturación: se acerca al espectador.',1,[.1,.18,.28,.4,.52],hb.h],['Plano medio','Donde vive la acción: valores medios y el acento.',.85,[.22,.34,.46,.58,.7],hb.h],['Fondo','Más claro, menos saturado y casi sin contraste: perspectiva atmosférica.',.4,[.52,.58,.64,.7,.76],hb.h+(((hl.h-hb.h+540)%360)-180)*.25]],
+    cl=x=>Math.max(.04,Math.min(.96,x+sh));
+  return def.map(([n,d,s,L,h])=>({n,d,sw:L.map(l=>hslHex(h,Math.max(.05,hb.s*s),cl(l)))}))}
+/* ---- 3) Tu pieza vs tu plan: paleta real de una imagen ---- */
+async function paletaDeImagen(file){const bm=await createImageBitmap(file),W=72,H=Math.max(1,Math.round(72*bm.height/bm.width)),c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.drawImage(bm,0,0,W,H);
+  const d=g.getImageData(0,0,W,H).data,pts=[];for(let i=0;i<d.length;i+=4)if(d[i+3]>200)pts.push([d[i],d[i+1],d[i+2]]);if(!pts.length)return [];
+  const K=6,ord=[...pts].sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));let C=Array.from({length:K},(_,i)=>[...ord[Math.floor((i+.5)*ord.length/K)]]),asg=new Array(pts.length).fill(0);
+  for(let it=0;it<9;it++){const S2=C.map(()=>[0,0,0,0]);pts.forEach((q,j)=>{let b=0,bd=1e9;C.forEach((k,i)=>{const dd=(q[0]-k[0])**2+(q[1]-k[1])**2+(q[2]-k[2])**2;if(dd<bd){bd=dd;b=i}});asg[j]=b;const s=S2[b];s[0]+=q[0];s[1]+=q[1];s[2]+=q[2];s[3]++});
+    C=C.map((k,i)=>S2[i][3]?[S2[i][0]/S2[i][3],S2[i][1]/S2[i][3],S2[i][2]/S2[i][3]]:k);S2.forEach((s,i)=>C[i].n=s[3])}
+  const cnt=new Array(K).fill(0);asg.forEach(a=>cnt[a]++);
+  return C.map((k,i)=>({hex:'#'+k.map(v=>Math.round(v).toString(16).padStart(2,'0')).join(''),pct:Math.round(cnt[i]*100/pts.length)})).filter(x=>x.pct>=2).sort((a,b)=>b.pct-a.pct)}
+const rgbDist=(a,b)=>{const x=escRgbLin(a),y=escRgbLin(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2])/1.732};
+function comparaImagen(p,cl){const plan=p.mood.paleta||[],M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),mt=M.T.n?M.T.v:I.T.v,mv=M.V.n?M.V.v:I.V.v,out=[];
+  const temp=cl.reduce((s,x)=>s+escTmp(x.hex)*x.pct*(hexHsl(x.hex)?.s||0),0)/Math.max(1,cl.reduce((s,x)=>s+x.pct*(hexHsl(x.hex)?.s||0),0)),luma=cl.reduce((s,x)=>s+escLuma(x.hex)*x.pct,0)/100;
+  if(Math.abs(mt)>=.4&&Math.abs(temp)>=.3&&Math.sign(mt)!==Math.sign(temp))out.push(`✗ Tu imagen se ve ${temp>0?'cálida':'fría'} y tu mood pide ${mt>0?'calidez':'frío'}.`);else if(Math.abs(mt)>=.4)out.push(`✓ La temperatura de la imagen acompaña a tu mood.`);
+  if(Math.abs(mv)>=.4&&((mv<0&&luma>.45)||(mv>0&&luma<.3)))out.push(`✗ Tu imagen es ${luma>.45?'clara':'oscura'} (valor medio ${Math.round(luma*100)}%) y tu mood pide ${mv<0?'oscuridad':'luz'}.`);else if(Math.abs(mv)>=.4)out.push('✓ El valor medio de la imagen acompaña a tu mood.');
+  const fuerte=[...cl].sort((a,b)=>(hexHsl(b.hex)?.s||0)-(hexHsl(a.hex)?.s||0))[0];if(fuerte&&(hexHsl(fuerte.hex)?.s||0)>.5)out.push(fuerte.pct>12?`✗ El color más fuerte (${fuerte.hex}) ocupa ${fuerte.pct}%: deja de ser acento y compite con todo.`:`✓ El color más fuerte (${fuerte.hex}) ocupa ${fuerte.pct}%: funciona como acento.`);
+  if(plan.length){const sin=plan.filter(c=>!cl.some(x=>rgbDist(c,x.hex)<.2));if(sin.length)out.push(`Colores de tu plan que casi no aparecen en la imagen: ${sin.slice(0,4).join(', ')}.`);
+    const nuevos=cl.filter(x=>x.pct>=12&&!plan.some(c=>rgbDist(c,x.hex)<.2));if(nuevos.length)out.push(`Domina un color que no está en tu paleta: ${nuevos.map(x=>x.hex+' ('+x.pct+'%)').join(', ')}. ¿Lo quieres en el plan o lo corriges en la pintura?`)}
+  return out}
+/* ---- 4) Variantes de la escena (día, noche, antes y después del conflicto) ---- */
+function escVariantes(p){const E=escDe(p),mix=(a,b,t)=>{const x=escRgb(a),y=escRgb(b);return escHex(x.map((v,i)=>v*(1-t)+y[i]*t))},ch=(h,dl)=>{const x=hexHsl(h)||{h:0,s:0,l:.3};return hslHex(x.h,x.s,Math.max(.03,Math.min(.6,x.l+dl)))},pr=ESC_PRE;
+  return [{n:'Día',d:'La misma escena con luz de día, más neutra.',e:{luz:mix(E.luz,pr.neutro.luz,.6),amb:mix(E.amb,pr.neutro.amb,.5),reb:E.reb,ang:225,el:50,int:1.1}},
+    {n:'Noche',d:'Luz fría y baja: las sombras casi se cierran.',e:{luz:mix(E.luz,pr.luna.luz,.7),amb:mix(E.amb,pr.luna.amb,.6),reb:mix(E.reb,pr.luna.reb,.5),ang:E.ang,el:55,int:.65}},
+    {n:'Antes del conflicto',d:'Calma: sombras suaves, poco contraste, luz alta.',e:{luz:E.luz,amb:ch(E.amb,.1),reb:E.reb,ang:E.ang,el:Math.max(40,E.el),int:Math.max(.7,Math.min(1,(E.int||1)*.9))}},
+    {n:'Después del conflicto',d:'Consecuencia: más contraste, luz más baja y rebote cálido.',e:{luz:E.luz,amb:ch(E.amb,-.06),reb:mix(E.reb,'#8a2a10',.4),ang:E.ang,el:Math.min(25,E.el),int:Math.min(1.5,(E.int||1)*1.25)}}]}
+const escStr=e=>[e.luz,e.amb,e.reb,e.ang,e.el,e.int].join('|');
+/* ---- 5) Daltonismo y escala de grises ---- */
+const CVD={protan:['Protanopía',[[.152286,1.052583,-.204868],[.114503,.786281,.099216],[-.003882,-.048116,1.051998]]],deutan:['Deuteranopía',[[.367322,.860646,-.227968],[.280085,.672501,.047413],[-.01182,.04294,.968881]]],tritan:['Tritanopía',[[1.255528,-.076749,-.178779],[-.078411,.930809,.147602],[.004733,.691367,.3039]]]};
+function simCVD(hex,k){if(k==='gris'){const g=Math.round(lumaHex(hex)*255).toString(16).padStart(2,'0');return '#'+g+g+g}
+  const c=escRgb(hex),M=CVD[k][1];return escHex(M.map(r=>Math.max(0,Math.min(1,r[0]*c[0]+r[1]*c[1]+r[2]*c[2]))))}
+function notasCVD(pal){const out=[];for(const k of Object.keys(CVD)){const L=[];for(let i=0;i<pal.length;i++)for(let j=i+1;j<pal.length;j++)if(rgbDist(pal[i],pal[j])>.22&&rgbDist(simCVD(pal[i],k),simCVD(pal[j],k))<.09)L.push(`${pal[i]} y ${pal[j]}`);
+    if(L.length)out.push(`En ${CVD[k][0].toLowerCase()} se confunden ${L.slice(0,2).join(' y ')}: separa su valor (uno más claro que el otro) para que no dependan solo del tono.`)}
+  const gl=[];for(let i=0;i<pal.length;i++)for(let j=i+1;j<pal.length;j++)if(Math.abs(escLuma(pal[i])-escLuma(pal[j]))<.04&&rgbDist(pal[i],pal[j])>.22)gl.push(`${pal[i]} y ${pal[j]}`);
+  if(gl.length)out.push(`En escala de grises se vuelven iguales ${gl.slice(0,2).join(' y ')}: un diseño que se lee por valor las confundiría.`);return out}
+/* ---- 6) Exportar la paleta con sus roles ---- */
+const palItems=p=>{const R=p.mood.paletaRoles||[];return (p.mood.paleta||[]).map((hex,i)=>({hex,rol:R[i]||hex}))};
+function mapaLuzMas(p){const ab=k=>S.palAb?.[k]?'open':'',pal=(p.mood.paleta||[]).slice(0,8),tipo=palTipo(p),pl=planosValor(p),V=p.escena?escVariantes(p):null,
+    notas=pal.length>1?notasCVD(pal):[],im=S.palImg;
+  return `${piezasHTML(p)}
+    ${tipo==='key'?`<details class="pf-det" data-det="planos" ${ab('planos')}><summary>Valor por plano (primer plano, medio y fondo)</summary><p class="hint">Para keyframes: lo cercano más oscuro y saturado, lo lejano más claro y gris. Con tu hue y tu clave de valor.</p>
+      ${pl.map(x=>`<div class="pf-pl"><span class="lbl">${x.n}</span><div class="palbar" style="flex:1">${x.sw.map(h=>`<span style="flex:1;background:${h}" title="${h}"></span>`).join('')}</div><button class="btn ghost sm" data-act="copiar-txt" data-v="${x.sw.join(' ')}" title="Copiar colores">Copiar</button></div><p class="hint" style="margin:0">${esc(x.d)}</p>`).join('')}</details>`:''}
+    <details class="pf-det" data-det="variantes" ${ab('variantes')}><summary>Variantes de la escena (día, noche, antes y después del conflicto)</summary>
+      ${V?`<div class="grid2">${V.map((v,i)=>`<div class="pf"><b>${v.n}</b><p class="hint" style="margin:0">${esc(v.d)}</p><span class="esc-mini">${pal.slice(0,5).map(h=>`<canvas class="esc-bola esc-m" data-esce="${esc(escStr(v.e))}" data-hex="${h}" width="48" height="48"></canvas>`).join('')}</span>
+        <div class="prow"><button class="btn sm" data-act="esc-var-usar" data-i="${i}">Usar esta escena</button><button class="btn ghost sm" data-act="esc-var-guardar" data-i="${i}">Guardar</button></div></div>`).join('')}</div>`:'<p class="muted">Elige primero una escena de luz (arriba) y se generan las variantes a partir de ella.</p>'}</details>
+    <details class="pf-det" data-det="cvd" ${ab('cvd')}><summary>Cómo la ven otros (daltonismo y escala de grises)</summary>
+      ${pal.length?[['Normal',null],['Protanopía','protan'],['Deuteranopía','deutan'],['Tritanopía','tritan'],['Grises','gris']].map(([n,k])=>`<div class="pf-pl"><span class="lbl">${n}</span><div class="palbar" style="flex:1">${pal.map(h=>`<span style="flex:1;background:${k?simCVD(h,k):h}"></span>`).join('')}</div></div>`).join(''):'<p class="muted">Define tu paleta primero.</p>'}
+      ${notas.length?`<ul class="why-l">${notas.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:pal.length>1?'<p class="muted" style="margin:0">✓ Ningún par de colores se confunde en daltonismo ni en grises.</p>':''}</details>
+    <details class="pf-det" data-det="imagen" ${ab('imagen')}><summary>Tu pieza vs tu plan (sube una imagen)</summary><p class="hint">Sube tu boceto o pintura: saco sus colores reales y los comparo con tu mood y tu paleta. La imagen no se guarda.</p>
+      <input type="file" id="pf-img" accept="image/*">
+      ${im?`<div class="palbar" style="min-height:26px">${im.cl.map(x=>`<span style="flex:${x.pct};background:${x.hex}" title="${x.hex} · ${x.pct}%"></span>`).join('')}</div><ul class="why-l">${im.msgs.map(m=>`<li>${esc(m)}</li>`).join('')}</ul><div class="prow"><button class="btn sm" data-act="pal-img-usar">Usar estos colores como paleta</button></div>`:''}</details>
+    <details class="pf-det" data-det="export" ${ab('export')}><summary>Exportar la paleta</summary><p class="hint">Con los nombres de rol de cada color. Photoshop: .ase o .aco · Procreate: .swatches · Krita y GIMP: .gpl.</p>
+      <div class="prow">${[['ase','.ase'],['aco','.aco'],['swatches','.swatches'],['gpl','.gpl']].map(([f,n])=>`<button class="btn sm" data-act="pal-exp" data-f="${f}">${n}</button>`).join('')}${Object.keys(p.paletasPieza||{}).length?'<button class="btn sm" data-act="pal-exp" data-f="piezas">Todas las piezas (.ase)</button>':''}</div></details>`}
 /* dibujo para el PNG del tablero: esfera + rampa por color */
 function escDibujaBloque(x,items,E,x0,y0,tam,dry){const sw=26,cw=tam+10;
   if(!dry)items.forEach((it,i)=>{const b=document.createElement('canvas');b.width=b.height=tam;escBola(b,it.hex,E);x.drawImage(b,x0+i*cw,y0);escRampa(it.hex,E).forEach((r,j)=>{x.fillStyle=r.hex;x.fillRect(x0+i*cw,y0+tam+8+j*sw,tam,sw-3)})});
@@ -6618,7 +6681,8 @@ function tableroHTML(p){const C=tabColumnas(p),A=tableroAudit(p),ok=A.filter(a=>
     <ul class="tp-audit">${A.map(a=>`<li class="${a.ok?'ok':'no'}"><i>${a.ok?'✓':'✗'}</i><div><b>${esc(a.t)}</b><small>${esc(a.det)}</small>${!a.ok&&a.acts.length?`<div class="prow">${a.acts.map(b).join('')}</div>`:''}</div></li>`).join('')}</ul>
     <details ${p.refs.length?'open':''}><summary class="lbl">Vista previa del tablero</summary>
     <div class="tp-prev"><div class="tp-head"><b>${esc(p.nombre)}</b>${p.concepto.frase?`<span>${esc(p.concepto.frase)}</span>`:''}<div class="chips">${p.pilares.filter(x=>x.t).map(x=>`<span class="chip">${esc(x.t)}</span>`).join('')}</div><span class="pal">${(p.mood.paleta||[]).map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span>
-      ${p.escena&&(p.mood.paleta||[]).length?`<span class="lbl">Luz y color · ${esc(escNombre(p,escDe(p)))}</span>${escMiniHTML((p.mood.paleta||[]).slice(0,6).map(hex=>({hex})))}`:''}</div>
+      ${p.escena&&(p.mood.paleta||[]).length?`<span class="lbl">Luz y color · ${esc(escNombre(p,escDe(p)))}</span>${escMiniHTML((p.mood.paleta||[]).slice(0,6).map(hex=>({hex})))}`:''}
+      ${Object.keys(PAL_TIPOS).filter(k=>p.paletasPieza?.[k]).map(k=>`<span class="lbl">${PAL_TIPOS[k]}</span><span class="pal">${p.paletasPieza[k].pal.map(z=>`<i style="background:${z.hex}" title="${esc(z.rol)}"></i>`).join('')}</span>`).join('')}</div>
     <div class="tp-cols">${cols.map(x=>`<div class="tp-col" style="--tc:${tpColor(x.g.k)}"><div class="tp-ch"><b>${esc(x.g.n)}</b><span>${x.refs.length}</span></div>
       ${x.g.c?`<div class="pj-bar">${pjPaleta(p,x.g.c).pal.map(z=>`<i style="background:${z.hex};flex:${z.pct}"></i>`).join('')}</div>${p.escena||x.g.c.luzEsc?escMiniHTML(pjItems(p,x.g.c),x.g.c.id):''}`:''}
       ${x.g.k==='luz'?(p.luces||[]).map(l=>`<div class="tp-luz"><b>${esc(l.n||'Luz')}</b><small>${esc([l.fuente,l.temp,l.dir].filter(Boolean).join(' · '))}</small></div>`).join(''):''}
@@ -6652,6 +6716,9 @@ async function tableroPNG(p,soloHeader){
     y+=(mp.length||pj.length)?230:0;
     if(p.escena&&mp.length){const E=escDe(p);if(!dry){x.font=`500 24px ${MONO}`;x.fillStyle=INK3;x.fillText('LUZ Y COLOR · '+escNombre(p,E).toUpperCase(),PAD,y);[E.luz,E.amb,E.reb].forEach((c,i)=>{x.fillStyle=c;x.fillRect(PAD+900+i*60,y-6,48,40)})}
       y+=44;y+=escDibujaBloque(x,mp.slice(0,6).map(hex=>({hex})),E,PAD,y,150,dry)+50}
+    {const PP=p.paletasPieza||{},kk=Object.keys(PAL_TIPOS).filter(k=>PP[k]);
+      if(kk.length){if(!dry){x.font=`500 24px ${MONO}`;x.fillStyle=INK3;x.fillText('PALETAS POR PIEZA',PAD,y)}y+=36;
+        kk.forEach(k=>{if(!dry){x.font=`500 22px ${MONO}`;x.fillStyle=INK3;x.fillText(PAL_TIPOS[k].toUpperCase(),PAD,y+54);let xx=PAD+330;PP[k].pal.forEach(z=>{const w=z.pct*8+40;x.fillStyle=z.hex;x.fillRect(xx,y,w,90);xx+=w+6})}y+=110});y+=30}}
     if(!dry){x.fillStyle='#262a33';x.fillRect(PAD,y,cw,3)}
     return y+GAP}
   function etiqueta(x,txt,ix,iy,iw,ih,dry){if(!txt||dry)return;x.font=`600 24px ${BODY}`;const ls=envolver(x,txt,iw-28).slice(0,2),h=ls.length*30+18;
@@ -6750,9 +6817,25 @@ async function accionTp(a,el,p,ds){
     case 'esc-guardar':{const E=escDe(p);p.escenas=p.escenas||[];const n=(ESC_PRE[E.k]?.n||'Escena')+' '+(p.escenas.length+1);p.escenas.push({id:uid(),n,luz:E.luz,amb:E.amb,reb:E.reb,ang:E.ang,el:E.el,int:E.int});marcar();renderMain();toast('Escena guardada');break}
     case 'esc-cargar':{const s=(p.escenas||[]).find(x=>x.id===ds.id);if(s){p.escena={k:'',luz:s.luz,amb:s.amb,reb:s.reb,ang:s.ang,el:s.el,int:s.int};marcar();renderMain()}break}
     case 'esc-del':p.escenas=(p.escenas||[]).filter(x=>x.id!==ds.id);marcar();renderMain();break;
-    case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
+    case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaRoles=escRampa(c,escDe(p)).map(r=>r.n);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
     case 'pal-tipo':S.palTipo=ds.k;renderMain();break;
+    case 'pal-guardar-pieza':{const tp=palTipo(p),P=paletaFunc(p,tp)[+ds.i];if(!P)return;p.paletasPieza=p.paletasPieza||{};p.paletasPieza[tp]={n:P.n,pal:P.pal,escK:P.escK};marcar();renderMain();toast(`Guardada como paleta de ${PAL_TIPOS[tp].toLowerCase()}`);break}
+    case 'pal-pieza-auto':{const P=paletaFunc(p,ds.k)[0];p.paletasPieza=p.paletasPieza||{};p.paletasPieza[ds.k]={n:P.n,pal:P.pal,escK:P.escK};marcar();renderMain();break}
+    case 'pal-pieza-del':if(p.paletasPieza){delete p.paletasPieza[ds.k];marcar();renderMain()}break;
+    case 'pal-pieza-usar':{const x=p.paletasPieza?.[ds.k];if(!x)return;p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=x.pal.map(z=>z.hex).slice(0,8);p.mood.paletaRoles=x.pal.map(z=>z.rol);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada al proyecto (la anterior queda guardada)');break}
+    case 'esc-var-usar':{const v=escVariantes(p)[+ds.i];if(!v)return;Object.assign(escMut(p),v.e,{k:''});marcar();renderMain();toast(`Escena «${v.n}» aplicada`);break}
+    case 'esc-var-guardar':{const v=escVariantes(p)[+ds.i];if(!v)return;p.escenas=p.escenas||[];p.escenas.push({id:uid(),n:v.n+' · '+(ESC_PRE[p.escena?.k]?.n||'mi escena'),...v.e});marcar();renderMain();toast('Escena guardada en «Mis escenas»');break}
+    case 'pal-img-usar':{const im=S.palImg;if(!im?.cl?.length)return;p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=im.cl.slice(0,6).map(x=>x.hex);p.mood.paletaRoles=null;p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta tomada de tu imagen (la anterior queda guardada)');break}
+    case 'copiar-txt':copiarTexto(ds.v,'Colores copiados');break;
+    case 'pal-exp':{const it=palItems(p);if(!it.length){toast('Define tu paleta primero');return}const nom=slug(p.nombre,40);
+      if(ds.f==='ase')bajarBlob(nom+'-paleta.ase',escASE([{n:p.nombre,cols:it.map(x=>({n:x.rol,hex:x.hex}))}]));
+      else if(ds.f==='aco')bajarBlob(nom+'-paleta.aco',acoBlob(it));
+      else if(ds.f==='swatches')procreateBlob(p.nombre,it).then(b=>bajarBlob(nom+'-paleta.swatches',b)).catch(()=>toast('No se pudo crear el archivo'));
+      else if(ds.f==='gpl')descargar(nom+'-paleta.gpl',`GIMP Palette\nName: ${p.nombre}\nColumns: 0\n#\n`+it.map(x=>{const r=escRgbLin(x.hex).map(v=>String(Math.round(v*255)).padStart(3));return `${r.join(' ')} ${x.rol}`}).join('\n'),'text/plain');
+      else if(ds.f==='piezas'){const PP=p.paletasPieza||{};bajarBlob(nom+'-paletas-por-pieza.ase',escASE([{n:'Proyecto',cols:it.map(x=>({n:x.rol,hex:x.hex}))},...Object.keys(PP).map(k=>({n:PAL_TIPOS[k],cols:PP[k].pal.map(z=>({n:z.rol,hex:z.hex}))}))]))}
+      break}
     case 'pal-func':{const tp=palTipo(p),P=paletaFunc(p,tp)[+ds.i];if(!P)return;p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=P.pal.map(z=>z.hex).slice(0,8);p.mood.paletaPropia=true;
+      p.mood.paletaRoles=P.pal.map(z=>z.rol);
       if(!p.escena&&ESC_PRE[P.escK]){Object.assign(escMut(p),ESC_PRE[P.escK],{k:P.escK,int:1});delete p.escena.n}
       nuevaDecision(p,`Paleta funcional: ${P.n} (${PAL_TIPOS[tp]})`,P.d,['Mood','Color'],'luz','En prueba');marcar();renderMain();toast('Paleta aplicada a todo el proyecto (la anterior queda guardada)');break}
     case 'pal-volver':{if(!p.mood.paletaAnterior?.length)return;const a=p.mood.paleta;p.mood.paleta=p.mood.paletaAnterior;p.mood.paletaAnterior=a;marcar();renderMain();toast('Paleta intercambiada');break}
@@ -6972,7 +7055,10 @@ document.addEventListener('input',e=>{
     r.tema=t.value;marcarPid(pid);return}
   if(t.dataset.aj){setPath(S.ajustes,t.dataset.aj,t.type==='checkbox'?t.checked:t.value);marcarAj();if(t.type==='checkbox'||(t.tagName==='SELECT'&&t.dataset.aj.startsWith('galeria.')))renderMain();if(t.dataset.aj.startsWith('cot.')){const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(cotDraft(),cotCalc(S.cot),cotBase())}}
 });
+document.addEventListener('toggle',e=>{const d=e.target;if(d?.dataset?.det){S.palAb=S.palAb||{};S.palAb[d.dataset.det]=d.open}},true);
 document.addEventListener('change',e=>{
+  if(e.target.id==='pf-img'){const f=e.target.files?.[0],p=S.P[S.cur];if(!f||!p)return;
+    paletaDeImagen(f).then(cl=>{S.palImg={cl,msgs:comparaImagen(p,cl)};const lz=$('#mp-luzcolor');if(lz){lz.outerHTML=mapaLuzHTML(p);escDibuja()}}).catch(()=>toast('No pude leer esa imagen'));return}
   if(e.target.dataset?.bref&&S.vista==='biblioteca'){const g=$('#bibgrid');if(g){g.innerHTML=bibGrid();S.assets?.hydrate?.()}return}
   if(e.target.dataset?.pjc){const p=S.P[S.cur];if(p)pjRefresca(p,e.target.dataset.pjc.split('.')[0]);return}
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
