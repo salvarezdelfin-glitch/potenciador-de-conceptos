@@ -462,6 +462,24 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .cerebro{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
 .c-main,.c-side{display:flex;flex-direction:column;gap:16px;min-width:0}
 @media (max-width:1100px){.cerebro{grid-template-columns:minmax(0,1fr)}}
+.mp-wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.75fr) minmax(0,1fr);gap:34px;align-items:center;margin:6px 0 18px}
+.mp-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.mp-svg path{fill:none;stroke-width:1.5}.mp-svg path.l{stroke:var(--line2)}.mp-svg path.x{stroke:var(--warn);stroke-width:2;stroke-dasharray:6 5}
+.mp-col{display:flex;flex-direction:column;gap:20px;position:relative;z-index:1;min-width:0}
+.mp-mid{position:relative;z-index:2}
+.mp-c{background:var(--surface2);border:1px solid var(--accent);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.mp-hilo{margin:0;font-family:var(--display);font-size:19px;line-height:1.25;color:var(--ink)}
+.mp-n{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.mp-n.vac{border-style:dashed}.mp-n.cf{border-color:var(--warn)}
+.mp-h{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:700;font-size:16px}.mp-h .btn{margin-left:auto}
+.mp-num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:12px}
+.mp-f{display:flex;flex-direction:column;gap:2px}.mp-f label,.mp-c label{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.mp-n input[type=text],.mp-n textarea{width:100%;box-sizing:border-box;font-size:14px}
+.mp-tz{display:flex;align-items:center;gap:6px}.mp-tz input{flex:1;min-width:0}
+.mp-nota{margin:0;font-size:12px;color:var(--ink3)}.mp-nota.warn{color:var(--warn)}.mp-nota.gen{color:#e5b04a}
+.mp-cfi{display:flex;flex-direction:column;gap:4px;border-left:3px solid var(--warn);padding-left:10px}
+.mp-idea{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px}.mp-idea p{margin:0;font-size:14px}
+@media(max-width:860px){.mp-wrap{grid-template-columns:minmax(0,1fr);gap:16px}.mp-svg{display:none}.mp-mid{order:-1}}
 .dna{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:2px}
 .dna-h{display:flex;flex-direction:column;padding:2px 4px 8px}.dna-h b{font-family:var(--display);font-size:22px;line-height:1.1}
 .dna-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:start;border-top:1px solid var(--line)}
@@ -919,12 +937,12 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq9y68n').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murb53dx').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
-  ['cerebro','Cerebro'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
+  ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
   ['refs','Referencias'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
@@ -1292,7 +1310,7 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -1360,7 +1378,7 @@ function renderMainInner(){
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`${TAB_SEP.has(k)?'<span class="tab-sep" aria-hidden="true"></span>':''}<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({cerebro:vCerebro,mapa:vMapa,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -5051,6 +5069,9 @@ async function accionDir(a,el,p,ds){
       x.hecho=true;marcar();renderMain();toast(x.tipo==='undo-dec'?'Deshecho':'Guardado');break}
     case 'audit-save':{const D=DX(p);p.criticas.push({tipo:'Auditoría',ts:Date.now(),r:{Conflictos:D.conflictos.map(c=>c.t+' → '+c.fix),Vacíos:D.vacios.map(v=>v.n+': '+v.q),Genéricos:D.genericos,Fortalezas:D.fortalezas,Oportunidades:D.oportunidades,Preguntas:D.preguntas.map(q=>q.t)}});marcar();toast('Auditoría guardada en Crítica → historial');break}
     case 'preg-add':{const v=$('#preg-t')?.value.trim();if(!v)return;p.preguntas.push({id:uid(),t:v,ts:Date.now()});marcar();renderMain();$('#preg-t')?.focus();break}
+    case 'mapa-otras':S.mapaRot=(S.mapaRot||0)+1;renderMain();break;
+    case 'mapa-preg':{if(!ds.v)return;p.preguntas.push({id:uid(),t:ds.v,ts:Date.now()});marcar();el.textContent='✓ Guardada';el.disabled=true;toast('Guardada en Preguntas abiertas (Cerebro)');break}
+    case 'mapa-pensar':{if(!S.sample||!ds.v)return;S.chatExplorarTxt='Del mapa del proyecto, esta pregunta: '+ds.v;S.tab='cerebro';renderMain();preguntar('chat-explorar');break}
     case 'preg-ok':{const q=p.preguntas.find(x=>x.id===ds.id);if(q){q.ok=!q.ok;marcar();renderMain()}break}
     case 'preg-del':p.preguntas=p.preguntas.filter(x=>x.id!==ds.id);marcar();renderMain();break;
     case 'evitar-add':{const v=$('#evitar-t')?.value.trim();if(!v)return;v.split(',').map(x=>x.trim()).filter(Boolean).forEach(x=>{if(!p.evitar.includes(x))p.evitar.push(x)});marcar();renderMain();$('#evitar-t')?.focus();break}
@@ -5955,6 +5976,101 @@ function dnaHTML(p){const F=dnaFilas(p);
 async function copiarTexto(txt,msg){try{await navigator.clipboard.writeText(txt);toast(msg||'Copiado')}catch{
   try{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();toast(msg||'Copiado')}catch{toast('No se pudo copiar')}}}
 
+/* ============ Mapa mental del proyecto: el ADN como red. Cada nodo es el campo real (data-b), no una copia ============ */
+const MP_NOM={idea:'Idea',funcion:'Función',intencion:'Intención',tension:'Tensión',personajes:'Personajes',mood:'Mood',lenguaje:'Lenguaje visual',mundo:'Mundo y límites'};
+const MP_TAB={idea:'concepto',funcion:'concepto',intencion:'ad',tension:'tension',personajes:'personajes',mood:'mood',lenguaje:'lenguaje',mundo:'refs'};
+function mpNodoDe(txt){const t=nz(txt);
+  if(/pilar|frase (central )?de a|\bad\b|intencion/.test(t))return 'intencion';
+  if(/funcion/.test(t))return 'funcion';
+  if(/que estas dise|que es\b|\btema\b/.test(t))return 'idea';
+  if(/tension|↔/.test(t))return 'tension';
+  if(/mood|emocion|3 palabras/.test(t))return 'mood';
+  if(/formas|silueta|material|color|luz|composicion|paleta/.test(t))return 'lenguaje';
+  return 'mundo'}
+function mapaCalc(p){const D=DX(p);
+  const par={iv:['intencion','lenguaje'],mv:['mood','lenguaje'],pal:['mood','lenguaje']};
+  const cruces=D.conflictos.map((c,i)=>({i,a:(par[c.tipo]||par.pal)[0],b:(par[c.tipo]||par.pal)[1]}));
+  const notas={};const add=(id,cls,t)=>{(notas[id]=notas[id]||[]).push({cls,t})};
+  cruces.forEach(x=>{add(x.a,'warn',`Choca con ${MP_NOM[x.b]}`);add(x.b,'warn',`Choca con ${MP_NOM[x.a]}`)});
+  D.vacios.forEach(v=>{const id=mpNodoDe(v.n);if((notas[id]||[]).filter(n=>n.cls==='vac').length<1)add(id,'vac',`Falta: ${v.n.toLowerCase()}`)});
+  D.genericos.slice(0,6).forEach(g=>add(mpNodoDe(g.split(':')[0]),'gen',corto(g,110)));
+  const q=p.que||{},T=(p.tensiones||[]).filter(x=>x.a&&x.b),mw=tresMood(p).filter(Boolean),qq=queDe(p);
+  const hilo=qq?[cap(qq),q.tema?`habla de ${q.tema}`:'',q.funcion?`existe para ${corto(q.funcion,90).replace(/[.…]+$/,'')}`:'',T.length?`su choque es ${T.map(x=>`${x.a} ↔ ${x.b}`).join(' y ')}`:'',mw.length?`debe sentirse ${lista3(mw)}`:''].filter(Boolean).join(' · ')+'.':'Empieza por el nodo 1: ¿qué estás diseñando?';
+  return {D,cruces,notas,hilo}}
+function mapaIdeas(p,D){const o=[],q=p.que||{},T=(p.tensiones||[]).filter(x=>x.a&&x.b),pil=p.pilares.filter(x=>x.t.trim()),pj=(p.personajes||[]).filter(c=>c.nombre),mw=tresMood(p).filter(Boolean);
+  const add=(nodo,t)=>o.push({nodo,t}),tema=(q.tema||'').trim(),rot=S.mapaRot||0;
+  if(tema&&pil.length&&!pil.some(x=>nz([x.t,x.f,x.como].join(' ')).includes(nz(tema.split(/[,;y]/)[0].trim()))))add('intencion',`Tu tema es «${tema}», pero ningún pilar lo nombra. ¿Cuál de tus pilares es la forma visible de ese tema? Si ninguno, ¿falta un pilar o sobra el tema?`);
+  const cubre=s=>pj.some(c=>pjLadoVis(p,c).some(y=>nz(y.lado)===nz(s)));
+  T.forEach(x=>{
+    if(pj.length)[x.a,x.b].forEach(s=>{if(!cubre(s))add('personajes',`«${s}» es un lado de tu tensión y ningún personaje lo encarna. ¿Quién lo carga? ¿O lo carga el mundo mismo?`)});
+    add('tension',`¿Qué pierde «${x.a}» para que «${x.b}» exista, y al revés? Lo que se pierde casi siempre es lo más dramático de la pieza.`);
+    add('tension',`Invierte quién domina entre «${x.a}» y «${x.b}». Si la historia sigue funcionando, el conflicto es decorativo; si se rompe, encontraste lo que de verdad importa.`);
+    if(mw.length)add('mood',`Tu mood dice «${mw[0]}»: ¿viene de «${x.a}» o de «${x.b}»? Si viene de uno solo, el otro lado todavía no se siente.`)});
+  if(T.length&&pj.length>1)add('personajes',`¿Entre cuáles de tus ${pj.length} personajes ocurre el choque «${T[0].a}» ↔ «${T[0].b}»? Ese par es el corazón de la pieza.`);
+  pil.forEach(x=>add('intencion',`Pilar «${x.t}»: ¿qué personaje o lugar lo prueba con una acción, no con un adjetivo?`));
+  if(q.funcion&&(p.forma?.silueta||'').trim())add('lenguaje',`Si la función es «${corto(q.funcion,70)}», ¿qué parte de la silueta cambia si la quitas? Lo que no cambia es adorno.`);
+  if(tema)add('idea',`¿Cuál sería el tema contrario a «${tema}»? Cuenta el mismo mundo desde ahí: ¿qué ves que antes no veías?`);
+  (p.concepto.nucleos||[]).filter(Boolean).forEach(n=>add('idea',`Núcleo «${n}»: ¿en qué escena concreta se ve, sin que nadie lo explique?`));
+  add('tension',PROVOCACIONES[rot%PROVOCACIONES.length]);
+  D.oportunidades.forEach(t=>add(mpNodoDe(t),t));
+  if(!(p.evitar||[]).length)add('mundo','Nombra tres cosas que NO quieres. Lo que rechazas define el estilo tanto como lo que eliges.');
+  if(o.length<4)[['idea','¿Qué quieres que sienta alguien que ve la pieza durante tres segundos, sin leer nada?'],['funcion','¿Qué cambiaría en el diseño si el elemento tuviera que sobrevivir un año en su mundo?'],['tension','¿Qué dos cosas que amas no pueden convivir en este diseño?']].forEach(([n,t])=>add(n,t));
+  const cnt={};o.forEach((x,i)=>{x.k=(cnt[x.nodo]=(cnt[x.nodo]||0)+1)*100+i});o.sort((a,b)=>a.k-b.k);
+  const ini=(rot*5)%o.length;return [...o.slice(ini),...o.slice(0,ini)].slice(0,5)}
+function mapaPanelHTML(p,M){const D=M.D,I=mapaIdeas(p,D);
+  return `<div class="grid2" style="align-items:start">
+    <div class="box"><h3>Contradicciones <span class="lbl">${D.conflictos.length}</span></h3>
+      ${D.conflictos.length?D.conflictos.map((c,i)=>`<div class="mp-cfi" id="mp-cf-${i}"><span class="lbl">${MP_NOM[M.cruces[i].a]} ↔ ${MP_NOM[M.cruces[i].b]}</span>${conflHTML(p,c)}</div>`).join(''):'<p class="muted" style="margin:0">Ninguna: lo que piensas y lo que dibujas hablan el mismo idioma.</p>'}
+      ${D.fortalezas.length?`<p class="hint" style="margin:0"><b>Lo que ya funciona:</b> ${esc(corto(D.fortalezas[0],170))}</p>`:''}</div>
+    <div class="box"><div class="prow" style="justify-content:space-between"><h3>Para pensar</h3><button class="btn ghost sm" data-act="mapa-otras" title="Otras preguntas, siempre sobre lo que ya escribiste">Otras ideas</button></div>
+      <p class="hint">Preguntas que salen de cruzar tus propios nodos. Ninguna decide por ti: respóndelas en el mapa.</p>
+      ${I.map(x=>`<div class="mp-idea"><span class="lbl">${MP_NOM[x.nodo]}</span><p>${esc(x.t)}</p><div class="prow"><button class="btn ghost sm" data-act="mapa-preg" data-v="${esc(x.t)}">Guardar como pregunta abierta</button>${S.sample?`<button class="btn ghost sm" data-act="mapa-pensar" data-v="${esc(x.t)}">Pensarla con Claude</button>`:''}</div></div>`).join('')}</div></div>`}
+function mapaNodoHTML(p,id,n,M){
+  const q=p.que||{},l=p.lenguaje||{},F=(lb,h)=>`<div class="mp-f"><label>${lb}</label>${h}</div>`,T=p.tensiones||[],pj=p.personajes||[],pl=p.pilares||[];
+  const B={
+    idea:F('Qué es',inp('que.que',q.que,'Una criatura marina que vive sola…'))+F('Tema',inp('que.tema',q.tema,'poder, pérdida, fe…')),
+    funcion:F('Para qué existe en su mundo',tx('que.funcion',q.funcion,'Protege la entrada de un templo…','x-que-funcion',58)),
+    intencion:F('Frase de Art Direction',tx('ad',p.ad,'Qué quieres que entiendan y sientan','x-ad',52))+[0,1,2].map(i=>F('Pilar '+(i+1),inp(`pilares.${i}.t`,pl[i]?.t,'Una intención, no un objeto'))).join(''),
+    tension:T.length?T.map((t,i)=>`<div class="mp-tz"><input type="text" data-b="tensiones.${i}.a" value="${esc(t.a)}" placeholder="Idea A" aria-label="Lado A"><span>↔</span><input type="text" data-b="tensiones.${i}.b" value="${esc(t.b)}" placeholder="Idea B" aria-label="Lado B"></div>${inp(`tensiones.${i}.como`,t.como,'Cómo se ve este choque')}`).join('')+'<button class="btn ghost sm" data-act="tens-add">＋ Otra tensión</button>':'<p class="muted" style="margin:0">Sin conflicto, el diseño no tiene nada que contar.</p><button class="btn sm" data-act="tens-add">＋ Definir una tensión</button>',
+    personajes:pj.length?pj.map(c=>`<div class="mp-tz"><input type="text" data-pj="${c.id}.nombre" value="${esc(c.nombre)}" placeholder="Nombre" aria-label="Nombre"><span class="lbl">${esc(c.rol||'')}</span></div><input type="text" data-pj="${c.id}.lado" value="${esc(c.lado||'')}" placeholder="Qué lado de la tensión encarna" aria-label="Lado">`).join(''):'<p class="muted" style="margin:0">Aún sin personajes.</p>',
+    mood:`<div class="grid3" style="gap:6px">${[0,1,2].map(i=>`<input type="text" data-b="mood.tres.${i}" value="${esc((p.mood.tres||[])[i]||'')}" placeholder="palabra ${i+1}" aria-label="Palabra de mood ${i+1}">`).join('')}</div>`+F('Emoción',tx('mood.emocion',p.mood.emocion,'Qué siente quien la ve','x-mood-emocion',46))+((p.mood.paleta||[]).length?`<span class="pal">${p.mood.paleta.map(c=>`<i style="background:${esc(c)}" title="${esc(c)}"></i>`).join('')}</span>`:''),
+    lenguaje:F('Silueta',inp('forma.silueta',p.forma?.silueta,'Reconocible en negro a 5 cm'))+`<div class="grid2" style="gap:6px">${F('Color dominante',inp('lenguaje.colorDom',l.colorDom,'obsidiana'))}${F('Acento',inp('lenguaje.colorAcento',l.colorAcento,'rojo'))}</div>`+((l.formas||[]).length||(p.materiales||[]).length?`<p class="hint" style="margin:0">${[(l.formas||[]).length?'Formas: '+l.formas.join(', '):'',(p.materiales||[]).length?'Materiales: '+p.materiales.join(', '):''].filter(Boolean).map(esc).join(' · ')}</p>`:''),
+    mundo:`<div class="chips">${(p.evitar||[]).map((e,i)=>`<span class="chip">✕ ${esc(e)}<button data-act="evitar-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')||'<span class="muted">Nada que evitar definido</span>'}</div><p class="hint" style="margin:0">${(p.refs||[]).length} referencias · ${(p.decisiones||[]).length} decisiones · ${(p.preguntas||[]).filter(x=>!x.ok).length} preguntas abiertas</p>${(p.decisiones||[])[0]?`<p class="hint" style="margin:0">Última decisión: <b>${esc(corto(p.decisiones[0].t,70))}</b></p>`:''}`}[id];
+  const nt=(M.notas[id]||[]).map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
+  return `<div class="mp-n ${M.notas[id]?.some(x=>x.cls==='warn')?'cf':''} ${M.notas[id]?.some(x=>x.cls==='vac')?'vac':''}" id="mp-${id}"><div class="mp-h"><b class="mp-num">${n}</b><span>${MP_NOM[id]}</span><button class="btn ghost sm" data-act="tab" data-tab="${MP_TAB[id]}" title="Abrir su pestaña completa" aria-label="Abrir ${MP_NOM[id]}">↗</button></div>${B}<div data-mpnota="${id}">${nt}</div></div>`}
+function vMapa(p){
+  if(!(p.mood.tres||[]).some(Boolean)){const m=tresMood(p);if(m.length)p.mood.tres=[m[0]||'',m[1]||'',m[2]||'']}
+  const M=mapaCalc(p),ids=['idea','funcion','intencion','tension','personajes','mood','lenguaje','mundo'];S.mapaCruces=M.cruces;
+  const nd=i=>mapaNodoHTML(p,ids[i],i+1,M);
+  return `<p class="intro"><b>Todo el proyecto en un solo lugar.</b> Cada caja es el campo real: si lo cambias aquí, cambia en todas las pestañas (y al revés). Se lee en orden, <b>1 → 8</b>: primero el porqué, luego cómo se ve. Las líneas rojas son contradicciones.</p>
+  <div class="mp-wrap" id="mp-wrap"><svg class="mp-svg" id="mp-svg" aria-hidden="true"></svg>
+    <div class="mp-col"><span class="lbl">Por qué existe</span>${[0,1,2,3].map(nd).join('')}</div>
+    <div class="mp-mid"><div class="mp-c" id="mp-centro"><span class="lbl">${esc(p.nombre)} · ${esc((DECISION_EST.find(d=>d[0]===(p.decision||'Exploring'))||[,''])[1])}</span>
+      <label class="lbl" for="x-brief-una-frase">La frase del proyecto</label>${inp('brief.una.frase',p.brief.una?.frase,'Sujeto + lugar + sentimiento, en una frase')}
+      <p class="mp-hilo" id="mp-hilo">${esc(M.hilo)}</p></div></div>
+    <div class="mp-col"><span class="lbl">Cómo se ve y se siente</span>${[4,5,6,7].map(nd).join('')}</div></div>
+  <div id="mp-panel">${mapaPanelHTML(p,M)}</div>`}
+function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');if(!w||!svg||!c||getComputedStyle(svg).display==='none')return;
+  const W=w.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${W.width} ${W.height}`);
+  const R=id=>{const e=$('#mp-'+id);if(!e)return null;const r=e.getBoundingClientRect();return {x:r.left-W.left,y:r.top-W.top,w:r.width,h:r.height}};
+  const C=R('centro'),ids=['idea','funcion','intencion','tension','personajes','mood','lenguaje','mundo'];let h='';
+  ids.forEach((id,k)=>{const r=R(id);if(!r)return;const L=k<4,x1=L?C.x:C.x+C.w,y1=C.y+C.h*(((k%4)+.5)/4),x2=L?r.x+r.w:r.x,y2=r.y+r.h/2,mx=(x1+x2)/2;
+    h+=`<path class="l" d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"/>`});
+  (S.mapaCruces||[]).forEach(x=>{const a=R(x.a),b=R(x.b);if(!a||!b)return;const aL=ids.indexOf(x.a)<4,bL=ids.indexOf(x.b)<4;
+    if(aL!==bL){const x1=aL?a.x+a.w:a.x,x2=bL?b.x+b.w:b.x;h+=`<path class="x" d="M${x1} ${a.y+a.h/2} C${x1+(aL?70:-70)} ${a.y+a.h/2} ${x2+(bL?-70:70)} ${b.y+b.h/2} ${x2} ${b.y+b.h/2}"/>`}
+    else{const out=aL?Math.min(a.x,b.x)-34:Math.max(a.x+a.w,b.x+b.w)+34,x1=aL?a.x:a.x+a.w,x2=aL?b.x:b.x+b.w;h+=`<path class="x" d="M${x1} ${a.y+a.h/2} C${out} ${a.y+a.h/2} ${out} ${b.y+b.h/2} ${x2} ${b.y+b.h/2}"/>`}});
+  svg.innerHTML=h}
+let mapaT=null;
+function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'||S.vista!=='proyecto'||S.P[S.cur]!==p)return;
+  const M=mapaCalc(p);S.mapaCruces=M.cruces;
+  const hl=$('#mp-hilo');if(hl)hl.textContent=M.hilo;
+  const pn=$('#mp-panel');if(pn&&!pn.contains(document.activeElement))pn.innerHTML=mapaPanelHTML(p,M);
+  Object.keys(MP_NOM).forEach(id=>{const e=$('#mp-'+id),nt=document.querySelector(`[data-mpnota="${id}"]`);if(!e||!nt)return;const L=M.notas[id]||[];
+    nt.innerHTML=L.map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
+    e.classList.toggle('cf',L.some(x=>x.cls==='warn'));e.classList.toggle('vac',L.some(x=>x.cls==='vac'))});
+  mapaLineas()},300)}
+window.addEventListener('resize',()=>{if(S.tab==='mapa')mapaLineas()});
+
 /* ============ Personajes: paleta que se construye con el personaje ============ */
 const PJ_ROLES=['Protagonista','Antagonista','Aliado','Deidad','Criatura','Secundario'];
 /* materiales que no están en COLW (h,s,l) */
@@ -6490,7 +6606,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
-  if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id)}return}
+  if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
   if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
@@ -6523,7 +6639,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
     setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);
     if(t.dataset.b.startsWith('mood.tres'))p.mood.palabras=p.mood.tres.filter(Boolean).join(', ');
-    dxVivo(p);
+    dxVivo(p);mapaVivo(p);
     if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
     if(t.dataset.b.startsWith('mood.paleta'))p.mood.paletaPropia=true;
     marcar();
