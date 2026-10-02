@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq8vv33').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq95mo6').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1039,8 +1039,9 @@ function md(txt){
   return out+(inUl?'</ul>':'');
 }
 
+const DECISION_EST=[['Exploring','Explorando'],['Decided','Decidido'],['Locked','Bloqueado'],['Discarded','Descartado']];
 function nuevoProyecto(nombre){
-  return {nombre:nombre||'Proyecto sin nombre',tipo:'Personaje',encargo:'',estado:'Brief',creado:Date.now(),actualizado:Date.now(),
+  return {nombre:nombre||'Proyecto sin nombre',tipo:'Personaje',encargo:'',estado:'Brief',decision:'Exploring',creado:Date.now(),actualizado:Date.now(),
     brief:{texto:'',entregable:'',publico:'',restricciones:'',historia:''},nombres:[],
     concepto:{nucleos:['','',''],tension:'',tensionTexto:'',frase:'',empujes:[]},
     mundo:{},keywords:{forma:[],material:[],emocion:[],cultura:[],luz:[]},busquedas:[],
@@ -1337,6 +1338,7 @@ function renderMainInner(){
       <div class="prow">
         <select id="f-tipo" data-b="tipo" aria-label="Tipo">${TIPOS.map(t=>`<option ${t===p.tipo?'selected':''}>${t}</option>`).join('')}</select>
         <select id="f-estado" data-b="estado" aria-label="Estado">${ESTADOS.map(t=>`<option ${t===p.estado?'selected':''}>${t}</option>`).join('')}</select>
+        <select id="f-decision" data-b="decision" aria-label="Estado de decisión" title="Exploring: en flux, se vale cambiar todo. Decided: ya elegiste, pero se puede revisar. Locked: el asesor no cuestiona la intención, solo ayuda dentro de ella. Discarded: fuera del radar." style="${p.decision==='Locked'?'border-color:var(--accent);color:var(--accent)':''}">${DECISION_EST.map(([k,n])=>`<option value="${k}" ${k===(p.decision||'Exploring')?'selected':''}>${k==='Locked'?'🔒 ':''}${n}</option>`).join('')}</select>
         <input type="text" id="f-encargo" data-b="encargo" value="${esc(p.encargo)}" placeholder="Cliente / encargo" style="width:200px;max-width:100%">
         <label class="lbl prow" for="f-entrega" style="gap:6px">Entrega <input type="date" id="f-entrega" data-b="entrega" value="${esc(p.entrega||'')}"></label>
       </div>
@@ -1612,7 +1614,7 @@ function vPrincipios(){
 const hoyN=()=>Math.floor(Date.now()/864e5);
 const asLink=n=>`https://www.google.com/search?q=${encodeURIComponent((n||'')+' artstation')}`;
 function vInicio(){
-  const ps=ordenados(),a=S.ajustes;
+  const ps=ordenados().filter(([,p])=>p.decision!=='Discarded'),a=S.ajustes;
   const ult=ps[0],s=ult?salud(ult[1]):null,sig=s?.items.find(i=>!i[1]);
   const regla=a.principios.length?a.principios[hoyN()%a.principios.length]:'';
   const art=a.referentes.length?a.referentes[hoyN()%a.referentes.length]:null;
@@ -1732,7 +1734,8 @@ function asesor(kind,titulo,desc){
     <div class="prow">${busy?`<button class="btn sm" data-act="ai-stop" data-k="${kind}">Detener</button>`:`<button class="btn sm pri" data-act="ai" data-k="${kind}">${r?'Volver a preguntar':'Preguntar'}</button>`}</div></div>${body}</div>`}
 
 function ctxProyecto(p,{refs=false}={}){
-  const L=[`Proyecto: ${p.nombre} (${p.tipo})`,`Brief: ${p.brief.texto}`,p.brief.restricciones&&`Restricciones: ${p.brief.restricciones}`,
+  const L=[p.decision==='Locked'&&'INTENCIÓN BLOQUEADA POR EL ARTISTA: ya decidió la dirección de este proyecto. No la cuestiones, no propongas cambiarla ni reinterpretarla — ayúdalo solo a ejecutarla mejor dentro de ese marco, aunque veas una idea "más fuerte".',
+    `Proyecto: ${p.nombre} (${p.tipo})`,`Brief: ${p.brief.texto}`,p.brief.restricciones&&`Restricciones: ${p.brief.restricciones}`,
     `Núcleos: ${p.concepto.nucleos.filter(Boolean).join(' / ')}`,`Tensión: ${p.concepto.tension} — ${p.concepto.tensionTexto}`,
     p.concepto.frase&&`Frase: ${p.concepto.frase}`,p.concepto.empujes.length&&`Empujes: ${p.concepto.empujes.join(' | ')}`,
     `Mundo como personaje: ${MUNDO_Q.filter(([k])=>p.mundo[k]).map(([k,q])=>q+' '+p.mundo[k]).join(' ')}`,
@@ -2108,7 +2111,7 @@ function terminadas(){let n=0;for(const p of Object.values(S.P))for(const x of p
 function siguientePaso(){
   const est=estancadas().find(e=>e.dias>=4);
   if(est)return {tag:'Se está enfriando',titulo:est.p.nombre,texto:`Llevas ${est.dias} días con "${corto(est.x.nota||est.x.etapa||'un boceto',60)}" sin marcarlo Final ni soltarlo. Termínalo aunque no esté perfecto, o suéltalo y sigue.`,pid:est.pid,tab:'critica',accion:'Ir a esa pieza'};
-  for(const [pid,p] of ordenados()){if(p.estado==='Archivado')continue;const D=DX(p);
+  for(const [pid,p] of ordenados()){if(p.estado==='Archivado'||p.decision==='Discarded')continue;const D=DX(p);
     if(D.conflictos.length)return {tag:'Contradicción sin resolver',titulo:p.nombre,texto:corto(D.conflictos[0].t,140),pid,tab:'cerebro',accion:'Resolverla'}}
   const post=lista('postulaciones').find(x=>x.seguimiento&&x.seguimiento<=hoyKey()&&!['Oferta','Rechazado'].includes(x.estado));
   if(post)return {tag:'Seguimiento pendiente',titulo:post.estudio,texto:`Ya pasó tu fecha de seguimiento (${post.seguimiento}). Un mensaje corto y amable cuenta.`,v:'postulaciones',accion:'Ir a Postulaciones'};
@@ -2117,7 +2120,7 @@ function siguientePaso(){
   const t=tareaActiva();
   if(t){const hechos=t.bocetos.length,meta=Math.max(0,...t.reqs.map(r=>r.meta||0));
     if(meta&&hechos<meta)return {tag:'Tarea del taller',titulo:t.titulo,texto:`Vas ${hechos}/${meta} bocetos. Sigue avanzando.`,v:'taller',accion:'Ir a la tarea'}}
-  const ps=ordenados();
+  const ps=ordenados().filter(([,p])=>p.decision!=='Discarded');
   if(ps.length){const [pid,p]=ps[0],D=DX(p),v=D.vacios[0];
     if(v)return {tag:'Siguiente decisión',titulo:p.nombre,texto:v.q,pid,tab:v.tab,accion:'Decidir'}}
   const dias=S.ajustes.rutina?.dias||{};
