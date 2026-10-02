@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq7djdd').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq7ia83').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -4520,6 +4520,7 @@ function chatHTML(p){const ch=p.chat||[],ex=S.ai['chat-explorar'],busyEx=S.aiBus
       <div class="prow"><button class="btn pri" data-act="chat">Enviar</button>${S.sample?busyEx?`<button class="btn sm" data-act="ai-stop" data-k="chat-explorar">Detener</button>`:`<button class="btn sm" data-act="ai" data-k="chat-explorar" title="Para ideas grandes: busca conexiones, ofrece caminos A/B y termina en una decisión, en vez de una respuesta rápida">Pensarlo a fondo con Claude</button>`:''}</div>
       ${!S.sample?'<p class="hint" style="margin:4px 0 0">Para pensar ideas grandes a fondo (conexiones, caminos A/B, una pregunta que avance el proyecto): conecta Claude en «Conexión con Claude», en el menú lateral.</p>':ex?.error?`<p class="muted" style="margin:4px 0 0">${esc(ex.error)}</p>`:''}</div>
     <div class="chips sugs">${SUGS.map(s=>`<button class="ch" data-act="chat-sug" data-v="${esc(s)}">${esc(s)}</button>`).join('')}</div>
+    ${S.sample&&ch.filter(m=>m.r==='dir').length>=2?`<div class="prow"><button class="btn sm pri" data-act="trat-de-chat" ${S.aiBusy.tratamiento?'disabled':''} title="Toma todo lo hablado aquí y lo reparte en los campos del proyecto, con revisión antes de guardar">${S.aiBusy.tratamiento?'Armando…':'Convertir esta conversación en el tratamiento completo →'}</button></div>`:''}
     ${ch.length?`<div class="prow"><button class="btn ghost sm" data-act="chat-limpiar">${S.confirmChat?'¿Borrar la conversación? (las decisiones se quedan)':'Limpiar conversación'}</button></div>`:''}</div>`}
 function saludo(p){const ds=(p.decisiones||[]).filter(d=>d.estado!=='Descartada'),D=DX(p),v=D.vacios[0];
   return [ds.length?`La última vez decidimos: **${ds[0].t}**${ds[0].motivo?' — '+corto(ds[0].motivo,80):''}.`:`Soy el director de **${p.nombre}**. Conozco todo lo que escribes en el proyecto y lo comparo contra tu intención.`,
@@ -6703,6 +6704,7 @@ async function accion(a,el){
     case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}if(ds.k==='chat-explorar')S.chatExplorarTxt=$('#chat-txt')?.value||'';preguntar(ds.k);break;
     case 'brief-explorar':{const txt=(p?.brief.texto||'').trim();if(!txt){toast('Escribe tu idea en "El encargo" primero');return}S.chatExplorarTxt=txt;S.tab='cerebro';renderMain();preguntar('chat-explorar');break}
     case 'trat-analizar':S.tratTxt=$('#trat-txt')?.value||'';preguntar('tratamiento');break;
+    case 'trat-de-chat':{if(!p)return;S.tratTxt=(p.chat||[]).map(m=>(m.r==='yo'?'ARTISTA: ':'DIRECTOR: ')+m.t).join('\n\n');S.tab='cerebro';renderMain();preguntar('tratamiento');break}
     case 'trat-toggle':S.tratSel=S.tratSel||{};S.tratSel[ds.k]=!(S.tratSel[ds.k]!==false);renderMain();break;
     case 'trat-cancelar':S.tratPropuesta=null;S.tratSel={};renderMain();break;
     case 'trat-aplicar':{if(!p||!S.tratPropuesta)return;const prop=S.tratPropuesta;
