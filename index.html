@@ -467,6 +467,8 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-cols{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.esc-mini{display:flex;gap:4px;flex-wrap:wrap}.esc-bola.esc-m{width:40px;height:40px}
+.esc-pj{margin-top:6px;border-top:1px solid var(--line);padding-top:8px}.esc-pj summary{cursor:pointer}
 .esc-sw{height:26px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10.5px}
 .mp-wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.75fr) minmax(0,1fr);gap:34px;align-items:center;margin:6px 0 18px}
 .mp-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
@@ -943,7 +945,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murko8yc').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murl60qp').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1316,7 +1318,7 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.tab==='mood'&&S.vista==='proyecto')requestAnimationFrame(escDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -6299,12 +6301,13 @@ function vPersonajes(p){const pj=p.personajes=p.personajes||[],line=pjLineup(p);
       ${fi(c,'materiales','Materiales que lleva','Ej. obsidiana, cuero, pluma de guacamaya')}
       <div class="grid2" style="gap:8px">${fi(c,'piel','Piel / pelaje','Ej. piel morena, pelaje ocre con rosetas')}${fi(c,'colorClave','Color que lo identifica (opcional)','Ej. rojo sangre')}</div>
       ${fi(c,'forma','Forma / silueta','Ej. triángulo invertido delgado')}
-    </div><div class="pj-out" id="pjpal-${c.id}">${pjCardPal(p,c)}</div></div></div>`).join('')}</div>
+    </div><div class="pj-out" id="pjpal-${c.id}">${pjCardPal(p,c)}</div></div>${pjEscHTML(p,c)}</div>`).join('')}</div>
   ${pj.length?`<div class="prow"><button class="btn" data-act="pj-add">Agregar personaje</button></div>`:''}`}
 function pjRefresca(p,id){const c=(p.personajes||[]).find(x=>x.id===id);const el=$('#pjpal-'+id);if(c&&el)el.innerHTML=pjCardPal(p,c);
   const h=$('#pj-'+id+' h3');if(c&&h)h.textContent=c.nombre||'Personaje sin nombre';
   /* los demás pueden cambiar por choques de acento */
-  for(const o of p.personajes||[])if(o.id!==id){const e=$('#pjpal-'+o.id);if(e)e.innerHTML=pjCardPal(p,o)}}
+  for(const o of p.personajes||[])if(o.id!==id){const e=$('#pjpal-'+o.id);if(e)e.innerHTML=pjCardPal(p,o)}
+  escRefrescaPj(p)}
 /* muestras para Photoshop (.aco v1+v2) y Procreate (.swatches) */
 function acoBlob(pal){const cols=pal.map(x=>{const h=x.hex.replace('#','');return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16),n:x.rol}});
   const b=[];const u16=v=>b.push((v>>8)&255,v&255);const u32=v=>{u16((v>>>16)&65535);u16(v&65535)};
@@ -6413,14 +6416,36 @@ function escBola(cv,loc,E){const N=cv.width,g=cv.getContext('2d'),img=g.createIm
     for(let c=0;c<3;c++){const v=L[c]*K[c]*lit+L[c]*A[c]*amb*(1-lit*.5)+L[c]*B[c]*bk*.55+K[c]*sp*.55;img.data[o+c]=escSrgb(v)}
     img.data[o+3]=Math.round(255*Math.max(0,Math.min(1,(1.02-Math.sqrt(r2))*N*.25)))}
   g.putImageData(img,0,0)}
+/* la escena de un personaje: la suya (preset o guardada) o, si no eligió, la del proyecto */
+function escDePj(p,c){const k=c?.luzEsc||'';if(k.startsWith('pre:')&&ESC_PRE[k.slice(4)])return {...ESC_PRE[k.slice(4)],int:1};
+  if(k.startsWith('esc:')){const s=(p.escenas||[]).find(x=>x.id===k.slice(4));if(s)return s}return escDe(p)}
+const escNombre=(p,E)=>ESC_PRE[E.k]?.n||'Escena propia';
+function escColsHTML(items,E,pjid){return `<div class="esc-cols">${items.map((it,i)=>`<div class="esc-col"><canvas class="esc-bola" ${pjid?`data-pj="${pjid}" data-hex="${esc(it.hex)}"`:`data-i="${i}"`} width="110" height="110" aria-label="Esfera con ${esc(it.hex)} bajo esta luz"></canvas>
+    <div class="esc-loc"><i style="background:${esc(it.hex)}"></i>${esc(it.rol?it.rol+' · ':'')}${esc(it.hex)}</div>
+    ${escRampa(it.hex,E).map(r=>`<div class="esc-sw" style="background:${r.hex}" title="${r.n} ${r.hex}"><span style="color:${lumaHex(r.hex)>.5?'#111':'#eee'}">${r.n} · ${r.hex}</span></div>`).join('')}
+    ${pjid?'':`<button class="btn ghost sm" data-act="esc-rampa" data-i="${i}" title="Reemplaza tu paleta por esta rampa (la anterior queda guardada)">Usar como paleta</button>`}</div>`).join('')}</div>`}
 function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
   if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
-  return `<div class="esc-cols">${pal.map((c,i)=>`<div class="esc-col"><canvas class="esc-bola" data-i="${i}" width="110" height="110" aria-label="Esfera con ${esc(c)} bajo esta luz"></canvas>
-    <div class="esc-loc"><i style="background:${esc(c)}"></i>${esc(c)}</div>
-    ${escRampa(c,E).map(r=>`<div class="esc-sw" style="background:${r.hex}" title="${r.n} ${r.hex}"><span style="color:${lumaHex(r.hex)>.5?'#111':'#eee'}">${r.n} · ${r.hex}</span></div>`).join('')}
-    <button class="btn ghost sm" data-act="esc-rampa" data-i="${i}" title="Reemplaza tu paleta por esta rampa (la anterior queda guardada)">Usar como paleta</button></div>`).join('')}</div>`}
-function escDibuja(){const p=S.P[S.cur];if(!p||S.tab!=='mood')return;const E=escDe(p);document.querySelectorAll('.esc-bola').forEach(cv=>{const c=(p.mood.paleta||[])[+cv.dataset.i];if(c)escBola(cv,c,E)})}
-function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja()}}
+  return escColsHTML(pal.map(hex=>({hex})),E,'')}
+function escDibuja(){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
+  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
+    const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
+function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja()}escRefrescaPj(p)}
+/* personajes: cada color de su paleta, iluminado con la escena */
+const pjItems=(p,c)=>pjPaleta(p,c).pal.slice(0,6).map(x=>({hex:x.hex,rol:x.rol}));
+function pjEscHTML(p,c){const E=escDePj(p,c),sel=c.luzEsc||'';
+  return `<details class="esc-pj"><summary class="muted">Luz y sombras de este personaje</summary>
+    <label class="esc-r" style="max-width:320px"><span class="lbl">Escena de luz</span><select data-pjesc="${c.id}"><option value="">La del proyecto (${esc(escNombre(p,escDe(p)))})</option>
+      ${(p.escenas||[]).length?`<optgroup label="Mis escenas">${p.escenas.map(s=>`<option value="esc:${s.id}" ${sel==='esc:'+s.id?'selected':''}>${esc(s.n)}</option>`).join('')}</optgroup>`:''}
+      <optgroup label="Escenas de luz">${Object.entries(ESC_PRE).map(([k,v])=>`<option value="pre:${k}" ${sel==='pre:'+k?'selected':''}>${esc(v.n)}</option>`).join('')}</optgroup></select></label>
+    <div id="pjesc-cols-${c.id}">${escColsHTML(pjItems(p,c),E,c.id)}</div>
+    <div class="prow"><button class="btn ghost sm" data-act="esc-ase-pj" data-id="${c.id}" title="Swatches con luz y sombra de este personaje, para Photoshop">Exportar con luz (.ase)</button></div></details>`}
+function escRefrescaPj(p){(p.personajes||[]).forEach(c=>{const o=$('#pjesc-cols-'+c.id);if(o){o.innerHTML=escColsHTML(pjItems(p,c),escDePj(p,c),c.id);}});escDibuja()}
+/* dibujo para el PNG del tablero: esfera + rampa por color */
+function escDibujaBloque(x,items,E,x0,y0,tam,dry){const sw=26,cw=tam+10;
+  if(!dry)items.forEach((it,i)=>{const b=document.createElement('canvas');b.width=b.height=tam;escBola(b,it.hex,E);x.drawImage(b,x0+i*cw,y0);escRampa(it.hex,E).forEach((r,j)=>{x.fillStyle=r.hex;x.fillRect(x0+i*cw,y0+tam+8+j*sw,tam,sw-3)})});
+  return tam+8+ESC_ROLES.length*sw}
+const escMiniHTML=(items,pjid)=>`<span class="esc-mini">${items.map(it=>`<canvas class="esc-bola esc-m" ${pjid?`data-pj="${pjid}"`:''} data-hex="${esc(it.hex)}" width="48" height="48" title="${esc(it.hex)}"></canvas>`).join('')}</span>`
 function escHTML(p){const E=escDe(p),mias=new Set((p.luces||[]).map(l=>l.k)),sl=(k,lab,min,max,st)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${E[k]}"></label>`,co=(k,lab)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="color" data-esc="${k}" value="${esc(E[k])}"></label>`;
   return `<div class="box" id="esc-box"><h3>Constructor de luz y color</h3><p class="hint">Cada color de tu paleta, iluminado por la luz de tu escena: ves la esfera y la rampa de luz → sombra → rebote, con el color de la luz y el de las sombras que tú eliges. Elige una de tus claves de luz o ajusta a mano.</p>
     <div class="chips">${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch ${E.k===k?'on':''}" data-act="esc-preset" data-k="${k}" title="${mias.has(k)?'Es una de tus claves de luz':''}">${mias.has(k)?'★ ':''}${esc(v.n)}</button>`).join('')}</div>
@@ -6474,6 +6499,7 @@ function tableroAudit(p){const C=tabColumnas(p),by=k=>C.find(x=>x.g.k===k),A=[],
   add(R.length&&prim/R.length>=.4&&(!cu||cul>=4),`Fuentes reales: ${prim} de ${R.length}${cu?` · cultura ${cul}`:''}`,'Lo que hace creíble un mundo es la referencia real (museo, arquitectura, naturaleza), no solo el arte de otros. Meta: 40%+'+(cu?' y 4+ piezas culturales.':'.'),cu?[{act:'tp-buscar',ds:{q:cu+' sculpture',g:'cultura'},txt:'Buscar: '+cu+' sculpture'},{act:'tp-buscar',ds:{q:cu+' codex',g:'cultura'},txt:cu+' codex'}]:[]);
   const L=p.luces||[],lc=L.filter(l=>R.some(r=>luzDe(p,r)===l.id)).length;
   add(L.length>=2&&lc>=2,`Claves de luz: ${L.length} (${lc} con foto)`,L.length<2?'Define 2–4 luces en Mood: fuente, temperatura, dirección y dónde la usas.':'Cada luz necesita al menos una foto real de referencia.',[{act:'tab',ds:{tab:'mood'},txt:L.length<2?'Definir en Mood':'Ver claves de luz'}]);
+  add(!!p.escena,'Escena de luz y color','Elige una escena en Mood → Constructor de luz y color: el tablero muestra tu paleta iluminada y las rampas de sombra por personaje.',[{act:'tab',ds:{tab:'mood'},txt:'Ir a Mood'}]);
   const mat=by('materiales').refs.length;add(mat>=3,`Materiales: ${mat}`,'3+ fotos de cómo se ven de verdad tus materiales principales.',mat>=3?[]:(p.materiales||[]).slice(0,2).map(m=>({act:'tp-buscar',ds:{q:tr(m)+' texture close up',g:'materiales'},txt:'Buscar: '+tr(m)})));
   const tec=by('tecnica').refs,tecOk=tec.filter(r=>(r.aprendo||'').trim().length>8||(r.porque||'').trim().length>20).length;
   add(!tec.length||tecOk===tec.length,`Técnica: ${tecOk}/${tec.length} dicen qué tomas`,'Si no dices qué tomas de cada artista, parece copia de estilo. Escribe «tomo: formas simples», «tomo: su luz»…');
@@ -6487,9 +6513,10 @@ function tableroHTML(p){const C=tabColumnas(p),A=tableroAudit(p),ok=A.filter(a=>
     <p class="hint">Cómo se arma un tablero de industria: <b>80% imagen</b>, encabezado corto, una columna por grupo (mood, luz, cada personaje, mundo, cultura real, materiales, técnica), una imagen héroe por grupo y etiquetas de 2–5 palabras. El texto largo va en la Hoja.</p>
     <ul class="tp-audit">${A.map(a=>`<li class="${a.ok?'ok':'no'}"><i>${a.ok?'✓':'✗'}</i><div><b>${esc(a.t)}</b><small>${esc(a.det)}</small>${!a.ok&&a.acts.length?`<div class="prow">${a.acts.map(b).join('')}</div>`:''}</div></li>`).join('')}</ul>
     <details ${p.refs.length?'open':''}><summary class="lbl">Vista previa del tablero</summary>
-    <div class="tp-prev"><div class="tp-head"><b>${esc(p.nombre)}</b>${p.concepto.frase?`<span>${esc(p.concepto.frase)}</span>`:''}<div class="chips">${p.pilares.filter(x=>x.t).map(x=>`<span class="chip">${esc(x.t)}</span>`).join('')}</div><span class="pal">${(p.mood.paleta||[]).map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span></div>
+    <div class="tp-prev"><div class="tp-head"><b>${esc(p.nombre)}</b>${p.concepto.frase?`<span>${esc(p.concepto.frase)}</span>`:''}<div class="chips">${p.pilares.filter(x=>x.t).map(x=>`<span class="chip">${esc(x.t)}</span>`).join('')}</div><span class="pal">${(p.mood.paleta||[]).map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span>
+      ${p.escena&&(p.mood.paleta||[]).length?`<span class="lbl">Luz y color · ${esc(escNombre(p,escDe(p)))}</span>${escMiniHTML((p.mood.paleta||[]).slice(0,6).map(hex=>({hex})))}`:''}</div>
     <div class="tp-cols">${cols.map(x=>`<div class="tp-col" style="--tc:${tpColor(x.g.k)}"><div class="tp-ch"><b>${esc(x.g.n)}</b><span>${x.refs.length}</span></div>
-      ${x.g.c?`<div class="pj-bar">${pjPaleta(p,x.g.c).pal.map(z=>`<i style="background:${z.hex};flex:${z.pct}"></i>`).join('')}</div>`:''}
+      ${x.g.c?`<div class="pj-bar">${pjPaleta(p,x.g.c).pal.map(z=>`<i style="background:${z.hex};flex:${z.pct}"></i>`).join('')}</div>${p.escena||x.g.c.luzEsc?escMiniHTML(pjItems(p,x.g.c),x.g.c.id):''}`:''}
       ${x.g.k==='luz'?(p.luces||[]).map(l=>`<div class="tp-luz"><b>${esc(l.n||'Luz')}</b><small>${esc([l.fuente,l.temp,l.dir].filter(Boolean).join(' · '))}</small></div>`).join(''):''}
       <div class="tp-imgs">${x.refs.slice(0,9).map((r,i)=>`<figure class="${i===0?'hero':''}"><img ${imgAttrs(r)} alt="" loading="lazy" data-act="zoom"><figcaption>${esc(etiquetaDe(r)||'—')}</figcaption></figure>`).join('')||'<p class="muted" style="margin:0;font-size:12px">Vacío</p>'}${x.refs.length>9?`<span class="muted" style="font-size:12px">+${x.refs.length-9}</span>`:''}</div></div>`).join('')}</div></div></details>
     <div class="prow"><button class="btn pri" data-act="tp-png" ${S.exp?'disabled':''}>Descargar tablero (PNG alta resolución)</button>${SYNC_OK?`<button class="btn" data-act="tp-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta (PureRef)</button>`:''}<button class="btn" data-act="tp-zip" ${S.exp?'disabled':''}>Carpeta por grupos (.zip)</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div>
@@ -6499,7 +6526,7 @@ function tableroHTML(p){const C=tabColumnas(p),A=tableroAudit(p),ok=A.filter(a=>
 async function tableroPNG(p,soloHeader){
   await document.fonts?.ready;
   const FD='"Big Shoulders Display", '+DISP,COLW=720,GAP=56,PAD=110,IG=16,BG='#141519',INK='#eceef2',INK2='#a9afba',INK3='#6f7683';
-  const cols=tabColumnas(p).filter(x=>x.refs.length||(x.g.k==='luz'&&(p.luces||[]).length));
+  const cols=tabColumnas(p).filter(x=>x.refs.length||(x.g.k==='luz'&&(p.luces||[]).length)||(x.g.c&&(p.escena||x.g.c.luzEsc)));
   const n=Math.max(3,cols.length),W=PAD*2+n*COLW+(n-1)*GAP;
   const imgs={};if(!soloHeader)await Promise.all(cols.flatMap(x=>x.refs).map(async r=>{try{imgs[r.id]=await createImageBitmap(await blobDeRef(r))}catch{}}));
   const pj=(p.personajes||[]).filter(c=>c.nombre);
@@ -6519,6 +6546,8 @@ async function tableroPNG(p,soloHeader){
     for(const c of pj){const P=pjPaleta(p,c).pal;if(px+P.length*70>W-PAD){px=PAD;y+=240}
       if(!dry){x.font=`500 24px ${MONO}`;x.fillStyle=INK3;x.fillText(c.nombre.toUpperCase(),px,y);P.forEach((z,i)=>{x.fillStyle=z.hex;x.fillRect(px+i*70,y+20,62,130)})}px+=P.length*70+60}
     y+=(mp.length||pj.length)?230:0;
+    if(p.escena&&mp.length){const E=escDe(p);if(!dry){x.font=`500 24px ${MONO}`;x.fillStyle=INK3;x.fillText('LUZ Y COLOR · '+escNombre(p,E).toUpperCase(),PAD,y);[E.luz,E.amb,E.reb].forEach((c,i)=>{x.fillStyle=c;x.fillRect(PAD+900+i*60,y-6,48,40)})}
+      y+=44;y+=escDibujaBloque(x,mp.slice(0,6).map(hex=>({hex})),E,PAD,y,150,dry)+50}
     if(!dry){x.fillStyle='#262a33';x.fillRect(PAD,y,cw,3)}
     return y+GAP}
   function etiqueta(x,txt,ix,iy,iw,ih,dry){if(!txt||dry)return;x.font=`600 24px ${BODY}`;const ls=envolver(x,txt,iw-28).slice(0,2),h=ls.length*30+18;
@@ -6530,7 +6559,8 @@ async function tableroPNG(p,soloHeader){
   function columna(x,cx,y0,col,dry){let y=y0;const tc=tpColor(col.g.k);
     if(!dry){x.fillStyle=tc;x.fillRect(cx,y,COLW,10)}y+=74;x.font=`800 64px ${FD}`;x.fillStyle=INK;for(const l of envolver(x,col.g.n.toUpperCase(),COLW).slice(0,2)){if(!dry)x.fillText(l,cx,y);y+=66}
     x.font=`400 26px ${BODY}`;x.fillStyle=INK2;for(const l of envolver(x,col.g.d||'',COLW).slice(0,2)){if(!dry)x.fillText(l,cx,y);y+=34}y+=10;
-    if(col.g.c){const P=pjPaleta(p,col.g.c).pal;let xx=cx;if(!dry)P.forEach(z=>{const w=COLW*z.pct/100;x.fillStyle=z.hex;x.fillRect(xx,y,w,34);xx+=w});y+=58}
+    if(col.g.c){const P=pjPaleta(p,col.g.c).pal;let xx=cx;if(!dry)P.forEach(z=>{const w=COLW*z.pct/100;x.fillStyle=z.hex;x.fillRect(xx,y,w,34);xx+=w});y+=58;
+      if(p.escena||col.g.c.luzEsc){y+=escDibujaBloque(x,pjItems(p,col.g.c).slice(0,5),escDePj(p,col.g.c),cx,y,128,dry)+30}}
     if(col.g.k==='luz')for(const l of p.luces||[]){const ls=[['Fuente',l.fuente],['Temperatura',l.temp],['Dirección',l.dir],['Uso',l.uso]].filter(q=>q[1]);x.font=`400 26px ${BODY}`;
       const lines=ls.flatMap(([k,v])=>envolver(x,k+': '+v,COLW-40).slice(0,2)),h=78+lines.length*34+20;
       if(!dry){x.fillStyle='#1d2027';x.fillRect(cx,y,COLW,h);x.fillStyle=tc;x.fillRect(cx,y,6,h);x.font=`700 40px ${FD}`;x.fillStyle=INK;x.fillText((l.n||'Luz').toUpperCase(),cx+24,y+54);
@@ -6617,6 +6647,7 @@ async function accionTp(a,el,p,ds){
     case 'esc-cargar':{const s=(p.escenas||[]).find(x=>x.id===ds.id);if(s){p.escena={k:'',luz:s.luz,amb:s.amb,reb:s.reb,ang:s.ang,el:s.el,int:s.int};marcar();renderMain()}break}
     case 'esc-del':p.escenas=(p.escenas||[]).filter(x=>x.id!==ds.id);marcar();renderMain();break;
     case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
+    case 'esc-ase-pj':{const c=(p.personajes||[]).find(x=>x.id===ds.id);if(!c)return;const E=escDePj(p,c);bajarBlob(slug(p.nombre+' '+c.nombre,50)+'-luz-y-color.ase',escASE(pjItems(p,c).map(it=>({n:`${c.nombre} · ${it.rol}`,cols:escRampa(it.hex,E).map(r=>({n:`${it.rol} · ${r.n}`,hex:r.hex}))}))));break}
     case 'esc-png':{const cv=escPNG(p);cv.toBlob(b=>b&&bajarBlob(slug(p.nombre,40)+'-luz-y-color.png',b));break}
     case 'esc-ase':{const E=escDe(p),g=(p.mood.paleta||[]).slice(0,8).map(c=>({n:c,cols:escRampa(c,E).map(r=>({n:`${c} · ${r.n}`,hex:r.hex}))}));if(!g.length){toast('Define tu paleta primero');return}bajarBlob(slug(p.nombre,40)+'-luz-y-color.ase',escASE(g));break}
     case 'luz-add':{p.luces=p.luces||[];const P=LUCES.find(x=>x.k===ds.k);p.luces.push({id:uid(),k:P?.k||'',n:P?.n||'',fuente:P?.fuente||'',temp:P?.temp||'',dir:P?.dir||'',uso:''});marcar();renderMain();break}
@@ -6773,6 +6804,7 @@ document.addEventListener('input',e=>{
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.pjesc){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjesc);if(c){c.luzEsc=t.value;marcar();escRefrescaPj(p)}return}
   if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escDe(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
