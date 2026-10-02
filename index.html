@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq7ia83').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq8vv33').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1220,15 +1220,14 @@ function renderSide(){
   const side=$('#side');side.classList.toggle('open',!!S.menu);
   const modo=S.navModo||'crear';
   const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
-    return `<div class="prow" style="padding:0 10px 6px;flex-wrap:wrap;gap:4px">${m('crear','Crear')}${m('crecer','Crecer')}${m('negocio','Negocio')}${m('todo','Todo')}</div>`})();
-  const grupoCrear=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crear</span>
-      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
+    return `<div class="prow" style="padding:0 10px 6px;flex-wrap:wrap;gap:4px">${m('crear','Create')}${m('crecer','Grow')}${m('negocio','Career')}${m('perfil','Profile')}${m('todo','Todo')}</div>`})();
+  const grupoCrear=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Create</span>
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
-      ${nav('estilo','eye','Mi estilo')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
+      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
     </div>`;
-  const grupoCrecer=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
+  const grupoCrecer=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Grow</span>
       ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
@@ -1236,13 +1235,11 @@ function renderSide(){
       ${nav('ruta','map','Ruta de aprendizaje')}
       ${nav('potenciar','target','Potenciar mi punto débil')}
       ${nav('recursos','grid','Recursos y pinceles')}
-      ${nav('principios','book','Mis principios')}
       ${nav('progreso','chart','Mi progreso')}
     </div>`;
-  const grupoNegocio=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Negocio</span>
-      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
-      ${nav('cv','doc','Mi CV')}
+  const grupoNegocio=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Career</span>
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
+      ${nav('cv','doc','Mi CV')}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('reclutador','eye','Revisión de reclutador')}
       ${nav('formatos','frame','Formatos y entrega')}
@@ -1255,6 +1252,12 @@ function renderSide(){
       ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('contratos','doc','Contratos')}
     </div>`;
+  const grupoPerfil=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Profile</span>
+      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
+      ${nav('metas','target','Mis metas')}
+      ${nav('estilo','eye','Mi estilo')}
+      ${nav('principios','book','Mis principios')}
+    </div>`;
   side.innerHTML=`
     <div class="brand">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div class="plist">
@@ -1265,6 +1268,7 @@ function renderSide(){
     ${modo==='crear'||modo==='todo'?grupoCrear:''}
     ${modo==='crecer'||modo==='todo'?grupoCrecer:''}
     ${modo==='negocio'||modo==='todo'?grupoNegocio:''}
+    ${modo==='perfil'||modo==='todo'?grupoPerfil:''}
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
       <div class="plist" id="plist-proy">${listaProyectos()}</div>
@@ -1320,6 +1324,7 @@ function renderMainInner(){
   if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
   if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
   if(S.vista==='potenciar'){m.innerHTML=vPotenciar();return}
+  if(S.vista==='metas'){m.innerHTML=vMetas();return}
   if(S.vista==='taller'){m.innerHTML=vTaller();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
@@ -1788,7 +1793,7 @@ async function preguntar(kind){
       const url=S.ajustes.portafolioUrl||PF_URL_DEF,imgs=await imagenesPortafolio(url);
       let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
       const prev=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);
-      const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]||'Environment & Keyframe Concept Artist'}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
+      const r=await S.sample.json(`${ROL_CRITICA}\n\nEvalúa el PORTAFOLIO de este artista como lo haría un reclutador y un art director de un estudio que contrata concept artists (videojuegos, cine, outsourcing).\nSu meta: ${metaTexto()}.\nEstudia ${S.ajustes.horasSemana||10} horas por semana.\nPortafolio: ${url}\n${images?`Adjunto ${images.length} piezas de su portafolio (portadas primero). Obsérvalas con detalle.`:'No pude adjuntar imágenes: dilo y no inventes lo que contienen.'}\nSus guías: ${guiasTexto()||'—'}\n${prev?`Evaluación anterior (${fecha(prev.ts)}): ${prev.data.nivel}, ${prev.data.puntuacion}/100. Frenos que tenía: ${(prev.data.frenos||[]).join('; ')}. Di qué mejoró y qué no.`:''}\n${S.ajustes.notasProfes?`Lo que le dicen sus profesores y asesores: ${S.ajustes.notasProfes}. Tómalo en cuenta y di en qué coincides y en qué no.\n`:''}Da DOS escalas: "puntuacion" contra la industria (100 = senior AAA; un junior recién contratado ≈ 55–65) y "escuela" contra estudiantes y egresados de arte. Sé honesto, sin inflar ni desanimar. Los meses son estimaciones con su ritmo actual.\nResponde SOLO con JSON: {"nivel":"una de: ${NIVELES.join(' | ')}","puntuacion":0-100,"escuela":{"puntuacion":0-100,"texto":"dónde queda frente a su generación, en una frase"},"resumen":"3-4 frases","contratable":"para qué tipo de estudio o trabajo es contratable HOY y para cuál todavía no","criterios":[{"criterio":"Idea y diseño original","nota":1-10,"comentario":""},{"criterio":"Composición"},{"criterio":"Valores"},{"criterio":"Color y luz"},{"criterio":"Storytelling"},{"criterio":"Técnica / render"},{"criterio":"Proceso visible"},{"criterio":"Coherencia del portafolio"},{"criterio":"Presentación"}],"fortalezas":["3-4"],"frenos":["3-5, concretos"],"piezas":[{"pieza":"nombre o descripción","decision":"Mantener | Mejorar | Quitar","nota":"por qué y qué hacer"}],"meses_junior_solido":"rango, ej. 4–6","meses_intermedio":"rango","plan":[{"meses":"0–3","nivel":"nivel esperado al final","meta":"","acciones":["3-5"],"tarifa":"rango en MXN y USD"},{"meses":"3–6"},{"meses":"6–12"},{"meses":"12–24"}]}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.niveles=S.ajustes.niveles||[];S.ajustes.niveles.push({ts:Date.now(),fuente:'Asesor · '+(images?.length||0)+' piezas vistas',data:r});marcarAj();S.ai[kind]=null;
     }else if(kind==='borrador'){
       let images;const img=(p.piezas||[]).at(-1)||(p.refs||[]).at(-1);
@@ -1843,7 +1848,7 @@ async function preguntar(kind){
     }else if(kind==='ruta'){
       const {orden}=debilidades(),r=S.ajustes.ruta||{};
       const recursos=Object.entries(RUTA).flatMap(([k,a])=>a.map(([tipo,t,au])=>`${t} (${au}, ${tipo}) [${k}] — ${r[k+'|'+t]||'Pendiente'}`)).join('\n');
-      const d=await S.sample.json(`${ROL}\n\nArma un plan de estudio de 8 semanas para él, con ${S.ajustes.horasSemana||10} horas por semana.\nSus debilidades de mayor a menor: ${orden.slice(0,4).map(k=>SKILLS[k]).join(', ')}. Meta: Environment & Keyframe Concept Artist.\nRecursos disponibles (usa estos, respeta los terminados):\n${recursos}\nCada semana: un foco, qué leer/ver (con capítulo o tema concreto) y un ejercicio práctico aplicado a entornos. Incluye repaso y una pieza de portafolio al final.\nResponde SOLO con JSON: {"semanas":[{"semana":"1","foco":"","tareas":["3-4 tareas concretas con horas"]}]}`,{signal:ctl.signal,cache:false});
+      const d=await S.sample.json(`${ROL}\n\nArma un plan de estudio de 8 semanas para él, con ${S.ajustes.horasSemana||10} horas por semana.\nSus debilidades de mayor a menor: ${orden.slice(0,4).map(k=>SKILLS[k]).join(', ')}. Meta: ${metaTexto()}.\nRecursos disponibles (usa estos, respeta los terminados):\n${recursos}\nCada semana: un foco, qué leer/ver (con capítulo o tema concreto) y un ejercicio práctico aplicado a entornos. Incluye repaso y una pieza de portafolio al final.\nResponde SOLO con JSON: {"semanas":[{"semana":"1","foco":"","tareas":["3-4 tareas concretas con horas"]}]}`,{signal:ctl.signal,cache:false});
       S.ajustes.rutaPlan=(d.semanas||[]).slice(0,8);marcarAj();S.ai[kind]=null;
     }else if(kind==='prueba'){
       const r=await S.sample.json(`${ROL}\n\nWrite a REALISTIC art test like the ones game and film studios send to junior concept artist candidates. Write it in ENGLISH. Tailor it to his goal and taste, and make it attack one of his weaknesses.\nHis taste: ${S.ajustes.gusto||'—'}\nWeaknesses: ${debilidades().orden.slice(0,3).map(k=>SKILLS[k]).join(', ')}\nUse a FICTIONAL studio name.\nReply ONLY with JSON: {"estudio":"fictional studio","puesto":"role title","tipo":"Entorno|Personaje|Criatura|Prop / arma|Key art","brief":"3-5 sentences","entregables":["list"],"ad":["3 art director notes"],"horas":48 or 72}`,{signal:ctl.signal,cache:false});
@@ -1989,6 +1994,21 @@ setInterval(()=>{const t=S.timer,el=$('#timer');if(!t?.fin||!el)return;const r=M
 /* ============ Estudio diario ============ */
 const SKILLS_ENV={escala:'Escala',atmosfera:'Perspectiva atmosférica',claves:'Claves de luz',blockout:'Blockout 3D',profundidad:'Lectura de profundidad'};
 const SKILLS={...SKILLS_ENV,valores:'Valores',silueta:'Silueta y lectura',composicion:'Composición',color:'Color y luz',perspectiva:'Forma y perspectiva',diseno:'Diseño de forma',storytelling:'Storytelling',anatomia:'Anatomía y estructura'};
+/* Goals como objeto real, no una frase enterrada en 'gusto' — todo lo que antes asumía un rol fijo ahora lee de aquí */
+function metaTexto(){return (S.ajustes.metas?.rol||'').trim()||S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]?.replace(/^Meta:\s*/,'')||'Environment & Keyframe Concept Artist'}
+function vMetas(){const m=S.ajustes.metas=S.ajustes.metas||{};
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis metas</h1>
+  <p class="intro">Tu meta profesional, explícita y propia — no una frase enterrada en otro campo. Todo lo demás (plan de estudio, evaluación de nivel, adaptar a vacante) la usa como referencia.</p>
+  <div class="box" style="border-top:3px solid var(--accent)">
+    <div class="field"><label for="m-rol">¿Qué quieres ser / en qué puesto quieres trabajar?</label><input type="text" id="m-rol" data-aj="metas.rol" value="${esc(m.rol||'')}" placeholder="Ej. Environment & Keyframe Concept Artist"></div>
+    <div class="grid2">
+      <div class="field"><label for="m-plazo">¿Para cuándo?</label><input type="text" id="m-plazo" data-aj="metas.plazo" value="${esc(m.plazo||'')}" placeholder="Ej. en 12 meses, para 2027…"></div>
+      <div class="field"><label for="m-enfoque">¿En qué te vas a enfocar para llegar?</label><input type="text" id="m-enfoque" data-aj="metas.enfoque" value="${esc(m.enfoque||'')}" placeholder="Ej. environments con 3D, portafolio enfocado en VD"></div>
+    </div>
+    <div class="field"><label for="m-porque">¿Por qué esta meta?</label><textarea id="m-porque" data-aj="metas.porque" placeholder="Lo que te importa de este camino, para no perderlo de vista">${esc(m.porque||'')}</textarea></div>
+  </div>
+  ${m.rol?`<div class="box orienta-ok"><p style="margin:0">Esta es la meta que usa toda la app ahora: <b>${esc(metaTexto())}</b>${m.plazo?' · '+esc(m.plazo):''}.</p></div>`:'<div class="box"><p class="muted" style="margin:0">Sin meta propia todavía, la app usa un valor genérico de respaldo. Escribe la tuya arriba.</p></div>'}`}
 const CRIT2SKILL={'Idea y diseño':'diseno','Silueta y lectura':'silueta','Composición y punto focal':'composicion','Valores':'valores','Color y luz':'color','Forma y perspectiva':'perspectiva','Storytelling':'storytelling','Pilares y mood':'diseno'};
 const EJERCICIOS={
   escala:['Un mismo entorno en 3 thumbnails: pon una figura humana chica, mediana y diminuta. Escribe cuál cuenta mejor la escala y por qué.','Estructura monumental (templo, árbol, máquina): usa solo 3 pistas de escala (figura, puerta, escalón) y quita todo lo demás.','Master study de 20 min de un keyframe con escala épica: marca con flechas cada pista de tamaño que usa el artista.'],
@@ -2014,6 +2034,14 @@ function debilidades(){
   const orden=[...man,...conDatos.map(x=>x[0]),...resto].filter((k,i,a)=>a.indexOf(k)===i);
   return {orden,prom:Object.fromEntries(conDatos)};
 }
+/* Perfil de habilidades real: no un puntaje arbitrario, sino evidencia acumulada de tus propias críticas (debilidades().prom ya promedia nota real por skill) */
+function nivelSkill(prom){if(prom==null)return null;if(prom>=7.5)return['Fuerte','var(--ok)'];if(prom>=5.5)return['Sólido','var(--c-tecnica)'];return['En desarrollo','var(--warn)']}
+function perfilHabilidadesHTML(){
+  const {prom}=debilidades();
+  const filas=Object.entries(SKILLS).map(([k,n])=>({n,p:prom[k],info:nivelSkill(prom[k])})).sort((a,b)=>(b.p??-1)-(a.p??-1));
+  const conDatos=filas.filter(f=>f.p!=null).length;
+  return `<div class="box"><h3>Perfil de habilidades</h3><p class="hint">Basado en la evidencia real de tus críticas, no en una sola evaluación. ${conDatos?`${conDatos}/${filas.length} con datos.`:'Pide crítica de alguna pieza para empezar a llenarlo.'}</p>
+    <div class="scores">${filas.map(({n,p,info})=>`<div class="score" style="grid-template-columns:110px 1fr auto"><span>${esc(n)}</span>${info?`<div class="bar" style="width:auto"><i style="width:${Math.round((p/10)*100)}%;background:${info[1]}"></i></div><b style="color:${info[1]};white-space:nowrap">${info[0]}</b>`:`<span class="muted" style="font-size:12.5px">Sin datos todavía</span><span></span>`}</div>`).join('')}</div></div>`}
 function ejercicioDeHoy(){
   const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},hoy=r.dias[hoyKey()];
   if(hoy)return hoy;
@@ -2082,6 +2110,10 @@ function siguientePaso(){
   if(est)return {tag:'Se está enfriando',titulo:est.p.nombre,texto:`Llevas ${est.dias} días con "${corto(est.x.nota||est.x.etapa||'un boceto',60)}" sin marcarlo Final ni soltarlo. Termínalo aunque no esté perfecto, o suéltalo y sigue.`,pid:est.pid,tab:'critica',accion:'Ir a esa pieza'};
   for(const [pid,p] of ordenados()){if(p.estado==='Archivado')continue;const D=DX(p);
     if(D.conflictos.length)return {tag:'Contradicción sin resolver',titulo:p.nombre,texto:corto(D.conflictos[0].t,140),pid,tab:'cerebro',accion:'Resolverla'}}
+  const post=lista('postulaciones').find(x=>x.seguimiento&&x.seguimiento<=hoyKey()&&!['Oferta','Rechazado'].includes(x.estado));
+  if(post)return {tag:'Seguimiento pendiente',titulo:post.estudio,texto:`Ya pasó tu fecha de seguimiento (${post.seguimiento}). Un mensaje corto y amable cuenta.`,v:'postulaciones',accion:'Ir a Postulaciones'};
+  const prueba=lista('pruebas').find(x=>x.estado==='En curso');
+  if(prueba){const dd=diasHasta(hoyKey(new Date(prueba.limite)));if(dd!=null&&dd<=1)return {tag:'Prueba de arte',titulo:prueba.estudio,texto:dd<=0?'Se vence hoy: entrega lo que tengas.':'Se vence mañana.',v:'pruebas',accion:'Ir a la prueba'}}
   const t=tareaActiva();
   if(t){const hechos=t.bocetos.length,meta=Math.max(0,...t.reqs.map(r=>r.meta||0));
     if(meta&&hechos<meta)return {tag:'Tarea del taller',titulo:t.titulo,texto:`Vas ${hechos}/${meta} bocetos. Sigue avanzando.`,v:'taller',accion:'Ir a la tarea'}}
@@ -2507,6 +2539,7 @@ function vNivel(){
     <a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Ver portafolio ↗</a>
     ${S.sample?(S.aiBusy.nivel?'<button class="btn" data-act="ai-stop" data-k="nivel">Detener</button><span class="muted">Revisando tu portafolio…</span>':'<button class="btn pri" data-act="ai" data-k="nivel">Evaluar mi nivel</button>'):''}</div>
     ${S.ai.nivel?.error?`<p class="muted">${esc(S.ai.nivel.error)}</p>`:''}</div>
+  ${perfilHabilidadesHTML()}
   ${d?`
   <div class="grid2">
     <div class="box"><span class="lbl">Evaluación del ${fecha(u.ts)}${u.fuente?' · '+esc(u.fuente):''}</span>
