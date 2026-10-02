@@ -919,7 +919,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq6yh55').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muq7djdd').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1761,7 +1761,12 @@ async function preguntar(kind){
   const ctl=new AbortController();S.aiBusy[kind]=ctl;S.ai[kind]={stream:''};renderMain();
   const onText=({text})=>{S.ai[kind].stream=text;const el=document.querySelector('.asesor .aiout');if(el)el.innerHTML=md(text)};
   try{
-    if(kind==='chat-explorar'){
+    if(kind==='tratamiento'){
+      const texto=(S.tratTxt||'').trim();
+      if(!texto){S.ai[kind]={error:'Pega tu brief o tratamiento primero.'};delete S.aiBusy[kind];renderMain();return}
+      const r=await S.sample.json(`${ROL}\n\nContexto YA GUARDADO del proyecto (no lo repitas; compáralo contra el texto nuevo):\n${ctxProyecto(p)}\n\nEl artista te trae un tratamiento o brief ya trabajado (puede venir de él mismo, de sus profesores, o de otra conversación). Tu trabajo es REPARTIRLO en los campos estructurados del proyecto, con fidelidad: usa sus palabras y su estructura, no las reinterpretes ni las adornes de más. Si algo en el texto choca con lo que ya existe, prioriza el texto nuevo: es la versión más reciente y confirmada por él.\n\nTexto nuevo:\n${texto.slice(0,12000)}\n\nIncluye SOLO las claves para las que el texto trae información clara; omite por completo las que no.\nResponde SOLO con JSON con cualquiera de estas claves (todas opcionales):\n{"brief_texto":"","brief_historia":"","brief_entregable":"","que_que":"","que_tema":"","que_funcion":"","concepto_frase":"","concepto_tensionTexto":"","ad":"","mood_emocion":"","mood_sensacion":"","mood_atmosfera":"","mood_luz":"","mood_clima":"","color_dominante":"","color_acento":"","composicion":"","forma_silueta":"","forma_anatomia":"","forma_geometria":"","forma_proporcion":"","nucleos":["",""],"pilares":[{"t":"","f":""}],"tensiones":[{"a":"","b":"","aVis":"","bVis":"","como":"","domina":""}],"reglas_visuales":[""],"personajes":[{"nombre":"","rol":"Protagonista|Antagonista|Aliado|Deidad|Criatura|Secundario","lado":"","forma":"","materiales":"","personalidad":"","notas":""}]}`,{signal:ctl.signal,cache:false,modelTier:'complex'});
+      S.tratPropuesta=r;S.tratSel={};S.ai[kind]=null;
+    }else if(kind==='chat-explorar'){
       const txt=(S.chatExplorarTxt||'').trim();
       if(!txt){S.ai[kind]={error:'Escribe tu idea primero.'};delete S.aiBusy[kind];renderMain();return}
       const hist=(p.chat||[]).slice(-6).map(m=>(m.r==='yo'?'ARTISTA: ':'TÚ: ')+m.t).join('\n');
@@ -3347,7 +3352,7 @@ function pedirTexto(kind,p,x){
     nombres:`dame nombres para ${n}`,nombres2:`dame nombres para ${S.nom?.para?.toLowerCase()||'mi proyecto'}${S.nom?.pid==='__todos'?' de todos mis proyectos':' de '+n}`,
     critica:`critica mi pieza${x?.etapa?' ('+x.etapa.toLowerCase()+')':''} de ${n}`,proceso:`critica el proceso de ${n} (mis carpetas)`,metodo:'saca mis reglas de trabajo de mis procesos',
     estilo:'analiza mi estilo',nivel:'evalúa mi nivel con mi portafolio',diario:'dame el ejercicio de estudio de hoy',reto:'dame un reto de estudio',prueba:'dame una prueba de arte',
-    msg:'pule mi mensaje en inglés',ruta:'arma mi plan de estudio de 8 semanas',adaptar:'adapta mi portafolio a esta vacante (te la paso)',taller:`trabajemos los pilares de ${n}`,'chat-explorar':`ayúdame a pensar a fondo esta idea para ${n}: «${S.chatExplorarTxt||''}»`};
+    msg:'pule mi mensaje en inglés',ruta:'arma mi plan de estudio de 8 semanas',adaptar:'adapta mi portafolio a esta vacante (te la paso)',taller:`trabajemos los pilares de ${n}`,'chat-explorar':`ayúdame a pensar a fondo esta idea para ${n}: «${S.chatExplorarTxt||''}»`,tratamiento:`reparte este tratamiento en los campos de ${n} (te lo paso completo)`};
   const k=kind.startsWith('guia-')?'guia':kind;
   const frase=m[k]||(k==='guia'?`guíame en la etapa de producción de ${n}`:`ayúdame con ${n}`);
   return `Pídemelo en tu chat de Claude: «${frase}». Lo hago y lo dejo guardado aquí en tu app.`;
@@ -4544,10 +4549,70 @@ function cerebroEstadoHTML(p,D){const s=salud(p),conf=D.conflictos.slice(0,2),va
     ${conf.length?`<div class="orienta-l">${conf.map(c=>conflHTML(p,c)).join('')}</div>`:''}
     ${vac.length?`<div class="orienta-l">${vac.map(v=>`<div class="cf" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>NO DEFINIDO · ${esc(v.n)}</b> — ${esc(v.q)}</p><div class="prow"><button class="btn sm" data-act="tab" data-tab="${v.tab}">Ir a resolverlo</button></div></div>`).join('')}${D.vacios.length>vac.length?`<p class="muted" style="margin:4px 0 0;font-size:12.5px">+${D.vacios.length-vac.length} más en la Auditoría de coherencia, más abajo.</p>`:''}</div>`:''}
   </div>`}
+/* Aplicar tratamiento completo: pega un brief ya armado (tuyo, de profesores, de otra conversación) y Claude lo reparte en todos los campos de golpe, con revisión antes/después por campo — automatiza lo que si no hay que repartir a mano, campo por campo, por varias pestañas */
+const TRAT_CAMPOS=[
+  ['brief_texto','El encargo',p=>p.brief.texto,(p,v)=>p.brief.texto=v],
+  ['brief_historia','Historia / guion',p=>p.brief.historia,(p,v)=>p.brief.historia=v],
+  ['brief_entregable','Entregable',p=>p.brief.entregable,(p,v)=>p.brief.entregable=v],
+  ['que_que','Concepto (qué es)',p=>p.que?.que,(p,v)=>{p.que=p.que||{};p.que.que=v}],
+  ['que_tema','Tema',p=>p.que?.tema,(p,v)=>{p.que=p.que||{};p.que.tema=v}],
+  ['que_funcion','Función',p=>p.que?.funcion,(p,v)=>{p.que=p.que||{};p.que.funcion=v}],
+  ['concepto_frase','Frase del concepto',p=>p.concepto.frase,(p,v)=>p.concepto.frase=v],
+  ['concepto_tensionTexto','Texto de la tensión central',p=>p.concepto.tensionTexto,(p,v)=>p.concepto.tensionTexto=v],
+  ['ad','Art Direction',p=>p.ad,(p,v)=>p.ad=v],
+  ['mood_emocion','Mood: emoción',p=>p.mood.emocion,(p,v)=>p.mood.emocion=v],
+  ['mood_sensacion','Mood: sensación',p=>p.mood.sensacion,(p,v)=>p.mood.sensacion=v],
+  ['mood_atmosfera','Mood: atmósfera',p=>p.mood.atmosfera,(p,v)=>p.mood.atmosfera=v],
+  ['mood_luz','Mood: luz',p=>p.mood.luz,(p,v)=>p.mood.luz=v],
+  ['mood_clima','Mood: clima',p=>p.mood.clima,(p,v)=>p.mood.clima=v],
+  ['color_dominante','Color dominante',p=>p.lenguaje?.colorDom,(p,v)=>{p.lenguaje=p.lenguaje||{};p.lenguaje.colorDom=v}],
+  ['color_acento','Color acento',p=>p.lenguaje?.colorAcento,(p,v)=>{p.lenguaje=p.lenguaje||{};p.lenguaje.colorAcento=v}],
+  ['composicion','Composición',p=>p.lenguaje?.composicion,(p,v)=>{p.lenguaje=p.lenguaje||{};p.lenguaje.composicion=v}],
+  ['forma_silueta','Forma: silueta',p=>p.forma?.silueta,(p,v)=>{p.forma=p.forma||{};p.forma.silueta=v}],
+  ['forma_anatomia','Forma: anatomía',p=>p.forma?.anatomia,(p,v)=>{p.forma=p.forma||{};p.forma.anatomia=v}],
+  ['forma_geometria','Forma: geometría',p=>p.forma?.geometria,(p,v)=>{p.forma=p.forma||{};p.forma.geometria=v}],
+  ['forma_proporcion','Forma: proporción',p=>p.forma?.proporcion,(p,v)=>{p.forma=p.forma||{};p.forma.proporcion=v}]
+];
+const TRAT_ARRAYS=[
+  ['nucleos','Núcleos',p=>p.concepto.nucleos,(p,v)=>{p.concepto.nucleos=v.slice(0,3).map(String)}],
+  ['pilares','Pilares',p=>p.pilares,(p,v)=>{p.pilares=v.slice(0,3).map(x=>({t:String(x.t||''),f:String(x.f||'')}));while(p.pilares.length<3)p.pilares.push({t:'',f:''})}],
+  ['tensiones','Tensiones',p=>p.tensiones,(p,v)=>{p.tensiones=v.map(x=>({a:String(x.a||''),b:String(x.b||''),aVis:String(x.aVis||''),bVis:String(x.bVis||''),como:String(x.como||''),domina:String(x.domina||'')}))}],
+  ['reglas_visuales','Reglas visuales',p=>p.lenguaje?.reglas,(p,v)=>{p.lenguaje=p.lenguaje||{};p.lenguaje.reglas=v.map(String)}],
+  ['personajes','Personajes',p=>p.personajes,(p,v)=>{
+    const existentes=(p.personajes||[]);
+    p.personajes=v.map(x=>{const match=existentes.find(e=>nz(e.nombre)===nz(x.nombre||''));
+      return {id:match?.id||uid(),nombre:String(x.nombre||''),rol:PJ_ROLES.includes(x.rol)?x.rol:'Secundario',lado:String(x.lado||''),forma:String(x.forma||match?.forma||''),materiales:String(x.materiales||match?.materiales||''),personalidad:String(x.personalidad||''),notas:String(x.notas||''),piel:match?.piel||'',colorClave:match?.colorClave||'',paleta:match?.paleta||[]}})
+  }]
+];
+function tratTexto(k,v){if(k==='personajes')return(v||[]).map(x=>x.nombre).join(', ')||'(ninguno)';
+  if(k==='pilares')return(v||[]).map(x=>x.t).filter(Boolean).join(' · ')||'(vacío)';
+  if(k==='tensiones')return(v||[]).map(x=>`${x.a} ↔ ${x.b}`).join(' · ')||'(vacía)';
+  if(Array.isArray(v))return v.join(', ')||'(vacío)';
+  return v||'(vacío)'}
+function tratamientoHTML(p){
+  if(!S.sample)return'';
+  const prop=S.tratPropuesta;
+  if(!prop)return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Aplicar un tratamiento completo</h3><p class="hint">Pega tu brief o tratamiento ya armado (tuyo, de tus profesores, de otra conversación): se reparte en todos los campos del proyecto de una sola vez, y revisas antes/después de cada uno antes de guardar nada.</p>
+    <textarea id="trat-txt" placeholder="Pega aquí tu brief completo…" style="min-height:140px">${esc(S.tratTxt||'')}</textarea>
+    <div class="prow">${S.aiBusy.tratamiento?`<button class="btn sm" data-act="ai-stop" data-k="tratamiento">Detener</button>`:`<button class="btn sm pri" data-act="trat-analizar">Analizar y repartir →</button>`}</div>
+    ${S.aiBusy.tratamiento?'<p class="muted">Leyendo y repartiendo…</p>':S.ai.tratamiento?.error?`<p class="muted">${esc(S.ai.tratamiento.error)}</p>`:''}</div>`;
+  const fila=(k,lbl,actual,nuevo)=>{const sel=S.tratSel?.[k]!==false;
+    return `<div class="cf" style="border-left:3px solid ${sel?'var(--ok)':'var(--line)'}"><label class="chk"><input type="checkbox" data-act="trat-toggle" data-k="${k}" ${sel?'checked':''}><span><b>${esc(lbl)}</b></span></label>
+      <p class="muted" style="margin:2px 0 0;font-size:12px">Antes: ${esc(corto(String(actual),140))}</p>
+      <p style="margin:2px 0 0">Nuevo: ${esc(corto(String(nuevo),220))}</p></div>`};
+  const filas=[];
+  TRAT_CAMPOS.forEach(([k,lbl,get])=>{if(prop[k]!=null&&String(prop[k]).trim())filas.push(fila(k,lbl,get(p)||'(vacío)',prop[k]))});
+  TRAT_ARRAYS.forEach(([k,lbl,get])=>{if(Array.isArray(prop[k])&&prop[k].length)filas.push(fila(k,lbl,tratTexto(k,get(p)),tratTexto(k,prop[k])))});
+  if(!filas.length)return `<div class="box"><p class="muted" style="margin:0">No encontré nada claro que repartir en ese texto.</p><div class="prow"><button class="btn sm" data-act="trat-cancelar">Cerrar</button></div></div>`;
+  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Revisa antes de aplicar</h3><button class="btn ghost sm" data-act="trat-cancelar">Cancelar</button></div>
+    <p class="hint">Desmarca lo que no quieras cambiar. Lo demás se escribe en el proyecto tal cual lo ves aquí.</p>
+    ${filas.join('')}
+    <div class="prow"><button class="btn pri" data-act="trat-aplicar">Aplicar seleccionados</button></div></div>`}
 function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   return `
   ${dnaHTML(p)}
   ${cerebroEstadoHTML(p,D)}
+  ${tratamientoHTML(p)}
   <div class="cerebro">
     <div class="c-main">
       <div class="box asist"><div class="prow" style="justify-content:space-between"><h3>Asistente · director de arte del proyecto</h3><span class="lbl">Local · sin IA de pago · usa solo tu contexto</span></div>${chatHTML(p)}
@@ -6637,6 +6702,14 @@ async function accion(a,el){
     case 'rf-del':S.ajustes.referentes.splice(+ds.i,1);marcarAj();renderMain();break;
     case 'ai':if(!S.sample&&ds.k==='nombres2'){nombresLocal();break}if(ds.k==='chat-explorar')S.chatExplorarTxt=$('#chat-txt')?.value||'';preguntar(ds.k);break;
     case 'brief-explorar':{const txt=(p?.brief.texto||'').trim();if(!txt){toast('Escribe tu idea en "El encargo" primero');return}S.chatExplorarTxt=txt;S.tab='cerebro';renderMain();preguntar('chat-explorar');break}
+    case 'trat-analizar':S.tratTxt=$('#trat-txt')?.value||'';preguntar('tratamiento');break;
+    case 'trat-toggle':S.tratSel=S.tratSel||{};S.tratSel[ds.k]=!(S.tratSel[ds.k]!==false);renderMain();break;
+    case 'trat-cancelar':S.tratPropuesta=null;S.tratSel={};renderMain();break;
+    case 'trat-aplicar':{if(!p||!S.tratPropuesta)return;const prop=S.tratPropuesta;
+      TRAT_CAMPOS.forEach(([k,lbl,get,set])=>{if(S.tratSel?.[k]!==false&&prop[k]!=null&&String(prop[k]).trim())set(p,prop[k])});
+      TRAT_ARRAYS.forEach(([k,lbl,get,set])=>{if(S.tratSel?.[k]!==false&&Array.isArray(prop[k])&&prop[k].length)set(p,prop[k])});
+      nuevaDecision(p,'Se aplicó un tratamiento completo al proyecto.','Repartido con ayuda de Claude a partir de un brief pegado por el usuario.',[],'tratamiento');
+      S.tratPropuesta=null;S.tratSel={};S.tratTxt='';marcar();renderMain();toast('Aplicado');break}
     case 'nom-local':nombresLocal();break;
     case 'ai-stop':S.aiBusy[ds.k]?.abort();break;
     case 'ai-empuje':{const x=S.ai.concepto?.data?.empujes?.[+ds.i];if(x){p.concepto.empujes.push(x.idea);marcar();el.textContent='Guardado';el.disabled=true;renderSide()}break}
