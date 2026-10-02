@@ -468,6 +468,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
+.mp-dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px;display:inline-block}
+.pf{display:flex;flex-direction:column;gap:5px;background:var(--surface2);border-radius:10px;padding:10px;min-width:0}.pf>b{font-family:var(--display);font-size:17px}
+.pf-r{display:flex;align-items:center;gap:6px;font-size:12.5px}.pf-r i{width:16px;height:16px;border-radius:4px;flex:0 0 16px}.pf-r small{color:var(--ink3)}
 .esc-mini{display:flex;gap:4px;flex-wrap:wrap}.esc-bola.esc-m{width:40px;height:40px}
 .esc-pj{margin-top:6px;border-top:1px solid var(--line);padding-top:8px}.esc-pj summary{cursor:pointer}
 .esc-sw{height:26px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10.5px}
@@ -946,7 +949,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murl9i85').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murlkf3d').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -6102,6 +6105,7 @@ function mapaCalc(p){const D=DX(p);
   cruces.forEach(x=>{add(x.a,'warn',`Choca con ${MP_NOM[x.b]}`);add(x.b,'warn',`Choca con ${MP_NOM[x.a]}`)});
   D.vacios.forEach(v=>{const id=mpNodoDe(v.n);if((notas[id]||[]).filter(n=>n.cls==='vac').length<1)add(id,'vac',`Falta: ${v.n.toLowerCase()}`)});
   D.genericos.slice(0,6).forEach(g=>add(mpNodoDe(g.split(':')[0]),'gen',corto(g,110)));
+  escRevisa(p).filter(x=>x.fix).slice(0,2).forEach(x=>add(/mood|oscuro|luminos/i.test(x.t)?'mood':'lenguaje','gen','Luz: '+corto(x.t,100)));
   const q=p.que||{},T=(p.tensiones||[]).filter(x=>x.a&&x.b),mw=tresMood(p).filter(Boolean),qq=queDe(p);
   const hilo=qq?[cap(qq),q.tema?`habla de ${q.tema}`:'',q.funcion?`existe para ${corto(q.funcion,90).replace(/[.…]+$/,'')}`:'',T.length?`su choque es ${T.map(x=>`${x.a} ↔ ${x.b}`).join(' y ')}`:'',mw.length?`debe sentirse ${lista3(mw)}`:''].filter(Boolean).join(' · ')+'.':'Empieza por el nodo 1: ¿qué estás diseñando?';
   return {D,cruces,notas,hilo}}
@@ -6121,6 +6125,9 @@ function mapaIdeas(p,D){const o=[],q=p.que||{},T=(p.tensiones||[]).filter(x=>x.a
   (p.concepto.nucleos||[]).filter(Boolean).forEach(n=>add('idea',`Núcleo «${n}»: ¿en qué escena concreta se ve, sin que nadie lo explique?`));
   add('tension',PROVOCACIONES[rot%PROVOCACIONES.length]);
   D.oportunidades.forEach(t=>add(mpNodoDe(t),t));
+  if(T.length)add('lenguaje',`¿Qué color es «${T[0].a}» y cuál es «${T[0].b}»? Si no puedes nombrarlos, la tensión todavía no llegó a la paleta.`);
+  add('lenguaje','¿Dónde está el único punto donde el color más fuerte puede aparecer? Si está en todas partes, no es un acento.');
+  if(p.que?.funcion)add('lenguaje',`Si la función es «${corto(p.que.funcion,60)}», ¿qué color o brillo la delata sin explicarla?`);
   if(!(p.evitar||[]).length)add('mundo','Nombra tres cosas que NO quieres. Lo que rechazas define el estilo tanto como lo que eliges.');
   if(o.length<4)[['idea','¿Qué quieres que sienta alguien que ve la pieza durante tres segundos, sin leer nada?'],['funcion','¿Qué cambiaría en el diseño si el elemento tuviera que sobrevivir un año en su mundo?'],['tension','¿Qué dos cosas que amas no pueden convivir en este diseño?']].forEach(([n,t])=>add(n,t));
   const cnt={};o.forEach((x,i)=>{x.k=(cnt[x.nodo]=(cnt[x.nodo]||0)+1)*100+i});o.sort((a,b)=>a.k-b.k);
@@ -6139,10 +6146,10 @@ function mapaNodoHTML(p,id,n,M){
     idea:F('Qué es',inp('que.que',q.que,'Una criatura marina que vive sola…'))+F('Tema',inp('que.tema',q.tema,'poder, pérdida, fe…')),
     funcion:F('Para qué existe en su mundo',tx('que.funcion',q.funcion,'Protege la entrada de un templo…','x-que-funcion',58)),
     intencion:F('Frase de Art Direction',tx('ad',p.ad,'Qué quieres que entiendan y sientan','x-ad',52))+[0,1,2].map(i=>F('Pilar '+(i+1),inp(`pilares.${i}.t`,pl[i]?.t,'Una intención, no un objeto'))).join(''),
-    tension:T.length?T.map((t,i)=>`<div class="mp-tz"><input type="text" data-b="tensiones.${i}.a" value="${esc(t.a)}" placeholder="Idea A" aria-label="Lado A"><span>↔</span><input type="text" data-b="tensiones.${i}.b" value="${esc(t.b)}" placeholder="Idea B" aria-label="Lado B"></div>${inp(`tensiones.${i}.como`,t.como,'Cómo se ve este choque')}`).join('')+'<button class="btn ghost sm" data-act="tens-add">＋ Otra tensión</button>':'<p class="muted" style="margin:0">Sin conflicto, el diseño no tiene nada que contar.</p><button class="btn sm" data-act="tens-add">＋ Definir una tensión</button>',
+    tension:T.length?T.map((t,i)=>{const ca=colorDe([t.aVis,t.a].join(' ')),cb=colorDe([t.bVis,t.b].join(' ')),dot=c=>c?`<i class="mp-dot" style="background:${hslHex(c.hsl[0],c.hsl[1],c.hsl[2])}" title="${esc(c.k)}"></i>`:'';return `<div class="mp-tz">${dot(ca)}<input type="text" data-b="tensiones.${i}.a" value="${esc(t.a)}" placeholder="Idea A" aria-label="Lado A"><span>↔</span><input type="text" data-b="tensiones.${i}.b" value="${esc(t.b)}" placeholder="Idea B" aria-label="Lado B">${dot(cb)}</div>${inp(`tensiones.${i}.como`,t.como,'Cómo se ve este choque')}`}).join('')+'<button class="btn ghost sm" data-act="tens-add">＋ Otra tensión</button>':'<p class="muted" style="margin:0">Sin conflicto, el diseño no tiene nada que contar.</p><button class="btn sm" data-act="tens-add">＋ Definir una tensión</button>',
     personajes:pj.length?pj.map(c=>`<div class="mp-tz"><input type="text" data-pj="${c.id}.nombre" value="${esc(c.nombre)}" placeholder="Nombre" aria-label="Nombre"><span class="lbl">${esc(c.rol||'')}</span></div><input type="text" data-pj="${c.id}.lado" value="${esc(c.lado||'')}" placeholder="Qué lado de la tensión encarna" aria-label="Lado">`).join(''):'<p class="muted" style="margin:0">Aún sin personajes.</p>',
     mood:`<div class="grid3" style="gap:6px">${[0,1,2].map(i=>`<input type="text" data-b="mood.tres.${i}" value="${esc((p.mood.tres||[])[i]||'')}" placeholder="palabra ${i+1}" aria-label="Palabra de mood ${i+1}">`).join('')}</div>`+F('Emoción',tx('mood.emocion',p.mood.emocion,'Qué siente quien la ve','x-mood-emocion',46))+((p.mood.paleta||[]).length?`<span class="pal">${p.mood.paleta.map(c=>`<i style="background:${esc(c)}" title="${esc(c)}"></i>`).join('')}</span>`:''),
-    lenguaje:F('Silueta',inp('forma.silueta',p.forma?.silueta,'Reconocible en negro a 5 cm'))+`<div class="grid2" style="gap:6px">${F('Color dominante',inp('lenguaje.colorDom',l.colorDom,'obsidiana'))}${F('Acento',inp('lenguaje.colorAcento',l.colorAcento,'rojo'))}</div>`+((l.formas||[]).length||(p.materiales||[]).length?`<p class="hint" style="margin:0">${[(l.formas||[]).length?'Formas: '+l.formas.join(', '):'',(p.materiales||[]).length?'Materiales: '+p.materiales.join(', '):''].filter(Boolean).map(esc).join(' · ')}</p>`:''),
+    lenguaje:`<p class="hint" style="margin:0">Luz: <b>${esc(p.escena?escNombre(p,p.escena):'sin escena (elige abajo)')}</b></p>${p.escena&&(p.mood.paleta||[]).length?escMiniHTML((p.mood.paleta||[]).slice(0,6).map(hex=>({hex}))):''}`+F('Silueta',inp('forma.silueta',p.forma?.silueta,'Reconocible en negro a 5 cm'))+`<div class="grid2" style="gap:6px">${F('Color dominante',inp('lenguaje.colorDom',l.colorDom,'obsidiana'))}${F('Acento',inp('lenguaje.colorAcento',l.colorAcento,'rojo'))}</div>`+((l.formas||[]).length||(p.materiales||[]).length?`<p class="hint" style="margin:0">${[(l.formas||[]).length?'Formas: '+l.formas.join(', '):'',(p.materiales||[]).length?'Materiales: '+p.materiales.join(', '):''].filter(Boolean).map(esc).join(' · ')}</p>`:''),
     mundo:`<div class="chips">${(p.evitar||[]).map((e,i)=>`<span class="chip">✕ ${esc(e)}<button data-act="evitar-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')||'<span class="muted">Nada que evitar definido</span>'}</div><p class="hint" style="margin:0">${(p.refs||[]).length} referencias · ${(p.decisiones||[]).length} decisiones · ${(p.preguntas||[]).filter(x=>!x.ok).length} preguntas abiertas</p>${(p.decisiones||[])[0]?`<p class="hint" style="margin:0">Última decisión: <b>${esc(corto(p.decisiones[0].t,70))}</b></p>`:''}`}[id];
   const nt=(M.notas[id]||[]).map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
   return `<div class="mp-n ${M.notas[id]?.some(x=>x.cls==='warn')?'cf':''} ${M.notas[id]?.some(x=>x.cls==='vac')?'vac':''}" id="mp-${id}"><div class="mp-h"><b class="mp-num">${n}</b><span>${MP_NOM[id]}</span><button class="btn ghost sm" data-act="tab" data-tab="${MP_TAB[id]}" title="Abrir su pestaña completa" aria-label="Abrir ${MP_NOM[id]}">↗</button></div>${B}<div data-mpnota="${id}">${nt}</div></div>`}
@@ -6162,6 +6169,7 @@ function vMapa(p){
       <label class="lbl" for="x-brief-una-frase">La frase del proyecto</label>${inp('brief.una.frase',p.brief.una?.frase,'Sujeto + lugar + sentimiento, en una frase')}
       <p class="mp-hilo" id="mp-hilo">${esc(M.hilo)}</p></div></div>
     <div class="mp-col"><span class="lbl">Cómo se ve y se siente</span>${[4,5,6,7].map(nd).join('')}</div></div>
+  ${mapaLuzHTML(p)}
   <div id="mp-panel">${mapaPanelHTML(p,M)}</div>`}
 function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');if(!w||!svg||!c||getComputedStyle(svg).display==='none')return;
   const W=w.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${W.width} ${W.height}`);
@@ -6177,6 +6185,7 @@ let mapaT=null;
 function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'||S.vista!=='proyecto'||S.P[S.cur]!==p)return;
   const M=mapaCalc(p);S.mapaCruces=M.cruces;
   const hl=$('#mp-hilo');if(hl)hl.textContent=M.hilo;
+  const lz=$('#mp-luzcolor');if(lz&&!lz.contains(document.activeElement)){lz.outerHTML=mapaLuzHTML(p);escDibuja()}
   const pn=$('#mp-panel');if(pn&&!pn.contains(document.activeElement))pn.innerHTML=mapaPanelHTML(p,M);
   Object.keys(MP_NOM).forEach(id=>{const e=$('#mp-'+id),nt=document.querySelector(`[data-mpnota="${id}"]`);if(!e||!nt)return;const L=M.notas[id]||[];
     nt.innerHTML=L.map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
@@ -6405,7 +6414,9 @@ const escRgb=h=>{h=String(h||'#888888').replace('#','');return [0,2,4].map(i=>Ma
 const escSrgb=v=>Math.round(Math.pow(Math.max(0,Math.min(1,v)),1/2.2)*255);
 const escHex=c=>'#'+c.map(v=>escSrgb(v).toString(16).padStart(2,'0')).join('');
 const escMul=(a,b,k=1)=>a.map((v,i)=>v*b[i]*k),escSum=(...c)=>c[0].map((_,i)=>c.reduce((s,x)=>s+x[i],0));
-function escDe(p){if(!p.escena)p.escena={k:'neutro',...ESC_PRE.neutro,int:1};delete p.escena.n;return p.escena}
+/* escDe solo LEE (no crea escena: así «tener escena» significa que la elegiste); escMut es para cambiarla */
+function escDe(p){return p.escena||{k:'neutro',...ESC_PRE.neutro,int:1}}
+function escMut(p){if(!p.escena)p.escena={k:'neutro',...ESC_PRE.neutro,int:1};delete p.escena.n;return p.escena}
 function escLuces(E){return {L:escRgb(E.luz).map(v=>v*(E.int||1)*1.1),A:escRgb(E.amb),B:escRgb(E.reb)}}
 function escRampa(loc,E){const L=escRgb(loc),{L:K,A,B}=escLuces(E),sat=(c,s)=>{const m=(c[0]+c[1]+c[2])/3;return c.map(v=>m+(v-m)*s)};
   const filas=[escSum(K.map(v=>v*.85),[.12,.12,.12]),escSum(escMul(L,K),escMul(L,A,.3)),escSum(escMul(L,K,.5),escMul(L,A,.55)),sat(escSum(escMul(L,K,.15),escMul(L,A,.8)),1.15),escMul(L,A,.6),escSum(escMul(L,A,.4),escMul(L,B,.5)),escMul(L,A,.3)];
@@ -6429,7 +6440,8 @@ function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
   if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
   return escColsHTML(pal.map(hex=>({hex})),E,'')}
 function escDibuja(){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
-  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
+  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
+    if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
     const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
 function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);const r=$('#esc-rev');if(r)r.innerHTML=escRevHTML(p);escDibuja()}escRefrescaPj(p)}
 /* personajes: cada color de su paleta, iluminado con la escena */
@@ -6446,19 +6458,19 @@ function escRefrescaPj(p){(p.personajes||[]).forEach(c=>{const o=$('#pjesc-cols-
 const escLuma=h=>lumaHex(h);
 function escTmp(h){const x=hexHsl(h);if(!x||x.s<.12)return 0;return (x.h<75||x.h>330)?1:(x.h>=150&&x.h<=270)?-1:0}
 function escRevisa(p){const E=escDe(p),R=[],M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),mt=M.T.v||I.T.v,mv=M.V.v||I.V.v,tL=escTmp(E.luz),tA=escTmp(E.amb),mias=(p.luces||[]).map(l=>l.k).filter(k=>ESC_PRE[k]);
-  const poner=(k)=>pp=>{const e=escDe(pp);Object.assign(e,ESC_PRE[k],{k,int:e.int||1});delete e.n};
+  const poner=(k)=>pp=>{const e=escMut(pp);Object.assign(e,ESC_PRE[k],{k,int:e.int||1});delete e.n};
   const add=(t,why,lbl,fix)=>R.push({t,why,lbl,fix});
   const pal=(p.mood.paleta||[]).slice(0,8),ramps=pal.map(c=>escRampa(c,E));
   if(Math.abs(mt)>=.4&&tL&&Math.sign(mt)!==tL){const cand=Object.keys(ESC_PRE).filter(k=>k!=='neutro'&&escTmp(ESC_PRE[k].luz)===Math.sign(mt)),k=mias.find(m=>cand.includes(m))||(mt>0?'antorcha':'luna');
     add(`Tu mood pide ${mt>0?'calidez':'frío'}, pero la luz de la escena es ${tL>0?'cálida':'fría'}.`,'Si el mood y la luz dicen cosas distintas, el espectador siente la luz, no tus palabras.',`Cambiar a «${ESC_PRE[k].n}»`,poner(k))}
   if(tL&&tA===tL&&hexHsl(E.amb).s>=.2&&Math.abs(mt)<.4){const x=hexHsl(E.amb);
-    add(`La sombra y la luz son del mismo tono (${tL>0?'cálido':'frío'}).`,'Casi siempre la sombra va en el tono contrario a la luz: luz cálida, sombra fría. Es lo que da profundidad y evita que se vea plano.','Poner la sombra en el tono contrario',pp=>{const e=escDe(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h+180,Math.max(.3,h.s*.8),Math.min(.4,Math.max(.14,h.l)));e.k=''})}
-  if(mv<=-.4&&(E.int>1.15||E.el>=75))add('Tu mood es oscuro, pero la escena está muy iluminada.','Un mood oscuro necesita poca luz o una sola fuente fuerte, no iluminación pareja.','Bajar la intensidad',pp=>{const e=escDe(pp);e.int=Math.min(e.int,.7);e.k=''});
-  if(mv>=.4&&E.int<.6)add('Tu mood es luminoso, pero la escena está poco iluminada.','El valor de la luz tiene que acompañar lo que quieres sentir.','Subir la intensidad',pp=>{const e=escDe(pp);e.int=1.1;e.k=''});
+    add(`La sombra y la luz son del mismo tono (${tL>0?'cálido':'frío'}).`,'Casi siempre la sombra va en el tono contrario a la luz: luz cálida, sombra fría. Es lo que da profundidad y evita que se vea plano.','Poner la sombra en el tono contrario',pp=>{const e=escMut(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h+180,Math.max(.3,h.s*.8),Math.min(.4,Math.max(.14,h.l)));e.k=''})}
+  if(mv<=-.4&&(E.int>1.15||E.el>=75))add('Tu mood es oscuro, pero la escena está muy iluminada.','Un mood oscuro necesita poca luz o una sola fuente fuerte, no iluminación pareja.','Bajar la intensidad',pp=>{const e=escMut(pp);e.int=Math.min(e.int,.7);e.k=''});
+  if(mv>=.4&&E.int<.6)add('Tu mood es luminoso, pero la escena está poco iluminada.','El valor de la luz tiene que acompañar lo que quieres sentir.','Subir la intensidad',pp=>{const e=escMut(pp);e.int=1.1;e.k=''});
   if(ramps.length){const perd=ramps.filter(r=>escLuma(r[4].hex)<.035).length;
-    if(perd>=Math.ceil(ramps.length/2))add(`En ${perd} de ${ramps.length} colores la sombra se pierde en negro.`,'Sin información en la sombra no se lee la forma ni el material. Aclara un poco el color de las sombras.','Aclarar las sombras',pp=>{const e=escDe(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h,h.s,Math.min(.45,h.l+.12));e.k=''});
+    if(perd>=Math.ceil(ramps.length/2))add(`En ${perd} de ${ramps.length} colores la sombra se pierde en negro.`,'Sin información en la sombra no se lee la forma ni el material. Aclara un poco el color de las sombras.','Aclarar las sombras',pp=>{const e=escMut(pp),h=hexHsl(e.amb);e.amb=hslHex(h.h,h.s,Math.min(.45,h.l+.12));e.k=''});
     const plano=ramps.filter(r=>escLuma(r[1].hex)-escLuma(r[4].hex)<.08).length;
-    if(plano>=Math.ceil(ramps.length/2))add(`En ${plano} de ${ramps.length} colores casi no hay diferencia entre luz y sombra.`,'Con tan poco contraste la forma se lee plana. Más intensidad en la luz o sombras más oscuras.','Subir el contraste',pp=>{const e=escDe(pp);e.int=Math.min(1.5,(e.int||1)+.25);e.k=''})}
+    if(plano>=Math.ceil(ramps.length/2))add(`En ${plano} de ${ramps.length} colores casi no hay diferencia entre luz y sombra.`,'Con tan poco contraste la forma se lee plana. Más intensidad en la luz o sombras más oscuras.','Subir el contraste',pp=>{const e=escMut(pp);e.int=Math.min(1.5,(e.int||1)+.25);e.k=''})}
   if(mias.length&&E.k&&!mias.includes(E.k))add(`La escena no es ninguna de tus claves de luz (${mias.map(k=>ESC_PRE[k].n).join(', ')}).`,'Tu proyecto ya definió su luz en Mood; la escena debería salir de ahí para que tablero, personajes y paleta cuenten lo mismo.',`Usar «${ESC_PRE[mias[0]].n}»`,poner(mias[0]));
   for(const c of (p.personajes||[]).filter(x=>x.nombre)){const Ec=escDePj(p,c),it=pjItems(p,c),rr=it.map(x=>escRampa(x.hex,Ec));
     const perd=rr.filter(r=>escLuma(r[4].hex)<.035).length;
@@ -6472,6 +6484,66 @@ function escRevHTML(p){const R=escRevisa(p),fix=R.filter(x=>x.fix).length;
     ${p.escUndo?'<div class="prow"><button class="btn ghost sm" data-act="esc-undo">Deshacer la última corrección</button></div>':''}</div>`}
 function escAplicaFix(p,x){x.fix(p);nuevaDecision(p,'Luz y color: '+x.lbl,'La app lo sugirió porque: '+x.t+' '+x.why,['Mood'],'luz','En prueba')}
 function escGuardaUndo(p){p.escUndo={escena:clone(escDe(p)),escenas:clone(p.escenas||[]),pj:(p.personajes||[]).map(c=>[c.id,c.luzEsc||''])}}
+/* ============ Paletas funcionales: salen del mood, la tensión, la pieza (key / personaje / prop) y la luz ============ */
+const PAL_TIPOS={key:'Key / entorno',personaje:'Personaje',prop:'Prop / arma'};
+function palTipo(p){if(S.palTipo)return S.palTipo;const t=(p.que?.tipo||'')+' '+(p.tipo||'');return /Personaje|Criatura/i.test(t)?'personaje':/Prop|arma|Veh/i.test(t)?'prop':'key'}
+function escSugerida(p){const mias=(p.luces||[]).map(l=>l.k).find(k=>ESC_PRE[k]);if(mias)return mias;
+  const M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),t=M.T.n?M.T.v:I.T.v,v=M.V.n?M.V.v:I.V.v,s=lucesSugeridas(p)[0]?.L.k;if(s&&ESC_PRE[s])return s;
+  return v<-.3?(t>0?'antorcha':'luna'):v>.3?(t>0?'follaje':'niebla'):(t>0?'atardecer':'neutro')}
+function palMaterial(p){for(const w of toks([(p.materiales||[]).join(' '),p.materialNota,...(p.personajes||[]).map(c=>c.materiales)].join(' '))){const m=matColor(w);if(m)return {k:m.k,h:m.hsl[0],s:m.hsl[1],l:m.hsl[2]}}return null}
+function paletaFunc(p,tipo){
+  const base=paletaSugerida(p),M=vecDe(moodTextos(p)),I=vecDe(intTextos(p)),t=M.T.n?M.T.v:I.T.v,v=M.V.n?M.V.v:I.V.v,e=M.E.n?M.E.v:I.E.v,
+    hb=hexHsl(base.pal[1].hex),ha=hexHsl(base.pal[4].hex),T=(p.tensiones||[]).filter(x=>x.a&&x.b)[0],
+    sA=T&&colorDe([T.aVis,T.a].join(' ')),sB=T&&colorDe([T.bVis,T.b].join(' ')),clave=v<-.3?'baja':v>.3?'alta':'media',
+    L=clave==='baja'?{sh:.07,bajo:.16,medio:.3,alto:.5,luz:.72}:clave==='alta'?{sh:.5,bajo:.62,medio:.75,alto:.87,luz:.95}:{sh:.12,bajo:.28,medio:.46,alto:.68,luz:.86},
+    sk=p.escena?p.escena.k:escSugerida(p),E=p.escena||{...ESC_PRE[sk],k:sk,int:1},luzH=hexHsl(E.luz)||{h:40,s:.8,l:.8},ambH=hexHsl(E.amb)||{h:220,s:.3,l:.3},
+    S0=Math.max(.2,Math.min(.85,hb.s*(e<-.3?.75:1))),mat=palMaterial(p),pj=(p.personajes||[]).find(c=>c.piel),piel=pj&&colorDe(pj.piel),
+    H=x=>hslHex(x[0],x[1],x[2]),luz=hslHex(luzH.h,luzH.s*.8,L.luz),sombra=hslHex(ambH.h,Math.min(.5,ambH.s*.8),Math.max(.04,Math.min(L.sh,.3)));
+  const V=[
+    {n:'Fiel al mood',d:`Todo parte de tu mood${t?` (${polo('T',t)})`:''} y de la clave ${clave}: una dominante clara y un solo acento.`,h:hb.h,h2:hb.h+(t>0?-14:14),ac:ha.h,acS:Math.min(1,ha.s+.1),sc:.8},
+    {n:'La tensión como paleta',d:T?`«${T.a}» y «${T.b}» tienen cada uno su color: ${sA?sA.k:'uno'} contra ${sB?sB.k:'su opuesto'}. El que domina ocupa más área.`:'Sin tensión definida: usa colores complementarios como si fuera un choque. Define tu tensión y se vuelve tuya.',h:sA?sA.hsl[0]:hb.h,h2:sB?sB.hsl[0]:hb.h+180,ac:luzH.h,acS:.85,sc:.55},
+    {n:'Contraste en el foco',d:'Casi monocromática y calmada; el color fuerte (complementario) vive solo donde quieres que mire el ojo.',h:hb.h,h2:hb.h+25,ac:hb.h+180,acS:.9,sc:.5}];
+  return V.map(x=>{const dom=[x.h,S0,L.medio],sec=[x.h2,S0*x.sc,L.alto*.9+.05],ac=[x.ac,x.acS,tipo==='prop'?.5:.55];
+    const rol={key:[
+      ['Sombra',sombra,30,'Las zonas oscuras y el primer plano: dan peso y profundidad.'],
+      ['Fondo / aire',hslHex(x.h,S0*.3,clave==='baja'?L.bajo:L.alto),20,'Lo lejano: más claro y menos saturado (perspectiva atmosférica).'],
+      ['Dominante',H(dom),25,'El color del mundo; ocupa la mayor parte del plano medio.'],
+      ['Secundario',H(sec),12,'Apoya a la dominante en masas medianas y reflejos.'],
+      ['Luz',luz,8,`El color de la luz de «${ESC_PRE[sk]?.n||'tu escena'}»: bordes, manchas y reflejos.`],
+      ['Acento del foco',H(ac),5,'Solo en el punto donde quieres que mire el espectador.']],
+    personaje:[
+      ['Dominante (masa)',H(dom),38,'Ropa o cuerpo principal: define la silueta de color.'],
+      ['Piel / pelaje',piel?hslHex(piel.hsl[0],piel.hsl[1],Math.max(.25,L.medio)):hslHex(25,.35,Math.max(.22,L.medio*1.1)),18,'Debe contrastar con la dominante para leer el cuerpo.'],
+      ['Secundario',H(sec),14,'Detalles grandes: capa, cinturón, tela.'],
+      ['Material',mat?hslHex(mat.h,mat.s,Math.max(.14,Math.min(.6,mat.l+(clave==='alta'?.1:0)))):hslHex(x.h,S0*.25,L.bajo),12,mat?`Su material (${mat.k}): armadura, joyas o piedra.`:'Metal, hueso o piedra: más neutro que el resto.'],
+      ['Sombra',sombra,10,'Cómo se oscurece bajo la luz de la escena.'],
+      ['Acento del foco',H(ac),8,'Rostro, ojos o arma: lo primero que se debe ver.']],
+    prop:[
+      ['Material base',mat?hslHex(mat.h,mat.s,mat.l):H(dom),42,mat?`El material principal (${mat.k}).`:'El material principal del objeto.'],
+      ['Material secundario',H(sec),24,'Empuñadura, remaches, bordes: cambia el material, no solo el color.'],
+      ['Desgaste',hslHex(x.h+15,S0*.55,L.bajo+.06),14,'Óxido, polvo, uso: cuenta su historia.'],
+      ['Sombra',sombra,12,'Cómo se oscurece bajo la luz de la escena.'],
+      ['Acento / detalle',H(ac),8,'Gema, filo, símbolo o brillo: el detalle que lo hace único.']]}[tipo]||[];
+    const pal=rol.map(([n,hex,pct,uso])=>({rol:n,hex,pct,uso}));
+    const ls=pal.map(z=>escLuma(z.hex)),spread=Math.max(...ls)-Math.min(...ls),ac2=pal.at(-1),notas=[];
+    notas.push(spread>=.4?`✓ Buen rango de valores (${Math.round(spread*100)}%): se lee en escala de grises.`:`✗ Poco rango de valores (${Math.round(spread*100)}%): puede verse plana en grises.`);
+    notas.push(ac2.pct<=8?`✓ El acento ocupa ${ac2.pct}%: solo en el foco.`:'');
+    return {n:x.n,d:x.d,pal,notas:notas.filter(Boolean),escK:sk}})}
+/* conectar el mapa con luz y color */
+function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.k??escSugerida(p),E=p.escena||{...ESC_PRE[sk],k:sk,int:1};
+  return `<div class="box" id="mp-luzcolor" style="border-top:3px solid var(--c-mood)"><h3>Luz y color de esta pieza</h3>
+    <p class="hint">Tres propuestas de paleta que salen de tu mood, tu tensión, tus materiales y la luz de tu escena. Elige una y la app la aplica a todo el proyecto; si luego algo no cuadra, la revisión te dice qué ajustar.</p>
+    <div class="chips"><span class="lbl">Tipo de pieza</span>${Object.entries(PAL_TIPOS).map(([k,n])=>`<button class="ch ${tipo===k?'on':''}" data-act="pal-tipo" data-k="${k}">${n}</button>`).join('')}</div>
+    <div class="prow"><span class="lbl">Escena de luz</span>${p.escena?`<b>${esc(escNombre(p,p.escena))}</b>`:`<span class="muted">Sin elegir · sugerida por tu mood:</span> <b>${esc(ESC_PRE[sk]?.n||'')}</b> <button class="btn ghost sm" data-act="esc-preset" data-k="${sk}">Usarla</button>`}<button class="btn ghost sm" data-act="tab" data-tab="mood">Ajustar en Mood ↗</button></div>
+    <div class="grid3" style="align-items:start">${P.map((v,i)=>`<div class="pf"><b>${esc(v.n)}</b><p class="hint" style="margin:0">${esc(v.d)}</p>
+      <div class="palbar">${v.pal.map(z=>`<span style="flex:${z.pct};background:${z.hex}" title="${esc(z.rol)} · ${z.pct}%"></span>`).join('')}</div>
+      <div class="pj-bar gris" title="Lectura en escala de grises">${v.pal.map(z=>{const g=Math.round(escLuma(z.hex)*255);return `<i style="background:rgb(${g},${g},${g});flex:${z.pct}"></i>`}).join('')}</div>
+      ${v.pal.map(z=>`<div class="pf-r" title="${esc(z.uso)}"><i style="background:${z.hex}"></i><span><b>${esc(z.rol)}</b> <small>${z.pct}% · ${z.hex}</small></span></div>`).join('')}
+      <span class="esc-mini">${v.pal.map(z=>`<canvas class="esc-bola esc-m" data-esck="${esc(v.escK)}" data-hex="${z.hex}" width="48" height="48" title="${esc(z.rol)} bajo ${esc(ESC_PRE[v.escK]?.n||'la escena')}"></canvas>`).join('')}</span>
+      ${v.notas.map(n=>`<p class="muted" style="margin:0;font-size:12px">${esc(n)}</p>`).join('')}
+      <button class="btn sm pri" data-act="pal-func" data-i="${i}">Usar esta paleta</button></div>`).join('')}</div>
+    ${p.mood.paletaAnterior?.length?`<div class="prow"><span class="lbl">Paleta anterior</span><span class="pal">${p.mood.paletaAnterior.map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span><button class="btn ghost sm" data-act="pal-volver">Volver a la anterior</button></div>`:''}
+    <div id="esc-rev">${escRevHTML(p)}</div></div>`}
 /* dibujo para el PNG del tablero: esfera + rampa por color */
 function escDibujaBloque(x,items,E,x0,y0,tam,dry){const sw=26,cw=tam+10;
   if(!dry)items.forEach((it,i)=>{const b=document.createElement('canvas');b.width=b.height=tam;escBola(b,it.hex,E);x.drawImage(b,x0+i*cw,y0);escRampa(it.hex,E).forEach((r,j)=>{x.fillStyle=r.hex;x.fillRect(x0+i*cw,y0+tam+8+j*sw,tam,sw-3)})});
@@ -6674,11 +6746,16 @@ function refTableroHTML(p,r){const G=tabGrupos(p),g=grupoDe(p,r),auto=!r.grupo;
     <input type="text" id="re-${r.id}" data-ref="${r.id}" data-rk="etiqueta" value="${esc(r.etiqueta||'')}" placeholder="Etiqueta corta: ${esc(etiquetaDe({porque:r.porque})||'2–5 palabras')}" style="font-size:12px;padding:4px 8px;background:var(--surface)">`}
 async function accionTp(a,el,p,ds){
   switch(a){
-    case 'esc-preset':{const P=ESC_PRE[ds.k];if(!P)return;const E=escDe(p);Object.assign(E,P,{k:ds.k,int:E.int||1});delete E.n;marcar();renderMain();break}
+    case 'esc-preset':{const P=ESC_PRE[ds.k];if(!P)return;const E=escMut(p);Object.assign(E,P,{k:ds.k,int:E.int||1});delete E.n;marcar();renderMain();break}
     case 'esc-guardar':{const E=escDe(p);p.escenas=p.escenas||[];const n=(ESC_PRE[E.k]?.n||'Escena')+' '+(p.escenas.length+1);p.escenas.push({id:uid(),n,luz:E.luz,amb:E.amb,reb:E.reb,ang:E.ang,el:E.el,int:E.int});marcar();renderMain();toast('Escena guardada');break}
     case 'esc-cargar':{const s=(p.escenas||[]).find(x=>x.id===ds.id);if(s){p.escena={k:'',luz:s.luz,amb:s.amb,reb:s.reb,ang:s.ang,el:s.el,int:s.int};marcar();renderMain()}break}
     case 'esc-del':p.escenas=(p.escenas||[]).filter(x=>x.id!==ds.id);marcar();renderMain();break;
     case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
+    case 'pal-tipo':S.palTipo=ds.k;renderMain();break;
+    case 'pal-func':{const tp=palTipo(p),P=paletaFunc(p,tp)[+ds.i];if(!P)return;p.mood.paletaAnterior=[...(p.mood.paleta||[])];p.mood.paleta=P.pal.map(z=>z.hex).slice(0,8);p.mood.paletaPropia=true;
+      if(!p.escena&&ESC_PRE[P.escK]){Object.assign(escMut(p),ESC_PRE[P.escK],{k:P.escK,int:1});delete p.escena.n}
+      nuevaDecision(p,`Paleta funcional: ${P.n} (${PAL_TIPOS[tp]})`,P.d,['Mood','Color'],'luz','En prueba');marcar();renderMain();toast('Paleta aplicada a todo el proyecto (la anterior queda guardada)');break}
+    case 'pal-volver':{if(!p.mood.paletaAnterior?.length)return;const a=p.mood.paleta;p.mood.paleta=p.mood.paletaAnterior;p.mood.paletaAnterior=a;marcar();renderMain();toast('Paleta intercambiada');break}
     case 'esc-fix':{const x=escRevisa(p)[+ds.i];if(!x?.fix)return;escGuardaUndo(p);escAplicaFix(p,x);marcar();renderMain();toast('Corregido: puedes deshacerlo');break}
     case 'esc-fix-todo':{if(!escRevisa(p).some(x=>x.fix))return;escGuardaUndo(p);const hechos=new Set();
       for(let i=0;i<5;i++){const x=escRevisa(p).find(y=>y.fix&&!hechos.has(y.lbl));if(!x)break;hechos.add(x.lbl);escAplicaFix(p,x)}
@@ -6842,7 +6919,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
   if(t.dataset.pjesc){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjesc);if(c){c.luzEsc=t.value;marcar();escRefrescaPj(p)}return}
-  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escDe(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
+  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
