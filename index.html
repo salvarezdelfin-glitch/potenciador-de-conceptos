@@ -462,6 +462,12 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .cerebro{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
 .c-main,.c-side{display:flex;flex-direction:column;gap:16px;min-width:0}
 @media (max-width:1100px){.cerebro{grid-template-columns:minmax(0,1fr)}}
+.esc-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.esc-r{display:flex;flex-direction:column;gap:3px}.esc-r input[type=color]{width:100%;height:30px;padding:0;border:1px solid var(--line2);border-radius:6px;background:transparent}
+.esc-cols{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
+.esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.esc-sw{height:26px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10.5px}
 .mp-wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.75fr) minmax(0,1fr);gap:34px;align-items:center;margin:6px 0 18px}
 .mp-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
 .mp-svg path{fill:none;stroke-width:1.5}.mp-svg path.l{stroke:var(--line2)}.mp-svg path.x{stroke:var(--warn);stroke-width:2;stroke-dasharray:6 5}
@@ -937,7 +943,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murbw9el').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murko8yc').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1310,7 +1316,7 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.tab==='mood'&&S.vista==='proyecto')requestAnimationFrame(escDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -4957,7 +4963,8 @@ function vMood(p){const m=p.mood,t=tresMood(p);
     <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>
   <div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
       <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
-    <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
+    <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>
+  ${escHTML(p)}`}
 function vivoSintesis(p){const t=tresMood(p).filter(Boolean);if(t.length<3)return `<p class="nd-box sm">El proyecto debe sentirse: ${t.map(esc).join(', ')||'___'}${t.length<3?', ___':''}. (Faltan ${3-t.length})</p>`;
   const g=t.filter(w=>GENERICOS.includes(nz(w)));return `<p class="sintesis">El proyecto debe sentirse: <b>${esc(t[0])}</b>, <b>${esc(t[1])}</b> y <b>${esc(t[2])}</b>.</p>${g.length?`<p class="nd-box sm">«${esc(g.join('», «'))}» es genérico: ¿qué tipo de ${esc(g[0])}?</p>`:''}`}
 function vivoPalSug(p){const s=paletaSugerida(p);
@@ -6382,6 +6389,56 @@ function lucesHTML(p){const L=p.luces=p.luces||[],sug=lucesSugeridas(p);
       <div class="prow"><span class="lbl">${nr} referencia${nr===1?'':'s'}</span><button class="btn sm ${nr?'':'pri'}" data-act="luz-buscar" data-id="${l.id}">Buscar fotos de esta luz</button>${P?`<a class="btn sm ghost" href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(P.q+' photography')}" target="_blank" rel="noopener">Pinterest</a><a class="btn sm ghost" href="https://www.artstation.com/search?sort_by=relevance&query=${encodeURIComponent(P.q)}" target="_blank" rel="noopener">ArtStation</a>`:''}</div></div>`}).join('')}</div>
     <div class="prow"><button class="btn sm" data-act="luz-add" data-k="">＋ Otra luz</button></div></div>`}
 
+/* ============ Constructor de luz y color: cada color de tu paleta, iluminado por la luz de tu escena ============ */
+const ESC_PRE={neutro:{n:'Día neutro',luz:'#fff1dc',amb:'#6f84a8',reb:'#8a7a66',ang:225,el:45},
+  fuego:{n:'Fuego nocturno',luz:'#ff8a3a',amb:'#1d2a4a',reb:'#7a3a1a',ang:200,el:-15},antorcha:{n:'Antorchas en interior',luz:'#ffb25a',amb:'#14182a',reb:'#5a3a22',ang:220,el:15},
+  cenital:{n:'Luz cenital',luz:'#fff6e0',amb:'#34405e',reb:'#4a5a3a',ang:225,el:85},niebla:{n:'Niebla de selva',luz:'#dfe6ea',amb:'#8d9aa6',reb:'#9aa59a',ang:225,el:40},
+  follaje:{n:'Luz filtrada por follaje',luz:'#f2d98a',amb:'#2f5a46',reb:'#5f8a3a',ang:225,el:60},atardecer:{n:'Contraluz de atardecer',luz:'#ff9a5a',amb:'#3a3f6a',reb:'#8a5a4a',ang:40,el:15},
+  luna:{n:'Luna / noche fría',luz:'#a9c0ff',amb:'#151c3a',reb:'#2a3a5a',ang:225,el:55},tormenta:{n:'Tormenta',luz:'#dfe8ff',amb:'#0d1224',reb:'#2a3350',ang:200,el:70},
+  volcan:{n:'Resplandor volcánico',luz:'#ff4d1a',amb:'#170d14',reb:'#8a2a10',ang:200,el:-30}};
+const ESC_ROLES=['Especular','Luz','Luz media','Penumbra','Núcleo de sombra','Rebote','Sombra proyectada'];
+const escRgb=h=>{h=String(h||'#888888').replace('#','');return [0,2,4].map(i=>Math.pow((parseInt(h.slice(i,i+2),16)||0)/255,2.2))};
+const escSrgb=v=>Math.round(Math.pow(Math.max(0,Math.min(1,v)),1/2.2)*255);
+const escHex=c=>'#'+c.map(v=>escSrgb(v).toString(16).padStart(2,'0')).join('');
+const escMul=(a,b,k=1)=>a.map((v,i)=>v*b[i]*k),escSum=(...c)=>c[0].map((_,i)=>c.reduce((s,x)=>s+x[i],0));
+function escDe(p){if(!p.escena)p.escena={k:'neutro',...ESC_PRE.neutro,int:1};delete p.escena.n;return p.escena}
+function escLuces(E){return {L:escRgb(E.luz).map(v=>v*(E.int||1)*1.1),A:escRgb(E.amb),B:escRgb(E.reb)}}
+function escRampa(loc,E){const L=escRgb(loc),{L:K,A,B}=escLuces(E),sat=(c,s)=>{const m=(c[0]+c[1]+c[2])/3;return c.map(v=>m+(v-m)*s)};
+  const filas=[escSum(K.map(v=>v*.85),[.12,.12,.12]),escSum(escMul(L,K),escMul(L,A,.3)),escSum(escMul(L,K,.5),escMul(L,A,.55)),sat(escSum(escMul(L,K,.15),escMul(L,A,.8)),1.15),escMul(L,A,.6),escSum(escMul(L,A,.4),escMul(L,B,.5)),escMul(L,A,.3)];
+  return filas.map((c,i)=>({n:ESC_ROLES[i],hex:escHex(c)}))}
+function escBola(cv,loc,E){const N=cv.width,g=cv.getContext('2d'),img=g.createImageData(N,N),L=escRgb(loc),{L:K,A,B}=escLuces(E);
+  const az=E.ang*Math.PI/180,el=E.el*Math.PI/180,lx=Math.cos(az)*Math.cos(el),ly=Math.sin(el),lz=-Math.sin(az)*Math.cos(el),ss=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=(i+.5-N/2)/(N/2*.92),y=-(j+.5-N/2)/(N/2*.92),r2=x*x+y*y,o=(j*N+i)*4;if(r2>=1.04)continue;
+    const z=Math.sqrt(Math.max(0,1-r2)),ndl=x*lx+y*ly+z*lz,lit=ss(-.02,.3,ndl)*Math.pow(Math.max(0,ndl),.8),amb=.55+.25*y,bk=Math.max(0,-ndl)*Math.max(0,.5-y*.5)*.7,rz=2*ndl*z-lz,sp=ndl>0?Math.pow(Math.max(0,rz),32):0;
+    for(let c=0;c<3;c++){const v=L[c]*K[c]*lit+L[c]*A[c]*amb*(1-lit*.5)+L[c]*B[c]*bk*.55+K[c]*sp*.55;img.data[o+c]=escSrgb(v)}
+    img.data[o+3]=Math.round(255*Math.max(0,Math.min(1,(1.02-Math.sqrt(r2))*N*.25)))}
+  g.putImageData(img,0,0)}
+function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
+  if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
+  return `<div class="esc-cols">${pal.map((c,i)=>`<div class="esc-col"><canvas class="esc-bola" data-i="${i}" width="110" height="110" aria-label="Esfera con ${esc(c)} bajo esta luz"></canvas>
+    <div class="esc-loc"><i style="background:${esc(c)}"></i>${esc(c)}</div>
+    ${escRampa(c,E).map(r=>`<div class="esc-sw" style="background:${r.hex}" title="${r.n} ${r.hex}"><span style="color:${lumaHex(r.hex)>.5?'#111':'#eee'}">${r.n} · ${r.hex}</span></div>`).join('')}
+    <button class="btn ghost sm" data-act="esc-rampa" data-i="${i}" title="Reemplaza tu paleta por esta rampa (la anterior queda guardada)">Usar como paleta</button></div>`).join('')}</div>`}
+function escDibuja(){const p=S.P[S.cur];if(!p||S.tab!=='mood')return;const E=escDe(p);document.querySelectorAll('.esc-bola').forEach(cv=>{const c=(p.mood.paleta||[])[+cv.dataset.i];if(c)escBola(cv,c,E)})}
+function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja()}}
+function escHTML(p){const E=escDe(p),mias=new Set((p.luces||[]).map(l=>l.k)),sl=(k,lab,min,max,st)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${E[k]}"></label>`,co=(k,lab)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="color" data-esc="${k}" value="${esc(E[k])}"></label>`;
+  return `<div class="box" id="esc-box"><h3>Constructor de luz y color</h3><p class="hint">Cada color de tu paleta, iluminado por la luz de tu escena: ves la esfera y la rampa de luz → sombra → rebote, con el color de la luz y el de las sombras que tú eliges. Elige una de tus claves de luz o ajusta a mano.</p>
+    <div class="chips">${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch ${E.k===k?'on':''}" data-act="esc-preset" data-k="${k}" title="${mias.has(k)?'Es una de tus claves de luz':''}">${mias.has(k)?'★ ':''}${esc(v.n)}</button>`).join('')}</div>
+    <div class="esc-ctl">${co('luz','Color de la luz')}${co('amb','Sombras / ambiente')}${co('reb','Rebote')}${sl('ang','Giro de la luz',0,360,5)}${sl('el','Altura de la luz',-40,90,5)}${sl('int','Intensidad',0.3,1.6,0.05)}</div>
+    <div id="esc-out">${escOutHTML(p)}</div>
+    <div class="prow"><button class="btn sm" data-act="esc-guardar">Guardar esta escena</button><button class="btn sm" data-act="esc-png">Exportar PNG</button><button class="btn sm" data-act="esc-ase" title="Swatches que abre Photoshop (Ventana → Muestras → Cargar) y otros programas de Adobe">Exportar swatches (.ase)</button></div>
+    ${(p.escenas||[]).length?`<div class="chips"><span class="lbl">Mis escenas</span>${p.escenas.map(s=>`<span class="chip"><button style="color:var(--ink)" data-act="esc-cargar" data-id="${s.id}">${esc(s.n)}</button><button data-act="esc-del" data-id="${s.id}" aria-label="Quitar">×</button></span>`).join('')}</div>`:''}</div>`}
+function escASE(grupos){const bytes=[],u16=n=>bytes.push(n>>8&255,n&255),u32=n=>bytes.push(n>>>24&255,n>>16&255,n>>8&255,n&255),f32=v=>{const b=new DataView(new ArrayBuffer(4));b.setFloat32(0,v);for(let i=0;i<4;i++)bytes.push(b.getUint8(i))},str=s=>{u16(s.length+1);for(const ch of s)u16(ch.charCodeAt(0));u16(0)};
+  [...'ASEF'].forEach(c=>bytes.push(c.charCodeAt(0)));u16(1);u16(0);u32(grupos.reduce((n,g)=>n+g.cols.length+2,0));
+  grupos.forEach(g=>{u16(0xC001);u32(2+(g.n.length+1)*2);str(g.n);g.cols.forEach(c=>{u16(1);u32(2+(c.n.length+1)*2+4+12+2);str(c.n);[...'RGB '].forEach(x=>bytes.push(x.charCodeAt(0)));escRgbLin(c.hex).forEach(f32);u16(2)});u16(0xC002);u32(0)});
+  return new Blob([new Uint8Array(bytes)],{type:'application/octet-stream'})}
+const escRgbLin=h=>{h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)/255)};
+function escPNG(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8),cw=170,W=Math.max(1,pal.length)*cw+30,H=130+ESC_ROLES.length*34+60,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  g.fillStyle='#15181e';g.fillRect(0,0,W,H);g.fillStyle='#eceef2';g.font='700 16px sans-serif';g.fillText(`${p.nombre} · luz y color`,15,24);
+  pal.forEach((c,i)=>{const x=15+i*cw,b=document.createElement('canvas');b.width=b.height=110;escBola(b,c,E);g.drawImage(b,x+15,34);
+    escRampa(c,E).forEach((r,j)=>{const y=150+j*34;g.fillStyle=r.hex;g.fillRect(x,y,cw-12,32);g.fillStyle=lumaHex(r.hex)>.5?'#111':'#eee';g.font='11px sans-serif';g.fillText(`${r.n} ${r.hex}`,x+6,y+20)})});
+  return cv}
+
 /* ============ Tablero profesional ============ */
 const TP_COL={mood:'#e27cc1',luz:'#e5b04a',pj:'#3fc9a8',mundo:'#5fd08a',cultura:'#7c8cff',materiales:'#ff9a5a',tecnica:'#c9a0ff'};
 function tabGrupos(p){const pj=(p.personajes||[]).filter(c=>c.nombre);
@@ -6555,6 +6612,13 @@ function refTableroHTML(p,r){const G=tabGrupos(p),g=grupoDe(p,r),auto=!r.grupo;
     <input type="text" id="re-${r.id}" data-ref="${r.id}" data-rk="etiqueta" value="${esc(r.etiqueta||'')}" placeholder="Etiqueta corta: ${esc(etiquetaDe({porque:r.porque})||'2–5 palabras')}" style="font-size:12px;padding:4px 8px;background:var(--surface)">`}
 async function accionTp(a,el,p,ds){
   switch(a){
+    case 'esc-preset':{const P=ESC_PRE[ds.k];if(!P)return;const E=escDe(p);Object.assign(E,P,{k:ds.k,int:E.int||1});delete E.n;marcar();renderMain();break}
+    case 'esc-guardar':{const E=escDe(p);p.escenas=p.escenas||[];const n=(ESC_PRE[E.k]?.n||'Escena')+' '+(p.escenas.length+1);p.escenas.push({id:uid(),n,luz:E.luz,amb:E.amb,reb:E.reb,ang:E.ang,el:E.el,int:E.int});marcar();renderMain();toast('Escena guardada');break}
+    case 'esc-cargar':{const s=(p.escenas||[]).find(x=>x.id===ds.id);if(s){p.escena={k:'',luz:s.luz,amb:s.amb,reb:s.reb,ang:s.ang,el:s.el,int:s.int};marcar();renderMain()}break}
+    case 'esc-del':p.escenas=(p.escenas||[]).filter(x=>x.id!==ds.id);marcar();renderMain();break;
+    case 'esc-rampa':{const c=(p.mood.paleta||[])[+ds.i];if(!c)return;p.mood.paletaAnterior=[...p.mood.paleta];p.mood.paleta=escRampa(c,escDe(p)).map(r=>r.hex).slice(0,8);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta cambiada por la rampa (la anterior quedó guardada)');break}
+    case 'esc-png':{const cv=escPNG(p);cv.toBlob(b=>b&&bajarBlob(slug(p.nombre,40)+'-luz-y-color.png',b));break}
+    case 'esc-ase':{const E=escDe(p),g=(p.mood.paleta||[]).slice(0,8).map(c=>({n:c,cols:escRampa(c,E).map(r=>({n:`${c} · ${r.n}`,hex:r.hex}))}));if(!g.length){toast('Define tu paleta primero');return}bajarBlob(slug(p.nombre,40)+'-luz-y-color.ase',escASE(g));break}
     case 'luz-add':{p.luces=p.luces||[];const P=LUCES.find(x=>x.k===ds.k);p.luces.push({id:uid(),k:P?.k||'',n:P?.n||'',fuente:P?.fuente||'',temp:P?.temp||'',dir:P?.dir||'',uso:''});marcar();renderMain();break}
     case 'luz-del':p.luces=(p.luces||[]).filter(l=>l.id!==ds.id);p.refs.forEach(r=>{if(r.luz===ds.id)delete r.luz});marcar();renderMain();break;
     case 'luz-buscar':{const l=(p.luces||[]).find(x=>x.id===ds.id);if(!l)return true;const P=LUCES.find(x=>x.k===l.k);S.refB={...(S.refB||{}),q:P?.q||tr(l.n)||l.n,grupo:'luz',luz:l.id,capa:'mood',src:'wm'};irABuscarRefs();buscarRefs();break}
@@ -6709,6 +6773,7 @@ document.addEventListener('input',e=>{
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
+  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escDe(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
@@ -6743,7 +6808,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
     setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);
     if(t.dataset.b.startsWith('mood.tres'))p.mood.palabras=p.mood.tres.filter(Boolean).join(', ');
-    dxVivo(p);mapaVivo(p);
+    dxVivo(p);mapaVivo(p);if(t.dataset.b.startsWith('mood.paleta'))escRefresca(p);
     if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
     if(t.dataset.b.startsWith('mood.paleta'))p.mood.paletaPropia=true;
     marcar();
