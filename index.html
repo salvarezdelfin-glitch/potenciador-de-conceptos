@@ -468,6 +468,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
+.lic{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;align-self:flex-start}.lic.ok{background:var(--ok-bg);color:var(--ok)}.lic.warn{background:rgba(229,176,74,.14);color:#e5b04a}.lic.no{background:var(--warn-bg);color:var(--warn)}.ref-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .pf-piezas{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}.pf-pz,.pf-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pf-pz .lbl,.pf-pl .lbl{min-width:84px}
 .pf-det{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pf-det summary{cursor:pointer;font-weight:600}.pf-det[open]{display:flex;flex-direction:column;gap:8px}.pf-det[open] summary{margin-bottom:2px}
 .mp-dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px;display:inline-block}
@@ -951,7 +952,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murm89z0').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murmhbjh').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1544,7 +1545,7 @@ function vRefs(p){
       <select id="f-destino" data-act-change="destino">${LAYERS.map(l=>`<option value="${l.k}" ${S.destinoCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
       <label class="btn pri" for="f-file">Subir imágenes</label><input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden></div>
   </div>
-  <div class="prow"><span class="lbl">${p.refs.length} referencias · ${s.conP} con porqué</span>${sin?`<span class="banner">${sin} sin porqué: escríbelo o quítala.</span>`:''}</div>
+  <div class="prow"><span class="lbl">${p.refs.length} referencias · ${s.conP} con porqué</span><button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos y licencias</button>${sin?`<span class="banner">${sin} sin porqué: escríbelo o quítala.</span>`:''}</div>
   <div class="prow"><span class="lbl">Filtrar por estudio</span><div class="chips">${['Todas',...REF_POR].map(c=>`<button class="ch xs ${(S.refF||'Todas')===c?'on':''}" data-act="ref-f" data-v="${c}">${c}</button>`).join('')}</div></div>
   <div class="board">${LAYERS.map(l=>{const rs=p.refs.filter(r=>r.capa===l.k&&(!S.refF||S.refF==='Todas'||(r.estudio||[]).includes(S.refF)));const pil=/^p(\d)$/.exec(l.k);
     const desc=pil?(p.pilares[+pil[1]-1]?.f||'Define este pilar en Mood · Técnica · AD.'):l.d;
@@ -1574,7 +1575,9 @@ function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div cl
   <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
   <button class="btn ghost sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button>
   <button class="btn ghost sm" data-act="ref-bajar" data-id="${r.id}" title="Descargar esta imagen suelta">Descargar</button>
-  <button class="btn ghost sm danger" data-act="ref-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕'}</button></div>${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
+  <button class="btn ghost sm danger" data-act="ref-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕'}</button></div>${refMetaHTML(r)}${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
+function refMetaHTML(r){const est=r.licEstado||(r.lic?licDeTexto(r.lic):(r.link?'desconocida':''));if(!est&&!r.autor&&!r.w)return '';const L=LIC_EST[est]||LIC_EST.desconocida;
+  return `<div class="ref-meta">${est?`<span class="lic ${L[1]}" title="${esc(r.lic||'La fuente no indica licencia')}">${L[0]}</span>`:''}${r.autor?`<small class="muted">${esc(r.autor)}</small>`:''}${r.w&&r.h?`<small class="muted">${r.w}×${r.h}</small>`:''}</div>`}
 
 function vRevision(p){
   const s=salud(p);
@@ -3360,19 +3363,70 @@ function syncBox(){
     <p class="muted" id="sync-msg" style="margin:0">${esc(S.sync?.msg||(S.ajustes.syncTs?'Última sincronización: '+new Date(S.ajustes.syncTs).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'La primera vez elige la carpeta "SEBASTIAN ALVAREZ DELFIN CONCEPT ARTIST".'))}</p></div>`;
 }
 
-/* ============ Buscar referencias visuales (The Met + Wikimedia Commons) ============ */
-async function buscarWikimedia(q){
-  const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:bitmap')}&gsrlimit=24&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=480&format=json&origin=*`;
-  const j=await (await fetch(u)).json();
-  return Object.values(j.query?.pages||{}).sort((a,b)=>a.index-b.index).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{};
-    return {id:'wm-'+p.pageid,src:ii.thumburl||ii.url,full:ii.url,big:(ii.thumburl||'').replace('/480px-','/1280px-')||ii.url,titulo:(md.ObjectName?.value||p.title.replace(/^File:/,'').replace(/\.[a-z]+$/i,'')).replace(/<[^>]+>/g,'').slice(0,90),fuente:'Wikimedia Commons',link:ii.descriptionurl||`https://commons.wikimedia.org/wiki/${encodeURIComponent(p.title)}`}}).filter(x=>x.src&&!/\.(svg|pdf|tif)/i.test(x.full||''));
-}
-async function buscarMet(q){
-  const s=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=${encodeURIComponent(q)}`)).json();
-  const ids=(s.objectIDs||[]).slice(0,16);
-  const objs=await Promise.all(ids.map(id=>fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`).then(r=>r.ok?r.json():null).catch(()=>null)));
-  return objs.filter(o=>o?.primaryImageSmall).map(o=>({id:'met-'+o.objectID,src:o.primaryImageSmall,full:o.primaryImage||o.primaryImageSmall,big:o.primaryImageSmall,titulo:[o.title,o.culture||o.artistDisplayName,o.objectDate].filter(Boolean).join(' · ').slice(0,110),fuente:'The Met',link:o.objectURL}));
-}
+/* ============ Capa de proveedores de referencias ============
+   Cada proveedor devuelve el mismo modelo común:
+   {prov,id,clave,src,big,titulo,autor,fuente,link,lic:{estado,texto,url},w,h,tags,cat,creditos}
+   Sin claves: The Met, Art Institute of Chicago, Wikimedia Commons y Openverse tienen API pública y gratuita.
+   ArtStation entra por la función del servidor (PC_SHIM.artistas): ahí vive su acceso autorizado, no se raspa nada desde aquí.
+   La licencia sale SIEMPRE de la fuente; si la fuente no la da, se marca «no verificada». */
+const REF_PROV={met:'The Met',aic:'Art Institute of Chicago',wm:'Wikimedia Commons',ov:'Openverse',as:'ArtStation'};
+const LIC_EST={dominio:['Dominio público','ok'],abierta:['Licencia abierta · pide atribución','ok'],restringida:['Solo estudio (NC/ND)','warn'],museo:['Derechos del museo · verifica','warn'],inspiracion:['© del autor · solo inspiración','no'],desconocida:['Licencia no verificada','no']};
+function licDeTexto(t){const n=String(t||'').toLowerCase();if(!n.trim())return 'desconocida';
+  if(/\bnc\b|-nc|\bnd\b|-nd|non.?commercial|noderiv/.test(n))return 'restringida';
+  if(/cc0|public domain|\bpdm\b|dominio p|^pd\b|pd-/.test(n))return 'dominio';
+  if(/cc[- ]by|\bby\b|attribution|gfdl|free art/.test(n))return 'abierta';return 'desconocida'}
+const canon=u=>{try{const x=new URL(u);return (x.hostname+x.pathname).toLowerCase().replace(/\/+$/,'')}catch{return String(u||'').toLowerCase()}};
+const limpiaHTML=s=>String(s||'').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/\s+/g,' ').trim();
+const mkRef=o=>({tags:[],autor:'',w:0,h:0,...o,clave:canon(o.link||o.big||o.src)});
+async function jget(u){const c=typeof AbortSignal!=='undefined'&&AbortSignal.timeout?{signal:AbortSignal.timeout(14000)}:{};const r=await fetch(u,c);if(!r.ok){const e=new Error('http '+r.status);e.status=r.status;throw e}return r.json()}
+/* The Met: el buscador v1 se retiró el 2026-10-01; v1.1 pagina con limit/offset. Los datos del objeto siguen en v1/objects. */
+async function provMet(q,{n=14}={}){const s=await jget(`https://collectionapi.metmuseum.org/public/collection/v1.1/search?hasImages=true&q=${encodeURIComponent(q)}&limit=${n+6}&offset=0`);
+  const objs=await Promise.all((s.objectIDs||[]).slice(0,n+6).map(id=>jget(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`).catch(()=>null)));
+  return objs.filter(o=>o?.primaryImageSmall).slice(0,n).map(o=>mkRef({prov:'met',id:'met-'+o.objectID,src:o.primaryImageSmall,big:o.primaryImage||o.primaryImageSmall,
+    titulo:[o.title,o.culture,o.objectDate].filter(Boolean).join(' · ').slice(0,110),autor:o.artistDisplayName||o.culture||'',fuente:'The Met',link:o.objectURL,
+    lic:o.isPublicDomain?{estado:'dominio',texto:'Dominio público (Met Open Access, CC0)',url:'https://www.metmuseum.org/about-the-met/policies-and-documents/open-access'}:{estado:'museo',texto:o.rightsAndReproduction||'Derechos reservados por el museo: úsala solo como estudio'},
+    tags:(o.tags||[]).map(t=>t.term).filter(Boolean).slice(0,6),cat:'Museo'}))}
+async function provAic(q,{n=14}={}){const j=await jget(`https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(q)}&limit=${n+6}&fields=id,title,artist_title,image_id,is_public_domain,thumbnail,date_display,term_titles`);
+  return (j.data||[]).filter(o=>o.image_id).slice(0,n).map(o=>mkRef({prov:'aic',id:'aic-'+o.id,src:`https://www.artic.edu/iiif/2/${o.image_id}/full/400,/0/default.jpg`,big:`https://www.artic.edu/iiif/2/${o.image_id}/full/843,/0/default.jpg`,
+    titulo:[o.title,o.date_display].filter(Boolean).join(' · ').slice(0,110),autor:o.artist_title||'',fuente:'Art Institute of Chicago',link:`https://www.artic.edu/artworks/${o.id}`,
+    lic:o.is_public_domain?{estado:'dominio',texto:'Dominio público (CC0, Art Institute of Chicago)',url:'https://creativecommons.org/publicdomain/zero/1.0/'}:{estado:'museo',texto:'Derechos reservados por el museo: úsala solo como estudio'},
+    w:o.thumbnail?.width||0,h:o.thumbnail?.height||0,tags:(o.term_titles||[]).slice(0,6),cat:'Museo'}))}
+async function provWm(q,{n=20}={}){const j=await jget(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:bitmap')}&gsrlimit=${n+8}&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=480&format=json&origin=*`);
+  return Object.values(j.query?.pages||{}).sort((a,b)=>a.index-b.index).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{},lt=limpiaHTML(md.LicenseShortName?.value);
+    return mkRef({prov:'wm',id:'wm-'+p.pageid,src:ii.thumburl||ii.url,big:(ii.width>=1280&&ii.thumburl)?ii.thumburl.replace('/480px-','/1280px-'):ii.url,
+      titulo:limpiaHTML(md.ObjectName?.value||p.title.replace(/^File:/,'').replace(/\.[a-z]+$/i,'')).slice(0,100),autor:limpiaHTML(md.Artist?.value).slice(0,60),fuente:'Wikimedia Commons',
+      link:ii.descriptionurl||`https://commons.wikimedia.org/wiki/${encodeURIComponent(p.title)}`,lic:{estado:licDeTexto(lt),texto:lt||'Sin licencia indicada',url:md.LicenseUrl?.value||''},
+      w:ii.width||0,h:ii.height||0,tags:limpiaHTML(md.Categories?.value).split('|').map(x=>x.trim()).filter(x=>x&&!/^(CC|GFDL|Self-published|Uploaded|Files|Media|Pages|Images)/i.test(x)).slice(0,5),cat:'Foto',_url:ii.url})})
+    .filter(x=>x.src&&!/\.(svg|pdf|tif)/i.test(x._url||'')&&!WM_BASURA.test(x.titulo)).slice(0,n)}
+async function provOv(q,{n=20,libre=false}={}){const j=await jget(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&page_size=20&mature=false${libre?'&license_type=commercial,modification':''}`);
+  return (j.results||[]).filter(x=>!/wikimedia|^met$|aic/i.test(x.provider||'')&&(x.thumbnail||x.url)).slice(0,n).map(x=>mkRef({prov:'ov',id:'ov-'+x.id,src:x.thumbnail||x.url,big:x.url||x.thumbnail,
+    titulo:String(x.title||'Sin título').slice(0,100),autor:x.creator||'',fuente:'Openverse · '+(x.source||x.provider||'?'),link:x.foreign_landing_url||x.url,
+    lic:{estado:licDeTexto('cc '+x.license),texto:'CC '+String(x.license||'?').toUpperCase()+(x.license_version?' '+x.license_version:''),url:x.license_url||''},
+    w:x.width||0,h:x.height||0,tags:(x.tags||[]).map(t=>t.name).slice(0,6),cat:'Foto',creditos:x.attribution||''}))}
+const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv};
+const PROV_GRUPOS={'':['met','aic','wm','ov'],museos:['met','aic'],met:['met'],aic:['aic'],wm:['wm'],ov:['ov']};
+async function buscarTodos(q,fuentes,opts,alts){const est={};
+  /* si una fuente no devuelve nada con la consulta completa, reintenta con versiones más simples (las APIs buscan por coincidencia estricta) */
+  const res=await Promise.all(fuentes.map(async k=>{try{let r=await PROV_FN[k](q,opts||{});est[k]={ok:true,n:r.length};
+      for(const a of (alts||[]).slice(0,2)){if(r.length)break;r=await PROV_FN[k](a,opts||{});if(r.length)est[k]={ok:true,n:r.length,alt:a}}return r}
+    catch(e){est[k]={ok:false,msg:e.status===429?'límite de uso, prueba en un rato':e.status?'error '+e.status:'sin conexión'};return []}}));
+  const vistos=new Set(),mezcla=[];
+  for(let i=0;i<40;i++)for(const l of res){const x=l[i];if(!x)continue;const k2=canon(x.src);if(vistos.has(x.clave)||vistos.has(k2))continue;vistos.add(x.clave);vistos.add(k2);mezcla.push(x)}
+  return {items:mezcla,est}}
+/* relevancia: coincidencia con la búsqueda (título, autor, etiquetas), resolución, licencia identificable y tus preferencias por fuente */
+function puntuaRefs(items,q){const qt=toks(q).filter(w=>w.length>2),rel=S.ajustes.relev||{};
+  items.forEach((x,i)=>{const txt=nz([x.titulo,x.autor,(x.tags||[]).join(' ')].join(' ')),m=qt.length?qt.filter(w=>txt.includes(nz(w))).length/qt.length:0,lado=Math.max(x.w||0,x.h||0),r=rel[x.prov]||{ok:0,no:0},pref=Math.max(-.5,Math.min(.5,(r.ok-r.no)/12)),le=x.lic?.estado;
+    x._s=m*3+(lado>=1500?.6:lado>=900?.3:lado?0:.1)+(le==='dominio'?.5:le==='abierta'?.4:le==='desconocida'?-.2:0)+pref-i*.004});
+  return items.sort((a,b)=>b._s-a._s)}
+function relevMarca(r,v){const k=/Met/i.test(r.fuente||'')?'met':/Chicago/i.test(r.fuente||'')?'aic':/Wikimedia/i.test(r.fuente||'')?'wm':/Openverse/i.test(r.fuente||'')?'ov':/ArtStation/i.test(r.fuente||'')?'as':r.prov||'';if(!k)return;
+  S.ajustes.relev=S.ajustes.relev||{};const x=S.ajustes.relev[k]=S.ajustes.relev[k]||{ok:0,no:0};if(v>0)x.ok++;else x.no++;marcarAj()}
+/* constructor de consulta: tema + propósito + época o cultura + ambiente → consulta en inglés y variaciones que descubren cosas distintas */
+const PROPOS={'':['Cualquiera',''],anatomia:['Anatomía','anatomy study','skeleton'],materiales:['Materiales y textura','texture close up','material detail'],arquitectura:['Arquitectura','architecture','ruins exterior'],silueta:['Silueta y forma','silhouette','profile'],iluminacion:['Iluminación','dramatic lighting','light and shadow'],paleta:['Paleta y color','color palette','color study'],vestuario:['Vestuario','costume','clothing detail'],entorno:['Entorno y paisaje','landscape','environment']};
+function consultaDe(b){const en=s=>String(s||'').split(/\s+/).filter(Boolean).map(w=>tr(w)).join(' '),unico=a=>[...new Set(a.join(' ').split(/\s+/).filter(Boolean))].join(' ');
+  const tema=en(b.q),ep=en(b.epoca),am=en(b.amb),pr=PROPOS[b.prop||'']||PROPOS[''],principal=unico([tema,ep,am,pr[1]||'']);
+  const vars=[unico([tema,ep,am]),pr[2]?unico([tema,ep,pr[2]]):'',unico([tema,ep,'museum collection']),unico([tema,'reference photo']),unico([tema,ep,'close up detail']),am?unico([tema,am,'concept']):''].filter(x=>x&&x!==principal);
+  return {principal,variantes:[...new Set(vars)].slice(0,5)}}
+const consultaPrevHTML=b=>{if(!(b.q||'').trim())return '';const c=consultaDe(b);return `Buscaré: <b>${esc(b.exacta||c.principal)}</b>${c.variantes.length?` <span class="muted">· otras formas de buscarlo:</span> ${c.variantes.map(v=>`<button class="chip" data-act="rb-var" data-v="${esc(v)}" style="border:0;cursor:pointer;padding:3px 10px">${esc(v)}</button>`).join(' ')}`:''}`};
 /* lleva a Referencias y abre el desplegable de búsqueda manual (si estaba cerrado) y hace scroll hasta ahí.
    S.masHerr se guarda en el estado porque cada renderMain() reconstruye el <details> desde cero: si solo abriéramos
    el atributo open en el DOM, el siguiente render (por ejemplo cuando llega la búsqueda) lo volvería a cerrar. */
@@ -3380,39 +3434,72 @@ function irABuscarRefs(){S.tab='refs';S.masHerr=true;render();
   setTimeout(()=>$('#rb-q')?.scrollIntoView({block:'center',behavior:'smooth'}),30)}
 document.addEventListener('toggle',e=>{if(e.target.id==='det-masherr')S.masHerr=e.target.open},true);
 async function buscarRefs(){
-  const b=S.refB=S.refB||{};const q=(b.q||'').trim();if(!q){toast('Escribe qué buscar');return}
-  b.cargando=true;b.error='';b.items=[];b.artistasEnc=null;b.artistasQ=q;renderMain();
-  b.artista=null;b.artistaNom=null;
-  const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});return (r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,as:true,artista:x.artista,usuario:x.usuario}))};
-  const tareas=b.src==='met'?[buscarMet(q)]:b.src==='wm'?[buscarWikimedia(q)]:b.src==='as'?[buscarAS(q)]:[buscarMet(q),buscarWikimedia(q)];
+  const b=S.refB=S.refB||{};if(!(b.q||'').trim()){toast('Escribe qué buscar');return}
+  const q=(b.exacta||consultaDe(b).principal||b.q).trim();
+  b.cargando=true;b.error='';b.items=[];b.estado=null;b.qUsada=q;b.artistasEnc=null;b.artistasQ=q;b.artista=null;b.artistaNom=null;renderMain();
+  const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});
+    return (r.items||[]).map(x=>({...mkRef({prov:'as',id:'as-'+(x.link||x.src),titulo:x.titulo,autor:x.artista||'',fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'},cat:'Arte'}),as:true,artista:x.artista,usuario:x.usuario}))};
   /* artistas que de verdad resuelven ESTA búsqueda: se buscan en ArtStation aparte, aunque la fuente elegida sea otra */
   const pArtistas=(b.src==='as'?Promise.resolve(null):buscarAS(q).catch(()=>[]));
-  const [res,resAS]=await Promise.all([Promise.allSettled(tareas),pArtistas]);
-  const listas=res.filter(r=>r.status==='fulfilled').map(r=>r.value);
-  const mezcla=[];for(let i=0;i<30;i++)for(const l of listas)if(l[i])mezcla.push(l[i]);
-  const fuenteAS=b.src==='as'?mezcla:(resAS||[]);
-  const vistos=new Set(),artistas=[];for(const x of fuenteAS){if(!x.usuario||vistos.has(x.usuario))continue;vistos.add(x.usuario);artistas.push({u:x.usuario,n:x.artista,muestra:x})}
-  b.artistasEnc=artistas.slice(0,8);
-  b.items=mezcla;b.cargando=false;if(!mezcla.length)b.error=res.some(r=>r.status==='rejected')?'No se pudo buscar ahora (¿sin internet?).':'Sin resultados: prueba en inglés o con otras palabras (ej. "obsidian", "aztec sculpture", "jaguar").';
+  let mezcla=[],est={};
+  if(b.src==='as'){try{mezcla=await buscarAS(q);est.as={ok:true,n:mezcla.length}}catch{est.as={ok:false,msg:'no disponible ahora'}}}
+  else{const r=await buscarTodos(q,PROV_GRUPOS[b.src||'']||PROV_GRUPOS[''],{libre:b.fLic==='libres'||b.fLic==='dominio'},b.exacta?[]:consultaDe(b).variantes);mezcla=puntuaRefs(r.items,q);est=r.est}
+  const resAS=b.src==='as'?mezcla:await pArtistas;
+  const vistos=new Set(),artistas=[];for(const x of (resAS||[])){if(!x.usuario||vistos.has(x.usuario))continue;vistos.add(x.usuario);artistas.push({u:x.usuario,n:x.artista,muestra:x})}
+  b.artistasEnc=artistas.slice(0,8);b.estado=est;b.items=mezcla;b.cargando=false;
+  if(!mezcla.length){const fallos=Object.entries(est).filter(([,v])=>!v.ok);
+    b.error=fallos.length===Object.keys(est).length?'No se pudo buscar ahora: '+fallos.map(([k,v])=>`${REF_PROV[k]} (${v.msg})`).join(', ')+'.':'Sin resultados para «'+q+'». Prueba en inglés, con menos palabras, o con una de las otras formas de buscarlo.'}
   renderMain();
 }
+function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
+  if(b.fFuente&&x.prov!==b.fFuente)return false;
+  if(b.fCat&&x.cat!==b.fCat)return false;
+  const e=x.lic?.estado||'desconocida';
+  if(b.fLic==='libres'&&!['dominio','abierta'].includes(e))return false;
+  if(b.fLic==='dominio'&&e!=='dominio')return false;
+  if(+b.fRes&&Math.max(x.w||0,x.h||0)<+b.fRes)return false;
+  if(b.fProp){if(!(x.w&&x.h))return false;const r=x.w/x.h;if(b.fProp==='h'&&r<1.2)return false;if(b.fProp==='v'&&r>.85)return false;if(b.fProp==='c'&&(r<.85||r>1.2))return false}
+  return true})}
+function refResHTML(p,b,x,i,ya){const L=LIC_EST[x.lic?.estado||'desconocida'],guard=ya.has(x.big)||ya.has(x.src),dims=x.w&&x.h?`${x.w}×${x.h}`:'tamaño sin dato';
+  return `<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
+    <figcaption><span>${esc(x.titulo)}</span>
+    <small class="muted">${x.autor?esc(x.autor)+' · ':''}${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
+    <span class="lic ${L[1]}" title="${esc(x.lic?.texto||'La fuente no indica licencia')}">${L[0]}</span>${x.lic?.texto&&x.lic.estado!=='desconocida'?`<small class="muted">${x.lic.url?`<a href="${esc(x.lic.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(corto(x.lic.texto,48))}</a>`:esc(corto(x.lic.texto,48))}</small>`:''}
+    <small class="muted">${dims}${x.cat?' · '+x.cat:''}</small>
+    ${(x.tags||[]).length?`<div class="chips">${x.tags.slice(0,4).map(t=>`<span class="chip" style="padding:2px 8px;font-size:11px">${esc(t)}</span>`).join('')}</div>`:''}
+    ${guard?'<span class="muted" style="font-size:12px">En tu moodboard ✓</span>':`<input type="text" id="rbn-${i}" placeholder="¿Para qué te sirve? (opcional)" style="font-size:12px;padding:5px 8px;background:var(--surface);border:1px solid var(--line2);border-radius:6px"><button class="btn sm pri" data-act="rb-add" data-i="${i}" style="align-self:flex-start">＋ A ${esc(capaNombre(p,b.capa||S.destinoCapa))}</button>`}</figcaption></figure>`}
 function refsBuscaHTML(p){
-  const b=S.refB=S.refB||{},sug=[...new Set([...(p.busquedas||[]).map(x=>x.q),...KWCATS.flatMap(([k])=>p.keywords[k]||[])])].slice(0,10),q=encodeURIComponent(b.q||'');
-  const ya=new Set((p.refs||[]).map(r=>r.src));
-  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">Museos (The Met) y Wikimedia Commons</span></div>
-    <p class="hint" style="margin:0">Piezas reales de museo (armas, esculturas, textiles, pintura) y fotos de arquitectura, naturaleza y materiales. Búscalas mejor en inglés. Se agregan a la capa que elijas; luego escribe su porqué.</p>
-    <div class="prow"><input type="text" id="rb-q" data-refb="q" value="${esc(b.q||'')}" placeholder="aztec obsidian knife, jaguar sculpture, volcanic rock…" style="flex:1 1 260px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px" data-enter="rb-buscar">
-      <select id="rb-src" data-refb="src" style="width:auto"><option value="">Todas</option><option value="met" ${b.src==='met'?'selected':''}>Museo (The Met)</option><option value="wm" ${b.src==='wm'?'selected':''}>Wikimedia</option><option value="as" ${b.src==='as'?'selected':''}>Artistas (ArtStation)</option></select>
+  const b=S.refB=S.refB||{},sug=[...new Set([...(p.busquedas||[]).map(x=>x.q),...KWCATS.flatMap(([k])=>p.keywords[k]||[])])].slice(0,10),q=encodeURIComponent(b.qUsada||b.q||'');
+  const ya=new Set((p.refs||[]).map(r=>r.src)),vis=refsFiltrar(b.items||[],b),ocultos=(b.items||[]).length-vis.length;
+  const sel=(k,opts,w)=>`<select data-refb="${k}" style="width:${w||'auto'}">${opts.map(([v,n])=>`<option value="${v}" ${String(b[k]||'')===String(v)?'selected':''}>${n}</option>`).join('')}</select>`;
+  const inpSt='border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px';
+  const fuentesUsadas=Object.keys(b.estado||{});
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">The Met · Art Institute of Chicago · Wikimedia Commons · Openverse · ArtStation</span></div>
+    <p class="hint" style="margin:0">Cuéntame qué necesitas y para qué: armo la búsqueda en inglés (donde hay más material) y te propongo variaciones. Cada resultado trae su licencia tal como la declara la fuente; si no la declara, lo digo. Nada se presenta como libre sin comprobarse.</p>
+    <div class="prow"><input type="text" id="rb-q" data-refb="q" value="${esc(b.q||'')}" placeholder="Qué buscas: cuchillo de obsidiana, jaguar, templo en ruinas…" style="flex:1 1 240px;${inpSt}" data-enter="rb-buscar">
+      ${sel('prop',Object.entries(PROPOS).map(([k,v])=>[k,k?'Para estudiar: '+v[0]:'Propósito (cualquiera)']))}
+      <input type="text" id="rb-ep" data-refb="epoca" list="rb-eps" value="${esc(b.epoca||'')}" placeholder="Época o cultura" style="width:150px;${inpSt}" data-enter="rb-buscar"><datalist id="rb-eps">${CULTURAS.map(c=>`<option value="${c}">`).join('')}</datalist>
+      <input type="text" id="rb-am" data-refb="amb" value="${esc(b.amb||'')}" placeholder="Ambiente (niebla, noche…)" style="width:170px;${inpSt}" data-enter="rb-buscar"></div>
+    <div class="prow">
+      ${sel('src',[['','Todas las fuentes'],['museos','Museos (Met + Chicago)'],['met','The Met'],['aic','Art Institute of Chicago'],['wm','Wikimedia Commons'],['ov','Openverse'],['as','Artistas (ArtStation)']])}
       <select id="rb-capa" data-refb="capa" style="width:auto">${LAYERS.map(l=>`<option value="${l.k}" ${(b.capa||S.destinoCapa)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
       <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
-    ${sug.length?`<div class="chips">${sug.map(s=>`<button class="chip" data-act="rb-sug" data-v="${esc(s)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(s)}</button>`).join('')}</div>`:''}
-    ${b.q?`<div class="prow" style="font-size:12.5px"><span class="muted">También en:</span><a class="btn ghost sm" href="https://www.pinterest.com/search/pins/?q=${q}" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}+site%3Aartstation.com" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">Google Imágenes ↗</a></div>`:''}
+    <p class="hint" id="rb-prev" style="margin:0">${consultaPrevHTML(b)}</p>
+    ${sug.length?`<div class="chips"><span class="lbl">De tu proyecto</span>${sug.map(s=>`<button class="chip" data-act="rb-sug" data-v="${esc(s)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(s)}</button>`).join('')}</div>`:''}
+    ${b.q?`<div class="prow" style="font-size:12.5px"><span class="muted">También, abriendo la web (sin importar nada):</span><a class="btn ghost sm" href="https://www.pinterest.com/search/pins/?q=${q}" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}+site%3Aartstation.com" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">Google Imágenes ↗</a></div>`:''}
     ${artistasHTML(p)}
     <div id="rb-res"></div>${b.artista&&b.artistaNom?`<div class="prow"><span class="lbl">Obras de ${esc(b.artistaNom)}</span><a class="btn ghost sm" href="https://www.artstation.com/${esc(b.artista)}" target="_blank" rel="noopener">Perfil ↗</a><button class="btn ghost sm" data-act="as-cerrar">Volver a la búsqueda</button></div>`:''}
-    ${b.cargando?'<p class="muted">Buscando…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
-    ${(b.items||[]).length?`<div class="bib">${b.items.map((x,i)=>`<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
-      <figcaption><span>${esc(x.titulo)}</span><small class="muted">${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
-      ${ya.has(x.big)||ya.has(x.src)?'<span class="muted" style="font-size:12px">En tu moodboard ✓</span>':`<button class="btn sm pri" data-act="rb-add" data-i="${i}" style="align-self:flex-start">＋ A ${esc(capaNombre(p,b.capa||S.destinoCapa))}</button>`}</figcaption></figure>`).join('')}</div>`:''}
+    ${b.cargando?'<p class="muted">Buscando en varias fuentes…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
+    ${fuentesUsadas.length&&!b.cargando?`<p class="hint" style="margin:0">${fuentesUsadas.map(k=>{const e=b.estado[k];return e.ok?`${REF_PROV[k]} ✓ ${e.n}${e.alt?` (con «${esc(e.alt)}»)`:""}`:`<span style="color:var(--warn)">${REF_PROV[k]}: ${esc(e.msg)}</span>`}).join(' · ')}</p>`:''}
+    ${(b.items||[]).length&&!b.artista?`<div class="prow" style="font-size:12.5px"><span class="lbl">Filtrar</span>
+      ${sel('fFuente',[['','Cualquier fuente'],...Object.entries(REF_PROV).filter(([k])=>(b.items||[]).some(x=>x.prov===k)).map(([k,n])=>[k,n])])}
+      ${sel('fLic',[['','Cualquier licencia'],['libres','Reutilizables (dominio público o abierta)'],['dominio','Solo dominio público']])}
+      ${sel('fProp',[['','Cualquier proporción'],['h','Horizontal'],['v','Vertical'],['c','Cuadrada']])}
+      ${sel('fRes',[['','Cualquier resolución'],['800','800 px o más'],['1200','1200 px o más'],['2000','2000 px o más']])}
+      ${sel('fCat',[['','Cualquier tipo'],['Museo','Museo / obra'],['Foto','Foto'],['Arte','Concept art']])}
+      ${ocultos?`<span class="muted">${ocultos} oculto${ocultos===1?'':'s'} por tus filtros</span> <button class="btn ghost sm" data-act="rb-limpiar">Quitar filtros</button>`:''}</div>`:''}
+    ${(b.items||[]).length&&!vis.length&&!b.cargando?'<p class="muted">Ningún resultado cumple tus filtros. Quítalos o relaja alguno (las fuentes no siempre informan tamaño).</p>':''}
+    ${vis.length?`<div class="bib">${vis.map(({x,i})=>refResHTML(p,b,x,i,ya)).join('')}</div><p class="hint" style="margin:0">Solo se guarda el enlace a la imagen y sus datos; la imagen sigue en su sitio de origen. «Dominio público» y «licencia abierta» se pueden reutilizar (la abierta pide atribución: en Referencias, «Copiar créditos»). Lo demás úsalo como estudio o inspiración.</p>`:''}
   </div>`}
 
 /* ============ Modo presentación ============ */
@@ -4260,9 +4347,9 @@ function personajePoseQuery(c){const animal=c.rol==='Criatura';
 function seedRechazados(p,ya,key){((p.rechazados||{})[key]||[]).forEach(x=>ya.add(x))}
 function seedRechazadosTodos(p,ya){Object.values(p.rechazados||{}).forEach(a=>a.forEach(x=>ya.add(x)))}
 function origenKey(o){return o?(o.tipo==='cat'?'cat:'+o.n:o.tipo==='pose'?'pose:'+o.id:o.tipo==='q'?'q:'+o.q:null):null}
-function aprobarRef(p,id){const r=p.refs.find(x=>x.id===id);if(!r)return;r.auto=false;marcar();renderMain()}
+function aprobarRef(p,id){const r=p.refs.find(x=>x.id===id);if(!r)return;relevMarca(r,1);r.auto=false;marcar();renderMain()}
 async function reemplazarRef(p,id){
-  const i=p.refs.findIndex(x=>x.id===id);if(i<0)return;const ref=p.refs[i];
+  const i=p.refs.findIndex(x=>x.id===id);if(i<0)return;const ref=p.refs[i];relevMarca(ref,-1);
   const key=origenKey(ref.origen);const rech=p.rechazados=p.rechazados||{};
   if(key){rech[key]=rech[key]||[];if(ref.src&&!rech[key].includes(ref.src))rech[key].push(ref.src)}
   p.refs.splice(i,1);marcar();renderMain();
@@ -5907,10 +5994,9 @@ const OBJ2EST={Forma:'Forma',Anatomía:'Anatomía',Material:'Material',Luz:'Luz'
 const limpiaQ=q=>q.replace(/\b(reference|references|concept art|design|shape language|cinematic|photo|photography|texture macro|museum collection|film still|color palette|storytelling details|worn used|silhouette|low key|wide shot|low angle)\b/gi,' ').replace(/\s+/g,' ').trim();
 /* fuera lo que casi nunca sirve como referencia visual, aunque la licencia esté bien: logos, banderas, mapas, diagramas, iconos, capturas de pantalla, estampillas, escudos */
 const WM_BASURA=/\b(logo|flag of|coat of arms|locator map|map of|diagram|icon|screenshot|meme|postage stamp|banknote|seal of|emoji|favicon|wordmark|infographic)\b/i;
-async function wmLibre(q,n){const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:bitmap')}&gsrlimit=14&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=1280&format=json&origin=*`;
-  const j=await (await fetch(u)).json();return Object.values(j.query?.pages||{}).sort((a,b)=>a.index-b.index).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{},lic=(md.LicenseShortName?.value||'').replace(/<[^>]+>/g,'');return {src:ii.thumburl||ii.url,link:ii.descriptionurl,titulo:p.title.replace(/^File:/,'').replace(/\.[a-z]+$/i,''),lic,ancho:ii.width||0,fuente:'Wikimedia'}}).filter(x=>x.src&&/CC|Public domain|PD/i.test(x.lic)&&!WM_BASURA.test(x.titulo)&&x.ancho>=500).slice(0,n)}
-async function metLibre(q,n){const s=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=${encodeURIComponent(q)}`)).json();const out=[];
-  for(const id of (s.objectIDs||[]).slice(0,14)){if(out.length>=n)break;try{const o=await (await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`)).json();if(o.isPublicDomain&&o.primaryImageSmall)out.push({src:o.primaryImageSmall,link:o.objectURL,titulo:[o.title,o.culture,o.objectDate].filter(Boolean).join(' · '),lic:'Dominio público (The Met)',fuente:'The Met'})}catch{}}return out}
+/* rutinas automáticas: mismos proveedores y mismo criterio de licencia que la búsqueda manual (solo dominio público o licencia abierta) */
+async function wmLibre(q,n){const r=await provWm(q,{n:16});return r.filter(x=>['dominio','abierta'].includes(x.lic.estado)&&x.w>=500).slice(0,n).map(x=>({src:x.big||x.src,link:x.link,titulo:x.titulo,lic:x.lic.texto,ancho:x.w,fuente:'Wikimedia',autor:x.autor,licEstado:x.lic.estado,prov:'wm'}))}
+async function metLibre(q,n){const r=await provMet(q,{n:14});return r.filter(x=>x.lic.estado==='dominio').slice(0,n).map(x=>({src:x.src,link:x.link,titulo:x.titulo,lic:'Dominio público (The Met)',fuente:'The Met',autor:x.autor,licEstado:'dominio',prov:'met'}))}
 /* búsquedas "de fotógrafo": lo que existe en museos y en Wikimedia, no términos de diseño */
 function busquedasFoto(p){const s=sujetosDe(p),Q=[],add=(q,capa,obj,busco,estudiar,met)=>{q=q.replace(/\s+/g,' ').trim();if(q&&!Q.some(x=>x.q===q))Q.push({q,capa,obj,busco,estudiar,met})};
   const en=t=>toks(t).map(tr).filter(w=>/^[a-z -]+$/i.test(w)&&!STOP.has(w)).slice(0,3).join(' ');
@@ -6861,8 +6947,8 @@ async function accionTp(a,el,p,ds){
     case 'esc-ase':{const E=escDe(p),g=(p.mood.paleta||[]).slice(0,8).map(c=>({n:c,cols:escRampa(c,E).map(r=>({n:`${c} · ${r.n}`,hex:r.hex}))}));if(!g.length){toast('Define tu paleta primero');return}bajarBlob(slug(p.nombre,40)+'-luz-y-color.ase',escASE(g));break}
     case 'luz-add':{p.luces=p.luces||[];const P=LUCES.find(x=>x.k===ds.k);p.luces.push({id:uid(),k:P?.k||'',n:P?.n||'',fuente:P?.fuente||'',temp:P?.temp||'',dir:P?.dir||'',uso:''});marcar();renderMain();break}
     case 'luz-del':p.luces=(p.luces||[]).filter(l=>l.id!==ds.id);p.refs.forEach(r=>{if(r.luz===ds.id)delete r.luz});marcar();renderMain();break;
-    case 'luz-buscar':{const l=(p.luces||[]).find(x=>x.id===ds.id);if(!l)return true;const P=LUCES.find(x=>x.k===l.k);S.refB={...(S.refB||{}),q:P?.q||tr(l.n)||l.n,grupo:'luz',luz:l.id,capa:'mood',src:'wm'};irABuscarRefs();buscarRefs();break}
-    case 'tp-buscar':S.refB={...(S.refB||{}),q:ds.q,grupo:ds.g,luz:null,capa:ds.g==='mood'||ds.g==='luz'?'mood':ds.g==='tecnica'?'tecnica':'concepto',src:ds.g==='cultura'?'':S.refB?.src||''};irABuscarRefs();buscarRefs();toast('Lo que agregues de esta búsqueda va a «'+(tabGrupos(p).find(g=>g.k===ds.g)?.n||'')+'»');break;
+    case 'luz-buscar':{const l=(p.luces||[]).find(x=>x.id===ds.id);if(!l)return true;const P=LUCES.find(x=>x.k===l.k);S.refB={...(S.refB||{}),q:P?.q||tr(l.n)||l.n,grupo:'luz',luz:l.id,capa:'mood',src:'wm',exacta:'',prop:'',epoca:'',amb:''};irABuscarRefs();buscarRefs();break}
+    case 'tp-buscar':S.refB={...(S.refB||{}),q:ds.q,grupo:ds.g,luz:null,capa:ds.g==='mood'||ds.g==='luz'?'mood':ds.g==='tecnica'?'tecnica':'concepto',src:ds.g==='cultura'?'':S.refB?.src||'',exacta:'',prop:'',epoca:'',amb:''};irABuscarRefs();buscarRefs();toast('Lo que agregues de esta búsqueda va a «'+(tabGrupos(p).find(g=>g.k===ds.g)?.n||'')+'»');break;
     case 'ref-heroe':{const r=p.refs.find(x=>x.id===ds.id);if(!r)return true;const g=grupoDe(p,r),on=!r.heroe;p.refs.forEach(x=>{if(grupoDe(p,x)===g)x.heroe=false});r.heroe=on;marcar();renderMain();break}
     case 'tp-png':tpPNG();break;
     case 'tp-zip':tpZip();break;
@@ -6995,7 +7081,7 @@ async function verArtista(p,u,f){const b=S.refB=S.refB||{};u=String(u||'').repla
   const q=b.q||'',filtro=[f,...toks(q).map(tr),...toks(p.bajar?.que||'').map(tr)].filter(Boolean).join(' ');
   b.artista=u;b.cargando=true;b.error='';b.items=[];renderMain();
   try{const r=await window.PC_SHIM.artistas({usuario:u,filtro});
-    b.items=(r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+(x.artista||u),link:x.link,src:x.src,big:x.big,as:true,artista:x.artista||u}));
+    b.items=(r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+(x.artista||u),link:x.link,src:x.src,big:x.big,as:true,artista:x.artista||u,prov:'as',autor:x.artista||u,cat:'Arte',lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'}}));
     b.artistaNom=r.artista||u;if(!b.items.length)b.error='No encontré obras públicas de ese artista. Revisa el usuario (lo que va después de artstation.com/).'}
   catch{b.error='No se pudo cargar ArtStation ahora. Abre su perfil: artstation.com/'+u}
   b.cargando=false;renderMain();setTimeout(()=>$('#rb-res')?.scrollIntoView({block:'start',behavior:'smooth'}),50)}
@@ -7022,7 +7108,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
   if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
-  if(t.dataset.refb){S.refB=S.refB||{};S.refB[t.dataset.refb]=t.value;if(t.tagName==='SELECT'&&t.dataset.refb==='src'&&S.refB.q)buscarRefs();return}
+  if(t.dataset.refb){S.refB=S.refB||{};const k=t.dataset.refb;S.refB[k]=t.value;if(['q','prop','epoca','amb'].includes(k))S.refB.exacta='';if(t.tagName==='SELECT'&&k==='src'&&S.refB.q)buscarRefs();else if(t.tagName==='SELECT'&&/^f[A-Z]/.test(k))renderMain();const pv=$('#rb-prev');if(pv&&['q','prop','epoca','amb'].includes(k))pv.innerHTML=consultaPrevHTML(S.refB);return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
   if(t.dataset.ruta){S.ajustes.ruta=S.ajustes.ruta||{};S.ajustes.ruta[t.dataset.ruta]=t.value;marcarAj();renderMain();return}
   if(t.dataset.ctr){contratoDraft()[t.dataset.ctr]=t.value;const ta=$('#ctr-texto');if(ta)ta.value=contratoTexto(S.ctr);return}
@@ -7228,11 +7314,18 @@ async function accion(a,el){
     case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
     case 'sync':sincronizarCarpeta(false);break;
     case 'sync-elegir':sincronizarCarpeta(true);break;
-    case 'rb-buscar':{const v=$('#rb-q')?.value;if(v!=null){S.refB=S.refB||{};S.refB.q=v}buscarRefs();break}
-    case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;buscarRefs();break;
+    case 'rb-buscar':{const v=$('#rb-q')?.value;S.refB=S.refB||{};if(v!=null)S.refB.q=v;S.refB.exacta='';buscarRefs();break}
+    case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;S.refB.exacta='';buscarRefs();break;
     case 'as-cerrar':S.refB.artista=null;S.refB.artistaNom=null;S.refB.items=[];S.refB.q?buscarRefs():renderMain();break;
-    case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;const capa=S.refB.capa||S.destinoCapa;
-      p.refs.push({id:uid(),capa,porque:x.as?`De ${x.artista}: tomo `:'',fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now(),...(S.refB.grupo?{grupo:S.refB.grupo}:x.as?{grupo:'tecnica'}:{}),...(S.refB.luz?{luz:S.refB.luz}:{}),tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':x.fuente&&/Met/i.test(x.fuente)?'Museo':'Fotografía'});marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+': escribe su porqué');break}
+    case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;const capa=S.refB.capa||S.destinoCapa,nota=($('#rbn-'+ds.i)?.value||'').trim();
+      p.refs.push({id:uid(),capa,porque:nota||(x.as?`De ${x.artista}: tomo `:''),fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now(),
+        autor:x.autor||'',lic:x.lic?.texto||'',licEstado:x.lic?.estado||(x.as?'inspiracion':'desconocida'),licUrl:x.lic?.url||'',w:x.w||0,h:x.h||0,tags:x.tags||[],prov:x.prov||'',creditos:x.creditos||'',
+        ...(S.refB.grupo?{grupo:S.refB.grupo}:x.as?{grupo:'tecnica'}:{}),...(S.refB.luz?{luz:S.refB.luz}:{}),tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':/Met|Chicago/i.test(x.fuente||'')?'Museo':'Fotografía'});
+      relevMarca({fuente:x.fuente,prov:x.prov},1);marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+(nota?'':': escribe su porqué'));break}
+    case 'rb-var':S.refB=S.refB||{};S.refB.exacta=ds.v;buscarRefs();break;
+    case 'rb-limpiar':{const b=S.refB;['fFuente','fLic','fProp','fRes','fCat'].forEach(k=>b[k]='');renderMain();break}
+    case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return `${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta'].includes(est)?'':'  [solo estudio o inspiración]'}`});
+      if(!L.length){toast('Todavía no hay referencias con fuente');return}copiarTexto(L.join('\n'),'Créditos y licencias copiados');break}
     case 'presentar':S.pres=null;presentar(0);try{document.documentElement.requestFullscreen?.()}catch{}break;
     case 'pres-prev':presentar(S.pres.i-1);break;
     case 'pres-next':presentar(S.pres.i+1);break;
