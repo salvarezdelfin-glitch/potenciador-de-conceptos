@@ -995,7 +995,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=musryw6u').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mussn5tz').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -7283,7 +7283,7 @@ function v3dPoseDeLandmarks(W){const T=V3.T,V=T.Vector3,rad=Math.PI/180,deg=180/
     const Qh=Qp.clone().multiply(E(-out['l'+s+'s'],0,sg*out['l'+s+'p'])),sl=dir(ks,as_).applyQuaternion(Qh.invert());out['l'+s+'k']=cl('l'+s+'k',Math.max(0,Math.atan2(-sl.z,-sl.y)*deg))}
   out._giro=Math.max(-180,Math.min(180,th*deg));return out}
 async function v3dPoseDeFoto(blob){const msg=t=>{const m=$('#v3d-foto-msg');if(m)m.textContent=t};msg('Buscando a la persona… (la primera vez baja el detector, unos 6 MB)');
-  try{const det=await v3dDetector(),bm=await createImageBitmap(blob),r=det.detect(bm),W=r.worldLandmarks&&r.worldLandmarks[0];
+  try{const det=await v3dDetector(),bm=await createImageBitmap(blob);let r;try{r=det.detect(bm)}finally{bm.close?.()}const W=r.worldLandmarks&&r.worldLandmarks[0];if(!V3.open)return;
     if(!W){msg('No encontré a una persona en esa foto. Prueba con una donde se vea el cuerpo entero y bien iluminado.');return}
     const o=v3dPoseDeLandmarks(W),giro=o._giro;delete o._giro;S.v3d.pose={...V3_POSES['De pie'],...o};S.v3d.preset='Pose de foto';S.v3d.giro.y=giro;v3dPose();v3dPanel();const m=$('#v3d-foto-msg');if(m)m.textContent='Listo. Es una estimación: ajústala con los controles de abajo.'}
   catch(e){msg('No pude cargar el detector. Revisa tu conexión e inténtalo de nuevo.')}}
@@ -7357,7 +7357,7 @@ function v3dModelo(){const T=V3.T,S3=S.v3d;if(V3.model){V3.scene.remove(V3.model
   if(S3.modelo==='loomis'){m.position.y=.75}
   v3dMaterial();v3dPose();v3dArcilla();v3dEncuadra();v3dLuz();v3dEscena()}
 function v3dArcilla(){if(S.v3d.modelo!=='mio'||!V3.model)return;V3.model.traverse(o=>{if(o.isMesh){if(!o.userData.mat0)o.userData.mat0=o.material;o.material=S.v3d.arcilla?V3.mat:o.userData.mat0}});V3.dirty=true}
-async function v3dCargaArchivo(f){const L=V3.lib,T=V3.T,ext=(f.name.split('.').pop()||'').toLowerCase();let obj,anims=[];
+async function v3dCargaArchivo(f){if(!V3.lib){toast('Espera a que cargue el motor 3D');return}const L=V3.lib,T=V3.T,ext=(f.name.split('.').pop()||'').toLowerCase();let obj,anims=[];
   try{const buf=await f.arrayBuffer();
     if(ext==='glb'||ext==='gltf'){const g=await new Promise((ok,no)=>new L.GLTFLoader().parse(buf,'',ok,no));obj=g.scene;anims=g.animations||[]}
     else if(ext==='obj')obj=new L.OBJLoader().parse(new TextDecoder().decode(buf));
@@ -7366,11 +7366,12 @@ async function v3dCargaArchivo(f){const L=V3.lib,T=V3.T,ext=(f.name.split('.').p
     else{toast('Formato no compatible: usa .glb, .gltf, .obj, .fbx o .stl');return}
   }catch(e){toast('No pude abrir ese modelo. Si es un .gltf con archivos aparte, conviértelo a .glb');return}
   const w=new T.Group();w.add(obj);obj.updateMatrixWorld(true);const b=new T.Box3().setFromObject(obj),sz=b.getSize(new T.Vector3()),c=b.getCenter(new T.Vector3()),k=1.8/(Math.max(sz.x,sz.y,sz.z)||1);
+  if(b.isEmpty()){toast('Ese modelo no trae geometría visible');return}
   obj.position.set(-c.x,-b.min.y,-c.z);const e=new T.Group();e.add(w);w.scale.setScalar(k);e.userData.escala=k;
   V3.mio=obj;V3.mioW=e;V3.anims=anims;V3.mioBones=[];obj.traverse(o=>{if(o.isBone){o.userData.q0=o.quaternion.clone();o.userData.qa=o.quaternion.clone();V3.mioBones.push(o)}});
   V3.mioMixer=anims.length?new T.AnimationMixer(obj):null;V3.mixer=V3.mioMixer;V3.bones=V3.mioBones;
-  const s3=S.v3d;s3.modelo='mio';s3.mioNombre=f.name;s3.bones={};s3.hueso=V3.mioBones[0]?.name||'';s3.anim={clip:0,t:0};s3.tab='pose';v3dModelo();v3dPanel();toast('Modelo cargado: '+f.name)}
-function v3dAnim(){if(!V3.mixer||!V3.anims.length)return;const a=S.v3d.anim,c=V3.anims[Math.min(a.clip,V3.anims.length-1)];V3.mixer.stopAllAction();const ac=V3.mixer.clipAction(c);ac.play();V3.mixer.setTime(a.t*c.duration);V3.mixer.update(0);V3.bones.forEach(b=>b.userData.qa=b.quaternion.clone());v3dHuesos()}
+  if(!V3.open)return;const s3=S.v3d;s3.modelo='mio';s3.mioNombre=f.name;s3.bones={};s3.hueso=V3.mioBones[0]?.name||'';s3.anim={clip:0,t:0};s3.tab='pose';v3dModelo();v3dPanel();toast('Modelo cargado: '+f.name)}
+function v3dAnim(){if(!V3.mixer||!V3.anims.length)return;const a=S.v3d.anim,c=V3.anims[Math.min(a.clip,V3.anims.length-1)];V3.mixer.stopAllAction();V3.bones.forEach(b=>b.quaternion.copy(b.userData.q0));const ac=V3.mixer.clipAction(c);ac.play();V3.mixer.setTime(a.t*c.duration);V3.mixer.update(0);V3.bones.forEach(b=>b.userData.qa=b.quaternion.clone());v3dHuesos()}
 function v3dHuesos(){const T=V3.T;for(const b of V3.bones){const d=S.v3d.bones[b.name];const q0=b.userData.qa||b.userData.q0;if(d&&q0){b.quaternion.copy(q0).multiply(new T.Quaternion().setFromEuler(new T.Euler(d[0]*Math.PI/180,d[1]*Math.PI/180,d[2]*Math.PI/180)))}else if(q0&&!d)b.quaternion.copy(q0)}V3.dirty=true}
 /* ---- panel ---- */
 const v3Sl=(lbl,path,min,max,st,val,u='°')=>`<label class="v3-s"><span>${lbl} <b id="v3v-${path.replace(/\./g,'-')}">${Math.round(val*100)/100}${u}</b></span><input type="range" data-v3="${path}" min="${min}" max="${max}" step="${st}" value="${val}"></label>`;
@@ -7418,9 +7419,9 @@ function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?`Pose 3D: ${s.preset}`
 function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[['modelo','Modelo'],['pose','Pose'],['luz','Luz'],['camara','Cámara'],['guardar','Guardar']].map(([k,n])=>`<button class="${s.tab===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
 async function v3dAbrir(modo,tab){if(V3.open)return;S.v3d=S.v3d||v3Def();if(modo)S.v3d.modelo=modo;if(tab)S.v3d.tab=tab;
   const ov=$('#overlay');ov.innerHTML=`<div class="v3d" id="v3d"><div class="v3d-top"><span class="v3d-hint">Arrastra para girar · rueda para acercar · clic derecho para mover</span><button class="btn sm" data-act="v3d-cerrar">✕ Cerrar</button></div><div class="v3d-cv" id="v3d-cv"><div class="v3d-carga" id="v3d-carga">Cargando el motor 3D…</div></div><div class="v3d-panel" id="v3d-panel"></div><nav class="v3d-tabs" id="v3d-tabs"></nav><input type="file" id="v3d-file" accept=".glb,.gltf,.obj,.fbx,.stl" hidden></div>`;
-  V3.open=true;
+  V3.open=true;const tk=V3.tk=(V3.tk||0)+1;
   try{await v3dLib()}catch(e){V3.open=false;ov.innerHTML='';toast('No pude cargar el motor 3D. Revisa tu conexión e inténtalo de nuevo.');return}
-  if(!V3.open)return;$('#v3d-carga')?.remove();v3dInit();v3dPanel();v3dModelo()}
+  if(!V3.open||V3.tk!==tk)return;$('#v3d-carga')?.remove();v3dInit();v3dPanel();v3dModelo()}
 function v3dCerrar(){V3.open=false;cancelAnimationFrame(V3.raf);try{V3.ro?.disconnect();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}V3.renderer=null;$('#overlay').innerHTML=''}
 async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)return;
   const r=V3.renderer,cv=r.domElement,pr=r.getPixelRatio();r.setPixelRatio(Math.max(2,pr));v3dResize();r.render(V3.scene,V3.camera);const blob=await new Promise(ok=>cv.toBlob(ok,'image/png'));r.setPixelRatio(pr);v3dResize();
@@ -7441,13 +7442,12 @@ document.addEventListener('input',e=>{const t=e.target;if(!t.closest?.('#v3d'))r
   else if(t.dataset.v3sel){s[t.dataset.v3sel]=t.value}
   else if(t.dataset.v3txt){s[t.dataset.v3txt]=t.value}
   else if(t.dataset.v3anim==='clip'){s.anim.clip=+t.value;v3dAnim()}
-  else if(t.dataset.v3bone!==undefined){s.hueso=t.value;v3dPanel()}
-  else if(t.dataset.bone!==undefined){}});
+  else if(t.dataset.v3bone!==undefined){s.hueso=t.value;v3dPanel()}});
 document.addEventListener('input',e=>{const t=e.target;if(!t.closest?.('#v3d')||!t.dataset.v3||!t.dataset.v3.startsWith('bone.'))return;const i=+t.dataset.v3.split('.')[1],s=S.v3d;s.bones[s.hueso]=s.bones[s.hueso]||[0,0,0];s.bones[s.hueso][i]=+t.value;const lb=$('#v3v-bone-'+i);if(lb)lb.textContent=t.value+'°';v3dHuesos()},true);
 document.addEventListener('change',e=>{if(e.target.id==='v3d-file'&&e.target.files?.[0]){v3dCargaArchivo(e.target.files[0]);e.target.value=''}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&V3.open)v3dCerrar()});
-document.addEventListener('dragover',e=>{if(V3.open&&e.target.closest?.('#v3d-cv'))e.preventDefault()});
-document.addEventListener('drop',e=>{if(!V3.open||!e.target.closest?.('#v3d-cv'))return;e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f)v3dCargaArchivo(f)});
+document.addEventListener('dragover',e=>{if(V3.open&&e.target.closest?.('#v3d'))e.preventDefault()});
+document.addEventListener('drop',e=>{if(!V3.open||!e.target.closest?.('#v3d'))return;e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f&&e.target.closest('#v3d-cv'))v3dCargaArchivo(f)});
 function herramientasRefHTML(){return `<div class="ht-row"><button class="ht-c ht-b" data-act="rb-ir"><b>Buscar referencias</b><span>Museos, fotos y concept art. Toca varias y se van directo a tu moodboard.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="maniqui"><b>Referencia 3D</b><span>Cuerpos con anatomía, cabeza de Loomis y formas, con tu luz. También tus propios modelos.</span></button><button class="ht-c ht-p" data-act="v3d-abrir" data-m="maniqui" data-t="pose"><b>Poses</b><span>Ponlo en la pose de una imagen, o elige una y busca fotos reales con ese nombre.</span></button></div>`}
 /* ============ Tablero profesional ============ */
 const TP_COL={mood:'#e27cc1',luz:'#e5b04a',pj:'#3fc9a8',mundo:'#5fd08a',cultura:'#7c8cff',materiales:'#ff9a5a',tecnica:'#c9a0ff'};
@@ -7799,7 +7799,7 @@ function artistasHTML(p){const b=S.refB||{},q=b.q||p.bajar?.que||'';
 async function verArtista(p,u,f){const b=S.refB=S.refB||{};u=String(u||'').replace(/^.*artstation\.com\//i,'').replace(/[/?#].*$/,'').trim();if(!u){toast('Escribe el usuario o el link de ArtStation');return}
   if(!window.PC_SHIM?.artistas){window.open('https://www.artstation.com/'+encodeURIComponent(u),'_blank','noopener');return}
   const q=b.q||'',filtro=[f,...toks(q).map(tr),...toks(p.bajar?.que||'').map(tr)].filter(Boolean).join(' ');
-  b.artista=u;b.cargando=true;b.error='';b.items=[];renderMain();
+  b.artista=u;S.rbSel=[];b.cargando=true;b.error='';b.items=[];renderMain();
   try{const r=await window.PC_SHIM.artistas({usuario:u,filtro});
     b.items=(r.items||[]).map(x=>({titulo:x.titulo,fuente:'ArtStation · '+(x.artista||u),link:x.link,src:x.src,big:x.big,as:true,artista:x.artista||u,prov:'as',autor:x.artista||u,cat:'Arte',lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'}}));
     b.artistaNom=r.artista||u;if(!b.items.length)b.error='No encontré obras públicas de ese artista. Revisa el usuario (lo que va después de artstation.com/).'}
@@ -8041,7 +8041,7 @@ async function accion(a,el){
     case 'sync-elegir':sincronizarCarpeta(true);break;
     case 'rb-buscar':{const v=$('#rb-q')?.value;S.refB=S.refB||{};if(v!=null)S.refB.q=v;S.refB.exacta='';buscarRefs();break}
     case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;S.refB.exacta='';buscarRefs();break;
-    case 'as-cerrar':S.refB.artista=null;S.refB.artistaNom=null;S.refB.items=[];S.refB.q?buscarRefs():renderMain();break;
+    case 'as-cerrar':S.rbSel=[];S.refB.artista=null;S.refB.artistaNom=null;S.refB.items=[];S.refB.q?buscarRefs():renderMain();break;
     case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;rbAgrega(p,x,S.refB.capa||S.destinoCapa,($('#rbn-'+ds.i)?.value||'').trim());marcar();renderMain();toast('Agregada al moodboard');break}
     case 'foto-clave':{const nom={px:'pexels',us:'unsplash'}[ds.k],inp=$('#key-'+ds.k),v=(inp?.value||'').trim();if(!nom)return;if(v.length<20){toast('Esa clave se ve muy corta: cópiala completa');return}
       try{await window.PC_SHIM.setSecret(nom,v);if(inp)inp.value='';S.fotosEstado=await window.PC_SHIM.fotos({estado:true});renderMain();toast('Clave guardada en tu servidor')}catch{toast('No se pudo guardar la clave')}break}
