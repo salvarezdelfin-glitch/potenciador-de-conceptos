@@ -248,6 +248,7 @@
     async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
     recursos:()=>llamar('pc-recursos'),
     artistas:b=>llamar('pc-artistas',b),
+    fotos:b=>llamar('pc-fotos',b),
     avisarAhora:()=>llamar('pc-avisos'),
     avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},

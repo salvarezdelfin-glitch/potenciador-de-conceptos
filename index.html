@@ -943,6 +943,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
     async setSecret(n,v){const {error}=await sb.rpc('pc_set_named_secret',{p_name:n,p_value:v});if(error)throw error},
     recursos:()=>llamar('pc-recursos'),
     artistas:b=>llamar('pc-artistas',b),
+    fotos:b=>llamar('pc-fotos',b),
     avisarAhora:()=>llamar('pc-avisos'),
     avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
@@ -952,7 +953,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murmhbjh').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murmsvkh').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3369,8 +3370,8 @@ function syncBox(){
    Sin claves: The Met, Art Institute of Chicago, Wikimedia Commons y Openverse tienen API pública y gratuita.
    ArtStation entra por la función del servidor (PC_SHIM.artistas): ahí vive su acceso autorizado, no se raspa nada desde aquí.
    La licencia sale SIEMPRE de la fuente; si la fuente no la da, se marca «no verificada». */
-const REF_PROV={met:'The Met',aic:'Art Institute of Chicago',wm:'Wikimedia Commons',ov:'Openverse',as:'ArtStation'};
-const LIC_EST={dominio:['Dominio público','ok'],abierta:['Licencia abierta · pide atribución','ok'],restringida:['Solo estudio (NC/ND)','warn'],museo:['Derechos del museo · verifica','warn'],inspiracion:['© del autor · solo inspiración','no'],desconocida:['Licencia no verificada','no']};
+const REF_PROV={met:'The Met',aic:'Art Institute of Chicago',wm:'Wikimedia Commons',ov:'Openverse',px:'Pexels',us:'Unsplash',as:'ArtStation'};
+const LIC_EST={dominio:['Dominio público','ok'],abierta:['Licencia abierta · pide atribución','ok'],libreuso:['Uso libre (licencia propia de la fuente)','ok'],restringida:['Solo estudio (NC/ND)','warn'],museo:['Derechos del museo · verifica','warn'],inspiracion:['© del autor · solo inspiración','no'],desconocida:['Licencia no verificada','no']};
 function licDeTexto(t){const n=String(t||'').toLowerCase();if(!n.trim())return 'desconocida';
   if(/\bnc\b|-nc|\bnd\b|-nd|non.?commercial|noderiv/.test(n))return 'restringida';
   if(/cc0|public domain|\bpdm\b|dominio p|^pd\b|pd-/.test(n))return 'dominio';
@@ -3403,20 +3404,29 @@ async function provOv(q,{n=20,libre=false}={}){const j=await jget(`https://api.o
     titulo:String(x.title||'Sin título').slice(0,100),autor:x.creator||'',fuente:'Openverse · '+(x.source||x.provider||'?'),link:x.foreign_landing_url||x.url,
     lic:{estado:licDeTexto('cc '+x.license),texto:'CC '+String(x.license||'?').toUpperCase()+(x.license_version?' '+x.license_version:''),url:x.license_url||''},
     w:x.width||0,h:x.height||0,tags:(x.tags||[]).map(t=>t.name).slice(0,6),cat:'Foto',creditos:x.attribution||''}))}
-const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv};
-const PROV_GRUPOS={'':['met','aic','wm','ov'],museos:['met','aic'],met:['met'],aic:['aic'],wm:['wm'],ov:['ov']};
+/* Pexels y Unsplash: requieren clave. Van por la función del servidor pc-fotos, que lee la clave guardada en pc_secrets. */
+async function provFotos(prov,q,{n=20,orient=''}={}){
+  if(!window.PC_SHIM?.fotos){const e=new Error('sin servidor');e.code='sin_servidor';throw e}
+  let r;try{r=await window.PC_SHIM.fotos({prov,q,n,orientacion:orient})}catch(o){const e=new Error(o?.code||'error');e.code=o?.code||'error';throw e}
+  const nombre=prov==='pexels'?'Pexels':'Unsplash';
+  return (r.items||[]).map(x=>mkRef({prov:prov==='pexels'?'px':'us',id:x.id,src:x.src,big:x.big||x.src,titulo:x.titulo,autor:x.autor,autorUrl:x.autorUrl||'',fuente:nombre,link:x.link,
+    lic:{estado:'libreuso',texto:'Licencia de '+nombre+': uso libre, sin revender la foto tal cual',url:prov==='pexels'?'https://www.pexels.com/license/':'https://unsplash.com/license'},
+    w:x.w||0,h:x.h||0,tags:x.tags||[],cat:'Foto',dl:x.dl||'',creditos:'Foto de '+(x.autor||'autor desconocido')+(x.autorUrl?' ('+x.autorUrl+')':'')+' en '+nombre+' · '+x.link}))}
+const provPx=(q,o)=>provFotos('pexels',q,o),provUs=(q,o)=>provFotos('unsplash',q,o);
+const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv,px:provPx,us:provUs};
+const PROV_GRUPOS={'':['met','aic','wm','ov'],museos:['met','aic'],met:['met'],aic:['aic'],wm:['wm'],ov:['ov'],px:['px'],us:['us']};
 async function buscarTodos(q,fuentes,opts,alts){const est={};
   /* si una fuente no devuelve nada con la consulta completa, reintenta con versiones más simples (las APIs buscan por coincidencia estricta) */
   const res=await Promise.all(fuentes.map(async k=>{try{let r=await PROV_FN[k](q,opts||{});est[k]={ok:true,n:r.length};
       for(const a of (alts||[]).slice(0,2)){if(r.length)break;r=await PROV_FN[k](a,opts||{});if(r.length)est[k]={ok:true,n:r.length,alt:a}}return r}
-    catch(e){est[k]={ok:false,msg:e.status===429?'límite de uso, prueba en un rato':e.status?'error '+e.status:'sin conexión'};return []}}));
+    catch(e){est[k]={ok:false,msg:e.code==='sin_clave'?'falta la clave: pégala en «Claves de fotos»':e.code==='clave_invalida'?'la clave no es válida: revísala en «Claves de fotos»':e.code==='sin_servidor'?'solo disponible en la app publicada':(e.status===429||e.code==='limite')?'límite de uso, prueba en un rato':e.status?'error '+e.status:'sin conexión'};return []}}));
   const vistos=new Set(),mezcla=[];
   for(let i=0;i<40;i++)for(const l of res){const x=l[i];if(!x)continue;const k2=canon(x.src);if(vistos.has(x.clave)||vistos.has(k2))continue;vistos.add(x.clave);vistos.add(k2);mezcla.push(x)}
   return {items:mezcla,est}}
 /* relevancia: coincidencia con la búsqueda (título, autor, etiquetas), resolución, licencia identificable y tus preferencias por fuente */
 function puntuaRefs(items,q){const qt=toks(q).filter(w=>w.length>2),rel=S.ajustes.relev||{};
   items.forEach((x,i)=>{const txt=nz([x.titulo,x.autor,(x.tags||[]).join(' ')].join(' ')),m=qt.length?qt.filter(w=>txt.includes(nz(w))).length/qt.length:0,lado=Math.max(x.w||0,x.h||0),r=rel[x.prov]||{ok:0,no:0},pref=Math.max(-.5,Math.min(.5,(r.ok-r.no)/12)),le=x.lic?.estado;
-    x._s=m*3+(lado>=1500?.6:lado>=900?.3:lado?0:.1)+(le==='dominio'?.5:le==='abierta'?.4:le==='desconocida'?-.2:0)+pref-i*.004});
+    x._s=m*3+(lado>=1500?.6:lado>=900?.3:lado?0:.1)+(le==='dominio'?.5:(le==='abierta'||le==='libreuso')?.4:le==='desconocida'?-.2:0)+pref-i*.004});
   return items.sort((a,b)=>b._s-a._s)}
 function relevMarca(r,v){const k=/Met/i.test(r.fuente||'')?'met':/Chicago/i.test(r.fuente||'')?'aic':/Wikimedia/i.test(r.fuente||'')?'wm':/Openverse/i.test(r.fuente||'')?'ov':/ArtStation/i.test(r.fuente||'')?'as':r.prov||'';if(!k)return;
   S.ajustes.relev=S.ajustes.relev||{};const x=S.ajustes.relev[k]=S.ajustes.relev[k]||{ok:0,no:0};if(v>0)x.ok++;else x.no++;marcarAj()}
@@ -3443,7 +3453,8 @@ async function buscarRefs(){
   const pArtistas=(b.src==='as'?Promise.resolve(null):buscarAS(q).catch(()=>[]));
   let mezcla=[],est={};
   if(b.src==='as'){try{mezcla=await buscarAS(q);est.as={ok:true,n:mezcla.length}}catch{est.as={ok:false,msg:'no disponible ahora'}}}
-  else{const r=await buscarTodos(q,PROV_GRUPOS[b.src||'']||PROV_GRUPOS[''],{libre:b.fLic==='libres'||b.fLic==='dominio'},b.exacta?[]:consultaDe(b).variantes);mezcla=puntuaRefs(r.items,q);est=r.est}
+  else{let fuentes=PROV_GRUPOS[b.src||'']||PROV_GRUPOS[''];if(!b.src){const fe=S.fotosEstado||{};fuentes=[...fuentes,...(fe.pexels?['px']:[]),...(fe.unsplash?['us']:[])]}
+    const r=await buscarTodos(q,fuentes,{libre:b.fLic==='libres'||b.fLic==='dominio',orient:{h:'landscape',v:'portrait',c:'squarish'}[b.fProp]||''},b.exacta?[]:consultaDe(b).variantes);mezcla=puntuaRefs(r.items,q);est=r.est}
   const resAS=b.src==='as'?mezcla:await pArtistas;
   const vistos=new Set(),artistas=[];for(const x of (resAS||[])){if(!x.usuario||vistos.has(x.usuario))continue;vistos.add(x.usuario);artistas.push({u:x.usuario,n:x.artista,muestra:x})}
   b.artistasEnc=artistas.slice(0,8);b.estado=est;b.items=mezcla;b.cargando=false;
@@ -3451,11 +3462,23 @@ async function buscarRefs(){
     b.error=fallos.length===Object.keys(est).length?'No se pudo buscar ahora: '+fallos.map(([k,v])=>`${REF_PROV[k]} (${v.msg})`).join(', ')+'.':'Sin resultados para «'+q+'». Prueba en inglés, con menos palabras, o con una de las otras formas de buscarlo.'}
   renderMain();
 }
+async function cargaFotosEstado(){if(!window.PC_SHIM?.fotos||S.fotosEstado!==undefined)return;S.fotosEstado=null;
+  try{S.fotosEstado=await window.PC_SHIM.fotos({estado:true})}catch{S.fotosEstado={pexels:false,unsplash:false}}renderMain()}
+function fotosClavesHTML(){const e=S.fotosEstado;
+  if(!window.PC_SHIM?.fotos)return '<p class="hint" style="margin:0">Pexels y Unsplash se activan en la app publicada: necesitan tu sesión y el servidor para guardar sus claves.</p>';
+  if(e===undefined)setTimeout(cargaFotosEstado,0);
+  const fila=(k,n,url,nota)=>`<div class="prow" style="align-items:center"><b style="min-width:76px">${n}</b>${e?.[k==='px'?'pexels':'unsplash']?`<span class="lic ok">Clave guardada ✓</span><button class="btn ghost sm" data-act="foto-clave-quitar" data-k="${k}">Quitar clave</button>`:`<input type="password" id="key-${k}" autocomplete="off" spellcheck="false" placeholder="Pega aquí tu clave de ${n}" style="flex:1 1 200px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:7px 10px"><button class="btn sm pri" data-act="foto-clave" data-k="${k}">Guardar</button><a class="btn ghost sm" href="${url}" target="_blank" rel="noopener">Conseguir clave gratis ↗</a>`}</div><p class="hint" style="margin:0 0 6px">${nota}</p>`;
+  const est=e?[e.pexels&&'Pexels ✓',e.unsplash&&'Unsplash ✓'].filter(Boolean).join(' · ')||'sin configurar':'';
+  return `<details class="pf-det" data-det="claves" ${S.palAb?.claves||(e&&['px','us'].includes(S.refB?.src)&&!e[S.refB.src==='px'?'pexels':'unsplash'])?'open':''}><summary>Claves de fotos (Pexels y Unsplash)${est?' · '+est:''}</summary>
+    <p class="hint" style="margin:0">Dos bancos de fotos gratuitos con buena fotografía de materiales, arquitectura y luz. La clave se guarda en tu servidor, no en este navegador. Se pega una sola vez.</p>
+    ${fila('px','Pexels','https://www.pexels.com/api/','Gratis: 200 búsquedas por hora. En su página, crea la cuenta, pide la clave y cópiala aquí.')}
+    ${fila('us','Unsplash','https://unsplash.com/developers','En modo demo: 50 búsquedas por hora. Crea una aplicación y copia el «Access Key» (no el «Secret Key»).')}
+    <p class="hint" style="margin:0">Las dos licencias permiten usar las fotos gratis; piden dar crédito al fotógrafo (en Referencias, «Copiar créditos») y no revender la foto tal cual.</p></details>`}
 function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
   if(b.fFuente&&x.prov!==b.fFuente)return false;
   if(b.fCat&&x.cat!==b.fCat)return false;
   const e=x.lic?.estado||'desconocida';
-  if(b.fLic==='libres'&&!['dominio','abierta'].includes(e))return false;
+  if(b.fLic==='libres'&&!['dominio','abierta','libreuso'].includes(e))return false;
   if(b.fLic==='dominio'&&e!=='dominio')return false;
   if(+b.fRes&&Math.max(x.w||0,x.h||0)<+b.fRes)return false;
   if(b.fProp){if(!(x.w&&x.h))return false;const r=x.w/x.h;if(b.fProp==='h'&&r<1.2)return false;if(b.fProp==='v'&&r>.85)return false;if(b.fProp==='c'&&(r<.85||r>1.2))return false}
@@ -3463,7 +3486,7 @@ function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
 function refResHTML(p,b,x,i,ya){const L=LIC_EST[x.lic?.estado||'desconocida'],guard=ya.has(x.big)||ya.has(x.src),dims=x.w&&x.h?`${x.w}×${x.h}`:'tamaño sin dato';
   return `<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
     <figcaption><span>${esc(x.titulo)}</span>
-    <small class="muted">${x.autor?esc(x.autor)+' · ':''}${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
+    <small class="muted">${x.autor?(x.autorUrl?`<a href="${esc(x.autorUrl)}" target="_blank" rel="noopener" style="color:inherit">${esc(x.autor)}</a>`:esc(x.autor))+' · ':''}${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
     <span class="lic ${L[1]}" title="${esc(x.lic?.texto||'La fuente no indica licencia')}">${L[0]}</span>${x.lic?.texto&&x.lic.estado!=='desconocida'?`<small class="muted">${x.lic.url?`<a href="${esc(x.lic.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(corto(x.lic.texto,48))}</a>`:esc(corto(x.lic.texto,48))}</small>`:''}
     <small class="muted">${dims}${x.cat?' · '+x.cat:''}</small>
     ${(x.tags||[]).length?`<div class="chips">${x.tags.slice(0,4).map(t=>`<span class="chip" style="padding:2px 8px;font-size:11px">${esc(t)}</span>`).join('')}</div>`:''}
@@ -3481,7 +3504,7 @@ function refsBuscaHTML(p){
       <input type="text" id="rb-ep" data-refb="epoca" list="rb-eps" value="${esc(b.epoca||'')}" placeholder="Época o cultura" style="width:150px;${inpSt}" data-enter="rb-buscar"><datalist id="rb-eps">${CULTURAS.map(c=>`<option value="${c}">`).join('')}</datalist>
       <input type="text" id="rb-am" data-refb="amb" value="${esc(b.amb||'')}" placeholder="Ambiente (niebla, noche…)" style="width:170px;${inpSt}" data-enter="rb-buscar"></div>
     <div class="prow">
-      ${sel('src',[['','Todas las fuentes'],['museos','Museos (Met + Chicago)'],['met','The Met'],['aic','Art Institute of Chicago'],['wm','Wikimedia Commons'],['ov','Openverse'],['as','Artistas (ArtStation)']])}
+      ${sel('src',[['','Todas las fuentes'],['museos','Museos (Met + Chicago)'],['met','The Met'],['aic','Art Institute of Chicago'],['wm','Wikimedia Commons'],['ov','Openverse'],['px','Pexels (requiere clave)'],['us','Unsplash (requiere clave)'],['as','Artistas (ArtStation)']])}
       <select id="rb-capa" data-refb="capa" style="width:auto">${LAYERS.map(l=>`<option value="${l.k}" ${(b.capa||S.destinoCapa)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
       <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
     <p class="hint" id="rb-prev" style="margin:0">${consultaPrevHTML(b)}</p>
@@ -3490,6 +3513,7 @@ function refsBuscaHTML(p){
     ${artistasHTML(p)}
     <div id="rb-res"></div>${b.artista&&b.artistaNom?`<div class="prow"><span class="lbl">Obras de ${esc(b.artistaNom)}</span><a class="btn ghost sm" href="https://www.artstation.com/${esc(b.artista)}" target="_blank" rel="noopener">Perfil ↗</a><button class="btn ghost sm" data-act="as-cerrar">Volver a la búsqueda</button></div>`:''}
     ${b.cargando?'<p class="muted">Buscando en varias fuentes…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
+    ${fotosClavesHTML()}
     ${fuentesUsadas.length&&!b.cargando?`<p class="hint" style="margin:0">${fuentesUsadas.map(k=>{const e=b.estado[k];return e.ok?`${REF_PROV[k]} ✓ ${e.n}${e.alt?` (con «${esc(e.alt)}»)`:""}`:`<span style="color:var(--warn)">${REF_PROV[k]}: ${esc(e.msg)}</span>`}).join(' · ')}</p>`:''}
     ${(b.items||[]).length&&!b.artista?`<div class="prow" style="font-size:12.5px"><span class="lbl">Filtrar</span>
       ${sel('fFuente',[['','Cualquier fuente'],...Object.entries(REF_PROV).filter(([k])=>(b.items||[]).some(x=>x.prov===k)).map(([k,n])=>[k,n])])}
@@ -7321,10 +7345,13 @@ async function accion(a,el){
       p.refs.push({id:uid(),capa,porque:nota||(x.as?`De ${x.artista}: tomo `:''),fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,creado:Date.now(),
         autor:x.autor||'',lic:x.lic?.texto||'',licEstado:x.lic?.estado||(x.as?'inspiracion':'desconocida'),licUrl:x.lic?.url||'',w:x.w||0,h:x.h||0,tags:x.tags||[],prov:x.prov||'',creditos:x.creditos||'',
         ...(S.refB.grupo?{grupo:S.refB.grupo}:x.as?{grupo:'tecnica'}:{}),...(S.refB.luz?{luz:S.refB.luz}:{}),tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':/Met|Chicago/i.test(x.fuente||'')?'Museo':'Fotografía'});
-      relevMarca({fuente:x.fuente,prov:x.prov},1);marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+(nota?'':': escribe su porqué'));break}
+      relevMarca({fuente:x.fuente,prov:x.prov},1);if(x.prov==='us'&&x.dl&&window.PC_SHIM?.fotos)window.PC_SHIM.fotos({descarga:x.dl}).catch(()=>{});marcar();renderMain();toast('Agregada'+(S.refB.grupo?' a «'+(tabGrupos(p).find(g=>g.k===S.refB.grupo)?.n||'')+'»':'')+(nota?'':': escribe su porqué'));break}
+    case 'foto-clave':{const nom={px:'pexels',us:'unsplash'}[ds.k],inp=$('#key-'+ds.k),v=(inp?.value||'').trim();if(!nom)return;if(v.length<20){toast('Esa clave se ve muy corta: cópiala completa');return}
+      try{await window.PC_SHIM.setSecret(nom,v);if(inp)inp.value='';S.fotosEstado=await window.PC_SHIM.fotos({estado:true});renderMain();toast('Clave guardada en tu servidor')}catch{toast('No se pudo guardar la clave')}break}
+    case 'foto-clave-quitar':{const nom={px:'pexels',us:'unsplash'}[ds.k];if(!nom)return;try{await window.PC_SHIM.setSecret(nom,'');S.fotosEstado=await window.PC_SHIM.fotos({estado:true});renderMain();toast('Clave quitada')}catch{toast('No se pudo quitar')}break}
     case 'rb-var':S.refB=S.refB||{};S.refB.exacta=ds.v;buscarRefs();break;
     case 'rb-limpiar':{const b=S.refB;['fFuente','fLic','fProp','fRes','fCat'].forEach(k=>b[k]='');renderMain();break}
-    case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return `${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta'].includes(est)?'':'  [solo estudio o inspiración]'}`});
+    case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return r.creditos&&['libreuso','abierta','dominio'].includes(est)?r.creditos+' · '+(r.lic||''):`${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta','libreuso'].includes(est)?'':'  [solo estudio o inspiración]'}`});
       if(!L.length){toast('Todavía no hay referencias con fuente');return}copiarTexto(L.join('\n'),'Créditos y licencias copiados');break}
     case 'presentar':S.pres=null;presentar(0);try{document.documentElement.requestFullscreen?.()}catch{}break;
     case 'pres-prev':presentar(S.pres.i-1);break;
