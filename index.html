@@ -468,6 +468,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-col{flex:0 0 150px;display:flex;flex-direction:column;gap:3px}.esc-bola{width:110px;height:110px;align-self:center;background:#0b0c0f;border-radius:50%}
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
+.sitios{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.sitio{display:flex;flex-direction:column;gap:6px;background:var(--surface2);border-radius:10px;padding:10px;min-width:0}
 .lic{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;align-self:flex-start}.lic.ok{background:var(--ok-bg);color:var(--ok)}.lic.warn{background:rgba(229,176,74,.14);color:#e5b04a}.lic.no{background:var(--warn-bg);color:var(--warn)}.ref-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .pf-piezas{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}.pf-pz,.pf-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pf-pz .lbl,.pf-pl .lbl{min-width:84px}
 .pf-det{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pf-det summary{cursor:pointer;font-weight:600}.pf-det[open]{display:flex;flex-direction:column;gap:8px}.pf-det[open] summary{margin-bottom:2px}
@@ -953,7 +954,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murmsvkh').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murnbpy8').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1554,6 +1555,7 @@ function vRefs(p){
     return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
     ${qs.length?`<div class="colq">${qs.map(b=>`<div class="colq-r"><button class="colq-b" ${S.autoRef?'disabled':''} data-act="buscar-guardada" data-q="${esc(b.q)}" data-capa="${esc(b.capa)}" data-obj="${esc(b.obj||'')}" data-busco="${esc(b.busco||'')}" data-estudiar="${esc(b.estudiar||'')}" title="Traer referencias reales + concept art de esta búsqueda">↓ ${esc(b.q)}</button><a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗</a></div>`).join('')}</div>`:''}
     ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
+  ${sitiosRefHTML(p)}
   <details id="det-masherr" ${S.refB?.q||S.masHerr?'open':''}><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: buscar por tu cuenta, artistas a seguir, tus búsquedas guardadas</summary>
   ${refsBuscaHTML(p)}
   ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
@@ -3432,7 +3434,7 @@ function relevMarca(r,v){const k=/Met/i.test(r.fuente||'')?'met':/Chicago/i.test
   S.ajustes.relev=S.ajustes.relev||{};const x=S.ajustes.relev[k]=S.ajustes.relev[k]||{ok:0,no:0};if(v>0)x.ok++;else x.no++;marcarAj()}
 /* constructor de consulta: tema + propósito + época o cultura + ambiente → consulta en inglés y variaciones que descubren cosas distintas */
 const PROPOS={'':['Cualquiera',''],anatomia:['Anatomía','anatomy study','skeleton'],materiales:['Materiales y textura','texture close up','material detail'],arquitectura:['Arquitectura','architecture','ruins exterior'],silueta:['Silueta y forma','silhouette','profile'],iluminacion:['Iluminación','dramatic lighting','light and shadow'],paleta:['Paleta y color','color palette','color study'],vestuario:['Vestuario','costume','clothing detail'],entorno:['Entorno y paisaje','landscape','environment']};
-function consultaDe(b){const en=s=>String(s||'').split(/\s+/).filter(Boolean).map(w=>tr(w)).join(' '),unico=a=>[...new Set(a.join(' ').split(/\s+/).filter(Boolean))].join(' ');
+function consultaDe(b){const en=s=>String(s||'').split(/\s+/).filter(w=>w&&!STOP.has(nz(w))).map(w=>trSeguro(w)).join(' '),unico=a=>[...new Set(a.join(' ').split(/\s+/).filter(Boolean))].join(' ');
   const tema=en(b.q),ep=en(b.epoca),am=en(b.amb),pr=PROPOS[b.prop||'']||PROPOS[''],principal=unico([tema,ep,am,pr[1]||'']);
   const vars=[unico([tema,ep,am]),pr[2]?unico([tema,ep,pr[2]]):'',unico([tema,ep,'museum collection']),unico([tema,'reference photo']),unico([tema,ep,'close up detail']),am?unico([tema,am,'concept']):''].filter(x=>x&&x!==principal);
   return {principal,variantes:[...new Set(vars)].slice(0,5)}}
@@ -3474,6 +3476,55 @@ function fotosClavesHTML(){const e=S.fotosEstado;
     ${fila('px','Pexels','https://www.pexels.com/api/','Gratis: 200 búsquedas por hora. En su página, crea la cuenta, pide la clave y cópiala aquí.')}
     ${fila('us','Unsplash','https://unsplash.com/developers','En modo demo: 50 búsquedas por hora. Crea una aplicación y copia el «Access Key» (no el «Secret Key»).')}
     <p class="hint" style="margin:0">Las dos licencias permiten usar las fotos gratis; piden dar crédito al fotógrafo (en Referencias, «Copiar créditos») y no revender la foto tal cual.</p></details>`}
+/* ============ Buscar tú mismo: enlaces directos a páginas con buenas referencias ============
+   Solo abre la búsqueda en la página con tu consulta; no se trae ni se raspa nada. Lo que encuentres lo traes con «Subir imágenes» o pegando la imagen. */
+const SITIO_G={concept:'Concept art y diseño',foto:'Fotografía de uso libre',museo:'Museos y archivos',natural:'Naturaleza y anatomía real',material:'Materiales y 3D',arq:'Arquitectura',cine:'Cine y color'};
+const SITIO_LIC={abierto:['Dominio público / abierto','ok'],libre:['Uso libre','ok'],mixta:['Licencias mixtas: revisa cada imagen','warn'],estudio:['© de sus autores: inspiración y estudio','no']};
+/* traduce solo palabras del diccionario ES→EN; lo que ya está en inglés (o no se conoce) se deja tal cual */
+const trSeguro=w=>{const n=nz(w).trim();if(TR[n])return TR[n];const x=n.replace(/(es|s)$/,'');if(TR[x])return TR[x];return w.trim()};
+const SLUG=q=>q.trim().toLowerCase().replace(/\s+/g,'-'),ENC=q=>encodeURIComponent(q.trim());
+const SITIOS_REF=[
+ {k:'artstation',g:'concept',n:'ArtStation',l:'estudio',d:'El estándar de la industria: concept art de personajes, criaturas y entornos.',u:q=>'https://www.artstation.com/search?sort_by=relevance&query='+ENC(q)},
+ {k:'pinterest',g:'concept',n:'Pinterest',l:'estudio',d:'Descubrimiento visual y tableros de otros artistas; muy bueno para explorar direcciones.',u:q=>'https://www.pinterest.com/search/pins/?q='+ENC(q)},
+ {k:'behance',g:'concept',n:'Behance',l:'estudio',d:'Proyectos completos de ilustración y dirección de arte, con el proceso.',u:q=>'https://www.behance.net/search/projects?search='+ENC(q)},
+ {k:'google',g:'concept',n:'Google Imágenes',l:'estudio',d:'Lo más amplio, pero sin control de licencias ni de calidad.',u:q=>'https://www.google.com/search?tbm=isch&q='+ENC(q)},
+ {k:'gac',g:'concept',n:'Google Arts & Culture',l:'estudio',d:'Obras, objetos y sitios históricos en alta resolución, con contexto cultural.',u:q=>'https://artsandculture.google.com/search?q='+ENC(q)},
+ {k:'unsplash',g:'foto',n:'Unsplash',l:'libre',d:'Fotografía cuidada de materiales, paisaje, arquitectura y luz.',u:q=>'https://unsplash.com/s/photos/'+SLUG(q)},
+ {k:'pexels',g:'foto',n:'Pexels',l:'libre',d:'Fotos y vídeo de uso libre; buen volumen de texturas y ambientes.',u:q=>'https://www.pexels.com/search/'+ENC(q)+'/'},
+ {k:'pixabay',g:'foto',n:'Pixabay',l:'libre',d:'Fotos, ilustraciones y vectores de uso libre.',u:q=>'https://pixabay.com/images/search/'+ENC(q)+'/'},
+ {k:'flickr',g:'foto',n:'Flickr',l:'mixta',d:'Fotografía real de museos, viajes y detalles; filtra por licencia en su buscador.',u:q=>'https://www.flickr.com/search/?text='+ENC(q)},
+ {k:'commons',g:'foto',n:'Wikimedia Commons',l:'abierto',d:'Millones de archivos libres: objetos de museo, arquitectura, naturaleza.',u:q=>'https://commons.wikimedia.org/w/index.php?ns6=1&search='+ENC(q)},
+ {k:'openverse',g:'foto',n:'Openverse',l:'abierto',d:'Buscador de imágenes con licencia abierta de muchas fuentes a la vez.',u:q=>'https://openverse.org/search/image?q='+ENC(q)},
+ {k:'met',g:'museo',n:'The Met (acceso abierto)',l:'abierto',d:'Armas, textiles, escultura y arte de todas las culturas; filtro de dominio público.',u:q=>'https://www.metmuseum.org/art/collection/search?showOnly=openAccess&q='+ENC(q)},
+ {k:'aic',g:'museo',n:'Art Institute of Chicago',l:'abierto',d:'Colección con imágenes de dominio público en alta resolución.',u:q=>'https://www.artic.edu/collection?q='+ENC(q)},
+ {k:'rijks',g:'museo',n:'Rijksmuseum',l:'abierto',d:'Imágenes de dominio público de muy alta calidad; excelente para luz, vestuario y objetos.',u:q=>'https://www.rijksmuseum.nl/en/collection/search?q='+ENC(q)},
+ {k:'cleveland',g:'museo',n:'Cleveland Museum of Art',l:'abierto',d:'Acceso abierto con muy buena resolución, arte de muchas culturas.',u:q=>'https://www.clevelandart.org/art/collection/search?search='+ENC(q)},
+ {k:'vam',g:'museo',n:'V&A (Victoria and Albert)',l:'mixta',d:'Diseño, vestuario, joyería y objetos decorativos; revisa derechos por pieza.',u:q=>'https://collections.vam.ac.uk/search/?q='+ENC(q)},
+ {k:'si',g:'museo',n:'Smithsonian Open Access',l:'abierto',d:'Millones de imágenes CC0: naturaleza, objetos, historia, arqueología.',u:q=>'https://www.si.edu/search/collection-images?edan_q='+ENC(q)},
+ {k:'europeana',g:'museo',n:'Europeana',l:'mixta',d:'Archivos y museos europeos; cada objeto indica su derecho de uso.',u:q=>'https://www.europeana.eu/en/search?query='+ENC(q)},
+ {k:'loc',g:'museo',n:'Library of Congress (imágenes)',l:'mixta',d:'Grabados, fotografía histórica y mapas; muchos de dominio público.',u:q=>'https://www.loc.gov/pictures/search/?q='+ENC(q)},
+ {k:'bhl',g:'natural',n:'Biodiversity Heritage Library',l:'abierto',d:'Láminas científicas históricas de animales y plantas: anatomía y forma.',u:q=>'https://www.biodiversitylibrary.org/search?searchTerm='+ENC(q)},
+ {k:'inat',g:'natural',n:'iNaturalist',l:'mixta',d:'Fotos de especies reales en su hábitat; cada foto trae su licencia.',u:q=>'https://www.inaturalist.org/taxa/search?q='+ENC(q)},
+ {k:'nasa',g:'natural',n:'NASA Images',l:'abierto',d:'Cielo, planetas, naves y fenómenos; en su mayoría de dominio público.',u:q=>'https://images.nasa.gov/search?q='+ENC(q)},
+ {k:'ambientcg',g:'material',n:'ambientCG',l:'abierto',d:'Texturas y materiales CC0 para estudiar cómo se ve de verdad una superficie.',u:q=>'https://ambientcg.com/list?q='+ENC(q)},
+ {k:'polyhaven',g:'material',n:'Poly Haven',l:'abierto',d:'Texturas, modelos y HDRI de luz real, todo CC0.',u:q=>'https://polyhaven.com/all?s='+ENC(q)},
+ {k:'sketchfab',g:'material',n:'Sketchfab',l:'mixta',d:'Modelos 3D para estudiar forma, escala y volumen desde cualquier ángulo.',u:q=>'https://sketchfab.com/search?type=models&q='+ENC(q)},
+ {k:'archdaily',g:'arq',n:'ArchDaily',l:'estudio',d:'Arquitectura contemporánea con planos y fotografía de proyecto.',u:q=>'https://www.archdaily.com/search/projects?q='+ENC(q)},
+ {k:'filmgrab',g:'cine',n:'Film-Grab',l:'estudio',d:'Fotogramas de películas: composición, luz y color en pantalla.',u:q=>'https://film-grab.com/?s='+ENC(q)},
+ {k:'adobecolor',g:'cine',n:'Adobe Color',l:'libre',d:'Paletas de color publicadas por otros: buen punto de partida para armonías.',u:q=>'https://color.adobe.com/search?q='+ENC(q)}];
+function sitioQ(p){const b=S.refB||{};return S.sitioQ!=null?S.sitioQ:(b.qUsada||b.q||'')}
+function sitioURL(site,q,en){const t=en?String(q).split(/\s+/).filter(w=>w&&!STOP.has(nz(w))).map(w=>trSeguro(w)).join(' '):String(q);return site.u(t)}
+function sitiosRefHTML(p){const q=sitioQ(p),en=S.sitioEn!==false,fav=new Set(S.ajustes.sitiosFav||[]),g=S.sitioG||'';
+  const L=SITIOS_REF.filter(x=>!g||x.g===g).sort((a,b)=>(fav.has(b.k)?1:0)-(fav.has(a.k)?1:0));
+  return `<details class="box" data-det="sitios" ${S.palAb?.sitios===false?'':'open'}><summary style="cursor:pointer"><h3 style="display:inline">Buscar tú mismo en otras páginas</h3> <span class="lbl">${SITIOS_REF.length} sitios</span></summary>
+    <p class="hint" style="margin:6px 0">Escribe lo que buscas y abre cualquier sitio ya con la búsqueda hecha. Aquí no se importa nada: lo que te guste lo traes con «Subir imágenes» o pegándolo (Ctrl+V), y revisas su licencia en el sitio.</p>
+    <div class="prow"><input type="text" id="ext-q" data-extq value="${esc(q)}" placeholder="aztec obsidian knife, ruinas con niebla…" style="flex:1 1 240px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px">
+      <label class="chk" style="margin:0"><input type="checkbox" id="ext-en" data-exten ${en?'checked':''}><span>Buscar en inglés <small class="muted">(más resultados)</small></span></label></div>
+    <div class="chips"><button class="ch xs ${g?'':'on'}" data-act="sitio-g" data-g="">Todos</button>${Object.entries(SITIO_G).map(([k,n])=>`<button class="ch xs ${g===k?'on':''}" data-act="sitio-g" data-g="${k}">${n}</button>`).join('')}</div>
+    <div class="sitios">${L.map(x=>{const lc=SITIO_LIC[x.l];return `<div class="sitio"><div class="prow" style="justify-content:space-between;align-items:flex-start"><b>${esc(x.n)}</b><button class="btn ghost sm" data-act="sitio-fav" data-k="${x.k}" title="${fav.has(x.k)?'Quitar de favoritos':'Poner primero'}" aria-label="Favorito">${fav.has(x.k)?'★':'☆'}</button></div>
+      <p class="hint" style="margin:0">${esc(x.d)}</p><span class="lic ${lc[1]}">${lc[0]}</span>
+      <button class="btn sm pri" data-act="sitio-abrir" data-k="${x.k}">Buscar en ${esc(x.n.split(' (')[0])} ↗</button></div>`}).join('')}</div>
+    <p class="hint" style="margin:6px 0 0">Si un sitio cambia la dirección de su buscador, el botón te deja en su portada y ahí escribes tu búsqueda. «Inspiración y estudio» significa que las imágenes pertenecen a sus autores: sirven para aprender, no para reutilizar.</p></details>`}
 function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
   if(b.fFuente&&x.prov!==b.fFuente)return false;
   if(b.fCat&&x.cat!==b.fCat)return false;
@@ -3509,7 +3560,7 @@ function refsBuscaHTML(p){
       <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
     <p class="hint" id="rb-prev" style="margin:0">${consultaPrevHTML(b)}</p>
     ${sug.length?`<div class="chips"><span class="lbl">De tu proyecto</span>${sug.map(s=>`<button class="chip" data-act="rb-sug" data-v="${esc(s)}" style="border:0;cursor:pointer;padding:4px 10px">${esc(s)}</button>`).join('')}</div>`:''}
-    ${b.q?`<div class="prow" style="font-size:12.5px"><span class="muted">También, abriendo la web (sin importar nada):</span><a class="btn ghost sm" href="https://www.pinterest.com/search/pins/?q=${q}" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}+site%3Aartstation.com" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn ghost sm" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">Google Imágenes ↗</a></div>`:''}
+    
     ${artistasHTML(p)}
     <div id="rb-res"></div>${b.artista&&b.artistaNom?`<div class="prow"><span class="lbl">Obras de ${esc(b.artistaNom)}</span><a class="btn ghost sm" href="https://www.artstation.com/${esc(b.artista)}" target="_blank" rel="noopener">Perfil ↗</a><button class="btn ghost sm" data-act="as-cerrar">Volver a la búsqueda</button></div>`:''}
     ${b.cargando?'<p class="muted">Buscando en varias fuentes…</p>':b.error?`<p class="muted">${esc(b.error)}</p>`:''}
@@ -7120,6 +7171,8 @@ async function accionAs(a,el,p,ds){
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='trat-txt'){S.tratTxt=t.value;return}
+  if(t.dataset.extq!==undefined){S.sitioQ=t.value;return}
+  if(t.dataset.exten!==undefined){S.sitioEn=t.checked;return}
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
   if(t.dataset.nom){nomDraft()[t.dataset.nom]=t.value;if(t.dataset.nom==='pid'){S.ai.nombres2=null;if(S.P[t.value])S.nomFavP=t.value}if(t.tagName==='SELECT'){const p=S.P[t.value];if(p&&!S.nom.desc)S.nom.desc='';renderMain()}return}
@@ -7349,6 +7402,10 @@ async function accion(a,el){
     case 'foto-clave':{const nom={px:'pexels',us:'unsplash'}[ds.k],inp=$('#key-'+ds.k),v=(inp?.value||'').trim();if(!nom)return;if(v.length<20){toast('Esa clave se ve muy corta: cópiala completa');return}
       try{await window.PC_SHIM.setSecret(nom,v);if(inp)inp.value='';S.fotosEstado=await window.PC_SHIM.fotos({estado:true});renderMain();toast('Clave guardada en tu servidor')}catch{toast('No se pudo guardar la clave')}break}
     case 'foto-clave-quitar':{const nom={px:'pexels',us:'unsplash'}[ds.k];if(!nom)return;try{await window.PC_SHIM.setSecret(nom,'');S.fotosEstado=await window.PC_SHIM.fotos({estado:true});renderMain();toast('Clave quitada')}catch{toast('No se pudo quitar')}break}
+    case 'sitio-g':S.sitioG=ds.g||'';renderMain();break;
+    case 'sitio-fav':{const f=S.ajustes.sitiosFav=S.ajustes.sitiosFav||[];const k=ds.k;S.ajustes.sitiosFav=f.includes(k)?f.filter(x=>x!==k):[...f,k];marcarAj();renderMain();break}
+    case 'sitio-abrir':{const x=SITIOS_REF.find(z=>z.k===ds.k),q=($('#ext-q')?.value||sitioQ(p)||'').trim();if(!x)return;if(!q){toast('Escribe primero qué quieres buscar');$('#ext-q')?.focus();return}
+      S.sitioQ=q;window.open(sitioURL(x,q,S.sitioEn!==false),'_blank','noopener');break}
     case 'rb-var':S.refB=S.refB||{};S.refB.exacta=ds.v;buscarRefs();break;
     case 'rb-limpiar':{const b=S.refB;['fFuente','fLic','fProp','fRes','fCat'].forEach(k=>b[k]='');renderMain();break}
     case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return r.creditos&&['libreuso','abierta','dominio'].includes(est)?r.creditos+' · '+(r.lic||''):`${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta','libreuso'].includes(est)?'':'  [solo estudio o inspiración]'}`});
