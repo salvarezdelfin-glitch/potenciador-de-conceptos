@@ -66,13 +66,13 @@ button,input,textarea,select{font:inherit;color:inherit}
   .side{position:fixed;inset:0 auto 0 0;width:min(86vw,320px);z-index:40;transform:translateX(-102%);transition:transform .22s ease;padding-top:calc(22px + env(safe-area-inset-top,0px));padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));box-shadow:20px 0 60px rgba(0,0,0,.5)}
   .side.open{transform:none}
   .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:39}
-  .bottombar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(16,18,23,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
-  .bb{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;color:var(--ink3);font-size:10.5px;padding:6px 0;cursor:pointer}
+  .bottombar{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:45;background:rgba(16,18,23,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line2);border-radius:30px;padding:6px;box-shadow:0 12px 34px rgba(0,0,0,.55)}
+  .bb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;background:none;color:var(--ink3);font-size:10.5px;padding:7px 0;cursor:pointer;border-radius:22px;min-height:48px;transition:background .15s ease,color .15s ease}
   .bb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .bb[aria-current="true"]{color:var(--accent)}
+  .bb[aria-current="true"]{color:var(--ink);background:var(--surface3)}.bb[aria-current="true"] svg{stroke:var(--accent)}
   .bb.fab svg{background:var(--accent);color:var(--accent-ink);stroke:var(--accent-ink);border-radius:12px;width:40px;height:30px;padding:5px 9px}
 }
-@media (prefers-reduced-motion:reduce){.side{transition:none}}
+@media (prefers-reduced-motion:reduce){.side{transition:none}.bb{transition:none}}
 
 /* sidebar */
 .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
@@ -469,6 +469,8 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
 .sitios{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.sitio{display:flex;flex-direction:column;gap:6px;background:var(--surface2);border-radius:10px;padding:10px;min-width:0}
+.gd-lay{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}.gd-cv{max-width:100%;height:auto;border-radius:10px;background:#0b0c0f;flex:1 1 320px;min-width:0}.gd-w{display:flex;flex-direction:column;gap:6px;align-items:center;max-width:240px}
+.gd-n{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding:7px 4px}.gd-n.ok{background:var(--ok-bg);border-radius:8px}.gd-num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:12px;flex:0 0 22px}.gd-n.ok .gd-num{background:var(--ok)}
 .rm-wrap{position:relative;height:68vh;min-height:380px;background:#0a0b0e;border:1px solid var(--line2);border-radius:12px;overflow:hidden;touch-action:none;cursor:grab}
 .rm-world{position:absolute;left:0;top:0;transform-origin:0 0}.rm-svg{position:absolute;overflow:visible;pointer-events:none}.rm-svg path{fill:none}.rm-svg path.hit{stroke:transparent;stroke-width:16;pointer-events:stroke;cursor:pointer}
 .rm-n{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none;-webkit-user-select:none}.rm-n.dim{opacity:.16}
@@ -966,7 +968,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=musq7ivo').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=musqmf4a').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1339,7 +1341,7 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(S.tab==='rmapa'&&S.vista==='proyecto')requestAnimationFrame(rmInit);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(S.tab==='rmapa'&&S.vista==='proyecto')requestAnimationFrame(rmInit);if(S.tab==='critica'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -5272,6 +5274,7 @@ function vCritica2(p){const an=S.anP?.[S.cur],cc=S.ccRes?.[S.cur],piezas=(p.piez
       ${piezas.length?`<select id="an-pieza" aria-label="O analiza una pieza subida"><option value="">…o una pieza ya subida</option>${piezas.map(x=>`<option value="${x.id}">${esc(x.etapa)} · ${fecha(x.creado)}</option>`).join('')}</select>`:''}</div>
     ${S.anBusy?'<p class="muted">Analizando…</p>':''}
     ${an?analisisHTML(an.a,an.cr,{id:'p',guardar:`<div class="prow">${an.guardada?'<span class="ok-box sm">✓ Guardada en críticas y en tus piezas</span>':'<button class="btn sm pri" data-act="an-guardar">Guardar crítica (y el boceto en Carpetas)</button>'}<button class="btn sm" data-act="an-ronda">Convertir problemas en ronda</button></div>`}):''}</div>
+  ${guiasHTML(p)}
   ${rondasHTML(p)}
   <div class="box"><h3>Criticar mi concepto</h3><p class="hint">Describe tu diseño con palabras. Reviso claridad, función, silueta, originalidad, coherencia, material, mood, storytelling, Art Direction y referencias. No halago por default.</p>
     <textarea id="cc-txt" placeholder="Un guerrero con máscara de jaguar, armadura de obsidiana y plumas; carga dos cuchillos curvos…" style="min-height:80px">${esc(S.ccTxt||'')}</textarea>
@@ -6936,6 +6939,96 @@ window.addEventListener('pointerup',e=>{const d=RM.drag;if(!d)return;RM.drag=nul
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#rm-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.rmView||(S.rmView={x:0,y:0,k:1}),k2=Math.max(.08,Math.min(2.5,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;rmApply()},{passive:false});
 
+/* ============ Guías sobre tu pieza: composición y armonía de color, con notas que la app propone y tú confirmas ============
+   Todo se calcula aquí, en tu navegador, sin IA ni envío de la imagen a ningún servidor. */
+const GD={pid:null,bm:{obra:null,ref:null},an:{obra:null,ref:null},nom:{obra:'',ref:''}};
+const GD_GUIAS=[['ninguna','Sin guía'],['tercios','Tercios'],['centro','Centro'],['diagonales','Diagonales'],['espiral','Espiral áurea'],['triangulos','Triángulos'],['simetria','Simetría']];
+const GD_COLOR=[['orig','Original',[]],['comp','Complementaria',[0,180]],['analoga','Análoga',[-30,0,30]],['triada','Triádica',[0,120,240]],['split','Compl. dividida',[0,150,210]],['tetra','Tetrádica',[0,90,180,270]]];
+const PHI=1.618034;
+function gdRgb2hsv(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}return {h,s:mx?d/mx:0,v:mx}}
+function gdAnaliza(bm){const W=Math.min(120,bm.width),H=Math.max(8,Math.round(W*bm.height/bm.width)),c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(bm,0,0,W,H);
+  const d=g.getImageData(0,0,W,H).data,N=W*H,L=new Float32Array(N),Sa=new Float32Array(N),Hu=new Float32Array(N),V=new Float32Array(N);
+  for(let i=0;i<N;i++){const r=d[i*4],gg=d[i*4+1],b=d[i*4+2],q=gdRgb2hsv(r,gg,b);L[i]=(.2126*r+.7152*gg+.0722*b)/255;Sa[i]=q.s;Hu[i]=q.h;V[i]=q.v}
+  /* saliencia: contraste local de valor + color vivo */
+  const sal=new Float32Array(N),R=4;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){let s=0,n=0;for(let yy=Math.max(0,y-R);yy<=Math.min(H-1,y+R);yy++)for(let xx=Math.max(0,x-R);xx<=Math.min(W-1,x+R);xx++){s+=L[yy*W+xx];n++}sal[y*W+x]=Math.abs(L[y*W+x]-s/n)+.5*Sa[y*W+x]*V[y*W+x]}
+  /* pico principal de un mapa: promedio por ventana (imagen integral) → máximo → centro de masa solo alrededor de ese máximo (así no se promedian zonas separadas) */
+  const II=arr=>{const I=new Float64Array((W+1)*(H+1));for(let y=0;y<H;y++){let r=0;for(let x=0;x<W;x++){r+=arr[y*W+x];I[(y+1)*(W+1)+x+1]=I[y*(W+1)+x+1]+r}}return I};
+  const pico=arr=>{const I=II(arr),R=Math.max(3,Math.round(W*.08));let bx=0,by=0,bv=-1;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const x0=Math.max(0,x-R),x1=Math.min(W,x+R+1),y0=Math.max(0,y-R),y1=Math.min(H,y+R+1),v=(I[y1*(W+1)+x1]-I[y0*(W+1)+x1]-I[y1*(W+1)+x0]+I[y0*(W+1)+x0])/((x1-x0)*(y1-y0));if(v>bv){bv=v;bx=x;by=y}}
+    let sx=0,sy=0,sw=0;const R2=R*1.6;for(let y=Math.max(0,Math.floor(by-R2));y<=Math.min(H-1,by+R2);y++)for(let x=Math.max(0,Math.floor(bx-R2));x<=Math.min(W-1,bx+R2);x++){const w=Math.pow(arr[y*W+x],2);sx+=w*x;sy+=w*y;sw+=w}
+    return sw?{x:(sx/sw+.5)/W,y:(sy/sw+.5)/H}:{x:(bx+.5)/W,y:(by+.5)/H}};
+  const focal=pico(sal),osc=pico(L.map(v=>1-v)),cla=pico(L.map(v=>Math.pow(v,3))),viv=pico(Sa.map((v,i)=>v*V[i]));
+  let wl=0,wr=0,wt=0,wb=0,vo=0,vm=0,vc=0;for(let i=0;i<N;i++){const w=(1-L[i])*.7+Sa[i]*.3,x=i%W,y=Math.floor(i/W);if(x<W/2)wl+=w;else wr+=w;if(y<H/2)wt+=w;else wb+=w;if(L[i]<.33)vo++;else if(L[i]<.66)vm++;else vc++}
+  const bins=new Float32Array(36);let tot=0;for(let i=0;i<N;i++){if(Sa[i]>.2&&V[i]>.15){const w=Sa[i]*V[i];bins[Math.floor(Hu[i]/10)%36]+=w;tot+=w}}
+  let dom=0,best=-1;for(let b=0;b<36;b++){const s=bins[b]+.5*(bins[(b+35)%36]+bins[(b+1)%36]);if(s>best){best=s;dom=b*10+5}}
+  const cob={};for(const [k,,ang] of GD_COLOR){if(!ang.length)continue;let ok=0;for(let b=0;b<36;b++){const h=b*10+5;if(ang.some(a=>{const t=((dom+a)%360+360)%360,dd=Math.abs(((h-t)%360+540)%360-180);return dd<=22}))ok+=bins[b]}cob[k]=tot?ok/tot:0}
+  return {w:bm.width,h:bm.height,focal,osc,cla,viv,peso:{izq:wl/(wl+wr),der:wr/(wl+wr),arr:wt/(wt+wb),aba:wb/(wt+wb)},val:{osc:vo/N,med:vm/N,cla:vc/N},bins:[...bins],tot,color:tot/(N*.5)>.04,dom,cob}}
+function gdEsq(x,y){return (y<.5?'superior ':'inferior ')+(x<.5?'izquierdo':'derecho')}
+function gdPropuestas(an,nom){if(!an)return [];const P=[],f=an.focal,T=[[1/3,1/3],[2/3,1/3],[1/3,2/3],[2/3,2/3]],dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const dT=Math.min(...T.map(t=>dist([f.x,f.y],t))),tp=T.reduce((a,t)=>dist([f.x,f.y],t)<dist([f.x,f.y],a)?t:a),dC=dist([f.x,f.y],[.5,.5]);
+  const dD=Math.min(Math.abs(f.y-f.x*(an.h/an.w))/1.2,Math.abs(f.y-(1-f.x*(an.h/an.w)))/1.2),borde=Math.min(f.x,1-f.x,f.y,1-f.y);
+  let guia='libre',t1;
+  if(dT<.09){guia='tercios';t1=`El foco de la imagen cae casi sobre el punto de tercios ${gdEsq(tp[0],tp[1])}: la guía de tercios es la que mejor le queda.`}
+  else if(dC<.08){guia='centro';t1='El foco está casi en el centro: composición estable y directa. Si quieres tensión, muévelo hacia un punto de tercios.'}
+  else if(dD<.07){guia='diagonales';t1='El foco se apoya sobre una diagonal: la guía de diagonales describe el recorrido de la imagen.'}
+  else t1=`El foco queda ${gdEsq(f.x,f.y).replace(/^(\w+) /,'en la zona $1 ')} y no coincide con una guía clásica (a ${Math.round(dT*100)}% de un punto de tercios). Puede ser intencional: confirma si lo es.`;
+  P.push({id:'foco',n:1,x:f.x,y:f.y,guia,t:t1});
+  if(borde<.1)P.push({id:'borde',n:1,x:f.x,y:f.y,t:'El foco está muy pegado al borde: la mirada se sale de la imagen. Dale aire por ese lado.'});
+  const dif=Math.abs(an.peso.izq-an.peso.der);
+  if(dif>.14){const pesa=an.peso.izq>an.peso.der?'izquierda':'derecha';P.push({id:'peso',n:2,x:an.osc.x,y:an.osc.y,t:`La mitad ${pesa} pesa más (${Math.round(Math.max(an.peso.izq,an.peso.der)*100)}% del peso visual): equilíbrala con un acento o un valor más claro del otro lado, o déjala si buscas esa tensión.`})}
+  else P.push({id:'peso',n:2,x:an.osc.x,y:an.osc.y,t:'El peso visual está bien repartido entre izquierda y derecha. La masa más oscura queda aquí.'});
+  const v=an.val;if(v.osc>.55)P.push({id:'val',n:3,x:an.cla.x,y:an.cla.y,t:`La imagen es muy oscura (${Math.round(v.osc*100)}% en valores bajos): el punto más claro marca dónde manda la luz. Verifica que sea el que quieres.`});
+  else if(v.cla>.55)P.push({id:'val',n:3,x:an.osc.x,y:an.osc.y,t:`La imagen es muy clara (${Math.round(v.cla*100)}% en valores altos): la masa oscura es lo que da estructura; quizá falte un valor bajo.`});
+  else if(v.med>.7)P.push({id:'val',n:3,x:an.cla.x,y:an.cla.y,t:`${Math.round(v.med*100)}% de la imagen vive en valores medios: poco contraste de valor. El punto más claro marcado es tu mejor candidato a foco.`});
+  else P.push({id:'val',n:3,x:an.cla.x,y:an.cla.y,t:'Buen reparto de valores (oscuros, medios y claros). El punto más claro marcado es donde la luz es más fuerte.'});
+  if(an.color){const mejor=GD_COLOR.filter(c=>c[2].length).map(c=>[c,an.cob[c[0]]/(c[2].length*44/360)]).sort((a,b)=>b[1]-a[1])[0];
+    if(mejor&&an.cob[mejor[0][0]]>.55)P.push({id:'color',n:4,x:an.viv.x,y:an.viv.y,t:`El color se parece más a una armonía ${mejor[0][1].toLowerCase()} (${Math.round(an.cob[mejor[0][0]]*100)}% de los colores vivos). El punto marcado es el color más intenso.`,color:mejor[0][0]});
+    else P.push({id:'color',n:4,x:an.viv.x,y:an.viv.y,t:'Los colores no siguen una armonía clásica: es libre, y eso funciona si el acento está controlado. El punto marcado es el color más intenso.'})}
+  else P.push({id:'color',n:4,x:an.viv.x,y:an.viv.y,t:'Casi no hay color vivo: la imagen se lee por valor. Un solo acento de color sería muy fuerte.'});
+  return P}
+function gdLineas(g,k,W,H,giro){g.save();if(giro&1){g.translate(W,0);g.scale(-1,1)}if(giro&2){g.translate(0,H);g.scale(1,-1)}
+  g.strokeStyle='rgba(255,255,255,.85)';g.fillStyle='rgba(255,255,255,.9)';g.lineWidth=Math.max(1.5,W/420);const L=(x1,y1,x2,y2)=>{g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke()},dot=(x,y)=>{g.beginPath();g.arc(x,y,Math.max(4,W/110),0,7);g.fill()};
+  if(k==='tercios'){L(W/3,0,W/3,H);L(2*W/3,0,2*W/3,H);L(0,H/3,W,H/3);L(0,2*H/3,W,2*H/3);[[1,1],[2,1],[1,2],[2,2]].forEach(([a,b])=>dot(a*W/3,b*H/3))}
+  else if(k==='centro'){L(W/2,0,W/2,H);L(0,H/2,W,H/2);g.beginPath();g.arc(W/2,H/2,Math.min(W,H)/4,0,7);g.stroke()}
+  else if(k==='diagonales'){L(0,0,W,H);L(W,0,0,H)}
+  else if(k==='triangulos'){L(0,H,W,0);/* diagonal (0,H)-(W,0) y las perpendiculares desde las otras dos esquinas */const dx=W,dy=-H,dd=dx*dx+dy*dy;[[0,0],[W,H]].forEach(([cx,cy])=>{const t=((cx-0)*dx+(cy-H)*dy)/dd;L(cx,cy,dx*t,H+dy*t)})}
+  else if(k==='simetria'){L(W/2,0,W/2,H);g.setLineDash([10,8]);L(0,H/2,W,H/2);g.setLineDash([])}
+  else if(k==='espiral'){const E=[1.1708,.7236],a0=2.9096,R0=1.203,sx=W/PHI,sy=H;g.beginPath();for(let i=0;i<=360;i++){const t=i/360*4.2,a=a0+t*Math.PI/2,r=R0*Math.pow(PHI,-t),x=(E[0]+r*Math.cos(a))*sx,y=(E[1]+r*Math.sin(a))*sy;i?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();dot(E[0]*sx,E[1]*sy)}
+  g.restore()}
+function gdDibuja(){const cv=$('#gd-cv');if(!cv)return;const sl=S.gd?.slot||'obra',bm=GD.bm[sl];if(!bm){const g=cv.getContext('2d');g.clearRect(0,0,cv.width,cv.height);return}
+  const maxW=Math.min(cv.parentElement.clientWidth||640,720),W=Math.round(maxW),H=Math.round(maxW*bm.height/bm.width);cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  if(S.gd?.gris)g.filter='grayscale(1)';g.drawImage(bm,0,0,W,H);g.filter='none';
+  gdLineas(g,S.gd?.guia||'ninguna',W,H,S.gd?.giro||0);
+  const an=GD.an[sl],P=gdPropuestas(an,GD.nom[sl]),G=S.gd||{},ok=new Set((G.conf||[]).map(x=>x.id+'|'+x.sl)),no=new Set(G.no||[]);
+  const puestos=[];P.forEach(m=>{if(no.has(m.id+'|'+sl))return;const r=Math.max(11,W/46),c=ok.has(m.id+'|'+sl)?'#5fd08a':'#ff6a3d';let x=m.x*W,y=m.y*H,t=0;/* si dos marcadores caen en el mismo punto, el siguiente se corre al lado para no taparlo */while(puestos.some(q=>Math.hypot(q[0]-x,q[1]-y)<r*2.1)&&t++<8){x+=r*2.3;if(x>W-r){x=m.x*W;y+=r*2.3}}puestos.push([x,y]);g.beginPath();g.arc(x,y,r,0,7);g.fillStyle=c;g.fill();g.lineWidth=2;g.strokeStyle='#0b0c0f';g.stroke();g.fillStyle='#0b0c0f';g.font='700 '+Math.round(r*1.15)+'px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(m.n,x,y+1)});
+  const wc=$('#gd-wheel');if(wc&&an)gdRueda(wc,an,G.color||'orig')}
+function gdRueda(cv,an,k){const S0=cv.width,g=cv.getContext('2d'),c=S0/2,R=S0*.34,Rb=S0*.46;g.clearRect(0,0,S0,S0);
+  for(let a=0;a<360;a+=3){g.beginPath();g.arc(c,c,R,(a-90)*Math.PI/180,(a+3-90)*Math.PI/180);g.arc(c,c,R*.62,(a+3-90)*Math.PI/180,(a-90)*Math.PI/180,true);g.closePath();g.fillStyle=`hsl(${a},70%,50%)`;g.fill()}
+  const mx=Math.max(...an.bins,1e-6);an.bins.forEach((v,b)=>{if(!v)return;const a0=(b*10-90)*Math.PI/180,a1=((b+1)*10-90)*Math.PI/180,h=(v/mx)*(Rb-R-4);g.beginPath();g.arc(c,c,R+4,a0,a1);g.arc(c,c,R+4+h,a1,a0,true);g.closePath();g.fillStyle='rgba(255,255,255,.75)';g.fill()});
+  const ang=(GD_COLOR.find(x=>x[0]===k)||[,,[]])[2];ang.forEach(a=>{const t=((an.dom+a)%360-90)*Math.PI/180;g.beginPath();g.moveTo(c,c);g.lineTo(c+Math.cos(t)*(R+2),c+Math.sin(t)*(R+2));g.lineWidth=3;g.strokeStyle='#fff';g.stroke();g.beginPath();g.arc(c,c,R*.62-2,t-.38,t+.38);g.lineWidth=6;g.strokeStyle='rgba(255,255,255,.9)';g.stroke()})}
+async function gdCargarBlob(sl,blob,nombre){try{const bm=await createImageBitmap(blob);GD.bm[sl]=bm;GD.an[sl]=gdAnaliza(bm);GD.nom[sl]=nombre||'';S.gd=S.gd||{};S.gd.slot=sl;S.gd.no=(S.gd.no||[]).filter(x=>!x.endsWith('|'+sl));S.gd.conf=(S.gd.conf||[]).filter(x=>x.sl!==sl);renderMain()}catch{toast('No pude leer esa imagen')}}
+function guiasHTML(p){if(GD.pid!==S.cur){GD.pid=S.cur;GD.bm={obra:null,ref:null};GD.an={obra:null,ref:null};GD.nom={obra:'',ref:''};S.gd={guia:'tercios',color:'orig',slot:'obra',conf:[],no:[]}}
+  const G=S.gd=S.gd||{guia:'tercios',color:'orig',slot:'obra',conf:[],no:[]},sl=G.slot||'obra',an=GD.an[sl],piezas=(p.piezas||[]).slice().reverse(),refs=(p.refs||[]).filter(r=>refSrc(r)),P=gdPropuestas(an),ok=new Set((G.conf||[]).map(x=>x.id+'|'+x.sl)),no=new Set(G.no||[]);
+  const otra=sl==='obra'?'ref':'obra',A=GD.an.obra,B=GD.an.ref;
+  return `<div class="box" style="border-top:3px solid var(--c-ad)"><div class="prow" style="justify-content:space-between"><h3>Guías sobre tu pieza</h3><span class="lbl">Sin IA · la imagen no sale de tu navegador</span></div>
+    <p class="hint" style="margin:0">Pon tu obra (y, si quieres, una referencia) con guías de composición y de color encima. La app marca con números lo que ve —foco, peso, valores, color— y propone una nota por cada uno: tú confirmas la que sí te sirve.</p>
+    <div class="chips"><button class="ch ${sl==='obra'?'on':''}" data-act="gd-slot" data-k="obra">Obra</button><button class="ch ${sl==='ref'?'on':''}" data-act="gd-slot" data-k="ref">Referencia</button>
+      <span class="lbl" style="margin-left:6px">${GD.bm[sl]?esc(corto(GD.nom[sl]||'Imagen cargada',34)):'Elige una imagen para «'+(sl==='obra'?'Obra':'Referencia')+'»'}</span></div>
+    <div class="prow"><label class="btn sm pri" for="gd-file">Subir imagen</label><input type="file" id="gd-file" accept="image/*" hidden>
+      ${piezas.length?`<select data-gdpieza aria-label="Una pieza de tu proyecto"><option value="">…una pieza de tu proyecto</option>${piezas.map(x=>`<option value="p:${x.id}">${esc(x.etapa||'Pieza')} · ${fecha(x.creado)}</option>`).join('')}</select>`:''}
+      ${refs.length?`<select data-gdpieza aria-label="Una referencia de tu moodboard"><option value="">…o una referencia</option>${refs.slice(0,60).map(x=>`<option value="r:${x.id}">${esc(corto((x.fuente||'Referencia').split(' · ')[0],40))}</option>`).join('')}</select>`:''}</div>
+    ${GD.bm[sl]?`<div class="chips"><span class="lbl">Composición</span>${GD_GUIAS.map(([k,n])=>`<button class="ch xs ${G.guia===k?'on':''}" data-act="gd-guia" data-k="${k}">${n}</button>`).join('')}<button class="ch xs" data-act="gd-giro" title="Voltea la guía">⟲ Girar</button><button class="ch xs ${G.gris?'on':''}" data-act="gd-gris">Grises</button></div>
+    <div class="chips"><span class="lbl">Color</span>${GD_COLOR.map(([k,n])=>`<button class="ch xs ${G.color===k?'on':''}" data-act="gd-color" data-k="${k}">${n}${an&&k!=='orig'&&an.color?` · ${Math.round(an.cob[k]*100)}%`:''}</button>`).join('')}</div>
+    <div class="gd-lay"><canvas id="gd-cv" class="gd-cv" aria-label="Tu imagen con guías"></canvas>${an?`<div class="gd-w"><canvas id="gd-wheel" width="230" height="230" aria-label="Rueda de color"></canvas><small class="muted">Barras blancas: cuánto hay de cada tono. Líneas: la armonía elegida, a partir del tono dominante.</small></div>`:''}</div>
+    <div><span class="lbl">La app propone (confirma las que te sirvan)</span>${P.filter(m=>!no.has(m.id+'|'+sl)).map(m=>`<div class="gd-n ${ok.has(m.id+'|'+sl)?'ok':''}"><b class="gd-num">${m.n}</b><span style="flex:1;font-size:13.5px">${esc(m.t)}</span>${ok.has(m.id+'|'+sl)?`<button class="btn ghost sm" data-act="gd-no" data-id="${m.id}">Quitar</button>`:`<button class="btn sm" data-act="gd-ok" data-id="${m.id}">✓ Confirmar</button><button class="btn ghost sm" data-act="gd-no" data-id="${m.id}" title="No aplica">✕</button>`}${m.guia&&m.guia!=='libre'?`<button class="btn ghost sm" data-act="gd-guia" data-k="${m.guia}">Ver guía</button>`:''}${m.color?`<button class="btn ghost sm" data-act="gd-color" data-k="${m.color}">Ver armonía</button>`:''}</div>`).join('')}</div>
+    ${A&&B?`<div class="hint" style="margin:0"><b>Obra vs referencia:</b> ${[Math.abs(A.val.osc-B.val.osc)>.2?`la ${A.val.osc>B.val.osc?'obra':'referencia'} es bastante más oscura`:'valores parecidos',gdEsq(A.focal.x,A.focal.y)!==gdEsq(B.focal.x,B.focal.y)?`el foco de la obra está en el cuadrante ${gdEsq(A.focal.x,A.focal.y)} y el de la referencia en el ${gdEsq(B.focal.x,B.focal.y)}`:'el foco cae en la misma zona',A.color&&B.color&&Math.abs(((A.dom-B.dom)%360+540)%360-180)>40?`el tono dominante difiere en ${Math.round(Math.abs(((A.dom-B.dom)%360+540)%360-180))}°`:'tono dominante parecido'].join(' · ')}.</div>`:''}
+    <div class="prow"><button class="btn sm pri" data-act="gd-guardar" ${(G.conf||[]).length?'':'disabled'}>Guardar ${(G.conf||[]).length||''} nota${(G.conf||[]).length===1?'':'s'} confirmada${(G.conf||[]).length===1?'':'s'} en el historial</button>${(G.conf||[]).length?'<span class="muted" style="font-size:12px">Queda en «Historial de críticas», abajo.</span>':'<span class="muted" style="font-size:12px">Confirma al menos una nota.</span>'}</div>`:'<div class="empty">Sube una imagen o elige una pieza o referencia de tu proyecto para empezar.</div>'}</div>`}
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='gd-file'){const f=t.files?.[0];if(f){gdCargarBlob(S.gd?.slot||'obra',f,f.name);t.value=''}return}
+  if(t.dataset?.gdpieza!==undefined&&t.value){const p=S.P[S.cur],[k,id]=t.value.split(':'),x=(k==='p'?p?.piezas:p?.refs)?.find(z=>z.id===id);if(!x)return;
+    blobDeRef(x).then(b=>gdCargarBlob(S.gd?.slot||'obra',b,k==='p'?(x.etapa||'Pieza'):(x.fuente||'Referencia').split(' · ')[0])).catch(()=>toast('No pude abrir esa imagen'))}});
+
 /* ============ Tablero profesional ============ */
 const TP_COL={mood:'#e27cc1',luz:'#e5b04a',pj:'#3fc9a8',mundo:'#5fd08a',cultura:'#7c8cff',materiales:'#ff9a5a',tecnica:'#c9a0ff'};
 function tabGrupos(p){const pj=(p.personajes||[]).filter(c=>c.nombre);
@@ -7555,6 +7648,16 @@ async function accion(a,el){
     case 'rm-solo':S.rmF={...(S.rmF||{}),solo:ds.v};renderMain();break;
     case 'rm-buscar':{const n=rmIdeas(p).find(z=>z.id===ds.id);if(!n)return;const q=toks(n.q).map(trSeguro).filter((w,i,a)=>a.indexOf(w)===i).slice(0,4).join(' ')||n.txt;
       S.refB={...(S.refB||{}),q,capa:n.capa||'concepto',grupo:n.grupo||null,luz:null,exacta:'',prop:'',epoca:'',amb:'',src:''};irABuscarRefs();buscarRefs();toast('Lo que agregues va a «'+capaNombre(p,n.capa||'concepto')+'»');break}
+    case 'gd-slot':S.gd.slot=ds.k;renderMain();break;
+    case 'gd-guia':S.gd.guia=ds.k;renderMain();break;
+    case 'gd-giro':S.gd.giro=((S.gd.giro||0)+1)%4;renderMain();break;
+    case 'gd-gris':S.gd.gris=!S.gd.gris;renderMain();break;
+    case 'gd-color':S.gd.color=ds.k;renderMain();break;
+    case 'gd-ok':{const sl=S.gd.slot||'obra',m=gdPropuestas(GD.an[sl]).find(z=>z.id===ds.id);if(!m)return;S.gd.conf=(S.gd.conf||[]).filter(x=>!(x.id===ds.id&&x.sl===sl));S.gd.conf.push({id:ds.id,sl,t:m.t});renderMain();break}
+    case 'gd-no':{const sl=S.gd.slot||'obra';S.gd.conf=(S.gd.conf||[]).filter(x=>!(x.id===ds.id&&x.sl===sl));if(!ds.quitar&&!(S.gd.no||[]).includes(ds.id+'|'+sl)&&!el.textContent.includes('Quitar'))S.gd.no=[...(S.gd.no||[]),ds.id+'|'+sl];renderMain();break}
+    case 'gd-guardar':{const G=S.gd,L=G.conf||[];if(!L.length)return;const g=GD_GUIAS.find(x=>x[0]===G.guia)?.[1],c=GD_COLOR.find(x=>x[0]===G.color)?.[1];
+      p.criticas.push({tipo:'Guías de composición',ts:Date.now(),titulo:GD.nom.obra||GD.nom.ref||'',r:{'Notas confirmadas':L.map(x=>(x.sl==='ref'?'[Referencia] ':'')+x.t),'Guía usada':[g&&g!=='Sin guía'?g:null,c&&c!=='Original'?'Armonía '+c.toLowerCase():null].filter(Boolean)}});
+      G.conf=[];marcar();renderMain();toast('Notas guardadas en el historial de críticas');break}
     case 'rb-var':S.refB=S.refB||{};S.refB.exacta=ds.v;buscarRefs();break;
     case 'rb-limpiar':{const b=S.refB;['fFuente','fLic','fProp','fRes','fCat'].forEach(k=>b[k]='');renderMain();break}
     case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return r.creditos&&['libreuso','abierta','dominio'].includes(est)?r.creditos+' · '+(r.lic||''):`${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta','libreuso'].includes(est)?'':'  [solo estudio o inspiración]'}`});
