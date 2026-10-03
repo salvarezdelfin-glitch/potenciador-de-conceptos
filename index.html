@@ -469,6 +469,18 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .esc-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);justify-content:center}.esc-loc i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .esc-rev{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.esc-ri{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:6px}
 .sitios{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.sitio{display:flex;flex-direction:column;gap:6px;background:var(--surface2);border-radius:10px;padding:10px;min-width:0}
+.rm-wrap{position:relative;height:68vh;min-height:380px;background:#0a0b0e;border:1px solid var(--line2);border-radius:12px;overflow:hidden;touch-action:none;cursor:grab}
+.rm-world{position:absolute;left:0;top:0;transform-origin:0 0}.rm-svg{position:absolute;overflow:visible;pointer-events:none}.rm-svg path{fill:none}.rm-svg path.hit{stroke:transparent;stroke-width:16;pointer-events:stroke;cursor:pointer}
+.rm-n{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none;-webkit-user-select:none}.rm-n.dim{opacity:.16}
+.rm-r{width:92px}.rm-r img{width:92px;height:92px;object-fit:cover;border-radius:6px;border:2px solid var(--line2);display:block;background:#15181e;pointer-events:none}
+.rm-r>span{display:block;font-size:10px;color:var(--ink3);text-align:center;max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;pointer-events:none}
+.rm-r.sel img{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.rm-r.nw img{border-style:dashed;border-color:var(--warn)}
+.rm-i{background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:8px 12px;min-width:120px;max-width:200px;text-align:center;display:flex;flex-direction:column;gap:2px}.rm-i b{font-family:var(--display);font-size:15px;line-height:1.15}.rm-i small{color:var(--ink2);font-size:11.5px}.rm-i.sel{box-shadow:0 0 0 4px var(--accent-soft)}
+.rm-ctl{position:absolute;right:10px;bottom:10px;display:flex;gap:6px;z-index:3}
+.rm-lay{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:12px;align-items:start}@media(max-width:900px){.rm-lay{grid-template-columns:minmax(0,1fr)}.rm-wrap{height:60vh}}
+.rm-gap{display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line);padding-top:8px}.rm-prop{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid var(--line);padding:5px 0}
+.rm-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.rm-link{background:none;border:0;color:var(--accent);cursor:pointer;padding:0;font:inherit;text-align:left}
+.rm-unir{display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line);padding-top:8px}.rm-mini{display:flex;flex-wrap:wrap;gap:4px}.rm-mini img{width:44px;height:44px;object-fit:cover;border-radius:5px;cursor:pointer}
 .lic{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;align-self:flex-start}.lic.ok{background:var(--ok-bg);color:var(--ok)}.lic.warn{background:rgba(229,176,74,.14);color:#e5b04a}.lic.no{background:var(--warn-bg);color:var(--warn)}.ref-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .pf-piezas{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}.pf-pz,.pf-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pf-pz .lbl,.pf-pl .lbl{min-width:84px}
 .pf-det{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pf-det summary{cursor:pointer;font-weight:600}.pf-det[open]{display:flex;flex-direction:column;gap:8px}.pf-det[open] summary{margin-bottom:2px}
@@ -954,13 +966,13 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=murnbpy8').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=musq7ivo').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
+  ['refs','Referencias'],['rmapa','Mapa de refs'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs'};
 /* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
@@ -1327,7 +1339,7 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(S.tab==='rmapa'&&S.vista==='proyecto')requestAnimationFrame(rmInit);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -1395,7 +1407,7 @@ function renderMainInner(){
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`${TAB_SEP.has(k)?'<span class="tab-sep" aria-hidden="true"></span>':''}<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,mapa:vMapa,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({cerebro:vCerebro,mapa:vMapa,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,rmapa:vRMapa,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -6804,6 +6816,126 @@ function escPNG(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8),cw=170,W=
     escRampa(c,E).forEach((r,j)=>{const y=150+j*34;g.fillStyle=r.hex;g.fillRect(x,y,cw-12,32);g.fillStyle=lumaHex(r.hex)>.5?'#111':'#eee';g.font='11px sans-serif';g.fillText(`${r.n} ${r.hex}`,x+6,y+20)})});
   return cv}
 
+/* ============ Mapa de referencias: tus imágenes y tus ideas como una red ============
+   Nodos = referencias del moodboard + las ideas del proyecto (idea, pilares, tensiones, personajes, mood, lenguaje visual).
+   Líneas gruesas = relaciones que tú confirmaste (p.refLinks). Punteadas = propuestas de la app (misma luz, mismo material, mismo tema…).
+   Líneas tenues radiales = a qué idea pertenece cada imagen. Posiciones movidas a mano en p.refPos. */
+const RM_T={luz:['Misma luz','#e5b04a'],material:['Mismo material','#ff9a5a'],color:['Mismo color','#e27cc1'],forma:['Misma forma','#7c8cff'],tema:['Mismo tema','#3fc9a8'],sostiene:['Sostiene esta idea','#5fd08a'],contrasta:['Contrasta con','#ff7d6e'],otro:['Relacionadas','#a9afba']};
+const RM_K={idea:'#ff6a3d',pilar:'#3fc9a8',tension:'#ff7d6e',pj:'#e5b04a',mood:'#e27cc1',len:'#7c8cff'};
+const RM={pos:{},data:null,drag:null};
+function rmIdeas(p){const N=[],t=s=>corto(String(s||'').trim(),60);
+  if(queDe(p))N.push({id:'n:idea',k:'idea',n:'Idea',txt:t(queDe(p)),q:queDe(p),capa:'concepto'});
+  (p.pilares||[]).forEach((x,i)=>{if((x.t||'').trim())N.push({id:'n:p'+(i+1),k:'pilar',n:'Pilar '+(i+1),txt:t(x.t),q:[x.t,x.f].join(' '),capa:'p'+(i+1)})});
+  (p.tensiones||[]).filter(x=>x.a&&x.b).forEach((x,i)=>N.push({id:'n:t'+i,k:'tension',n:'Tensión',txt:t(x.a+' ↔ '+x.b),q:x.a+' '+x.b,capa:'concepto'}));
+  (p.personajes||[]).filter(c=>c.nombre).forEach(c=>N.push({id:'n:pj:'+c.id,k:'pj',n:c.rol||'Personaje',txt:t(c.nombre),q:[c.nombre,c.forma,c.materiales].join(' '),capa:'concepto',grupo:'pj:'+c.id}));
+  const m=tresMood(p).filter(Boolean);if(m.length)N.push({id:'n:mood',k:'mood',n:'Mood',txt:t(m.join(', ')),q:m.join(' '),capa:'mood'});
+  const l=p.lenguaje||{};if(l.colorDom||(l.formas||[]).length||p.forma?.silueta)N.push({id:'n:len',k:'len',n:'Lenguaje visual',txt:t([l.colorDom,(l.formas||[]).join(' ')].filter(Boolean).join(' · ')||p.forma?.silueta),q:[(l.formas||[]).join(' '),p.forma?.silueta,l.colorDom].join(' '),capa:'tecnica'});
+  return N}
+/* a qué idea pertenece una imagen: la que tú uniste, o la que se deduce de su capa y su grupo */
+function rmAncla(p,r,ids,links){const sl=links.find(l=>(l.a===r.id&&ids.has(l.b))||(l.b===r.id&&ids.has(l.a)));if(sl)return ids.has(sl.a)?sl.a:sl.b;
+  const g=r.grupo||'';let a=null;
+  if(/^p[123]$/.test(r.capa||''))a='n:p'+r.capa[1];else if(g.startsWith('pj:'))a='n:'+g;else if(r.capa==='mood'||g==='mood'||g==='luz')a='n:mood';
+  else if(r.capa==='tecnica'||['materiales','tecnica','cultura'].includes(g))a='n:len';else if(r.capa==='concepto')a='n:idea';
+  return a&&ids.has(a)?a:null}
+function rmPropuestas(p,refs,links){const hay=new Set(links.map(l=>[l.a,l.b].sort().join('|'))),no=new Set(p.refLinksNo||[]),P=[],par=new Set();
+  const cadena=(lista,t,why)=>{const L=lista.slice(0,12);for(let i=0;i<L.length-1;i++){const a=L[i].id,b=L[i+1].id,pk=[a,b].sort().join('|');if(hay.has(pk)||par.has(pk))continue;const k=pk+'|'+t;if(no.has(k))continue;par.add(pk);P.push({k,a,b,t,why})}};
+  const por=f=>{const m={};refs.forEach(r=>{(f(r)||[]).forEach(v=>{if(v)(m[v]=m[v]||[]).push(r)})});return m};
+  Object.entries(por(r=>r.luz?[r.luz]:[])).forEach(([v,L])=>{if(L.length>1)cadena(L,'luz','Las dos usan la misma clave de luz')});
+  Object.entries(por(r=>(r.estudio||[]).filter(x=>/Material|Color|Luz/.test(x)))).forEach(([v,L])=>{if(L.length>1)cadena(L,/Material/.test(v)?'material':/Color/.test(v)?'color':'luz','Las dos estudian: '+v.toLowerCase())});
+  Object.entries(por(r=>(r.estudio||[]).filter(x=>/Forma|Anatom|Composici/.test(x)))).forEach(([v,L])=>{if(L.length>1)cadena(L,'forma','Las dos estudian: '+v.toLowerCase())});
+  Object.entries(por(r=>(r.tags||[]).map(x=>String(x).toLowerCase()))).forEach(([v,L])=>{if(L.length>1&&L.length<=8)cadena(L,'tema','Comparten la etiqueta «'+v+'»')});
+  return P.slice(0,120)}
+function rmDatos(p){const N=rmIdeas(p),ids=new Set(N.map(n=>n.id)),refs=(p.refs||[]).filter(r=>refSrc(r)),rids=new Set(refs.map(r=>r.id));
+  const links=(p.refLinks||[]).filter(l=>(ids.has(l.a)||rids.has(l.a))&&(ids.has(l.b)||rids.has(l.b)));
+  const anc={};refs.forEach(r=>anc[r.id]=rmAncla(p,r,ids,links));
+  const grp={};refs.forEach(r=>{const a=anc[r.id]||'_';(grp[a]=grp[a]||[]).push(r)});
+  const maxN=Math.max(1,...Object.values(grp).map(a=>a.length)),R=Math.max(420,110*Math.sqrt(maxN)+260),na=Math.max(1,N.length),pos={};
+  N.forEach((n,i)=>{const a=-Math.PI/2+2*Math.PI*i/na;pos[n.id]={x:Math.cos(a)*R,y:Math.sin(a)*R}});
+  const espiral=(list,cx,cy)=>list.forEach((r,k)=>{const rad=86*(.9+Math.sqrt(k)*.95),ang=k*2.399963;pos[r.id]={x:cx+Math.cos(ang)*rad,y:cy+Math.sin(ang)*rad}});
+  for(const [a,list] of Object.entries(grp)){if(a==='_')continue;const A=pos[a],d=Math.atan2(A.y,A.x),off=90+30*Math.sqrt(list.length);espiral(list,A.x+Math.cos(d)*off,A.y+Math.sin(d)*off)}
+  if(grp._)espiral(grp._,0,N.length?R+250+36*Math.sqrt(grp._.length):0);
+  Object.entries(p.refPos||{}).forEach(([id,q])=>{if(pos[id]&&q&&isFinite(q.x)&&isFinite(q.y))pos[id]=q});
+  const props=S.rmProp===false?[]:rmPropuestas(p,refs,links),edges=[];
+  refs.forEach(r=>{const a=anc[r.id];if(a&&!links.some(l=>[l.a,l.b].includes(r.id)&&[l.a,l.b].includes(a)))edges.push({a:r.id,b:a,t:'sostiene',kind:'ancla'})});
+  props.forEach(x=>edges.push({...x,kind:'prop',key:x.k}));links.forEach(l=>edges.push({...l,kind:'link'}));
+  const cnt={};N.forEach(n=>cnt[n.id]=0);refs.forEach(r=>{if(anc[r.id])cnt[anc[r.id]]++});
+  const xs=Object.values(pos).map(q=>q.x),ys=Object.values(pos).map(q=>q.y),b=xs.length?{x:Math.min(...xs)-120,y:Math.min(...ys)-120,w:Math.max(...xs)-Math.min(...xs)+240,h:Math.max(...ys)-Math.min(...ys)+240}:{x:-300,y:-200,w:600,h:400};
+  RM.pos=pos;RM.bounds=b;
+  return RM.data={N,refs,links,anc,props,edges,cnt,grp}}
+function rmNombre(D,id){const n=D.N.find(x=>x.id===id);if(n)return n.n+': '+n.txt;const r=D.refs.find(x=>x.id===id);return r?(etiquetaDe(r)||corto((r.fuente||'Imagen').split(' · ')[0],34)):'—'}
+function rmApply(){const w=$('#rm-world'),v=S.rmView;if(w&&v)w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`}
+function rmFit(){const wr=$('#rm-wrap'),b=RM.bounds;if(!wr||!b)return;const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.1,Math.min(W/b.w,H/b.h)*.94));S.rmView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
+function rmLineas(){const sv=$('#rm-svg');if(!sv||!RM.data)return;const sel=S.rmSel,P=RM.pos;let h='';
+  for(const e of RM.data.edges){const A=P[e.a],B=P[e.b];if(!A||!B)continue;const col=(RM_T[e.t]||RM_T.otro)[1],on=!sel||e.a===sel||e.b===sel,dx=B.x-A.x,dy=B.y-A.y,cx=(A.x+B.x)/2-dy*.12,cy=(A.y+B.y)/2+dx*.12,d=`M${A.x} ${A.y} Q${cx} ${cy} ${B.x} ${B.y}`;
+    const op=e.kind==='ancla'?(on?.34:.05):e.kind==='prop'?(on?.55:.08):(on?.95:.12),selL=(S.rmSelLink&&e.id===S.rmSelLink)||(S.rmSelProp&&e.key===S.rmSelProp);
+    h+=`<path d="${d}" stroke="${col}" stroke-width="${selL?5:e.kind==='link'?2.6:1.5}" stroke-opacity="${selL?1:op}" ${e.kind==='prop'?'stroke-dasharray="7 6"':''}/>`;
+    if(e.kind!=='ancla')h+=`<path class="hit" d="${d}" ${e.kind==='link'?`data-lid="${e.id}"`:`data-pk="${esc(e.key)}"`}/>`;
+    if(e.kind==='link'&&on)h+=`<text x="${(A.x+2*cx+B.x)/4}" y="${(A.y+2*cy+B.y)/4}" fill="${col}" font-size="13" text-anchor="middle">${esc(RM_T[e.t]?.[0]||'')}</text>`}
+  sv.innerHTML=h}
+function rmInit(){if(S.tab!=='rmapa'||S.vista!=='proyecto')return;const p=S.P[S.cur],wr=$('#rm-wrap');if(!p||!wr||!RM.data)return;
+  const b=RM.bounds,sv=$('#rm-svg'),w=$('#rm-world');if(sv){sv.setAttribute('width',b.w);sv.setAttribute('height',b.h);sv.style.left=b.x+'px';sv.style.top=b.y+'px';sv.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`)}
+  if(!S.rmView)rmFit();rmApply();rmLineas()}
+function rmOk(r,F){if(!F)return true;if(F.capa&&r.capa!==F.capa)return false;if(F.est&&!(r.estudio||[]).includes(F.est))return false;if(F.solo==='sueltas'){const D=RM.data;if(D.anc[r.id]||D.links.some(l=>l.a===r.id||l.b===r.id))return false}
+  if(F.solo==='sinporque'&&(r.porque||'').trim().length>=8)return false;return true}
+function rmPanelHTML(p,D){
+  const nodos=[...D.N.map(n=>[n.id,n.n+': '+n.txt]),...D.refs.map(r=>[r.id,'Imagen · '+(etiquetaDe(r)||corto((r.fuente||'').split(' · ')[0],30))])];
+  const tipos=Object.entries(RM_T).map(([k,v])=>[k,v[0]]);
+  const selT=(id,val,at)=>`<select ${at}>${tipos.map(([k,n])=>`<option value="${k}" ${k===val?'selected':''}>${n}</option>`).join('')}</select>`;
+  const unir=a=>`<div class="rm-unir"><span class="lbl">Unir con…</span><select id="rm-ub">${nodos.filter(x=>x[0]!==a).map(([id,n])=>`<option value="${esc(id)}">${esc(corto(n,46))}</option>`).join('')}</select>${selT('', 'forma','id="rm-ut"')}<button class="btn sm pri" data-act="rm-unir" data-a="${esc(a)}">Unir</button></div>`;
+  const misLinks=id=>D.links.filter(l=>l.a===id||l.b===id).map(l=>{const o=l.a===id?l.b:l.a;return `<div class="prow" style="justify-content:space-between"><span style="font-size:12.5px"><i class="rm-dot" style="background:${RM_T[l.t]?.[1]||'#999'}"></i>${RM_T[l.t]?.[0]||''} → <button class="rm-link" data-act="rm-sel" data-id="${esc(o)}">${esc(corto(rmNombre(D,o),34))}</button></span><button class="btn ghost sm" data-act="rm-del-link" data-id="${l.id}" aria-label="Quitar relación">✕</button></div>`}).join('');
+  const misProps=id=>D.props.filter(x=>x.a===id||x.b===id).slice(0,6).map(x=>{const o=x.a===id?x.b:x.a;return `<div class="rm-prop"><span style="font-size:12.5px"><i class="rm-dot" style="background:${RM_T[x.t][1]}"></i>${esc(RM_T[x.t][0])} con <button class="rm-link" data-act="rm-sel" data-id="${esc(o)}">${esc(corto(rmNombre(D,o),30))}</button><br><small class="muted">${esc(x.why)}</small></span><span class="prow"><button class="btn sm" data-act="rm-conf" data-k="${esc(x.k)}">✓</button><button class="btn ghost sm" data-act="rm-no" data-k="${esc(x.k)}">✕</button></span></div>`}).join('');
+  /* una relación seleccionada */
+  const L=S.rmSelLink&&D.links.find(l=>l.id===S.rmSelLink);
+  if(L)return `<div class="box"><h3>Relación</h3><p style="margin:0"><b>${esc(rmNombre(D,L.a))}</b><br>↔ <b>${esc(rmNombre(D,L.b))}</b></p><label class="esc-r"><span class="lbl">Por qué se unen</span>${selT('',L.t,`data-rmlt="${L.id}"`)}</label><div class="prow"><button class="btn danger sm" data-act="rm-del-link" data-id="${L.id}">Quitar relación</button><button class="btn ghost sm" data-act="rm-sel" data-id="">Cerrar</button></div></div>`;
+  const PR=S.rmSelProp&&D.props.find(x=>x.k===S.rmSelProp);
+  if(PR)return `<div class="box"><h3>Propuesta de la app</h3><p style="margin:0"><b>${esc(rmNombre(D,PR.a))}</b><br>↔ <b>${esc(rmNombre(D,PR.b))}</b></p><p class="hint" style="margin:0"><i class="rm-dot" style="background:${RM_T[PR.t][1]}"></i>${esc(RM_T[PR.t][0])}: ${esc(PR.why)}</p><div class="prow"><button class="btn pri sm" data-act="rm-conf" data-k="${esc(PR.k)}">Confirmar</button><button class="btn ghost sm" data-act="rm-no" data-k="${esc(PR.k)}">Descartar</button></div></div>`;
+  const sel=S.rmSel,n=D.N.find(x=>x.id===sel),r=D.refs.find(x=>x.id===sel);
+  if(r)return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Referencia</h3><button class="btn ghost sm" data-act="rm-sel" data-id="">Cerrar</button></div>
+    <img ${imgAttrs(r)} alt="" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;background:#0b0c0f">
+    <label class="esc-r"><span class="lbl">¿Para qué sirve? (su porqué)</span><textarea id="rmp-${r.id}" data-ref="${r.id}" data-rk="porque" style="min-height:56px" placeholder="¿Qué tomo exactamente de ella?">${esc(r.porque||'')}</textarea></label>
+    <div class="rrow"><select data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener">Fuente ↗</a>`:''}</div>
+    ${refMetaHTML(r)}<div><span class="lbl">Pertenece a</span> <b>${D.anc[r.id]?esc(rmNombre(D,D.anc[r.id])):'ninguna idea todavía'}</b></div>
+    ${misLinks(r.id)?`<div><span class="lbl">Tus relaciones</span>${misLinks(r.id)}</div>`:''}
+    ${misProps(r.id)?`<div><span class="lbl">La app propone</span>${misProps(r.id)}</div>`:''}${unir(r.id)}</div>`;
+  if(n){const hijas=D.refs.filter(x=>D.anc[x.id]===n.id);
+    return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>${esc(n.n)}</h3><button class="btn ghost sm" data-act="rm-sel" data-id="">Cerrar</button></div><p style="margin:0">${esc(n.txt)}</p>
+      <div><span class="lbl">${hijas.length} referencia${hijas.length===1?'':'s'} detrás</span><div class="rm-mini">${hijas.slice(0,18).map(x=>`<img ${imgAttrs(x)} alt="" data-act="rm-sel" data-id="${x.id}" title="${esc(etiquetaDe(x))}">`).join('')||'<span class="muted">Ninguna todavía.</span>'}</div></div>
+      <button class="btn sm ${hijas.length?'':'pri'}" data-act="rm-buscar" data-id="${esc(n.id)}">Buscar referencias para esta idea</button>
+      ${misLinks(n.id)?`<div><span class="lbl">Tus relaciones</span>${misLinks(n.id)}</div>`:''}${unir(n.id)}</div>`}
+  /* nada seleccionado: huecos y filtros */
+  const sinRef=D.N.filter(x=>x.k!=='idea'&&!D.cnt[x.id]),sueltas=D.refs.filter(x=>!D.anc[x.id]&&!D.links.some(l=>l.a===x.id||l.b===x.id)),sinPq=D.refs.filter(x=>(x.porque||'').trim().length<8),F=S.rmF||{};
+  return `<div class="box"><h3>Qué te dice el mapa</h3>
+    ${sinRef.length?`<div class="rm-gap"><b>Ideas sin referencias detrás (${sinRef.length})</b>${sinRef.map(x=>`<div class="prow" style="justify-content:space-between"><span style="font-size:12.5px">${esc(x.n)}: ${esc(x.txt)}</span><button class="btn sm" data-act="rm-buscar" data-id="${esc(x.id)}">Buscar</button></div>`).join('')}</div>`:'<p class="muted" style="margin:0">✓ Todas tus ideas tienen referencias detrás.</p>'}
+    ${sueltas.length?`<div class="rm-gap"><b>Imágenes sueltas (${sueltas.length})</b><span class="hint">No sostienen ninguna idea. Úndelas a una, o quítalas.</span><button class="btn ghost sm" data-act="rm-solo" data-v="sueltas">Verlas</button></div>`:''}
+    ${sinPq.length?`<div class="rm-gap"><b>Sin porqué (${sinPq.length})</b><span class="hint">Una imagen sin motivo es solo decoración.</span><button class="btn ghost sm" data-act="rm-solo" data-v="sinporque">Verlas</button></div>`:''}
+    <div class="rm-gap"><b>Propuestas de la app (${D.props.length})</b><span class="hint">Líneas punteadas. Tócalas para confirmar o descartar.</span>
+      <div class="prow"><label class="chk" style="margin:0"><input type="checkbox" data-rmprop ${S.rmProp===false?'':'checked'}><span>Mostrar propuestas</span></label>${D.props.length&&S.rmProp!==false?'<button class="btn sm" data-act="rm-conf-todo">Confirmar todas</button>':''}</div></div>
+    <div class="rm-gap"><b>Filtrar el mapa</b><div class="prow"><select data-rmf="capa"><option value="">Todas las capas</option>${LAYERS.map(l=>`<option value="${l.k}" ${F.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
+      <select data-rmf="est"><option value="">Cualquier estudio</option>${REF_POR.map(e=>`<option ${F.est===e?'selected':''}>${e}</option>`).join('')}</select>
+      <select data-rmf="solo"><option value="">Todas</option><option value="sueltas" ${F.solo==='sueltas'?'selected':''}>Solo sueltas</option><option value="sinporque" ${F.solo==='sinporque'?'selected':''}>Solo sin porqué</option></select></div></div></div>`}
+function vRMapa(p){const D=rmDatos(p),F=S.rmF||{};
+  if(!D.refs.length)return `<p class="intro"><b>Mapa de referencias.</b> Aquí cada imagen de tu moodboard y cada idea de tu proyecto son nodos de una misma red.</p><div class="box"><h3>Todavía no hay imágenes</h3><p class="hint">Agrega referencias en la pestaña Referencias (búsqueda, subir imágenes o pegarlas) y aquí las verás conectadas a tus ideas.</p><div class="prow"><button class="btn pri" data-act="tab" data-tab="refs">Ir a Referencias</button></div></div>`;
+  const nodo=(id,q,h,st='')=>`<div class="rm-n ${h}" data-id="${esc(id)}" style="left:${q.x}px;top:${q.y}px;${st}">`;
+  return `<p class="intro"><b>Mapa de referencias.</b> Cada imagen y cada idea es un nodo. Las líneas gruesas son relaciones que tú confirmaste; las punteadas son propuestas de la app (misma luz, mismo material, mismo tema). Arrastra para moverte, rueda para acercar, toca un nodo para ver su detalle.</p>
+  <div class="rm-lay"><div><div class="rm-wrap" id="rm-wrap"><div class="rm-world" id="rm-world"><svg class="rm-svg" id="rm-svg" aria-hidden="true"></svg>
+      ${D.N.map(n=>`${nodo(n.id,RM.pos[n.id],`rm-i ${S.rmSel===n.id?'sel':''}`,`border-color:${RM_K[n.k]}`)}<span class="lbl" style="color:${RM_K[n.k]}">${esc(n.n)}</span><b>${esc(n.txt)}</b><small>${D.cnt[n.id]||0} ref${D.cnt[n.id]===1?'':'s'}</small></div>`).join('')}
+      ${D.refs.map(r=>`${nodo(r.id,RM.pos[r.id],`rm-r ${S.rmSel===r.id?'sel':''} ${(r.porque||'').trim().length<8?'nw':''} ${rmOk(r,F)?'':'dim'}`)}<img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" loading="lazy" referrerpolicy="no-referrer"><span>${esc(etiquetaDe(r)||'—')}</span></div>`).join('')}
+    </div><div class="rm-ctl"><button class="btn sm" data-act="rm-zoom" data-v="1.25" aria-label="Acercar">＋</button><button class="btn sm" data-act="rm-zoom" data-v="0.8" aria-label="Alejar">－</button><button class="btn sm" data-act="rm-fit">Ver todo</button></div></div>
+    <p class="hint" style="margin:6px 0 0">Borde punteado rojo = imagen sin porqué. Las ideas (cajas con borde de color) salen de tu Mapa del proyecto.</p></div>
+    <div id="rm-panel">${rmPanelHTML(p,D)}</div></div>`}
+
+/* interacción del lienzo: arrastrar el fondo = moverse, arrastrar un nodo = reubicarlo (se guarda), rueda = acercar, toque = seleccionar */
+document.addEventListener('pointerdown',e=>{const wr=e.target.closest?.('#rm-wrap');if(!wr||e.button>0||e.target.closest('.rm-ctl'))return;const n=e.target.closest('.rm-n'),v=S.rmView||(S.rmView={x:0,y:0,k:1});
+  RM.drag={id:n?.dataset.id||null,sx:e.clientX,sy:e.clientY,moved:false,ox:v.x,oy:v.y,p0:n&&RM.pos[n.dataset.id]?{...RM.pos[n.dataset.id]}:null};if(!n)wr.style.cursor='grabbing'});
+window.addEventListener('pointermove',e=>{const d=RM.drag;if(!d)return;const dx=e.clientX-d.sx,dy=e.clientY-d.sy;if(!d.moved&&Math.hypot(dx,dy)<5)return;d.moved=true;const v=S.rmView;
+  if(d.id&&d.p0){const q={x:d.p0.x+dx/v.k,y:d.p0.y+dy/v.k};RM.pos[d.id]=q;const el=document.querySelector('.rm-n[data-id="'+CSS.escape(d.id)+'"]');if(el){el.style.left=q.x+'px';el.style.top=q.y+'px'}rmLineas()}
+  else if(!d.id){v.x=d.ox+dx;v.y=d.oy+dy;rmApply()}});
+window.addEventListener('pointerup',e=>{const d=RM.drag;if(!d)return;RM.drag=null;const wr=$('#rm-wrap');if(wr)wr.style.cursor='';const p=S.P[S.cur];if(!p)return;
+  if(d.id){if(d.moved){p.refPos=p.refPos||{};p.refPos[d.id]={x:Math.round(RM.pos[d.id].x),y:Math.round(RM.pos[d.id].y)};marcar()}else{S.rmSel=S.rmSel===d.id?null:d.id;S.rmSelLink=null;S.rmSelProp=null;renderMain()}}
+  else if(!d.moved&&e.target.closest?.('#rm-wrap')){const h=e.target.closest('[data-lid],[data-pk]');if(h){S.rmSelLink=h.dataset.lid||null;S.rmSelProp=h.dataset.pk||null;S.rmSel=null}else{S.rmSel=null;S.rmSelLink=null;S.rmSelProp=null}renderMain()}});
+document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#rm-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.rmView||(S.rmView={x:0,y:0,k:1}),k2=Math.max(.08,Math.min(2.5,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;
+  v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;rmApply()},{passive:false});
+
 /* ============ Tablero profesional ============ */
 const TP_COL={mood:'#e27cc1',luz:'#e5b04a',pj:'#3fc9a8',mundo:'#5fd08a',cultura:'#7c8cff',materiales:'#ff9a5a',tecnica:'#c9a0ff'};
 function tabGrupos(p){const pj=(p.personajes||[]).filter(c=>c.nombre);
@@ -7172,6 +7304,9 @@ document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='trat-txt'){S.tratTxt=t.value;return}
   if(t.dataset.extq!==undefined){S.sitioQ=t.value;return}
+  if(t.dataset.rmf){S.rmF=S.rmF||{};S.rmF[t.dataset.rmf]=t.value;renderMain();return}
+  if(t.dataset.rmprop!==undefined){S.rmProp=t.checked;renderMain();return}
+  if(t.dataset.rmlt){const pp=S.P[S.cur],l=(pp?.refLinks||[]).find(x=>x.id===t.dataset.rmlt);if(l){l.t=t.value;marcar();renderMain()}return}
   if(t.dataset.exten!==undefined){S.sitioEn=t.checked;return}
   if(t.id==='f-buscar'){S.q=t.value;const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   if(t.dataset.avisos){S.ajustes.avisos=S.ajustes.avisos||{};S.ajustes.avisos[t.dataset.avisos]=t.type==='checkbox'?t.checked:t.value.trim();marcarAj();return}
@@ -7406,6 +7541,20 @@ async function accion(a,el){
     case 'sitio-fav':{const f=S.ajustes.sitiosFav=S.ajustes.sitiosFav||[];const k=ds.k;S.ajustes.sitiosFav=f.includes(k)?f.filter(x=>x!==k):[...f,k];marcarAj();renderMain();break}
     case 'sitio-abrir':{const x=SITIOS_REF.find(z=>z.k===ds.k),q=($('#ext-q')?.value||sitioQ(p)||'').trim();if(!x)return;if(!q){toast('Escribe primero qué quieres buscar');$('#ext-q')?.focus();return}
       S.sitioQ=q;window.open(sitioURL(x,q,S.sitioEn!==false),'_blank','noopener');break}
+    case 'rm-sel':S.rmSel=ds.id||null;S.rmSelLink=null;S.rmSelProp=null;renderMain();break;
+    case 'rm-unir':{const a=ds.a,b=$('#rm-ub')?.value,t=$('#rm-ut')?.value||'otro';if(!a||!b||a===b)return;p.refLinks=p.refLinks||[];
+      if(p.refLinks.some(l=>[l.a,l.b].sort().join('|')===[a,b].sort().join('|')&&l.t===t)){toast('Esa relación ya existe');return}
+      p.refLinks.push({id:uid(),a,b,t,ts:Date.now()});marcar();renderMain();toast('Relación guardada');break}
+    case 'rm-del-link':p.refLinks=(p.refLinks||[]).filter(l=>l.id!==ds.id);S.rmSelLink=null;marcar();renderMain();break;
+    case 'rm-conf':{const x=rmDatos(p).props.find(z=>z.k===ds.k);if(!x)return;p.refLinks=p.refLinks||[];p.refLinks.push({id:uid(),a:x.a,b:x.b,t:x.t,ts:Date.now()});S.rmSelProp=null;marcar();renderMain();toast('Relación confirmada');break}
+    case 'rm-no':{p.refLinksNo=p.refLinksNo||[];if(!p.refLinksNo.includes(ds.k))p.refLinksNo.push(ds.k);S.rmSelProp=null;marcar();renderMain();break}
+    case 'rm-conf-todo':{const L=rmDatos(p).props;if(!L.length)return;if(!S.rmCT){S.rmCT=true;el.textContent='¿Confirmar '+L.length+'? Tócalo otra vez';return}
+      S.rmCT=false;p.refLinks=p.refLinks||[];L.forEach(x=>p.refLinks.push({id:uid(),a:x.a,b:x.b,t:x.t,ts:Date.now()}));marcar();renderMain();toast(L.length+' relaciones confirmadas: puedes quitar cualquiera tocando su línea');break}
+    case 'rm-fit':S.rmView=null;rmFit();rmApply();break;
+    case 'rm-zoom':{const wr=$('#rm-wrap'),v=S.rmView;if(!wr||!v)return;const f=+ds.v,k2=Math.max(.08,Math.min(2.5,v.k*f)),mx=wr.clientWidth/2,my=wr.clientHeight/2;v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;rmApply();break}
+    case 'rm-solo':S.rmF={...(S.rmF||{}),solo:ds.v};renderMain();break;
+    case 'rm-buscar':{const n=rmIdeas(p).find(z=>z.id===ds.id);if(!n)return;const q=toks(n.q).map(trSeguro).filter((w,i,a)=>a.indexOf(w)===i).slice(0,4).join(' ')||n.txt;
+      S.refB={...(S.refB||{}),q,capa:n.capa||'concepto',grupo:n.grupo||null,luz:null,exacta:'',prop:'',epoca:'',amb:'',src:''};irABuscarRefs();buscarRefs();toast('Lo que agregues va a «'+capaNombre(p,n.capa||'concepto')+'»');break}
     case 'rb-var':S.refB=S.refB||{};S.refB.exacta=ds.v;buscarRefs();break;
     case 'rb-limpiar':{const b=S.refB;['fFuente','fLic','fProp','fRes','fCat'].forEach(k=>b[k]='');renderMain();break}
     case 'refs-creditos':{const L=(p.refs||[]).filter(r=>r.link||r.autor).map(r=>{const est=r.licEstado||(r.lic?licDeTexto(r.lic):'desconocida');return r.creditos&&['libreuso','abierta','dominio'].includes(est)?r.creditos+' · '+(r.lic||''):`${(r.fuente||'Sin título').split(' · ')[0]}${r.autor?' — '+r.autor:''} · ${r.lic||LIC_EST[est][0]}${r.link?' · '+r.link:''}${['dominio','abierta','libreuso'].includes(est)?'':'  [solo estudio o inspiración]'}`});
