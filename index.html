@@ -395,6 +395,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .tabs{border-bottom:0;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab-sep{flex:0 0 auto;width:1px;align-self:stretch;background:var(--line2);margin:4px 4px}
+.hoja-s{border-top:1px solid var(--line);padding-top:14px;margin-top:8px}.hv-r{margin:0 0 10px}.hv-r p{margin:2px 0 0;white-space:pre-wrap}.hv-g{display:grid;gap:4px 18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.hv-pj{border:1px solid var(--line);border-radius:10px;padding:10px 12px}.hv-pj p{margin:4px 0 0}.hoja-s>summary{cursor:pointer}
 .tab{border-radius:8px;border-bottom:0;margin:0;padding:8px 12px;font-size:13.5px}
 .tab:hover{color:var(--ink);background:var(--surface2)}
 .tab[aria-selected="true"]{background:var(--surface3);color:var(--ink);border-bottom:0;box-shadow:inset 0 -2px 0 var(--accent)}
@@ -995,13 +996,13 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut5svft').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut5x2ov').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
+  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja · brief']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
 /* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
@@ -1425,6 +1426,7 @@ function renderMainInner(){
     </div>
     <div class="prow" style="gap:10px;align-items:center">
       <div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+      <button class="btn sm pri" data-act="tab" data-tab="hoja" title="Todo el proyecto en una hoja: brief, historia y estilo visual, para trabajarlo ahí">→ Hoja</button>
       <button class="btn sm blk" data-act="blk" title="Revisa tu contexto y te da preguntas, experimentos y direcciones">Estoy bloqueado</button>
       <details class="phead-mas"><summary class="btn sm ghost" style="list-style:none;cursor:pointer">⋯ Más</summary>
         <div class="prow" style="margin-top:6px;flex-wrap:wrap">
@@ -1667,28 +1669,68 @@ function hojaPaletasHTML(p){const pj=(p.personajes||[]).filter(x=>x.nombre),mp=p
     ${mp.length?`<div class="hpal-row"><span class="lbl">Mundo</span><div class="hpal">${mp.map(h=>sw(h)).join('')}</div></div>`:''}
     ${pj.map(x=>{const R=pjPaleta(p,x).pal;return `<div class="hpal-row"><span class="lbl">${esc(x.nombre)}${x.rol?` · ${esc(x.rol)}`:''}</span><div class="hpal">${R.map(z=>sw(z.hex,z.rol,z.pct)).join('')}</div><div class="pj-bar">${R.map(z=>`<i style="background:${z.hex};flex:${z.pct}"></i>`).join('')}</div></div>`}).join('')}
     ${pj.length?'':`<p class="muted" style="margin:0">Agrega personajes en la pestaña Personajes y su paleta aparece aquí.</p>`}</div>`}
-function vHoja(p){
-  const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim());
+const hojaBotones=p=>`<span class="prow">${p.refs.length?`<button class="btn" data-act="tp-png">Tablero en PNG</button><button class="btn" data-act="tp-zip">Llevar a PureRef (.zip)</button>${SYNC_OK?'<button class="btn" data-act="tp-carpeta">Guardar en mi carpeta</button>':''}`:''}<button class="btn" data-act="copiar-md">Copiar todo como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></span>`;
+function hojaFaltan(p){const c=p.concepto,q=p.que||{},l=p.lenguaje||{},g=p.guia||{},pj=(p.personajes||[]).filter(x=>x.nombre);
+  return [['La frase del proyecto',c.frase],['El encargo',p.brief.texto],['La historia',p.brief.historia],['Qué es y para qué existe',q.que&&q.funcion],['Las 3 palabras de mood',tresMood(p).filter(Boolean).length>=3],['Silueta',p.forma?.silueta],['Color',p.mood.color||l.colorDom],['Luz',p.mood.luz||g.luz],['Los pilares',p.pilares.some(x=>x.t)],['Personajes',pj.length],['Referencias',p.refs.length]].filter(x=>!x[1]).map(x=>x[0])}
+function vHojaVer(p){const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p).filter(Boolean),pj=(p.personajes||[]).filter(x=>x.nombre),tens=(p.tensiones||[]).filter(t=>t.a||t.b),nuc=c.nucleos.filter(x=>x.trim()),falta=hojaFaltan(p),
+    R=(lab,val)=>val?`<div class="hv-r"><span class="lbl">${lab}</span><p>${esc(val)}</p></div>`:'',
+    S_=(k,titulo,cuerpo)=>cuerpo.trim()?`<div class="hsec hoja-s"><div class="hsec-h"><h5 style="margin:0">${titulo}</h5>${k?cpBtn(k):''}</div>${cuerpo}</div>`:'';
   return `
-  <div class="prow" style="justify-content:flex-end">${p.refs.length?`<button class="btn" data-act="tp-png">Tablero en PNG</button><button class="btn" data-act="tp-zip">Llevar a PureRef (.zip)</button>${SYNC_OK?'<button class="btn" data-act="tp-carpeta">Guardar en mi carpeta</button>':''}`:''}<button class="btn" data-act="copiar-md">Copiar todo como texto</button><button class="btn pri" data-act="exportar-md">Descargar .md</button></div>
+  <div class="prow" style="justify-content:space-between;align-items:center"><span class="muted" style="font-size:13px;max-width:62ch">Todo lo que has contestado, en una sola hoja. ${falta.length?`Faltan: ${falta.map(esc).join(', ')}.`:'Está completa.'}</span>${hojaBotones(p)}</div>
   <article class="sheet">
-    ${dnaHTML(p)}
-    ${(p.lenguaje?.reglas||[]).length?`<div class="hsec"><div class="hsec-h"><h5 style="margin:0">Reglas visuales</h5>${cpBtn('reglas')}</div><ol class="reglas">${p.lenguaje.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
     <div class="hsec" style="gap:10px"><div class="hsec-h"><span class="lbl">${esc(p.tipo)} · ${esc(p.encargo||'Proyecto personal')} · ${fecha(p.creado)}</span>${cpBtn('titulo')}</div>
       <h2>${esc(p.nombre)}</h2>${c.frase?`<p class="logline">${esc(c.frase)}</p>`:''}</div>
-    ${nuc.length?`<div class="hsec"><div class="hsec-h"><div class="tension">${nuc.map(esc).join(' <span style="color:var(--ink3)">/</span> ')}${c.tension?`<em>${esc(c.tension)}</em>`:''}</div>${cpBtn('tension')}</div>${c.tensionTexto?`<p style="margin:0;max-width:70ch;color:var(--ink2)">${esc(c.tensionTexto)}</p>`:''}</div>`:''}
-    <div class="shgrid">${p.pilares.map((x,i)=>`<div class="shpil"><div class="hsec-h"><span class="lbl" style="color:var(--c-ad)">Pilar ${i+1}</span>${x.t||x.f?cpBtn('pilar'+i):''}</div><b>${esc(x.t||'—')}</b><p>${esc(x.f)}</p>${x.como?`<p class="muted">Se ve: ${esc(x.como)}</p>`:''}${x.no?`<p class="muted">Nunca: ${esc(x.no)}</p>`:''}</div>`).join('')}</div>
-    <div class="shgrid">
-      <div class="layer-mood" style="--lc:var(--c-mood)"><div class="hsec-h"><h5>Mood</h5>${cpBtn('mood')}</div><p>${esc(p.mood.sensacion||'—')}</p><p class="muted">${esc(p.mood.palabras)}</p>${(p.luces||[]).filter(l=>l.n).map(l=>`<p style="margin:4px 0 0"><b>${esc(l.n)}</b> <span class="muted">${esc([l.fuente,l.temp,l.dir].filter(Boolean).join(' · '))}</span></p>`).join('')}
-        <div class="pal" style="margin-top:8px">${p.mood.paleta.map(c=>`<span title="${esc(c)}" style="width:30px;height:30px;border-radius:4px;background:${esc(c)};border:1px solid var(--line)"></span>`).join('')}</div></div>
-      <div style="--lc:var(--c-tecnica)"><div class="hsec-h"><h5>Técnica</h5>${cpBtn('tecnica')}</div><p>${esc(p.tecnica.medio||'—')}</p><p class="muted">${esc([p.tecnica.acabado,p.tecnica.referentes].filter(Boolean).join(' · '))}</p></div>
-      <div style="--lc:var(--c-concepto)"><div class="hsec-h"><h5>Keywords</h5>${cpBtn('keywords')}</div><p>${KWCATS.flatMap(([k])=>p.keywords[k]||[]).map(esc).join(' · ')||'—'}</p></div>
-      ${MUNDO_Q.some(([k])=>p.mundo[k])?`<div style="--lc:var(--c-ad)"><div class="hsec-h"><h5>El mundo como personaje</h5>${cpBtn('mundo')}</div>${MUNDO_Q.filter(([k])=>p.mundo[k]).slice(0,3).map(([k,q])=>`<p><span class="muted">${q}</span><br>${esc(p.mundo[k])}</p>`).join('')}</div>`:''}
-    </div>
+    ${S_('','Brief',R('El encargo',p.brief.texto)+`<div class="hv-g">${R('Entregable',p.brief.entregable)}${R('Para quién',p.brief.publico)}${R('Restricciones',p.brief.restricciones)}</div>`)}
+    ${S_('','Historia',R('',p.brief.historia))}
+    ${S_('tension','Cómo es',`<div class="hv-g">${R('Qué es',q.que)}${R('Tema',q.tema)}${R('Función',q.funcion)}</div>`+(nuc.length?`<div class="tension" style="margin:6px 0">${nuc.map(esc).join(' <span style="color:var(--ink3)">/</span> ')}${c.tension?`<em>${esc(c.tension)}</em>`:''}</div>`:'')+(tens.length?`<p style="margin:4px 0"><span class="lbl">Tensiones</span> ${tens.map(t=>`<b>${esc(t.a)}</b> ↔ <b>${esc(t.b)}</b>${t.domina?` <span class="muted">(${esc(t.domina)})</span>`:''}`).join(' · ')}</p>`:'')+R('Qué está en juego',c.tensionTexto))}
+    ${S_('mood','Estilo visual',(mw.length?`<p style="margin:0 0 6px"><span class="lbl">Mood</span> ${mw.map(w=>`<b>${esc(w)}</b>`).join(' · ')}</p>`:'')+R('La sensación',p.mood.sensacion)+`<div class="hv-g">${R('Formas',g.formas||(l.formas||[]).join(', '))}${R('Silueta',p.forma?.silueta)}${R('Escala',l.escala)}${R('Composición',l.composicion)}${R('Materiales',[(p.materiales||[]).join(', '),g.materiales].filter(Boolean).join(' — '))}${R('Color',[p.mood.color,l.colorDom&&'domina '+l.colorDom,l.colorAcento&&'acento '+l.colorAcento].filter(Boolean).join(' · '))}${R('Luz',[p.mood.luz,g.luz].filter(Boolean).join(' — '))}${R('Técnica',[p.tecnica.medio,p.tecnica.acabado,g.estilizacion].filter(Boolean).join(' · '))}</div>`+((p.mood.paleta||[]).length?`<div class="pal" style="margin-top:6px">${p.mood.paleta.map(h=>`<span title="${esc(h)}" style="width:30px;height:30px;border-radius:4px;background:${esc(h)};border:1px solid var(--line)"></span>`).join('')}</div>`:''))}
+    ${S_('','Dirección de arte',R('Qué quiero comunicar',p.ad)+`<div class="shgrid">${p.pilares.map((x,i)=>x.t||x.f?`<div class="shpil"><div class="hsec-h"><span class="lbl" style="color:var(--c-ad)">Pilar ${i+1}</span>${cpBtn('pilar'+i)}</div><b>${esc(x.t||'—')}</b><p>${esc(x.f)}</p>${x.como?`<p class="muted">Se ve: ${esc(x.como)}</p>`:''}${x.no?`<p class="muted">Nunca: ${esc(x.no)}</p>`:''}</div>`:'').join('')}</div>`)}
+    ${S_('reglas','Reglas visuales',(l.reglas||[]).length?`<ol class="reglas">${l.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol>`:'')}
+    ${S_('','Personajes',pj.length?`<div class="hv-g">${pj.map(x=>`<div class="hv-pj"><b>${esc(x.nombre)}</b>${x.rol?` <span class="muted">· ${esc(x.rol)}</span>`:''}${[['Representa',x.lado],['Personalidad',x.personalidad],['Materiales',x.materiales],['Piel / pelaje',x.piel],['Forma',x.forma],['Color clave',x.colorClave]].filter(r=>r[1]).map(r=>`<p><span class="lbl">${r[0]}</span> ${esc(r[1])}</p>`).join('')}</div>`).join('')}</div>`:'')}
+    ${S_('mundo','El mundo como personaje',MUNDO_Q.filter(([k])=>p.mundo[k]).map(([k,qq])=>R(qq,p.mundo[k])).join(''))}
+    ${S_('','Debe aparecer y debe evitarse',R('Debe aparecer',(p.debe||[]).join(' · '))+R('Evitar',(p.evitar||[]).join(' · ')))}
+    ${S_('keywords','Keywords',KWCATS.flatMap(([k])=>p.keywords[k]||[]).length?`<p style="margin:0">${KWCATS.flatMap(([k])=>p.keywords[k]||[]).map(esc).join(' · ')}</p>`:'')}
+    ${hojaPaletasHTML(p)}
+    ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:''}
+  </article>`}
+function vHoja(p){return `<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
+function vHojaEditar(p){
+  const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p),
+    T=(lab,path,val,ph,alto)=>`<div class="field"><label for="x-${path.replace(/\./g,'-')}">${lab}</label>${tx(path,val,ph,null,alto||46)}</div>`,
+    I=(lab,path,val,ph)=>`<div class="field"><label for="x-${path.replace(/\./g,'-')}">${lab}</label>${inp(path,val,ph)}</div>`,
+    S_=(k,titulo,sub,cuerpo,abierto)=>`<div class="hsec hoja-s"><div class="hsec-h"><div><h5 style="margin:0">${titulo}</h5>${sub?`<span class="muted" style="font-size:12px">${sub}</span>`:''}</div>${k?cpBtn(k):''}</div>${cuerpo}</div>`,
+    pj=(p.personajes||[]).filter(x=>x.nombre),tens=(p.tensiones||[]).filter(t=>t.a||t.b);
+  return `
+  <div class="prow" style="justify-content:space-between;align-items:center"><span class="muted" style="font-size:13px;max-width:60ch">Aquí está todo el proyecto en una sola hoja. <b>Escribe directo en cada campo</b>: se guarda solo y cambia en el resto de la app.</span>
+    ${hojaBotones(p)}</div>
+  <article class="sheet">
+    <div class="hsec" style="gap:10px"><div class="hsec-h"><span class="lbl">${esc(p.tipo)} · ${esc(p.encargo||'Proyecto personal')} · ${fecha(p.creado)}</span>${cpBtn('titulo')}</div>
+      <h2>${esc(p.nombre)}</h2>${I('La frase del proyecto','concepto.frase',c.frase,'Es un … que … porque …')}</div>
+    ${S_('','Brief','Qué te piden, para qué es y qué tiene que lograr.',`${T('El encargo','brief.texto',p.brief.texto,'Qué te piden, para qué es y qué tiene que lograr',64)}
+      <div class="grid3">${T('Entregable','brief.entregable',p.brief.entregable,'Turnaround, key art, 3 thumbnails, formato, fecha…')}${T('Para quién','brief.publico',p.brief.publico,'Juego, película, portafolio, cliente…')}${T('Restricciones','brief.restricciones',p.brief.restricciones,'Lo que no puede cambiar: lore, estilo, tiempo…')}</div>`)}
+    ${S_('','Historia','El lore, el guion o la sinopsis: quién es, de dónde viene, qué quiere, qué le pasa.',T('Historia o guion','brief.historia',p.brief.historia||'','Pega o escribe la historia aquí',90))}
+    ${S_('tension','Concepto y tensión','Qué es, de qué habla y para qué existe.',`<div class="grid3">${I('¿Qué es? (en una línea)','que.que',q.que,'Una criatura marina que vive sola en una fosa abisal')}${I('Tema','que.tema',q.tema,'Aislamiento, culpa, fe, poder que se paga…')}${T('Función · ¿para qué existe?','que.funcion',q.funcion,'Protege la entrada de un templo que nadie visita…')}</div>
+      ${tens.length?`<p style="margin:2px 0 8px"><span class="lbl">Tensiones</span> ${tens.map(t=>`<b>${esc(t.a)}</b> ↔ <b>${esc(t.b)}</b>${t.domina?` <span class="muted">(${esc(t.domina)})</span>`:''}`).join(' · ')}</p>`:''}
+      ${T('¿Qué está en juego?','concepto.tensionTexto',c.tensionTexto,'Qué se pierde, quién gana…',44)}`)}
+    ${S_('mood','Estilo visual','Cómo se ve y se siente: mood, forma, color, luz y técnica.',`
+      <div class="field"><label>Mood · 3 palabras</label><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(mw[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div></div>
+      ${T('La sensación en una frase','mood.sensacion',p.mood.sensacion,'Opresión sagrada, calma antes del golpe…')}
+      <div class="grid2">${T('Formas que dominan','guia.formas',g.formas,'Triángulos y verticales para el poder; curvas para la amenaza…')}${T('Silueta · ¿qué lo hace reconocible?','forma.silueta',p.forma?.silueta,'Hombros enormes y cabeza diminuta…')}
+        ${T('Escala','lenguaje.escala',l.escala,'El dios mide 3 veces un humano…')}${T('Composición','lenguaje.composicion',l.composicion,'Cámara baja, figura en el tercio derecho…')}
+        ${T('Material dominante','guia.materiales',g.materiales,'Obsidiana pulida, piedra volcánica, oro martillado…',40)}${T('Color y relación cromática','mood.color',p.mood.color,'Carmesí contra negro obsidiana; oro como acento',40)}
+        ${T('Luz · cómo está iluminado','mood.luz',p.mood.luz,'Una sola fuente: fuego bajo desde abajo…',40)}${T('Luz · qué iluminación refuerza el concepto','guia.luz',g.luz,'Una fuente dominante, contraluz…',40)}</div>
+      <div class="grid3">${I('Color que domina','lenguaje.colorDom',l.colorDom,'negro obsidiana')}${I('Color de acento','lenguaje.colorAcento',l.colorAcento,'carmesí')}${I('Nivel de estilización','guia.estilizacion',g.estilizacion,'Proporciones exageradas, materiales creíbles')}</div>
+      <div class="grid2">${T('Medio y proceso','tecnica.medio',p.tecnica.medio,'Blockout en Blender + paintover; photobash…',40)}${I('Rendering / acabado','tecnica.acabado',p.tecnica.acabado,'Render pictórico, sketch pintado…')}</div>
+      ${(p.mood.paleta||[]).length?`<div class="pal" style="margin-top:6px">${p.mood.paleta.map(h=>`<span title="${esc(h)}" style="width:30px;height:30px;border-radius:4px;background:${esc(h)};border:1px solid var(--line)"></span>`).join('')}</div>`:''}`)}
+    ${S_('','Dirección de arte','Qué quieres que se entienda y se sienta, y los pilares que lo sostienen.',`${T('Frase central','ad',p.ad,'Que el poder se sienta sagrado y condenado a la vez…',54)}
+      <div class="grid3">${p.pilares.map((x,i)=>`<div class="shpil"><span class="lbl" style="color:var(--c-ad)">Pilar ${i+1}</span>${I('Nombre (una intención)',`pilares.${i}.t`,x.t,'La naturaleza reclama')}${T('Qué comunica',`pilares.${i}.f`,x.f,'La belleza existe, pero está deteriorada.',40)}${T('Cómo se ve',`pilares.${i}.como`,x.como,'Materiales desgastados, estructuras rotas…',40)}${T('Qué NO debe hacer',`pilares.${i}.no`,x.no,'No convertir todo en ruinas sin intención.',36)}</div>`).join('')}</div>`)}
+    ${(l.reglas||[]).length?S_('reglas','Reglas visuales','Se editan en Lenguaje visual.',`<ol class="reglas">${l.reglas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol>`):''}
+    ${S_('','Personajes','Cada uno con su paleta (más abajo).',pj.length?`<ul class="list">${pj.map(x=>`<li><span><b>${esc(x.nombre)}</b>${x.rol?` · ${esc(x.rol)}`:''}${x.lado?` <span class="muted">— ${esc(x.lado)}</span>`:''}</span></li>`).join('')}</ul><div class="prow"><button class="btn sm" data-act="tab" data-tab="personajes">Editar personajes</button></div>`:`<p class="muted" style="margin:0">Todavía no hay personajes.</p><div class="prow"><button class="btn sm" data-act="tab" data-tab="personajes">Agregar personajes</button></div>`)}
+    <details class="hsec hoja-s" ${MUNDO_Q.some(([k])=>p.mundo[k])?'open':''}><summary><h5 style="display:inline">El mundo como personaje</h5> <span class="muted" style="font-size:12px">La naturaleza no es fondo: quiere, teme, reacciona.</span></summary><div class="grid2" style="margin-top:8px">${MUNDO_Q.map(([k,qq])=>`<div class="field"><label for="x-mundo-${k}">${qq}</label>${tx('mundo.'+k,p.mundo[k]||'',qq,null,44)}</div>`).join('')}</div></details>
+    <div class="shgrid"><div style="--lc:var(--c-concepto)"><div class="hsec-h"><h5>Keywords</h5>${cpBtn('keywords')}</div><p>${KWCATS.flatMap(([k])=>p.keywords[k]||[]).map(esc).join(' · ')||'—'}</p></div></div>
     ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:'<p class="muted">Sin referencias todavía.</p>'}
   </article>`}
-
 function vPrincipios(){
   const a=S.ajustes;
   return `
@@ -3961,13 +4003,15 @@ function aMarkdown(p){
   if((p.decisiones||[]).length)L.push('## Decision log',...p.decisiones.map(d=>`- **${d.t}** — ${d.motivo||'sin motivo'} (${d.estado}, ${fecha(d.ts)})`),'');
   if((p.preguntas||[]).some(q=>!q.ok))L.push('## Preguntas abiertas',...p.preguntas.filter(q=>!q.ok).map(q=>'- '+q.t),'');
   if(c.frase)L.push(`> ${c.frase}`,'');
-  L.push('## Brief',p.brief.texto||'—','');
+  L.push('## Brief',p.brief.texto||'—',...[['Entregable',p.brief.entregable],['Para quién',p.brief.publico],['Restricciones',p.brief.restricciones]].filter(x=>x[1]).map(x=>`- **${x[0]}:** ${x[1]}`),'');if(p.brief.historia)L.push('## Historia',p.brief.historia,'');
   L.push('## Concepto',`**Núcleos:** ${c.nucleos.filter(Boolean).join(' / ')}`,`**Tensión:** ${c.tension||'—'} — ${c.tensionTexto}`);
   if(c.empujes.length)L.push('','**Empujes:**',...c.empujes.map(e=>'- '+e));
   L.push('','## El mundo como personaje',...MUNDO_Q.filter(([k])=>p.mundo[k]).map(([k,q])=>`- **${q}** ${p.mundo[k]}`),'');
   L.push('## Keywords',...KWCATS.map(([k,n])=>`- **${n}:** ${(p.keywords[k]||[]).join(', ')}`),'');
   if(p.busquedas.length)L.push('## Búsquedas',...p.busquedas.map(b=>`- [${capaNombre(p,b.capa)}] ${b.q}`),'');
+  {const pj=(p.personajes||[]).filter(x=>x.nombre);if(pj.length)L.push('## Personajes',...pj.map(x=>`- **${x.nombre}** (${x.rol||''}) — ${[x.lado,x.personalidad,x.materiales,x.piel,x.forma].filter(Boolean).join(' · ')}`),'')}
   {const pj=(p.personajes||[]).filter(x=>x.nombre);if(pj.length)L.push('## Paletas de personajes',...pj.map(x=>`- **${x.nombre}** (${x.rol||''}): `+pjPaleta(p,x).pal.map(z=>`${z.rol} ${z.hex} ${z.pct}%`).join(', ')),'')}
+  {const E=[['Formas',(p.guia||{}).formas],['Silueta',p.forma?.silueta],['Escala',l.escala],['Composición',l.composicion],['Material dominante',(p.guia||{}).materiales],['Color',p.mood.color],['Luz (mood)',p.mood.luz],['Luz (refuerza el concepto)',(p.guia||{}).luz],['Estilización',(p.guia||{}).estilizacion]].filter(x=>x[1]);if(E.length)L.push('## Estilo visual',...E.map(x=>`- **${x[0]}:** ${x[1]}`),'')}
   L.push('## Mood',p.mood.sensacion,`*${p.mood.palabras}* — paleta ${p.mood.paleta.join(' ')}`,'','## Técnica',p.tecnica.medio,p.tecnica.acabado,p.tecnica.referentes,'');
   L.push('## Art Direction',...p.pilares.map((x,i)=>`${i+1}. **${x.t}** — ${x.f}`),'');
   L.push('## Referencias',...LAYERS.flatMap(l=>{const rs=p.refs.filter(r=>r.capa===l.k);return rs.length?[`### ${capaNombre(p,l.k)}`,...rs.map(r=>`- ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`)]:[]}),'');
@@ -8308,6 +8352,7 @@ async function accion(a,el){
       marcar();renderMain();toast('Aplicado · sus búsquedas ya están en Referencias');break}
     case 'ai-dir-emp':{const x=S.ai.ideas?.data?.direcciones?.[+ds.i];if(x){p.concepto.empujes.push(`${x.titulo}: ${x.idea}`);marcar();el.textContent='Guardado';el.disabled=true}break}
     case 'ref-copy':{const r=p.refs.find(x=>x.id===ds.id);if(r)copiarRef(r,el);break}
+    case 'hoja-modo':S.hojaEdit=ds.m==='editar';renderMain();window.scrollTo({top:0});break;
     case 'copiar-md':{const txt=aMarkdown(p);try{await navigator.clipboard.writeText(txt);toast('Copiado')}catch{toast('No se pudo copiar')}break}
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
