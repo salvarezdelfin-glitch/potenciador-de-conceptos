@@ -995,7 +995,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mustiikh').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut253mf').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1251,7 +1251,7 @@ function elegirInicial(){
   S.cur=S.P[h]?h:ids[0]||null;
   if(!S.cur&&S.vista==='proyecto')S.vista='inicio';
 }
-function ordenados(){return Object.entries(S.P).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0))}
+function ordenados(){return Object.entries(S.P).filter(([,p])=>!p.libre).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0))}
 function recordar(){try{localStorage.setItem('cdc.cur',S.cur||'')}catch{}}
 
 /* ============ Salud del proceso ============ */
@@ -1299,6 +1299,7 @@ function renderSide(){
   const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
     return `<div class="prow" style="padding:0 10px 6px;flex-wrap:wrap;gap:4px">${m('crear','Create')}${m('crecer','Grow')}${m('negocio','Career')}${m('perfil','Profile')}${m('todo','Todo')}</div>`})();
   const grupoCrear=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Create</span>
+      <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
@@ -1407,6 +1408,7 @@ function renderMainInner(){
   if(S.vista==='taller'){m.innerHTML=vTaller();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
+  if(p.libre){m.innerHTML=herrHTML(p);return}
   const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
   m.innerHTML=`
   ${conflictoHTML(S.cur)}
@@ -1720,6 +1722,7 @@ function vInicio(){
     <div class="box"><span class="lbl">Empieza algo nuevo</span><h3>¿Tienes una idea?</h3><p class="hint">Escríbela en bruto. El cerebro del proyecto te va preguntando qué es, para qué existe y qué quieres comunicar, y te marca lo que falta.</p>
       <div class="prow"><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>
   </div>
+  <div class="box"><span class="lbl">Sin proyecto</span><h3>Herramientas</h3><p class="hint">Luz y color, referencias y moodboard, tablero y 3D, para usarlos sueltos cuando solo quieres probar algo.</p><div class="prow"><button class="btn sm pri" data-act="herr">Abrir herramientas</button><button class="btn sm" data-act="herr" data-t="refs">Referencias</button><button class="btn sm" data-act="herr" data-t="herr3d">Referencia 3D</button></div></div>
   ${proximos(5).length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Próximos</h3><button class="btn sm ghost" data-act="vista" data-v="calendario">Calendario</button></div><ul class="list">${proximos(5).map(e=>{const dd=diasHasta(e.fecha);return `<li><span><b style="color:${dd<=1?'var(--warn)':'inherit'}">${dd===0?'Hoy':dd===1?'Mañana':fechaCorta(e.fecha)}</b> · ${esc(e.titulo)}</span></li>`}).join('')}</ul></div>`:''}
   <div class="stats">
     <div class="stat"><b>${terminadas()}</b><span>piezas terminadas</span></div>
@@ -5153,10 +5156,28 @@ function vMood(p){const m=p.mood,t=tresMood(p);
   <div class="box"><h3>3 palabras de mood</h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
     <div data-vivo="sintesis">${vivoSintesis(p)}</div>
     <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>
-  <div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
-      <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
-    <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>
+  ${moodPaletaHTML(p)}
   ${escHTML(p)}`}
+function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
+      <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
+    <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
+/* ============ Herramientas: luz y color, referencias, moodboard, tablero y 3D SIN proyecto ============
+   Es un espacio libre (un proyecto oculto con libre:true): reutiliza todo lo que ya funciona, pero no aparece en la lista de proyectos. */
+const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias y moodboard'],['board','Tablero'],['herr3d','Referencia 3D']];
+function herrP(){if(!S.P[HERR_ID]){const p=nuevoProyecto('Herramientas');p.libre=true;S.P[HERR_ID]=p}return S.P[HERR_ID]}
+function herrAbre(tab){const nuevo=!S.P[HERR_ID];herrP();S.cur=HERR_ID;S.vista='proyecto';S.tab=tab||'luzcolor';S.ai={};S.confirmDel=false;recordar();if(nuevo)marcar();render()}
+function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
+  return `${conflictoHTML(S.cur)}<div class="phead"><div style="flex:1 1 380px;min-width:0"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,46px);margin:0">Herramientas</h1><p class="muted" style="margin:4px 0 0">Luz y color, referencias, moodboard, tablero y 3D, sin necesidad de un proyecto. Lo que hagas aquí se guarda aparte, y también aparece en tu Biblioteca.</p></div></div>
+  <nav class="tabs" role="tablist">${HERR_TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join('')}</nav>
+  <section class="panel">${({luzcolor:vLuzColor,refs:vRefs,board:vBoardTab,herr3d:vHerr3d}[S.tab])(p)}</section>`}
+function vLuzColor(p){const m=p.mood,t=tresMood(p);
+  return `<p class="intro"><b>Luz y color sin proyecto.</b> Arma una escena de luz, saca paletas funcionales para un personaje, un prop o una pieza clave, y compara tu imagen. Si quieres que la paleta responda a un mood, escríbelo abajo; si no, juega con la luz y los colores a mano.</p>
+  <div class="box"><h3>Qué sensación quieres <span class="lbl">opcional</span></h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
+    <div class="grid2"><div class="field"><label for="x-mood-luz">Cómo está iluminado</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div><div class="field"><label for="x-mood-color">Color y relación cromática</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,50)}</div></div></div>
+  ${mapaLuzHTML(p)}${moodPaletaHTML(p)}${escHTML(p)}`}
+function vHerr3d(){return `<p class="intro"><b>Referencia 3D.</b> Cuerpos con anatomía, cabeza de Loomis, formas básicas y tus propios modelos, con la luz que tú controlas. Se procesa en tu navegador.</p>
+  <div class="ht-row"><button class="ht-c ht-3" data-act="v3d-abrir" data-m="maniqui"><b>Cuerpo</b><span>Cinco tipos de cuerpo con anatomía, para posar y estudiar luz.</span></button><button class="ht-c ht-p" data-act="v3d-abrir" data-m="maniqui" data-t="pose"><b>Poses</b><span>Ponlo en la pose de una imagen, o elige una de las 9 de partida.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="loomis"><b>Cabeza de Loomis</b><span>Planos y líneas guía para estudiar la cabeza con luz.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="formas"><b>Formas básicas</b><span>Esfera, cubo, cilindro, cono y más, para ver cómo cae la sombra.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="mio"><b>Mis modelos</b><span>Carga un .glb, .obj o .fbx; si trae esqueleto, lo posas.</span></button></div>
+  <p class="hint">Con «Añadir al moodboard» la imagen queda en <b>Referencias y moodboard</b> de esta sección. También puedes descargarla en PNG o copiarla.</p>`}
 function vivoSintesis(p){const t=tresMood(p).filter(Boolean);if(t.length<3)return `<p class="nd-box sm">El proyecto debe sentirse: ${t.map(esc).join(', ')||'___'}${t.length<3?', ___':''}. (Faltan ${3-t.length})</p>`;
   const g=t.filter(w=>GENERICOS.includes(nz(w)));return `<p class="sintesis">El proyecto debe sentirse: <b>${esc(t[0])}</b>, <b>${esc(t[1])}</b> y <b>${esc(t[2])}</b>.</p>${g.length?`<p class="nd-box sm">«${esc(g.join('», «'))}» es genérico: ¿qué tipo de ${esc(g[0])}?</p>`:''}`}
 function vivoPalSug(p){const s=paletaSugerida(p);
@@ -7928,6 +7949,7 @@ async function accion(a,el){
   /* el selector de carpeta necesita un gesto del usuario recién hecho: se atiende antes que cualquier otra cosa */
   if(a==='tp-carpeta'){tpCarpeta();return}
   switch(a){
+    case 'herr':herrAbre(ds.t);break;
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
