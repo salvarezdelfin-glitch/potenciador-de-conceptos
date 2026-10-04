@@ -398,6 +398,14 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .tab{border-radius:8px;border-bottom:0;margin:0;padding:8px 12px;font-size:13.5px}
 .tab:hover{color:var(--ink);background:var(--surface2)}
 .tab[aria-selected="true"]{background:var(--surface3);color:var(--ink);border-bottom:0;box-shadow:inset 0 -2px 0 var(--accent)}
+.pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 14px}
+.pg-sec>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;padding:14px 18px}
+.pg-sec>summary::-webkit-details-marker{display:none}
+.pg-sec>summary h2{margin:0;font-family:var(--display);font-size:20px;text-transform:uppercase}
+.pg-sec>summary::after{content:'▸';margin-left:auto;color:var(--ink3)}
+.pg-sec[open]>summary::after{content:'▾'}
+.pg-body{padding:0 18px 18px}
+
 .seis{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--lc);border-radius:10px}
 .seis:hover{background:var(--surface2)}
 .asesor{background:linear-gradient(135deg,var(--accent-soft),transparent 55%),var(--surface);border-color:var(--line);border-left:3px solid var(--accent);border-radius:12px}
@@ -995,17 +1003,20 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut253mf').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut5ezi7').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
-const TABS = [
-  ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja']
-];
+/* ============ El proyecto en 6 páginas (antes 20 pestañas). Las claves viejas siguen funcionando: llevan a su página y su sección ============ */
+const TABS=[['proyecto','Proyecto'],['concepto','Concepto'],['visual','Visual'],['refs','Referencias'],['critica','Crítica'],['entrega','Entrega']];
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
-/* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
-const TAB_SEP=new Set(['mood','refs','critica','hoja']);
+const TAB_NUEVO={cerebro:['proyecto','asistente'],mapa:['proyecto','mapa'],brief:['concepto','brief'],tension:['concepto','tension'],ad:['concepto','ad'],explorar:['concepto','explorar'],mood:['visual','mood'],lenguaje:['visual','lenguaje'],personajes:['visual','personajes'],mundo:['visual','mundo'],board:['refs','tablero'],bajar:['refs','bajar'],revision:['critica','revision'],carpetas:['critica','carpetas'],produccion:['entrega','produccion'],laminas:['entrega','laminas'],hoja:['entrega','hoja']};
+const VISTA_NUEVO={calendario:['inicio','calendario'],galeria:['biblioteca','ilustraciones'],artistas:['biblioteca','artistas'],nombres:['biblioteca','nombres'],diario:['estudiar','practicar'],retos:['estudiar','practicar'],desatorar:['estudiar','practicar'],potenciar:['estudiar','practicar'],ruta:['estudiar','aprender'],recursos:['estudiar','aprender'],taller:['estudiar','taller'],reclutador:['portafolio','reclutador'],formatos:['portafolio','formatos'],cv:['portafolio','cv'],redes:['portafolio','publicar'],vacantes:['trabajo','vacantes'],adaptar:['trabajo','adaptar'],postulaciones:['trabajo','postulaciones'],pruebas:['trabajo','pruebas'],mensajes:['trabajo','mensajes'],trabajos:['dinero','trabajos'],cotizador:['dinero','cotizador'],cobros:['dinero','cobros'],contratos:['dinero','contratos'],metas:['yo','metas'],nivel:['yo','nivel'],estilo:['yo','estilo'],principios:['yo','principios'],progreso:['yo','progreso']};
+const VISTA_MODO={diario:['practicar','hoy'],retos:['practicar','retos'],desatorar:['practicar','atorado'],potenciar:['practicar','plan'],ruta:['aprender','ruta'],recursos:['aprender','recursos']};
+function vistaResuelve(k){const n=VISTA_NUEVO[k];if(!n)return null;const m=VISTA_MODO[k];if(m)(S.modoPg=S.modoPg||{})[m[0]]=m[1];return n}
+const enVista=k=>S.vista===(VISTA_NUEVO[k]?.[0]||k);
+function tabResuelve(k){k=TAB_ALIAS[k]||k;return TAB_NUEVO[k]||[k,null]}
+const TAB_SEP=new Set();
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
 const GRUPOS_MUNDO=['Personajes','Criaturas','Entornos','Props','Keyframes'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
@@ -1287,67 +1298,25 @@ function salud(p){
   const ok=items.filter(i=>i[1]).length;
   return {items,ok,total:items.length,pct:Math.round(ok/items.length*100),conP,refs:refs.length};
 }
-function tabCompleta(p,t){const it=salud(p).items.filter(i=>i[2]===t);return it.length&&it.every(i=>i[1])}
+function tabCompleta(p,t){const it=salud(p).items.filter(i=>tabResuelve(i[2])[0]===t);return it.length&&it.every(i=>i[1])}
 
 /* ============ Render ============ */
-function render(){renderSide();renderMain()}
+function render(){{const r=vistaResuelve(S.vista);if(r){S.vista=r[0];if(r[1]&&!S.ancla)S.ancla=r[1]}}renderSide();renderMain()}
 function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
   const side=$('#side');side.classList.toggle('open',!!S.menu);
-  const modo=S.navModo||'crear';
-  const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
-    return `<div class="prow" style="padding:0 10px 6px;flex-wrap:wrap;gap:4px">${m('crear','Create')}${m('crecer','Grow')}${m('negocio','Career')}${m('perfil','Profile')}${m('todo','Todo')}</div>`})();
-  const grupoCrear=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Create</span>
+  const BADGE={estudiar:()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''},trabajo:()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''},dinero:()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''}};
+  const grupoNav=`<div class="plist navlinks">
       <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
-      ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
-      ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
-      ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
-      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
-    </div>`;
-  const grupoCrecer=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Grow</span>
-      ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
-      ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
-      ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
-      ${nav('retos','target','Retos de estudio')}
-      ${nav('ruta','map','Ruta de aprendizaje')}
-      ${nav('potenciar','target','Potenciar mi punto débil')}
-      ${nav('recursos','grid','Recursos y pinceles')}
-      ${nav('progreso','chart','Mi progreso')}
-    </div>`;
-  const grupoNegocio=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Career</span>
-      ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
-      ${nav('cv','doc','Mi CV')}
-      ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('reclutador','eye','Revisión de reclutador')}
-      ${nav('formatos','frame','Formatos y entrega')}
-      ${nav('adaptar','target','Adaptar a vacante')}
-      ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
-      ${nav('mensajes','mail','Mensajes en inglés')}
-      ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
-      ${nav('trabajos','frame','Trabajos')}
-      ${nav('cotizador','coin','Cotizador freelance')}
-      ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('contratos','doc','Contratos')}
-    </div>`;
-  const grupoPerfil=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Profile</span>
-      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
-      ${nav('metas','target','Mis metas')}
-      ${nav('estilo','eye','Mi estilo')}
-      ${nav('principios','book','Mis principios')}
+      ${[['biblioteca','Biblioteca','grid'],['estudiar','Estudiar','target'],['portafolio','Portafolio','frame'],['trabajo','Trabajo','brief'],['dinero','Dinero','coin'],['yo','Yo','eye']].map(([k,n,ico])=>nav(k,ico,n,BADGE[k]?.()||'')).join('')}
     </div>`;
   side.innerHTML=`
     <div class="brand">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div class="plist">
-      ${nav('inicio','home','Inicio')}
-      ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
+      ${nav('inicio','home','Inicio',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
     </div>
-    ${modos}
-    ${modo==='crear'||modo==='todo'?grupoCrear:''}
-    ${modo==='crecer'||modo==='todo'?grupoCrecer:''}
-    ${modo==='negocio'||modo==='todo'?grupoNegocio:''}
-    ${modo==='perfil'||modo==='todo'?grupoPerfil:''}
+    ${grupoNav}
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
       <div class="plist" id="plist-proy">${listaProyectos()}</div>
@@ -1355,7 +1324,7 @@ function renderSide(){
     ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
     <span class="status" id="status">${S.modo==='local'?'Guardado solo en este navegador':S.modo==='error'?'Sin conexión al almacenamiento':''}</span>`;
   const bb=$('#bottombar');if(bb){const b=(act,v,ico,n,cur)=>`<button class="bb ${act==='nuevo'?'fab':''}" data-act="${act}" ${v?`data-v="${v}"`:''} aria-current="${!!cur}">${ICO[ico]}<span>${n}</span></button>`;
-    bb.innerHTML=b('vista','inicio','home','Inicio',S.vista==='inicio'&&!S.menu)+b('menu','','folder','Proyectos',S.menu||S.vista==='proyecto')+b('nuevo','','plus','Nuevo')+b('vista','estilo','eye','Estilo',S.vista==='estilo'&&!S.menu)+b('vista','artistas','users','Artistas',S.vista==='artistas'&&!S.menu)}
+    bb.innerHTML=b('vista','inicio','home','Inicio',S.vista==='inicio'&&!S.menu)+b('menu','','folder','Proyectos',S.menu||S.vista==='proyecto')+b('nuevo','','plus','Nuevo')+b('herr','','spark','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','biblioteca','grid','Biblioteca',S.vista==='biblioteca'&&!S.menu)}
   const sc=$('#scrim');if(sc)sc.className=S.menu?'scrim':'';
 }
 function listaProyectos(){
@@ -1369,47 +1338,26 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(S.tab==='board'&&S.vista==='proyecto')requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.tab==='critica'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+const pgSec=(pg,id,titulo,sub,html,abierto)=>{const o=S.secOpen?.[pg+':'+id],open=o===undefined?!!abierto:o;
+  return `<details class="pg-sec" id="sec-${id}" data-pg="${pg}:${id}" ${open?'open':''}><summary><h2>${titulo}</h2>${sub?`<span class="muted">${sub}</span>`:''}</summary><div class="pg-body">${html}</div></details>`};
+const pgModos=(clave,lista)=>{const k=(S.modoPg||{})[clave],m=lista.find(x=>x[0]===k)||lista[0];return `<div class="chips">${lista.map(([id,n])=>`<button class="ch ${m[0]===id?'on':''}" data-act="pg-modo" data-c="${clave}" data-k="${id}">${n}</button>`).join('')}</div>${m[2]()}`};
+const secAbierta=id=>!!document.querySelector('#sec-'+id+'[open]');
+const enMapa=()=>S.vista==='proyecto'&&S.tab==='proyecto'&&secAbierta('mapa');
+const enTablero=()=>S.vista==='proyecto'&&(S.tab==='board'||(S.tab==='refs'&&secAbierta('tablero')));
+function pgAncla(){if(!S.ancla)return;const id=S.ancla;S.ancla=null;const d=document.getElementById('sec-'+id);if(!d)return;d.open=true;(S.secOpen=S.secOpen||{})[d.dataset.pg]=true;requestAnimationFrame(()=>d.scrollIntoView({block:'start'}))}
+function pgInicia(id){if(id==='sec-vacantes')cargarVacantes(false);else if(id==='sec-trabajos'){if(!S.cotHist)cargarCotHist()}else if(id==='sec-aprender'){if((S.modoPg||{}).aprender==='recursos')cargarRecursos(false)}else if(id==='sec-tablero')requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);else if(id==='sec-mapa')requestAnimationFrame(()=>mapaLineas());else if(id==='sec-luz')requestAnimationFrame(escDibuja)}
+document.addEventListener('toggle',e=>{const d=e.target;if(!d.classList?.contains('pg-sec'))return;(S.secOpen=S.secOpen||{})[d.dataset.pg]=d.open;if(d.open)pgInicia(d.id)},true);
+function renderMain(){renderMainInner();pgAncla();S.assets?.hydrate?.();if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.tab==='critica'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
-  if(S.vista==='inicio'){m.innerHTML=vInicio();return}
+  {const r=vistaResuelve(S.vista);if(r){S.vista=r[0];if(r[1]&&!S.ancla)S.ancla=r[1]}}
+  if(PGV[S.vista]){m.innerHTML=PGV[S.vista]();return}
   if(S.vista==='papelera'){m.innerHTML=vPapelera();return}
-  if(S.vista==='estilo'){m.innerHTML=vEstilo();return}
-  if(S.vista==='desatorar'){m.innerHTML=vDesatorar();return}
-  if(S.vista==='diario'){m.innerHTML=vDiario();return}
-  if(S.vista==='retos'){m.innerHTML=vRetos();return}
-  if(S.vista==='nivel'){m.innerHTML=vNivel();return}
-  if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
-  if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
   if(S.vista==='avisos'){m.innerHTML=vAvisos();return}
-  if(S.vista==='nombres'){m.innerHTML=vNombres();return}
-  if(S.vista==='galeria'){m.innerHTML=vGaleria();return}
-  if(S.vista==='redes'){m.innerHTML=vRedes();return}
-  if(S.vista==='cobros'){m.innerHTML=vCobros();return}
-  if(S.vista==='ruta'){m.innerHTML=vRuta();return}
-  if(S.vista==='contratos'){m.innerHTML=vContratos();return}
-  if(S.vista==='postulaciones'){m.innerHTML=vPostulaciones();return}
-  if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
-  if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
-  if(S.vista==='biblioteca'){m.innerHTML=vBiblioteca();return}
-  if(S.vista==='calendario'){m.innerHTML=vCalendario();return}
-  if(S.vista==='cv'){m.innerHTML=vCV();return}
-  if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
-  if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
-  if(S.vista==='trabajos'){m.innerHTML=vTrabajos();return}
-  if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
-  if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
-  if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
-  if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
-  if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
-  if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
-  if(S.vista==='potenciar'){m.innerHTML=vPotenciar();return}
-  if(S.vista==='metas'){m.innerHTML=vMetas();return}
-  if(S.vista==='taller'){m.innerHTML=vTaller();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   if(p.libre){m.innerHTML=herrHTML(p);return}
-  const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
+  const s=salud(p);{const [t,a]=tabResuelve(S.tab);S.tab=t;if(a&&!S.ancla)S.ancla=a}if(!TABS.some(t=>t[0]===S.tab))S.tab='proyecto';
   m.innerHTML=`
   ${conflictoHTML(S.cur)}
   <div class="phead">
@@ -1438,7 +1386,7 @@ function renderMainInner(){
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n],i)=>`${TAB_SEP.has(k)?'<span class="tab-sep" aria-hidden="true"></span>':''}<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}"><b>${k==='hoja'?'→':i+1}</b>${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({cerebro:vCerebro,mapa:vMapa,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,board:vBoardTab,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <section class="panel">${({proyecto:pgProyecto,concepto:pgConcepto,visual:pgVisual,refs:pgRefs,critica:pgCritica,entrega:pgEntrega})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -1455,7 +1403,6 @@ function nombresHTML(p){
   if(!(p.nombres||[]).length)return favBox;
   return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`+favBox}
 function vBrief(p){return `
-  <p class="intro">Antes de buscar una sola imagen, <strong>reescribe el encargo con tus palabras</strong>. Si no lo puedes explicar en un párrafo, todavía no sabes qué buscar.</p>
   <div class="box" style="border-top:3px solid var(--accent)"><h3>Brief de una frase</h3><p class="hint">1 sujeto, 1 lugar, 1 sentimiento. Una sola frase que describa la imagen, y te quedas con ella hasta terminar. Se queda fija arriba del proyecto.</p>
     <div class="grid3" style="gap:10px">
       <div class="field"><label for="f-una-sujeto">Sujeto</label>${it('brief.una.sujeto',p.brief.una?.sujeto||'','Un dios de la guerra','f-una-sujeto')}</div>
@@ -1505,7 +1452,6 @@ function vConcepto(p){
   ${asesor('concepto','Asesor: empuja mi concepto','Diagnostica tu tensión, te hace preguntas y propone empujes concretos.')}`}
 
 function vMundo(p){return `
-  <p class="intro"><strong>Haz que el mundo sea un personaje.</strong> La naturaleza no es fondo: quiere, teme, reacciona y deja huella. Tus referentes aquí son <strong>Nicolas Weis</strong> y <strong>Crash McCreery</strong>: fíjate en cómo cada forma del entorno tiene carácter.</p>
   <div class="grid2">${MUNDO_Q.map(([k,q,h])=>`<div class="box"><h3>${q}</h3><p class="hint">${h}</p>${ta('mundo.'+k,p.mundo[k]||'')}</div>`).join('')}</div>`}
 
 function vKeywords(p){
@@ -1579,7 +1525,6 @@ function vRefs(p){
   const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
   return `
   ${herramientasRefHTML()}
-  <p class="intro"><strong>Aquí juntas y entiendes tus referencias.</strong> Busca, sube o pega imágenes y escribe el porqué de cada una. Cuando tengas varias, ordénalas sobre el lienzo en la pestaña <button class="btn ghost sm" data-act="tab" data-tab="board">Tablero</button>.</p>
   ${refsBuscaHTML(p)}
   ${sitiosRefHTML(p)}
   <div class="drop" id="drop">
@@ -1624,29 +1569,22 @@ function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div cl
 function refMetaHTML(r){const est=r.licEstado||(r.lic?licDeTexto(r.lic):(r.link?'desconocida':''));if(!est&&!r.autor&&!r.w)return '';const L=LIC_EST[est]||LIC_EST.desconocida;
   return `<div class="ref-meta">${est?`<span class="lic ${L[1]}" title="${esc(r.lic||'La fuente no indica licencia')}">${L[0]}</span>`:''}${r.autor?`<small class="muted">${esc(r.autor)}</small>`:''}${r.w&&r.h?`<small class="muted">${r.w}×${r.h}</small>`:''}</div>`}
 
-function vRevision(p){
-  const s=salud(p);
-  return `
-  <div class="grid2">
-    <div class="box"><h3>Básicos de diseño gráfico</h3><p class="hint">Revísalo en cada boceto y en el final. Si dudas, míralo en miniatura y en blanco y negro.</p>
+function vBasicos(p){return `    <div class="box"><h3>Básicos de diseño gráfico</h3><p class="hint">Revísalo en cada boceto y en el final. Si dudas, míralo en miniatura y en blanco y negro.</p>
       <div class="checks">${DISENO.map(([k,n,h])=>`<label class="chk"><input type="checkbox" id="d-${k}" data-b="diseno.${k}" ${p.diseno[k]?'checked':''}><span><b>${n}</b><small>${h}</small></span></label>`).join('')}</div>
-    </div>
-    <div class="box"><h3>Salud del proceso · ${s.pct}%</h3><p class="hint">Lo que falta, en orden. Es el mismo método en cada proyecto.</p>
+    </div>`}
+function vSalud(p){const s=salud(p);return `    <div class="box"><h3>Salud del proceso · ${s.pct}%</h3><p class="hint">Lo que falta, en orden. Es el mismo método en cada proyecto.</p>
       <div class="health-list">${s.items.map(([n,ok,t])=>`<div class="hl ${ok?'ok':'no'}"><i>${ok?'✓':'•'}</i><span>${n}</span>${ok?'':`<button class="btn ghost sm" data-act="tab" data-tab="${t}">Ir</button>`}</div>`).join('')}</div>
-    </div>
-  </div>
-  <div class="box"><h3>Retro del proyecto</h3><p class="hint">Estas notas se juntan en "Mi progreso" y te muestran tus patrones proyecto tras proyecto.</p>
+    </div>`}
+function vRetro(p){return `  <div class="box"><h3>Retro del proyecto</h3><p class="hint">Estas notas se juntan en "Mi progreso" y te muestran tus patrones proyecto tras proyecto.</p>
     <div class="grid3">
       <div class="field"><label for="f-retro-funciono">¿Qué funcionó?</label>${ta('retro.funciono',p.retro.funciono)}</div>
       <div class="field"><label for="f-retro-mejorar">¿Qué me costó o haría distinto?</label>${ta('retro.mejorar',p.retro.mejorar)}</div>
       <div class="field"><label for="f-retro-aprendi">Lo que aprendí (una frase para mi yo futuro)</label>${ta('retro.aprendi',p.retro.aprendi)}</div>
     </div>
-  </div>
-  <div class="box"><h3>Historial de versiones</h3><p class="hint">Se guarda una foto del proyecto al abrirlo y cada 15 minutos de trabajo. Si borraste algo o no te gustó un cambio, vuelve a una versión anterior; antes de restaurar se guarda la actual.</p>
+  </div>`}
+function vVersiones(p){return `  <div class="box"><h3>Historial de versiones</h3><p class="hint">Se guarda una foto del proyecto al abrirlo y cada 15 minutos de trabajo. Si borraste algo o no te gustó un cambio, vuelve a una versión anterior; antes de restaurar se guarda la actual.</p>
     ${!S.hist?'<div><button class="btn" data-act="hist">Ver historial</button></div>':S.hist.cargando?'<p class="muted">Cargando…</p>':S.hist.error?'<p class="muted">No se pudo cargar el historial.</p>':S.hist.lista.length?`<div class="tbl"><table><thead><tr><th>Fecha</th><th>Nombre</th><th style="text-align:right">Refs</th><th style="text-align:right">Salud</th><th></th></tr></thead><tbody>${S.hist.lista.map(h=>`<tr><td>${new Date(h.ts).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td>${esc(h.nombre)}</td><td class="num">${h.refs}</td><td class="num">${h.pct}%</td><td><button class="btn sm" data-act="hist-rest" data-ts="${h.ts}">${S.confirmHist===h.ts?'¿Restaurar?':'Restaurar'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no hay versiones guardadas.</p>'}
-  </div>
-  <div class="box"><h3>Zona de cuidado</h3><p class="hint">Si lo borras, queda en la Papelera y lo puedes recuperar.</p><div class="prow"><button class="btn danger" data-act="borrar">${S.confirmDel?'Sí, borrar proyecto y sus imágenes':'Borrar proyecto'}</button>${S.confirmDel?'<button class="btn ghost" data-act="cancel-del">Cancelar</button>':''}</div></div>`}
-
+  </div>`}
 /* textos planos de cada sección de la hoja, para copiarlas sueltas */
 function hojaTextos(p){const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim()),T={};
   T.titulo=[p.nombre,c.frase].filter(Boolean).join('\n');
@@ -1692,8 +1630,8 @@ function vHoja(p){
 function vPrincipios(){
   const a=S.ajustes;
   return `
-  <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mis principios</h1>
-  <p class="intro">Lo que no se negocia en ningún proyecto. Vienen de tus asesorías; edítalos y agrega los nuevos que aprendas.</p>
+  
+  
   <div class="box"><div class="princ">${a.principios.map((x,i)=>`<div class="pr"><textarea id="pr-${i}" data-aj="principios.${i}" style="min-height:44px">${esc(x)}</textarea><button class="btn ghost sm" data-act="pr-del" data-i="${i}" aria-label="Quitar">✕</button></div>`).join('')}</div>
     <div><button class="btn sm" data-act="pr-add">＋ Principio</button></div></div>
   `}
@@ -1722,8 +1660,6 @@ function vInicio(){
     <div class="box"><span class="lbl">Empieza algo nuevo</span><h3>¿Tienes una idea?</h3><p class="hint">Escríbela en bruto. El cerebro del proyecto te va preguntando qué es, para qué existe y qué quieres comunicar, y te marca lo que falta.</p>
       <div class="prow"><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>
   </div>
-  <div class="box"><span class="lbl">Sin proyecto</span><h3>Herramientas</h3><p class="hint">Luz y color, referencias y moodboard, tablero y 3D, para usarlos sueltos cuando solo quieres probar algo.</p><div class="prow"><button class="btn sm pri" data-act="herr">Abrir herramientas</button><button class="btn sm" data-act="herr" data-t="refs">Referencias</button><button class="btn sm" data-act="herr" data-t="herr3d">Referencia 3D</button></div></div>
-  ${proximos(5).length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Próximos</h3><button class="btn sm ghost" data-act="vista" data-v="calendario">Calendario</button></div><ul class="list">${proximos(5).map(e=>{const dd=diasHasta(e.fecha);return `<li><span><b style="color:${dd<=1?'var(--warn)':'inherit'}">${dd===0?'Hoy':dd===1?'Mañana':fechaCorta(e.fecha)}</b> · ${esc(e.titulo)}</span></li>`}).join('')}</ul></div>`:''}
   <div class="stats">
     <div class="stat"><b>${terminadas()}</b><span>piezas terminadas</span></div>
     <div class="stat"><b>${ps.length}</b><span>proyectos</span></div>
@@ -1740,8 +1676,8 @@ function vEstilo(){
   const a=S.ajustes,imgs=a.estiloImgs||[],an=a.estiloAnalisis,d=an?.data;
   const piezas=Object.values(S.P).reduce((n,p)=>n+p.piezas.length,0);
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi estilo</h1>
-  <p class="intro">Tu voz como artista se forma decidiendo, no copiando. El análisis parte de <b>tu portafolio</b> (<a href="${esc(a.portafolioUrl||PF_URL_DEF)}" target="_blank" rel="noopener" style="color:var(--accent)">ver</a>), más las piezas que subas aquí y en Crítica, escribe tu gusto en <b>Artistas a seguir</b> y analiza: qué ya es tuyo, qué todavía es influencia y hacia dónde empujarlo.</p>
+  
+  
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Mis piezas</h3>
     <span class="prow"><label class="btn pri" for="f-estilo">Subir piezas</label><input type="file" id="f-estilo" accept="image/png,image/jpeg,image/webp" multiple hidden></span></div>
     ${imgs.length?`<div class="estilo-imgs">${imgs.map((x,i)=>`<figure><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom"><button class="btn sm" data-act="est-del" data-i="${i}" aria-label="Quitar">✕</button><button class="btn sm" data-act="est-proponer" data-i="${i}" style="left:4px;right:auto" title="Proponer para portafolio">${x.pf?'★':'☆'}</button></figure>`).join('')}</div>`:'<p class="muted">Sube 4–8 piezas que sientas más tuyas: finales, bocetos o estudios.</p>'}
@@ -1770,8 +1706,8 @@ function guiasTexto(){return guias().map(({r})=>r.nombre+(r.leccion?` (aprender:
 function vArtistas(){
   const a=S.ajustes;
   return `
-  <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Artistas a seguir</h1>
-  <p class="intro">Concept artists que estudias y <strong>qué les vas a robar</strong>. Dentro de cada proyecto, el asesor te recomienda artistas según el tema; aquí también puedes descubrir por tema libre.</p>
+  
+  
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Descubrir artistas por tema</b><p class="muted" style="margin:2px 0 0">Ej. "criaturas biomecánicas", "entornos brutalistas con niebla", "diseño de armaduras".</p></div></div>
     <div class="prow"><input type="text" id="f-tema" value="${esc(S.tema||'')}" placeholder="Tema, estilo o tipo de diseño" style="flex:1 1 260px;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 10px" data-enter="descubrir">
     ${S.aiBusy.descubrir?'<button class="btn sm" data-act="ai-stop" data-k="descubrir">Detener</button>':'<button class="btn pri sm" data-act="descubrir">Recomendar</button>'}</div>
@@ -1799,7 +1735,7 @@ function vProgreso(){
   const top=Object.entries(falla).sort((a,b)=>b[1]-a[1]).slice(0,4);
   const aprend=ps.filter(([,p])=>p.retro.aprendi||p.retro.mejorar);
   return `
-  <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mi progreso</h1>
+  
   ${progresoMedidoHTML()}
   <div class="stats">
     <div class="stat"><b>${ps.length}</b><span>proyectos</span></div>
@@ -2094,8 +2030,8 @@ const SKILLS={...SKILLS_ENV,valores:'Valores',silueta:'Silueta y lectura',compos
 function metaTexto(){return (S.ajustes.metas?.rol||'').trim()||S.ajustes.gusto?.match(/Meta:[^.]*/)?.[0]?.replace(/^Meta:\s*/,'')||'Environment & Keyframe Concept Artist'}
 function vMetas(){const m=S.ajustes.metas=S.ajustes.metas||{};
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis metas</h1>
-  <p class="intro">Tu meta profesional, explícita y propia — no una frase enterrada en otro campo. Todo lo demás (plan de estudio, evaluación de nivel, adaptar a vacante) la usa como referencia.</p>
+  
+  
   <div class="box" style="border-top:3px solid var(--accent)">
     <div class="field"><label for="m-rol">¿Qué quieres ser / en qué puesto quieres trabajar?</label><input type="text" id="m-rol" data-aj="metas.rol" value="${esc(m.rol||'')}" placeholder="Ej. Environment & Keyframe Concept Artist"></div>
     <div class="grid2">
@@ -2159,8 +2095,8 @@ function vDiario(){
   const cal=[];for(let i=34;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=hoyKey(d);cal.push(`<span class="dia ${dias[k]?.hecho?'on':''} ${i===0?'hoy':''}" title="${k}${dias[k]?.hecho?' · '+esc(SKILLS[dias[k].skill]||''):''}"></span>`)}
   const total=Object.values(dias).filter(x=>x.hecho).length;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudio diario</h1>
-  <p class="intro">30 minutos al día. ${S.ajustes.diarioEnfoque==='3d'?'Enfoque <strong>3D</strong>: Blender (blockout, luz y cámara, render + paintover) y ZBrush (forma, anatomía, hard surface), en rotación. Sube una captura o render y te doy feedback de silueta, valores y luz.':S.ajustes.diarioEnfoque==='env'?'Enfoque <strong>Environment & Keyframe</strong>: escala, perspectiva atmosférica, claves de luz, profundidad, blockout 3D, composición y valores, en rotación.':`Ataca tu punto más débil según tus críticas${Object.keys(prom).length?'':' (cuando tengas críticas, se ajusta solo)'}.`}</p>
+  
+  
   <div class="prow"><span class="lbl">Enfoque</span>${[['general','General'],['env','Environment & Keyframe'],['3d','3D (Blender + ZBrush)']].map(([k,n])=>`<button class="ch ${(S.ajustes.diarioEnfoque||'general')===k?'on':''}" data-act="d-enfoque" data-v="${k}">${n}</button>`).join('')}</div>
   <div class="stats"><div class="stat"><b>🔥 ${racha()}</b><span>días seguidos</span></div><div class="stat"><b>${total}</b><span>días de estudio</span></div>
     ${Object.entries(prom).slice(0,2).map(([k,v])=>`<div class="stat"><b>${v.toFixed(1)}</b><span>${SKILLS[k]} (tu promedio)</span></div>`).join('')}</div>
@@ -2276,8 +2212,8 @@ function vDesatorar(){
       ${ta_('unlock.porque',u.porque,'Tu respuesta','un-porque',110)}</div>
     <div class="box"><h3>¿Cómo te hacía sentir?</h3><p class="hint">Vuelve aquí cuando se te olvide para qué es todo esto.</p>${ta_('unlock.sentia',u.sentia,'Me hacía sentir…','un-sentia',110)}</div></div>`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Desatorarme</h1>
-  <p class="intro">Cuando te atoras casi nunca es por técnica: es identidad, dirección, voz, arranque, cierre o el porqué. Elige <b>solo el que más te frena hoy</b> y haz su ejercicio. <span class="muted">Basado en la guía "Stuck" de Mick Javaid (método UNLOCK).</span></p>
+  
+  
   <div class="unlk">${UNLOCK.map(x=>`<button class="unl" data-act="unl" data-k="${x.k}" aria-pressed="${k===x.k}"><b>${x.k}</b><span>${esc(x.n)}</span></button>`).join('')}</div>
   ${card?`<div class="banner" style="background:var(--surface2)"><i>${esc(card.s)}</i> → <b>${esc(card.c)}</b></div>${body}`
     :`<div class="grid3">${UNLOCK.map(x=>`<button class="box" data-act="unl" data-k="${x.k}" style="text-align:left;cursor:pointer"><span class="lbl" style="color:var(--accent)">${x.k} · ${esc(x.n)}</span><span><i>${esc(x.s)}</i></span><b>${esc(x.c)}</b></button>`).join('')}</div>`}`}
@@ -2306,8 +2242,8 @@ function vRetos(){
   const r=S.retoAI||retoLocal(S.retoSeed),hist=S.ajustes.retos||[];
   const titulo=r.proyecto||`${r.sujeto[0].toUpperCase()+r.sujeto.slice(1)}, ${r.genero}`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Retos de estudio</h1>
-  <p class="intro">Encargos como los de un estudio, con entregables, restricciones y tiempo límite. Así se entrena para el trabajo real: decidir rápido y entregar.</p>
+  
+  
   <div class="grid2">
     <div class="box brief"><span class="lbl">Brief · ${esc(r.estudio)}</span><h3>${esc(titulo)}</h3>
       ${r.brief?`<p style="margin:0">${esc(r.brief)}</p>`:`<p style="margin:0">Diseña <b>${esc(r.sujeto)}</b> para un proyecto de <b>${esc(r.genero)}</b>.</p>`}
@@ -2372,8 +2308,8 @@ function cvListaHTML(lista,campos,rutaBase,ph){return `<div class="cv-lista">${l
     <button class="btn sm" data-act="cv-add" data-ruta="${rutaBase}">＋ ${esc(ph)}</button></div>`}
 function vCV(){const cv=cvDatos();
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi CV</h1>
-  <p class="intro">Mismo lenguaje visual que tu portafolio (<a href="https://${esc(cv.portafolio)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(cv.portafolio)}</a>): tipografía, colores y orden. Edita lo que cambie y descárgalo en PDF cuando lo necesites para una postulación.</p>
+  
+  
   <div class="box"><h3>Quién eres</h3><div class="grid2">
     <div class="field"><label>Nombre</label><input type="text" data-aj="cv.nombre" value="${esc(cv.nombre)}"></div>
     <div class="field"><label>Rol</label><input type="text" data-aj="cv.rol" value="${esc(cv.rol)}" placeholder="Ilustrador y Concept Artist"></div>
@@ -2470,10 +2406,10 @@ function vPortafolio(){
   const cs=candidatas(),col=e=>cs.filter(c=>c.pf.estado===e);
   const cand=col('candidata'),apr=col('aprobada'),pub=col('publicada');
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Portafolio</h1>
+  
   <div class="banner" style="background:var(--accent-soft)"><b>Nada se publica solo.</b> Una pieza entra a tu portafolio únicamente si tú le das el visto bueno después de revisarla con tu asesor. Después, tú decides cuándo subir el paquete.</div>
   ${portafolioGapHTML()}
-  <p class="intro">Propón piezas desde <b>Crítica</b> (en cada proyecto) o desde <b>Mi estilo</b>.</p>
+  
   <div class="kanban">
     <div class="kcol"><div class="colh"><b>Candidatas</b><span>${cand.length}</span></div>${cand.map(pfCard).join('')||'<div class="empty">Sin candidatas. Usa "Proponer para portafolio" en una pieza.</div>'}</div>
     <div class="kcol"><div class="colh"><b>Con visto bueno</b><span>${apr.length}</span></div>
@@ -2537,8 +2473,8 @@ function cotCalc(d){
 /* Trabajos: une Cotizaciones + Cobros por folio (o por cliente+proyecto si el cobro se creo a mano) en una sola tira de estado por cliente, sin inventar una base de datos nueva */
 function vTrabajos(){
   const paso=(ok,label)=>`<span class="nivel" style="color:${ok?'var(--ok)':'var(--ink3)'};border-color:${ok?'var(--ok)':'var(--ink3)'}">${ok?'✓ ':''}${esc(label)}</span>`;
-  if(!S.cotHist)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1><p class="intro">Cada cliente, de un vistazo: cotizado → contrato → cobrado. Se arma solo cruzando tus cotizaciones y tus cobros.</p><div class="box"><button class="btn pri" data-act="cot-hist">Cargar</button></div>`;
-  if(S.cotHist.cargando)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1><p class="muted">Cargando…</p>`;
+  if(!S.cotHist)return `<div class="box"><button class="btn pri" data-act="cot-hist">Cargar</button></div>`;
+  if(S.cotHist.cargando)return `<p class="muted">Cargando…</p>`;
   const cots=S.cotHist.lista||[],cobros=lista('cobros'),norm=s=>nz(s||'');
   const filas=cots.map(q=>{
     const cobro=cobros.find(c=>c.folio===q.folio)||cobros.find(c=>!c.folio&&norm(c.cliente)===norm(q.cliente)&&norm(c.proyecto)===norm(q.proyecto));
@@ -2547,8 +2483,8 @@ function vTrabajos(){
   });
   const sueltos=cobros.filter(c=>!c.folio&&!cots.some(q=>norm(q.cliente)===norm(c.cliente)&&norm(q.proyecto)===norm(c.proyecto)));
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Trabajos</h1>
-  <p class="intro">Cada cliente, de un vistazo: cotizado → contrato → cobrado. Se arma solo cruzando tus cotizaciones y tus cobros — no es una lista aparte que tengas que llenar.</p>
+  
+  
   ${filas.length||sueltos.length?`<div class="postlist">
     ${filas.map(({q,cobro,pag,falta})=>`<div class="post" style="border-left-color:${falta===0?'var(--ok)':'var(--accent)'}">
       <div class="prow" style="justify-content:space-between"><b style="font-family:var(--display);font-size:18px;text-transform:uppercase">${esc(q.cliente||'—')}</b><span class="muted">${esc(q.folio)}</span></div>
@@ -2567,7 +2503,7 @@ function vTrabajos(){
 function vCotizador(){
   const tab=S.cotTab||'cotizar';
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cotizador freelance</h1>
+  
   <nav class="tabs" role="tablist" style="align-self:flex-start"><button class="tab" role="tab" data-act="cot-tab" data-t="cotizar" aria-selected="${tab==='cotizar'}">Cotizar un encargo</button><button class="tab" role="tab" data-act="cot-tab" data-t="tarifas" aria-selected="${tab==='tarifas'}">¿Cuánto cobrar?</button></nav>
   ${tab==='tarifas'?vTarifas():vCotizar()}`}
 function vTarifas(){
@@ -2677,8 +2613,8 @@ function vNivel(){
   const a=S.ajustes,ev=(a.niveles||[]).slice().sort((x,y)=>x.ts-y.ts),u=ev.at(-1),d=u?.data,url=a.portafolioUrl||PF_URL_DEF;
   const idx=d?Math.max(0,NIVELES.indexOf(d.nivel)):-1;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi nivel</h1>
-  <p class="intro">Tu portafolio evaluado contra el estándar de la industria (estudios de videojuegos, cine y outsourcing), con un plan por meses. Evalúalo cada 2–3 meses: la gráfica muestra si de verdad estás creciendo.</p>
+  
+  
   <div class="box"><div class="prow" style="align-items:flex-end">
     <div class="field" style="flex:1 1 280px"><label for="f-pfurl">Link de tu portafolio</label><input type="text" id="f-pfurl" data-aj="portafolioUrl" value="${esc(url)}"></div>
     <div class="field" style="flex:1 1 100%"><label for="f-profes">Lo que te dicen tus profesores y asesores</label><textarea id="f-profes" data-aj="notasProfes" placeholder="Ej. buen nivel, falta pulir valores; la composición de Aldea funciona…">${esc(a.notasProfes||'')}</textarea></div>
@@ -2738,8 +2674,8 @@ function vPostulaciones(){
   const cuenta=e=>L.filter(x=>x.estado===e).length;
   const li=(x,f,ph,type='text')=>`<input type="${type}" id="po-${f}-${x.id}" data-li="postulaciones|${x.id}|${f}" value="${esc(x[f]||'')}" placeholder="${ph}">`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Postulaciones</h1>
-  <p class="intro">Cada estudio al que aplicas, en qué va y cuándo dar seguimiento. La regla de la industria: si no te responden, seguimiento amable a los 7–10 días, y otro a las 3 semanas.</p>
+  
+  
   <div class="stats">${['Aplicado','Prueba de arte','Entrevista','Oferta'].map(e=>`<div class="stat"><b>${cuenta(e)}</b><span>${e}</span></div>`).join('')}</div>
   ${pend.length?`<div class="banner"><b>Toca dar seguimiento:</b> ${pend.map(x=>esc(x.estudio)).join(', ')}</div>`:''}
   <div class="box"><h3>Nueva postulación</h3><div class="grid3" style="gap:10px">
@@ -2789,8 +2725,8 @@ function vPruebas(){
     <div><span class="lbl">Art director notes</span><ul style="margin:4px 0;padding-left:18px">${(x.ad||[]).map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>
     <p class="muted" style="margin:0">Deadline: ${x.horas} hours from acceptance.</p>${acciones}</div>`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Pruebas de arte</h1>
-  <p class="intro">Así prueban los estudios a un junior: un brief <b>en inglés</b>, 48–72 horas y entregables concretos. Practica aquí para que la real no te agarre en frío. Al terminar, sube tu entrega a <b>Crítica</b>.</p>
+  
+  
   ${activa?`<div class="box" style="border-color:var(--accent)"><span class="lbl">Prueba en curso</span><b class="cotbig" data-limite="${activa.limite}">${cuentaAtras(activa.limite)}</b>
     <p style="margin:0"><b>${esc(activa.estudio)}</b> · ${esc(activa.puesto)}</p>
     <div class="prow"><button class="btn pri" data-act="prueba-entregar" data-id="${activa.id}">Entregar y pedir crítica</button>${S.P[activa.pid]?`<button class="btn" data-act="abrir" data-id="${esc(activa.pid)}">Abrir proyecto</button>`:''}<button class="btn ghost" data-act="prueba-abandonar" data-id="${activa.id}">${S.confirmLi===activa.id?'¿Abandonar?':'Abandonar'}</button></div></div>`
@@ -2823,8 +2759,8 @@ function vMensajes(){
   const texto=S.msgTexto??t.en(v);
   const f=(k,lab,ph)=>`<div class="field"><label for="ms-${k}">${lab}</label><input type="text" id="ms-${k}" data-msg="${k}" value="${esc(v[k]||'')}" placeholder="${ph}"></div>`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mensajes en inglés</h1>
-  <p class="intro">Plantillas profesionales para estudios y clientes internacionales. Llena los datos, ajusta el texto y cópialo. Nada se envía desde aquí: tú lo mandas.</p>
+  
+  
   <div class="stepper">${MSGS.map(x=>`<button class="step ${x.k===t.k?'on':''}" data-act="msg-tpl" data-k="${x.k}"><span class="st">${esc(x.n)}</span></button>`).join('')}</div>
   <div class="grid2">
     <div class="box"><h3>${esc(t.n)}</h3><p class="hint">${esc(t.es)}</p>
@@ -2856,8 +2792,8 @@ function bibGrid(){
 function vBiblioteca(){
   const b=S.bib||{},nombres=[...new Set(Object.values(S.P).map(p=>p.nombre))],temas=temasConocidos(),guardar=todasRefs().filter(({r})=>!r.bibGuardado||r.bibTema!==temaDeRef(r)).length;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Biblioteca</h1>
-  <p class="intro">Todas tus referencias de todos tus proyectos, con su porqué. Agrupadas por tema como carpetas: escribe o ajusta el tema de cada una y con los años se va armando una biblioteca visual enorme, no solo un archivo por proyecto.</p>
+  
+  
   <datalist id="temas-dl">${temas.map(t=>`<option value="${esc(t)}">`).join('')}</datalist>
   <div class="box"><div class="grid3" style="gap:10px">
     <div class="field"><label for="bib-q">Buscar</label><input type="text" id="bib-q" data-bib="q" value="${esc(b.q||'')}" placeholder="obsidiana, niebla, templo…"></div>
@@ -2890,8 +2826,8 @@ function vCalendario(){
     const pipe=pipeDe(p),hechas=pipe.filter((e,i)=>e.check.every((c,j)=>p.prod?.hechos?.[i+'-'+j])).length,faltan=pipe.length-hechas,dd=diasHasta(p.entrega);
     return {pid,p,faltan,dd,cada:dd>0&&faltan?Math.round(dd/faltan*10)/10:null}});
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Calendario</h1>
-  <p class="intro">Entregas de tus proyectos, pruebas de arte, seguimientos de postulaciones y tus propias fechas, en un solo lugar. La fecha de entrega de cada proyecto se pone en su encabezado.</p>
+  
+  
   ${vencidos.length?`<div class="banner"><b>Vencido:</b> ${vencidos.map(e=>esc(e.titulo)+' ('+fechaCorta(e.fecha)+')').join(' · ')}</div>`:''}
   ${ritmo.length?`<div class="box"><h3>Ritmo de producción</h3><ul class="list">${ritmo.map(r=>`<li><span><b>${esc(r.p.nombre)}</b><br><span class="muted">Faltan ${r.faltan} etapa${r.faltan===1?'':'s'} del pipeline · entrega ${fechaCorta(r.p.entrega)} (${r.dd<0?'vencida':r.dd===0?'hoy':'en '+r.dd+' días'})</span></span>
     <span class="nivel" style="${r.cada!=null&&r.cada<1.5?'color:var(--warn);border-color:var(--warn)':''}">${r.cada!=null?'1 etapa cada '+r.cada+' días':r.faltan?'sin tiempo':'listo'}</span></li>`).join('')}</ul></div>`:''}
@@ -2946,7 +2882,7 @@ async function cargarVacantes(forzar){
     try{S.vac={...await window.PC_SHIM.vacantes()}}catch{S.vac={...(S.vac||{}),error:'No se pudo actualizar. Intenta de nuevo en un rato.'}}
   }
   if(S.vac)S.vac.cargando=false;
-  if(S.vista==='vacantes')renderMain();
+  if(enVista('vacantes'))renderMain();
 }
 function vVacantes(){
   const v=S.vac,f=S.vacF=S.vacF||{nivel:'todos',remoto:false,q:'',src:''},desc=new Set(S.ajustes.vacDesc||[]),ya=new Set(lista('postulaciones').map(x=>x.link));
@@ -2959,8 +2895,8 @@ function vVacantes(){
   items.sort((a,b)=>b.s-a.s||String(b.date).localeCompare(String(a.date)));
   const hace=v?.ts?Math.round((Date.now()-v.ts)/36e5):null;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Vacantes</h1>
-  <p class="intro">Vacantes de arte de <b>ArtStation, Hitmarker, RemoteOK, Remotive y Arbeitnow</b>, juntas y ordenadas por qué tanto encajan con tu perfil (concept, entornos, keyframes, visual development, ilustración; remoto y México suman). Todos los niveles: tú decides a cuál aplicar. Se actualizan <b>solas todos los días</b> y cada vez que entras si tienen más de 12 horas.</p>
+  
+  
   ${v?.sin?`<div class="banner">La búsqueda automática vive en tu app de GitHub. Aquí tienes las búsquedas de un clic.</div>`:`
   <div class="box"><div class="prow" style="justify-content:space-between">
     <span class="muted">${v?.actualizando?'Buscando en todas las bolsas…':hace!=null?`Actualizado ${hace<1?'hace menos de 1 hora':'hace '+hace+' h'} · ${Object.entries(v.fuentes||{}).map(([k,n])=>`${k} ${n}`).join(' · ')}`:v?.cargando?'Cargando…':'Sin datos todavía'}</span>
@@ -3013,8 +2949,8 @@ function vRedes(){
   const semana=L.filter(x=>x.estado==='Publicado'&&diasHasta(x.fecha)>=-7&&diasHasta(x.fecha)<=0).length;
   const li=(x,f,ph,type='text')=>`<input type="${type}" id="rs-${f}-${x.id}" data-li="posts|${x.id}|${f}" value="${esc(x[f]||'')}" placeholder="${ph}">`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Plan de publicación</h1>
-  <p class="intro">Los reclutadores y directores de arte te encuentran por <b>ArtStation</b> e <b>Instagram</b>. Publicar con constancia (2–3 veces por semana) y mostrando proceso vale más que subir mucho de golpe. Cada publicación aparece en tu Calendario.</p>
+  
+  
   <div class="stats"><div class="stat"><b>${semana}</b><span>publicadas en los últimos 7 días</span></div><div class="stat"><b>${L.filter(x=>x.estado!=='Publicado'&&x.fecha>=hoy).length}</b><span>próximas</span></div><div class="stat"><b>${L.filter(x=>x.estado==='Publicado').length}</b><span>publicadas en total</span></div></div>
   <div class="box"><div class="prow"><button class="btn pri" data-act="rs-plan">Armar plan de 4 semanas</button><button class="btn" data-act="rs-add">＋ Publicación</button>
     <a class="btn ghost" href="https://www.instagram.com/sebasalvarez.art/" target="_blank" rel="noopener">Tu Instagram ↗</a><a class="btn ghost" href="https://www.artstation.com/ssebasalvarez" target="_blank" rel="noopener">Tu ArtStation ↗</a></div>
@@ -3042,8 +2978,8 @@ function vCobros(){
   const porCobrar=L.filter(c=>c.estado!=='Cancelado').reduce((n,c)=>n+Math.max(0,aMxn(c.total-cobroPagado(c),c.mon)),0);
   const anio=hoyKey().slice(0,4),ingresosAnio=L.reduce((n,c)=>n+(c.pagos||[]).filter(p=>(p.fecha||'').startsWith(anio)).reduce((m,p)=>m+aMxn(p.monto,c.mon),0),0);
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cobros</h1>
-  <p class="intro">Qué te debe cada cliente, anticipos y pagos. Se crea un cobro desde una cotización aceptada (Cotizador → Historial) o a mano. Todo se convierte a MXN con tus tipos de cambio.</p>
+  
+  
   <div class="stats"><div class="stat"><b>${mxn(ingresosMes)}</b><span>cobrado este mes</span></div><div class="stat"><b>${mxn(porCobrar)}</b><span>por cobrar</span></div><div class="stat"><b>${mxn(ingresosAnio)}</b><span>cobrado en ${anio}</span></div></div>
   <div class="box"><h3>Nuevo cobro</h3><div class="grid3" style="gap:10px">
     <div class="field"><label for="cb-cliente">Cliente</label><input type="text" id="cb-cliente"></div>
@@ -3080,8 +3016,8 @@ function vRuta(){
   const total=Object.values(RUTA).flat().length,hechos=Object.values(r).filter(v=>v==='Terminado').length;
   const link=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ruta de aprendizaje</h1>
-  <p class="intro">Libros, cursos y canales de referencia en la industria, ordenados por tus puntos más débiles (según tus críticas y tu evaluación). Hazlos de uno en uno y aplícalos en el Estudio diario.</p>
+  
+  
   <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
   ${skills.map((k,i)=>`<div class="box"><div class="prow" style="justify-content:space-between"><h3>${i<3?`<span style="color:var(--accent)">Prioridad ${i+1} · </span>`:''}${esc(nombre(k))}</h3></div>
     <ul class="list">${RUTA[k].map(([tipo,t,a])=>{const key=k+'|'+t,e=r[key]||'Pendiente';return `<li style="grid-template-columns:1fr auto"><span><span class="tag" style="--lc:var(--ink3)">${tipo}</span> <b>${esc(t)}</b> · <span class="muted">${esc(a)}</span></span>
@@ -3105,9 +3041,9 @@ function vContratos(){
   const c=contratoDraft(),hist=S.cotHist?.lista||[];
   const f=(k,lab,ph='')=>`<div class="field"><label for="ct2-${k}">${lab}</label><input type="text" id="ct2-${k}" data-ctr="${k}" value="${esc(c[k])}" placeholder="${ph}"></div>`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Contratos</h1>
+  
   <div class="banner">Plantilla de punto de partida, no asesoría legal. Para encargos grandes, cesión de derechos o clientes corporativos, que la revise un abogado.</div>
-  <p class="intro">Nunca empieces un encargo sin algo firmado, aunque sea por correo. Llénalo desde una cotización o a mano, en español o inglés, y descárgalo para firmar.</p>
+  
   <div class="grid2">
     <div class="box"><h3>Datos</h3>
       <div class="prow"><div class="stepper" style="padding:0">${[['es','Español'],['en','English']].map(([k,n])=>`<button class="step ${c.idioma===k?'on':''}" data-act="ctr-idioma" data-v="${k}"><span class="st">${n}</span></button>`).join('')}</div>
@@ -3139,8 +3075,8 @@ function vAdaptar(){
   const cumple={fuerte:'var(--ok)',sí:'var(--ok)',si:'var(--ok)',necesita_evidencia:'var(--c-tecnica)',parcial:'var(--c-tecnica)',falta:'var(--warn)',no:'var(--warn)'};
   const VERE_LBL={fuerte:'Fuerte',necesita_evidencia:'Necesita evidencia',falta:'Falta',sí:'Sí',si:'Sí',parcial:'Parcial',no:'No'};
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Adaptar a una vacante</h1>
-  <p class="intro">Pega la vacante y el asesor la compara con tu portafolio: qué tanto encajas, qué piezas poner primero para <b>ese</b> estudio, qué te falta y tu carta de presentación en inglés. Un portafolio adaptado vale más que diez postulaciones genéricas.</p>
+  
+  
   <div class="box"><div class="grid3" style="gap:10px">
     <div class="field"><label for="adp-estudio">Estudio</label><input type="text" id="adp-estudio" data-adp="estudio" value="${esc(d.estudio)}"></div>
     <div class="field"><label for="adp-puesto">Puesto</label><input type="text" id="adp-puesto" data-adp="puesto" value="${esc(d.puesto)}"></div>
@@ -3202,8 +3138,8 @@ function nomDraft(){return S.nom=S.nom||{para:'Personaje',pid:S.cur&&S.P[S.cur]?
 function vNombres(){
   const d=nomDraft(),favs=S.ajustes.nombresFav||[],r=S.ai.nombres2?.data,p=S.P[d.pid];
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Nombres y títulos</h1>
-  <p class="intro">Un buen título hace que un proyecto se recuerde y se busque. Aquí nombras todo: proyectos, personajes, criaturas, lugares, armas, piezas y series. Elige qué nombras, da contexto y el tono, y quédate con tus favoritos.</p>
+  
+  
   <div class="grid2">
     <div class="box"><h3>Qué vas a nombrar</h3>
       <div class="stepper" style="padding:0;flex-wrap:wrap">${NOM_PARA.map(x=>`<button class="step ${d.para===x?'on':''}" data-act="nom-para" data-v="${esc(x)}"><span class="st">${esc(x)}</span></button>`).join('')}</div>
@@ -3259,8 +3195,8 @@ function vGaleria(){
   const items=f?g.filter(x=>x.tipo===f||x.pid===f):g;
   const busy=S.critBusy;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis ilustraciones</h1>
-  <p class="intro">Todo lo que haces, esté o no en un proyecto. Cada ilustración alimenta <b>Mi estilo</b> y <b>Mi nivel</b>, puede recibir <b>crítica</b> y la puedes proponer a tu <b>portafolio</b>. También puedes pedirme en una conversación con Claude que las revise todas.</p>
+  
+  
   ${syncBox()}
   <div class="prow"><span class="muted">Sube viejas y actuales y ponles año: con eso la app mide tu estilo y tu evolución.</span><button class="btn sm" data-act="vista" data-v="estilo">Ver mi estilo y evolución →</button></div>
   <div class="drop" id="drop-gal">
@@ -3299,7 +3235,6 @@ function vCarpetas(p){
   const grupos=p.grupos||[],g=grupos.includes(S.carpG)?S.carpG:'',ps=piezasGrupo(p,g);
   const pr=(p.procesos||[]).filter(x=>(x.grupo||'')===g).at(-1),d=pr?.data;
   return `
-  <p class="intro">Sube cada etapa en su carpeta: así el asesor ve tu <b>proceso completo</b>, no solo el resultado. La <b>crítica de proceso</b> compara boceto → grises → versiones → final y te dice qué mejoró, qué se perdió y qué cambiar en tu método.</p>
   ${syncBox()}
   <div class="prow" style="justify-content:space-between">
     <div class="stepper" style="padding:0;flex-wrap:wrap"><button class="step ${!g?'on':''}" data-act="carp-g" data-v=""><span class="st">General · ${piezasGrupo(p,'').length}</span></button>${grupos.map(x=>`<button class="step ${g===x?'on':''}" data-act="carp-g" data-v="${esc(x)}"><span class="st">${esc(x)} · ${piezasGrupo(p,x).length}</span></button>`).join('')}</div>
@@ -3801,7 +3736,6 @@ function vProduccion(p){
   const hechos=(i)=>pipe[i].check.filter((c,j)=>pr.hechos?.[i+'-'+j]).length;
   const k='guia-'+et;
   return `
-  <p class="intro">El pipeline de un estudio para <strong>${esc(p.tipo)}</strong>, paso a paso. En cada etapa: <strong>qué entregar</strong>, el checklist y <strong>la pregunta de diseño</strong>. Diseñar es decidir; dibujar viene después.</p>
   <div class="stepper">${pipe.map((s,i)=>{const h=hechos(i),t=s.check.length;return `<button class="step ${i===et?'on':''} ${h===t?'done':''}" data-act="etapa" data-i="${i}"><span class="sn">${h===t?'✓':i+1}</span><span class="st">${esc(s.n)}</span></button>`}).join('')}</div>
   <div class="grid2">
     <div class="box"><span class="lbl">Etapa ${et+1} de ${pipe.length}</span><h3>${esc(e.n)}</h3>
@@ -3856,7 +3790,7 @@ async function optimizarGaleria(){
     for(const v of viejos)if(!usado.includes(v))try{await S.assets.delete?.(v)}catch{}
   }finally{desbloquear(5000);S.galOpt=false;setStatus('Guardado')}
   if(antes&&antes>despues)toast(`Ilustraciones optimizadas: ${(antes/1e6).toFixed(1)} MB → ${(despues/1e6).toFixed(1)} MB`);
-  if(S.vista==='galeria')renderMain()}
+  if(enVista('galeria'))renderMain()}
 async function subirPieza(files){
   const p=S.P[S.cur];if(!p)return;const f=[...files].find(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));
   if(!f){toast('Sube una imagen PNG, JPG o WEBP');return}
@@ -4822,7 +4756,7 @@ const sel1=(path,opts,val,id,vacio='—')=>`<select id="${id||'x-'+path.replace(
 function porqueBtn(tema,dec){return `<button class="btn ghost sm why" data-act="why" data-tema="${esc(tema)}"${dec?` data-dec="${dec}"`:''} title="Cuestionar esta decisión">¿Por qué?</button>`}
 
 function etapasHTML(p){const cur=p.etapa||'idea',i=ETAPAS_P.findIndex(e=>e[0]===cur),D=DX(p);
-  return `<div class="stages" role="list">${ETAPAS_P.map(([k,n,tab],j)=>`<button role="listitem" class="stg ${j<i?'past':''} ${k===cur?'cur':''}" data-act="etapa" data-v="${k}" data-tab="${tab}" title="Ir a ${n} (puedes regresar cuando quieras)">${n}</button>`).join('<span class="stg-ar">→</span>')}</div>
+  return `<details class="etapa-d"><summary class="lbl">Etapa: <b>${esc((ETAPAS_P[i]||ETAPAS_P[0])[1])}</b> · ver y cambiar</summary><div class="stages" role="list">${ETAPAS_P.map(([k,n,tab],j)=>`<button role="listitem" class="stg ${j<i?'past':''} ${k===cur?'cur':''}" data-act="etapa" data-v="${k}" data-tab="${tab}" title="Ir a ${n} (puedes regresar cuando quieras)">${n}</button>`).join('<span class="stg-ar">→</span>')}</div></details>
   ${D.alerta?`<div class="alerta"><p style="margin:0">${esc(D.alerta)}</p>${D.conflictos.length?`<div class="cfs">${D.conflictos.map(c=>conflHTML(p,c)).join('')}</div>`:''}</div>`:''}`}
 
 
@@ -5033,7 +4967,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   return `
   ${dnaHTML(p)}
   ${cerebroEstadoHTML(p,D)}
-  ${tratamientoHTML(p)}
   <div class="cerebro">
     <div class="c-main">
       <div class="box asist"><div class="prow" style="justify-content:space-between"><h3>Asistente · director de arte del proyecto</h3><span class="lbl">Local · sin IA de pago · usa solo tu contexto</span></div>${chatHTML(p)}
@@ -5046,9 +4979,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
       <div class="box"><h3>Preguntas abiertas <span class="lbl">${pq.filter(q=>!q.ok).length}</span></h3>
         <div class="prow"><input type="text" id="preg-t" placeholder="¿Qué tengo que resolver antes de diseñar?" data-enter="preg-add" style="flex:1 1 160px"><button class="btn sm" data-act="preg-add">＋</button></div>
         ${pq.length?`<ul class="list">${pq.map(q=>`<li class="${q.ok?'hecha':''}"><span>${esc(q.t)}</span><span class="prow"><button class="btn ghost sm" data-act="preg-ok" data-id="${q.id}">${q.ok?'Reabrir':'✓'}</button><button class="btn ghost sm" data-act="preg-del" data-id="${q.id}">✕</button></span></li>`).join('')}</ul>`:''}</div>
-      <div class="box"><h3>Evitar <span class="lbl">${(p.evitar||[]).length}</span></h3><p class="hint">Clichés y elementos descartados. Los vigilo en todo el proyecto.</p>
-        <div class="chips">${(p.evitar||[]).map((e,i)=>`<span class="chip">${esc(e)}<button data-act="evitar-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')}</div>
-        <input type="text" id="evitar-t" placeholder="Algo que NO quieres + Enter" data-enter="evitar-add"></div>
       <div class="box"><h3>Notas</h3>${tx('notas',p.notas,'Lo que se te ocurra; el asistente también puede guardar aquí.','x-notas',90)}</div>
     </div>
   </div>`}
@@ -5056,7 +4986,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
 /* ---------- CONCEPTO ---------- */
 function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto;
   return `
-  <p class="intro"><b>IDEA → FUNCIÓN → INTENCIÓN.</b> El diseño no se puede quedar en «se ve cool»: la <strong>función</strong> es la que justifica la forma.</p>
   <div class="box"><h3>¿Qué estoy diseñando?</h3>${chSel('que.tipo',QUE_TIPOS,q.tipo,false)}
     <div class="grid2"><div class="field"><label for="x-que-que">En una línea: ¿qué es?</label>${inp('que.que',q.que,'Una criatura marina que vive sola en una fosa abisal')}</div>
     <div class="field"><label for="x-que-tema">Tema: ¿de qué habla en el fondo?</label>${inp('que.tema',q.tema,'Aislamiento, culpa, fe, poder que se paga…')}</div></div></div>
@@ -5068,7 +4997,8 @@ function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto;
       ${[['silueta','Silueta','¿Qué lo hace reconocible en negro, a 5 cm?'],['proporcion','Proporción','Cabeza pequeña, masa en los hombros, piernas cortas…'],['anatomia','Anatomía / estructura','¿Qué la sostiene? Esqueleto, articulaciones, estructura…'],['geometria','Geometría','Forma básica que lo contiene: triángulo invertido, círculo…'],['lenguaje','Lenguaje de formas','Qué comunican las formas: curvas = orgánico, puntas = amenaza…']].map(([k,n,ph])=>`<div class="field"><label for="x-forma-${k}">${n}</label>${tx('forma.'+k,f[k],ph,null,44)}</div>`).join('')}</div>
     <div class="box"><h3>Material</h3><p class="hint">Cada material cuenta algo. Elige y pregúntate por qué.</p>${chSel('materiales',MATERIALES,p.materiales)}
       <div class="prow">${(p.materiales||[]).map(m=>porqueBtn('este material: '+m.toLowerCase())).join('')}</div>
-      <div class="field"><label for="x-materialNota">Otros materiales / estado (oxidado, pulido, quemado…)</label>${tx('materialNota',p.materialNota,'Bronce con pátina verde, tela empapada de sal…',null,44)}</div></div>
+      <div class="field"><label for="x-materialNota">Otros materiales / estado (oxidado, pulido, quemado…)</label>${tx('materialNota',p.materialNota,'Bronce con pátina verde, tela empapada de sal…',null,44)}</div>
+      <div class="field"><label for="x-guia-mat">Material dominante (qué predomina en el diseño)</label>${tx('guia.materiales',(p.guia||{}).materiales,'Obsidiana pulida, piedra volcánica, oro martillado…','x-guia-mat',40)}</div></div>
   </div>
   <details class="box" ${c.nucleos.some(Boolean)||c.frase?'open':''}><summary><h3 style="display:inline">Núcleos y frase del concepto</h3></summary>
     <div class="nucleos">${c.nucleos.map((n,i)=>`<label class="nuc"><span>IDEA ${i+1}</span><input type="text" id="f-nuc-${i}" data-b="concepto.nucleos.${i}" value="${esc(n)}" placeholder="Idea ${i+1}"></label>`).join('')}</div>
@@ -5082,7 +5012,6 @@ function vivoFuncion(p){const f=(p.que?.funcion||'').trim();if(!f)return '<p cla
 /* ---------- ART DIRECTION ---------- */
 function vAD(p){
   return `
-  <p class="intro"><b>¿Qué quiero comunicar?</b> Los pilares son <strong>intenciones, no objetos</strong>: «La naturaleza reclama», no «árbol». Cada pilar dice qué comunica, cómo se ve y qué NO debe hacer.</p>
   <div class="box big-q"><h3>Frase central</h3><p class="hint">En una frase: ¿qué quiero que la gente entienda y sienta con este proyecto?</p>
     ${tx('ad',p.ad,'Que el poder se sienta sagrado y condenado a la vez: el dios sabe que su arma lo va a devorar.','f-ad',64)}<div data-vivo="ad">${vivoAD(p)}</div></div>
   <div class="pilares3">${p.pilares.map((x,i)=>`<div class="box pil"><span class="num">PILAR ${i+1}</span>
@@ -5114,7 +5043,6 @@ function vivoPilar(p,i){const x=p.pilares[i];if(!x.t.trim())return '';const O=[]
 /* ---------- TENSIÓN ---------- */
 function vTension(p){const T=p.tensiones||[],c=p.concepto;
   return `
-  <p class="intro"><b>¿Qué ideas están chocando?</b> Una antítesis sola «no tiene nada»: hazla consciente, decide quién domina y conviértela en <strong>decisiones visuales</strong>.</p>
   ${T.map((t,i)=>`<div class="box tens-b"><div class="tens-ab"><input type="text" id="x-t-a-${i}" data-b="tensiones.${i}.a" value="${esc(t.a)}" placeholder="A (ej. Naturaleza)"><span>↔</span><input type="text" id="x-t-b-${i}" data-b="tensiones.${i}.b" value="${esc(t.b)}" placeholder="B (ej. Tecnología)"><button class="btn ghost sm danger" data-act="tens-del" data-i="${i}" aria-label="Quitar tensión">✕</button></div>
     <div class="grid2"><div class="field"><label for="x-t-av-${i}">¿Cómo se ve ${esc(t.a||'A')}? (adjetivos visuales)</label>${inp(`tensiones.${i}.aVis`,t.aVis,'curvo, vivo, húmedo, verde',`x-t-av-${i}`)}</div>
       <div class="field"><label for="x-t-bv-${i}">¿Cómo se ve ${esc(t.b||'B')}?</label>${inp(`tensiones.${i}.bVis`,t.bVis,'rígido, frío, metálico, modular',`x-t-bv-${i}`)}</div></div>
@@ -5144,20 +5072,14 @@ function vivoTension(p,i){const t=(p.tensiones||[])[i];if(!t||!t.a||!t.b)return 
 /* ---------- MOOD ---------- */
 function vMood(p){const m=p.mood,t=tresMood(p);
   return `
-  <p class="intro"><b>¿Qué debe sentir el espectador?</b> La paleta sale de lo que escribes aquí: si cambias el mood, la sugerencia cambia contigo.</p>
   <div class="grid2">
     <div class="box"><h3>Emoción</h3><p class="hint">¿Qué quiero que sienta el espectador?</p>${tx('mood.emocion',m.emocion,'Reverencia con miedo; ganas de acercarse y de huir',null,50)}</div>
     <div class="box"><h3>Atmósfera</h3><p class="hint">¿Qué tipo de ambiente existe?</p>${tx('mood.atmosfera',m.atmosfera,'Silencio de templo abandonado, aire pesado de incienso',null,50)}</div>
-    <div class="box"><h3>Luz</h3><p class="hint">¿Cómo está iluminado?</p>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div>
     <div class="box"><h3>Clima</h3><p class="hint">¿Qué condiciones ambientales existen?</p>${tx('mood.clima',m.clima,'Humedad, humo, ceniza suspendida',null,50)}</div>
   </div>
-  ${lucesHTML(p)}
-  <div class="box"><h3>Color · relación cromática</h3>${chSel('mood.rel',MOOD_REL,m.rel,false)}${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,44)}</div>
   <div class="box"><h3>3 palabras de mood</h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
     <div data-vivo="sintesis">${vivoSintesis(p)}</div>
-    <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>
-  ${moodPaletaHTML(p)}
-  ${escHTML(p)}`}
+    <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>`}
 function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
       <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
     <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
@@ -5172,12 +5094,51 @@ function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
   <section class="panel">${({luzcolor:vLuzColor,refs:vRefs,board:vBoardTab,herr3d:vHerr3d}[S.tab])(p)}</section>`}
 function vLuzColor(p){const m=p.mood,t=tresMood(p);
   return `<p class="intro"><b>Luz y color sin proyecto.</b> Arma una escena de luz, saca paletas funcionales para un personaje, un prop o una pieza clave, y compara tu imagen. Si quieres que la paleta responda a un mood, escríbelo abajo; si no, juega con la luz y los colores a mano.</p>
-  <div class="box"><h3>Qué sensación quieres <span class="lbl">opcional</span></h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
-    <div class="grid2"><div class="field"><label for="x-mood-luz">Cómo está iluminado</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div><div class="field"><label for="x-mood-color">Color y relación cromática</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,50)}</div></div></div>
-  ${mapaLuzHTML(p)}${moodPaletaHTML(p)}${escHTML(p)}`}
+  <div class="box"><h3>Qué sensación quieres <span class="lbl">opcional</span></h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div></div>
+  ${luzColorHTML(p)}`}
 function vHerr3d(){return `<p class="intro"><b>Referencia 3D.</b> Cuerpos con anatomía, cabeza de Loomis, formas básicas y tus propios modelos, con la luz que tú controlas. Se procesa en tu navegador.</p>
   <div class="ht-row"><button class="ht-c ht-3" data-act="v3d-abrir" data-m="maniqui"><b>Cuerpo</b><span>Cinco tipos de cuerpo con anatomía, para posar y estudiar luz.</span></button><button class="ht-c ht-p" data-act="v3d-abrir" data-m="maniqui" data-t="pose"><b>Poses</b><span>Ponlo en la pose de una imagen, o elige una de las 9 de partida.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="loomis"><b>Cabeza de Loomis</b><span>Planos y líneas guía para estudiar la cabeza con luz.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="formas"><b>Formas básicas</b><span>Esfera, cubo, cilindro, cono y más, para ver cómo cae la sombra.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="mio"><b>Mis modelos</b><span>Carga un .glb, .obj o .fbx; si trae esqueleto, lo posas.</span></button></div>
   <p class="hint">Con «Añadir al moodboard» la imagen queda en <b>Referencias y moodboard</b> de esta sección. También puedes descargarla en PNG o copiarla.</p>`}
+function luzColorHTML(p){const m=p.mood,l=p.lenguaje||{},g=p.guia||{};
+  return `<div class="grid2">
+    <div class="box"><h3>Luz</h3><div class="field"><label for="x-mood-luz">¿Cómo está iluminado?</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div>
+      <div class="field"><label for="x-guia-luz">¿Qué iluminación refuerza el concepto?</label>${tx('guia.luz',g.luz,'Una fuente dominante, contraluz; la sombra se come los bordes…','x-guia-luz',50)}</div></div>
+    <div class="box"><h3>Color</h3>${chSel('mood.rel',MOOD_REL,m.rel,false)}<div class="field"><label for="x-mood-color">Relación cromática y color</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,44)}</div>
+      <div class="grid2" style="gap:8px"><div class="field"><label for="x-lenguaje-colorDom">Domina</label>${inp('lenguaje.colorDom',l.colorDom,'negro obsidiana')}</div><div class="field"><label for="x-lenguaje-colorAcento">Acento</label>${inp('lenguaje.colorAcento',l.colorAcento,'carmesí')}</div></div></div>
+  </div>
+  ${lucesHTML(p)}${escHTML(p)}${mapaLuzHTML(p)}${moodPaletaHTML(p)}`}
+function pgProyecto(p){return pgSec('proyecto','mapa','Mapa del proyecto','Todo en un lugar: lo editas aquí y cambia en todo el proyecto.',vMapa(p),true)
+  +pgSec('proyecto','asistente','Asistente y coherencia','Director de arte local, auditoría, decisiones y preguntas abiertas.',vCerebro(p),false)
+  +pgSec('proyecto','falta','Qué falta','El método paso a paso, en orden.',vSalud(p),false)}
+function pgConcepto(p){return pgSec('concepto','brief','Encargo','Reescríbelo con tus palabras: si no cabe en un párrafo, aún no sabes qué buscar.',vBrief(p),true)
+  +pgSec('concepto','que','Qué diseñas y para qué','Idea → función → intención: la función justifica la forma.',vConcepto2(p),false)
+  +pgSec('concepto','tension','Tensión','Qué ideas chocan, quién domina y cómo se ve ese conflicto.',vTension(p),false)
+  +pgSec('concepto','ad','Dirección de arte','Los pilares son intenciones, no objetos.',vAD(p),false)
+  +pgSec('concepto','explorar','Explorar','Explora antes de casarte con una idea.',vExplorar(p),false)}
+function pgVisual(p){return pgSec('visual','mood','Mood','Qué debe sentir el espectador; la paleta sale de lo que escribes.',vMood(p),true)
+  +pgSec('visual','luz','Luz y color','Tu escena de luz, paletas funcionales y la revisión de tu imagen.',luzColorHTML(p),false)
+  +pgSec('visual','lenguaje','Lenguaje visual','De ideas a reglas que se pueden dibujar y revisar.',vLenguaje(p),false)
+  +pgSec('visual','personajes','Personajes','Cada uno con su paleta, armada con lo que escribes de él.',vPersonajes(p),false)
+  +pgSec('visual','mundo','Mundo','Haz que el mundo sea un personaje.',vMundo(p),false)}
+function pgRefs(p){return pgSec('refs','buscar','Buscar y moodboard','Busca, sube o pega imágenes y escribe el porqué de cada una.',vRefs(p),true)
+  +pgSec('refs','tablero','Tablero','Ordena todo sobre un lienzo libre y llévalo a PureRef.',vBoardTab(p),false)
+  +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p),false)}
+function pgCritica(p){return pgSec('critica','medir','Medir y críticas','Datos de tu boceto y la crítica que te doy en el chat.',vCritica2(p),true)
+  +pgSec('critica','carpetas','Carpetas de proceso','Sube cada etapa para que se vea el proceso completo.',vCarpetas(p),false)
+  +pgSec('critica','revision','Básicos de diseño','Revísalos en cada boceto y en el final.',vBasicos(p),false)}
+function pgEntrega(p){return pgSec('entrega','produccion','Producción','El pipeline de un estudio, paso a paso.',vProduccion(p),true)
+  +pgSec('entrega','laminas','Láminas y publicación','Hojas de producción y el paquete para publicar.',vLaminas(p),false)
+  +pgSec('entrega','hoja','Hoja del proyecto','Todo el proyecto en una página, lista para exportar.',vHoja(p),false)
+  +pgSec('entrega','cierre','Cierre','Qué aprendiste y el historial de versiones.',vRetro(p)+vVersiones(p),false)}
+const PRACT=[['hoy','Hoy · 30 minutos',()=>vDiario()],['retos','Retos de estudio',()=>vRetos()],['atorado','Estoy atorado',()=>vDesatorar()],['plan','Plan de 7 días para mi punto débil',()=>vPotenciar()]];
+const APREN=[['ruta','Ruta de aprendizaje',()=>vRuta()],['recursos','Recursos y pinceles',()=>vRecursos()]];
+const PGV={inicio:()=>vInicio()+pgSec('v:inicio','calendario','Calendario','Entregas, pruebas, seguimientos y tus propias fechas.',vCalendario(),false),
+  biblioteca:()=>pgSec('v:biblioteca','referencias','Mis referencias','Todas las de tus proyectos, agrupadas por tema.',vBiblioteca(),true)+pgSec('v:biblioteca','ilustraciones','Mis ilustraciones','Todo lo que haces, esté o no en un proyecto.',vGaleria(),false)+pgSec('v:biblioteca','artistas','Artistas a seguir','Los que estudias y los que te inspiran.',vArtistas(),false)+pgSec('v:biblioteca','nombres','Nombres y títulos','Para proyectos, personajes, criaturas, lugares y piezas.',vNombres(),false),
+  estudiar:()=>pgSec('v:estudiar','practicar','Practicar','Elige qué necesitas hoy: ejercicio, reto, desatorarte o reforzar tu punto débil.',pgModos('practicar',PRACT),true)+pgSec('v:estudiar','aprender','Aprender','Libros, cursos y canales según tus puntos débiles, y dónde conseguir pinceles y assets.',pgModos('aprender',APREN),false)+pgSec('v:estudiar','taller','Tareas del taller','Lo que te piden en tu taller o asesoría, hasta entregarlo.',vTaller(),false),
+  portafolio:()=>pgSec('v:portafolio','piezas','Portafolio','Propón piezas y apruébalas para tu portafolio.',vPortafolio(),true)+pgSec('v:portafolio','reclutador','Revisión de reclutador','Tu portafolio como lo ve un estudio: la prueba de los 10 segundos.',vReclutador(),false)+pgSec('v:portafolio','formatos','Formatos y entrega','En qué tamaño trabajar y cómo exportar cada pieza.',vFormatos(),false)+pgSec('v:portafolio','cv','Mi CV','Mismo lenguaje visual que tu portafolio.',vCV(),false)+pgSec('v:portafolio','publicar','Plan de publicación','Qué publicar y cuándo para que te encuentren.',vRedes(),false),
+  trabajo:()=>pgSec('v:trabajo','vacantes','Vacantes','Vacantes de arte, con qué tanto encajas.',vVacantes(),true)+pgSec('v:trabajo','adaptar','Adaptar a una vacante','Qué poner primero, qué te falta y tu carta de presentación.',vAdaptar(),false)+pgSec('v:trabajo','postulaciones','Postulaciones','Cada estudio al que aplicas y cuándo dar seguimiento.',vPostulaciones(),false)+pgSec('v:trabajo','pruebas','Pruebas de arte','Cómo prueban los estudios a un junior.',vPruebas(),false)+pgSec('v:trabajo','mensajes','Mensajes en inglés','Plantillas para estudios y clientes internacionales.',vMensajes(),false),
+  dinero:()=>pgSec('v:dinero','trabajos','Trabajos','Cada cliente de un vistazo: cotizado, contrato, cobrado.',vTrabajos(),true)+pgSec('v:dinero','cotizador','Cotizador freelance','',vCotizador(),false)+pgSec('v:dinero','cobros','Cobros','Qué te debe cada cliente, anticipos y pagos.',vCobros(),false)+pgSec('v:dinero','contratos','Contratos','Nunca empieces un encargo sin algo firmado.',vContratos(),false),
+  yo:()=>pgSec('v:yo','metas','Mis metas','Tu meta profesional, explícita y propia.',vMetas(),true)+pgSec('v:yo','nivel','Mi nivel','Tu portafolio contra el estándar de la industria, con plan por meses.',vNivel(),false)+pgSec('v:yo','estilo','Mi estilo','Tu voz como artista se forma decidiendo, no copiando.',vEstilo(),false)+pgSec('v:yo','principios','Mis principios','Lo que no se negocia en ningún proyecto.',vPrincipios(),false)+pgSec('v:yo','progreso','Mi progreso','Dónde te saltas el método y lo que has aprendido.',vProgreso(),false)};
 function vivoSintesis(p){const t=tresMood(p).filter(Boolean);if(t.length<3)return `<p class="nd-box sm">El proyecto debe sentirse: ${t.map(esc).join(', ')||'___'}${t.length<3?', ___':''}. (Faltan ${3-t.length})</p>`;
   const g=t.filter(w=>GENERICOS.includes(nz(w)));return `<p class="sintesis">El proyecto debe sentirse: <b>${esc(t[0])}</b>, <b>${esc(t[1])}</b> y <b>${esc(t[2])}</b>.</p>${g.length?`<p class="nd-box sm">«${esc(g.join('», «'))}» es genérico: ¿qué tipo de ${esc(g[0])}?</p>`:''}`}
 function vivoPalSug(p){const s=paletaSugerida(p);
@@ -5194,14 +5155,9 @@ function vivoPalCheck(p){const pl=paletaLectura(p.mood.paleta||[]);if(!pl)return
 /* ---------- LENGUAJE VISUAL + TÉCNICA ---------- */
 function vLenguaje(p){const l=p.lenguaje||{},g=p.guia||{},c=reglasCandidatas(p);
   return `
-  <p class="intro"><b>De ideas a reglas.</b> Aquí la intención se vuelve algo que se puede dibujar y revisar: formas, silueta, escala, material, color, luz y composición.</p>
   <div class="grid2">
     <div class="box"><h3>Forma · ¿qué formas dominan?</h3>${chSel('lenguaje.formas',FORMAS_V,l.formas)}${tx('guia.formas',g.formas,'Triángulos y verticales para el poder; curvas para la amenaza…','x-guia-formas',44)}</div>
-    <div class="box"><h3>Silueta · ¿qué lo hace reconocible?</h3>${tx('forma.silueta',p.forma?.silueta,'Hombros enormes y cabeza diminuta; la serpiente rompe el contorno…','x-lg-sil',56)}</div>
     <div class="box"><h3>Escala · ¿qué relación hay entre elementos?</h3>${tx('lenguaje.escala',l.escala,'El dios mide 3 veces un humano; el templo lo empequeñece a él…',null,50)}</div>
-    <div class="box"><h3>Material · ¿qué predomina?</h3>${chSel('materiales',MATERIALES,p.materiales)}${tx('guia.materiales',g.materiales,'Obsidiana pulida, piedra volcánica, oro martillado…','x-guia-mat',40)}</div>
-    <div class="box"><h3>Color · dominante y acentos</h3><div class="grid2" style="gap:8px"><div class="field"><label for="x-lenguaje-colorDom">Domina</label>${inp('lenguaje.colorDom',l.colorDom,'negro obsidiana')}</div><div class="field"><label for="x-lenguaje-colorAcento">Acento</label>${inp('lenguaje.colorAcento',l.colorAcento,'carmesí')}</div></div></div>
-    <div class="box"><h3>Luz · ¿qué iluminación refuerza el concepto?</h3>${tx('guia.luz',g.luz,'Una fuente dominante, contraluz; la sombra se come los bordes…','x-guia-luz',50)}</div>
     <div class="box"><h3>Composición · ¿cómo se organiza la imagen?</h3>${tx('lenguaje.composicion',l.composicion,'Cámara baja, figura en el tercio derecho, diagonales hacia el foco…',null,50)}</div>
   </div>
   <div class="box"><h3>Reglas visuales <span class="lbl">${(l.reglas||[]).length}</span></h3><p class="hint">Lo que gobierna cada decisión del proyecto. Pocas y claras.</p>
@@ -5263,7 +5219,6 @@ function refExtra(p,r){const tipo=r.tipoRef||'',sub=tipo==='primaria'?REF_PRIM:t
 /* ---------- EXPLORACIÓN: variantes, azar intencional, kill your darlings ---------- */
 function vExplorar(p){const V=variantes(p),rows=['Forma','Proporción','Material','Color','Luz','Composición','Render'],c=S.dxAzar,lk=S.dxLocks||{};
   return `
-  <p class="intro"><b>Explora antes de casarte con una idea.</b> Aquí no hay ganadora automática: ves qué cambia visualmente en cada dirección y tú decides.</p>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Direcciones conceptuales</h3><span class="lbl">Mismo contexto, distinto tratamiento</span></div>
     <div class="tbl vars"><table><thead><tr><th></th>${V.map(v=>`<th><b>${v.k}</b> ${esc(v.n)}</th>`).join('')}</tr></thead><tbody>
     ${rows.map(r=>`<tr><th>${r}</th>${V.map(v=>`<td>${esc(v.c[r]||'')}</td>`).join('')}</tr>`).join('')}
@@ -5410,7 +5365,7 @@ async function accionDir(a,el,p,ds){
       p.criticas.push({tipo:'Desbloqueo',ts:Date.now(),titulo:S.blk?.nofunciona||'',r:{Preguntas:r.preguntas,Experimentos:r.experimentos,Direcciones:r.direcciones,Contradicciones:r.contra}});r.guardado=true;marcar();abrirBloqueado();renderMain();break}
     case 'tens-add':{const [A,B]=(ds.v||'|').split('|');p.tensiones.push({a:A||'',b:B||'',aVis:'',bVis:'',como:'',domina:''});marcar();renderMain();break}
     case 'tens-del':{const k='t'+ds.i;if(S.confirmLi!==k){S.confirmLi=k;el.textContent='¿Quitar?';return}S.confirmLi=null;p.tensiones.splice(+ds.i,1);marcar();renderMain();break}
-    case 'regla-add':{const v=ds.v;if(!v)return;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓';el.disabled=true;if(S.tab==='lenguaje')renderMain();break}
+    case 'regla-add':{const v=ds.v;if(!v)return;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓';el.disabled=true;if(S.tab==='visual')renderMain();break}
     case 'regla-add-t':{const v=$('#regla-t')?.value.trim();if(!v)return;p.lenguaje.reglas.push(v);marcar();renderMain();$('#regla-t')?.focus();break}
     case 'regla-del':p.lenguaje.reglas.splice(+ds.i,1);marcar();renderMain();break;
     case 'pal-usar':{const sg=paletaSugerida(p).pal;p.mood.paleta=sg.map(c=>c.hex);p.mood.paletaRoles=sg.map(c=>c.rol);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada: ajústala a tu gusto');break}
@@ -5823,8 +5778,8 @@ function vReclutador(){const R=S.rec,chk=S.ajustes.recCheck||{},tags=S.ajustes.r
       <div class="box"><h3>Qué te falta</h3>${X.falta.length?`<ul class="why-l">${X.falta.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:'<p class="ok-box">Tienes la cantidad base para tu especialidad.</p>'}</div></div>
     <div class="box"><h3>Coherencia de estilo · etiqueta cada pieza</h3><p class="hint">Mide clave, contraste, saturación, temperatura y reparto de detalle de todas juntas. Las marcadas se salen del promedio en 2 o más medidas. Es una señal, no un veredicto: una pieza distinta puede ser intencional.</p>
       <div class="rcs">${X.items.map(it=>`<figure class="rc ${it.fuera?'fuera':''}"><img src="${it.mini}" alt="" loading="lazy"><figcaption>${it.fuera?'<b style="color:var(--warn)">Se sale</b> · ':''}<select data-rectag="${esc(it.key)}" aria-label="Tipo"><option value="">Tipo…</option>${REC_TIPOS.map(t=>`<option ${it.tipo===t?'selected':''}>${t}</option>`).join('')}</select></figcaption></figure>`).join('')}</div></div>`}
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Revisión de reclutador</h1>
-  <p class="intro">Tu portafolio como lo ve un estudio: la prueba de los 10 segundos, qué quitar, qué te falta para <strong>Environment & Keyframe</strong> y si todo habla el mismo idioma visual. Mide tus imágenes de verdad; lo demás es tu checklist.</p>
+  return `
+  
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Tu portafolio</h3><span class="prow"><input type="text" data-aj="portafolioUrl" id="rec-url" value="${esc(S.ajustes.portafolioUrl||PF_URL_DEF)}" style="width:320px;max-width:100%"><button class="btn pri" data-act="rec-go">${R?.items?'Volver a revisar':'Revisar mi portafolio'}</button></span></div>
     <p class="hint">Lee las imágenes de tu portafolio (en su orden) y las últimas de Mis ilustraciones.</p></div>
   ${body}
@@ -5832,7 +5787,7 @@ function vReclutador(){const R=S.rec,chk=S.ajustes.recCheck||{},tags=S.ajustes.r
 
 /* ---------- vista de láminas (proyecto) ---------- */
 function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=sel=>`<option value="">— sin imagen —</option>${pz.map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.etapa)} · ${fecha(x.creado)}${x.grupo?' · '+esc(x.grupo):''}</option>`).join('')}`,pub=S.pub=S.pub||{img:'',titulo:''};
-  return `<p class="intro"><b>Presentación de estudio.</b> Hojas con el formato que se usa en producción, el breakdown de tu proceso y el paquete listo para publicar. <button class="btn ghost sm" data-act="vista" data-v="formatos">¿En qué formato? →</button></p>
+  return `
   <div class="box"><h3>Plantillas de producción · 4K</h3>
     <div class="chips">${LAM_TIPOS.map(([k,n])=>`<button class="ch ${d.tipo===k?'on':''}" data-act="lam-tipo" data-v="${k}">${n}</button>`).join('')}</div>
     <div class="prow" style="align-items:flex-end">
@@ -5914,8 +5869,8 @@ function fmtCheck(k){const {w,h,nombre,tipo,peso}=k,largo=Math.max(w,h),O=[],cm=
   if(/jpe?g/.test(tipo||'')&&largo<1920)O.push(['warn','JPG pequeño: si tienes el PSD, exporta de nuevo desde el maestro.']);
   return O}
 function vFormatos(){const d=fmtDraft(),R=fmtRecomendacion(d),k=S.fmtK,piezas=[...Object.entries(S.P).flatMap(([pid,p])=>(p.piezas||[]).map(x=>({x,label:`${p.nombre} · ${x.etapa}`}))),...(S.ajustes.galeria||[]).map(x=>({x,label:'Mis ilustraciones · '+(x.titulo||x.tipo||'')}))];S.fmtPz=piezas;
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Formatos y entrega</h1>
-  <p class="intro">En qué tamaño trabajar, en qué formato guardar y cómo exportar cada pieza para que luzca: HD, 4K, 8K, PSD, Procreate, PNG, JPG, TIFF, según su destino.</p>
+  return `
+  
   <div class="box"><h3>¿Para dónde es la pieza?</h3>${`<div class="chips">${FMT_DEST.map(([k2,n])=>`<button class="ch ${d.dest.includes(k2)?'on':''}" data-act="fmt-dest" data-v="${k2}">${n}</button>`).join('')}</div>`}
     <span class="lbl">Tipo de pieza</span><div class="chips">${FMT_TIPO.map(([k2,n])=>`<button class="ch ${d.tipo===k2?'on':''}" data-act="fmt-tipo" data-v="${k2}">${n}</button>`).join('')}</div>
     <span class="lbl">Herramienta</span><div class="chips">${FMT_HERR.map(([k2,n])=>`<button class="ch ${d.herr===k2?'on':''}" data-act="fmt-herr" data-v="${k2}">${n}</button>`).join('')}</div></div>
@@ -5975,7 +5930,7 @@ async function cargarRecursos(forzar){if(!S.db){S.recu={items:[],sin:true};rende
   const viejo=!S.recu?.ts||Date.now()-S.recu.ts>24*36e5;
   if(window.PC_SHIM?.recursos&&(forzar||viejo)){S.recu={...(S.recu||{}),actualizando:true};renderMain();
     try{await window.PC_SHIM.recursos();const d=await S.db.doc('recursos/cache').get();if(d.exists)S.recu={...d.data()}}catch{S.recu={...(S.recu||{}),error:'No se pudo actualizar. Intenta más tarde.'}}}
-  if(S.recu)S.recu.cargando=false;if(S.vista==='recursos')renderMain()}
+  if(S.recu)S.recu.cargando=false;if(enVista('recursos'))renderMain()}
 function recCatDe(x){return /HDRI/.test(x.tipo)?'HDRI':/Textura|Material/.test(x.tipo)?'Texturas / materiales':/Add-on/.test(x.tipo)?'Add-ons':/Pincel/.test(x.tipo)?'Blender':/Modelo/.test(x.tipo)?'Modelos 3D':'Blender'}
 function vRecursos(){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''},R=S.recu||{},favs=S.ajustes.recursosFav||[],qn=nz(f.q);
   const pasa=(cat,precio,txt)=>(f.cat==='Todos'||f.cat===cat||(f.cat==='Blender'&&/Blender/.test(txt))||(f.cat==='ZBrush'&&/ZBrush/.test(txt)))&&(f.precio==='Todos'||(f.precio==='Gratis'?/Gratis|Incluido/.test(precio):/[Pp]aga|suscrip/.test(precio)))&&(!qn||nz(txt).includes(qn));
@@ -5985,8 +5940,8 @@ function vRecursos(){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''},R=
   const card=x=>{const fav=favs.some(v=>v.id===x.id);return `<div class="rcur"><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.thumb?`<img src="${esc(x.thumb)}" alt="" loading="lazy">`:`<div class="rcur-ph">${esc(x.fuente)}</div>`}</a>
     <div class="rcur-b"><b>${esc(corto(x.nombre,48))}</b><span class="muted">${esc(x.tipo)} · ${esc(x.fuente)}</span><span class="tagp ${/Gratis/.test(x.precio)?'free':''}">${esc(x.precio)}</span>${x.licencia?`<small class="muted">${esc(corto(x.licencia,40))}</small>`:''}
     <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a><button class="btn ghost sm" data-act="recu-fav" data-id="${esc(x.id)}">${fav?'★':'☆'}</button></div></div></div>`};
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Recursos y pinceles</h1>
-  <p class="intro">Pinceles para Photoshop y Procreate, cosas para <strong>Blender</strong> y <strong>ZBrush</strong>, texturas, HDRIs y modelos, <strong>de gratis a de paga</strong>. Las novedades se actualizan solas cada día desde Poly Haven, ambientCG, BlenderKit, Sketchfab y Blender Extensions. <button class="btn ghost sm" data-act="vista" data-v="potenciar">Usar mis recursos para mi punto débil →</button></p>
+  return `
+  
   <div class="box"><div class="chips">${REC_CATS.map(c=>`<button class="ch ${f.cat===c?'on':''}" data-act="recu-cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
     <div class="prow"><span class="lbl">Precio</span>${['Todos','Gratis','Paga'].map(c=>`<button class="ch xs ${f.precio===c?'on':''}" data-act="recu-precio" data-v="${c}">${c}</button>`).join('')}
       <input type="text" id="recu-q" data-recq="1" value="${esc(f.q)}" placeholder="Buscar: roca, jaguar, niebla…" style="flex:1 1 200px"></div></div>
@@ -6041,8 +5996,8 @@ function planDe(hab){const R=misRecursos().filter(r=>(r.habs||[]).includes(hab))
   const pool=[...R,...sug],dias=[];for(let d=0;d<7;d++){const k=ej[d%ej.length],r=pool[d%Math.max(1,pool.length)];dias.push({d:d+1,skill:k,ej:(EJERCICIOS[k]||[])[d%3]||'',rec:r,tip:r?tipsDe(r,hab)[0]:''})}
   return {R,sug,dias}}
 function vPotenciar(){const deb=S.ajustes.debiles||[],hab=S.potH||deb[0]||'color',P=planDe(hab),pl=S.ajustes.planDebil||{},hechos=(pl.hab===hab&&pl.hechos)||{},mis=S.ajustes.misRecursos||[],d=S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Potenciar mi punto débil</h1>
-  <p class="intro">Dime qué te falla y qué recursos tienes (pinceles, plugins, apps, libros, cursos). Te armo un plan de 7 días que usa <strong>tus</strong> recursos, con ejercicios concretos y cómo usar cada herramienta para esa habilidad.</p>
+  return `
+  
   <div class="box"><h3>¿Qué te falla?</h3><div class="chips">${HAB.map(([k,n])=>`<button class="ch ${deb.includes(k)?'on':''}" data-act="deb-tog" data-v="${k}">${n}</button>`).join('')}</div>
     <p class="hint">Lo que marques se vuelve prioridad en tu Estudio diario y en tu Ruta de aprendizaje.</p></div>
   <div class="box"><h3>Mis recursos <span class="lbl">${mis.length}</span></h3>
@@ -6192,9 +6147,9 @@ function refsParaTarea(t,p){if(!p)return [];const tem=temasDe(t.enunciado),pal=t
   return (p.refs||[]).map(r=>{const txt=nz([r.porque,r.fuente,(r.estudio||[]).join(' '),(r.aplica||[]).join(' ')].join(' '));let s=pal.filter(w=>txt.includes(w)).length*2;
     if(tem.some(([,n])=>n==='Vegetación')&&/vegeta|raic|raiz|liana|helecho|ceiba|hoja|musgo|selva|bromel|monstera|arbol/.test(txt))s+=5;if(r.capa==='p3'||r.capa==='mood')s+=1;return {r,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,12).map(x=>x.r)}
 function vTaller(){const L=S.ajustes.tareas=S.ajustes.tareas||[],t=tareaActiva(),p=t?S.P[t.pid]:null;
-  if(!t)return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Tareas del taller</h1><p class="intro">Escribe lo que te pidieron en tu taller o asesoría y la app te guía: requisitos, referencias de tu proyecto, cómo bajar la idea y feedback de cada boceto hasta que cumplas lo que se pide.</p>${nuevaTareaHTML()}`;
+  if(!t)return `${nuevaTareaHTML()}`;
   const hechos=t.bocetos.length,meta=Math.max(0,...t.reqs.map(r=>r.meta||0)),tem=temasDe(t.enunciado),R=refsParaTarea(t,p);
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Tareas del taller</h1>
+  return `
   <div class="chips">${L.map(x=>`<button class="ch ${x.id===t.id?'on':''}" data-act="tar-sel" data-id="${x.id}">${esc(corto(x.titulo,30))}${x.entrega?' · '+esc(x.entrega):''}</button>`).join('')}<button class="ch" data-act="tar-nueva">＋ Nueva tarea</button></div>
   ${S.tarNueva?nuevaTareaHTML():''}
   <div class="box big-q"><div class="prow" style="justify-content:space-between"><h3>1 · Lo que te pidieron</h3><span class="lbl">${p?'Proyecto: '+esc(p.nombre):'Sin proyecto'}${t.entrega?' · entrega '+esc(t.entrega):''}</span></div>
@@ -6371,7 +6326,6 @@ function vMapa(p){
       <label class="lbl" for="x-brief-una-frase">La frase del proyecto</label>${inp('brief.una.frase',p.brief.una?.frase,'Sujeto + lugar + sentimiento, en una frase')}
       <p class="mp-hilo" id="mp-hilo">${esc(M.hilo)}</p></div></div>
     <div class="mp-col"><span class="lbl">Cómo se ve y se siente</span>${[4,5,6,7].map(nd).join('')}</div></div>
-  ${mapaLuzHTML(p)}
   <div id="mp-panel">${mapaPanelHTML(p,M)}</div>`}
 function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');if(!w||!svg||!c||getComputedStyle(svg).display==='none')return;
   const W=w.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${W.width} ${W.height}`);
@@ -6384,7 +6338,7 @@ function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');i
     else{const out=aL?Math.min(a.x,b.x)-34:Math.max(a.x+a.w,b.x+b.w)+34,x1=aL?a.x:a.x+a.w,x2=aL?b.x:b.x+b.w;h+=`<path class="x" d="M${x1} ${a.y+a.h/2} C${out} ${a.y+a.h/2} ${out} ${b.y+b.h/2} ${x2} ${b.y+b.h/2}"/>`}});
   svg.innerHTML=h}
 let mapaT=null;
-function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'||S.vista!=='proyecto'||S.P[S.cur]!==p)return;
+function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(!enMapa()||S.P[S.cur]!==p)return;
   const M=mapaCalc(p);S.mapaCruces=M.cruces;
   const hl=$('#mp-hilo');if(hl)hl.textContent=M.hilo;
   const lz=$('#mp-luzcolor');if(lz&&!lz.contains(document.activeElement)){lz.outerHTML=mapaLuzHTML(p);escDibuja()}
@@ -6393,7 +6347,7 @@ function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'
     nt.innerHTML=L.map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
     e.classList.toggle('cf',L.some(x=>x.cls==='warn'));e.classList.toggle('vac',L.some(x=>x.cls==='vac'))});
   mapaLineas()},300)}
-window.addEventListener('resize',()=>{if(S.tab==='mapa')mapaLineas()});
+window.addEventListener('resize',()=>{if(enMapa())mapaLineas()});
 
 /* ============ Personajes: paleta que se construye con el personaje ============ */
 const PJ_ROLES=['Protagonista','Antagonista','Aliado','Deidad','Criatura','Secundario'];
@@ -6510,7 +6464,7 @@ function pjCardPal(p,c){const R=pjPaleta(p,c);
     <details><summary class="muted">Por qué estos colores</summary><ul class="pj-rz">${R.razones.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></details>`}
 function vPersonajes(p){const pj=p.personajes=p.personajes||[],line=pjLineup(p);
   const fi=(c,k,lab,ph,sel)=>`<div class="field"><label for="pj-${c.id}-${k}">${lab}</label>${sel?`<select id="pj-${c.id}-${k}" data-pj="${c.id}.${k}">${sel.map(o=>`<option ${c[k]===o?'selected':''}>${o}</option>`).join('')}</select>`:`<input type="text" id="pj-${c.id}-${k}" data-pj="${c.id}.${k}" value="${esc(c[k]||'')}" placeholder="${esc(ph)}">`}</div>`;
-  return `<p class="intro">Cada personaje tiene su paleta, y <strong>se arma con lo que escribes de él</strong>: su lado de la tensión, su personalidad, sus materiales y su piel. Todo parte de la paleta del mundo para que pertenezcan al mismo lugar. Es una propuesta: toca un color para fijarlo a mano.</p>
+  return `
   ${line.length?`<div class="banner"><b>Lineup:</b> ${line.map(esc).join(' ')}</div>`:''}
   ${pj.length?'':`<div class="box"><h3>Todavía no hay personajes</h3><p class="hint">Agrega uno por cada personaje o criatura del proyecto.</p><div class="prow"><button class="btn pri" data-act="pj-add">Agregar personaje</button>${/Personaje|Criatura/.test(p.tipo)?'<button class="btn" data-act="pj-desde">Crear desde este proyecto</button>':''}</div></div>`}
   <div class="pj-list">${pj.map(c=>`<div class="box pj" id="pj-${c.id}">
@@ -6747,9 +6701,8 @@ function paletaFunc(p,tipo){
 /* conectar el mapa con luz y color */
 function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.k??escSugerida(p),E=p.escena||{...ESC_PRE[sk],k:sk,int:1};
   return `<div class="box" id="mp-luzcolor" style="border-top:3px solid var(--c-mood)"><h3>Luz y color de esta pieza</h3>
-    <p class="hint">Tres propuestas de paleta que salen de tu mood, tu tensión, tus materiales y la luz de tu escena. Elige una y la app la aplica a todo el proyecto; si luego algo no cuadra, la revisión te dice qué ajustar.</p>
+    <p class="hint">Tres propuestas de paleta que salen de tu mood, tu tensión, tus materiales y la luz de tu escena (la de arriba). Elige una y la app la aplica a todo el proyecto; la revisión de la luz te dice si algo no cuadra.</p>
     <div class="chips"><span class="lbl">Tipo de pieza</span>${Object.entries(PAL_TIPOS).map(([k,n])=>`<button class="ch ${tipo===k?'on':''}" data-act="pal-tipo" data-k="${k}">${n}</button>`).join('')}</div>
-    <div class="prow"><span class="lbl">Escena de luz</span>${p.escena?`<b>${esc(escNombre(p,p.escena))}</b>`:`<span class="muted">Sin elegir · sugerida por tu mood:</span> <b>${esc(ESC_PRE[sk]?.n||'')}</b> <button class="btn ghost sm" data-act="esc-preset" data-k="${sk}">Usarla</button>`}<button class="btn ghost sm" data-act="tab" data-tab="mood">Ajustar en Mood ↗</button></div>
     <div class="grid3" style="align-items:start">${P.map((v,i)=>`<div class="pf"><b>${esc(v.n)}</b><p class="hint" style="margin:0">${esc(v.d)}</p>
       <div class="palbar">${v.pal.map(z=>`<span style="flex:${z.pct};background:${z.hex}" title="${esc(z.rol)} · ${z.pct}%"></span>`).join('')}</div>
       <div class="pj-bar gris" title="Lectura en escala de grises">${v.pal.map(z=>{const g=Math.round(escLuma(z.hex)*255);return `<i style="background:rgb(${g},${g},${g});flex:${z.pct}"></i>`}).join('')}</div>
@@ -6759,7 +6712,7 @@ function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.
       <div class="prow"><button class="btn sm pri" data-act="pal-func" data-i="${i}">Usar esta paleta</button><button class="btn ghost sm" data-act="pal-guardar-pieza" data-i="${i}" title="Guárdala solo para este tipo de pieza">Guardar para ${esc(PAL_TIPOS[tipo].split(' ')[0].toLowerCase())}</button></div></div>`).join('')}</div>
     ${mapaLuzMas(p)}
     ${p.mood.paletaAnterior?.length?`<div class="prow"><span class="lbl">Paleta anterior</span><span class="pal">${p.mood.paletaAnterior.map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span><button class="btn ghost sm" data-act="pal-volver">Volver a la anterior</button></div>`:''}
-    <div id="esc-rev">${escRevHTML(p)}</div></div>`}
+  </div>`}
 /* ---- 1) Paletas por pieza (key / personaje / prop del mismo mundo) ---- */
 function piezasHTML(p){const PP=p.paletasPieza||{};
   return `<div class="pf-piezas"><b>Paletas por pieza</b><p class="hint" style="margin:0">Key, personaje y prop del mismo mundo comparten familia, pero no la misma paleta. Guarda la variante que te guste para cada uno.</p>
@@ -6899,7 +6852,7 @@ function rmLineas(){const sv=$('#rm-svg');if(!sv||!RM.data)return;const sel=S.rm
     if(e.kind!=='ancla')h+=`<path class="hit" d="${d}" ${e.kind==='link'?`data-lid="${e.id}"`:`data-pk="${esc(e.key)}"`}/>`;
     if(e.kind==='link'&&on)h+=`<text x="${(A.x+2*cx+B.x)/4}" y="${(A.y+2*cy+B.y)/4}" fill="${col}" font-size="13" text-anchor="middle">${esc(RM_T[e.t]?.[0]||'')}</text>`}
   sv.innerHTML=h}
-function rmInit(){if(S.tab!=='board'||S.bdVista!=='red'||S.vista!=='proyecto')return;const p=S.P[S.cur],wr=$('#rm-wrap');if(!p||!wr||!RM.data)return;
+function rmInit(){if(!enTablero()||S.bdVista!=='red')return;const p=S.P[S.cur],wr=$('#rm-wrap');if(!p||!wr||!RM.data)return;
   const b=RM.bounds,sv=$('#rm-svg'),w=$('#rm-world');if(sv){sv.setAttribute('width',b.w);sv.setAttribute('height',b.h);sv.style.left=b.x+'px';sv.style.top=b.y+'px';sv.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`)}
   if(!S.rmView)rmFit();rmApply();rmLineas()}
 function rmOk(r,F){if(!F)return true;if(F.capa&&r.capa!==F.capa)return false;if(F.est&&!(r.estudio||[]).includes(F.est))return false;if(F.solo==='sueltas'){const D=RM.data;if(D.anc[r.id]||D.links.some(l=>l.a===r.id||l.b===r.id))return false}
@@ -7076,8 +7029,8 @@ function bdBounds(p){const it=bdItems(p);if(!it.length)return null;let x0=1e9,y0
 function bdApply(){const w=$('#bd-world'),v=S.bdView;if(w&&v)w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`}
 function bdFit(){const p=S.P[S.cur],wr=$('#bd-wrap'),b=p&&bdBounds(p);if(!wr||!b)return;const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.05,Math.min(W/b.w,H/b.h)));S.bdView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
 let bdFitT=null;
-function bdInit(){if(S.tab!=='board'||S.vista!=='proyecto')return;const wr=$('#bd-wrap');if(!wr)return;
-  if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(S.tab==='board'&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
+function bdInit(){if(!enTablero())return;const wr=$('#bd-wrap');if(!wr)return;
+  if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(enTablero()&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
 function bdItemHTML(p,i){const sel=S.bdSel===i.id,st=`left:${i.x}px;top:${i.y}px;width:${i.w||240}px;z-index:${i.z||1}`;
   if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
   const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
@@ -7121,7 +7074,7 @@ window.addEventListener('pointerup',e=>{const d=BD.drag;if(!d)return;BD.drag=nul
   if(!d.moved){if(d.mode==='pan'&&e.target.closest?.('#bd-wrap'))bdSelect(null);else if(d.id)bdSelect(d.id)}});
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.bdView||(S.bdView={x:0,y:0,k:1}),k2=Math.max(.04,Math.min(3,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;S.bdTocado=true;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;bdApply()},{passive:false});
-document.addEventListener('keydown',e=>{if(S.tab!=='board'||S.vista!=='proyecto'||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
+document.addEventListener('keydown',e=>{if(!enTablero()||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
   const p=S.P[S.cur];p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
 /* descargas: el tablero se dibuja con las mismas posiciones y tamaños que ves */
 async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0));if(!items.length)return null;
@@ -7637,7 +7590,7 @@ async function bibExportarCarpetas(){
         r.bibGuardado=true;r.bibTema=tema;marcarPid(pid);ok++
       }catch{fallos++}
     }
-    if(S.vista==='biblioteca')renderMain();
+    if(enVista('biblioteca'))renderMain();
     toast(`Biblioteca actualizada: ${ok} nueva${ok===1?'':'s'}${fallos?`, ${fallos} sin poder guardar`:''}`)
   }catch(e){toast('No se pudo guardar la Biblioteca: '+(e?.message||e?.name||'error'))}
   finally{expStatus('');desbloquear()}
@@ -7736,7 +7689,7 @@ function bajarRecetas(p,que,seed){const cat=bajarCat(que),refs=refsParaTarea({en
     out.push({r,a,txt:[r?`Forma de «${etiquetaDe(r)||'tu referencia'}»`:'Silueta simple',a?`idea de ${a.n.split(' (')[0].toLowerCase()}`:'',pz?(pz.c||pz.t):''].filter(Boolean).join(' + '),regla:pick(reglas)})}
   return {refs,anclas:A,palancas:Pz,recetas:out,cat}}
 function vBajar(p){const b=p.bajar=p.bajar||{que:''},que=b.que||'',R=que?bajarRecetas(p,que,S.bajSeed||1):null,cat=R?.cat;
-  return `<p class="intro"><b>De la referencia al thumbnail.</b> Una referencia no se copia: se le saca <b>una forma, una historia o una regla</b> y se cruza con lo que ya decidiste del proyecto (tensión, pilares, materiales). Así deja de parecer «un árbol» y se vuelve <b>tu</b> árbol.</p>
+  return `
   <div class="box"><div class="field"><label for="f-baj">¿Qué vas a diseñar?</label><input type="text" id="f-baj" data-b="bajar.que" value="${esc(que)}" placeholder="Ej. vegetación, templo del dios, arma del guerrero, criatura…" data-enter="bajar-go"></div>
     <div class="prow"><button class="btn pri" data-act="bajar-go">Bajar la idea</button>${['vegetación','arquitectura del templo','arma del guerrero','criatura'].map(x=>`<button class="chip" data-act="bajar-set" data-v="${x}" style="border:0;cursor:pointer;padding:4px 10px">${x}</button>`).join('')}</div></div>
   ${R?`
@@ -7902,12 +7855,12 @@ document.addEventListener('toggle',e=>{const d=e.target;if(d?.dataset?.det){S.pa
 document.addEventListener('change',e=>{
   if(e.target.id==='pf-img'){const f=e.target.files?.[0],p=S.P[S.cur];if(!f||!p)return;
     paletaDeImagen(f).then(cl=>{S.palImg={cl,msgs:comparaImagen(p,cl)};const lz=$('#mp-luzcolor');if(lz){lz.outerHTML=mapaLuzHTML(p);escDibuja()}}).catch(()=>toast('No pude leer esa imagen'));return}
-  if(e.target.dataset?.bref&&S.vista==='biblioteca'){const g=$('#bibgrid');if(g){g.innerHTML=bibGrid();S.assets?.hydrate?.()}return}
+  if(e.target.dataset?.bref&&enVista('biblioteca')){const g=$('#bibgrid');if(g){g.innerHTML=bibGrid();S.assets?.hydrate?.()}return}
   if(e.target.dataset?.pjc){const p=S.P[S.cur];if(p)pjRefresca(p,e.target.dataset.pjc.split('.')[0]);return}
   if(e.target.id==='f-file'){subir(e.target.files);e.target.value=''}
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
-  if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
+  if(e.target.dataset?.aj?.startsWith('cot.')&&enVista('cotizador')&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};delete r.dias[k].fb;S.anD=null;marcarAj();renderMain();setTimeout(()=>$('[data-act="d-analizar"]')?.click(),50)}).catch(()=>toast('No se pudo subir'))}
   if(e.target.dataset?.carp){subirCarpeta(e.target.files,e.target.dataset.carp);e.target.value=''}
   if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
@@ -7952,9 +7905,10 @@ async function accion(a,el){
     case 'herr':herrAbre(ds.t);break;
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
+    case 'vista':S.vista=ds.v;S.ancla=null;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='avisos')cargarAvisos();document.querySelectorAll('#main .pg-sec[open]').forEach(d=>pgInicia(d.id));break;
+    case 'pg-modo':{(S.modoPg=S.modoPg||{})[ds.c]=ds.k;renderMain();if(ds.k==='recursos')cargarRecursos(false);break}
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
-    case 'tab':S.tab=TAB_ALIAS[ds.tab]||ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
+    case 'tab':{let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
     case 'empuje':{const t=$('#f-empuje'),v=t?.value.trim();if(!v)return;
