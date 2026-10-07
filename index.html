@@ -410,6 +410,17 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .rv-top{position:absolute;top:0;left:0;right:0;display:flex;gap:6px;align-items:center;padding:10px 12px;background:linear-gradient(rgba(0,0,0,.65),transparent);z-index:2}.rv-res{font-family:var(--mono);font-size:12px;color:var(--ink2)}
 .rv-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:34px;width:46px;height:72px;cursor:pointer;border-radius:10px}.rv-nav.l{left:8px}.rv-nav.r{right:8px}
 .rv-side{width:360px;max-width:40vw;overflow:auto;background:var(--surface);border-left:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px}@media(max-width:800px){.rv{flex-direction:column}.rv-stage{flex:0 0 56vh}.rv-side{width:auto;max-width:none;flex:1;border-left:0;border-top:1px solid var(--line)}}
+.rv-box{position:relative;flex:none;will-change:transform}.rv-box img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill}.rv-an{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}.rv-lab{position:absolute;inset:0;pointer-events:none}
+.rv-pin{position:absolute;transform:translate(-50%,-50%) scale(var(--ik,1));min-width:20px;height:20px;border-radius:10px;background:#ff6a3d;color:#140905;font:700 12px/20px var(--mono);text-align:center;padding:0 5px}.rv-n{display:inline-block;min-width:20px;height:20px;border-radius:10px;background:#ff6a3d;color:#140905;font:700 12px/20px var(--mono);text-align:center}
+.rv-stage.dibuja{cursor:crosshair}.rv-bar{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px 12px;background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:2}.rv-sep{width:1px;height:20px;background:var(--line2);margin:0 4px}
+.rv-crop{position:absolute;left:50%;top:56px;transform:translateX(-50%);z-index:3;display:flex;gap:8px;background:rgba(0,0,0,.75);padding:8px;border-radius:10px}
+.rg.sel{outline:3px solid var(--accent);outline-offset:-3px}.rg-ok{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:12px;background:var(--accent);color:#140905;font-weight:800;text-align:center;line-height:24px}
+.rg-pal{display:inline-flex;gap:2px;margin-left:6px;vertical-align:middle}.rg-pal i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(255,255,255,.35)}.rg-pal b{color:#ffcf6a;margin-left:2px;font-size:12px}
+.rf-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:8px}.rf-m{text-align:left;border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 11px;cursor:pointer;display:flex;flex-direction:column;gap:3px}.rf-m small{color:var(--ink3);font-size:12px;line-height:1.35}.rf-m:hover,.rf-m.on{border-color:var(--accent)}
+.rf-strip{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.rf-strip img{height:84px;width:auto;border-radius:6px;cursor:zoom-in;flex:none}.rf-why{color:var(--accent);font-style:normal}
+.cmp{position:fixed;inset:0;z-index:60;background:#08090b;display:flex;flex-direction:column}.cmp .rv-top{display:flex;gap:6px;align-items:center;padding:10px 12px;flex-wrap:wrap}.cmp-grid{flex:1;min-height:0;display:grid;gap:6px;padding:0 6px 6px;touch-action:none;cursor:grab}.cmp-p{position:relative;overflow:hidden;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;min-height:0}.cmp-img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;will-change:transform}.cmp-l{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.7);color:#fff;font-size:12px;padding:3px 8px;border-radius:6px;max-width:80%}.cmp-x{position:absolute;top:6px;right:6px}
+.pn{position:fixed;inset:0;z-index:60;background:#000;display:flex;align-items:center;justify-content:center}.pn-img{max-width:100%;max-height:100%;object-fit:contain}.pn-bar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px;background:linear-gradient(transparent,rgba(0,0,0,.8));opacity:.25;transition:opacity .2s}.pn:hover .pn-bar{opacity:1}
+
 .v3d-cv{position:relative}.v3d-bz{position:absolute;inset:0;z-index:6;background:#0d0f13;display:flex;flex-direction:column}.bz-top{padding:8px 12px;font-size:13px;display:flex;flex-direction:column;gap:2px}.bz-cv{flex:1;min-height:0;position:relative}.bz-cv canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}.bz-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
 .cp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.cp-cv{min-width:0}.cp-cv canvas{width:100%;display:block;border-radius:10px;touch-action:none;background:#0d0f13;cursor:crosshair}.cp-panel{display:flex;flex-direction:column;gap:12px;min-width:0}@media(max-width:900px){.cp-wrap{grid-template-columns:1fr}}
 .pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 16px}
@@ -1019,7 +1030,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyhqycc').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyi7nk1').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2918,15 +2929,15 @@ function crParsea(txt){
 /* ---- a quién se critica: un grupo de bocetos, un boceto, o el proyecto entero ---- */
 function crTarget(p){const z=S.crPz&&(p.piezas||[]).find(x=>x.id===S.crPz);if(z)return {k:'pieza',id:z.id,z};if(S.crProy)return {k:'proyecto'};return {k:'grupo',g:(p.grupos||[]).includes(S.carpG)?S.carpG:''}}
 function crMigra(p){for(const c of p.criticas||[]){if(c.tipo!=='Feedback de bocetos')continue;const r=c.r||{};c.tipo='Crítica';c.veredicto=(r['Resumen']||[])[0]||'';c.malo=[...(r['Problemas reales']||[]),...(r['Decisiones que cuestionaría']||[])].map(t=>crMalo(t));c.bien=r['Lo que funciona']||[];c.locas=(r['Qué probar en la siguiente ronda']||[]).map(crLoca);c.nivel='';if(!c.id)c.id=uid()}}
-function crLista(p,t){crMigra(p);return (p.criticas||[]).filter(c=>c.tipo==='Crítica'&&(t.k==='pieza'?c.pz===t.id:t.k==='proyecto'?!!c.proy:(!c.pz&&!c.proy&&(c.elemento||'')===t.g))).sort((a,b)=>b.ts-a.ts)}
-function crUltimas(p){crMigra(p);const seen={},out=[];for(const c of (p.criticas||[]).filter(c=>c.tipo==='Crítica').sort((a,b)=>b.ts-a.ts)){const k=c.pz?'z'+c.pz:c.proy?'p':'g'+(c.elemento||'');if(seen[k])continue;seen[k]=1;out.push(c)}return out}
+function crLista(p,t){crMigra(p);return (p.criticas||[]).filter(c=>c.tipo==='Crítica'&&(t.k==='pieza'?c.pz===t.id:t.k==='proyecto'?!!c.proy:(!c.pz&&!c.proy&&!c.refs&&(c.elemento||'')===t.g))).sort((a,b)=>b.ts-a.ts)}
+function crUltimas(p){crMigra(p);const seen={},out=[];for(const c of (p.criticas||[]).filter(c=>c.tipo==='Crítica').sort((a,b)=>b.ts-a.ts)){const k=c.pz?'z'+c.pz:c.proy?'p':c.refs?'r':'g'+(c.elemento||'');if(seen[k])continue;seen[k]=1;out.push(c)}return out}
 const crPend=p=>crUltimas(p).reduce((n,c)=>n+(c.malo||[]).filter(m=>!m.hecho).length,0);
 function crBusca(id){for(const [pid,p] of Object.entries(S.P)){const c=(p.criticas||[]).find(x=>x.id===id);if(c)return {c,p,pid}}for(const x of S.ajustes.galeria||[]){const c=(x.crits||[]).find(v=>v.id===id);if(c)return {c,x}}return null}
 const crGuarda=h=>h.x?marcarAj():h.pid&&h.pid!==S.cur?marcarPid(h.pid):marcar();
 /* ---- la petición que se pega en el chat ---- */
 function crPaquete(p,t){
   const foc=S.critFoco||[],focT=foc.length?[`Quiero que revises sobre todo: ${foc.map(k=>CRIT_FOCOS.find(f=>f[0]===k)[2]).join('; ')}.`,'']:[],conf=(S.gd?.conf||[]).map(x=>'- '+(x.sl==='ref'?'[Referencia] ':'')+x.t);
-  const ctx=['CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),''];
+  const ctx=['CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...rfParaTxt(p,t.k==='pieza'?(t.z.grupo||''):(t.g||'')),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),''];
   const NOHALAGO='No halagues por defecto: sé honesto aunque duela y juzga contra el estándar de la industria.';
   if(t.k==='proyecto')return [`Claude, critica mi proyecto «${p.nombre}» completo (idea, dirección de arte, estilo, referencias y lo que he dibujado). ${NOHALAGO}`,'',...focT,'Mira: ¿el concepto es claro y propio o genérico? ¿los pilares se sostienen? ¿qué decisiones están flojas, se contradicen o son "porque se ve cool"? ¿qué falta antes de seguir dibujando?','',...ctx,CR_FORMATO].join('\n');
   if(t.k==='pieza'){const z=t.z;return [`Claude, critica este boceto de mi proyecto «${p.nombre}» (${z.etapa}${z.grupo?', '+z.grupo:''}${z.nombre?', '+z.nombre:''}). ${NOHALAGO}`,z.nota?`Lo que quiero que revises: ${z.nota}`:'','',`QUÉ MIRAR: ${elemGuia(z.grupo||'')}`,...focT,'',...ctx,'Te paso la imagen en este mensaje (o dime la ruta de la carpeta en mi compu y la abres).','',CR_FORMATO].join('\n')}
@@ -3039,89 +3050,250 @@ function vRefsMas(p){const bi=bocetosIniciales(p);return `
     <input type="text" id="kw-${k}" data-kwadd="${k}" placeholder="Palabra + Enter"></div>`).join('')}</div>
     <div class="prow"><input type="text" id="f-bq" placeholder="Tu propia búsqueda" style="flex:1 1 240px" data-enter="bq"><select id="f-bqcapa">${LAYERS.map(l=>`<option value="${l.k}">${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn" data-act="bq">Añadir</button><button class="btn ghost" data-act="tab" data-tab="explorar">Combinar al azar (con intención) →</button></div></details>
   ${asesor('refs','Asesor: revisa mi moodboard','Lee tus porqués y (si se puede) mira las imágenes: qué falta, qué sobra, qué capa está débil.')}`}
-/* ============ Mesa de referencias: verlas bien (galería + visor con zoom), buscar, ordenar y estudiar. Igual en un proyecto y en Herramientas (piezas sueltas) ============ */
-const RV_HD=1500;
+/* ============ Mesa de referencias: verlas bien (galería + visor con zoom, valores, anotaciones y recortes), compararlas, estudiarlas, buscar lo que de verdad sirve al proyecto y revisar el moodboard. Igual en un proyecto y en Herramientas (piezas sueltas) ============ */
+const RV_HD=1500,PAL_OK=95;
 const rgMax=r=>Math.max(r.w||0,r.h||0);
 const rgResTxt=r=>{const m=rgMax(r);return m?(m>=3000?'4K':m>=RV_HD?'HD':m+' px'):''};
-function rgFiltra(p){const f=S.rgF=S.rgF||{capa:'',hd:false,q:''},q=nz(f.q);
-  return (p.refs||[]).map((r,i)=>({r,i})).filter(({r})=>(!f.capa||r.capa===f.capa)&&(!f.hd||rgMax(r)>=RV_HD)&&(!q||nz([r.porque,r.fuente,r.autor,(r.tags||[]).join(' ')].join(' ')).includes(q))).sort((a,b)=>(b.r.creado||0)-(a.r.creado||0))}
-function rgTile(p,{r}){const t=rgResTxt(r),sin=(r.porque||'').trim().length<8;
-  return `<figure class="rg layer-${esc(r.capa)}" data-act="rv-abrir" data-id="${r.id}" title="Ver en grande"><img class="rg-img" ${imgAttrs(r)} alt="" loading="lazy" data-rid="${r.id}">
-    ${t?`<span class="rg-res ${rgMax(r)<800?'baja':''}">${t}</span>`:'<span class="rg-res" hidden></span>'}
-    ${r.auto?`<span class="rg-tri"><button data-act="ref-ok" data-id="${r.id}" title="Sirve: la dejo">✓</button><button data-act="ref-no" data-id="${r.id}" title="No sirve: la quito">✗</button></span>`:''}
-    <figcaption>${sin?'<em>Sin porqué</em>':esc(corto(r.porque,80))}</figcaption></figure>`}
+/* ---- paleta de una imagen (5 colores) y qué tan cerca está de la paleta del proyecto ---- */
+const hexRgb=h=>{h=String(h||'').replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');const n=parseInt(h,16);return (h.length!==6||Number.isNaN(n))?null:[n>>16&255,n>>8&255,n&255]};
+const rgbHex=c=>'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');
+const dist3=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+function rfPaletaDe(src){const nw=src.naturalWidth||src.width,nh=src.naturalHeight||src.height,W=48,H=Math.max(1,Math.round(48*nh/nw)),cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d',{willReadFrequently:true});g.drawImage(src,0,0,W,H);
+  const d=g.getImageData(0,0,W,H).data,cu={};for(let i=0;i<d.length;i+=4){if(d[i+3]<128)continue;const k=(d[i]>>4)<<8|(d[i+1]>>4)<<4|(d[i+2]>>4),c=cu[k]=cu[k]||[0,0,0,0];c[0]+=d[i];c[1]+=d[i+1];c[2]+=d[i+2];c[3]++}
+  const L=Object.values(cu).map(c=>({n:c[3],c:[c[0]/c[3],c[1]/c[3],c[2]/c[3]].map(Math.round)})).sort((a,b)=>b.n-a.n),out=[];
+  for(const x of L){if(out.every(o=>dist3(o,x.c)>48))out.push(x.c);if(out.length>=5)break}return out.map(rgbHex)}
+function rfDistPal(r,p){const pal=(p?.mood?.paleta||[]).map(hexRgb).filter(Boolean),mine=(r.pal||[]).map(hexRgb).filter(Boolean);if(!pal.length||!mine.length)return null;
+  return mine.reduce((s,c)=>s+Math.min(...pal.map(q=>dist3(c,q))),0)/mine.length}
+/* ---- galería ---- */
+function rgFiltra(p){const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false},q=nz(f.q);
+  return (p.refs||[]).map((r,i)=>({r,i})).filter(({r})=>(!f.capa||r.capa===f.capa)&&(!f.hd||rgMax(r)>=RV_HD)&&(!f.pal||(rfDistPal(r,p)??1e9)<=PAL_OK)&&(!q||nz([r.porque,r.fuente,r.autor,(r.tags||[]).join(' ')].join(' ')).includes(q))).sort((a,b)=>(b.r.creado||0)-(a.r.creado||0))}
+function rgTile(p,{r}){const t=rgResTxt(r),sin=(r.porque||'').trim().length<8,sel=(S.rgSel||[]).includes(r.id)||(S.rgPara&&(r.para||[]).includes(S.rgPara)),act=S.rgPara?'rg-para':S.rgSel?'rg-sel':'rv-abrir',d=rfDistPal(r,p);
+  return `<figure class="rg layer-${esc(r.capa)} ${sel?'sel':''}" data-act="${act}" data-id="${r.id}"><img class="rg-img" ${imgAttrs(r)} alt="" loading="lazy" data-rid="${r.id}">
+    ${t?`<span class="rg-res ${rgMax(r)<800?'baja':''}">${t}</span>`:'<span class="rg-res" hidden></span>'}${sel?'<span class="rg-ok">✓</span>':''}
+    ${r.auto&&!S.rgSel&&!S.rgPara?`<span class="rg-tri"><button data-act="ref-ok" data-id="${r.id}" title="Sirve: la dejo">✓</button><button data-act="ref-no" data-id="${r.id}" title="No sirve: la quito">✗</button></span>`:''}
+    <figcaption>${sin?'<em>Sin porqué</em>':esc(corto(r.porque,80))}${(r.an||[]).length?` · ✎ ${r.an.length}`:''}${r.pal?.length?`<span class="rg-pal" title="${d==null?'':d<=PAL_OK?'Dentro de tu paleta':'Se sale de tu paleta'}">${r.pal.map(h=>`<i style="background:${h}"></i>`).join('')}${d!=null&&d>PAL_OK?'<b>⚠</b>':''}</span>`:''}</figcaption></figure>`}
 function rgGaleriaHTML(p){const L=rgFiltra(p);
   return L.length?`<p class="muted" style="margin:0">${L.length} referencia${L.length===1?'':'s'}</p><div class="rg-grid">${L.map(x=>rgTile(p,x)).join('')}</div>`:`<div class="empty">${(p.refs||[]).length?'Ninguna cumple ese filtro.':'Aún no hay referencias. Sube, pega (Ctrl+V) o busca arriba.'}</div>`}
+/* ---- qué buscar para ESTE proyecto: personajes, materiales, textura, mood, luz, cultura ---- */
+const RF_PROP={Material:'materiales',Luz:'iluminacion',Arquitectura:'arquitectura',Anatomía:'anatomia',Forma:'silueta',Mood:'entorno',Cultura:''};
+function rfMisiones(p){const M=[],add=(t,sub,q,capa,prop)=>{q=String(q||'').replace(/\s+/g,' ').trim();if(q&&!M.some(x=>x.q===q))M.push({t,sub,q,capa:capa||'mood',prop:prop||''})};
+  try{busquedasFoto(p).forEach(b=>add(b.obj+' · '+b.busco,b.estudiar,b.q,b.capa,RF_PROP[b.obj]))}catch{}
+  try{detectarElementos(p).slice(0,8).forEach(e=>{const x=elementoBusca(p,e);add((e.ico||'')+' '+e.n,'Cómo se ve de verdad y cómo se resuelve en concept art.',x.q,ELEM_CAPA[e.n]||'mood',/Armas|Vestuario|Herramientas/.test(e.n)?'materiales':/Arquitectura|Ruinas/.test(e.n)?'arquitectura':'')})}catch{}
+  try{(p.personajes||[]).filter(c=>c.nombre).slice(0,5).forEach(c=>add('Pose · '+c.nombre,'Cómo carga el peso y se mueve (fotos reales).',personajePoseQuery(c).wmQs[0],'concepto','silueta'))}catch{}
+  return M.slice(0,16)}
+function rfContexto(p){if(!p)return null;
+  const bag=[p.mood?.sensacion,p.mood?.palabras,p.mood?.emocion,p.mood?.atmosfera,p.mood?.luz,p.mood?.clima,p.mood?.color,...tresMood(p),...(p.materiales||[]),p.materialNota,p.guia?.materiales,p.guia?.formas,p.guia?.luz,...KWCATS.flatMap(([k])=>p.keywords?.[k]||[]),...(p.concepto?.nucleos||[]),...(p.lenguaje?.formas||[])].filter(Boolean).join(' '),
+    en=t=>[...new Set(toks(t).map(tr).map(w=>nz(w)).filter(w=>/^[a-z]{4,}$/.test(w)&&!STOP.has(w)))];
+  return {pos:new Set(en(bag)),neg:new Set(en((p.evitar||[]).join(' ')))}}
+function rfTop(vis,n){const cap=Math.ceil(n*.6),cnt={},out=[],rest=[],vistos=new Set();
+  for(const v of vis){const t=nz(v.x.titulo||'').slice(0,28);if(t.length>10&&vistos.has(t))continue;vistos.add(t);const k=v.x.prov||'';cnt[k]=(cnt[k]||0)+1;if(cnt[k]>cap||out.length>=n)rest.push(v);else out.push(v)}
+  for(const v of rest){if(out.length>=n)break;out.push(v)}return out}
+function rfMisionesHTML(p){const M=S.rfM=rfMisiones(p),b=S.refB||{};
+  return M.length?`<div class="box"><h3>Para tu proyecto</h3><p class="hint" style="margin:0">Búsquedas armadas con tu tema, personajes, materiales y texturas, mood y luz. De cada una te muestro solo lo mejor: alta resolución, relacionado con tu proyecto y sin lo que pusiste en «Evitar».</p>
+    <div class="rf-ms">${M.map((m,i)=>`<button class="rf-m ${b.mision===m.t?'on':''}" data-act="rf-mision" data-i="${i}"><b>${esc(corto(m.t,52))}</b><small>${esc(corto(m.sub,90))}</small></button>`).join('')}</div></div>`:`<p class="hint">Escribe qué es tu proyecto, sus materiales, el mood o tus personajes y aquí aparecerán búsquedas hechas a la medida.</p>`}
+/* ---- la mesa ---- */
 function vMesa(p){
-  const f=S.rgF=S.rgF||{capa:'',hd:false,q:''},vista=S.refVista==='tablero'?'tablero':'galeria',n=(p.refs||[]).length,s=salud(p),sin=n-s.conP,
-    capas=capasDe(p).map(l=>[l,(p.refs||[]).filter(r=>r.capa===l.k).length]).filter(([,c])=>c);
+  const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false},vista=S.refVista==='tablero'?'tablero':'galeria',n=(p.refs||[]).length,s=salud(p),sin=n-s.conP,hayPal=(p.mood?.paleta||[]).length>1,
+    capas=capasDe(p).map(l=>[l,(p.refs||[]).filter(r=>r.capa===l.k).length]).filter(([,c])=>c),selN=(S.rgSel||[]).length,rv=(p.criticas||[]).filter(c=>c.tipo==='Crítica'&&c.refs).sort((a,b)=>b.ts-a.ts)[0];
   S.refB=S.refB||{fRes:'1200',fLic:''};
   return `<div class="chips"><button class="ch ${vista==='galeria'?'on':''}" data-act="rg-vista" data-v="galeria">Galería · ${n}</button><button class="ch ${vista==='tablero'?'on':''}" data-act="rg-vista" data-v="tablero">Tablero (estilo PureRef)</button></div>
-  <details class="box" id="det-busca" ${S.rgBusca||!n?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Buscar referencias de alta calidad</h3> <span class="lbl">museos · fotos · concept art</span></summary><div style="margin-top:8px">${refsBuscaHTML(p)}</div></details>
+  ${S.rgPara?`<div class="banner">Eligiendo referencias para «${esc(S.rgPara)}»: toca las que sirven. <button class="btn sm pri" data-act="rf-listo">Listo</button></div>`:''}
+  <details class="box" id="det-busca" ${S.rgBusca||!n?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Buscar referencias de alta calidad</h3> <span class="lbl">museos · fotos · concept art</span></summary><div style="margin-top:8px;display:flex;flex-direction:column;gap:10px">${rfMisionesHTML(p)}<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Buscar otra cosa</h3></summary>${refsBuscaHTML(p)}</details>${S.refB?.mision?refsResultadoHTML(p):''}</div></details>
   ${vista==='tablero'?`<div id="sec-tablero">${vBoardTab(p)}</div>`:`
   <div class="drop" id="drop"><div class="prow"><label class="btn pri" for="f-file">＋ Subir imágenes</label><input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
     <span class="muted">arrastra aquí o pega con Ctrl+V</span><span style="flex:1"></span><label class="lbl" for="f-destino">Van a</label><select id="f-destino" data-act-change="destino">${capasDe(p).map(l=>`<option value="${l.k}" ${S.destinoCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div></div>
   ${n?`<div class="prow"><div class="chips"><button class="ch xs ${!f.capa?'on':''}" data-act="rg-capa" data-v="">Todas · ${n}</button>${capas.map(([l,c])=>`<button class="ch xs ${f.capa===l.k?'on':''}" data-act="rg-capa" data-v="${l.k}">${esc(capaNombre(p,l.k))} · ${c}</button>`).join('')}</div>
-    <button class="ch xs ${f.hd?'on':''}" data-act="rg-hd" title="Solo imágenes de ${RV_HD} px o más">Alta resolución</button><input type="text" id="rg-q" data-rgq="1" value="${esc(f.q)}" placeholder="Buscar en mis referencias…" style="flex:1 1 180px;max-width:280px">
-    <button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos</button></div>
+    <button class="ch xs ${f.hd?'on':''}" data-act="rg-hd" title="Solo imágenes de ${RV_HD} px o más">Alta resolución</button>${hayPal?`<button class="ch xs ${f.pal?'on':''}" data-act="rg-pal" title="Solo las que se acercan a tu paleta (se mide al abrir cada una)">En mi paleta</button>`:''}</div>
+  <div class="prow"><input type="text" id="rg-q" data-rgq="1" value="${esc(f.q)}" placeholder="Buscar en mis referencias…" style="flex:1 1 180px;max-width:280px">
+    <button class="btn sm ${S.rgSel?'pri':''}" data-act="rg-selmodo">${S.rgSel?'Cancelar selección':'Seleccionar y comparar'}</button>${selN>=2?`<button class="btn sm pri" data-act="cmp-abrir">Comparar ${Math.min(selN,4)}</button>`:''}
+    <button class="btn sm" data-act="pn-abrir" title="Pantalla completa para pintar con tus referencias a un lado">Modo pintar</button><button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos</button></div>
   ${sin>0?`<span class="banner">${sin} sin porqué: ábrela y escríbelo, o quítala.</span>`:''}`:''}
-  <div id="rg-wrap" style="display:flex;flex-direction:column;gap:8px">${rgGaleriaHTML(p)}</div>`}
-  `}
-/* ---- visor grande: zoom, mover, siguiente/anterior y todos los datos de la referencia ---- */
+  <div id="rg-wrap" style="display:flex;flex-direction:column;gap:8px">${rgGaleriaHTML(p)}</div>
+  ${n>=3?`<details class="box" id="det-rev" ${S.rgRev?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Revisar mi moodboard con Claude</h3> <span class="lbl">qué sobra, qué falta, qué quitar</span></summary><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+    <p class="hint" style="margin:0">Claude ve todas tus referencias en una hoja numerada y las compara con tu concepto, mood y materiales: te dice cuáles quitar (con número), qué capa está débil y qué buscar en su lugar.</p>
+    ${crMotorHTML('rf-directo','','rf',1)}
+    <details><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm pri" data-act="rf-pedir">Copiar la petición</button><button class="btn sm" data-act="rf-hoja">Bajar la hoja numerada (PNG)</button></div><p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta la hoja. <b>3.</b> Pega aquí su respuesta:</p>${crPegaHTML('rf-'+S.cur,'rf-guardar')}</div></details>
+    ${rv?crResHTML(rv):''}</div></details>`:''}`}`}
+/* resultados de la misión elegida: solo lo mejor, con por qué */
+function refsResultadoHTML(p){const b=S.refB||{},ya=new Set((p.refs||[]).map(r=>r.src)),vis=refsFiltrar(b.items||[],b),n=b.n||12;
+  if(b.cargando)return '<p class="muted">Buscando en varias fuentes…</p>';if(b.error)return `<p class="muted">${esc(b.error)}</p>`;if(!(b.items||[]).length)return '';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><p class="hint" style="margin:0"><b>${esc(b.mision)}</b> · las ${Math.min(vis.length,n)} mejores de ${vis.length}, ordenadas por tu proyecto. Debajo de cada una dice por qué.</p>
+    ${vis.length?`<div class="rb-feed">${rfTop(vis,n).map(({x,i})=>refFeedHTML(x,i,ya)).join('')}</div>${vis.length>n?`<button class="btn" data-act="rb-mas">Ver más (${vis.length-n})</button>`:''}${refSelBar(p,b)}`:'<p class="muted">Ningún resultado cumple los filtros de calidad. Abre «Buscar otra cosa» y relaja alguno.</p>'}</div>`}
+/* ---- referencias ligadas a un grupo de bocetos ---- */
+function rfParaHTML(p,g){if(!g||!(p.refs||[]).length)return '';const rs=p.refs.filter(r=>(r.para||[]).includes(g));
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><b>Referencias de «${esc(g)}»</b><button class="btn sm" data-act="rf-elegir" data-g="${esc(g)}">${rs.length?'Cambiar selección':'＋ Elegir de mis referencias'}</button></div>${rs.length?`<div class="rf-strip">${rs.map(r=>`<img ${imgAttrs(r)} alt="" data-act="rv-abrir-para" data-id="${r.id}" data-g="${esc(g)}" title="${esc(corto(r.porque,80))}">`).join('')}</div>`:'<p class="hint" style="margin:0">Marca cuáles de tus referencias sirven para estos bocetos: las verás aquí mientras dibujas y viajan en la petición de crítica.</p>'}</div>`}
+const rfParaTxt=(p,g)=>{const rs=g?(p.refs||[]).filter(r=>(r.para||[]).includes(g)):[];return rs.length?['','REFERENCIAS QUE ELEGÍ PARA ESTO (lo que tomo de cada una):',...rs.map(r=>`- ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`)]:[]};
+/* ---- visor grande ---- */
 function refDetalleHTML(p,r){const nowhy=(r.porque||'').trim().length<8;
   return `<div class="ref ${nowhy?'nowhy':''}"><div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
     ${nowhy?'<span class="warn">Falta el porqué</span>':''}
     <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
     <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${capasDe(p).map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div>
     ${refMetaHTML(r)}${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
-function rvAbre(id){const p=S.P[S.cur];if(!p)return;const L=rgFiltra(p).map(x=>x.r.id);if(!L.includes(id))L.push(id);S.rv={id,lista:L,k:1,x:0,y:0};rvPinta()}
-function rvCierra(){S.rv=null;$('#overlay').innerHTML=''}
+const rvRef=()=>S.P[S.cur]?.refs.find(x=>x.id===S.rv?.id);
+const RV_VISTAS=[['normal','Normal'],['bn','B/N'],['val','3 valores'],['blur','Borroso'],['mini','Miniatura']],RV_FILT={normal:'',bn:'grayscale(1)',val:'url(#rv-post)'};
+const SVG_POST='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="rv-post" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="discrete" tableValues="0 .5 1"/><feFuncG type="discrete" tableValues="0 .5 1"/><feFuncB type="discrete" tableValues="0 .5 1"/></feComponentTransfer></filter></defs></svg>';
+function rvAbre(id,lista){const p=S.P[S.cur];if(!p)return;const L=(lista||rgFiltra(p).map(x=>x.r.id)).slice();if(!L.includes(id))L.push(id);S.rv={id,lista:L,k:1,x:0,y:0,vista:'normal',tool:'',pos:L.indexOf(id),crop:null};rvPinta()}
+function rvCierra(){if(S.pn){clearInterval(S.pn.t);S.pn=null;if(document.fullscreenElement)document.exitFullscreen?.()}S.rv=null;S.cmp=null;$('#overlay').innerHTML=''}
 function rvPinta(){const p=S.P[S.cur];if(!p||!S.rv){rvCierra();return}
   const v=S.rv;v.lista=v.lista.filter(id=>p.refs.some(r=>r.id===id));let r=p.refs.find(x=>x.id===v.id);
   if(!r){if(!v.lista.length){rvCierra();return}v.id=v.lista[Math.min(v.pos||0,v.lista.length-1)];r=p.refs.find(x=>x.id===v.id)}
-  const i=v.lista.indexOf(r.id),n=v.lista.length;v.pos=i;v.k=1;v.x=v.y=0;
-  $('#overlay').innerHTML=`<div class="rv" id="rv"><div class="rv-stage" id="rv-stage"><img id="rv-img" ${imgAttrs(r)} alt="" draggable="false">
+  const i=v.lista.indexOf(r.id),n=v.lista.length,ext=/^https?:/.test(r.src||''),eu=encodeURIComponent(r.src||'');v.pos=i;v.k=1;v.x=v.y=0;v.crop=null;
+  $('#overlay').innerHTML=`<div class="rv" id="rv">${SVG_POST}<div class="rv-stage" id="rv-stage"><div class="rv-box" id="rv-box"><img id="rv-img" ${imgAttrs(r)} alt="" draggable="false"><svg class="rv-an" id="rv-an" viewBox="0 0 1 1" preserveAspectRatio="none"></svg><div class="rv-lab" id="rv-lab"></div></div>
     <div class="rv-top"><span class="lbl">${i+1} / ${n}</span><span class="rv-res" id="rv-res">${esc(rgResTxt(r)?rgResTxt(r)+(r.w&&r.h?' · '+r.w+'×'+r.h:''):'')}</span><span style="flex:1"></span>
       <button class="btn sm" data-act="rv-zoom" data-v="out" aria-label="Alejar">−</button><button class="btn sm" data-act="rv-zoom" data-v="fit">Ajustar</button><button class="btn sm" data-act="rv-zoom" data-v="in" aria-label="Acercar">＋</button><button class="btn sm" data-act="rv-zoom" data-v="real">100%</button><button class="btn sm pri" data-act="rv-cerrar">Cerrar</button></div>
+    <div class="rv-bar">${RV_VISTAS.map(([k,nn])=>`<button class="ch xs ${v.vista===k?'on':''}" data-act="rv-vista" data-v="${k}">${nn}</button>`).join('')}<span class="rv-sep"></span>${[['','✋ Mover'],['circ','○ Círculo'],['flecha','↗ Flecha'],['nota','＋ Nota'],['recorte','✂ Recortar']].map(([k,nn])=>`<button class="ch xs ${v.tool===k?'on':''}" data-act="rv-tool" data-v="${k}">${nn}</button>`).join('')}</div>
+    <div class="rv-crop" id="rv-crop" hidden><button class="btn sm pri" data-act="rv-crop-ok">Guardar recorte como referencia</button><button class="btn sm" data-act="rv-crop-no">Cancelar</button></div>
     ${n>1?'<button class="rv-nav l" data-act="rv-prev" aria-label="Anterior">‹</button><button class="rv-nav r" data-act="rv-next" aria-label="Siguiente">›</button>':''}</div>
     <aside class="rv-side">${r.auto?`<div class="ref-triage" style="position:static"><button class="btn sm ok-b" data-act="rv-ok" data-id="${r.id}">✓ Sirve</button><button class="btn sm no-b" data-act="rv-no" data-id="${r.id}">✗ No sirve</button></div>`:''}
       ${refDetalleHTML(p,r)}
-      <div class="prow"><button class="btn sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button><button class="btn sm" data-act="ref-bajar" data-id="${r.id}">Descargar</button><button class="btn ghost sm danger" data-act="rv-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕ Quitar'}</button></div></aside></div>`;
-  $('#overlay').querySelectorAll('.rx').forEach(d=>{d.open=false});S.assets?.hydrate?.();rvInit(r)}
-const rvApply=()=>{const im=$('#rv-img');if(im&&S.rv)im.style.transform=`translate(${S.rv.x}px,${S.rv.y}px) scale(${S.rv.k})`};
+      ${(p.grupos||[]).length?`<div><span class="lbl">Sirve para estos bocetos</span><div class="chips">${p.grupos.map(g=>`<button class="ch xs ${(r.para||[]).includes(g)?'on':''}" data-act="rv-para" data-g="${esc(g)}">${esc(g)}</button>`).join('')}</div></div>`:''}
+      <div><span class="lbl">Colores · contra tu paleta</span><div id="rv-pal" class="muted" style="font-size:12.5px">Midiendo…</div></div>
+      <div><span class="lbl">Anotaciones</span><div id="rv-anl"></div><p class="hint" style="margin:0">Elige Círculo, Flecha o Nota arriba y marca sobre la imagen; cada marca lleva su texto.</p></div>
+      <div class="prow"><button class="btn sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button><button class="btn sm" data-act="ref-bajar" data-id="${r.id}">Descargar</button><button class="btn ghost sm danger" data-act="rv-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕ Quitar'}</button></div>
+      ${(rgMax(r)&&rgMax(r)<RV_HD||!rgMax(r))?`<div><span class="lbl">¿Quieres una versión más grande?</span>${ext?`<div class="prow"><a class="btn sm" href="https://lens.google.com/uploadbyurl?url=${eu}" target="_blank" rel="noopener">Google Lens ↗</a><a class="btn sm" href="https://tineye.com/search?url=${eu}" target="_blank" rel="noopener">TinEye ↗</a></div>`:'<p class="hint" style="margin:0">Descárgala y súbela a Google Lens o TinEye para encontrar la misma imagen en alta resolución.</p>'}</div>`:''}</aside></div>`;
+  $('#overlay').querySelectorAll('.rx').forEach(d=>{d.open=false});S.assets?.hydrate?.();rvInit(r);rvAnPinta()}
+function rvApply(){const b=$('#rv-box');if(!b||!S.rv)return;const v=S.rv,mf=v.vista==='mini'?Math.min(1,110/Math.max(1,b.offsetWidth)):1;b.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k*mf})`;b.style.setProperty('--ik',String(1/(v.k*mf)))}
+function rvEstilo(){const im=$('#rv-img'),b=$('#rv-box');if(!im||!S.rv)return;const vs=S.rv.vista;im.style.filter=vs==='blur'?`grayscale(1) blur(${Math.max(2,Math.round((b?.offsetWidth||400)/70))}px)`:(RV_FILT[vs]||'');rvApply()}
+function rvFitBox(){const st=$('#rv-stage'),im=$('#rv-img'),b=$('#rv-box');if(!st||!im||!b||!im.naturalWidth)return;const s=Math.min(st.clientWidth/im.naturalWidth,st.clientHeight/im.naturalHeight,1.5);b.style.width=Math.round(im.naturalWidth*s)+'px';b.style.height=Math.round(im.naturalHeight*s)+'px';rvEstilo();rvAnPinta()}
 function rvZoom(k1,cx=0,cy=0){const v=S.rv;if(!v)return;k1=clamp(k1,1,14);const k0=v.k;v.x=cx-(cx-v.x)*k1/k0;v.y=cy-(cy-v.y)*k1/k0;v.k=k1;if(k1===1)v.x=v.y=0;rvApply()}
 function rvIr(d){const v=S.rv;if(!v||v.lista.length<2)return;const i=(v.lista.indexOf(v.id)+d+v.lista.length)%v.lista.length;v.id=v.lista[i];rvPinta()}
+const rvNorm=e=>{const b=$('#rv-box').getBoundingClientRect();return [clamp((e.clientX-b.left)/b.width,0,1),clamp((e.clientY-b.top)/b.height,0,1)]};
+function rvForma(a,W,H){const c='#ff6a3d';
+  if(a.t==='c')return `<ellipse cx="${a.x}" cy="${a.y}" rx="${a.rx}" ry="${a.ry}" fill="none" stroke="${c}" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+  if(a.t==='a'){const dx=(a.x2-a.x1)*W,dy=(a.y2-a.y1)*H,an=Math.atan2(dy,dx),h=(s)=>`<line x1="${a.x2}" y1="${a.y2}" x2="${a.x2+Math.cos(an+s)*18/W}" y2="${a.y2+Math.sin(an+s)*18/H}" stroke="${c}" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+    return `<line x1="${a.x1}" y1="${a.y1}" x2="${a.x2}" y2="${a.y2}" stroke="${c}" stroke-width="2.5" vector-effect="non-scaling-stroke"/>${h(2.6)}${h(-2.6)}`}
+  return ''}
+function rvAnPinta(){const r=rvRef(),svg=$('#rv-an'),lab=$('#rv-lab'),b=$('#rv-box'),l=$('#rv-anl');if(!r||!svg||!b)return;const W=b.offsetWidth||1,H=b.offsetHeight||1,A=r.an||[],cr=S.rv.crop;
+  svg.innerHTML=A.map(a=>rvForma(a,W,H)).join('')+(cr?`<rect x="${cr.x}" y="${cr.y}" width="${cr.w}" height="${cr.h}" fill="rgba(255,106,61,.14)" stroke="#fff" stroke-width="2" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>`:'')+'<g id="rv-pre"></g>';
+  lab.innerHTML=A.map((a,i)=>{const x=a.t==='a'?a.x1:a.t==='c'?a.x-a.rx:a.x,y=a.t==='a'?a.y1:a.t==='c'?a.y-a.ry:a.y;return `<span class="rv-pin" style="left:${x*100}%;top:${y*100}%">${i+1}</span>`}).join('');
+  if(l)l.innerHTML=A.length?A.map((a,i)=>`<div class="prow" style="gap:6px;flex-wrap:nowrap"><b class="rv-n">${i+1}</b><input type="text" data-anid="${a.id}" value="${esc(a.txt||'')}" placeholder="${a.t==='n'?'Nota':a.t==='c'?'Qué hay aquí':'Qué señala'}" style="flex:1;min-width:0;font-size:12.5px;padding:4px 8px"><button class="btn ghost sm danger" data-act="rv-an-del" data-id="${a.id}" aria-label="Quitar">✕</button></div>`).join(''):'<span class="muted" style="font-size:12.5px">Sin anotaciones.</span>';
+  const cb=$('#rv-crop');if(cb)cb.hidden=!cr}
+function rvPaleta(r){const out=$('#rv-pal'),p=S.P[S.cur];if(!out)return;
+  const pinta=()=>{const d=rfDistPal(r,p),sw=(r.pal||[]).map(h=>`<i style="background:${h}" title="${h}"></i>`).join('');out.innerHTML=`<span class="rg-pal" style="position:static;display:inline-flex">${sw}</span> ${d==null?(p?.mood?.paleta?.length>1?'':'<span class="muted">Define la paleta del proyecto para compararla.</span>'):d<=PAL_OK?'<span style="color:var(--ok)">Se acerca a la paleta de tu proyecto.</span>':'<span style="color:var(--warn)">Se sale de la paleta de tu proyecto: úsala por forma o textura, no por color.</span>'}`};
+  if(r.pal?.length){pinta();return}
+  const im=$('#rv-img');const intenta=async()=>{let pal=null;try{pal=rfPaletaDe(im)}catch{try{pal=rfPaletaDe(await createImageBitmap(await blobDeRef(r)))}catch{}}
+    if(pal?.length){r.pal=pal;marcar();if(S.rv?.id===r.id)pinta()}else out.textContent='No pude leer los colores de esta imagen (su sitio de origen no lo permite).'};
+  if(im.complete&&im.naturalWidth)intenta();else im.addEventListener('load',intenta,{once:true})}
 function rvInit(r){const st=$('#rv-stage'),im=$('#rv-img');if(!st||!im)return;
   im.addEventListener('load',()=>{const p=S.P[S.cur],rr=p?.refs.find(x=>x.id===r.id);if(!rr)return;if(!rr.w||!rr.h){rr.w=im.naturalWidth;rr.h=im.naturalHeight;marcar()}
-    const t=$('#rv-res');if(t)t.textContent=(rgResTxt(rr)?rgResTxt(rr)+' · ':'')+im.naturalWidth+'×'+im.naturalHeight});
+    const t=$('#rv-res');if(t)t.textContent=(rgResTxt(rr)?rgResTxt(rr)+' · ':'')+im.naturalWidth+'×'+im.naturalHeight;rvFitBox();rvPaleta(rr)});
+  if(im.complete&&im.naturalWidth){rvFitBox();rvPaleta(r)}
   st.addEventListener('wheel',e=>{e.preventDefault();const rc=st.getBoundingClientRect();rvZoom(S.rv.k*(e.deltaY<0?1.18:1/1.18),e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)},{passive:false});
-  let dr=null;st.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dr={x:e.clientX,y:e.clientY,ox:S.rv.x,oy:S.rv.y};try{st.setPointerCapture(e.pointerId)}catch{}});
-  st.addEventListener('pointermove',e=>{if(!dr||S.rv.k===1)return;S.rv.x=dr.ox+e.clientX-dr.x;S.rv.y=dr.oy+e.clientY-dr.y;rvApply()});
-  st.addEventListener('pointerup',()=>{dr=null});
-  st.addEventListener('dblclick',e=>{if(e.target.closest('button'))return;const rc=st.getBoundingClientRect(),real=Math.max(2,im.naturalWidth/Math.max(1,im.clientWidth));rvZoom(S.rv.k>1?1:real,e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)})}
-document.addEventListener('keydown',e=>{if(!S.rv||!$('#rv')||e.target.matches?.('input,textarea,select'))return;
+  let dr=null,a0=null;
+  st.addEventListener('pointerdown',e=>{if(e.target.closest('button,.rv-bar,.rv-crop,.rv-top'))return;try{st.setPointerCapture(e.pointerId)}catch{}
+    if(S.rv.tool){a0=rvNorm(e);if(S.rv.tool==='nota'){a0=null;const [x,y]=rvNorm(e),rr=rvRef();if(rr){(rr.an=rr.an||[]).push({id:uid(),t:'n',x,y,txt:''});marcar();rvAnPinta()}}return}
+    dr={x:e.clientX,y:e.clientY,ox:S.rv.x,oy:S.rv.y}});
+  st.addEventListener('pointermove',e=>{if(a0){const b=rvNorm(e),g=$('#rv-pre'),bx=$('#rv-box'),t=S.rv.tool;if(!g)return;
+      if(t==='circ')g.innerHTML=rvForma({t:'c',x:(a0[0]+b[0])/2,y:(a0[1]+b[1])/2,rx:Math.abs(b[0]-a0[0])/2,ry:Math.abs(b[1]-a0[1])/2},bx.offsetWidth,bx.offsetHeight);
+      else if(t==='flecha')g.innerHTML=rvForma({t:'a',x1:a0[0],y1:a0[1],x2:b[0],y2:b[1]},bx.offsetWidth,bx.offsetHeight);
+      else if(t==='recorte')g.innerHTML=`<rect x="${Math.min(a0[0],b[0])}" y="${Math.min(a0[1],b[1])}" width="${Math.abs(b[0]-a0[0])}" height="${Math.abs(b[1]-a0[1])}" fill="rgba(255,106,61,.14)" stroke="#fff" stroke-width="2" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>`;return}
+    if(!dr||S.rv.k===1)return;S.rv.x=dr.ox+e.clientX-dr.x;S.rv.y=dr.oy+e.clientY-dr.y;rvApply()});
+  st.addEventListener('pointerup',e=>{dr=null;if(!a0)return;const b=rvNorm(e),t=S.rv.tool,rr=rvRef();const pre=$('#rv-pre');if(pre)pre.innerHTML='';
+    const w=Math.abs(b[0]-a0[0]),h=Math.abs(b[1]-a0[1]);
+    if(rr&&t==='circ'&&w>.015&&h>.015){(rr.an=rr.an||[]).push({id:uid(),t:'c',x:(a0[0]+b[0])/2,y:(a0[1]+b[1])/2,rx:w/2,ry:h/2,txt:''});marcar()}
+    else if(rr&&t==='flecha'&&Math.hypot(w,h)>.03){(rr.an=rr.an||[]).push({id:uid(),t:'a',x1:a0[0],y1:a0[1],x2:b[0],y2:b[1],txt:''});marcar()}
+    else if(t==='recorte'&&w>.03&&h>.03)S.rv.crop={x:Math.min(a0[0],b[0]),y:Math.min(a0[1],b[1]),w,h};
+    a0=null;rvAnPinta()});
+  st.addEventListener('dblclick',e=>{if(e.target.closest('button')||S.rv.tool)return;const rc=st.getBoundingClientRect(),real=Math.max(2,im.naturalWidth/Math.max(1,im.clientWidth));rvZoom(S.rv.k>1?1:real,e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)})}
+window.addEventListener('resize',()=>{if(S.rv&&$('#rv'))rvFitBox()});
+/* ---- comparar 2 a 4 (o una contra tu boceto), con el mismo zoom y los mismos filtros ---- */
+function cmpItems(p){return (S.cmp?.items||[]).map(it=>it.k==='r'?{it,x:p.refs.find(r=>r.id===it.id),t:'Ref'}:{it,x:(p.piezas||[]).find(z=>z.id===it.id),t:'Mi boceto'}).filter(o=>o.x)}
+function cmpAbre(){const p=S.P[S.cur],ids=(S.rgSel||[]).slice(0,4);if(!p||ids.length<2){toast('Elige 2 a 4 referencias');return}S.cmp={items:ids.map(id=>({k:'r',id})),k:1,x:0,y:0,vista:'normal'};S.rgSel=null;S.rv=null;cmpPinta()}
+function cmpApply(){const v=S.cmp;if(!v)return;document.querySelectorAll('.cmp-img').forEach(im=>{im.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`;im.style.filter=v.vista==='blur'?'grayscale(1) blur(5px)':(RV_FILT[v.vista]||'')})}
+function cmpPinta(){const p=S.P[S.cur],v=S.cmp,L=cmpItems(p);if(!p||!v||!L.length){rvCierra();return}
+  $('#overlay').innerHTML=`<div class="cmp" id="cmp">${SVG_POST}<div class="rv-top" style="position:static;background:none"><b>Comparar</b><span style="flex:1"></span>${RV_VISTAS.filter(([k])=>k!=='mini').map(([k,n])=>`<button class="ch xs ${v.vista===k?'on':''}" data-act="cmp-vista" data-v="${k}">${n}</button>`).join('')}
+      ${L.length<4&&(p.piezas||[]).length?`<select data-cmpadd aria-label="Agregar mi boceto"><option value="">＋ Mi boceto…</option>${p.piezas.map(z=>`<option value="${z.id}">${esc(z.nombre||z.etapa)}${z.grupo?' · '+esc(z.grupo):''}</option>`).join('')}</select>`:''}
+      <button class="btn sm" data-act="cmp-zoom" data-v="fit">Ajustar</button><button class="btn sm pri" data-act="rv-cerrar">Cerrar</button></div>
+    <div class="cmp-grid" id="cmp-grid" style="grid-template-columns:repeat(${L.length<=2?L.length:2},1fr)">${L.map((o,i)=>`<div class="cmp-p"><img class="cmp-img" ${imgAttrs(o.x)} alt="" draggable="false"><span class="cmp-l">${i+1} · ${o.t==='Ref'?esc(corto(o.x.porque||o.x.fuente||'Referencia',60)):'Mi boceto: '+esc(corto(o.x.nombre||o.x.etapa,40))}</span>${L.length>1?`<button class="btn ghost sm cmp-x" data-act="cmp-quita" data-i="${i}" aria-label="Quitar">✕</button>`:''}</div>`).join('')}</div></div>`;
+  S.assets?.hydrate?.();cmpApply();const g=$('#cmp-grid');let dr=null;
+  g.addEventListener('wheel',e=>{e.preventDefault();const pn=e.target.closest('.cmp-p')||g,rc=pn.getBoundingClientRect(),k0=v.k,k1=clamp(k0*(e.deltaY<0?1.18:1/1.18),1,14),cx=e.clientX-rc.left-rc.width/2,cy=e.clientY-rc.top-rc.height/2;v.x=cx-(cx-v.x)*k1/k0;v.y=cy-(cy-v.y)*k1/k0;v.k=k1;if(k1===1)v.x=v.y=0;cmpApply()},{passive:false});
+  g.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dr={x:e.clientX,y:e.clientY,ox:v.x,oy:v.y};try{g.setPointerCapture(e.pointerId)}catch{}});
+  g.addEventListener('pointermove',e=>{if(!dr||v.k===1)return;v.x=dr.ox+e.clientX-dr.x;v.y=dr.oy+e.clientY-dr.y;cmpApply()});g.addEventListener('pointerup',()=>{dr=null})}
+/* ---- modo pintar: pantalla completa, avance automático, para tener las referencias a un lado mientras dibujas ---- */
+function pnAbre(){const p=S.P[S.cur];if(!p)return;const L=rgFiltra(p).map(x=>x.r.id);if(!L.length){toast('Aún no hay referencias');return}S.pn={lista:L,i:0,seg:0,vista:'normal',t:null};pnPinta();try{$('#overlay').requestFullscreen?.()}catch{}}
+function pnReloj(){const n=S.pn;if(!n)return;clearInterval(n.t);n.t=null;if(n.seg)n.t=setInterval(()=>pnIr(1),n.seg*1000)}
+function pnIr(d){const n=S.pn;if(!n||!$('#pn'))return;n.i=(n.i+d+n.lista.length)%n.lista.length;pnPinta()}
+function pnPinta(){const p=S.P[S.cur],n=S.pn;if(!p||!n)return;n.lista=n.lista.filter(id=>p.refs.some(r=>r.id===id));if(!n.lista.length){rvCierra();return}n.i=Math.min(n.i,n.lista.length-1);const r=p.refs.find(x=>x.id===n.lista[n.i]);
+  $('#overlay').innerHTML=`<div class="pn" id="pn">${SVG_POST}<img class="pn-img" ${imgAttrs(r)} alt="" style="filter:${n.vista==='bn'?'grayscale(1)':n.vista==='val'?'url(#rv-post)':'none'}">
+    <div class="pn-bar"><span class="lbl">${n.i+1} / ${n.lista.length}</span><span class="muted" style="max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(corto(r.porque||r.fuente||'',60))}</span><span style="flex:1"></span>
+      <button class="btn sm" data-act="pn-ir" data-d="-1">←</button><button class="btn sm" data-act="pn-ir" data-d="1">→</button>
+      <select data-pnseg aria-label="Cambiar sola">${[[0,'Sin avance'],[30,'Cada 30 s'],[60,'Cada 1 min'],[120,'Cada 2 min'],[300,'Cada 5 min']].map(([v,t])=>`<option value="${v}" ${n.seg===v?'selected':''}>${t}</option>`).join('')}</select>
+      ${[['normal','Color'],['bn','B/N'],['val','3 valores']].map(([k,t])=>`<button class="ch xs ${n.vista===k?'on':''}" data-act="pn-vista" data-v="${k}">${t}</button>`).join('')}
+      <button class="btn sm" data-act="pn-mezcla">Mezclar</button><button class="btn sm pri" data-act="rv-cerrar">Salir</button></div></div>`;
+  S.assets?.hydrate?.()}
+/* ---- revisar el moodboard con Claude: una hoja numerada con todas las referencias + su porqué ---- */
+async function rfHoja(p){const rs=(p.refs||[]).slice().sort((a,b)=>(a.creado||0)-(b.creado||0)).slice(-24),cols=Math.min(6,rs.length),rows=Math.ceil(rs.length/cols),cw=400,ch=300,cv=lienzo(cols*cw,rows*ch),c=cv.getContext('2d');c.fillStyle='#101216';c.fillRect(0,0,cv.width,cv.height);
+  for(let i=0;i<rs.length;i++){const x=(i%cols)*cw,y=Math.floor(i/cols)*ch,bm=await bmSeguro(rs[i]);c.fillStyle='#1b1e24';c.fillRect(x+4,y+4,cw-8,ch-8);if(bm)fitImg(c,bm,x+4,y+4,cw-8,ch-8);c.fillStyle='#000';c.fillRect(x+4,y+4,58,38);tx2(c,String(i+1),x+33,y+9,26,'#ff6a3d',{w:'700',al:'center'})}
+  return {cv,rs}}
+function rfPaquete(p,rs){return [`Claude, revisa el moodboard de mi proyecto «${p.nombre}»: te paso una hoja con mis ${rs.length} referencias numeradas. No halagues por defecto: sé honesto y juzga contra el estándar de la industria.`,'','Mira: ¿las referencias son coherentes con el concepto, el mood y la dirección de arte? ¿Qué capa o tema está débil? ¿Qué se repite o sobra (dime los números)? ¿Qué falta (texturas, luz, personajes, cultura)? ¿Cuáles quitarías y qué buscarías en su lugar (con búsquedas concretas en inglés)?','','MIS REFERENCIAS:',...rs.map((r,i)=>`${i+1}. [${capaNombre(p,r.capa)}] ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`),'','CONTEXTO DEL PROYECTO:',ctxProyecto(p),'',CR_FORMATO].join('\n')}
+/* ---- eventos y acciones ---- */
+document.addEventListener('keydown',e=>{if(e.target.matches?.('input,textarea,select'))return;
+  if(S.pn&&$('#pn')){if(e.key==='Escape')rvCierra();else if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();pnIr(1)}else if(e.key==='ArrowLeft')pnIr(-1);else if(e.key==='b'||e.key==='B'){S.pn.vista=S.pn.vista==='bn'?'normal':'bn';pnPinta()}return}
+  if(S.cmp&&$('#cmp')){if(e.key==='Escape')rvCierra();return}
+  if(!S.rv||!$('#rv'))return;
   if(e.key==='Escape')rvCierra();else if(e.key==='ArrowRight')rvIr(1);else if(e.key==='ArrowLeft')rvIr(-1);else if(e.key==='+'||e.key==='=')rvZoom(S.rv.k*1.3);else if(e.key==='-')rvZoom(S.rv.k/1.3);else if(e.key==='0')rvZoom(1)});
 /* al cargar cada miniatura se aprende su resolución real (para la insignia y el filtro de alta resolución) */
 document.addEventListener('load',e=>{const im=e.target;if(!im.classList?.contains('rg-img'))return;const p=S.P[S.cur],r=p?.refs.find(x=>x.id===im.dataset.rid);if(!r||!im.naturalWidth)return;
   if(!r.w||!r.h){r.w=im.naturalWidth;r.h=im.naturalHeight;clearTimeout(S.rgT);S.rgT=setTimeout(marcar,2500)}
   const b=im.parentElement.querySelector('.rg-res');if(b&&rgResTxt(r)){b.hidden=false;b.textContent=rgResTxt(r);b.classList.toggle('baja',rgMax(r)<800)}},true);
-document.addEventListener('toggle',e=>{if(e.target.id==='det-busca')S.rgBusca=e.target.open},true);
-document.addEventListener('input',e=>{const t=e.target;if(!t.dataset?.rgq)return;const p=S.P[S.cur];if(!p)return;S.rgF=S.rgF||{capa:'',hd:false,q:''};S.rgF.q=t.value;const w=$('#rg-wrap');if(w){w.innerHTML=rgGaleriaHTML(p);S.assets?.hydrate?.()}});
+document.addEventListener('toggle',e=>{if(e.target.id==='det-busca')S.rgBusca=e.target.open;else if(e.target.id==='det-rev')S.rgRev=e.target.open},true);
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset?.rgq){const p=S.P[S.cur];if(!p)return;S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false};S.rgF.q=t.value;const w=$('#rg-wrap');if(w){w.innerHTML=rgGaleriaHTML(p);S.assets?.hydrate?.()}return}
+  if(t.dataset?.anid){const r=rvRef(),a=r?.an?.find(x=>x.id===t.dataset.anid);if(a){a.txt=t.value;marcar()}}});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset?.cmpadd!==undefined&&t.value&&S.cmp){if(S.cmp.items.length<4)S.cmp.items.push({k:'z',id:t.value});cmpPinta()}
+  else if(t.dataset?.pnseg!==undefined&&S.pn){S.pn.seg=+t.value;pnReloj()}});
 async function accionRg(a,el,p,ds){
-  const f=S.rgF=S.rgF||{capa:'',hd:false,q:''};
+  const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false};
   switch(a){
     case 'rg-vista':S.refVista=ds.v;renderMain();return true;
     case 'rg-capa':f.capa=ds.v;renderMain();return true;
     case 'rg-hd':f.hd=!f.hd;renderMain();return true;
+    case 'rg-pal':f.pal=!f.pal;renderMain();return true;
+    case 'rg-selmodo':S.rgSel=S.rgSel?null:[];renderMain();return true;
+    case 'rg-sel':{const L=S.rgSel=S.rgSel||[];S.rgSel=L.includes(ds.id)?L.filter(x=>x!==ds.id):(L.length>=4?(toast('Máximo 4 a la vez'),L):[...L,ds.id]);renderMain();return true}
+    case 'rg-para':{const r=p?.refs.find(x=>x.id===ds.id);if(!r||!S.rgPara)return true;r.para=r.para||[];const i=r.para.indexOf(S.rgPara);i>=0?r.para.splice(i,1):r.para.push(S.rgPara);marcar();renderMain();return true}
+    case 'rf-elegir':S.rgPara=ds.g;S.rgSel=null;S.refVista='galeria';S.tab='refs';S.ancla='mesa';renderMain();return true;
+    case 'rf-listo':S.rgPara=null;S.tab='bocetos';S.ancla='carpetas';renderMain();return true;
+    case 'rf-mision':{const m=(S.rfM||[])[+ds.i];if(!m)return true;const b=S.refB=S.refB||{};b.q=m.q;b.exacta=m.q;b.capa=m.capa;b.prop=m.prop;b.mision=m.t;b.src='';S.rgBusca=true;buscarRefs();return true}
+    case 'rb-mas':(S.refB=S.refB||{}).n=(S.refB.n||12)+12;renderMain();return true;
     case 'rv-abrir':rvAbre(ds.id);return true;
+    case 'rv-abrir-para':rvAbre(ds.id,(p?.refs||[]).filter(r=>(r.para||[]).includes(ds.g)).map(r=>r.id));return true;
     case 'rv-cerrar':rvCierra();return true;
     case 'rv-prev':rvIr(-1);return true;
     case 'rv-next':rvIr(1);return true;
     case 'rv-zoom':{const v=S.rv;if(!v)return true;const im=$('#rv-img');if(ds.v==='in')rvZoom(v.k*1.4);else if(ds.v==='out')rvZoom(v.k/1.4);else if(ds.v==='fit')rvZoom(1);else if(im)rvZoom(Math.max(1,im.naturalWidth/Math.max(1,im.clientWidth)));return true}
+    case 'rv-vista':{if(!S.rv)return true;S.rv.vista=ds.v;document.querySelectorAll('.rv-bar [data-act="rv-vista"]').forEach(b=>b.classList.toggle('on',b.dataset.v===ds.v));rvEstilo();return true}
+    case 'rv-tool':{if(!S.rv)return true;S.rv.tool=ds.v;if(ds.v!=='recorte'){S.rv.crop=null;rvAnPinta()}document.querySelectorAll('.rv-bar [data-act="rv-tool"]').forEach(b=>b.classList.toggle('on',b.dataset.v===ds.v));$('#rv-stage')?.classList.toggle('dibuja',!!ds.v);return true}
+    case 'rv-an-del':{const r=rvRef();if(r){r.an=(r.an||[]).filter(x=>x.id!==ds.id);marcar();rvAnPinta()}return true}
+    case 'rv-para':{const r=rvRef();if(!r)return true;r.para=r.para||[];const i=r.para.indexOf(ds.g);i>=0?r.para.splice(i,1):r.para.push(ds.g);marcar();el.classList.toggle('on',i<0);return true}
+    case 'rv-crop-no':if(S.rv){S.rv.crop=null;rvAnPinta()}return true;
+    case 'rv-crop-ok':{const r=rvRef(),c=S.rv?.crop;if(!r||!c||!p)return true;
+      try{const bm=await createImageBitmap(await blobDeRef(r)),cv=lienzo(Math.max(8,Math.round(c.w*bm.width)),Math.max(8,Math.round(c.h*bm.height)));cv.getContext('2d').drawImage(bm,c.x*bm.width,c.y*bm.height,c.w*bm.width,c.h*bm.height,0,0,cv.width,cv.height);
+        const img=await guardarImagen(new File([await aBlob(cv,'image/jpeg',.93)],'detalle.jpg',{type:'image/jpeg'})),n={id:uid(),capa:r.capa,porque:'Detalle de otra referencia: ',fuente:r.fuente,link:r.link,lic:r.lic,licEstado:r.licEstado,autor:r.autor,creado:Date.now(),de:r.id,w:cv.width,h:cv.height,...img};
+        p.refs.push(n);S.rv.lista.splice(S.rv.pos+1,0,n.id);S.rv.crop=null;marcar();renderMain();rvAnPinta();toast('Recorte guardado como referencia nueva (siguiente en el visor)')}
+      catch{toast('No se pudo recortar: el sitio de origen no deja leer esta imagen. Descárgala y súbela, o usa Anotar.')}return true}
     case 'rv-ok':if(p){aprobarRef(p,ds.id);rvPinta()}return true;
     case 'rv-no':if(p){await reemplazarRef(p,ds.id);S.rv.id=ds.id;rvPinta();renderMain()}return true;
     case 'rv-del':{if(!p)return true;if(S.confirmRef!==ds.id){S.confirmRef=ds.id;rvPinta();return true}
-      const i=p.refs.findIndex(r=>r.id===ds.id);if(i>=0)p.refs.splice(i,1);S.confirmRef=null;marcar();const v=S.rv;if(v){v.lista=v.lista.filter(id=>id!==ds.id);v.id=v.lista[Math.min(v.pos||0,v.lista.length-1)]}rvPinta();renderMain();return true}}
+      const i=p.refs.findIndex(r=>r.id===ds.id);if(i>=0)p.refs.splice(i,1);S.confirmRef=null;marcar();const v=S.rv;if(v){v.lista=v.lista.filter(id=>id!==ds.id);v.id=v.lista[Math.min(v.pos||0,v.lista.length-1)]}rvPinta();renderMain();return true}
+    case 'cmp-abrir':cmpAbre();return true;
+    case 'cmp-vista':if(S.cmp){S.cmp.vista=ds.v;document.querySelectorAll('[data-act="cmp-vista"]').forEach(b=>b.classList.toggle('on',b.dataset.v===ds.v));cmpApply()}return true;
+    case 'cmp-zoom':if(S.cmp){S.cmp.k=1;S.cmp.x=S.cmp.y=0;cmpApply()}return true;
+    case 'cmp-quita':if(S.cmp){S.cmp.items.splice(+ds.i,1);S.cmp.items.length?cmpPinta():rvCierra()}return true;
+    case 'pn-abrir':pnAbre();return true;
+    case 'pn-ir':pnIr(+ds.d);return true;
+    case 'pn-vista':if(S.pn){S.pn.vista=ds.v;pnPinta()}return true;
+    case 'pn-mezcla':if(S.pn){S.pn.lista.sort(()=>Math.random()-.5);S.pn.i=0;pnPinta()}return true;
+    case 'rf-hoja':{if(!p)return true;const {cv}=await rfHoja(p);try{await bajarBlob(slug(p.nombre,40)+'-moodboard-numerado.png',await aBlob(cv))}catch{toast('No se pudo armar la hoja')}return true}
+    case 'rf-pedir':{if(!p)return true;const rs=(p.refs||[]).slice().sort((a,b)=>(a.creado||0)-(b.creado||0)).slice(-24);copiarTexto(rfPaquete(p,rs),'Petición copiada: pégamela en el chat con la hoja numerada');return true}
+    case 'rf-guardar':{if(!p)return true;const txt=(S.crResp?.[ds.key]||document.querySelector('[data-crresp="'+ds.key+'"]')?.value||'').trim();if(txt.length<20){toast('Pega primero la respuesta de Claude');return true}
+      const c=crNueva(txt,{refs:1,titulo:'Moodboard'});(p.criticas=p.criticas||[]).push(c);(S.crResp=S.crResp||{})[ds.key]='';S.rgRev=true;marcar();renderMain();toast(c.crudo?'No reconocí el formato: revisa abajo':'Lista de cambios lista');return true}
+    case 'rf-directo':{if(!p)return true;const pid=S.cur;S.rgRev=true;
+      let h;try{h=await rfHoja(p);const blob=await aBlob(h.cv,'image/jpeg',.86);
+        await crCorre({key:'rf',prompt:rfPaquete(p,h.rs)+'\n\nLa hoja numerada va adjunta.',blobs:[blob],extra:{refs:1,titulo:'Moodboard'},guarda:c=>{(p.criticas=p.criticas||[]).push(c);marcarPid(pid)}})}
+      catch(e){toast('No pude armar la hoja de tus referencias; usa copiar y pegar.')}return true}}
   return false}
 const vRefsHerr=p=>vMesa(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`;
 
@@ -3591,6 +3763,7 @@ function vCarpetas(p){
     <div class="stepper" style="padding:0;flex-wrap:wrap"><button class="step ${!g?'on':''}" data-act="carp-g" data-v=""><span class="st">General · ${piezasGrupo(p,'').length}</span></button>${grupos.map(x=>`<button class="step ${g===x?'on':''}" data-act="carp-g" data-v="${esc(x)}"><span class="st">${esc(x)} · ${piezasGrupo(p,x).length}</span></button>`).join('')}</div>
     <span class="prow"><input type="text" id="carp-nuevo" placeholder="O escribe el tuyo (ej. Dios, Templo, Vehículo)" style="width:220px;border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:6px 10px" data-enter="carp-add"><button class="btn sm" data-act="carp-add">＋ Subcarpeta</button>
     ${g?`<button class="btn ghost sm danger" data-act="carp-del" data-v="${esc(g)}">${S.confirmLi==='g:'+g?'¿Quitar subcarpeta? (las imágenes pasan a General)':'Quitar subcarpeta'}</button>`:''}</span></div>
+  ${rfParaHTML(p,g)}
   <div class="carps">${CARPS.map(([k,n,etapas,def,desc])=>{const xs=ps.filter(x=>carpDe(x)===k).sort((a,b)=>a.creado-b.creado);return `<div class="carp">
     <div class="colh"><b>${n}</b><span>${xs.length}</span></div><p class="desc">${desc}</p>
     <label class="btn sm" for="cf-${k}">＋ Subir</label><input type="file" id="cf-${k}" data-carp="${k}" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
@@ -3756,9 +3929,11 @@ async function buscarTodos(q,fuentes,opts,alts){const est={};
   for(let i=0;i<40;i++)for(const l of res){const x=l[i];if(!x)continue;const k2=canon(x.src);if(vistos.has(x.clave)||vistos.has(k2))continue;vistos.add(x.clave);vistos.add(k2);mezcla.push(x)}
   return {items:mezcla,est}}
 /* relevancia: coincidencia con la búsqueda (título, autor, etiquetas), resolución, licencia identificable y tus preferencias por fuente */
-function puntuaRefs(items,q){const qt=toks(q).filter(w=>w.length>2),rel=S.ajustes.relev||{};
+function puntuaRefs(items,q,ctx){const qt=toks(q).filter(w=>w.length>2),rel=S.ajustes.relev||{};
   items.forEach((x,i)=>{const txt=nz([x.titulo,x.autor,(x.tags||[]).join(' ')].join(' ')),m=qt.length?qt.filter(w=>txt.includes(nz(w))).length/qt.length:0,lado=Math.max(x.w||0,x.h||0),r=rel[x.prov]||{ok:0,no:0},pref=Math.max(-.5,Math.min(.5,(r.ok-r.no)/12)),le=x.lic?.estado;
-    x._s=m*3+(lado>=1500?.6:lado>=900?.3:lado?0:.1)+(le==='dominio'?.5:(le==='abierta'||le==='libreuso')?.4:le==='desconocida'?-.2:0)+pref-i*.004});
+    x._s=m*3+(lado>=1500?.6:lado>=900?.3:lado?0:.1)+(le==='dominio'?.5:(le==='abierta'||le==='libreuso')?.4:le==='desconocida'?-.2:0)+pref-i*.004;
+    if(ctx){const hit=[...ctx.pos].filter(w=>txt.includes(w)),bad=[...ctx.neg].filter(w=>txt.includes(w));x._s+=Math.min(3,hit.length)*.3-bad.length*1.2;x._why=[...new Set([...qt.filter(w=>txt.includes(nz(w))),...hit])].slice(0,4).join(', ')+(bad.length?' · ojo: '+bad.slice(0,2).join(', ')+' está en tu «Evitar»':'')}
+    if(lado&&lado<600)x._s-=1.2;if(WM_BASURA.test(x.titulo||''))x._s-=2});
   return items.sort((a,b)=>b._s-a._s)}
 function relevMarca(r,v){const k=/Met/i.test(r.fuente||'')?'met':/Chicago/i.test(r.fuente||'')?'aic':/Wikimedia/i.test(r.fuente||'')?'wm':/Openverse/i.test(r.fuente||'')?'ov':/ArtStation/i.test(r.fuente||'')?'as':r.prov||'';if(!k)return;
   S.ajustes.relev=S.ajustes.relev||{};const x=S.ajustes.relev[k]=S.ajustes.relev[k]||{ok:0,no:0};if(v>0)x.ok++;else x.no++;marcarAj()}
@@ -3778,7 +3953,7 @@ document.addEventListener('toggle',e=>{if(e.target.id==='det-masherr')S.masHerr=
 async function buscarRefs(){
   const b=S.refB=S.refB||{};if(!(b.q||'').trim()){toast('Escribe qué buscar');return}
   const q=(b.exacta||consultaDe(b).principal||b.q).trim();
-  S.rbSel=[];b.cargando=true;b.error='';b.items=[];b.estado=null;b.qUsada=q;b.artistasEnc=null;b.artistasQ=q;b.artista=null;b.artistaNom=null;renderMain();
+  S.rbSel=[];b.n=12;b.cargando=true;b.error='';b.items=[];b.estado=null;b.qUsada=q;b.artistasEnc=null;b.artistasQ=q;b.artista=null;b.artistaNom=null;renderMain();
   const buscarAS=async q=>{if(!window.PC_SHIM?.artistas)throw new Error('sin');const r=await window.PC_SHIM.artistas({q:toks(q).map(tr).join(' ')||q});
     return (r.items||[]).map(x=>({...mkRef({prov:'as',id:'as-'+(x.link||x.src),titulo:x.titulo,autor:x.artista||'',fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'},cat:'Arte'}),as:true,artista:x.artista,usuario:x.usuario}))};
   /* artistas que de verdad resuelven ESTA búsqueda: se buscan en ArtStation aparte, aunque la fuente elegida sea otra */
@@ -3786,7 +3961,7 @@ async function buscarRefs(){
   let mezcla=[],est={};
   if(b.src==='as'){try{mezcla=await buscarAS(q);est.as={ok:true,n:mezcla.length}}catch{est.as={ok:false,msg:'no disponible ahora'}}}
   else{let fuentes=PROV_GRUPOS[b.src||'']||PROV_GRUPOS[''];if(!b.src){const fe=S.fotosEstado||{};fuentes=[...fuentes,...(fe.pexels?['px']:[]),...(fe.unsplash?['us']:[])]}
-    const r=await buscarTodos(q,fuentes,{libre:b.fLic==='libres'||b.fLic==='dominio',orient:{h:'landscape',v:'portrait',c:'squarish'}[b.fProp]||''},b.exacta?[]:consultaDe(b).variantes);mezcla=puntuaRefs(r.items,q);est=r.est}
+    const r=await buscarTodos(q,fuentes,{libre:b.fLic==='libres'||b.fLic==='dominio',orient:{h:'landscape',v:'portrait',c:'squarish'}[b.fProp]||''},b.exacta?[]:consultaDe(b).variantes);mezcla=puntuaRefs(r.items,q,rfContexto(S.P[S.cur]));est=r.est}
   const resAS=b.src==='as'?mezcla:await pArtistas;
   const vistos=new Set(),artistas=[];for(const x of (resAS||[])){if(!x.usuario||vistos.has(x.usuario))continue;vistos.add(x.usuario);artistas.push({u:x.usuario,n:x.artista,muestra:x})}
   b.artistasEnc=artistas.slice(0,8);b.estado=est;b.items=mezcla;b.cargando=false;
@@ -3861,7 +4036,7 @@ function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
   const e=x.lic?.estado||'desconocida';
   if(b.fLic==='libres'&&!['dominio','abierta','libreuso'].includes(e))return false;
   if(b.fLic==='dominio'&&e!=='dominio')return false;
-  if(+b.fRes&&Math.max(x.w||0,x.h||0)<+b.fRes)return false;
+  if(+b.fRes&&Math.max(x.w||0,x.h||0)&&Math.max(x.w||0,x.h||0)<+b.fRes)return false;
   if(b.fProp){if(!(x.w&&x.h))return false;const r=x.w/x.h;if(b.fProp==='h'&&r<1.2)return false;if(b.fProp==='v'&&r>.85)return false;if(b.fProp==='c'&&(r<.85||r>1.2))return false}
   return true})}
 function refResHTML(p,b,x,i,ya){const L=LIC_EST[x.lic?.estado||'desconocida'],guard=ya.has(x.big)||ya.has(x.src),dims=x.w&&x.h?`${x.w}×${x.h}`:'tamaño sin dato';
@@ -3903,7 +4078,7 @@ function refsBuscaHTML(p){
       ${sel('fRes',[['','Cualquier resolución'],['800','800 px o más'],['1200','1200 px o más'],['2000','2000 px o más']])}
       ${ocultos?`<span class="muted">${ocultos} oculto${ocultos===1?'':'s'} por tus filtros</span> <button class="btn ghost sm" data-act="rb-limpiar">Quitar filtros</button>`:''}</div>`:''}
     ${(b.items||[]).length&&!vis.length&&!b.cargando?'<p class="muted">Ningún resultado cumple tus filtros. Quítalos o relaja alguno (las fuentes no siempre informan tamaño).</p>':''}
-    ${vis.length?`${refCatChips(b)}<div class="rb-feed">${vis.map(({x,i})=>refFeedHTML(x,i,ya)).join('')}</div>${refSelBar(p,b)}<p class="hint" style="margin:0">Solo se guarda el enlace a la imagen y sus datos; la imagen sigue en su sitio de origen. «Dominio público» y «licencia abierta» se pueden reutilizar (la abierta pide atribución: en Referencias, «Copiar créditos»). Lo demás úsalo como estudio o inspiración.</p>`:''}
+    ${vis.length&&!b.mision?`${refCatChips(b)}<div class="rb-feed">${rfTop(vis,b.n||12).map(({x,i})=>refFeedHTML(x,i,ya)).join('')}</div>${vis.length>(b.n||12)?`<button class="btn" data-act="rb-mas">Ver más (${vis.length-(b.n||12)})</button>`:''}${refSelBar(p,b)}<p class="hint" style="margin:0">Solo se guarda el enlace a la imagen y sus datos; la imagen sigue en su sitio de origen. «Dominio público» y «licencia abierta» se pueden reutilizar (la abierta pide atribución: en Referencias, «Copiar créditos»). Lo demás úsalo como estudio o inspiración.</p>`:''}
   </div>`}
 
 /* ============ Modo presentación ============ */
@@ -5969,7 +6144,11 @@ async function bajarBlob(nombre,blob){
   try{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=nombre;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);toast('Descargado: '+nombre)}catch{toast('No se pudo descargar')}}
 function tx2(c,t,x,y,size,color,{w='400',f=BODY,al='left',max}={}){c.font=`${w} ${size}px ${f}`;c.fillStyle=color;c.textAlign=al;c.textBaseline='top';max?c.fillText(t,x,y,max):c.fillText(t,x,y);c.textAlign='left'}
 function txW(c,t,x,y,w,size,color,{lh=1.35,max=6,f=BODY,wt='400'}={}){c.font=`${wt} ${size}px ${f}`;c.fillStyle=color;c.textBaseline='top';const L=envolver(c,String(t||''),w).slice(0,max);L.forEach((l,i)=>c.fillText(l,x,y+i*size*lh));return L.length*size*lh}
-function fitImg(c,bm,x,y,w,h,cover){const s=cover?Math.max(w/bm.width,h/bm.height):Math.min(w/bm.width,h/bm.height),dw=bm.width*s,dh=bm.height*s;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.drawImage(bm,x+(w-dw)/2,y+(h-dh)/2,dw,dh);c.restore()}
+/* al exportar PSD/Procreate cada foto se anota aparte (en vez de dibujarse) para que vaya en su propia capa */
+const LAM={capas:null,base:null,top:null};
+const lamArriba=(c,fn)=>{fn(c);if(LAM.capas&&c===LAM.base)fn(LAM.top)};
+function fitImg(c,bm,x,y,w,h,cover){if(LAM.capas&&c===LAM.base){LAM.capas.push({bm,x,y,w,h,cover});return}fitImgRaw(c,bm,x,y,w,h,cover)}
+function fitImgRaw(c,bm,x,y,w,h,cover){const s=cover?Math.max(w/bm.width,h/bm.height):Math.min(w/bm.width,h/bm.height),dw=bm.width*s,dh=bm.height*s;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.drawImage(bm,x+(w-dw)/2,y+(h-dh)/2,dw,dh);c.restore()}
 function dash(c,x1,y1,x2,y2,col,wd=2,d=[14,10]){c.save();c.strokeStyle=col;c.lineWidth=wd;c.setLineDash(d);c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.restore()}
 function cabecera(c,W,p,titulo,sub){c.fillStyle=PRO.bg;c.fillRect(0,0,W,190);c.fillStyle=PRO.acc;c.fillRect(0,186,W,4);
   tx2(c,(p.nombre||'').toUpperCase(),80,40,92,PRO.ink,{w:'800',f:DISP});tx2(c,titulo,80,138,30,PRO.acc,{w:'500',f:MONO});
@@ -5993,7 +6172,7 @@ async function laminaRefs(c,p,d){const W=3840,H=2160,SX=2800,capa=d.refCapa||'',
   const {cols,rows}=celdasGrid(rs.length),x0=80,y0=240,gw=SX-160,gh=H-y0-250,gap=28,cw=(gw-(cols-1)*gap)/cols,chh=(gh-(rows-1)*gap)/rows,ih=chh-44;
   for(let i=0;i<rs.length;i++){const x=x0+(i%cols)*(cw+gap),y=y0+Math.floor(i/cols)*(chh+gap),bm=await bmSeguro(rs[i]);
     c.fillStyle=PRO.panel;c.fillRect(x,y,cw,ih);if(bm)fitImg(c,bm,x,y,cw,ih);else tx2(c,'sin imagen',x+cw/2,y+ih/2-12,24,PRO.ink3,{f:MONO,al:'center'});
-    c.fillStyle=PRO.bg;c.fillRect(x,y,64,44);tx2(c,String(i+1).padStart(2,'0'),x+32,y+8,26,PRO.acc,{w:'700',f:MONO,al:'center'});
+    lamArriba(c,k=>{k.fillStyle=PRO.bg;k.fillRect(x,y,64,44);tx2(k,String(i+1).padStart(2,'0'),x+32,y+8,26,PRO.acc,{w:'700',f:MONO,al:'center'})});
     tx2(c,corto(rs[i].porque||(rs[i].fuente||'').split(' · ')[0]||'',70),x,y+ih+10,22,PRO.ink2,{max:cw})}
   const cr=rs.map((r,i)=>[i+1,r]).filter(([,r])=>r.autor||r.fuente).slice(0,10),colW=(SX-160)/2;
   if(cr.length){tx2(c,'CRÉDITOS',80,H-215,22,PRO.ink3,{w:'500',f:MONO});cr.forEach(([n,r],i)=>tx2(c,String(n).padStart(2,'0')+'  '+corto([(r.fuente||'').split(' · ')[0],r.autor,r.lic].filter(Boolean).join(' · '),88),80+(i%2)*colW,H-175+Math.floor(i/2)*30,18,PRO.ink3,{f:MONO,max:colW-20}))}
@@ -6009,9 +6188,9 @@ async function laminaThumbs(c,p,d){const W=3840,H=2160,g=d.grupo||'',fav=d.fav||
   const {cols,rows}=celdasGrid(xs.length),x0=80,y0=250,gw=W-160,gh=H-y0-190,gap=30,cw=(gw-(cols-1)*gap)/cols,chh=(gh-(rows-1)*gap)/rows,ih=chh-40;
   for(let i=0;i<xs.length;i++){const x=x0+(i%cols)*(cw+gap),y=y0+Math.floor(i/cols)*(chh+gap),bm=await bmSeguro(xs[i]),es=!!fav[xs[i].id];
     c.fillStyle=PRO.papel;c.fillRect(x,y,cw,ih);if(bm)fitImg(c,bm,x+10,y+10,cw-20,ih-20);
-    if(es){c.strokeStyle=PRO.acc;c.lineWidth=10;c.strokeRect(x+5,y+5,cw-10,ih-10)}
-    c.fillStyle=es?PRO.acc:PRO.bg;c.fillRect(x,y,72,46);tx2(c,String(i+1).padStart(2,'0'),x+36,y+9,28,es?'#140905':PRO.acc,{w:'700',f:MONO,al:'center'});
-    if(es)tx2(c,'★ ELEGIDO',x+cw-20,y+10,24,PRO.acc,{w:'700',f:MONO,al:'right'});
+    lamArriba(c,k=>{if(es){k.strokeStyle=PRO.acc;k.lineWidth=10;k.strokeRect(x+5,y+5,cw-10,ih-10)}
+      k.fillStyle=es?PRO.acc:PRO.bg;k.fillRect(x,y,72,46);tx2(k,String(i+1).padStart(2,'0'),x+36,y+9,28,es?'#140905':PRO.acc,{w:'700',f:MONO,al:'center'});
+      if(es)tx2(k,'★ ELEGIDO',x+cw-20,y+10,24,PRO.acc,{w:'700',f:MONO,al:'right'})});
     if(xs[i].nota)tx2(c,corto(xs[i].nota,80),x,y+ih+8,22,PRO.ink2,{max:cw})}
   const el=xs.map((z,i)=>fav[z.id]?String(i+1).padStart(2,'0'):null).filter(Boolean);
   tx2(c,el.length?'ELEGIDOS PARA LA SIGUIENTE RONDA: '+el.join(' · '):`${xs.length} THUMBNAILS · DECIDE CUÁLES SIGUEN`,80,H-140,28,PRO.ink2,{w:'500',f:MONO})}
@@ -6027,7 +6206,7 @@ async function laminaFinal(c,p,d,bm){const W=3840,H=2160,hx=80,hy=100,hw=2820,hh
   if(proc.length){tx2(c,'PROCESO',x,py-44,22,PRO.ink3,{w:'500',f:MONO});const sw=(w-(proc.length-1)*20)/proc.length;
     for(let i=0;i<proc.length;i++){const b2=await bmSeguro(proc[i]);c.fillStyle=PRO.bg;c.fillRect(x+i*(sw+20),py,sw,ph);if(b2)fitImg(c,b2,x+i*(sw+20),py,sw,ph)}}
   tx2(c,PRO_ARTISTA,x,H-hy-48,32,PRO.ink,{w:'600'});tx2(c,'© '+new Date().getFullYear(),x+w,H-hy-44,24,PRO.ink3,{f:MONO,al:'right'})}
-async function lamina(p,d){await document.fonts?.ready;const W=3840,H=2160,cv=lienzo(W,H),c=cv.getContext('2d');c.fillStyle=PRO.bg;c.fillRect(0,0,W,H);
+async function lamina(p,d){await document.fonts?.ready;const W=3840,H=2160,cv=lienzo(W,H),c=cv.getContext('2d');c.fillStyle=PRO.bg;c.fillRect(0,0,W,H);if(LAM.capas)LAM.base=c;
   const bm=d.img?await bmPieza(d.img):null,SX=2800;
   if(d.tipo==='turn'){cabecera(c,W,p,'CHARACTER TURNAROUND · '+(d.pers||'PERSONAJE').toUpperCase());
     c.fillStyle=PRO.papel;c.fillRect(0,190,SX,H-190);const top=330,gnd=H-150,n=Math.max(2,Math.min(14,parseFloat(d.cabezas)||8)),u=(gnd-top)/n;
@@ -6172,7 +6351,7 @@ function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=
       ${!['proc','refs','thumbs'].includes(d.tipo)?`<div class="field"><label for="lam-img">${d.tipo==='turn'?'Diseño actual (referencia)':d.tipo==='env'?'Vista principal':d.tipo==='final'?'Pieza final':'Keyframe'}</label><select id="lam-img" data-lam="img">${opt(d.img)}</select></div>`:''}
       <div class="field"><label>Formato</label><div class="chips">${[['png','PNG 4K'],['psd','Photoshop (PSD)'],['procreate','Procreate']].map(([k,n])=>`<button class="ch ${(S.lamFmt||'png')===k?'on':''}" data-act="lam-fmt" data-v="${k}">${n}</button>`).join('')}</div></div>
       <button class="btn" data-act="lam-prev">Vista previa</button><button class="btn pri" data-act="lam-bajar">${(S.lamFmt||'png')==='png'?'Descargar PNG 4K':(S.lamFmt==='psd'?'Descargar PSD':'Descargar para Procreate')}</button></div>
-    <p class="hint" style="margin:0">${(S.lamFmt||'png')==='png'?'<b>PNG:</b> la imagen final en 3840×2160, para publicar o imprimir.':S.lamFmt==='psd'?'<b>PSD:</b> 3840×2160 con 2 capas (la lámina y una capa vacía «Pintar aquí» encima), listo para Photoshop.':'<b>Procreate:</b> baja un PSD de 3840×2160 con 2 capas; en Procreate usa Importar y conserva las capas. El formato propio .procreate no se puede generar desde una web.'}</p>
+    <p class="hint" style="margin:0">${(S.lamFmt||'png')==='png'?'<b>PNG:</b> la imagen final en 3840×2160, para publicar o imprimir.':S.lamFmt==='psd'?'<b>PSD</b> 3840×2160 en capas: «Fondo y textos», una carpeta con <b>cada foto en su propia capa</b> (muévela, escálala o bórrala), «Números y marcas» y una capa vacía «Pintar aquí» encima.':'<b>Procreate:</b> el mismo archivo en capas pero a 2560×1440, para que te quepan más capas en el iPad. En Procreate abre «Importar» y elige el PSD: cada foto llega como capa. El formato propio .procreate no se puede generar desde una web.'}</p>
     ${d.tipo==='thumbs'?`<div class="field"><label>Qué thumbnails entran (toca ★ en los que eliges)</label><div class="chips">${piezasGrupo(p,d.grupo||'').sort((a,b)=>a.creado-b.creado).map((x,i)=>`<span class="prow" style="gap:2px"><button class="ch xs ${(d.sel||{})[x.id]===false?'':'on'}" data-act="lam-sel" data-id="${x.id}">${String(i+1).padStart(2,'0')}</button><button class="ch xs ${(d.fav||{})[x.id]?'on':''}" data-act="lam-fav" data-id="${x.id}" aria-label="Elegir">★</button></span>`).join('')||'<span class="muted">Sube thumbnails en la pestaña Bocetos.</span>'}</div></div>`:''}
     ${d.tipo==='proc'?`<div class="field"><label>Etapas incluidas (la más reciente de cada una)</label><div class="chips">${pz.map(x=>`<button class="ch xs ${(d.sel||{})[x.id]===false?'':'on'}" data-act="lam-sel" data-id="${x.id}">${esc(x.etapa)} · ${fecha(x.creado)}</button>`).join('')||'<span class="muted">Sube piezas en Carpetas o Crítica.</span>'}</div></div>`:''}
     <p class="hint">${d.tipo==='refs'?'Tus referencias en cuadrícula con su porqué, los créditos de cada una, qué buscas, keywords y paleta. Lista para enseñar el criterio detrás de tu moodboard.':d.tipo==='thumbs'?'Todos tus thumbnails numerados con los elegidos marcados: se ve que exploraste varias ideas y cuál sigue.':d.tipo==='final'?'Una lámina limpia para portafolio: tu pieza final grande, título, concepto, técnica, paleta y el proceso en miniatura.':d.tipo==='turn'?'Lienzo gris para pintar encima: frente, perfil y espalda con líneas de altura, callouts numerados, tu paleta y tu dirección (pilares, reglas, evitar).':d.tipo==='env'?'Vista principal, llaves de valor por plano, callouts de tus materiales, paleta y luz.':d.tipo==='key'?'Keyframe grande con qué comunica, paleta, dirección y el proceso debajo.':'Tus etapas en orden con flechas, las notas de cada una y tus decisiones confirmadas.'}</p>
@@ -6192,8 +6371,18 @@ async function accionPro(a,el,p,ds){
     case 'lam-prev':case 'lam-png':{el.disabled=true;el.textContent='Armando…';try{const cv=await lamina(p,lamDraft());if(a==='lam-prev'){const s=lienzo(1280,720);s.getContext('2d').drawImage(cv,0,0,1280,720);S.lamPrev=s.toDataURL('image/jpeg',.85)}else{const t=LAM_TIPOS.find(x=>x[0]===lamDraft().tipo)[1];await bajarBlob(`${slugP(PRO_ARTISTA)}_${slugP(p.nombre)}_${slugP(t)}${lamDraft().tipo==='turn'&&lamDraft().pers?'_'+slugP(lamDraft().pers):''}.png`,await aBlob(cv))}}catch(e){console.error(e);toast('No se pudo armar la lámina')}renderMain();return true}
     case 'lam-fmt':S.lamFmt=ds.v;renderMain();return true;
     case 'lam-bajar':return accionPro((S.lamFmt||'png')==='png'?'lam-png':'lam-psd',el,p,ds);
-    case 'lam-psd':{el.disabled=true;el.textContent='Armando PSD…';try{const d=lamDraft(),cv=await lamina(p,d),{writePsd}=await import('https://cdn.jsdelivr.net/npm/ag-psd@28.2.1/+esm'),vacio=lienzo(cv.width,cv.height),t=LAM_TIPOS.find(x=>x[0]===d.tipo)[1];
-      const buf=writePsd({width:cv.width,height:cv.height,canvas:cv,children:[{name:'Lámina · '+t,canvas:cv},{name:'Pintar aquí',canvas:vacio}]});
+    case 'lam-psd':{el.disabled=true;el.textContent='Armando PSD…';try{const d=lamDraft(),t=LAM_TIPOS.find(x=>x[0]===d.tipo)[1];let cv,fotos,arriba;
+      LAM.capas=[];LAM.top=lienzo(3840,2160).getContext('2d');try{cv=await lamina(p,d);fotos=LAM.capas;arriba=LAM.top.canvas}finally{LAM.capas=null;LAM.base=null;LAM.top=null}
+      /* Procreate: lienzo más liviano (2560×1440) para que quepan más capas en el iPad; Photoshop: 4K completo */
+      const k=S.lamFmt==='procreate'?2560/3840:1,W=Math.round(cv.width*k),H=Math.round(cv.height*k),{writePsd}=await import('https://cdn.jsdelivr.net/npm/ag-psd@28.2.1/+esm'),
+        escala=(c,w=Math.max(1,Math.round(c.width*k)),h=Math.max(1,Math.round(c.height*k)))=>{if(k===1)return c;const o=lienzo(w,h);o.getContext('2d').drawImage(c,0,0,w,h);return o},
+        plano=lienzo(W,H),pg=plano.getContext('2d'),base=escala(cv),capaFotos=[];
+      pg.drawImage(base,0,0);
+      fotos.forEach((f,i)=>{const lc=lienzo(Math.max(1,Math.round(f.w*k)),Math.max(1,Math.round(f.h*k))),g=lc.getContext('2d');fitImgRaw(g,f.bm,0,0,lc.width,lc.height,f.cover);const left=Math.round(f.x*k),top=Math.round(f.y*k);pg.drawImage(lc,left,top);capaFotos.push({name:'Foto '+String(i+1).padStart(2,'0'),left,top,canvas:lc})});
+      const marcas=escala(arriba);pg.drawImage(marcas,0,0);
+      const hijos=[{name:'Fondo y textos',canvas:base}];if(capaFotos.length)hijos.push({name:'Fotos (muévelas o quítalas)',opened:true,children:capaFotos});
+      hijos.push({name:'Números y marcas',canvas:marcas},{name:'Pintar aquí',canvas:lienzo(W,H)});
+      const buf=writePsd({width:W,height:H,canvas:plano,children:hijos});
       await bajarBlob(`${slugP(PRO_ARTISTA)}_${slugP(p.nombre)}_${slugP(t)}${d.tipo==='turn'&&d.pers?'_'+slugP(d.pers):''}.psd`,new Blob([buf],{type:'image/vnd.adobe.photoshop'}))}catch(e){console.error(e);toast('No se pudo armar el PSD (necesita internet la primera vez)')}renderMain();return true}
     case 'pub-zip':{if(S.pubBusy)return true;S.pubBusy=true;renderMain();try{await paquetePublicar(p,S.pub||{})}catch(e){console.error(e);toast('No se pudo armar el paquete')}S.pubBusy=false;renderMain();return true}
     case 'ron-add':{const t=$('#ron-t')?.value.trim();nuevaRonda(p,t,[],'');marcar();renderMain();return true}
@@ -7523,7 +7712,7 @@ function refFeedHTML(x,i,ya){const L=LIC_EST[x.lic?.estado||'desconocida'],guard
     <img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" referrerpolicy="no-referrer" draggable="false">
     ${guard?'<span class="rb-ya">En tu moodboard ✓</span>':`<span class="rb-chk">${sel?'✓':''}</span>`}
     <button class="rb-z" data-act="rb-zoom" data-i="${i}" aria-label="Ver más grande" title="Ver más grande">🔍</button>
-    <figcaption><span class="lic ${L[1]}" title="${esc(x.lic?.texto||'La fuente no indica licencia')}">${L[0]}</span><small>${esc(corto(x.titulo,46))}${x.autor?' · '+esc(corto(x.autor,22)):''} · ${esc(x.fuente.split(' · ')[0])}${x.w&&x.h?' · '+x.w+'×'+x.h:''}</small></figcaption></figure>`}
+    <figcaption><span class="lic ${L[1]}" title="${esc(x.lic?.texto||'La fuente no indica licencia')}">${L[0]}</span><small>${esc(corto(x.titulo,46))}${x.autor?' · '+esc(corto(x.autor,22)):''} · ${esc(x.fuente.split(' · ')[0])}${x.w&&x.h?' · '+x.w+'×'+x.h:''}</small>${x._why?`<br><small class="rf-why">↳ ${esc(x._why)}</small>`:''}</figcaption></figure>`}
 function refCatChips(b){return `<div class="chips" style="margin:2px 0"><span class="lbl">Ver</span>${[['','Todo'],['Museo','Museos y obras'],['Foto','Fotos'],['Arte','Concept art']].map(([k,n])=>`<button class="ch xs ${(b.fCat||'')===k?'on':''}" data-act="rb-cat" data-v="${k}">${n}</button>`).join('')}</div>`}
 function refSelBar(p,b){const n=(S.rbSel||[]).length;if(!n)return '';
   return `<div class="rb-bar"><b>${n} seleccionada${n>1?'s':''}</b><select data-refb="capa" aria-label="Capa del moodboard">${capasDe(p).map(l=>`<option value="${l.k}" ${capaDestino(b)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
@@ -8662,7 +8851,7 @@ async function accion(a,el){
     case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
     case 'sync':sincronizarCarpeta(false);break;
     case 'sync-elegir':sincronizarCarpeta(true);break;
-    case 'rb-buscar':{const v=$('#rb-q')?.value;S.refB=S.refB||{};if(v!=null)S.refB.q=v;S.refB.exacta='';buscarRefs();break}
+    case 'rb-buscar':{const v=$('#rb-q')?.value;S.refB=S.refB||{};if(v!=null)S.refB.q=v;S.refB.exacta='';S.refB.mision='';buscarRefs();break}
     case 'rb-sug':S.refB=S.refB||{};S.refB.q=ds.v;S.refB.exacta='';buscarRefs();break;
     case 'as-cerrar':S.rbSel=[];S.refB.artista=null;S.refB.artistaNom=null;S.refB.items=[];S.refB.q?buscarRefs():renderMain();break;
     case 'rb-add':{const x=S.refB?.items?.[+ds.i];if(!x||!p)return;rbAgrega(p,x,capaDestino(S.refB),($('#rbn-'+ds.i)?.value||'').trim());marcar();renderMain();toast('Agregada al moodboard');break}
