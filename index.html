@@ -692,6 +692,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}.reglas li{display:flex;gap:4px;align-items:center}.reglas li input{flex:1;min-width:0}.v3-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.v3-sw{display:inline-flex;gap:5px}.v3-c{width:26px;height:26px;border-radius:50%;border:2px solid var(--line2);cursor:pointer;padding:0}.v3-c.on{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
 .crec-l{display:flex;flex-direction:column;gap:6px}.crec-i{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}.crec-i span{font-size:13px;color:var(--ink2);line-height:1.4}.crec-i .btn{align-self:flex-start}
 .des-pasos{display:flex;flex-direction:column;gap:8px}.des-p{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;background:var(--bg)}.des-p span{flex:1}.des-p small{display:block;color:var(--ink2);margin-top:2px;line-height:1.4}.des-p.ok{opacity:.6}.des-p input{margin-top:3px}
+.rl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;align-items:start}.rl-box{position:relative;display:inline-block;max-width:100%}.rl-box canvas{width:100%;height:auto;display:block;border-radius:8px;background:#000}.rl-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:17px;cursor:grab;touch-action:none;box-shadow:0 0 0 2px rgba(0,0,0,.5);color:#000;user-select:none}.rl-panel{display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}.rl-mat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.rl-sw{width:22px;height:22px;border-radius:5px;border:1px solid var(--line2);flex:none}@media(max-width:900px){.rl-wrap{grid-template-columns:1fr}.rl-panel{max-height:none}}
 .v3-bar{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px;border-bottom:1px solid var(--line)}.v3-pg{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}
 .sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
 .cand{margin:6px 0 0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px;color:var(--ink2)}
@@ -1035,7 +1036,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muynb8xs').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muynopuj').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1425,7 +1426,7 @@ const pgNav=items=>`<div class="chips pgnav">${items.map(([id,n])=>`<button clas
 const enMapa=()=>S.vista==='proyecto'&&S.tab==='proyecto';
 const enTablero=()=>S.vista==='proyecto'&&(S.tab==='board'||(S.tab==='refs'&&!!document.getElementById('sec-tablero')));
 function pgAncla(){if(S.vista!=='proyecto'||!S.ancla)return;const id=S.ancla;S.ancla=null;const d=document.getElementById('sec-'+id);if(d)requestAnimationFrame(()=>d.scrollIntoView({block:'start'}))}
-function renderMain(){renderMainInner();pgAncla();S.assets?.hydrate?.();if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.vista==='proyecto'&&S.tab==='comp'&&S.P[S.cur]?.libre)requestAnimationFrame(compInit);if(S.tab==='bocetos'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();pgAncla();S.assets?.hydrate?.();if(S.vista==='proyecto'&&S.tab==='relite')requestAnimationFrame(rlMonta);if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.vista==='proyecto'&&S.tab==='comp'&&S.P[S.cur]?.libre)requestAnimationFrame(compInit);if(S.tab==='bocetos'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -3326,6 +3327,105 @@ async function accionRg(a,el,p,ds){
   return false}
 const vRefsHerr=p=>vMesa(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`;
 
+/* ============ Iluminar una ilustración en 2D: sube tu pintura y juega con la luz como en 3D (relieve estimado de la propia imagen) ============
+   Se calcula un relieve a partir de los valores de la imagen, y sobre él se mueven una o dos luces con color, sombras, brillo y materiales por color. Todo en tu navegador. */
+const RL={R:null,bm:null,nom:''};
+const RL_LUCES={fuego:{n:'Fuego desde abajo',x:.5,y:.98,z:.5,color:'#ff8a3d',int:1.6,amb:'#1b1420',ai:.28,l2:{on:false}},luna:{n:'Luna fría',x:.22,y:.04,z:.65,color:'#9db8ff',int:1.2,amb:'#0d1322',ai:.32,l2:{on:false}},rasante:{n:'Luz rasante',x:.98,y:.45,z:.14,color:'#ffe2b0',int:1.5,amb:'#1a1d28',ai:.22,l2:{on:false}},mediodia:{n:'Mediodía',x:.5,y:-.1,z:.9,color:'#fff4dc',int:1.2,amb:'#586a8c',ai:.5,l2:{on:false}},atardecer:{n:'Atardecer',x:.03,y:.35,z:.38,color:'#ff9a5c',int:1.5,amb:'#3a2a44',ai:.35,l2:{on:true,x:.95,y:.2,z:.3,color:'#6a8cff',int:.55}},neon:{n:'Neón en dos colores',x:.1,y:.3,z:.35,color:'#ff3fa4',int:1.4,amb:'#10102a',ai:.25,l2:{on:true,x:.9,y:.6,z:.35,color:'#2fe0ff',int:1.2}}};
+const RL_MAT={metal:{n:'Metal (brilla mucho)',esp:3.2,dif:.7,glow:0,ign:0},piel:{n:'Piel o suave',esp:.4,dif:1,glow:0,ign:0},tela:{n:'Tela o mate',esp:0,dif:1,glow:0,ign:0},brillo:{n:'Brillo propio (emite luz)',esp:0,dif:0,glow:.9,ign:.6},ignorar:{n:'No le afecta la luz',esp:0,dif:0,glow:0,ign:1}};
+const rlDef=()=>({x:.2,y:.25,z:.5,color:'#ffcf8a',int:1.3,radio:1.3,l2:{on:false,x:.85,y:.55,z:.35,color:'#6aa0ff',int:.8},amb:'#1e2438',ai:.35,relieve:3,suav:3,brillo:.35,dureza:28,sombras:.6,aplana:.4,fuerza:1,invert:false,vista:'res',mats:[],pick:false,palPid:''});
+const rlCol=h=>{const c=hexRgb(h)||[255,255,255];return [c[0]/255,c[1]/255,c[2]/255]};
+function rlBlur(a,W,H,r){r=Math.max(1,r|0);const t=new Float32Array(a.length),o=new Float32Array(a.length);
+  for(let p=0;p<2;p++){const s=p?o:a;
+    for(let y=0;y<H;y++){let sum=0,n=0;const b=y*W;for(let x=-r;x<=r;x++){if(x>=0&&x<W){sum+=s[b+x];n++}}for(let x=0;x<W;x++){t[b+x]=sum/n;const xo=x-r,xi=x+r+1;if(xo>=0){sum-=s[b+xo];n--}if(xi<W){sum+=s[b+xi];n++}}}
+    for(let x=0;x<W;x++){let sum=0,n=0;for(let y=-r;y<=r;y++){if(y>=0&&y<H){sum+=t[y*W+x];n++}}for(let y=0;y<H;y++){o[y*W+x]=sum/n;const yo=y-r,yi=y+r+1;if(yo>=0){sum-=t[yo*W+x];n--}if(yi<H){sum+=t[yi*W+x];n++}}}}
+  return o}
+function rlPrepara(bm,max){const k=Math.min(1,max/Math.max(bm.width,bm.height)),W=Math.max(8,Math.round(bm.width*k)),H=Math.max(8,Math.round(bm.height*k)),cv=lienzo(W,H),g=cv.getContext('2d',{willReadFrequently:true});g.drawImage(bm,0,0,W,H);
+  const src=g.getImageData(0,0,W,H),d=src.data,N=W*H,L=new Float32Array(N),hu=new Float32Array(N),sa=new Float32Array(N);
+  for(let i=0;i<N;i++){const r=d[i*4]/255,gg=d[i*4+1]/255,b=d[i*4+2]/255,mx=Math.max(r,gg,b),mn=Math.min(r,gg,b);L[i]=.2126*r+.7152*gg+.0722*b;sa[i]=mx?(mx-mn)/mx:0;let h=0;if(mx!==mn){const dd=mx-mn;h=mx===r?((gg-b)/dd+(gg<b?6:0)):mx===gg?(b-r)/dd+2:(r-gg)/dd+4;h*=60}hu[i]=h}
+  return {W,H,N,src,L,hu,sa,Lb:rlBlur(L,W,H,Math.max(4,Math.round(Math.max(W,H)/28))),Hm:null,nx:new Float32Array(N),ny:new Float32Array(N),nz:new Float32Array(N),out:new ImageData(W,H)}}
+function rlRelieve(R,P){const {W,H}=R,h=R.Hm=rlBlur(R.L,W,H,Math.max(1,Math.round(P.suav*Math.max(W,H)/400))),s=P.relieve*Math.max(W,H)/40*(P.invert?-1:1);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,xl=x>0?i-1:i,xr=x<W-1?i+1:i,yu=y>0?i-W:i,yd=y<H-1?i+W:i,dx=(h[xr]-h[xl])*s,dy=(h[yd]-h[yu])*s,m=1/Math.sqrt(dx*dx+dy*dy+1);R.nx[i]=-dx*m;R.ny[i]=-dy*m;R.nz[i]=m}}
+function rlPeso(R,i,m){const dh=Math.abs(R.hu[i]-m.h),d=(Math.min(dh,360-dh)/180*Math.max(m.s,R.sa[i])*1.4+Math.abs(R.sa[i]-m.s)*.7+Math.abs(R.L[i]-m.l)*.7)/m.tol,w=Math.max(0,1-d);return w*w*(3-2*w)}
+function rlRender(R,P,rapido){
+  const {W,H,src,L,Lb,Hm,nx,ny,nz,out}=R,sd=src.data,od=out.data,maxd=Math.max(W,H),rs=P.relieve*maxd*.03,c1=rlCol(P.color),ca=rlCol(P.amb),l2=P.l2,c2=rlCol(l2.color),
+    L1=[P.x*W,P.y*H,P.z*maxd],L2=[l2.x*W,l2.y*H,l2.z*maxd],mats=P.mats.map(m=>({...m,tol:Math.max(.08,m.tol)})),pasos=rapido?6:12,paso=maxd/(rapido?24:48),dur=P.dureza,fu=P.fuerza,ap=P.aplana;
+  const sombra=(x,y,i,Lp)=>{const Lx=Lp[0]-x,Ly=Lp[1]-y,lxy=Math.hypot(Lx,Ly);if(lxy<1e-3||P.sombras<=0)return 0;const dx=Lx/lxy,dy=Ly/lxy,sl=Lp[2]/lxy,hp=Hm[i]*rs;let s=0;
+    for(let k=1;k<=pasos;k++){const t=k*paso,px=Math.round(x+dx*t),py=Math.round(y+dy*t);if(px<0||py<0||px>=W||py>=H)break;const hs=Hm[py*W+px]*rs,rh=hp+sl*t;if(hs>rh)s=Math.max(s,Math.min(1,(hs-rh)/(rs*.25+1e-6)))}return s*P.sombras};
+  let dd=0,ss=0;
+  const luz=(x,y,i,Lp,int)=>{let Lx=Lp[0]-x,Ly=Lp[1]-y,Lz=Lp[2];const Ld=Math.hypot(Lx,Ly,Lz)||1;Lx/=Ld;Ly/=Ld;Lz/=Ld;const nl=Math.max(0,nx[i]*Lx+ny[i]*Ly+nz[i]*Lz);if(nl<=0){dd=0;ss=0;return}
+    const att=1/(1+Math.pow(Ld/(P.radio*maxd),2)*1.5),sh=1-sombra(x,y,i,Lp);dd=nl*att*int*sh;const hz=Lz+1,hn=Math.hypot(Lx,Ly,hz),sp=Math.max(0,(nx[i]*Lx+ny[i]*Ly+nz[i]*hz)/hn);ss=Math.pow(sp,dur)*att*int*sh};
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,o=i*4,a=sd[o+3];if(!a){od[o]=od[o+1]=od[o+2]=od[o+3]=0;continue}
+    const r=sd[o]/255,g=sd[o+1]/255,b=sd[o+2]/255;let esp=1,dif=1,glow=0,ign=0;
+    for(const m of mats){const w=rlPeso(R,i,m);if(w<=0)continue;const T=RL_MAT[m.tipo]||RL_MAT.tela;esp+=(T.esp-1)*w;dif+=(T.dif-1)*w;glow+=T.glow*w;ign=Math.max(ign,T.ign*w)}
+    const lb=Lb[i],fl=Math.min(2.2,Math.max(.6,(.5+(1-ap)*(lb-.5))/(lb+.04))),ar=Math.min(1,r*fl),ag=Math.min(1,g*fl),ab=Math.min(1,b*fl);
+    luz(x,y,i,L1,P.int);const d1=dd*dif,s1=ss*esp;let d2=0,s2=0;if(l2.on){luz(x,y,i,L2,l2.int);d2=dd*dif;s2=ss*esp}
+    let lr=ar*(ca[0]*P.ai+c1[0]*d1+c2[0]*d2)+(c1[0]*s1+c2[0]*s2)*P.brillo+r*glow,lg=ag*(ca[1]*P.ai+c1[1]*d1+c2[1]*d2)+(c1[1]*s1+c2[1]*s2)*P.brillo+g*glow,lbv=ab*(ca[2]*P.ai+c1[2]*d1+c2[2]*d2)+(c1[2]*s1+c2[2]*s2)*P.brillo+b*glow;
+    const k=fu*(1-ign);od[o]=Math.max(0,Math.min(255,(r*(1-k)+lr*k)*255));od[o+1]=Math.max(0,Math.min(255,(g*(1-k)+lg*k)*255));od[o+2]=Math.max(0,Math.min(255,(b*(1-k)+lbv*k)*255));od[o+3]=a}}
+function rlVista(R,P){const {W,H}=R;
+  if(P.vista==='orig')return R.src;
+  if(P.vista==='rel'){const o=new ImageData(W,H);for(let i=0;i<R.N;i++){const v=Math.round((R.nx[i]*.5+R.ny[i]*-.5+.5*R.nz[i]+.25)*255),c=Math.max(0,Math.min(255,v));o.data[i*4]=o.data[i*4+1]=o.data[i*4+2]=c;o.data[i*4+3]=255}return o}
+  if(P.vista==='mask'){const o=new ImageData(W,H),sd=R.src.data;for(let i=0;i<R.N;i++){let w=0;for(const m of P.mats)w=Math.max(w,rlPeso(R,i,{...m,tol:Math.max(.08,m.tol)}));const o4=i*4;o.data[o4]=sd[o4]*(1-.7*w)*.5+255*w*.6;o.data[o4+1]=sd[o4+1]*(1-.7*w)*.5+106*w*.6;o.data[o4+2]=sd[o4+2]*(1-.7*w)*.5+61*w*.6;o.data[o4+3]=sd[o4+3]}return o}
+  rlRender(R,P,R.rapido);return R.out}
+function rlActualiza(rapido){const R=RL.R,cv=$('#rl-cv'),P=S.rl;if(!R||!cv||!P)return;R.rapido=!!rapido;cv.getContext('2d').putImageData(rlVista(R,P),0,0)}
+function rlPines(){const P=S.rl,a=$('#rl-p1'),b=$('#rl-p2');if(!P)return;if(a){a.style.left=P.x*100+'%';a.style.top=P.y*100+'%';a.style.background=P.color}if(b){b.style.left=P.l2.x*100+'%';b.style.top=P.l2.y*100+'%';b.style.background=P.l2.color}}
+function rlMonta(){const R=RL.R,cv=$('#rl-cv'),box=$('#rl-box');if(!R||!cv||!box)return;cv.width=R.W;cv.height=R.H;rlActualiza(false);rlPines();
+  let drag=null;const P=S.rl,pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
+  box.addEventListener('pointerdown',e=>{const pin=e.target.closest('.rl-pin');
+    if(pin){drag=pin.id==='rl-p2'?'l2':'l1';try{box.setPointerCapture(e.pointerId)}catch{}e.preventDefault();return}
+    if(P.pick){const [fx,fy]=pos(e),x=Math.max(0,Math.min(R.W-1,Math.floor(fx*R.W))),y=Math.max(0,Math.min(R.H-1,Math.floor(fy*R.H))),i=y*R.W+x;P.mats.push({h:R.hu[i],s:R.sa[i],l:R.L[i],tol:.3,tipo:'metal',hex:rgbHex([R.src.data[i*4],R.src.data[i*4+1],R.src.data[i*4+2]])});P.pick=false;P.vista='mask';renderMain();toast('Color elegido: ahora dile cómo reacciona a la luz')}});
+  box.addEventListener('pointermove',e=>{if(!drag)return;const [fx,fy]=pos(e),t=drag==='l2'?P.l2:P;t.x=Math.max(-.15,Math.min(1.15,fx));t.y=Math.max(-.15,Math.min(1.15,fy));rlPines();cancelAnimationFrame(RL.f);RL.f=requestAnimationFrame(()=>rlActualiza(true))});
+  box.addEventListener('pointerup',()=>{if(drag){drag=null;rlActualiza(false)}})}
+async function rlCarga(bm,nom){RL.bm=bm;RL.nom=nom||'ilustracion';RL.R=rlPrepara(bm,720);S.rl=S.rl||rlDef();S.rl.vista='res';rlRelieve(RL.R,S.rl)}
+function rlPanelHTML(p){const P=S.rl,sl=(lbl,k,mn,mx,st,v,u='')=>`<label class="v3-s"><span>${lbl} <b id="rlv-${k.replace(/\./g,'-')}">${Math.round(v*100)/100}${u}</b></span><input type="range" data-rl="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,
+    palP=(P.palPid&&S.P[P.palPid]?S.P[P.palPid]:p)?.mood?.paleta||[],sw=(k)=>palP.length?`<span class="v3-sw">${palP.map(h=>`<button class="v3-c ${(k==='color'?P.color:k==='l2.color'?P.l2.color:P.amb).toLowerCase()===h.toLowerCase()?'on':''}" style="background:${esc(h)}" data-act="rl-color" data-k="${k}" data-c="${esc(h)}" aria-label="${esc(h)}"></button>`).join('')}</span>`:'',
+    proys=Object.entries(S.P).filter(([,x])=>!x.libre);
+  return `<div class="chips">${[['res','Con luz'],['orig','Original'],['rel','Relieve estimado'],['mask','Dónde afecta']].map(([k,n])=>`<button class="ch xs ${P.vista===k?'on':''}" data-act="rl-vista" data-v="${k}">${n}</button>`).join('')}<button class="btn sm" data-rlhold="1" title="Mantén apretado para ver la imagen sin luz">Mantén: antes</button></div>
+    <div class="v3-g"><b>Luces de partida</b><div class="chips">${Object.entries(RL_LUCES).map(([k,v])=>`<button class="ch xs" data-act="rl-luz" data-k="${k}">${esc(v.n)}</button>`).join('')}${p?.escena?`<button class="ch xs" data-act="rl-luz" data-k="proyecto" title="Aproximada, a partir de la escena de luz de tu proyecto">La luz de mi proyecto</button>`:''}</div></div>
+    <div class="v3-g"><b>Luz principal <span class="muted">(arrastra el ☀ sobre la imagen)</span></b><div class="prow"><input type="color" data-rl="color" value="${esc(P.color)}" aria-label="Color de la luz">${sw('color')}</div>${sl('Intensidad','int',0,3,.05,P.int)}${sl('Altura de la luz','z',.05,1.2,.01,P.z)}${sl('Alcance','radio',.3,4,.05,P.radio)}</div>
+    <div class="v3-g"><label class="chk"><input type="checkbox" data-rl="l2.on" ${P.l2.on?'checked':''}><span><b>Segunda luz</b> (contraluz o color distinto)</span></label>${P.l2.on?`<div class="prow"><input type="color" data-rl="l2.color" value="${esc(P.l2.color)}" aria-label="Color de la segunda luz">${sw('l2.color')}</div>${sl('Intensidad','l2.int',0,3,.05,P.l2.int)}${sl('Altura','l2.z',.05,1.2,.01,P.l2.z)}`:''}</div>
+    <div class="v3-g"><b>Ambiente y sombras</b><div class="prow"><input type="color" data-rl="amb" value="${esc(P.amb)}" aria-label="Color de la sombra">${sw('amb')}</div>${sl('Cuánto ambiente','ai',0,1.2,.02,P.ai)}${sl('Sombras que proyecta el relieve','sombras',0,1,.02,P.sombras)}</div>
+    <div class="v3-g"><b>Relieve y brillo</b>${sl('Relieve','relieve',0,8,.1,P.relieve)}${sl('Suavizado del relieve','suav',1,12,.5,P.suav)}${sl('Brillo','brillo',0,1.5,.02,P.brillo)}${sl('Dureza del brillo','dureza',2,120,1,P.dureza)}${sl('Aplanar la luz original','aplana',0,1,.02,P.aplana)}${sl('Fuerza del efecto','fuerza',0,1,.02,P.fuerza)}<label class="chk"><input type="checkbox" data-rl="invert" ${P.invert?'checked':''}><span>Invertir relieve (lo oscuro sale hacia ti)</span></label></div>
+    <div class="v3-g"><b>Colores que reaccionan distinto</b><p class="hint" style="margin:0">Elige un color de la imagen y dile si es metal, piel, tela, si brilla solo o si la luz no lo toca.</p>
+      ${P.mats.map((m,i)=>`<div class="rl-mat"><span class="rl-sw" style="background:${esc(m.hex||'#888')}"></span><select data-rl="mats.${i}.tipo" aria-label="Cómo reacciona">${Object.entries(RL_MAT).map(([k,v])=>`<option value="${k}" ${m.tipo===k?'selected':''}>${v.n}</option>`).join('')}</select><label class="v3-s" style="flex:1 1 120px"><span>Rango</span><input type="range" data-rl="mats.${i}.tol" min=".08" max="1" step=".02" value="${m.tol}"></label><button class="btn ghost sm danger" data-act="rl-mat-del" data-i="${i}" aria-label="Quitar">✕</button></div>`).join('')}
+      <button class="btn sm ${P.pick?'pri':''}" data-act="rl-pick">${P.pick?'Toca un color en la imagen…':'＋ Elegir un color de la imagen'}</button></div>
+    <div class="v3-g"><b>Guardar</b><div class="prow"><button class="btn pri sm" data-act="rl-exp" data-k="png">PNG</button><button class="btn sm" data-act="rl-exp" data-k="psd" title="Original, iluminada y relieve en capas">PSD en capas</button></div>
+      <div class="prow"><select id="rl-dest" aria-label="Guardar en"><option value="">Moodboard de Herramientas</option>${proys.map(([id,x])=>`<option value="${esc(id)}">Proyecto: ${esc(x.nombre)} (bocetos)</option>`).join('')}</select><button class="btn sm" data-act="rl-exp" data-k="guardar">Guardar ahí</button></div>
+      <button class="btn ghost sm" data-act="rl-reset">Restablecer luces</button></div>`}
+function vRelite(p){const P=S.rl=S.rl||rlDef(),pz=compImagenes('');
+  return `<p class="intro"><b>Iluminar una ilustración.</b> Sube un personaje, un keyframe o un entorno y juega con la luz como en 3D: mueve la luz, cámbiale el color, deja que ciertos colores reaccionen distinto (metal, piel, brillo propio). El relieve se estima de los valores de tu propia pintura; es una aproximación pensada para estudiar luz, no un render real.</p>
+  <div class="prow"><label class="btn pri" for="rl-file">Subir ilustración</label><input type="file" id="rl-file" accept="image/*" hidden>${pz.length?`<select data-rlpieza aria-label="Usar una de mis piezas"><option value="">…o una de mis piezas</option>${pz.slice(0,120).map((x,i)=>`<option value="${i}">${esc(corto(x.t,60))}</option>`).join('')}</select>`:''}${RL.R?`<span class="muted">${esc(RL.nom)} · ${RL.R.W}×${RL.R.H} en pantalla</span>`:''}</div>
+  ${RL.R?`<div class="rl-wrap"><div class="rl-box" id="rl-box"><canvas id="rl-cv"></canvas><div class="rl-pin" id="rl-p1" title="Arrástrame">☀</div>${P.l2.on?'<div class="rl-pin l2" id="rl-p2" title="Arrástrame">☀</div>':''}</div><div class="rl-panel">${rlPanelHTML(p)}</div></div>`:'<div class="empty">Sube una ilustración (o elige una de tus piezas) para empezar.</div>'}`}
+async function rlExporta(k){const P=S.rl,R0=RL.R;if(!R0||!RL.bm){toast('Sube primero una ilustración');return}
+  toast('Armando en alta calidad…');const R=rlPrepara(RL.bm,1600);rlRelieve(R,P);rlRender(R,P,false);const cv=lienzo(R.W,R.H);cv.getContext('2d').putImageData(R.out,0,0);const nom=slug(RL.nom,40)+'-luz';
+  try{if(k==='png'){await bajarBlob(nom+'.png',await aBlob(cv));return}
+    if(k==='psd'){const o=lienzo(R.W,R.H);o.getContext('2d').putImageData(R.src,0,0);const rel=lienzo(R.W,R.H),Pv={...P,vista:'rel'};rel.getContext('2d').putImageData(rlVista(R,Pv),0,0);
+      const {writePsd}=await import('https://cdn.jsdelivr.net/npm/ag-psd@28.2.1/+esm'),buf=writePsd({width:R.W,height:R.H,canvas:cv,children:[{name:'Original',canvas:o},{name:'Iluminada',canvas:cv},{name:'Relieve estimado (oculta)',canvas:rel,hidden:true},{name:'Pintar aquí',canvas:lienzo(R.W,R.H)}]});await bajarBlob(nom+'.psd',new Blob([buf],{type:'image/vnd.adobe.photoshop'}));return}
+    const pid=$('#rl-dest')?.value||'',f=new File([await aBlob(cv)],nom+'.png',{type:'image/png'}),img=await guardarImagen(f);
+    if(pid&&S.P[pid]){const pr=S.P[pid];pr.grupos=pr.grupos||[];if(!pr.grupos.includes('Iluminación'))pr.grupos.push('Iluminación');pr.piezas.push({id:uid(),etapa:'Color',grupo:'Iluminación',nota:'Estudio de luz · '+RL.nom,nombre:RL.nom+' · luz',creado:Date.now(),...img});marcarPid(pid);toast(`Guardada en «${pr.nombre}» (grupo Iluminación)`)}
+    else{const p=S.P[S.cur];if(!p)return;const r=refNueva({capa:capaDestino(undefined,p),porque:'Estudio de luz sobre mi ilustración: '+RL.nom,fuente:'Iluminar ilustración · hecho en la app',tipoRef:'primaria',clase:'Estudio de luz',lic:'Creación propia',licEstado:'propia',autor:'Tú',...img});aMoodTablero(p,[r],true);toast('Añadida al moodboard y al tablero')}}
+  catch(e){console.error(e);toast('No se pudo guardar')}}
+async function accionRl(a,el,p,ds){const P=S.rl;
+  switch(a){
+    case 'rl-vista':P.vista=ds.v;document.querySelectorAll('[data-act="rl-vista"]').forEach(b=>b.classList.toggle('on',b.dataset.v===ds.v));rlActualiza(false);return true;
+    case 'rl-luz':{if(ds.k==='proyecto'){const E=p?.escena;if(!E)return true;const L=escALuz3d(E),az=L.dir*RAD;Object.assign(P,{x:Math.max(.02,Math.min(.98,.5+Math.cos(az)*.45)),y:Math.max(.02,Math.min(.98,.5-Math.sin(L.alt*RAD)*.45)),z:Math.max(.2,Math.min(1,.2+L.alt/90*.7)),color:L.color,amb:L.ambc,int:Math.min(2,L.int/1.7)});P.l2.on=false}
+      else{const L=RL_LUCES[ds.k];if(!L)return true;const {n,l2,ai,amb,...r}=L;Object.assign(P,r,{amb,ai});P.l2={...P.l2,...l2}}
+      renderMain();return true}
+    case 'rl-color':{if(ds.k==='color')P.color=ds.c;else if(ds.k==='l2.color')P.l2.color=ds.c;else P.amb=ds.c;renderMain();return true}
+    case 'rl-pick':P.pick=!P.pick;renderMain();return true;
+    case 'rl-mat-del':P.mats.splice(+ds.i,1);rlActualiza(false);renderMain();return true;
+    case 'rl-reset':{const v=P.vista,m=P.mats;Object.assign(S.rl,rlDef(),{vista:v,mats:m});rlRelieve(RL.R,S.rl);renderMain();return true}
+    case 'rl-exp':rlExporta(ds.k);return true;
+    case 'rl-pieza':{const x=(S.P[S.cur]?.piezas||[]).find(v=>v.id===ds.id);if(!x)return true;try{await rlCarga(await cargarBitmap(x),x.nombre||x.etapa||'pieza');herrAbre('relite')}catch{toast('No pude abrir esa imagen')}return true}}
+  return false}
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.rl;if(k===undefined||!S.rl)return;const P=S.rl,v=t.type==='checkbox'?t.checked:t.type==='range'?+t.value:t.value;setPath(P,k,v);
+  const lb=$('#rlv-'+k.replace(/\./g,'-'));if(lb)lb.textContent=Math.round((+v)*100)/100;
+  if(k==='l2.on'){renderMain();return}
+  if(RL.R){if(k==='relieve'||k==='suav'||k==='invert')rlRelieve(RL.R,P);rlActualiza(true);rlPines();clearTimeout(RL.t);RL.t=setTimeout(()=>rlActualiza(false),180)}});
+document.addEventListener('change',async e=>{const t=e.target;
+  if(t.id==='rl-file'&&t.files[0]){const f=t.files[0];t.value='';try{await rlCarga(await createImageBitmap(f),f.name.replace(/\.[^.]+$/,''));renderMain()}catch{toast('No pude abrir esa imagen')}}
+  else if(t.dataset?.rlpieza!==undefined&&t.value!==''){const q=compImagenes('')[+t.value];if(q)try{await rlCarga(await cargarBitmap(q.r),q.r.nombre||q.r.etapa||'pieza');renderMain()}catch{toast('No pude abrir esa imagen')}}});
+document.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-rlhold]')&&RL.R){const P=S.rl,v=P.vista;P.vista='orig';rlActualiza(false);const fin=()=>{P.vista=v;rlActualiza(false);document.removeEventListener('pointerup',fin)};document.addEventListener('pointerup',fin)}});
+
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
   const ev=[];
@@ -3905,7 +4005,7 @@ function vCarpetas(p){
       <input type="text" id="cn-${x.id}" data-b="piezas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Qué quieres que revise de este boceto">
       <div class="prow" style="gap:4px"><select id="ce-${x.id}" data-b="piezas.${i}.etapa" aria-label="Mover a" style="flex:1">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
         ${grupos.length?`<select id="cg-${x.id}" data-b="piezas.${i}.grupo" aria-label="Subcarpeta" style="flex:1"><option value="">General</option>${grupos.map(gg=>`<option ${gg===(x.grupo||'')?'selected':''}>${esc(gg)}</option>`).join('')}</select>`:''}
-        <button class="btn ghost sm" data-act="comp-abrir" data-id="${x.id}" title="Estudiar su composición y su perspectiva">Composición</button><button class="btn ghost sm" data-act="cr-pz" data-id="${x.id}" title="Pedir la crítica de este boceto">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
+        <button class="btn ghost sm" data-act="comp-abrir" data-id="${x.id}" title="Estudiar su composición y su perspectiva">Composición</button><button class="btn ghost sm" data-act="rl-pieza" data-id="${x.id}" title="Jugar con la luz de este boceto">Luz</button><button class="btn ghost sm" data-act="cr-pz" data-id="${x.id}" title="Pedir la crítica de este boceto">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
   ${ps.length||(p.piezas||[]).length?'<div class="prow"><button class="btn pri" data-act="ir-sec" data-id="critica">Pedir crítica de estos bocetos ↓</button><span class="muted">Qué está mal, cómo arreglarlo e ideas nuevas.</span></div>':''}
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Crítica de proceso${g?' · '+esc(g):''}</b><p class="muted" style="margin:2px 0 0">Compara tus etapas en orden: qué mejoró, qué se perdió (¿los valores de tus grises llegaron vivos al final?) y qué cambiar en tu método para el próximo proyecto.</p></div>
     ${S.aiBusy.proceso?'<button class="btn sm" data-act="ai-stop" data-k="proceso">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="proceso" ${ps.length<2?'disabled title="Sube al menos 2 imágenes de distintas etapas"':''}>${d?'Analizar de nuevo':'Analizar mi proceso'}</button>`}</div>
@@ -5814,14 +5914,14 @@ function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class=
     <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
 /* ============ Herramientas: luz y color, referencias, moodboard, tablero y 3D SIN proyecto ============
    Es un espacio libre (un proyecto oculto con libre:true): reutiliza todo lo que ya funciona, pero no aparece en la lista de proyectos. */
-const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias'],['herr3d','Referencia 3D'],['comp','Perspectiva y composición']];
+const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias'],['herr3d','Referencia 3D'],['relite','Iluminar ilustración'],['comp','Perspectiva y composición']];
 const capasDe=p=>p?.libre?LAYERS.filter(l=>!/^p\d$/.test(l.k)):LAYERS;
 function herrP(){if(!S.P[HERR_ID]){const p=nuevoProyecto('Herramientas');p.libre=true;S.P[HERR_ID]=p}return S.P[HERR_ID]}
 function herrAbre(tab){const nuevo=!S.P[HERR_ID];herrP();S.palImg=null;S.confirmHerr=false;S.cur=HERR_ID;S.vista='proyecto';S.tab=tab||'luzcolor';S.ai={};S.confirmDel=false;recordar();if(nuevo)marcar();render()}
 function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
   return `${conflictoHTML(S.cur)}<div class="phead"><div style="flex:1 1 380px;min-width:0"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,46px);margin:0">Herramientas</h1><p class="muted" style="margin:4px 0 0">Luz y color, referencias, moodboard, tablero y 3D, sin necesidad de un proyecto. Lo que hagas aquí se guarda aparte, y también aparece en tu Biblioteca.</p></div></div>
   <nav class="tabs" role="tablist">${HERR_TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join('')}</nav>
-  <section class="panel">${({luzcolor:vLuzColor,refs:vRefsHerr,herr3d:vHerr3d,comp:vComp}[S.tab])(p)}</section>`}
+  <section class="panel">${({luzcolor:vLuzColor,refs:vRefsHerr,herr3d:vHerr3d,relite:vRelite,comp:vComp}[S.tab])(p)}</section>`}
 function vLuzColor(p){const m=p.mood,t=tresMood(p),conMood=t.some(Boolean)||m.luz||m.color,
     paso=(n,tit,sub,html)=>`<div class="herr-paso"><span class="herr-n">${n}</span><div><h3 style="margin:0">${tit}</h3><p class="hint" style="margin:2px 0 0">${sub}</p></div></div>${html}`;
   return `<p class="intro">Elige tus colores, ilumínalos con una escena de luz y mira qué paletas funcionan. No necesitas un proyecto.</p>
@@ -9403,7 +9503,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
