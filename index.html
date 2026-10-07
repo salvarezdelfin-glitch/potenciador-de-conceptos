@@ -997,7 +997,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mut62qji').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyce6l3').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1620,7 +1620,7 @@ function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div cl
   <div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
   ${nowhy?'<span class="warn">Falta el porqué</span>':''}
   <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
-  <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
+  <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${capasDe(p).map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
   <button class="btn ghost sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button>
   <button class="btn ghost sm" data-act="ref-bajar" data-id="${r.id}" title="Descargar esta imagen suelta">Descargar</button>
   <button class="btn ghost sm danger" data-act="ref-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕'}</button></div>${refMetaHTML(r)}${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
@@ -1675,7 +1675,7 @@ function hojaFaltan(p){const c=p.concepto,q=p.que||{},l=p.lenguaje||{},g=p.guia|
   return [['La frase del proyecto',c.frase],['El encargo',p.brief.texto],['La historia',p.brief.historia],['Qué es y para qué existe',q.que&&q.funcion],['Las 3 palabras de mood',tresMood(p).filter(Boolean).length>=3],['Silueta',p.forma?.silueta],['Color',p.mood.color||l.colorDom],['Luz',p.mood.luz||g.luz],['Los pilares',p.pilares.some(x=>x.t)],['Personajes',pj.length],['Referencias',p.refs.length]].filter(x=>!x[1]).map(x=>x[0])}
 function vHojaVer(p){const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p).filter(Boolean),pj=(p.personajes||[]).filter(x=>x.nombre),tens=(p.tensiones||[]).filter(t=>t.a||t.b),nuc=c.nucleos.filter(x=>x.trim()),falta=hojaFaltan(p),
     R=(lab,val)=>val?`<div class="hv-r"><span class="lbl">${lab}</span><p>${esc(val)}</p></div>`:'',
-    S_=(k,titulo,cuerpo)=>cuerpo.trim()?`<div class="hsec hoja-s"><div class="hsec-h"><h5 style="margin:0">${titulo}</h5>${k?cpBtn(k):''}</div>${cuerpo}</div>`:'';
+    S_=(k,titulo,cuerpo)=>cuerpo.replace(/<[^>]*>/g,'').trim()?`<div class="hsec hoja-s"><div class="hsec-h"><h5 style="margin:0">${titulo}</h5>${k?cpBtn(k):''}</div>${cuerpo}</div>`:'';
   return `
   <div class="prow" style="justify-content:space-between;align-items:center"><span class="muted" style="font-size:13px;max-width:62ch">Todo lo que has contestado, en una sola hoja. ${falta.length?`Faltan: ${falta.map(esc).join(', ')}.`:'Está completa.'}</span>${hojaBotones(p)}</div>
   <article class="sheet">
@@ -2009,7 +2009,7 @@ async function preguntar(kind){
       for(const x of [...(S.ajustes.galeria||[]).slice(-4),...(S.ajustes.estiloImgs||[]).slice(-2)])try{imgs.push(await blobDeRef(x))}catch{}
       for(const pr of Object.values(S.P))for(const x of pr.piezas.slice(-1))if(imgs.length<8)try{imgs.push(await blobDeRef(x))}catch{}
       let images;try{const lim=await S.sample.limits();if(lim?.images&&imgs.length)images=imgs.slice(0,lim.images.maxCount)}catch{}
-      const proys=Object.values(S.P).map(x=>`- ${x.nombre} (${x.tipo}): ${x.concepto.frase||x.concepto.nucleos.filter(Boolean).join(' / ')}; mood ${x.mood.sensacion||'—'}; técnica ${x.tecnica.medio||'—'}; pilares ${x.pilares.map(q=>q.t).filter(Boolean).join(', ')}`).join('\n').slice(0,6000);
+      const proys=Object.values(S.P).filter(x=>!x.libre).map(x=>`- ${x.nombre} (${x.tipo}): ${x.concepto.frase||x.concepto.nucleos.filter(Boolean).join(' / ')}; mood ${x.mood.sensacion||'—'}; técnica ${x.tecnica.medio||'—'}; pilares ${x.pilares.map(q=>q.t).filter(Boolean).join(', ')}`).join('\n').slice(0,6000);
       const r=await S.sample.json(`${ROL_CRITICA}\n\nAyúdalo a descubrir y formar su ESTILO PROPIO como concept artist e ilustrador.\nSu gusto: ${S.ajustes.gusto||'(sin escribir)'}\nArtistas que sigue: ${S.ajustes.referentes.map(r=>r.nombre).join(', ')||'—'}\nSus GUÍAS FUNDAMENTALES (el nivel al que quiere llegar; compáralo con ellas, di qué ya tiene de cada una y qué le falta): ${guiasTexto()||'—'}\nSus proyectos:\n${proys||'—'}\n${images?`Adjunto ${images.length} de sus piezas: analízalas con detalle (forma, trazo, valores, color, temas, composición).`:'No hay imágenes adjuntas: básate en sus proyectos y gusto, y dilo.'}\nSé honesto y concreto: qué ya es suyo, qué todavía es imitación de sus referentes, y cómo empujar una voz propia sin perder empleabilidad en la industria.\nResponde SOLO con JSON: {"resumen":"su estilo hoy en 2-3 frases","rasgos":[{"rasgo":"","evidencia":"dónde se ve"}],"fortalezas":["3"],"huecos":["3 cosas que le faltan o repite"],"firma":"lo que podría convertirse en su sello, en una frase","influencias":"de quién se nota la influencia y cómo diferenciarse","direccion":["3 direcciones para desarrollar su estilo propio"],"ejercicios":[{"nombre":"","como":"ejercicio concreto de 1-2 semanas"}],"artistas_adn":[{"artista":"concept artist real con ADN parecido","por_que":""}],"nicho":"en qué tipo de estudio o trabajo encajaría hoy y a cuál podría apuntar"}`,{signal:ctl.signal,cache:false,modelTier:'complex',images});
       S.ajustes.estiloAnalisis={ts:Date.now(),data:r,n:images?.length||0};marcarAj();S.ai[kind]={data:r};
     }else if(kind==='nombres'){
@@ -2103,7 +2103,7 @@ async function subir(files){
   setStatus(`Subiendo ${imgs.length}…`);let n=0;
   for(const f of imgs){
     try{
-      const r={id:uid(),capa:S.destinoCapa,porque:'',fuente:'',creado:Date.now()};
+      const r={id:uid(),capa:capaDestino(),porque:'',fuente:'',creado:Date.now()};
       Object.assign(r,await guardarImagen(f));
       p.refs.push(r);n++;
     }catch(e){toast(e?.code==='too_large'?'Imagen demasiado grande (máx. 20 MB)':e?.code==='quota_or_state'?'Se llenó el espacio de imágenes':'No se pudo subir una imagen')}
@@ -3042,7 +3042,7 @@ const HASHTAGS={
 function hashtagsDe(tipo){return [HASHTAGS.base,HASHTAGS[tipo]||HASHTAGS['Key art'],HASHTAGS.mx].join(' ')}
 function planLocal(){
   // 4 semanas, lunes/miércoles/viernes: proceso → final → detalles de cada proyecto con piezas
-  const ps=Object.entries(S.P).filter(([,p])=>p.estado!=='Archivado'&&((p.piezas||[]).length||(p.refs||[]).length)).slice(0,4);
+  const ps=Object.entries(S.P).filter(([,p])=>!p.libre&&p.estado!=='Archivado'&&((p.piezas||[]).length||(p.refs||[]).length)).slice(0,4);
   if(!ps.length)return 0;
   const d=new Date();while(d.getDay()!==1)d.setDate(d.getDate()+1);
   const dias=[];for(let w=0;w<4;w++)for(const o of [0,2,4]){const x=new Date(d);x.setDate(d.getDate()+w*7+o);dias.push(hoyKey(x))}
@@ -3241,7 +3241,8 @@ const NOM_FORMULAS=[
   ['[Nombre propio] + [rol]','Itzli, Guardián del Filo','Nombre con significado + función: se entiende y suena a personaje.'],
   ['Palabra en lengua original + traducción','Tezcatl (espejo)','Da identidad; verifica siempre el significado en una fuente seria.']
 ];
-function nomDraft(){return S.nom=S.nom||{para:'Personaje',pid:S.cur&&S.P[S.cur]?S.cur:'',desc:'',estilos:['Épico','Raíz en lengua originaria'],idioma:'Ambos'}}
+const curReal=()=>S.P[S.cur]?.libre?'':S.cur||'';
+function nomDraft(){return S.nom=S.nom||{para:'Personaje',pid:curReal(),desc:'',estilos:['Épico','Raíz en lengua originaria'],idioma:'Ambos'}}
 function vNombres(){
   const d=nomDraft(),favs=S.ajustes.nombresFav||[],r=S.ai.nombres2?.data,p=S.P[d.pid];
   return `
@@ -3421,7 +3422,7 @@ async function sincronizarCarpeta(elegir){
       try{
         const img=await guardarImagen(it.f);
         if(normN(top)==='proyectos'&&proy){
-          let pid=Object.keys(S.P).find(id=>normN(S.P[id].nombre)===normN(proy));
+          let pid=Object.keys(S.P).find(id=>!S.P[id].libre&&normN(S.P[id].nombre)===normN(proy));
           if(!pid){pid=uid();S.P[pid]=nuevoProyecto(proy);S.P[pid].encargo='Desde tu carpeta'}
           if(/referen|refs|moodboard/.test(normN(carp||''))){const p=S.P[pid],sub=normN(resto[0]||''),capa=/mood|ambient|atmos/.test(sub)?'mood':/style|estilo|tecnic/.test(sub)?'tecnica':'concepto';
             if(!(p.refs||[]).some(r=>r.origen===it.clave)){p.refs.push({id:uid(),capa,porque:'',fuente:(resto[0]?resto[0]+' · ':'')+base.nombre,...img,origen:it.clave,creado:base.creado})}marcarPid(pid);hechos[it.clave]=it.firma;continue}
@@ -5211,7 +5212,7 @@ function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class=
 const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias y moodboard'],['board','Tablero'],['herr3d','Referencia 3D']];
 const capasDe=p=>p?.libre?LAYERS.filter(l=>!/^p\d$/.test(l.k)):LAYERS;
 function herrP(){if(!S.P[HERR_ID]){const p=nuevoProyecto('Herramientas');p.libre=true;S.P[HERR_ID]=p}return S.P[HERR_ID]}
-function herrAbre(tab){const nuevo=!S.P[HERR_ID];herrP();S.cur=HERR_ID;S.vista='proyecto';S.tab=tab||'luzcolor';S.ai={};S.confirmDel=false;recordar();if(nuevo)marcar();render()}
+function herrAbre(tab){const nuevo=!S.P[HERR_ID];herrP();S.palImg=null;S.confirmHerr=false;S.cur=HERR_ID;S.vista='proyecto';S.tab=tab||'luzcolor';S.ai={};S.confirmDel=false;recordar();if(nuevo)marcar();render()}
 function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
   return `${conflictoHTML(S.cur)}<div class="phead"><div style="flex:1 1 380px;min-width:0"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,46px);margin:0">Herramientas</h1><p class="muted" style="margin:4px 0 0">Luz y color, referencias, moodboard, tablero y 3D, sin necesidad de un proyecto. Lo que hagas aquí se guarda aparte, y también aparece en tu Biblioteca.</p></div></div>
   <nav class="tabs" role="tablist">${HERR_TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join('')}</nav>
@@ -6265,7 +6266,7 @@ function vTaller(){const L=S.ajustes.tareas=S.ajustes.tareas||[],t=tareaActiva()
       <button class="btn ghost sm danger" data-act="tar-boc-del" data-i="${i}">✕</button></div></div>`}).join('')}</div>`:'<p class="muted">Sube tus bocetos conforme los haces (foto del cuaderno o captura). Cada uno recibe feedback al momento y queda también en las Carpetas de tu proyecto.</p>'}</div>
   <div class="box"><h3>4 · ¿Listo para entregar?</h3>${(()=>{const faltan=t.reqs.filter(r=>!(r.ok||(r.meta&&hechos>=r.meta)||t.bocetos.some(b=>(b.cumple||[]).includes(r.id))));return faltan.length?`<p class="nd-box">Te falta: ${faltan.map(r=>esc(r.t)).join(' · ')}</p>`:'<p class="ok-box">Cumples todos los requisitos. Arma tu lámina y entrégala.</p>'})()}
     <div class="prow"><button class="btn pri" data-act="tar-lamina">Descargar lámina de entrega (PNG)</button><button class="btn ghost sm danger" data-act="tar-del">${S.confirmLi==='t'+t.id?'¿Borrar tarea?':'Borrar tarea'}</button></div></div>`}
-function nuevaTareaHTML(){const d=S.tarD=S.tarD||{titulo:'',pid:S.cur||'',entrega:'',enunciado:''};
+function nuevaTareaHTML(){const d=S.tarD=S.tarD||{titulo:'',pid:curReal(),entrega:'',enunciado:''};
   return `<div class="box"><h3>Nueva tarea</h3><div class="grid2" style="gap:8px"><div class="field"><label for="tn-t">Título</label><input type="text" id="tn-t" data-tard="titulo" value="${esc(d.titulo)}" placeholder="Bocetos de vegetación"></div>
     <div class="field"><label for="tn-p">Proyecto</label><select id="tn-p" data-tard="pid"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${d.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
     <div class="field"><label for="tn-e">Entrega</label><input type="date" id="tn-e" data-tard="entrega" value="${esc(d.entrega)}"></div></div>
@@ -6969,7 +6970,7 @@ function rmPanelHTML(p,D){
   if(r)return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Referencia</h3><button class="btn ghost sm" data-act="rm-sel" data-id="">Cerrar</button></div>
     <img ${imgAttrs(r)} alt="" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;background:#0b0c0f">
     <label class="esc-r"><span class="lbl">¿Para qué sirve? (su porqué)</span><textarea id="rmp-${r.id}" data-ref="${r.id}" data-rk="porque" style="min-height:56px" placeholder="¿Qué tomo exactamente de ella?">${esc(r.porque||'')}</textarea></label>
-    <div class="rrow"><select data-ref="${r.id}" data-rk="capa" aria-label="Capa">${LAYERS.map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener">Fuente ↗</a>`:''}</div>
+    <div class="rrow"><select data-ref="${r.id}" data-rk="capa" aria-label="Capa">${capasDe(p).map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener">Fuente ↗</a>`:''}</div>
     ${refMetaHTML(r)}<div><span class="lbl">Pertenece a</span> <b>${D.anc[r.id]?esc(rmNombre(D,D.anc[r.id])):'ninguna idea todavía'}</b></div>
     ${misLinks(r.id)?`<div><span class="lbl">Tus relaciones</span>${misLinks(r.id)}</div>`:''}
     ${misProps(r.id)?`<div><span class="lbl">La app propone</span>${misProps(r.id)}</div>`:''}${unir(r.id)}</div>`;
@@ -7196,7 +7197,7 @@ async function bdDescarga(modo){const p=S.P[S.cur];if(!p||S.bdBusy)return;if(!bd
       st('Comprimiendo…');const blob=await zip.generateAsync({type:'blob'});await bajarBlob(nom+'-tablero.zip',blob);if(mal)toast(mal+' imagen(es) no se pudieron incluir')}
   }catch{toast('No se pudo armar el tablero')}finally{st('')}}
 async function bdSubir(files){const p=S.P[S.cur];if(!p)return;const imgs=[...files].filter(f=>/^image\/(png|jpeg|webp|gif)$/.test(f.type));if(!imgs.length){toast('Solo imágenes PNG, JPG, WEBP o GIF');return}
-  const nuevos=[];for(const f of imgs){try{const r={id:uid(),capa:S.destinoCapa||'concepto',porque:'',fuente:'',creado:Date.now()};Object.assign(r,await guardarImagen(f));p.refs.push(r);nuevos.push({t:'img',ref:r.id,w:240})}catch(e){toast(e?.code==='too_large'?'Imagen demasiado grande (máx. 20 MB)':'No se pudo subir una imagen')}}
+  const nuevos=[];for(const f of imgs){try{const r={id:uid(),capa:capaDestino(),porque:'',fuente:'',creado:Date.now()};Object.assign(r,await guardarImagen(f));p.refs.push(r);nuevos.push({t:'img',ref:r.id,w:240})}catch(e){toast(e?.code==='too_large'?'Imagen demasiado grande (máx. 20 MB)':'No se pudo subir una imagen')}}
   if(nuevos.length){bdAdd(p,nuevos);marcar();renderMain();toast(`${nuevos.length} imagen${nuevos.length>1?'es':''} al tablero y al moodboard`)}}
 document.addEventListener('change',e=>{const t=e.target;if(t.id==='bd-file'){bdSubir(t.files);t.value='';return}if(t.dataset?.bdpickcapa!==undefined){S.bdPickCapa=t.value;renderMain()}});
 document.addEventListener('input',e=>{const t=e.target,p=S.P[S.cur];if(!p)return;
@@ -7236,7 +7237,7 @@ function vBoardTab(p){const red=S.bdVista==='red';
 /* ---- ayudas compartidas (referencias y visor 3D) ---- */
 const RAD=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),BD_IMG_W=240;
 const luzDir=(ang,el)=>{const a=ang*RAD,e=el*RAD;return [Math.cos(a)*Math.cos(e),Math.sin(e),-Math.sin(a)*Math.cos(e)]};/* 0=derecha, 90=detrás, 180=izquierda, 270=frente */
-const claseDeFuente=f=>/Met|Chicago/i.test(f||'')?'Museo':'Fotografía',capaDestino=b=>b?.capa||S.destinoCapa;
+const claseDeFuente=f=>/Met|Chicago/i.test(f||'')?'Museo':'Fotografía',capaDestino=(b,p=S.P[S.cur])=>{const k=b?.capa||S.destinoCapa;return capasDe(p).some(l=>l.k===k)?k:'concepto'};
 const refNueva=c=>({id:uid(),creado:Date.now(),...c});
 function aMoodTablero(p,refs,tablero){p.refs.push(...refs);if(tablero)bdAdd(p,refs.map(r=>({t:'img',ref:r.id,w:BD_IMG_W})));marcar()}
 /* ============ Búsqueda como feed: toca varias y se van directo al moodboard ============ */
@@ -7425,7 +7426,7 @@ async function v3dCargaArchivo(f){if(!V3.lib){toast('Espera a que cargue el moto
     if(ext==='glb'||ext==='gltf'){const g=await new Promise((ok,no)=>new L.GLTFLoader().parse(buf,'',ok,no));obj=g.scene;anims=g.animations||[]}
     else if(ext==='obj')obj=new L.OBJLoader().parse(new TextDecoder().decode(buf));
     else if(ext==='fbx'){obj=new L.FBXLoader().parse(buf,'');anims=obj.animations||[]}
-    else if(ext==='stl'){obj=new T.Mesh(new L.STLLoader().parse(buf),V3.mat)}
+    else if(ext==='stl'){obj=new T.Mesh(new L.STLLoader().parse(buf),V3.mat||new T.MeshStandardMaterial({color:0xcdc7be,roughness:.88}))}
     else{toast('Formato no compatible: usa .glb, .gltf, .obj, .fbx o .stl');return}
   }catch(e){toast('No pude abrir ese modelo. Si es un .gltf con archivos aparte, conviértelo a .glb');return}
   const w=new T.Group();w.add(obj);obj.updateMatrixWorld(true);const b=new T.Box3().setFromObject(obj),sz=b.getSize(new T.Vector3()),c=b.getCenter(new T.Vector3()),k=1.8/(Math.max(sz.x,sz.y,sz.z)||1);
@@ -7472,7 +7473,7 @@ function v3dTabCamara(s){const ch=v3Ch;return `${v3Sl('Lente (mm)','lente',18,13
     <div class="prow"><button class="btn sm" data-act="v3d-encuadra">Encuadrar</button><button class="btn sm" data-act="v3d-reset-giro">Quitar giro del modelo</button></div>`}
 function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
   return `<p class="hint" style="margin:0">La imagen sale tal como la ves en pantalla.${esMio?' Como el modelo es tuyo, la referencia queda marcada con «licencia no verificada».':''}</p>
-    <label class="esc-r"><span class="lbl">Capa del moodboard</span><select data-v3sel="capa">${capasDe(S.P[S.cur]).map(l=>`<option value="${l.k}" ${(s.capa||S.destinoCapa)===l.k?'selected':''}>${esc(capaNombre(S.P[S.cur],l.k))}</option>`).join('')}</select></label>
+    <label class="esc-r"><span class="lbl">Capa del moodboard</span><select data-v3sel="capa">${capasDe(S.P[S.cur]).map(l=>`<option value="${l.k}" ${capaDestino({capa:s.capa})===l.k?'selected':''}>${esc(capaNombre(S.P[S.cur],l.k))}</option>`).join('')}</select></label>
     <label class="esc-r"><span class="lbl">Su porqué</span><input type="text" data-v3txt="porque" value="${esc(s.porque||v3dPorque())}" placeholder="¿Qué estudias con esta imagen?"></label>
     <label class="chk"><input type="checkbox" data-v3chk="tablero" ${s.tablero?'checked':''}><span>y ponerla en el Tablero</span></label>
     <div class="prow"><button class="btn pri" data-act="v3d-save" data-k="moodboard">Añadir al moodboard</button><button class="btn sm" data-act="v3d-save" data-k="png">Descargar PNG</button><button class="btn sm" data-act="v3d-save" data-k="copiar">Copiar imagen</button></div>
@@ -7496,7 +7497,7 @@ async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)r
   const nom=slug(p.nombre,40)+'-'+(s.modelo==='maniqui'?slug(s.preset,20):s.modelo)+'-3d';
   if(modo==='png'){await bajarBlob(nom+'.png',blob);return}
   if(modo==='copiar'){try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);toast('Imagen copiada')}catch{toast('Tu navegador no deja copiar imágenes; usa Descargar PNG')}return}
-  try{const f=new File([blob],nom+'.png',{type:'image/png'}),propio=s.modelo!=='mio',ref=refNueva({capa:s.capa||S.destinoCapa||'concepto',porque:(s.porque||v3dPorque()).trim(),fuente:propio?'Referencia 3D · hecha en la app':'Render de un modelo 3D tuyo',tipoRef:'primaria',clase:'Referencia 3D',
+  try{const f=new File([blob],nom+'.png',{type:'image/png'}),propio=s.modelo!=='mio',ref=refNueva({capa:capaDestino({capa:s.capa}),porque:(s.porque||v3dPorque()).trim(),fuente:propio?'Referencia 3D · hecha en la app':'Render de un modelo 3D tuyo',tipoRef:'primaria',clase:'Referencia 3D',
       lic:propio?'Creación propia':'Render de un modelo tuyo: revisa su licencia',licEstado:propio?'propia':'desconocida',autor:propio?'Tú':''});
     Object.assign(ref,await guardarImagen(f));aMoodTablero(p,[ref],s.tablero);toast('Añadida a tu moodboard'+(s.tablero?' y al tablero':'')+'. El visor sigue abierto: puedes cambiar la pose y añadir otra.')}
   catch(e){toast(e?.code==='too_large'?'La imagen es muy grande (máx. 20 MB)':'No se pudo guardar la imagen')}}
@@ -7917,7 +7918,7 @@ document.addEventListener('input',e=>{
     if(t.type==='checkbox'||t.dataset.pk==='titulo'){const card=t.closest('.pfcard'),btn=card?.querySelector('[data-act="pf-ok"]');if(btn)btn.disabled=!(x.pf.titulo.trim()&&x.pf.revisada&&x.pf.mejor)}return}
   if(t.dataset.fav!==undefined){const r=S.ajustes.referentes[+t.dataset.fav];if(r){r[t.dataset.fk]=t.value;marcarAj()}return}
   if(t.dataset.dxq){S.decQ=t.value;const pos=t.selectionStart;renderMain();const el=$('#dec-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
-  if(t.dataset.tard){S.tarD=S.tarD||{titulo:'',pid:S.cur||'',entrega:'',enunciado:''};S.tarD[t.dataset.tard]=t.value;return}
+  if(t.dataset.tard){S.tarD=S.tarD||{titulo:'',pid:curReal(),entrega:'',enunciado:''};S.tarD[t.dataset.tard]=t.value;return}
   if(t.dataset.tarnota!==undefined){const tt=tareaActiva(),b=tt?.bocetos[+t.dataset.tarnota];if(b){b.nota=t.value;marcarAj()}return}
   if(t.dataset.mr){S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};S.recNuevo[t.dataset.mr]=t.value;return}
   if(t.dataset.recq){S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};S.recF.q=t.value;const pos=t.selectionStart;renderMain();const el=$('#recu-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
@@ -8003,7 +8004,7 @@ async function accion(a,el){
     case 'herr-reset':{if(!S.confirmHerr){S.confirmHerr=true;renderMain();break}S.confirmHerr=false;const q=S.P[HERR_ID];if(q){q.mood=JSON.parse(JSON.stringify(nuevoProyecto().mood));delete q.escena;q.paletasPieza={};S.palImg=null;marcar();renderMain();toast('Colores y luz restablecidos')}break}
     case 'herr-reset-no':S.confirmHerr=false;renderMain();break;
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
-    case 'abrir':S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
+    case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
     case 'tab':S.tab=TAB_ALIAS[ds.tab]||ds.tab;S.confirmDel=false;renderMain();window.scrollTo({top:0});break;
@@ -8103,7 +8104,7 @@ async function accion(a,el){
     case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await S.db.doc('ajustes/principios').set(clone(S.ajustes));S.ajDirty=false}catch{}
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
-    case 'nom-taller':S.nom={...nomDraft(),pid:S.cur||'',para:'Proyecto'};S.vista='nombres';render();break;
+    case 'nom-taller':S.nom={...nomDraft(),pid:curReal(),para:'Proyecto'};S.vista='nombres';render();break;
     case 'carp-g':S.carpG=ds.v;renderMain();break;
     case 'carp-add':{const v=($('#carp-nuevo')?.value||'').trim();if(!v)return;p.grupos=p.grupos||[];if(!p.grupos.includes(v))p.grupos.push(v);S.carpG=v;marcar();renderMain();break}
     case 'carp-del':{const k='g:'+ds.v;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;p.grupos=(p.grupos||[]).filter(x=>x!==ds.v);(p.piezas||[]).forEach(x=>{if(x.grupo===ds.v)x.grupo=''});S.carpG='';marcar();renderMain();break}
