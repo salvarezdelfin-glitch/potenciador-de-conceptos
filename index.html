@@ -1038,7 +1038,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyo45uh').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyon792').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1305,7 +1305,8 @@ function elegirInicial(){
   S.cur=S.P[h]?h:ids[0]||null;
   if(!S.cur&&S.vista==='proyecto')S.vista='inicio';
 }
-function ordenados(){return Object.entries(S.P).filter(([,p])=>!p.libre).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0))}
+const esChico=p=>p.chico!==undefined?!!p.chico:/reto de estudio|prueba de arte|Proyecto personal|de mi vida|Idea para vender/i.test(p.encargo||'')||/^(Reto|Prueba) ·/.test(p.nombre||'')||(typeof VT_FECHAS!=='undefined'&&VT_FECHAS.some(f=>String(p.nombre||'').startsWith(f.n+': ')));
+function ordenados(){return Object.entries(S.P).filter(([,p])=>!p.libre&&!esChico(p)).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0))}
 function recordar(){try{localStorage.setItem('cdc.cur',S.cur||'')}catch{}}
 
 /* ============ Salud del proceso ============ */
@@ -1418,15 +1419,15 @@ function renderSide(){
   const sc=$('#scrim');if(sc)sc.className=S.menu?'scrim':'';
 }
 function listaProyectos(){
-  const q=(S.q||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  const todos=ordenados().filter(([,p])=>!q||norm(p.nombre+' '+p.tipo+' '+p.encargo).includes(q));
-  const activos=todos.filter(([,p])=>p.estado!=='Archivado'),arch=todos.filter(([,p])=>p.estado==='Archivado');
+  const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''),q=norm(S.q||''),filt=([,p])=>!q||norm(p.nombre+' '+p.tipo+' '+p.encargo).includes(q);
+  const todos=ordenados().filter(filt),activos=todos.filter(([,p])=>p.estado!=='Archivado'),arch=todos.filter(([,p])=>p.estado==='Archivado'),
+    chicos=Object.entries(S.P).filter(([,p])=>!p.libre&&esChico(p)&&p.estado!=='Archivado').filter(filt).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0));
   const item=([id,p])=>{const s=salud(p);return `<button class="pitem" data-act="abrir" data-id="${esc(id)}" aria-current="${S.vista==='proyecto'&&id===S.cur}">
       <span class="dotp" style="background:${s.pct>=75?'var(--ok)':s.pct>=35?'var(--c-tecnica)':'var(--ink3)'}"></span><span class="n">${esc(p.nombre)}</span><span class="s">${s.pct}%</span>
       <span class="meta">${esc(p.tipo)} · ${esc(p.estado)}</span></button>`};
-  if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
-  return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
+  if(!todos.length&&!chicos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
+  return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'')
+    +(chicos.length?`<details class="chicos" id="det-chicos" ${S.verChicos||chicos.some(([id])=>id===S.cur)?'open':''}><summary class="pitem"><span class="n" style="color:var(--ink3)">Trabajos pequeños (${chicos.length})</span></summary>${chicos.map(item).join('')}</details>`:'');
 }
 const pgSec=(pg,id,titulo,sub,html)=>`<section class="pg-sec" id="sec-${id}"><div class="pg-h"><h2>${titulo}</h2>${sub?`<span class="muted">${sub}</span>`:''}</div><div class="pg-body">${html}</div></section>`;
 const pgNav=items=>`<div class="chips pgnav">${items.map(([id,n])=>`<button class="ch xs" data-act="ir-sec" data-id="${id}">${n}</button>`).join('')}</div>`;
@@ -1708,7 +1709,8 @@ function vHojaVer(p){const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{
     ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:''}
   </article>`}
-function vHoja(p){return `${queSigueHTML(p)}<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
+function tamProyHTML(p){const ch=esChico(p);return `<div class="prow" style="margin-bottom:6px"><span class="lbl">Tamaño</span><button class="ch xs ${ch?'':'on'}" data-act="proy-tam" data-v="grande">Proyecto grande</button><button class="ch xs ${ch?'on':''}" data-act="proy-tam" data-v="chico">Trabajo pequeño</button><span class="muted" style="font-size:12px">Los pequeños no se mezclan con tus proyectos grandes: quedan en «Trabajos pequeños».</span></div>`}
+function vHoja(p){return `${tamProyHTML(p)}${queSigueHTML(p)}<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
 function vHojaEditar(p){
   const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p),
     T=(lab,path,val,ph,alto)=>`<div class="field"><label for="x-${path.replace(/\./g,'-')}">${lab}</label>${tx(path,val,ph,null,alto||46)}</div>`,
@@ -2990,6 +2992,7 @@ function crResHTML(c){
   const m=c.malo||[],h=m.filter(x=>x.hecho).length,orden=m.map((x,i)=>[x,i]).sort((a,b)=>(CR_PR[a[0].prio]??1)-(CR_PR[b[0].prio]??1)||a[1]-b[1]);
   return `<div class="cr-res">
     <div class="cr-ver"><span class="lbl">Veredicto · ${fecha(c.ts)}${c.nivel?' · '+esc(c.nivel):''}</span>${c.veredicto?`<p>${esc(c.veredicto)}</p>`:'<p class="muted" style="font-weight:400;font-size:14px">Claude no incluyó veredicto.</p>'}</div>
+    ${c.local?'<p class="muted" style="margin:0;font-size:12.5px">Lectura del director de arte de la app: mide valores, silueta, foco, color y detalle y los cruza con tu proyecto. No ve qué representa el dibujo; para esa parte, pídele una crítica a Claude.</p>':''}
     ${c.crudo?`<div class="cr-sec"><p class="muted">No reconocí las secciones de esta respuesta. Pídele a Claude: «Responde con el formato de la petición» y pégala otra vez. Esto fue lo que pegaste:</p><pre style="white-space:pre-wrap;font-size:13px;margin:0">${esc(c.crudo)}</pre></div>`:''}
     ${m.length?`<div class="cr-sec"><div class="prow" style="justify-content:space-between"><h4>Qué cambiar</h4><span class="lbl">${h} de ${m.length} corregidos</span></div><div class="bar"><i style="width:${h/m.length*100}%"></i></div>
       ${orden.map(([x,i])=>`<label class="cr-m ${x.hecho?'ok':''}"><input type="checkbox" data-crh="${c.id}|${i}" ${x.hecho?'checked':''}><span><b class="cr-p ${x.prio}">${CR_PN[x.prio]||'Media'}</b> ${esc(x.t)}${x.fix?`<small>→ ${esc(x.fix)}</small>`:''}</span></label>`).join('')}</div>`:(c.crudo?'':'<p class="muted">Claude no marcó problemas.</p>')}
@@ -3024,15 +3027,11 @@ function vCriticaClaude(p){
     <p class="hint" style="margin:0">Provocaciones para sacarte de lo seguro, sin esperar a nadie. Las que te llamen la atención se guardan en Explorar.</p>
     ${(S.crLoca||[]).map(i=>`<div class="cr-l"><span><b>${esc(crLocaTxt(i))}</b></span><button class="btn sm" data-act="cr-prov-g" data-i="${i}">Guardar para probar</button></div>`).join('')}</div>`}
 function crBloqueGal(x){const L=(x.crits||[]).slice().sort((a,b)=>b.ts-a.ts),key='g-'+x.id,pend=L[0]?(L[0].malo||[]).filter(m=>!m.hecho).length:0;
-  return `<details class="cr-gal" data-id="${x.id}" ${S.crAb===x.id?'open':''}><summary class="btn sm pri" style="display:inline-block;cursor:pointer">Crítica de Claude${L.length?` · ${pend} por cambiar`:''}</summary>
+  return `<details class="cr-gal" data-id="${x.id}" ${S.crAb===x.id?'open':''}><summary class="btn sm pri" style="display:inline-block;cursor:pointer">Crítica${L.length?` · ${pend} por cambiar`:''}</summary>
     ${crMotorHTML('cr-directo-gal',`data-id="${x.id}"`,'g'+x.id,1)}
     <details class="cr-man" style="margin-top:6px"><summary class="lbl" style="cursor:pointer">Hazlo a mano con el chat de Claude</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm" data-act="cr-pedir-gal" data-id="${x.id}">Copiar la petición</button><span class="hint">2. Pégala en el chat con la imagen. 3. Pega su respuesta aquí:</span></div>${crPegaHTML(key,'cr-guardar-gal',`data-id="${x.id}"`)}</div></details>
     ${L.length?crResHTML(L[0]):''}</details>`}
 /* ---- la app critica sola cuando hay llave conectada (Conexión con Claude); si no, copiar y pegar ---- */
-function crMotorHTML(act,attrs,key,nImg){
-  if(S.sample){if(S.crBusy===key)return `<div class="prow"><span class="muted">Claude está revisando${nImg?' '+Math.min(nImg,5)+' imagen'+(Math.min(nImg,5)===1?'':'es'):''}… puede tardar un minuto.</span><button class="btn sm" data-act="cr-stop">Detener</button></div>`;
-    return `<div class="prow"><button class="btn pri" data-act="${act}" ${attrs} ${S.crBusy?'disabled':''}>Criticar ahora, aquí</button><span class="muted">${nImg?`Claude ve ${nImg>5?'las 5 más recientes de tus '+nImg:nImg===1?'la imagen':'tus '+nImg+' imágenes'} y `:'Claude ve '}todo el contexto del proyecto.</span></div>${S.crErr&&!S.crBusy?`<p class="muted" style="margin:0">${esc(S.crErr)}</p>`:''}`}
-  return window.PC_SHIM?`<div class="nd-box sm"><b>Para que la app critique sola</b>, sin copiar ni pegar, conecta una vez tu llave de Anthropic. <button class="btn sm pri" data-act="cr-conecta">Conectar Claude</button></div>`:''}
 function crEsperaLlave(){clearInterval(S.crPoll);let n=0;S.crPoll=setInterval(async()=>{n++;try{const s=await window.PC_SHIM.use('sample');if(s&&s.conectado()){S.sample=s;clearInterval(S.crPoll);toast('Claude conectado');renderMain()}}catch{}if(n>80)clearInterval(S.crPoll)},1500)}
 const crDirectoTxt=t=>t.replace(/Te paso (las imágenes|la imagen) en este mensaje \(o dime[^)]*\)\.?/,'Las imágenes van adjuntas: obsérvalas con detalle antes de opinar.');
 async function crCorre({key,prompt,blobs,extra,guarda}){
@@ -3147,8 +3146,8 @@ function vMesa(p){
     <button class="btn sm" data-act="pn-abrir" title="Pantalla completa para pintar con tus referencias a un lado">Modo pintar</button><button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos</button></div>
   ${sin>0?`<span class="banner">${sin} sin porqué: ábrela y escríbelo, o quítala.</span>`:''}`:''}
   <div id="rg-wrap" style="display:flex;flex-direction:column;gap:8px">${rgGaleriaHTML(p)}</div>
-  ${n>=3?`<details class="box" id="det-rev" ${S.rgRev?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Revisar mi moodboard con Claude</h3> <span class="lbl">qué sobra, qué falta, qué quitar</span></summary><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
-    <p class="hint" style="margin:0">Claude ve todas tus referencias en una hoja numerada y las compara con tu concepto, mood y materiales: te dice cuáles quitar (con número), qué capa está débil y qué buscar en su lugar.</p>
+  ${n>=3?`<details class="box" id="det-rev" ${S.rgRev?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Revisar mi moodboard</h3> <span class="lbl">qué sobra, qué falta, qué quitar</span></summary><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+    <p class="hint" style="margin:0">El director de arte revisa tus referencias: capas sin cubrir, calidad, porqués, paleta, choques con tu lista de EVITAR y repetición, y te dice qué buscar. Con Claude conectado también puede mirar la hoja numerada.</p>
     ${crMotorHTML('rf-directo','','rf',1)}
     <details><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm pri" data-act="rf-pedir">Copiar la petición</button><button class="btn sm" data-act="rf-hoja">Bajar la hoja numerada (PNG)</button></div><p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta la hoja. <b>3.</b> Pega aquí su respuesta:</p>${crPegaHTML('rf-'+S.cur,'rf-guardar')}</div></details>
     ${rv?crResHTML(rv):''}</div></details>`:''}`}`}
@@ -3523,10 +3522,10 @@ function swSubirHTML(k){const O=swObras(k);
     ${O.length?`<div class="rcurs">${O.map(o=>`<div class="rcur"><img ${imgAttrs(o.mini?{asset:o.mini}:o)} alt="${esc(o.titulo)}" loading="lazy" data-act="zoom"><div class="rcur-b"><span class="muted">${esc(corto(o.titulo,30))}</span><button class="btn ghost sm danger" data-act="sw-obra-del" data-id="${o.id}">✕</button></div></div>`).join('')}</div>
       ${swSenal(k).length?`<div><span class="lbl">Lo que se ve en tus imágenes</span><ul class="why-l">${swSenal(k).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`:'<div class="empty">Aún no subes nada de este programa.</div>'}</div>`}
 function swEvalHTML(k){const ev=(S.ajustes.swEval||{})[k],sw=swPorK(k),key='sw-'+k;
-  return `<div class="box"><h3>Que Claude lea mi nivel</h3><p class="hint" style="margin:0">Claude mira lo que subiste y tu autoevaluación, te dice tu nivel con honestidad y te arma 5 ejercicios a tu medida.</p>
-    ${S.sample?(S.swBusy===k?'<div class="prow"><span class="muted">Claude está revisando… puede tardar un minuto.</span></div>':`<div class="prow"><button class="btn pri" data-act="sw-directo" data-k="${k}" ${swObras(k).length?'':'disabled title="Sube al menos una imagen"'}>Evaluar ahora, aquí</button></div>${S.swErr?`<p class="muted" style="margin:0">${esc(S.swErr)}</p>`:''}`):(window.PC_SHIM?`<div class="nd-box sm">Conecta tu llave de Anthropic para que la app lo haga sola. <button class="btn sm pri" data-act="cr-conecta">Conectar Claude</button></div>`:'')}
+  return `<div class="box"><h3>Mi nivel, leído por el director de arte</h3><p class="hint" style="margin:0">Lee tu nivel con lo que contestaste, lo que subiste y lo que completaste, y te arma tus próximos ejercicios. No necesita llave ni chat.</p><div class="prow"><button class="btn pri" data-act="sw-local" data-k="${k}">Leer mi nivel (director de arte de la app)</button></div>
+    ${S.sample?(S.swBusy===k?'<div class="prow"><span class="muted">Claude está revisando… puede tardar un minuto.</span></div>':`<div class="prow"><button class="btn pri" data-act="sw-directo" data-k="${k}" ${swObras(k).length?'':'disabled title="Sube al menos una imagen"'}>Con Claude (más profundo)</button></div>${S.swErr?`<p class="muted" style="margin:0">${esc(S.swErr)}</p>`:''}`):(window.PC_SHIM?`<div class="nd-box sm">Opcional: conecta tu llave de Anthropic para una lectura más profunda de Claude. <button class="btn sm pri" data-act="cr-conecta">Conectar Claude</button></div>`:'')}
     <details ${S.sample?'':'open'}><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm pri" data-act="sw-copiar" data-k="${k}">Copiar la petición</button></div><p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta tus imágenes. <b>3.</b> Pega aquí su respuesta:</p>${crPegaHTML(key,'sw-guardar','data-k="'+k+'"')}</div></details>
-    ${ev?`<div class="cr-res"><div class="cr-ver"><span class="lbl">Lectura de Claude · ${fecha(ev.ts)}</span><p>${ev.nivel?'Nivel '+esc(SW_NIV[ev.nivel]):'Sin nivel claro'}${ev.frase?': '+esc(ev.frase):''}</p></div>
+    ${ev?`<div class="cr-res"><div class="cr-ver"><span class="lbl">Lectura ${ev.local?'del director de arte':'de Claude'} · ${fecha(ev.ts)}</span><p>${ev.nivel?'Nivel '+esc(SW_NIV[ev.nivel]):'Sin nivel claro'}${ev.frase?': '+esc(ev.frase):''}</p></div>
       ${ev.bien?.length?`<div class="cr-sec"><h4>Lo que ya haces bien</h4><ul>${ev.bien.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}${ev.falta?.length?`<div class="cr-sec"><h4>Lo que te falta para el siguiente nivel</h4><ul>${ev.falta.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
       ${ev.ej?.length?`<div class="cr-sec"><h4>Tus ejercicios a medida</h4>${ev.ej.map((x,i)=>`<label class="cr-m ${x.hecho?'ok':''}"><input type="checkbox" data-sweval="${k}|${i}" ${x.hecho?'checked':''}><span>${esc(x.t)}</span></label>`).join('')}</div>`:''}</div>`:''}</div>`}
 function swEjHTML(k){const sw=swPorK(k),nv=swNivel(k),e=swEstado(k),lt=S.swLv&&S.swK===k?S.swLv:Math.min(4,nv+1),L=sw.ej[lt]||[],hechos=L.filter((x,i)=>e.ej[`${lt}|${i}`]).length;
@@ -3682,30 +3681,83 @@ function vtLista(){return VT_FECHAS.map(f=>({f,p:vtProx(f)})).sort((a,b)=>a.p.di
 function vtFechaTxt(f,p){return p.fecha.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+(f.fin?' al '+p.fin.getDate():'')}
 function ventasBannerHTML(){const L=vtLista().filter(x=>x.p.enCurso||x.p.dias<=45).slice(0,2);if(!L.length)return '';
   return `<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Se acerca · ideas para vender</span>${L.map(({f,p})=>{const ya=p.dias<=f.sem*7;return `<p style="margin:4px 0"><b>${f.ico} ${esc(f.n)}</b> · ${p.enCurso?'ocurre ahora':'en '+p.dias+' días'}${ya&&!p.enCurso?' <span class="tagp">ya es momento de preparar algo</span>':''}</p>`}).join('')}<div class="prow"><button class="btn sm pri" data-act="vista" data-v="ventas">Ver ideas</button></div></div>`}
-function vVentas(){const L=vtLista(),vis=S.vtTodas?L:L.slice(0,4),guard=S.ajustes.ventasIdeas||[],p0=ordenados()[0]?.[1],mat=(p0?.materiales||[]).slice(0,2).join(' y ').toLowerCase();
-  const card=({f,p})=>{const lim=f.sem*7,ya=!p.enCurso&&p.dias<=lim,urg=p.dias<=lim/2&&!p.enCurso;
+/* ---- generador de ideas nuevas para cada fecha (botón ↻) y piezas para vender, SEPARADAS de tus proyectos de portafolio ---- */
+const VT_SUJ={inktober:['un personaje de tu mundo','una criatura','un objeto ritual','una planta rara','una máscara','un animal en pose','un lugar en ruinas','una herramienta antigua','un monstruo cute','un arma','un árbol con carácter','un insecto gigante'],
+  halloween:['murciélago','búho','calabaza','casa embrujada','bruja','fantasma','gato negro','araña','esqueleto','luna llena','cementerio','espantapájaros','vampiro','momia','cuervo','caldero','serpiente','jaguar de noche'],
+  muertos:['calavera','xoloitzcuintle','flor de cempasúchil','ofrenda','alebrije','catrina','vela','papel picado','pan de muerto','mariposa monarca','colibrí','altar','guía de almas','jaguar guardián'],
+  blackfriday:['pack de pinceles','plantilla de lámina','bundle de stickers','bundle de prints','pack de texturas','set de wallpapers'],
+  posadas:['esfera navideña','pino con luces','nacimiento fantástico','farol','piñata','poinsettia','muñeco de nieve','trineo','criatura con gorro','estrella','regalo','campana'],
+  reyes:['rosca de reyes','rey mago','estrella guía','camello','corona','muñequito de la rosca','chocolate caliente'],
+  valentin:['corazón','pareja de criaturas','carta de amor','rosa','mariposas','dos llaves','corazón de obsidiana','pareja de aves','guerrero y su jaguar','abrazo'],
+  mujer:['guerrera','retrato fuerte','mano alzada','flores y plumas','cazadora','sabia','sacerdotisa','pareja de amigas'],
+  tierra:['selva','árbol enorme','río','templo cubierto de raíces','jaguar','colibrí','hongos','montaña','cascada','libros con raíces','marcapáginas con hoja'],
+  nino:['criatura bebé','animalito de la selva','dragón cute','jaguar bebé','quetzal pequeño','amigo imaginario','juguete','castillo de arena'],
+  starwars:['droide original','nave original','cazarrecompensas original','planeta','duelo de espadas de luz'],
+  madres:['retrato de mamá','mamá y cría','flores','mamá jaguar','madre y bebé','tarjeta de gracias','una mujer sabia','familia con mascota'],
+  padres:['retrato de papá','papá guerrero','herramientas','papá y cría','pasatiempo','casa en el árbol','pescador'],
+  gato:['gato guardián','gato en la selva','gato con capa','gato de templo','gatos apilados','gato dormido','gato mago'],
+  independencia:['águila y nopal','papel picado','fiesta en la plaza','sombrero charro','mariachi fantástico','pirámide con luces','jaguar mexicano']};
+const VT_FORMATOS=['pack de 6 stickers','print A4','tarjeta','fondo de pantalla de celular','marcapáginas','póster A3','mini zine de 8 páginas','pack de 4 postales','plantilla de historia de Instagram','diseño para taza (mockup)','retrato por encargo','pin esmaltado (diseño)'],
+  VT_GIROS=['en versión cute','con motivos mesoamericanos','en tinta blanco y negro','con solo 2 colores','estilo retro vintage','con luz de fuego','estilo acuarela','en neón','como criatura de tu mundo','con muchos detalles pequeños','estilo cuento infantil oscuro','con textura de papel antiguo','en línea continua','en siluetas planas'];
+function vtGenera(f,n=6){const pick=a=>a[Math.floor(Math.random()*a.length)],suj=(VT_SUJ[f.k]||['personaje','criatura','objeto']).slice(),out=[],usados=new Set(),p0=ordenados()[0]?.[1],mundo=(p0?.personajes||[]).filter(c=>c.nombre).map(c=>c.nombre);
+  let guard=0;while(out.length<n&&guard++<80){let t;const r=Math.random();
+    if(mundo.length&&r<.25)t=`Tu «${pick(mundo)}» en versión ${f.n}: ${pick(VT_FORMATOS)} ${pick(VT_GIROS)}`;
+    else{const s=pick(suj);t=`${cap(pick(VT_FORMATOS))} de ${s} ${pick(VT_GIROS)}`}
+    if(!usados.has(t)){usados.add(t);out.push(t)}}
+  return out}
+function vtFicha(pz){const f=VT_FECHAS.find(x=>x.k===pz.k),ten=(f?.tags||[]),tr_=s=>String(s).split(/\s+/).map(w=>{try{return tr(w)}catch{return w}}).join(' ');
+  return `TÍTULO (ES): ${corto(pz.t,70)}\nTÍTULO (EN): ${tr_(corto(pz.t,70))}\n\nETIQUETAS (13): ${[...ten,'ilustración','arte digital','regalo','descarga digital','decoración','original','hecho a mano','mesoamericano','fantasía'].slice(0,13).join(', ')}\n\nDESCRIPCIÓN: Ilustración original: ${pz.t}. Archivo digital en alta resolución (300 dpi) listo para imprimir.${f?` Pensada para ${f.n}.`:''} Uso personal; si lo quieres comercial, escríbeme.\n\nQUÉ INCLUYE: archivo PNG de alta resolución${pz.precio?`\nPRECIO: ${pz.precio}`:''}`}
+const vtPz=()=>S.ajustes.ventasPiezas=S.ajustes.ventasPiezas||[];
+function vtPiezasHTML(){const L=vtPz();if(!L.length)return '';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Mis piezas para vender <span class="lbl">${L.length}</span></h3><span class="muted" style="font-size:12.5px">Aparte de tus proyectos y de tu portafolio</span></div>
+    ${L.map(z=>{const f=VT_FECHAS.find(x=>x.k===z.k),n=VT_PASOS.filter((x,i)=>z.pasos?.[i]).length;return `<div class="box"><div class="prow" style="justify-content:space-between"><b>${f?f.ico+' ':''}${esc(z.t)}</b><select data-vtpest="${z.id}" aria-label="Estado">${['Idea','En proceso','Lista','Publicada'].map(e=>`<option ${z.est===e?'selected':''}>${e}</option>`).join('')}</select></div>
+      <div class="bar"><i style="width:${n/VT_PASOS.length*100}%"></i></div>
+      ${VT_PASOS.map(([t,d],i)=>`<label class="chk"><input type="checkbox" data-vtpaso="${z.id}|${i}" ${z.pasos?.[i]?'checked':''}><span><b>${esc(t)}</b> <small class="muted">${esc(d)}</small></span></label>`).join('')}
+      <div class="prow"><input type="text" data-vtprecio="${z.id}" value="${esc(z.precio||'')}" placeholder="Precio (opcional)" style="width:140px"><label class="btn sm" for="vt-img-${z.id}">${z.asset||z.src?'Cambiar la ilustración':'Subir la ilustración'}</label><input type="file" id="vt-img-${z.id}" data-vtimg="${z.id}" accept="image/*" hidden><button class="btn sm" data-act="vt-ficha" data-id="${z.id}">Copiar ficha de venta</button><button class="btn ghost sm danger" data-act="vt-pz-del" data-id="${z.id}">${S.confirmLi==='vz'+z.id?'¿Borrar?':'✕'}</button></div>
+      ${z.asset||z.src?`<img ${imgAttrs(z.mini?{asset:z.mini}:z)} alt="" style="max-height:160px;width:auto;border-radius:8px" data-act="zoom">`:''}
+      <textarea data-vtnota="${z.id}" placeholder="Notas: tamaños, dónde lo vas a vender, para quién…" style="min-height:48px">${esc(z.nota||'')}</textarea></div>`}).join('')}</div>`}
+function vVentas(){const L=vtLista(),vis=S.vtTodas?L:L.slice(0,4),guard=S.ajustes.ventasIdeas||[],p0=ordenados()[0]?.[1],mat=(p0?.materiales||[]).slice(0,2).join(' y ').toLowerCase(),G=S.vtGen=S.vtGen||{};
+  const card=({f,p})=>{const lim=f.sem*7,ya=!p.enCurso&&p.dias<=lim,urg=p.dias<=lim/2&&!p.enCurso,ideas=G[f.k]||f.ideas;
     return `<div class="box" ${urg?'style="border-top:3px solid var(--warn)"':ya||p.enCurso?'style="border-top:3px solid var(--accent)"':''}><div class="prow" style="justify-content:space-between"><h3>${f.ico} ${esc(f.n)}</h3><span class="tagp ${urg?'':'free'}">${p.enCurso?'ocurre ahora':'en '+p.dias+' días'} · ${esc(vtFechaTxt(f,p))}</span></div>
       <p class="hint" style="margin:0">${esc(f.txt)}${ya&&!urg?' Publica con unas semanas de anticipación: la gente busca antes de la fecha.':''}${urg?' Ya casi es la fecha: haz algo pequeño que alcances a publicar.':''}</p>
-      <ul class="vt-ideas">${f.ideas.map((x,i)=>`<li><span>${esc(x)}</span><button class="btn ghost sm" data-act="vt-guarda" data-k="${f.k}" data-i="${i}" title="Guardar en mi lista">${guard.some(g=>g.k===f.k&&g.i===i)?'★':'☆'}</button><button class="btn sm" data-act="vt-hacer" data-k="${f.k}" data-i="${i}">Hacer →</button></li>`).join('')}</ul>
-      <div class="chips"><span class="lbl">Se vende como</span>${f.venta.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>
-      <div class="prow"><button class="btn sm" data-act="vt-tags" data-k="${f.k}">Copiar etiquetas</button><button class="btn sm" data-act="vt-cal" data-k="${f.k}" title="Pone en tu calendario la fecha para publicar">Agregar al calendario</button></div></div>`};
+      <ul class="vt-ideas">${ideas.map((x,i)=>`<li><span>${esc(x)}</span><button class="btn ghost sm" data-act="vt-guarda" data-k="${f.k}" data-i="${i}" title="Guardar en mi lista">${guard.some(g=>g.k===f.k&&g.t===x)?'★':'☆'}</button><button class="btn sm" data-act="vt-hacer" data-k="${f.k}" data-i="${i}">Hacer →</button></li>`).join('')}</ul>
+      <div class="prow"><button class="btn sm pri" data-act="vt-nuevas" data-k="${f.k}" title="Ideas nuevas cada vez">↻ Nuevas ideas</button>${G[f.k]?`<button class="btn ghost sm" data-act="vt-base" data-k="${f.k}">Volver a las de siempre</button>`:''}<button class="btn sm" data-act="vt-tags" data-k="${f.k}">Copiar etiquetas</button><button class="btn sm" data-act="vt-cal" data-k="${f.k}" title="Pone en tu calendario la fecha para publicar">Agregar al calendario</button></div>
+      <div class="chips"><span class="lbl">Se vende como</span>${f.venta.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>`};
   return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ideas para vender</h1>
-  <p class="intro">Ilustraciones sencillas, sin un proyecto grande, para vender: stickers, prints, tarjetas, retratos por encargo. Aquí ves las fechas que se acercan y qué puedes hacer para cada una con tu estilo.${mat?` Con tu proyecto más reciente puedes usar ${esc(mat)} y tus criaturas como sello propio.`:''}</p>
+  <p class="intro">Ilustraciones sencillas, sin un proyecto grande, para vender: stickers, prints, tarjetas, retratos por encargo. <b>Viven aparte de tus proyectos y de tu portafolio</b>: nada de aquí se mezcla con tus proyectos grandes. Toca «↻ Nuevas ideas» para ver otras combinaciones.${mat?` Con tu proyecto más reciente puedes usar ${esc(mat)} y tus criaturas como sello propio.`:''}</p>
+  ${vtPiezasHTML()}
   ${vis.map(card).join('')}
   ${L.length>4?`<button class="btn" data-act="vt-todas">${S.vtTodas?'Ver menos':`Ver todas las fechas del año (${L.length})`}</button>`:''}
-  ${guard.length?`<div class="box"><h3>Mi lista <span class="lbl">${guard.length}</span></h3><ul class="vt-ideas">${guard.map(g=>{const f=VT_FECHAS.find(x=>x.k===g.k);return `<li><span><b>${f?esc(f.n):''}</b> · ${esc(g.t)}</span><select data-vtest="${g.id}" aria-label="Estado">${['Idea','En proceso','Publicada'].map(e=>`<option ${g.est===e?'selected':''}>${e}</option>`).join('')}</select><button class="btn ghost sm danger" data-act="vt-del" data-id="${g.id}">✕</button></li>`}).join('')}</ul></div>`:''}
-  <div class="box"><h3>Ideas que se venden todo el año</h3><ul class="vt-ideas">${VT_SIEMPRE.map(([t,d])=>`<li><span><b>${esc(t)}</b><br><span class="muted">${esc(d)}</span></span></li>`).join('')}</ul></div>
+  ${guard.length?`<div class="box"><h3>Mi lista de ideas <span class="lbl">${guard.length}</span></h3><ul class="vt-ideas">${guard.map(g=>{const f=VT_FECHAS.find(x=>x.k===g.k);return `<li><span><b>${f?esc(f.n):''}</b> · ${esc(g.t)}</span><button class="btn sm" data-act="vt-hacer-g" data-id="${g.id}">Hacer →</button><button class="btn ghost sm danger" data-act="vt-del" data-id="${g.id}">✕</button></li>`}).join('')}</ul></div>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Ideas que se venden todo el año</h3><button class="btn sm pri" data-act="vt-siempre">↻ Otras</button></div><ul class="vt-ideas">${(S.vtSiempre||VT_SIEMPRE.map(x=>x[0]+': '+x[1])).map(x=>`<li><span>${esc(x)}</span><button class="btn sm" data-act="vt-hacer-s" data-t="${esc(x)}">Hacer →</button></li>`).join('')}</ul></div>
   <div class="grid2"><div class="box"><h3>De la idea a la tienda: 6 pasos</h3><ol class="reglas">${VT_PASOS.map(([t,d])=>`<li><span><b>${esc(t)}.</b> ${esc(d)}</span></li>`).join('')}</ol></div>
     <div class="box"><h3>Dónde venderlo</h3><ul class="vt-ideas">${VT_DONDE.map(([t,d])=>`<li><span><b>${esc(t)}</b><br><span class="muted">${esc(d)}</span></span></li>`).join('')}</ul><p class="hint" style="margin:0">Revisa comisiones, reglas de cada sitio y que tu material no use derechos de otros.</p></div></div>`}
 async function accionVt(a,el,p,ds){
+  const nuevaPz=(k,t)=>{vtPz().unshift({id:uid(),k,t,est:'En proceso',pasos:{},nota:'',precio:'',ts:Date.now()});marcarAj();renderMain();toast('Agregada a «Mis piezas para vender»: aparte de tus proyectos');window.scrollTo({top:0,behavior:'smooth'})};
   switch(a){
     case 'vt-todas':S.vtTodas=!S.vtTodas;renderMain();return true;
-    case 'vt-guarda':{const f=VT_FECHAS.find(x=>x.k===ds.k),t=f?.ideas[+ds.i];if(!t)return true;const L=S.ajustes.ventasIdeas=S.ajustes.ventasIdeas||[],i=L.findIndex(g=>g.k===ds.k&&g.i===+ds.i);if(i>=0)L.splice(i,1);else L.push({id:uid(),k:ds.k,i:+ds.i,t,est:'Idea'});marcarAj();renderMain();return true}
+    case 'vt-nuevas':{const f=VT_FECHAS.find(x=>x.k===ds.k);if(!f)return true;(S.vtGen=S.vtGen||{})[f.k]=vtGenera(f);renderMain();return true}
+    case 'vt-base':{if(S.vtGen)delete S.vtGen[ds.k];renderMain();return true}
+    case 'vt-siempre':{const pick=a=>a[Math.floor(Math.random()*a.length)],out=new Set();let g=0;while(out.size<6&&g++<60){out.add(pick(VT_SIEMPRE_FORM)+' de '+pick(VT_SIEMPRE_SUJ)+' '+pick(VT_GIROS))}S.vtSiempre=[...out].map(cap);renderMain();return true}
+    case 'vt-guarda':{const f=VT_FECHAS.find(x=>x.k===ds.k),t=(S.vtGen?.[ds.k]||f?.ideas||[])[+ds.i];if(!t)return true;const L=S.ajustes.ventasIdeas=S.ajustes.ventasIdeas||[],i=L.findIndex(g=>g.k===ds.k&&g.t===t);if(i>=0)L.splice(i,1);else L.push({id:uid(),k:ds.k,t,est:'Idea'});marcarAj();renderMain();return true}
     case 'vt-del':S.ajustes.ventasIdeas=(S.ajustes.ventasIdeas||[]).filter(g=>g.id!==ds.id);marcarAj();renderMain();return true;
     case 'vt-tags':{const f=VT_FECHAS.find(x=>x.k===ds.k);if(f)copiarTexto(f.tags.join(', '),'Etiquetas copiadas');return true}
     case 'vt-cal':{const f=VT_FECHAS.find(x=>x.k===ds.k);if(!f)return true;const pr=vtProx(f),d=new Date(pr.fecha);d.setDate(d.getDate()-f.sem*7);const h=new Date();h.setHours(0,0,0,0);const pub=d<h?h:d;lista('eventos').push({id:uid(),fecha:hoyKey(pub),titulo:'Publicar algo de '+f.n});marcarAj();toast('Agregado al calendario: '+fechaCorta(hoyKey(pub)));return true}
-    case 'vt-hacer':{const f=VT_FECHAS.find(x=>x.k===ds.k),t=f?.ideas[+ds.i];if(!t)return true;const id=uid(),np=nuevoProyecto(corto(f.n+': '+t,60));np.tipo='Ilustración';np.que.tipo='Ilustración';np.que.que=t;np.brief.texto=`Ilustración sencilla para vender (${f.n}). Idea: ${t}. Entrega: PNG de 300 dpi y una versión pequeña para redes.`;np.entrega=hoyKey(new Date(Date.now()+10*864e5));S.P[id]=np;S.cur=id;S.vista='proyecto';S.tab='hoja';recordar();marcar();render();toast('Proyecto sencillo creado: hazlo en pocos días');return true}}
+    case 'vt-hacer':{const f=VT_FECHAS.find(x=>x.k===ds.k),t=(S.vtGen?.[ds.k]||f?.ideas||[])[+ds.i];if(t)nuevaPz(ds.k,t);return true}
+    case 'vt-hacer-g':{const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===ds.id);if(g)nuevaPz(g.k,g.t);return true}
+    case 'vt-hacer-s':nuevaPz('',ds.t);return true;
+    case 'vt-pz-del':{const k='vz'+ds.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;S.ajustes.ventasPiezas=vtPz().filter(z=>z.id!==ds.id);marcarAj();renderMain();return true}
+    case 'vt-ficha':{const z=vtPz().find(x=>x.id===ds.id);if(z)copiarTexto(vtFicha(z),'Ficha de venta copiada');return true}}
   return false}
+const VT_SIEMPRE_FORM=['pack de 10 stickers','print A3','retrato por encargo','wallpaper de celular','marcapáginas','tarjeta coleccionable','libro de colorear de 8 páginas','set de pinceles'],VT_SIEMPRE_SUJ=['criaturas de tu mundo','plantas raras','mascotas','guerreros','templos en ruinas','animales de la selva','objetos rituales','paisajes con niebla','personajes originales','monstruos cute'];
+document.addEventListener('change',async e=>{const t=e.target;
+  if(t.dataset?.vtest){const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===t.dataset.vtest);if(g){g.est=t.value;marcarAj()}}
+  else if(t.dataset?.vtpest){const z=vtPz().find(x=>x.id===t.dataset.vtpest);if(z){z.est=t.value;marcarAj()}}
+  else if(t.dataset?.vtpaso){const [id,i]=t.dataset.vtpaso.split('|'),z=vtPz().find(x=>x.id===id);if(z){z.pasos=z.pasos||{};z.pasos[+i]=t.checked;if(VT_PASOS.every((x,j)=>z.pasos[j]))z.est='Lista';marcarAj();renderMain()}}
+  else if(t.dataset?.vtimg){const z=vtPz().find(x=>x.id===t.dataset.vtimg),f=t.files[0];t.value='';if(z&&f){bloquear();try{Object.assign(z,await guardarImagen(f,{mini:true}));marcarAj();renderMain()}catch{toast('No se pudo subir la imagen')}finally{desbloquear()}}}});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset?.vtnota){const z=vtPz().find(x=>x.id===t.dataset.vtnota);if(z){z.nota=t.value;marcarAj()}}
+  else if(t.dataset?.vtprecio){const z=vtPz().find(x=>x.id===t.dataset.vtprecio);if(z){z.precio=t.value;marcarAj()}}});
 document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.vtest){const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===t.dataset.vtest);if(g){g.est=t.value;marcarAj()}}});
 
 /* ============ Metodología: qué sigue, cambios que se propagan, revisión semanal, banco de errores propios y estudios de maestros ============ */
@@ -3781,6 +3833,7 @@ function vMaestros(){const M=S.mae=S.mae||{enf:[],min:20,nota:''},L=(S.ajustes.m
   ${L.length?`<div class="box"><h3>Tus estudios de maestros <span class="lbl">${L.length}</span></h3><div class="rcurs">${L.slice(0,12).map(x=>`<div class="rcur"><img ${imgAttrs(x.copiaMini?{asset:x.copiaMini}:{asset:x.copia})} alt="" loading="lazy" data-act="zoom"><div class="rcur-b"><b>${esc(corto(x.obra||'Obra',34))}</b><span class="muted">${esc((x.enf||[]).join(', '))} · ${x.min} min · ${fecha(x.ts)}</span>${x.nota?`<small class="muted">${esc(corto(x.nota,80))}</small>`:''}<div class="prow"><button class="btn sm" data-act="mae-ver" data-id="${x.id}">Comparar</button><button class="btn ghost sm danger" data-act="mae-del" data-id="${x.id}">✕</button></div></div></div>`).join('')}</div></div>`:''}`}
 async function accionProp(a,el,p,ds){
   switch(a){
+    case 'proy-tam':{if(!p)return true;p.chico=ds.v==='chico';marcar();render();toast(p.chico?'Quedó en «Trabajos pequeños»':'Ahora es un proyecto grande');return true}
     case 'prop-ok':{if(p){p.revTs=Date.now();marcar();renderMain();toast('Hecho: no te lo vuelvo a recordar')}return true}
     case 'err-add':{const v=$('#err-t')?.value.trim();if(!v)return true;(S.ajustes.errores=S.ajustes.errores||[]).push({id:uid(),t:v});marcarAj();S.errAb=true;renderMain();return true}
     case 'err-del':S.ajustes.errores=(S.ajustes.errores||[]).filter(x=>x.id!==ds.id);marcarAj();S.errAb=true;renderMain();return true;
@@ -3801,7 +3854,107 @@ document.addEventListener('change',e=>{const t=e.target;
   else if(t.dataset?.errchk){(S.errChk=S.errChk||{})[t.dataset.errchk]=t.checked;S.errAb=true;renderMain()}
   else if(t.dataset?.semhecha){const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{meta:''}),hecha:t.checked,ts:Date.now()};marcarAj();renderMain()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset?.semmeta){const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{hecha:false}),meta:t.value,ts:Date.now()};marcarAj()}else if(t.dataset?.maenota){(S.mae=S.mae||{}).nota=t.value}});
-document.addEventListener('toggle',e=>{if(e.target.id==='det-err')S.errAb=e.target.open},true);
+document.addEventListener('toggle',e=>{if(e.target.id==='det-err')S.errAb=e.target.open;else if(e.target.id==='det-chicos')S.verChicos=e.target.open},true);
+
+/* ============ Director de arte de la app: critica, lee tu nivel y revisa tu moodboard SIN llave ni chat ============
+   Mide lo que se puede medir (valores, silueta, foco, color, detalle), lo cruza con TU proyecto (pilares, tensión, mood, evitar) y lo dice como lo diría un director: qué está mal, cómo arreglarlo, qué funciona y qué probar.
+   No ve qué representa el dibujo; para eso sigue existiendo la crítica de Claude como opción más profunda. */
+const AD_FIX=[
+ [/Silueta muy recortada/i,'Agrupa los entrantes pequeños en 2 o 3 formas grandes; repinta la silueta en negro sólido y mírala a 5 cm hasta que se lea sola.'],
+ [/figura ocupa solo/i,'Acerca la cámara o escala la figura hasta que ocupe al menos un tercio del cuadro.'],
+ [/figura llena/i,'Deja aire alrededor de la figura: redúcela o amplía el lienzo para que se vea el contorno.'],
+ [/No hay una masa dominante/i,'Define UNA forma grande dominante y subordina el resto a ella; compruébalo en la vista de silueta.'],
+ [/Figura y fondo casi con el mismo valor/i,'Oscurece el fondo (o aclara la figura) al menos 2 pasos de valor justo donde se tocan.'],
+ [/grupos de valor pesan parecido/i,'Elige la clave: lleva ~60% de la imagen a UN grupo (oscuros, medios o claros) y deja los otros dos como apoyo.'],
+ [/Contraste global bajo/i,'Hunde los oscuros más profundos y limpia las luces; compáralo en blanco y negro hasta que se lea de lejos.'],
+ [/pero tu proyecto pide/i,'Lleva la clave de la imagen a lo que pide tu dirección de arte, o cambia la dirección a propósito y anótalo.'],
+ [/Contraste muy alto/i,'Suaviza los pasos entre valores medios y reserva el contraste máximo para el foco.'],
+ [/Contraste bajo para un proyecto/i,'Sube el contraste de valor y de borde en el foco: ahí vive la intención de tu proyecto.'],
+ [/Dos focos compiten/i,'Elige un foco: baja el contraste y el detalle del segundo hasta que el ojo vaya primero al principal.'],
+ [/foco está pegado al borde/i,'Mueve el foco hacia dentro (a un tercio) o añade una forma que devuelva la mirada al cuadro.'],
+ [/detalle está repartido parejo/i,'Simplifica lo que está fuera del foco: borra o difumina la mitad del detalle ahí y deja zonas de descanso.'],
+ [/fuera de tu paleta/i,'Llévalos a tu paleta con una capa de Color o un mapa de degradado; si el color es nuevo, decide si entra a la paleta.'],
+ [/Tu imagen es (cálida|fría) y tu mood/i,'Ajusta la temperatura general (Balance de color o capa de Color) para que coincida con el mood.'],
+ [/color más saturado/i,'Lleva el acento de color al mismo lugar que el foco de valor.'],
+ [/mucha saturación/i,'Baja la saturación general y deja un solo acento fuerte.']];
+const adFix=t=>(AD_FIX.find(([re])=>re.test(t))||[])[1]||'';
+const adPrio=t=>/Silueta|figura ocupa|figura llena|masa dominante|mismo valor|grupos de valor|Contraste global|Dos focos|foco está pegado/i.test(t)?'alta':/detalle está repartido|fuera de tu paleta|temperatura|clave|Contraste muy alto|Contraste bajo/i.test(t)?'media':'baja';
+const adCorta=t=>{const i=t.search(/\.\s+[A-ZÁÉÍÓÚ]/);return i>20?t.slice(0,i+1):t};
+const adCat=t=>/Silueta|figura|masa|contorno/i.test(t)?'silueta':/valor|Contraste|clave/i.test(t)?'valores':/foco|detalle/i.test(t)?'foco':/color|paleta|temperatura|acento|saturaci/i.test(t)?'color':'diseno';
+function adAgrega(L){const m=new Map();for(const arr of L)for(const x of new Set(arr)){const k=x.replace(/\d+(\.\d+)?%?/g,'#').slice(0,60),e=m.get(k)||{t:x,veces:0};e.veces++;m.set(k,e)}return [...m.values()].sort((a,b)=>b.veces-a.veces)}
+const AD_LOCAS_CAT={silueta:['10 siluetas en 10 minutos con un pincel enorme y sin detalle; elige la que no habrías dibujado','20 min'],valores:['Rehaz la imagen con solo 3 valores planos, sin grises intermedios','20 min'],foco:['Una versión donde todo lo que no es el foco tiene la mitad del contraste y del detalle','15 min'],color:['Repinta con 3 colores y un neutro; el único acento va en el foco','20 min'],diseno:['Rediseña la forma dominante con el tipo de forma opuesto (curva en lugar de recta, o al revés)','25 min']};
+function adLocas(p,cats){const n=p?.nombre||'tu proyecto',out=[],usados=new Set();for(const c of cats){const x=AD_LOCAS_CAT[c];if(x&&!usados.has(c)){usados.add(c);out.push({t:x[0],como:x[1],probada:false})}}
+  const pool=CR_LOCAS.slice();while(out.length<5&&pool.length){const i=Math.floor(Math.random()*pool.length);out.push({t:pool.splice(i,1)[0].replace(/\{n\}/g,'«'+n+'»'),como:'pruébalo en un thumbnail de 20 minutos',probada:false})}return out.slice(0,5)}
+function adVeredicto(nF,nP,top,que,proy){const r=nF/((nF+nP)||1),niv=nP===0?'sólido':r>=.7?'sólido':r>=.45?'prometedor':'arranque',cab=que?que+': ':'';
+  const limpia=t=>{let x=adCorta(String(t)).replace(/^En (todos|\d+ de \d+)[^:]*:\s*/,'').replace(/:\s+(en|si|se|el|la|los|las|un|una)\b.*$/i,'').replace(/\.$/,'');return x.charAt(0).toLowerCase()+x.slice(1)};
+  if(proy)return {nivel:niv,veredicto:top?`Tu dirección está ${niv==='arranque'?'en arranque':niv==='prometedor'?'prometedora':'sólida'}. Lo que más la frena hoy: ${limpia(top.t)}.`:'Tu dirección está clara y sin contradicciones: ya puedes dibujar con intención.'};
+  return {nivel:niv,veredicto:top?`${cab}${niv==='arranque'?'todavía en arranque':niv}. ${nF?'Ya hay lectura en lo básico, pero lo':'Lo'} que más lo frena hoy: ${limpia(top.t)}.`:`${cab}sólido en lo que se puede medir: se lee en valores, silueta y foco. El siguiente salto es de diseño y de historia, no de técnica.`}}
+/* crítica de imágenes: una o varias (un grupo de bocetos) */
+function adCriticaImgs(p,A,{etapa='Boceto',nota='',titulo=''}={}){
+  const n=A.length,R=A.map(a=>criticaImagen(a,p||null,{etapa,nota})),P=adAgrega(R.map(r=>r.problemas)),F=adAgrega(R.map(r=>r.funciona));
+  const pre=x=>n>1?(x.veces===n?`En todos (${n}): `:`En ${x.veces} de ${n}: `):'';
+  const malo=P.map(x=>{let prio=adPrio(x.t);if(n>1&&x.veces/n>=.6&&prio==='media')prio='alta';const fix=adFix(x.t),t=pre(x)+(fix?adCorta(x.t):x.t);return {t,fix:fix||'Revísalo en las vistas de Medir y comparar y corrígelo antes de seguir.',prio,hecho:false,_v:x.veces}})
+    .sort((a,b)=>({alta:0,media:1,baja:2}[a.prio]-{alta:0,media:1,baja:2}[b.prio])||b._v-a._v);
+  if(n>=3){const c=A.map(a=>a.complej),mn=Math.min(...c),mx=Math.max(...c);if(mx-mn<.6&&A.every(a=>a.llenado>.05))malo.push({t:`Poca variedad entre tus ${n} bocetos: la complejidad de silueta es casi igual (${mn.toFixed(1)} a ${mx.toFixed(1)})`,fix:'Explora siluetas realmente distintas: cambia la masa (ancha, alta, baja, partida), no solo el detalle.',prio:'media',hecho:false,_v:n});
+    const md=A.map(a=>a.mean),vr=Math.max(...md)-Math.min(...md);if(vr<.08)malo.push({t:`Todos tus bocetos tienen la misma clave de valor (diferencia ${Math.round(vr*100)}%)`,fix:'Prueba una versión en clave baja y otra en clave alta del mismo diseño para ver cuál cuenta mejor.',prio:'baja',hecho:false,_v:n})}
+  if(/Thumbnail|Boceto/.test(etapa)){const col=A.filter(a=>a.msat>.25).length;if(col>=Math.ceil(n/2))malo.push({t:`${n>1?col+' de '+n:'Esta imagen'} ya tiene color fuerte en etapa de ${etapa.toLowerCase()}`,fix:'Resuelve primero silueta y 3 valores en gris; el color va después, sobre valores que ya funcionan.',prio:'baja',hecho:false,_v:1})}
+  const bien=F.slice(0,4).map(x=>pre(x)+x.t),cats=[...new Set(malo.slice(0,4).map(m=>adCat(m.t)))],top=malo.find(m=>m.prio==='alta')||malo[0],V=adVeredicto(F.length,P.length+malo.filter(m=>/Poca variedad|misma clave/.test(m.t)).length,top,titulo);
+  return {...V,malo:malo.slice(0,6).map(({_v,...m})=>m),bien,locas:adLocas(p,cats),local:true}}
+/* crítica de todo el proyecto (sin imágenes): dirección, tensión, pilares, referencias */
+function adCriticaProyecto(p){const D=DX(p),Sl=salud(p),malo=[],bien=[],R=p.refs||[],ev=(p.evitar||[]).map(nz).filter(x=>x.length>3);
+  D.conflictos.slice(0,2).forEach(c=>malo.push({t:c.t,fix:c.fix||'Resuelve esta contradicción: decide qué manda y ajusta lo otro.',prio:'alta',hecho:false}));
+  if(!(p.tensiones||[]).length)malo.push({t:'No hay una tensión definida',fix:'Escribe qué dos fuerzas chocan en tu proyecto y quién domina: es lo que le da dirección a cada decisión.',prio:'alta',hecho:false});
+  D.vacios.slice(0,2).forEach(v=>malo.push({t:`Sin definir: ${v.n||v.q}`,fix:v.q||'Defínelo antes de seguir dibujando.',prio:'alta',hecho:false}));
+  p.pilares.forEach((x,i)=>{if(x.t&&pilarObjeto(x.t))malo.push({t:`El pilar ${i+1} («${x.t}») es un objeto, no una intención`,fix:'Reescríbelo como lo que quieres que se entienda o se sienta (ej. «Lo sagrado pesa», no «corona»).',prio:'media',hecho:false})});
+  const ad=(p.ad||'').trim();if(ad&&!/(pero|aunque|mientras|y a la vez|sin embargo|contra|entre|porque)/.test(nz(ad)))malo.push({t:'La frase central no tiene conflicto',fix:'Reescríbela con un «pero» o un «porque»: una dirección sin conflicto no se puede dibujar con intención.',prio:'media',hecho:false});
+  const sin=R.filter(r=>(r.porque||'').trim().length<8).length;if(R.length&&sin/R.length>.3)malo.push({t:`${sin} de ${R.length} referencias no tienen porqué`,fix:'Escribe qué tomas de cada una o quítala: una referencia sin porqué es solo una imagen bonita.',prio:'media',hecho:false});
+  const choques=R.filter(r=>ev.some(e=>nz([r.porque,r.fuente].join(' ')).includes(e)));if(choques.length)malo.push({t:`${choques.length} referencia${choques.length===1?'':'s'} menciona${choques.length===1?'':'n'} algo de tu lista de EVITAR`,fix:'Revisa si son justo el cliché que querías evitar y sácalas del moodboard.',prio:'alta',hecho:false});
+  Sl.items.filter(i=>!i[1]).slice(0,3).forEach(i=>malo.push({t:`Falta en el método: ${i[0]}`,fix:'Ve a esa parte y complétala antes de seguir con el detalle.',prio:'media',hecho:false}));
+  if((p.tensiones||[]).length)bien.push('La tensión está definida: da dirección a las decisiones.');if(p.pilares.filter(x=>x.t&&!pilarObjeto(x.t)).length>=3)bien.push('Tus tres pilares son intenciones, no objetos.');if((p.mood.paleta||[]).length>=3)bien.push('La paleta está definida y se puede medir contra ella.');
+  if((p.que?.funcion||'').trim().length>30)bien.push('La función del diseño está escrita: cada forma se puede justificar contra ella.');if(R.length>=6&&sin/R.length<=.2)bien.push('Casi todas tus referencias tienen su porqué.');if(!D.conflictos.length)bien.push('No hay contradicciones abiertas entre concepto, mood y lenguaje.');
+  const V=adVeredicto(bien.length,malo.length,malo.find(m=>m.prio==='alta')||malo[0],'',true);
+  return {...V,malo:malo.slice(0,6),bien:bien.slice(0,4),locas:adLocas(p,[]),local:true}}
+/* revisión del moodboard: balance, capas, calidad, paleta, evitar, repetición */
+function adRevisionRefs(p){const R=p.refs||[],malo=[],bien=[],ev=(p.evitar||[]).map(nz).filter(x=>x.length>3),cap=capasDe(p);
+  const vacias=cap.filter(l=>!R.some(r=>r.capa===l.k)&&!/^p\d$/.test(l.k)).map(l=>capaNombre(p,l.k));if(vacias.length)malo.push({t:`Capas sin ninguna referencia: ${vacias.join(', ')}`,fix:'Busca al menos 3 referencias para cada una (usa «Para tu proyecto» en Buscar referencias).',prio:'alta',hecho:false});
+  const prim=R.filter(r=>r.tipoRef==='primaria').length,sec=R.filter(r=>r.tipoRef==='secundaria').length;if(R.length>=6&&sec>prim*1.5)malo.push({t:`${sec} artísticas contra ${prim} reales: estudias decisiones de otros más que cómo funcionan las cosas`,fix:'Suma fotos reales de materiales, anatomía, arquitectura y luz; diseña con ellas y aprende oficio con las artísticas.',prio:'media',hecho:false});
+  const bajas=R.filter(r=>rgMax(r)&&rgMax(r)<800).length;if(bajas>=2)malo.push({t:`${bajas} referencias son de baja resolución (menos de 800 px)`,fix:'Quítalas o búscales una versión grande con Google Lens o TinEye (en el visor).',prio:'media',hecho:false});
+  const sin=R.filter(r=>(r.porque||'').trim().length<8).length;if(R.length&&sin/R.length>.25)malo.push({t:`${sin} referencias no tienen porqué`,fix:'Abre cada una y escribe qué tomas de ella; si no puedes, quítala.',prio:'alta',hecho:false});
+  const choques=R.filter(r=>ev.some(e=>nz([r.porque,r.fuente,(r.tags||[]).join(' ')].join(' ')).includes(e)));if(choques.length)malo.push({t:`${choques.length} referencia${choques.length===1?'':'s'} choca${choques.length===1?'':'n'} con tu lista de EVITAR`,fix:'Sácalas del moodboard o quita ese punto de «Evitar» si cambió tu dirección.',prio:'alta',hecho:false});
+  const fuera=R.filter(r=>{const d=rfDistPal(r,p);return d!=null&&d>PAL_OK}).length,medidas=R.filter(r=>r.pal?.length).length;if(medidas>=4&&fuera/medidas>.4)malo.push({t:`${fuera} de ${medidas} referencias medidas se salen de tu paleta`,fix:'Úsalas por forma, textura o luz, no por color; o ajusta la paleta del proyecto si ese color ya es parte de tu mundo.',prio:'baja',hecho:false});
+  const fu={};R.forEach(r=>{const k=(r.fuente||'').split(' · ')[0].toLowerCase();if(k)fu[k]=(fu[k]||0)+1});const top=Object.entries(fu).sort((a,b)=>b[1]-a[1])[0];if(top&&R.length>=8&&top[1]/R.length>.5)malo.push({t:`Más de la mitad de tus referencias vienen del mismo sitio («${top[0]}»)`,fix:'Diversifica: mezcla museos, fotografía real y concept art de varios artistas.',prio:'baja',hecho:false});
+  const cats={};R.forEach(r=>(r.estudio||[]).forEach(c=>cats[c]=(cats[c]||0)+1));const faltan=['Forma','Silueta','Material','Luz','Composición','Anatomía'].filter(c=>R.length>=6&&!cats[c]);if(faltan.length&&Object.keys(cats).length)malo.push({t:`No estudias: ${faltan.slice(0,3).join(', ').toLowerCase()}`,fix:'Marca en cada referencia por qué la guardaste y busca algunas para lo que falta.',prio:'media',hecho:false});
+  if(R.length>=12)bien.push(`Ya tienes ${R.length} referencias: hay material para decidir.`);if(sin===0&&R.length)bien.push('Todas tienen su porqué.');if(R.length&&bajas===0)bien.push('No hay referencias de baja resolución.');if(!vacias.length&&R.length)bien.push('Todas las capas tienen referencias.');if(prim&&sec&&Math.abs(prim-sec)<=Math.max(2,R.length*.3))bien.push('Hay equilibrio entre referencias reales y artísticas.');
+  let ms=[];try{ms=rfMisiones(p).slice(0,3)}catch{}
+  const locas=ms.map(m=>({t:'Busca: '+m.t,como:'abre «Para tu proyecto» y toca esa búsqueda',probada:false}));while(locas.length<3)locas.push(...adLocas(p,[]).slice(0,1));
+  const V=adVeredicto(bien.length,malo.length,malo.find(m=>m.prio==='alta')||malo[0],'Tu moodboard');return {...V,malo:malo.slice(0,6),bien:bien.slice(0,4),locas:locas.slice(0,5),local:true}}
+/* lectura de nivel por programa o medio, con lo que contestaste, subiste y completaste */
+function swLecturaLocal(k){const sw=swPorK(k),e=swEstado(k),nq=swNivelQuiz(k),nv=Math.max(1,swNivel(k)||(swObras(k).length?1:0)),sig=Math.min(4,nv+1),O=swObras(k),sen=swSenal(k),hechos=Object.keys(e.ej||{}).length;
+  const si=sw.quiz.filter((q,i)=>e.q[i]===2&&q[1]<=nv).slice(0,3).map(q=>q[0]),faltan=sw.quiz.filter((q,i)=>e.q[i]!==2&&q[1]<=sig).slice(0,3).map(q=>q[0]);
+  const bien=[...si.map(x=>'Lo dominas: '+x.charAt(0).toLowerCase()+x.slice(1)),...sen.filter(x=>/Buen|se separa bien/.test(x)).slice(0,1)];if(hechos)bien.push(`Has completado ${hechos} ejercicio${hechos===1?'':'s'}: constancia.`);
+  const falta=[...faltan.map(x=>'Te falta afianzar: '+x.charAt(0).toLowerCase()+x.slice(1)),...sen.filter(x=>!/Buen|se separa bien/.test(x)).slice(0,2)];if(!O.length)falta.push('Sube trabajo de este medio: sin ver lo que haces, esta lectura solo se apoya en lo que contestaste.');
+  const L=(sw.ej[sig]||[]).filter((x,i)=>!e.ej[`${sig}|${i}`]).slice(0,5).map(x=>({id:uid(),t:`${x[0]} → ${x[1]} min → ${x[2]}`,hecho:false}));
+  const motivo=nq?`según lo que contestas${O.length?' y lo que subes':''}`:O.length?'por lo que subes (todavía sin autoevaluación completa)':'solo con tu autoevaluación';
+  return {nivel:nv,frase:`${SW_NIV[nv]} ${motivo}. Lo que más te acerca a ${SW_NIV[sig]}: ${(faltan[0]||sw.ej[sig]?.[0]?.[0]||'seguir practicando').charAt(0).toLowerCase()+(faltan[0]||sw.ej[sig]?.[0]?.[0]||'seguir practicando').slice(1)}.`,bien:bien.slice(0,4),falta:falta.slice(0,4),ej:L}}
+const adExtra=(p,t)=>({elemento:t.k==='grupo'?t.g:'',titulo:t.k==='pieza'?(t.z.nombre||t.z.etapa):t.k==='proyecto'?p.nombre:(t.g||'General'),...(t.k==='pieza'?{pz:t.id}:{}),...(t.k==='proyecto'?{proy:1}:{})});
+async function adCorre(key,fn){if(S.crBusy)return;S.crBusy=key;S.crLocal=true;S.crErr='';renderMain();try{await fn()}catch(e){console.error(e);S.crErr='No pude analizar: '+(e?.message||'error')}S.crBusy=null;S.crLocal=false;renderMain()}
+async function accionAd(a,el,p,ds){
+  switch(a){
+    case 'cr-local':{if(!p)return true;const t=crTarget(p),pid=S.cur;await adCorre('p',async()=>{let ext;
+        if(t.k==='proyecto')ext=adCriticaProyecto(p);
+        else{const xs=t.k==='pieza'?[t.z]:piezasGrupo(p,t.g).slice().sort((a,b)=>a.creado-b.creado).slice(-8),blobs=await crBlobs(xs);if(!blobs.length)throw new Error('sube bocetos primero');
+          const A=[];for(const b of blobs)try{A.push(await analizarImagen(b))}catch{}if(!A.length)throw new Error('no pude leer las imágenes');
+          ext=adCriticaImgs(p,A,{etapa:xs.at(-1)?.etapa||'Boceto',nota:t.k==='pieza'?(t.z.nota||''):'',titulo:t.k==='pieza'?'':(t.g||'Estos bocetos')})}
+        (p.criticas=p.criticas||[]).push({id:uid(),tipo:'Crítica',ts:Date.now(),...adExtra(p,t),...ext});marcarPid(pid);toast('Crítica lista: mírala abajo')});return true}
+    case 'cr-local-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(!x)return true;S.crAb=x.id;await adCorre('g'+x.id,async()=>{const b=(await crBlobs([x]))[0];if(!b)throw new Error('no pude leer la imagen');const a=await analizarImagen(b),pr=x.pid&&S.P[x.pid]?S.P[x.pid]:null;
+        (x.crits=x.crits||[]).push({id:uid(),tipo:'Crítica',ts:Date.now(),titulo:x.titulo||x.tipo||'Ilustración',...adCriticaImgs(pr,[a],{etapa:x.etapa||'Final',nota:x.nota||'',titulo:x.titulo||''})});marcarAj();toast('Crítica lista')});return true}
+    case 'rf-local':{if(!p)return true;const pid=S.cur;S.rgRev=true;await adCorre('rf',async()=>{(p.criticas=p.criticas||[]).push({id:uid(),tipo:'Crítica',ts:Date.now(),refs:1,titulo:'Moodboard',...adRevisionRefs(p)});marcarPid(pid);toast('Revisión lista')});return true}
+    case 'sw-local':{const k=ds.k;(S.ajustes.swEval=S.ajustes.swEval||{})[k]={ts:Date.now(),local:true,...swLecturaLocal(k)};marcarAj();renderMain();toast('Lectura lista');return true}}
+  return false}
+function crMotorHTML(act,attrs,key,nImg){const actL=act.replace('directo','local'),busy=S.crBusy===key;
+  if(busy)return `<div class="prow"><span class="muted">${S.crLocal?'Analizando…':'Claude está revisando… puede tardar un minuto.'}</span>${S.crLocal?'':'<button class="btn sm" data-act="cr-stop">Detener</button>'}</div>`;
+  return `<div class="prow"><button class="btn pri" data-act="${actL}" ${attrs} ${S.crBusy?'disabled':''}>Criticar ahora · director de arte de la app</button>${S.sample?`<button class="btn" data-act="${act}" ${attrs} ${S.crBusy?'disabled':''}>Con Claude (más profundo)</button>`:''}</div>
+    <p class="hint" style="margin:0">El director de arte de la app mide valores, silueta, foco, color y detalle${nImg?' de '+(nImg>8?'tus 8 imágenes más recientes':nImg===1?'tu imagen':'tus '+nImg+' imágenes'):''}, lo cruza con tu proyecto y te dice qué está mal, cómo arreglarlo y qué probar. No necesita llave ni chat.${S.sample?'':window.PC_SHIM?' <button class="btn ghost sm" data-act="cr-conecta">Opcional: conectar Claude para una lectura más profunda</button>':''}</p>${S.crErr&&!S.crBusy?`<p class="muted" style="margin:0">${esc(S.crErr)}</p>`:''}`}
 
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
@@ -6384,7 +6537,7 @@ function pgRefs(p){return pgNav([['mesa','Referencias'],['bajar','Ref → thumbn
   +pgSec('refs','mas','Más herramientas','Llenado automático, balance, búsqueda por objetivo, artistas, sitios y keywords.',vRefsMas(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`)}
 function pgBocetos(p){return pgNav([['carpetas','Subir bocetos'],['critica','Crítica'],['medir','Medir y comparar'],['basicos','Básicos de diseño']])
   +pgSec('bocetos','carpetas','Subir bocetos','Por elemento (personaje, vegetación, rocas…), con el contexto del proyecto.',vCarpetas(p))
-  +pgSec('bocetos','critica','Crítica: qué está mal y qué cambiar','Claude critica en el chat; aquí queda como lista de cambios, con ideas fuera de lo ordinario.',vCriticaClaude(p))
+  +pgSec('bocetos','critica','Crítica: qué está mal y qué cambiar','El director de arte de la app te critica (y Claude, si quieres más profundidad); queda como lista de cambios, con ideas fuera de lo ordinario.',vCriticaClaude(p))
   +pgSec('bocetos','medir','Medir y comparar','Datos medidos por la app (no es opinión): valores, silueta, foco, y comparar dos versiones.',vMedir(p))
   +pgSec('bocetos','basicos','Básicos de diseño','Revísalos en cada boceto y en el final.',vBasicos(p))}
 function pgExplorar(p){return pgSec('explorar','explorar','Explorar','Explora antes de casarte con una idea.',vExplorar(p))}
@@ -9929,7 +10082,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionAd(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
