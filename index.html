@@ -1039,7 +1039,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyosr8w').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muypeiej').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2636,8 +2636,8 @@ function vCotizador(){
   const tab=S.cotTab||'cotizar';
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cotizador freelance</h1>
-  <nav class="tabs" role="tablist" style="align-self:flex-start"><button class="tab" role="tab" data-act="cot-tab" data-t="cotizar" aria-selected="${tab==='cotizar'}">Cotizar un encargo</button><button class="tab" role="tab" data-act="cot-tab" data-t="tarifas" aria-selected="${tab==='tarifas'}">¿Cuánto cobrar?</button></nav>
-  ${tab==='tarifas'?vTarifas():vCotizar()}`}
+  <nav class="tabs" role="tablist" style="align-self:flex-start"><button class="tab" role="tab" data-act="cot-tab" data-t="cotizar" aria-selected="${tab==='cotizar'}">Cotizar un encargo</button><button class="tab" role="tab" data-act="cot-tab" data-t="tarifas" aria-selected="${tab==='tarifas'}">¿Cuánto cobrar?</button><button class="tab" role="tab" data-act="cot-tab" data-t="prints" aria-selected="${tab==='prints'}">Precio de prints</button></nav>
+  ${tab==='tarifas'?vTarifas():tab==='prints'?prCalcHTML():vCotizar()}`}
 function vTarifas(){
   const b=cotBase(),mk=S.mkt||'mx',M=MERCADOS[mk],lv=['Junior (0–2 años)','Intermedio (3–6)','Senior (7+)'];
   const g=S.ajustes.cot?.gastos||{},n=k=>+g[k]||0;
@@ -3715,6 +3715,7 @@ function vtPiezasHTML(){const L=vtPz();if(!L.length)return '';
     ${L.map(z=>{const f=VT_FECHAS.find(x=>x.k===z.k),n=VT_PASOS.filter((x,i)=>z.pasos?.[i]).length;return `<div class="box"><div class="prow" style="justify-content:space-between"><b>${f?f.ico+' ':''}${esc(z.t)}</b><select data-vtpest="${z.id}" aria-label="Estado">${['Idea','En proceso','Lista','Publicada'].map(e=>`<option ${z.est===e?'selected':''}>${e}</option>`).join('')}</select></div>
       <div class="bar"><i style="width:${n/VT_PASOS.length*100}%"></i></div>
       ${VT_PASOS.map(([t,d],i)=>`<label class="chk"><input type="checkbox" data-vtpaso="${z.id}|${i}" ${z.pasos?.[i]?'checked':''}><span><b>${esc(t)}</b> <small class="muted">${esc(d)}</small></span></label>`).join('')}
+      ${prPzHTML(z)}
       <div class="prow"><input type="text" data-vtprecio="${z.id}" value="${esc(z.precio||'')}" placeholder="Precio (opcional)" style="width:140px"><label class="btn sm" for="vt-img-${z.id}">${z.asset||z.src?'Cambiar la ilustración':'Subir la ilustración'}</label><input type="file" id="vt-img-${z.id}" data-vtimg="${z.id}" accept="image/*" hidden><button class="btn sm" data-act="vt-ficha" data-id="${z.id}">Copiar ficha de venta</button><button class="btn ghost sm danger" data-act="vt-pz-del" data-id="${z.id}">${S.confirmLi==='vz'+z.id?'¿Borrar?':'✕'}</button></div>
       ${z.asset||z.src?`<img ${imgAttrs(z.mini?{asset:z.mini}:z)} alt="" style="max-height:160px;width:auto;border-radius:8px" data-act="zoom">`:''}
       <textarea data-vtnota="${z.id}" placeholder="Notas: tamaños, dónde lo vas a vender, para quién…" style="min-height:48px">${esc(z.nota||'')}</textarea></div>`}).join('')}</div>`}
@@ -3727,6 +3728,8 @@ function vVentas(){const L=vtLista(),vis=S.vtTodas?L:L.slice(0,4),guard=S.ajuste
       <div class="chips"><span class="lbl">Se vende como</span>${f.venta.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>`};
   return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ideas para vender</h1>
   <p class="intro">Ilustraciones sencillas, sin un proyecto grande, para vender: stickers, prints, tarjetas, retratos por encargo. <b>Viven aparte de tus proyectos y de tu portafolio</b>: nada de aquí se mezcla con tus proyectos grandes. Toca «↻ Nuevas ideas» para ver otras combinaciones.${mat?` Con tu proyecto más reciente puedes usar ${esc(mat)} y tus criaturas como sello propio.`:''}</p>
+  ${inkHTML()}
+  ${prGenHTML()}
   ${vtPiezasHTML()}
   ${vis.map(card).join('')}
   ${L.length>4?`<button class="btn" data-act="vt-todas">${S.vtTodas?'Ver menos':`Ver todas las fechas del año (${L.length})`}</button>`:''}
@@ -3749,6 +3752,11 @@ async function accionVt(a,el,p,ds){
     case 'vt-hacer-g':{const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===ds.id);if(g)nuevaPz(g.k,g.t);return true}
     case 'vt-hacer-s':nuevaPz('',ds.t);return true;
     case 'vt-pz-del':{const k='vz'+ds.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;S.ajustes.ventasPiezas=vtPz().filter(z=>z.id!==ds.id);marcarAj();renderMain();return true}
+    case 'pr-genera':S.prGen=prGenera(6);renderMain();return true;
+    case 'pr-ir':S.vista='cotizador';S.cotTab='prints';render();window.scrollTo({top:0});return true;
+    case 'pr-hacer':{const x=(S.prGen||[])[+ds.i];if(x)prNuevaPz(x.t,{tam:x.tam,marco:x.marco,q:x.q||1,nota:x.por});return true}
+    case 'pr-usa':{const z=vtPz().find(q=>q.id===ds.id);if(z&&z.tam){z.precio=mxn(prCalc(z.tam,!!z.marco,z.q||1).precio);marcarAj();renderMain()}return true}
+    case 'ink-print':{const x=INK26[+ds.d-1];if(x)prNuevaPz(x[3]+' · '+x[1]+' (Inktober 2026, día '+ds.d+')',{k:'inktober',nota:'Inktober día '+ds.d+': '+x[0]+'. '+x[2]});return true}
     case 'vt-ficha':{const z=vtPz().find(x=>x.id===ds.id);if(z)copiarTexto(vtFicha(z),'Ficha de venta copiada');return true}}
   return false}
 const VT_SIEMPRE_FORM=['pack de 10 stickers','print A3','retrato por encargo','wallpaper de celular','marcapáginas','tarjeta coleccionable','libro de colorear de 8 páginas','set de pinceles'],VT_SIEMPRE_SUJ=['criaturas de tu mundo','plantas raras','mascotas','guerreros','templos en ruinas','animales de la selva','objetos rituales','paisajes con niebla','personajes originales','monstruos cute'];
@@ -3761,6 +3769,77 @@ document.addEventListener('input',e=>{const t=e.target;
   if(t.dataset?.vtnota){const z=vtPz().find(x=>x.id===t.dataset.vtnota);if(z){z.nota=t.value;marcarAj()}}
   else if(t.dataset?.vtprecio){const z=vtPz().find(x=>x.id===t.dataset.vtprecio);if(z){z.precio=t.value;marcarAj()}}});
 document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.vtest){const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===t.dataset.vtest);if(g){g.est=t.value;marcarAj()}}});
+
+/* ---- Inktober 2026 (lista oficial), generador de prints para enmarcar y calculadora de precio ---- */
+const INK26=[['Apple','Manzana','Manzana de obsidiana en una ofrenda, con una mordida','Print «la fruta prohibida» en tinta'],
+['Relic','Reliquia','Un objeto ritual de tu mundo, dibujado como pieza de museo','Print de objeto estilo lámina de museo'],
+['Miniature','Miniatura','Un templo o una ciudad entera dentro de un frasco','Print «mundos en frasco»'],
+['Cactus','Nopal','Nopal guerrero o con espinas de obsidiana','Print botánico de nopal'],
+['Smack','Golpe','El instante exacto de un impacto, con líneas de movimiento',''],
+['Ogre','Ogro','Un ogro con carácter: ¿qué cuida? ¿qué lo enoja?','Print de criatura entre tierna y oscura'],
+['Panic','Pánico','Una multitud huye y una sola figura se queda quieta (sirve para practicar valores y foco)',''],
+['Stinky','Apestoso','Criatura tan apestosa que las moscas la rodean (humor)','Sticker de criatura apestosa'],
+['Ram','Carnero','Carnero con cuernos en espiral y detalles de tu cultura','Print de animal con cuernos (muy vendible)'],
+['Mystical','Místico','Un ser o un lugar místico con luz y niebla','Print místico: de los que más se enmarcan'],
+['Rescue','Rescate','Un guerrero rescata a un animal pequeño',''],
+['Toss','Lanzar','Alguien lanza algo y se ve toda la trayectoria',''],
+['Flimsy','Endeble','Un puente o una choza que apenas se sostiene',''],
+['Lady','Dama','Retrato de una dama de tu mundo con vestuario detallado','Print de retrato de personaje'],
+['Hooray','¡Hurra!','Celebración con confeti y criaturas','Tarjeta o sticker de celebración'],
+['Gangly','Larguirucho','Criatura de extremidades larguísimas','Sticker o print de criatura rara'],
+['Contraption','Artefacto','Máquina extraña hecha con materiales de tu cultura','Print tipo patente antigua'],
+['Flightless','Sin vuelo','Un ave que no vuela: un quetzal que se quedó en tierra','Print de ave con carácter'],
+['Confused','Confundido','Un animal totalmente perdido, con cara de duda','Sticker cute'],
+['Lounge','Reposar','Un jaguar descansando en una rama o un templo','Print de jaguar relajado'],
+['Hero','Héroe','Pose heroica con una silueta fuerte','Print de personaje héroe'],
+['Beacon','Faro','Un fuego guía en la noche con niebla','Print de paisaje con luz (ideal para pared)'],
+['Dapper','Elegante','Un animal o criatura con traje elegante','Print de humor, buen regalo'],
+['Bake','Hornear','Cocina de tu cultura: pan de muerto, tamales, horno','Print de cocina o tarjeta'],
+['Fracture','Fractura','Una máscara o estatua que se rompe y deja salir luz','Print de máscara rota'],
+['Zip','Cierre','Algo se abre con un cierre y revela otro mundo','Print conceptual'],
+['Dumb','Tonto','Un personaje bobo pero adorable','Sticker'],
+['Trophy','Trofeo','Trofeo de un cazador de criaturas: ¿de quién es la cabeza?','Print de trofeo'],
+['Tusk','Colmillo','Criatura con colmillos enormes y tallados','Print de criatura'],
+['Cookie','Galleta','Galletas con las formas de tus criaturas','Stickers o print de comida cute'],
+['Flex','Presumir','Cierre del mes: tu mejor personaje presumiendo','Print del mes: tu favorito']];
+const PR_TAM=[['dig','Solo digital',0,0],['a5','5×7 in (A5)',18,95],['a4','A4 / 8×10 in',40,160],['a3','A3 / 11×14 in',85,260],['a2','A2 / 18×24 in',230,520]];
+const PR_TEMAS=[['criatura original de tu mundo','Lo único que nadie más tiene: tu diseño'],['jaguar','Los felinos son de lo que más se compra para decorar'],['nopal y plantas mexicanas','Decoración botánica con identidad'],['máscara ritual','Se ve bien en pared y es distinta a lo de siempre'],['selva con niebla','Calma y atmósfera: gusta en salas y recámaras'],['templo en ruinas con luz','Entorno que parece póster de cine'],['alebrije','Color y folclor: regalos y turistas'],['xoloitzcuintle','Mascotas y cultura mexicana'],['colibrí o quetzal','Las aves están entre lo más vendido en prints'],['luna y sol','Simbólico y combina con cualquier cuarto'],['mapa de un mundo imaginario','Los mapas se enmarcan mucho'],['gato guardián','Los gatos venden todo el año'],['mariposas y flores','Gusta mucho como regalo'],['calavera floral','Funciona en temporada de muertos y todo el año'],['monstruo adorable','Cuartos infantiles y coleccionistas']];
+const PR_EST=['en tinta blanco y negro','con 2 colores sobre papel crema','en línea fina estilo grabado','con paleta cálida de atardecer','con luz de luna azul','como lámina botánica antigua','en siluetas planas con un color de acento','con textura de papel antiguo'];
+const PR_FORM=[['print A4 enmarcado','a4',true],['print A3 en edición de 20 piezas numeradas','a3',false],['set de 3 prints A5 para pared de galería','a5',true,3],['pack de 4 mini prints 5×7','a5',false,4],['print A3 con paspartú y marco','a3',true],['print A2 para sala o recámara','a2',true]];
+function prGenera(n=6){const pick=a=>a[Math.floor(Math.random()*a.length)],out=[],us=new Set(),mundo=(ordenados()[0]?.[1]?.personajes||[]).filter(c=>c.nombre).map(c=>c.nombre);let g=0;
+  while(out.length<n&&g++<80){const f=pick(PR_FORM),tm=pick(PR_TEMAS),est=pick(PR_EST),pj=mundo.length&&Math.random()<.25?pick(mundo):null,
+    t=cap(f[0])+' de '+(pj?'tu «'+pj+'»':tm[0])+' '+est;if(us.has(t))continue;us.add(t);out.push({t,por:pj?'Es tu sello: vende tu mundo, no el de otro':tm[1],tam:f[1],marco:f[2],q:f[3]||1})}
+  return out}
+const prCfg=()=>{const c=(S.ajustes.cot||{}).pr||{},n=(k,d)=>c[k]!==undefined&&c[k]!==''&&!isNaN(+c[k])?+c[k]:d;return {tarifa:n('tarifa',cotBase().tarifa||150),horas:n('horas',4),uds:n('uds',15),com:n('com',9),imp:n('imp',10),emp:n('emp',25),meta:n('meta',3000),n}};
+function prCalc(k,marco,q=1){const c=prCfg(),t=PR_TAM.find(x=>x[0]===k)||PR_TAM[2],dig=k==='dig',im=dig?0:c.n('i_'+k,t[2]),ma=marco&&!dig?c.n('m_'+k,t[3]):0,dir=(im+ma+(dig?0:c.emp))*q,tiempo=c.horas*c.tarifa,fee=Math.min(.9,(c.com+c.imp)/100),
+    precio=Math.ceil((dir+tiempo/Math.max(1,c.uds))/(1-fee)/10)*10,gan=precio*(1-fee)-dir;
+  return {dir,precio,gan,tiempo,eq:gan>0?Math.ceil(tiempo/gan):null,mes:gan>0?Math.ceil(c.meta/gan):null,lote:dir*c.uds,uds:c.uds}}
+function prResHTML(){const c=prCfg();
+  return `<div class="tbl"><table><thead><tr><th>Tamaño</th><th style="text-align:right">Precio sin marco</th><th style="text-align:right">Precio con marco</th><th style="text-align:right">Ganas por pieza (con marco)</th><th style="text-align:right">Ya te pagaste tu tiempo en la pieza</th><th style="text-align:right">Piezas al mes para tu meta</th></tr></thead><tbody>
+  ${PR_TAM.map(([k,n])=>{const a=prCalc(k,false),b=prCalc(k,true);return `<tr><td><b>${esc(n)}</b></td><td class="num">${mxn(a.precio)}</td><td class="num">${k==='dig'?'—':mxn(b.precio)}</td><td class="num">${k==='dig'?mxn(a.gan):mxn(b.gan)}</td><td class="num">${(k==='dig'?a:b).eq??'—'}</td><td class="num">${(k==='dig'?a:b).mes??'—'}</td></tr>`}).join('')}</tbody></table></div>
+  <p class="hint" style="margin:0">El precio ya incluye tu tiempo repartido en ${c.uds} piezas (${c.horas} h × ${mxn(c.tarifa)}), los costos de imprimir, marco y empaque, y las comisiones e impuestos (${c.com+c.imp}%). Si imprimes toda la edición de ${c.uds} piezas en A4 con marco, inviertes ${mxn(prCalc('a4',true).lote)} antes de vender; para no arriesgar, imprime bajo demanda o de 3 en 3.</p>`}
+function prCalcHTML(){const c=prCfg(),f=(k,l,v,suf)=>`<div class="field"><label for="pr-${k}">${l}</label><input type="text" inputmode="decimal" id="pr-${k}" data-pr="${k}" value="${esc((((S.ajustes.cot||{}).pr||{})[k])??'')}" placeholder="${v}">${suf?`<small class="muted">${suf}</small>`:''}</div>`;
+  return `<p class="intro">Cuánto cobrar por cada print y cuántos necesitas vender. Cambia los números por los de tu imprenta y tu marco: el resultado se actualiza solo y se guarda. Después, en cada pieza de «Ideas para vender», aplicas el precio con un botón.</p>
+  <div class="box"><h3>Tus números</h3><div class="grid2">${f('tarifa','Tu tarifa por hora (MXN)',c.tarifa,'Usa la de tu cotizador si ya la pusiste')}${f('horas','Horas que te toma una pieza',c.horas)}${f('uds','Piezas que esperas vender de esta ilustración',c.uds,'Tu tiempo se reparte entre ellas')}${f('meta','Meta de ingreso al mes (MXN)',c.meta)}${f('com','Comisión de la tienda y del pago (%)',c.com,'Etsy y los cobros suman cerca de 9 a 12%')}${f('imp','Impuestos (%)',c.imp)}${f('emp','Empaque por pieza (MXN)',c.emp,'Funda, cartón y etiqueta')}</div>
+  <h3>Costos por tamaño</h3><div class="grid2">${PR_TAM.filter(t=>t[0]!=='dig').map(([k,n,i,m])=>f('i_'+k,'Imprimir '+n,i)+f('m_'+k,'Marco para '+n,m)).join('')}</div></div>
+  <div class="box"><h3>Precio sugerido</h3><div id="pr-res">${prResHTML()}</div></div>`}
+function prPzHTML(z){const tam=z.tam||'';return `<div class="prow"><select data-vttam="${z.id}" aria-label="Tamaño"><option value="">Tamaño…</option>${PR_TAM.map(t=>`<option value="${t[0]}" ${tam===t[0]?'selected':''}>${esc(t[1])}</option>`).join('')}</select>${tam&&tam!=='dig'?`<label class="chk"><input type="checkbox" data-vtmarco="${z.id}" ${z.marco?'checked':''}><span>Con marco</span></label>`:''}${tam?(()=>{const r=prCalc(tam,!!z.marco,z.q||1);return `<span class="muted" style="font-size:12.5px">Precio sugerido${(z.q||1)>1?' por las '+(z.q)+' piezas':''} <b>${mxn(r.precio)}</b> · ganas ${mxn(r.gan)} por pieza · mes: ${r.mes??'—'} piezas para tu meta</span><button class="btn sm" data-act="pr-usa" data-id="${z.id}">Usar ${mxn(r.precio)}</button>`})():''}</div>`}
+function prNuevaPz(t,extra){vtPz().unshift(Object.assign({id:uid(),k:'',t,est:'Idea',pasos:{},nota:'',precio:'',tam:'a4',marco:false,ts:Date.now()},extra||{}));marcarAj();renderMain();toast('Agregada a «Mis piezas para vender»: aparte de tus proyectos');window.scrollTo({top:0,behavior:'smooth'})}
+function prGenHTML(){const L=S.prGen||(S.prGen=prGenera(6));
+  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Generador de prints para enmarcar y vender</h3><div class="prow"><button class="btn sm pri" data-act="pr-genera">↻ Nuevas ideas</button><button class="btn sm" data-act="pr-ir">Calcular precios →</button></div></div>
+  <p class="hint" style="margin:0">Ideas pensadas para imprimirse, enmarcarse y venderse: tema que la gente compra, estilo, tamaño y si va con marco. Con tu tarifa y tus costos te dice el precio y cuántos necesitas vender.</p>
+  <ul class="vt-ideas">${L.map((x,i)=>{const r=prCalc(x.tam,x.marco,x.q||1);return `<li><span><b>${esc(x.t)}</b><br><span class="muted">${esc(x.por)} · ${mxn(r.precio)} · ganas ${mxn(r.gan)} por pieza</span></span><button class="btn sm" data-act="pr-hacer" data-i="${i}">Hacer →</button></li>`}).join('')}</ul></div>`}
+function inkHTML(){const h=new Date(),hoy=h.getMonth()===9&&h.getFullYear()===2026?h.getDate():0,H=S.ajustes.inkt||{},n=Object.values(H).filter(Boolean).length,d0=hoy?INK26[hoy-1]:null;
+  return `<details class="box" id="det-ink" style="border-top:3px solid var(--accent)" ${hoy||S.inkAb?'open':''}><summary><b>Inktober 2026 · ${n} de 31 hechos</b> <span class="muted">· lista oficial, con idea y print posible cada día</span></summary>
+  ${d0?`<p style="margin:8px 0 2px"><b>Hoy, día ${hoy}: ${esc(d0[0].toUpperCase())} (${esc(d0[1])})</b><br>${esc(d0[2])}</p>`:''}
+  <ul class="vt-ideas">${INK26.map((x,i)=>{const d=i+1;return `<li ${d===hoy?'style="border-left:3px solid var(--accent);padding-left:8px"':''}><label class="chk" style="flex:1"><input type="checkbox" data-inkd="${d}" ${H[d]?'checked':''}><span><b>${d}. ${esc(x[0])}</b> <small class="muted">(${esc(x[1])})</small> · ${esc(x[2])}${x[3]?`<br><small class="muted">Print: ${esc(x[3])}</small>`:''}</span></label>${x[3]?`<button class="btn sm" data-act="ink-print" data-d="${d}" title="Lo manda a Mis piezas para vender">Print →</button>`:''}</li>`}).join('')}</ul>
+  <p class="hint" style="margin:0">Hazlo en tinta (también vale pluma o marcador). Al terminar el mes, escoge tus 3 mejores y conviértelos en prints con «Print →».</p></details>`}
+document.addEventListener('toggle',e=>{if(e.target.id==='det-ink')S.inkAb=e.target.open},true);
+document.addEventListener('input',e=>{const k=e.target.dataset?.pr;if(!k)return;const o=S.ajustes.cot=S.ajustes.cot||{};(o.pr=o.pr||{})[k]=e.target.value;marcarAj();const r=$('#pr-res');if(r)r.innerHTML=prResHTML()});
+document.addEventListener('change',e=>{const t=e.target,d=t.dataset||{};
+  if(d.inkd){const H=S.ajustes.inkt=S.ajustes.inkt||{};H[d.inkd]=t.checked;marcarAj();renderMain();return}
+  if(d.vttam||d.vtmarco){const z=vtPz().find(x=>x.id===(d.vttam||d.vtmarco));if(z){if(d.vttam)z.tam=t.value;else z.marco=t.checked;marcarAj();renderMain()}}});
+
 
 /* ============ Metodología: qué sigue, cambios que se propagan, revisión semanal, banco de errores propios y estudios de maestros ============ */
 /* ---- 2. Cuando cambias la dirección, lo anterior puede quedar desactualizado ---- */
