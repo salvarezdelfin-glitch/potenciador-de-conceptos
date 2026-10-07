@@ -395,7 +395,12 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .tabs{border-bottom:0;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab-sep{flex:0 0 auto;width:1px;align-self:stretch;background:var(--line2);margin:4px 4px}
-.tabs.primarias{flex-wrap:wrap;overflow:visible}.tabs-mas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:10px 0}.tm{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink)}.tm small{display:block;color:var(--ink3);font-size:12px;margin-top:2px}.tm.on{border-color:var(--accent)}.phead-mas[open]{flex-basis:100%}.etapa-d{margin:6px 0}.etapa-d>summary{cursor:pointer}
+.tabs{flex-wrap:wrap;overflow:visible}
+.pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 16px}
+.pg-h{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;padding:14px 18px 6px}
+.pg-h h2{margin:0;font-family:var(--display);font-size:20px;text-transform:uppercase}
+.pg-body{padding:0 18px 18px}
+.pgnav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:0 0 10px;flex-wrap:wrap}.phead-mas[open]{flex-basis:100%}.etapa-d{margin:6px 0}.etapa-d>summary{cursor:pointer}
 .herr-paso{display:flex;gap:12px;align-items:flex-start;margin:22px 0 8px}.herr-n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
 .hoja-s{border-top:1px solid var(--line);padding-top:14px;margin-top:8px}.hv-r{margin:0 0 10px}.hv-r p{margin:2px 0 0;white-space:pre-wrap}.hv-g{display:grid;gap:4px 18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.hv-pj{border:1px solid var(--line);border-radius:10px;padding:10px 12px}.hv-pj p{margin:4px 0 0}.hoja-s>summary{cursor:pointer}
 .tab{border-radius:8px;border-bottom:0;margin:0;padding:8px 12px;font-size:13.5px}
@@ -998,18 +1003,16 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muydro8d').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muye27nl').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
-const TABS = [
-  ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['carpetas','Bocetos'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja · brief']
-];
+/* ============ El proyecto en 8 pestañas (antes 20). Las claves viejas siguen funcionando: llevan a su pestaña y a la parte que les toca ============ */
+const TABS=[['hoja','Hoja'],['idea','Idea y dirección'],['estilo','Mundo y estilo'],['refs','Referencias'],['bocetos','Bocetos y crítica'],['explorar','Explorar'],['produccion','Producción y láminas'],['proyecto','Proyecto']];
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
-/* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
-const TAB_DESC={cerebro:'Resumen, asistente y qué falta',mapa:'Todo el proyecto en un mapa',concepto:'Qué diseñas y para qué existe',ad:'Qué comunicas: pilares y dirección de arte',tension:'Qué ideas chocan entre sí',mood:'Cómo se siente: mood, luz y color',lenguaje:'Formas, silueta, color, luz y reglas',personajes:'Cada uno con su paleta y sus datos',board:'Lienzo libre y exportar a PureRef',bajar:'De una referencia a un thumbnail',mundo:'El mundo como personaje',explorar:'Variantes y combinaciones',produccion:'El pipeline de un estudio, paso a paso',laminas:'Láminas de producción y publicar',revision:'Salud del proceso, retro y versiones'};
-const TAB_SEP=new Set(['mood','refs','critica','hoja']);
+const TAB_NUEVO={brief:['idea','brief'],concepto:['idea','que'],tension:['idea','tension'],ad:['idea','ad'],mood:['estilo','mood'],lenguaje:['estilo','lenguaje'],personajes:['estilo','personajes'],mundo:['estilo','mundo'],board:['refs','tablero'],bajar:['refs','bajar'],carpetas:['bocetos','carpetas'],critica:['bocetos','critica'],laminas:['produccion','laminas'],cerebro:['proyecto','asistente'],mapa:['proyecto','mapa'],revision:['proyecto','falta']};
+function tabResuelve(k){k=TAB_ALIAS[k]||k;return TAB_NUEVO[k]||[k,null]}
+const TAB_SEP=new Set();
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
 const GRUPOS_MUNDO=['Personajes','Criaturas','Entornos','Props','Keyframes'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
@@ -1291,7 +1294,7 @@ function salud(p){
   const ok=items.filter(i=>i[1]).length;
   return {items,ok,total:items.length,pct:Math.round(ok/items.length*100),conP,refs:refs.length};
 }
-function tabCompleta(p,t){const it=salud(p).items.filter(i=>i[2]===t);return it.length&&it.every(i=>i[1])}
+function tabCompleta(p,t){const it=salud(p).items.filter(i=>tabResuelve(i[2])[0]===t);return it.length&&it.every(i=>i[1])}
 
 /* ============ Render ============ */
 function render(){renderSide();renderMain()}
@@ -1373,7 +1376,12 @@ function listaProyectos(){
   if(!todos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'');
 }
-function renderMain(){renderMainInner();S.assets?.hydrate?.();if(S.tab==='mapa'&&S.vista==='proyecto')requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(S.tab==='board'&&S.vista==='proyecto')requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.tab==='critica'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+const pgSec=(pg,id,titulo,sub,html)=>`<section class="pg-sec" id="sec-${id}"><div class="pg-h"><h2>${titulo}</h2>${sub?`<span class="muted">${sub}</span>`:''}</div><div class="pg-body">${html}</div></section>`;
+const pgNav=items=>`<div class="chips pgnav">${items.map(([id,n])=>`<button class="ch xs" data-act="ir-sec" data-id="${id}">${n}</button>`).join('')}</div>`;
+const enMapa=()=>S.vista==='proyecto'&&S.tab==='proyecto';
+const enTablero=()=>S.vista==='proyecto'&&(S.tab==='board'||(S.tab==='refs'&&!!document.getElementById('sec-tablero')));
+function pgAncla(){if(S.vista!=='proyecto'||!S.ancla)return;const id=S.ancla;S.ancla=null;const d=document.getElementById('sec-'+id);if(d)requestAnimationFrame(()=>d.scrollIntoView({block:'start'}))}
+function renderMain(){renderMainInner();pgAncla();S.assets?.hydrate?.();if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.tab==='bocetos'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
@@ -1413,7 +1421,7 @@ function renderMainInner(){
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   if(p.libre){m.innerHTML=herrHTML(p);return}
-  const s=salud(p);S.tab=TAB_ALIAS[S.tab]||S.tab;if(!TABS.some(t=>t[0]===S.tab))S.tab='cerebro';
+  const s=salud(p);{const [t,a]=tabResuelve(S.tab);S.tab=t;if(a&&!S.ancla)S.ancla=a}if(!TABS.some(t=>t[0]===S.tab))S.tab='hoja';
   m.innerHTML=`
   ${conflictoHTML(S.cur)}
   <div class="phead">
@@ -1442,9 +1450,8 @@ function renderMainInner(){
   </div>
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
   ${etapasHTML(p)}
-  ${(()=>{const PRIM=['hoja','brief','refs','carpetas','critica'],prim=PRIM.map(k=>TABS.find(t=>t[0]===k)),dentro=PRIM.includes(S.tab),cur=TABS.find(t=>t[0]===S.tab)||['',''],dot=k=>k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':'';
-    return `<nav class="tabs primarias" role="tablist">${prim.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}${dot(k)}</button>`).join('')}<button class="tab" role="tab" data-act="tabs-mas" aria-expanded="${!!S.tabsMas}" aria-selected="${!dentro}">${dentro?'Más secciones':esc(cur[1])} ▾</button></nav>${S.tabsMas?`<div class="tabs-mas">${TABS.filter(t=>!PRIM.includes(t[0])).map(([k,n])=>`<button class="tm ${S.tab===k?'on':''}" data-act="tab" data-tab="${k}"><b>${n}${dot(k)}</b><small>${TAB_DESC[k]||''}</small></button>`).join('')}</div>`:''}`})()}
-  <section class="panel">${({cerebro:vCerebro,mapa:vMapa,brief:vBrief,concepto:vConcepto2,ad:vAD,tension:vTension,mood:vMood,lenguaje:vLenguaje,personajes:vPersonajes,mundo:vMundo,explorar:vExplorar,refs:vRefs,board:vBoardTab,bajar:vBajar,produccion:vProduccion,carpetas:vCarpetas,critica:vCritica2,laminas:vLaminas,revision:vRevision,hoja:vHoja})[S.tab](p)}</section>`;
+  <nav class="tabs" role="tablist">${TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
+  <section class="panel">${({hoja:vHoja,idea:pgIdea,estilo:pgEstilo,refs:pgRefs,bocetos:pgBocetos,explorar:pgExplorar,produccion:pgProduccion,proyecto:pgProyecto})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -1461,7 +1468,6 @@ function nombresHTML(p){
   if(!(p.nombres||[]).length)return favBox;
   return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`+favBox}
 function vBrief(p){return `
-  <p class="intro">Antes de buscar una sola imagen, <strong>reescribe el encargo con tus palabras</strong>. Si no lo puedes explicar en un párrafo, todavía no sabes qué buscar.</p>
   <div class="box" style="border-top:3px solid var(--accent)"><h3>Brief de una frase</h3><p class="hint">1 sujeto, 1 lugar, 1 sentimiento. Una sola frase que describa la imagen, y te quedas con ella hasta terminar. Se queda fija arriba del proyecto.</p>
     <div class="grid3" style="gap:10px">
       <div class="field"><label for="f-una-sujeto">Sujeto</label>${it('brief.una.sujeto',p.brief.una?.sujeto||'','Un dios de la guerra','f-una-sujeto')}</div>
@@ -1511,7 +1517,6 @@ function vConcepto(p){
   ${asesor('concepto','Asesor: empuja mi concepto','Diagnostica tu tensión, te hace preguntas y propone empujes concretos.')}`}
 
 function vMundo(p){return `
-  <p class="intro"><strong>Haz que el mundo sea un personaje.</strong> La naturaleza no es fondo: quiere, teme, reacciona y deja huella. Tus referentes aquí son <strong>Nicolas Weis</strong> y <strong>Crash McCreery</strong>: fíjate en cómo cada forma del entorno tiene carácter.</p>
   <div class="grid2">${MUNDO_Q.map(([k,q,h])=>`<div class="box"><h3>${q}</h3><p class="hint">${h}</p>${ta('mundo.'+k,p.mundo[k]||'')}</div>`).join('')}</div>`}
 
 function vKeywords(p){
@@ -1585,7 +1590,6 @@ function vRefs(p){
   const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
   return `
   ${herramientasRefHTML()}
-  <p class="intro"><strong>Aquí juntas y entiendes tus referencias.</strong> Busca, sube o pega imágenes y escribe el porqué de cada una. Cuando tengas varias, ordénalas sobre el lienzo en la pestaña <button class="btn ghost sm" data-act="tab" data-tab="board">Tablero</button>.</p>
   ${refsBuscaHTML(p)}
   ${sitiosRefHTML(p)}
   <div class="drop" id="drop">
@@ -1630,29 +1634,22 @@ function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div cl
 function refMetaHTML(r){const est=r.licEstado||(r.lic?licDeTexto(r.lic):(r.link?'desconocida':''));if(!est&&!r.autor&&!r.w)return '';const L=LIC_EST[est]||LIC_EST.desconocida;
   return `<div class="ref-meta">${est?`<span class="lic ${L[1]}" title="${esc(r.lic||'La fuente no indica licencia')}">${L[0]}</span>`:''}${r.autor?`<small class="muted">${esc(r.autor)}</small>`:''}${r.w&&r.h?`<small class="muted">${r.w}×${r.h}</small>`:''}</div>`}
 
-function vRevision(p){
-  const s=salud(p);
-  return `
-  <div class="grid2">
-    <div class="box"><h3>Básicos de diseño gráfico</h3><p class="hint">Revísalo en cada boceto y en el final. Si dudas, míralo en miniatura y en blanco y negro.</p>
+function vBasicos(p){return `    <div class="box"><h3>Básicos de diseño gráfico</h3><p class="hint">Revísalo en cada boceto y en el final. Si dudas, míralo en miniatura y en blanco y negro.</p>
       <div class="checks">${DISENO.map(([k,n,h])=>`<label class="chk"><input type="checkbox" id="d-${k}" data-b="diseno.${k}" ${p.diseno[k]?'checked':''}><span><b>${n}</b><small>${h}</small></span></label>`).join('')}</div>
-    </div>
-    <div class="box"><h3>Salud del proceso · ${s.pct}%</h3><p class="hint">Lo que falta, en orden. Es el mismo método en cada proyecto.</p>
+    </div>`}
+function vSalud(p){const s=salud(p);return `    <div class="box"><h3>Salud del proceso · ${s.pct}%</h3><p class="hint">Lo que falta, en orden. Es el mismo método en cada proyecto.</p>
       <div class="health-list">${s.items.map(([n,ok,t])=>`<div class="hl ${ok?'ok':'no'}"><i>${ok?'✓':'•'}</i><span>${n}</span>${ok?'':`<button class="btn ghost sm" data-act="tab" data-tab="${t}">Ir</button>`}</div>`).join('')}</div>
-    </div>
-  </div>
-  <div class="box"><h3>Retro del proyecto</h3><p class="hint">Estas notas se juntan en "Mi progreso" y te muestran tus patrones proyecto tras proyecto.</p>
+    </div>`}
+function vRetro(p){return `  <div class="box"><h3>Retro del proyecto</h3><p class="hint">Estas notas se juntan en "Mi progreso" y te muestran tus patrones proyecto tras proyecto.</p>
     <div class="grid3">
       <div class="field"><label for="f-retro-funciono">¿Qué funcionó?</label>${ta('retro.funciono',p.retro.funciono)}</div>
       <div class="field"><label for="f-retro-mejorar">¿Qué me costó o haría distinto?</label>${ta('retro.mejorar',p.retro.mejorar)}</div>
       <div class="field"><label for="f-retro-aprendi">Lo que aprendí (una frase para mi yo futuro)</label>${ta('retro.aprendi',p.retro.aprendi)}</div>
     </div>
-  </div>
-  <div class="box"><h3>Historial de versiones</h3><p class="hint">Se guarda una foto del proyecto al abrirlo y cada 15 minutos de trabajo. Si borraste algo o no te gustó un cambio, vuelve a una versión anterior; antes de restaurar se guarda la actual.</p>
+  </div>`}
+function vVersiones(p){return `  <div class="box"><h3>Historial de versiones</h3><p class="hint">Se guarda una foto del proyecto al abrirlo y cada 15 minutos de trabajo. Si borraste algo o no te gustó un cambio, vuelve a una versión anterior; antes de restaurar se guarda la actual.</p>
     ${!S.hist?'<div><button class="btn" data-act="hist">Ver historial</button></div>':S.hist.cargando?'<p class="muted">Cargando…</p>':S.hist.error?'<p class="muted">No se pudo cargar el historial.</p>':S.hist.lista.length?`<div class="tbl"><table><thead><tr><th>Fecha</th><th>Nombre</th><th style="text-align:right">Refs</th><th style="text-align:right">Salud</th><th></th></tr></thead><tbody>${S.hist.lista.map(h=>`<tr><td>${new Date(h.ts).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td>${esc(h.nombre)}</td><td class="num">${h.refs}</td><td class="num">${h.pct}%</td><td><button class="btn sm" data-act="hist-rest" data-ts="${h.ts}">${S.confirmHist===h.ts?'¿Restaurar?':'Restaurar'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no hay versiones guardadas.</p>'}
-  </div>
-  <div class="box"><h3>Zona de cuidado</h3><p class="hint">Si lo borras, queda en la Papelera y lo puedes recuperar.</p><div class="prow"><button class="btn danger" data-act="borrar">${S.confirmDel?'Sí, borrar proyecto y sus imágenes':'Borrar proyecto'}</button>${S.confirmDel?'<button class="btn ghost" data-act="cancel-del">Cancelar</button>':''}</div></div>`}
-
+  </div>`}
 /* textos planos de cada sección de la hoja, para copiarlas sueltas */
 function hojaTextos(p){const c=p.concepto,nuc=c.nucleos.filter(x=>x.trim()),T={};
   T.titulo=[p.nombre,c.frase].filter(Boolean).join('\n');
@@ -3335,6 +3332,7 @@ function vGaleria(){
 const CARPS=[['bocetos','Bocetos',['Thumbnail','Boceto'],'Boceto','Thumbnails, siluetas, bocetos de idea y composición'],['grises','Escala de grises',['Valores'],'Valores','Estudios de valor: 3–4 grupos, lectura del foco'],['versiones','Versiones',['Color','Render'],'Color','Cada iteración de color y render, en orden'],['final','Final',['Final'],'Final','La pieza terminada']];
 const carpDe=x=>(CARPS.find(c=>c[2].includes(x.etapa))||CARPS[3])[0];
 /* ============ Bocetos por elemento (vegetación, fauna, rocas…) + feedback de Claude con el contexto del proyecto ============ */
+const CRIT_FOCOS=[['composicion','Composición','composición y lectura del foco'],['color','Color y luz','color, valores y luz'],['silueta','Silueta','silueta y forma'],['anatomia','Anatomía','anatomía y estructura'],['concepto','Concepto y dirección de arte','concepto, función y coherencia con la dirección de arte'],['mood','Mood','si transmite el mood que busco']];
 const ELEM_SUG_TIPO={Personaje:['Personaje','Vestuario','Props','Expresiones','Turnaround','Color'],Criatura:['Criatura','Anatomía','Texturas','Turnaround','Color'],Entorno:['Entorno','Arquitectura','Vegetación','Rocas','Props','Iluminación'],'Prop / arma':['Prop','Arma','Detalles','Materiales','Turnaround'],'Key art':['Key art','Composición','Color y luz','Thumbnails'],'Vehículo':['Vehículo','Mecánica','Detalles','Turnaround']},
   ELEM_SUG_BASE=['Personaje','Criatura','Entorno','Arquitectura','Vegetación','Fauna','Rocas','Props','Vehículo','Key art','Color y luz','Thumbnails'];
 const elemSug=p=>[...new Set([...(ELEM_SUG_TIPO[p.tipo]||[]),...ELEM_SUG_BASE])].filter(e=>!(p.grupos||[]).includes(e)).slice(0,10);
@@ -3351,15 +3349,16 @@ const ELEM_GUIA=[[/vegetaci|planta|flora|arbol|árbol|selva/i,'Silueta legible e
   [/vestuario|ropa|armadura|outfit/i,'Capas y función de cada pieza, silueta y volumen, materiales y desgaste, qué dice de quién lo usa, cómo se mueve el cuerpo debajo.'],
   [/anatom|turnaround|expresi/i,'Consistencia entre vistas, proporciones y estructura, lectura de forma en volumen, expresiones o poses que cuenten carácter.']];
 const elemGuia=g=>(ELEM_GUIA.find(([re])=>re.test(g||''))||[])[1]||'Identifica tú qué es cada boceto y aplica la disciplina que le corresponde (diseño de personaje, de entorno, de props, key art…). En todos: silueta y lectura en miniatura, valores, lenguaje de formas, qué decisión de diseño se ve, si se siente de ESTE mundo o podría ser de cualquiera, y qué cambiarías primero.';
-function bocetosPaquete(p,g){const xs=piezasGrupo(p,g||''),el=g||'general';
+function bocetosPaquete(p,g){const xs=piezasGrupo(p,g||''),el=g||'general',foc=S.critFoco||[],conf=(S.gd?.conf||[]).map(x=>'- '+(x.sl==='ref'?'[Referencia] ':'')+x.t);
   return [`Claude, dame feedback de mis bocetos de «${el}» para mi proyecto «${p.nombre}». No halagues por defecto: dime lo que de verdad funciona, los problemas reales y qué probaría en la siguiente ronda.`,'',
-    `QUÉ MIRAR EN ESTOS BOCETOS: ${elemGuia(g)}`,'',
+    `QUÉ MIRAR EN ESTOS BOCETOS: ${elemGuia(g)}`,...(foc.length?[`Quiero que revises sobre todo: ${foc.map(k=>CRIT_FOCOS.find(f=>f[0]===k)[2]).join('; ')}.`]:[]),'',
     `BOCETOS (${xs.length}):`,...(xs.length?xs.map((x,i)=>`${i+1}. ${x.nombre||x.etapa||'Boceto'} · ${x.etapa||''}${x.nota?' — '+x.nota:''}`):['(te los paso en este mensaje)']),'',
-    'CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),'',
+    'CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),'',
     'Te paso las imágenes en este mensaje (o dime la ruta de la carpeta en mi compu y las abres). Responde con estas secciones: Lo que funciona · Problemas reales · Decisiones que cuestionaría · Qué información falta · Qué probar en la siguiente ronda. Además dime, boceto por boceto, si se siente de ESTE mundo o podría ser de cualquier proyecto.'].join('\n')}
 function bocetosFeedbackHTML(p,g,ps){return `<div class="box big-q" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Feedback de Claude · ${esc(g||'General')}</h3><span class="lbl">${ps.length} boceto${ps.length===1?'':'s'}</span></div>
     <p class="hint" style="margin:0">El feedback te lo doy yo, con tus bocetos y tu proyecto a la vista. La app arma la petición con todo lo que ya decidiste y una guía de lo que mirar según el tipo de boceto.</p>
-    <div class="prow"><b>1.</b><button class="btn sm pri" data-act="bocetos-pedir">Copiar la petición para Claude</button><button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar las imágenes + la petición (.zip)</button></div>
+    <div class="chips"><span class="lbl">Que revise sobre todo</span>${CRIT_FOCOS.map(([k,n])=>`<button class="ch xs ${(S.critFoco||[]).includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
+    <div class="prow"><b>1.</b><button class="btn sm pri" data-act="bocetos-pedir">Copiar la petición para Claude</button><button class="btn sm" data-act="claude-tablero" title="Baja el tablero de referencias como imagen para adjuntarla">Bajar el tablero (PNG)</button><button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar las imágenes + la petición (.zip)</button></div>
     <p class="hint" style="margin:0"><b>2.</b> Pégame la petición en el chat y adjunta las imágenes (o dime la ruta de la carpeta y las abro). <b>3.</b> Cuando te responda, pega aquí mi feedback y se guarda en el historial de este elemento:</p>
     <textarea id="claude-resp" placeholder="Pega aquí el feedback de Claude…" style="min-height:90px">${esc(S.claudeResp||'')}</textarea>
     <div class="prow"><button class="btn sm" data-act="bocetos-guardar">Guardar el feedback</button></div>
@@ -3881,7 +3880,6 @@ function vProduccion(p){
   const hechos=(i)=>pipe[i].check.filter((c,j)=>pr.hechos?.[i+'-'+j]).length;
   const k='guia-'+et;
   return `
-  <p class="intro">El pipeline de un estudio para <strong>${esc(p.tipo)}</strong>, paso a paso. En cada etapa: <strong>qué entregar</strong>, el checklist y <strong>la pregunta de diseño</strong>. Diseñar es decidir; dibujar viene después.</p>
   <div class="stepper">${pipe.map((s,i)=>{const h=hechos(i),t=s.check.length;return `<button class="step ${i===et?'on':''} ${h===t?'done':''}" data-act="etapa" data-i="${i}"><span class="sn">${h===t?'✓':i+1}</span><span class="st">${esc(s.n)}</span></button>`}).join('')}</div>
   <div class="grid2">
     <div class="box"><span class="lbl">Etapa ${et+1} de ${pipe.length}</span><h3>${esc(e.n)}</h3>
@@ -5115,7 +5113,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   return `
   ${dnaHTML(p)}
   ${cerebroEstadoHTML(p,D)}
-  ${tratamientoHTML(p)}
   <div class="cerebro">
     <div class="c-main">
       <div class="box asist"><div class="prow" style="justify-content:space-between"><h3>Asistente · director de arte del proyecto</h3><span class="lbl">Local · sin IA de pago · usa solo tu contexto</span></div>${chatHTML(p)}
@@ -5128,9 +5125,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
       <div class="box"><h3>Preguntas abiertas <span class="lbl">${pq.filter(q=>!q.ok).length}</span></h3>
         <div class="prow"><input type="text" id="preg-t" placeholder="¿Qué tengo que resolver antes de diseñar?" data-enter="preg-add" style="flex:1 1 160px"><button class="btn sm" data-act="preg-add">＋</button></div>
         ${pq.length?`<ul class="list">${pq.map(q=>`<li class="${q.ok?'hecha':''}"><span>${esc(q.t)}</span><span class="prow"><button class="btn ghost sm" data-act="preg-ok" data-id="${q.id}">${q.ok?'Reabrir':'✓'}</button><button class="btn ghost sm" data-act="preg-del" data-id="${q.id}">✕</button></span></li>`).join('')}</ul>`:''}</div>
-      <div class="box"><h3>Evitar <span class="lbl">${(p.evitar||[]).length}</span></h3><p class="hint">Clichés y elementos descartados. Los vigilo en todo el proyecto.</p>
-        <div class="chips">${(p.evitar||[]).map((e,i)=>`<span class="chip">${esc(e)}<button data-act="evitar-del" data-i="${i}" aria-label="Quitar">×</button></span>`).join('')}</div>
-        <input type="text" id="evitar-t" placeholder="Algo que NO quieres + Enter" data-enter="evitar-add"></div>
       <div class="box"><h3>Notas</h3>${tx('notas',p.notas,'Lo que se te ocurra; el asistente también puede guardar aquí.','x-notas',90)}</div>
     </div>
   </div>`}
@@ -5138,7 +5132,6 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
 /* ---------- CONCEPTO ---------- */
 function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto;
   return `
-  <p class="intro"><b>IDEA → FUNCIÓN → INTENCIÓN.</b> El diseño no se puede quedar en «se ve cool»: la <strong>función</strong> es la que justifica la forma.</p>
   <div class="box"><h3>¿Qué estoy diseñando?</h3>${chSel('que.tipo',QUE_TIPOS,q.tipo,false)}
     <div class="grid2"><div class="field"><label for="x-que-que">En una línea: ¿qué es?</label>${inp('que.que',q.que,'Una criatura marina que vive sola en una fosa abisal')}</div>
     <div class="field"><label for="x-que-tema">Tema: ¿de qué habla en el fondo?</label>${inp('que.tema',q.tema,'Aislamiento, culpa, fe, poder que se paga…')}</div></div></div>
@@ -5150,7 +5143,8 @@ function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto;
       ${[['silueta','Silueta','¿Qué lo hace reconocible en negro, a 5 cm?'],['proporcion','Proporción','Cabeza pequeña, masa en los hombros, piernas cortas…'],['anatomia','Anatomía / estructura','¿Qué la sostiene? Esqueleto, articulaciones, estructura…'],['geometria','Geometría','Forma básica que lo contiene: triángulo invertido, círculo…'],['lenguaje','Lenguaje de formas','Qué comunican las formas: curvas = orgánico, puntas = amenaza…']].map(([k,n,ph])=>`<div class="field"><label for="x-forma-${k}">${n}</label>${tx('forma.'+k,f[k],ph,null,44)}</div>`).join('')}</div>
     <div class="box"><h3>Material</h3><p class="hint">Cada material cuenta algo. Elige y pregúntate por qué.</p>${chSel('materiales',MATERIALES,p.materiales)}
       <div class="prow">${(p.materiales||[]).map(m=>porqueBtn('este material: '+m.toLowerCase())).join('')}</div>
-      <div class="field"><label for="x-materialNota">Otros materiales / estado (oxidado, pulido, quemado…)</label>${tx('materialNota',p.materialNota,'Bronce con pátina verde, tela empapada de sal…',null,44)}</div></div>
+      <div class="field"><label for="x-materialNota">Otros materiales / estado (oxidado, pulido, quemado…)</label>${tx('materialNota',p.materialNota,'Bronce con pátina verde, tela empapada de sal…',null,44)}</div>
+      <div class="field"><label for="x-guia-mat">Material dominante (qué predomina en el diseño)</label>${tx('guia.materiales',(p.guia||{}).materiales,'Obsidiana pulida, piedra volcánica, oro martillado…','x-guia-mat',40)}</div></div>
   </div>
   <details class="box" ${c.nucleos.some(Boolean)||c.frase?'open':''}><summary><h3 style="display:inline">Núcleos y frase del concepto</h3></summary>
     <div class="nucleos">${c.nucleos.map((n,i)=>`<label class="nuc"><span>IDEA ${i+1}</span><input type="text" id="f-nuc-${i}" data-b="concepto.nucleos.${i}" value="${esc(n)}" placeholder="Idea ${i+1}"></label>`).join('')}</div>
@@ -5164,7 +5158,6 @@ function vivoFuncion(p){const f=(p.que?.funcion||'').trim();if(!f)return '<p cla
 /* ---------- ART DIRECTION ---------- */
 function vAD(p){
   return `
-  <p class="intro"><b>¿Qué quiero comunicar?</b> Los pilares son <strong>intenciones, no objetos</strong>: «La naturaleza reclama», no «árbol». Cada pilar dice qué comunica, cómo se ve y qué NO debe hacer.</p>
   <div class="box big-q"><h3>Frase central</h3><p class="hint">En una frase: ¿qué quiero que la gente entienda y sienta con este proyecto?</p>
     ${tx('ad',p.ad,'Que el poder se sienta sagrado y condenado a la vez: el dios sabe que su arma lo va a devorar.','f-ad',64)}<div data-vivo="ad">${vivoAD(p)}</div></div>
   <div class="pilares3">${p.pilares.map((x,i)=>`<div class="box pil"><span class="num">PILAR ${i+1}</span>
@@ -5196,7 +5189,6 @@ function vivoPilar(p,i){const x=p.pilares[i];if(!x.t.trim())return '';const O=[]
 /* ---------- TENSIÓN ---------- */
 function vTension(p){const T=p.tensiones||[],c=p.concepto;
   return `
-  <p class="intro"><b>¿Qué ideas están chocando?</b> Una antítesis sola «no tiene nada»: hazla consciente, decide quién domina y conviértela en <strong>decisiones visuales</strong>.</p>
   ${T.map((t,i)=>`<div class="box tens-b"><div class="tens-ab"><input type="text" id="x-t-a-${i}" data-b="tensiones.${i}.a" value="${esc(t.a)}" placeholder="A (ej. Naturaleza)"><span>↔</span><input type="text" id="x-t-b-${i}" data-b="tensiones.${i}.b" value="${esc(t.b)}" placeholder="B (ej. Tecnología)"><button class="btn ghost sm danger" data-act="tens-del" data-i="${i}" aria-label="Quitar tensión">✕</button></div>
     <div class="grid2"><div class="field"><label for="x-t-av-${i}">¿Cómo se ve ${esc(t.a||'A')}? (adjetivos visuales)</label>${inp(`tensiones.${i}.aVis`,t.aVis,'curvo, vivo, húmedo, verde',`x-t-av-${i}`)}</div>
       <div class="field"><label for="x-t-bv-${i}">¿Cómo se ve ${esc(t.b||'B')}?</label>${inp(`tensiones.${i}.bVis`,t.bVis,'rígido, frío, metálico, modular',`x-t-bv-${i}`)}</div></div>
@@ -5226,20 +5218,14 @@ function vivoTension(p,i){const t=(p.tensiones||[])[i];if(!t||!t.a||!t.b)return 
 /* ---------- MOOD ---------- */
 function vMood(p){const m=p.mood,t=tresMood(p);
   return `
-  <p class="intro"><b>¿Qué debe sentir el espectador?</b> La paleta sale de lo que escribes aquí: si cambias el mood, la sugerencia cambia contigo.</p>
   <div class="grid2">
     <div class="box"><h3>Emoción</h3><p class="hint">¿Qué quiero que sienta el espectador?</p>${tx('mood.emocion',m.emocion,'Reverencia con miedo; ganas de acercarse y de huir',null,50)}</div>
     <div class="box"><h3>Atmósfera</h3><p class="hint">¿Qué tipo de ambiente existe?</p>${tx('mood.atmosfera',m.atmosfera,'Silencio de templo abandonado, aire pesado de incienso',null,50)}</div>
-    <div class="box"><h3>Luz</h3><p class="hint">¿Cómo está iluminado?</p>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div>
     <div class="box"><h3>Clima</h3><p class="hint">¿Qué condiciones ambientales existen?</p>${tx('mood.clima',m.clima,'Humedad, humo, ceniza suspendida',null,50)}</div>
   </div>
-  ${lucesHTML(p)}
-  <div class="box"><h3>Color · relación cromática</h3>${chSel('mood.rel',MOOD_REL,m.rel,false)}${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,44)}</div>
   <div class="box"><h3>3 palabras de mood</h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
     <div data-vivo="sintesis">${vivoSintesis(p)}</div>
-    <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>
-  ${moodPaletaHTML(p)}
-  ${escHTML(p)}`}
+    <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>`}
 function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
       <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
     <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
@@ -5264,6 +5250,42 @@ function vLuzColor(p){const m=p.mood,t=tresMood(p),conMood=t.some(Boolean)||m.lu
 function vHerr3d(){return `<p class="intro"><b>Referencia 3D.</b> Cuerpos con anatomía, cabeza de Loomis, formas básicas y tus propios modelos, con la luz que tú controlas. Se procesa en tu navegador.</p>
   <div class="ht-row"><button class="ht-c ht-3" data-act="v3d-abrir" data-m="maniqui"><b>Cuerpo</b><span>Cinco tipos de cuerpo con anatomía, para posar y estudiar luz.</span></button><button class="ht-c ht-p" data-act="v3d-abrir" data-m="maniqui" data-t="pose"><b>Poses</b><span>Ponlo en la pose de una imagen, o elige una de las 9 de partida.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="loomis"><b>Cabeza de Loomis</b><span>Planos y líneas guía para estudiar la cabeza con luz.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="formas"><b>Formas básicas</b><span>Esfera, cubo, cilindro, cono y más, para ver cómo cae la sombra.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="mio"><b>Mis modelos</b><span>Carga un .glb, .obj o .fbx; si trae esqueleto, lo posas.</span></button></div>
   <p class="hint">Con «Añadir al moodboard» la imagen queda en <b>Referencias y moodboard</b> de esta sección. También puedes descargarla en PNG o copiarla.</p>`}
+function luzColorHTML(p){const m=p.mood,l=p.lenguaje||{},g=p.guia||{};
+  return `<div class="grid2">
+    <div class="box"><h3>Luz</h3><div class="field"><label for="x-mood-luz">¿Cómo está iluminado?</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div>
+      <div class="field"><label for="x-guia-luz">¿Qué iluminación refuerza el concepto?</label>${tx('guia.luz',g.luz,'Una fuente dominante, contraluz; la sombra se come los bordes…','x-guia-luz',50)}</div></div>
+    <div class="box"><h3>Color</h3>${chSel('mood.rel',MOOD_REL,m.rel,false)}<div class="field"><label for="x-mood-color">Relación cromática y color</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,44)}</div>
+      <div class="grid2" style="gap:8px"><div class="field"><label for="x-lenguaje-colorDom">Domina</label>${inp('lenguaje.colorDom',l.colorDom,'negro obsidiana')}</div><div class="field"><label for="x-lenguaje-colorAcento">Acento</label>${inp('lenguaje.colorAcento',l.colorAcento,'carmesí')}</div></div></div>
+  </div>
+  ${lucesHTML(p)}${escHTML(p)}${mapaLuzHTML(p)}${moodPaletaHTML(p)}`}
+function pgIdea(p){return pgNav([['brief','Encargo'],['que','Qué y para qué'],['tension','Tensión'],['ad','Dirección de arte']])
+  +pgSec('idea','brief','Encargo','Reescríbelo con tus palabras: si no cabe en un párrafo, aún no sabes qué buscar.',vBrief(p))
+  +pgSec('idea','que','Qué diseñas y para qué','Idea → función → intención: la función justifica la forma.',vConcepto2(p))
+  +pgSec('idea','tension','Tensión','Qué ideas chocan, quién domina y cómo se ve ese conflicto.',vTension(p))
+  +pgSec('idea','ad','Dirección de arte','Los pilares son intenciones, no objetos.',vAD(p))}
+function pgEstilo(p){return pgNav([['mood','Mood'],['luz','Luz y color'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],['mundo','Mundo']])
+  +pgSec('estilo','mood','Mood','Qué debe sentir el espectador; la paleta sale de lo que escribes.',vMood(p))
+  +pgSec('estilo','luz','Luz y color','Tu escena de luz, paletas funcionales y la revisión de tu imagen.',luzColorHTML(p))
+  +pgSec('estilo','lenguaje','Lenguaje visual','De ideas a reglas que se pueden dibujar y revisar.',vLenguaje(p))
+  +pgSec('estilo','personajes','Personajes','Cada uno con su paleta, armada con lo que escribes de él.',vPersonajes(p))
+  +pgSec('estilo','mundo','Mundo','Haz que el mundo sea un personaje.',vMundo(p))}
+function pgRefs(p){return pgNav([['buscar','Buscar y moodboard'],['tablero','Tablero'],['bajar','Ref → thumbnail']])
+  +pgSec('refs','buscar','Buscar y moodboard','Busca, sube o pega imágenes y escribe el porqué de cada una.',vRefs(p))
+  +pgSec('refs','tablero','Tablero','Ordena todo sobre un lienzo libre y llévalo a PureRef.',vBoardTab(p))
+  +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))}
+function pgBocetos(p){return pgNav([['carpetas','Subir y feedback'],['critica','Medir un boceto'],['basicos','Básicos de diseño']])
+  +pgSec('bocetos','carpetas','Subir bocetos y pedir feedback','Por elemento, con el contexto del proyecto.',vCarpetas(p))
+  +pgSec('bocetos','critica','Medir un boceto','Datos de tu boceto (valores, silueta, foco) y el historial de críticas.',vCritica2(p))
+  +pgSec('bocetos','basicos','Básicos de diseño','Revísalos en cada boceto y en el final.',vBasicos(p))}
+function pgExplorar(p){return pgSec('explorar','explorar','Explorar','Explora antes de casarte con una idea.',vExplorar(p))}
+function pgProduccion(p){return pgNav([['produccion','Producción'],['laminas','Láminas y publicar']])
+  +pgSec('produccion','produccion','Producción','El pipeline de un estudio, paso a paso.',vProduccion(p))
+  +pgSec('produccion','laminas','Láminas y publicación','Hojas de producción y el paquete para publicar.',vLaminas(p))}
+function pgProyecto(p){return pgNav([['mapa','Mapa'],['asistente','Asistente y coherencia'],['falta','Qué falta'],['cierre','Cierre']])
+  +pgSec('proyecto','mapa','Mapa del proyecto','Todo en un lugar: lo editas aquí y cambia en todo el proyecto.',vMapa(p))
+  +pgSec('proyecto','asistente','Asistente y coherencia','Director de arte local, auditoría, decisiones y preguntas abiertas.',vCerebro(p))
+  +pgSec('proyecto','falta','Qué falta','El método paso a paso, en orden.',vSalud(p))
+  +pgSec('proyecto','cierre','Cierre','Qué aprendiste y el historial de versiones.',vRetro(p)+vVersiones(p))}
 function vivoSintesis(p){const t=tresMood(p).filter(Boolean);if(t.length<3)return `<p class="nd-box sm">El proyecto debe sentirse: ${t.map(esc).join(', ')||'___'}${t.length<3?', ___':''}. (Faltan ${3-t.length})</p>`;
   const g=t.filter(w=>GENERICOS.includes(nz(w)));return `<p class="sintesis">El proyecto debe sentirse: <b>${esc(t[0])}</b>, <b>${esc(t[1])}</b> y <b>${esc(t[2])}</b>.</p>${g.length?`<p class="nd-box sm">«${esc(g.join('», «'))}» es genérico: ¿qué tipo de ${esc(g[0])}?</p>`:''}`}
 function vivoPalSug(p){if(p.libre&&!(tresMood(p).some(Boolean)||p.mood.luz||p.mood.color))return '<h3>Paleta guiada por una sensación</h3><p class="hint">Si escribes una sensación en el paso 3 (es opcional), aquí aparece una propuesta de paleta que la sigue.</p>';const s=paletaSugerida(p);
@@ -5280,14 +5302,9 @@ function vivoPalCheck(p){const pl=paletaLectura(p.mood.paleta||[]);if(!pl)return
 /* ---------- LENGUAJE VISUAL + TÉCNICA ---------- */
 function vLenguaje(p){const l=p.lenguaje||{},g=p.guia||{},c=reglasCandidatas(p);
   return `
-  <p class="intro"><b>De ideas a reglas.</b> Aquí la intención se vuelve algo que se puede dibujar y revisar: formas, silueta, escala, material, color, luz y composición.</p>
   <div class="grid2">
     <div class="box"><h3>Forma · ¿qué formas dominan?</h3>${chSel('lenguaje.formas',FORMAS_V,l.formas)}${tx('guia.formas',g.formas,'Triángulos y verticales para el poder; curvas para la amenaza…','x-guia-formas',44)}</div>
-    <div class="box"><h3>Silueta · ¿qué lo hace reconocible?</h3>${tx('forma.silueta',p.forma?.silueta,'Hombros enormes y cabeza diminuta; la serpiente rompe el contorno…','x-lg-sil',56)}</div>
     <div class="box"><h3>Escala · ¿qué relación hay entre elementos?</h3>${tx('lenguaje.escala',l.escala,'El dios mide 3 veces un humano; el templo lo empequeñece a él…',null,50)}</div>
-    <div class="box"><h3>Material · ¿qué predomina?</h3>${chSel('materiales',MATERIALES,p.materiales)}${tx('guia.materiales',g.materiales,'Obsidiana pulida, piedra volcánica, oro martillado…','x-guia-mat',40)}</div>
-    <div class="box"><h3>Color · dominante y acentos</h3><div class="grid2" style="gap:8px"><div class="field"><label for="x-lenguaje-colorDom">Domina</label>${inp('lenguaje.colorDom',l.colorDom,'negro obsidiana')}</div><div class="field"><label for="x-lenguaje-colorAcento">Acento</label>${inp('lenguaje.colorAcento',l.colorAcento,'carmesí')}</div></div></div>
-    <div class="box"><h3>Luz · ¿qué iluminación refuerza el concepto?</h3>${tx('guia.luz',g.luz,'Una fuente dominante, contraluz; la sombra se come los bordes…','x-guia-luz',50)}</div>
     <div class="box"><h3>Composición · ¿cómo se organiza la imagen?</h3>${tx('lenguaje.composicion',l.composicion,'Cámara baja, figura en el tercio derecho, diagonales hacia el foco…',null,50)}</div>
   </div>
   <div class="box"><h3>Reglas visuales <span class="lbl">${(l.reglas||[]).length}</span></h3><p class="hint">Lo que gobierna cada decisión del proyecto. Pocas y claras.</p>
@@ -5349,7 +5366,6 @@ function refExtra(p,r){const tipo=r.tipoRef||'',sub=tipo==='primaria'?REF_PRIM:t
 /* ---------- EXPLORACIÓN: variantes, azar intencional, kill your darlings ---------- */
 function vExplorar(p){const V=variantes(p),rows=['Forma','Proporción','Material','Color','Luz','Composición','Render'],c=S.dxAzar,lk=S.dxLocks||{};
   return `
-  <p class="intro"><b>Explora antes de casarte con una idea.</b> Aquí no hay ganadora automática: ves qué cambia visualmente en cada dirección y tú decides.</p>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Direcciones conceptuales</h3><span class="lbl">Mismo contexto, distinto tratamiento</span></div>
     <div class="tbl vars"><table><thead><tr><th></th>${V.map(v=>`<th><b>${v.k}</b> ${esc(v.n)}</th>`).join('')}</tr></thead><tbody>
     ${rows.map(r=>`<tr><th>${r}</th>${V.map(v=>`<td>${esc(v.c[r]||'')}</td>`).join('')}</tr>`).join('')}
@@ -5381,7 +5397,6 @@ function darlingsHTML(p){const L=darlingsLista(p),lab={funciona:'Existe porque f
 /* ---------- CRÍTICA: boceto al instante + concepto escrito ---------- */
 function vCritica2(p){const an=S.anP?.[S.cur],piezas=(p.piezas||[]).slice().reverse();
   return `
-  ${claudeBoxHTML(p)}
   ${guiasHTML(p)}
   <div class="box big-q" id="drop-an"><div class="prow" style="justify-content:space-between"><h3>Medir mi boceto · datos, no crítica</h3><span class="lbl">Funciona en cel, iPad y compu</span></div>
     <p class="hint">Sube lo que estás haciendo (foto del cuaderno, captura de Procreate o Photoshop). Mido silueta, valores, foco, detalle y color, y lo cruzo con tu proyecto. <b>Design without context</b>: sin color, borroso, silueta, miniatura y espejo.</p>
@@ -5496,7 +5511,7 @@ async function accionDir(a,el,p,ds){
       p.criticas.push({tipo:'Desbloqueo',ts:Date.now(),titulo:S.blk?.nofunciona||'',r:{Preguntas:r.preguntas,Experimentos:r.experimentos,Direcciones:r.direcciones,Contradicciones:r.contra}});r.guardado=true;marcar();abrirBloqueado();renderMain();break}
     case 'tens-add':{const [A,B]=(ds.v||'|').split('|');p.tensiones.push({a:A||'',b:B||'',aVis:'',bVis:'',como:'',domina:''});marcar();renderMain();break}
     case 'tens-del':{const k='t'+ds.i;if(S.confirmLi!==k){S.confirmLi=k;el.textContent='¿Quitar?';return}S.confirmLi=null;p.tensiones.splice(+ds.i,1);marcar();renderMain();break}
-    case 'regla-add':{const v=ds.v;if(!v)return;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓';el.disabled=true;if(S.tab==='lenguaje')renderMain();break}
+    case 'regla-add':{const v=ds.v;if(!v)return;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓';el.disabled=true;if(S.tab==='estilo')renderMain();break}
     case 'regla-add-t':{const v=$('#regla-t')?.value.trim();if(!v)return;p.lenguaje.reglas.push(v);marcar();renderMain();$('#regla-t')?.focus();break}
     case 'regla-del':p.lenguaje.reglas.splice(+ds.i,1);marcar();renderMain();break;
     case 'pal-usar':{const sg=paletaSugerida(p).pal;p.mood.paleta=sg.map(c=>c.hex);p.mood.paletaRoles=sg.map(c=>c.rol);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada: ajústala a tu gusto');break}
@@ -5918,7 +5933,7 @@ function vReclutador(){const R=S.rec,chk=S.ajustes.recCheck||{},tags=S.ajustes.r
 
 /* ---------- vista de láminas (proyecto) ---------- */
 function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=sel=>`<option value="">— sin imagen —</option>${pz.map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.etapa)} · ${fecha(x.creado)}${x.grupo?' · '+esc(x.grupo):''}</option>`).join('')}`,pub=S.pub=S.pub||{img:'',titulo:''};
-  return `<p class="intro"><b>Presentación de estudio.</b> Hojas con el formato que se usa en producción, el breakdown de tu proceso y el paquete listo para publicar. <button class="btn ghost sm" data-act="vista" data-v="formatos">¿En qué formato? →</button></p>
+  return `
   <div class="box"><h3>Plantillas de producción · 4K</h3>
     <div class="chips">${LAM_TIPOS.map(([k,n])=>`<button class="ch ${d.tipo===k?'on':''}" data-act="lam-tipo" data-v="${k}">${n}</button>`).join('')}</div>
     <div class="prow" style="align-items:flex-end">
@@ -6457,7 +6472,6 @@ function vMapa(p){
       <label class="lbl" for="x-brief-una-frase">La frase del proyecto</label>${inp('brief.una.frase',p.brief.una?.frase,'Sujeto + lugar + sentimiento, en una frase')}
       <p class="mp-hilo" id="mp-hilo">${esc(M.hilo)}</p></div></div>
     <div class="mp-col"><span class="lbl">Cómo se ve y se siente</span>${[4,5,6,7].map(nd).join('')}</div></div>
-  ${mapaLuzHTML(p)}
   <div id="mp-panel">${mapaPanelHTML(p,M)}</div>`}
 function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');if(!w||!svg||!c||getComputedStyle(svg).display==='none')return;
   const W=w.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${W.width} ${W.height}`);
@@ -6470,7 +6484,7 @@ function mapaLineas(){const w=$('#mp-wrap'),svg=$('#mp-svg'),c=$('#mp-centro');i
     else{const out=aL?Math.min(a.x,b.x)-34:Math.max(a.x+a.w,b.x+b.w)+34,x1=aL?a.x:a.x+a.w,x2=aL?b.x:b.x+b.w;h+=`<path class="x" d="M${x1} ${a.y+a.h/2} C${out} ${a.y+a.h/2} ${out} ${b.y+b.h/2} ${x2} ${b.y+b.h/2}"/>`}});
   svg.innerHTML=h}
 let mapaT=null;
-function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'||S.vista!=='proyecto'||S.P[S.cur]!==p)return;
+function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(!enMapa()||S.P[S.cur]!==p)return;
   const M=mapaCalc(p);S.mapaCruces=M.cruces;
   const hl=$('#mp-hilo');if(hl)hl.textContent=M.hilo;
   const lz=$('#mp-luzcolor');if(lz&&!lz.contains(document.activeElement)){lz.outerHTML=mapaLuzHTML(p);escDibuja()}
@@ -6479,7 +6493,7 @@ function mapaVivo(p){clearTimeout(mapaT);mapaT=setTimeout(()=>{if(S.tab!=='mapa'
     nt.innerHTML=L.map(x=>`<p class="mp-nota ${x.cls}">${x.cls==='warn'?'⚠ ':x.cls==='gen'?'≈ ':'· '}${esc(x.t)}</p>`).join('');
     e.classList.toggle('cf',L.some(x=>x.cls==='warn'));e.classList.toggle('vac',L.some(x=>x.cls==='vac'))});
   mapaLineas()},300)}
-window.addEventListener('resize',()=>{if(S.tab==='mapa')mapaLineas()});
+window.addEventListener('resize',()=>{if(enMapa())mapaLineas()});
 
 /* ============ Personajes: paleta que se construye con el personaje ============ */
 const PJ_ROLES=['Protagonista','Antagonista','Aliado','Deidad','Criatura','Secundario'];
@@ -6596,7 +6610,7 @@ function pjCardPal(p,c){const R=pjPaleta(p,c);
     <details><summary class="muted">Por qué estos colores</summary><ul class="pj-rz">${R.razones.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></details>`}
 function vPersonajes(p){const pj=p.personajes=p.personajes||[],line=pjLineup(p);
   const fi=(c,k,lab,ph,sel)=>`<div class="field"><label for="pj-${c.id}-${k}">${lab}</label>${sel?`<select id="pj-${c.id}-${k}" data-pj="${c.id}.${k}">${sel.map(o=>`<option ${c[k]===o?'selected':''}>${o}</option>`).join('')}</select>`:`<input type="text" id="pj-${c.id}-${k}" data-pj="${c.id}.${k}" value="${esc(c[k]||'')}" placeholder="${esc(ph)}">`}</div>`;
-  return `<p class="intro">Cada personaje tiene su paleta, y <strong>se arma con lo que escribes de él</strong>: su lado de la tensión, su personalidad, sus materiales y su piel. Todo parte de la paleta del mundo para que pertenezcan al mismo lugar. Es una propuesta: toca un color para fijarlo a mano.</p>
+  return `
   ${line.length?`<div class="banner"><b>Lineup:</b> ${line.map(esc).join(' ')}</div>`:''}
   ${pj.length?'':`<div class="box"><h3>Todavía no hay personajes</h3><p class="hint">Agrega uno por cada personaje o criatura del proyecto.</p><div class="prow"><button class="btn pri" data-act="pj-add">Agregar personaje</button>${/Personaje|Criatura/.test(p.tipo)?'<button class="btn" data-act="pj-desde">Crear desde este proyecto</button>':''}</div></div>`}
   <div class="pj-list">${pj.map(c=>`<div class="box pj" id="pj-${c.id}">
@@ -6835,7 +6849,6 @@ function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.
   return `<div class="box" id="mp-luzcolor" style="border-top:3px solid var(--c-mood)"><h3>Luz y color de esta pieza</h3>
     <p class="hint">${p.libre?'Tres propuestas de paleta según el tipo de pieza, la luz de tu escena y el mood si lo escribiste. Elige una y pasa a «Tus colores».':'Tres propuestas de paleta que salen de tu mood, tu tensión, tus materiales y la luz de tu escena. Elige una y la app la aplica a todo el proyecto; si luego algo no cuadra, la revisión te dice qué ajustar.'}</p>
     <div class="chips"><span class="lbl">Tipo de pieza</span>${Object.entries(PAL_TIPOS).map(([k,n])=>`<button class="ch ${tipo===k?'on':''}" data-act="pal-tipo" data-k="${k}">${n}</button>`).join('')}</div>
-    <div class="prow"><span class="lbl">Escena de luz</span>${p.escena?`<b>${esc(escNombre(p,p.escena))}</b>`:`<span class="muted">Sin elegir · sugerida por tu mood:</span> <b>${esc(ESC_PRE[sk]?.n||'')}</b> <button class="btn ghost sm" data-act="esc-preset" data-k="${sk}">Usarla</button>`}${p.libre?'':'<button class="btn ghost sm" data-act="tab" data-tab="mood">Ajustar en Mood ↗</button>'}</div>
     <div class="grid3" style="align-items:start">${P.map((v,i)=>`<div class="pf"><b>${esc(v.n)}</b><p class="hint" style="margin:0">${esc(v.d)}</p>
       <div class="palbar">${v.pal.map(z=>`<span style="flex:${z.pct};background:${z.hex}" title="${esc(z.rol)} · ${z.pct}%"></span>`).join('')}</div>
       <div class="pj-bar gris" title="Lectura en escala de grises">${v.pal.map(z=>{const g=Math.round(escLuma(z.hex)*255);return `<i style="background:rgb(${g},${g},${g});flex:${z.pct}"></i>`}).join('')}</div>
@@ -6845,7 +6858,7 @@ function mapaLuzHTML(p){const tipo=palTipo(p),P=paletaFunc(p,tipo),sk=p.escena?.
       <div class="prow"><button class="btn sm pri" data-act="pal-func" data-i="${i}">Usar esta paleta</button><button class="btn ghost sm" data-act="pal-guardar-pieza" data-i="${i}" title="Guárdala solo para este tipo de pieza">Guardar para ${esc(PAL_TIPOS[tipo].split(' ')[0].toLowerCase())}</button></div></div>`).join('')}</div>
     ${mapaLuzMas(p)}
     ${p.mood.paletaAnterior?.length?`<div class="prow"><span class="lbl">Paleta anterior</span><span class="pal">${p.mood.paletaAnterior.map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span><button class="btn ghost sm" data-act="pal-volver">Volver a la anterior</button></div>`:''}
-    <div id="esc-rev">${escRevHTML(p)}</div></div>`}
+  </div>`}
 /* ---- 1) Paletas por pieza (key / personaje / prop del mismo mundo) ---- */
 function piezasHTML(p){const PP=p.paletasPieza||{};
   return `<div class="pf-piezas"><b>Paletas por pieza</b><p class="hint" style="margin:0">Key, personaje y prop del mismo mundo comparten familia, pero no la misma paleta. Guarda la variante que te guste para cada uno.</p>
@@ -6985,7 +6998,7 @@ function rmLineas(){const sv=$('#rm-svg');if(!sv||!RM.data)return;const sel=S.rm
     if(e.kind!=='ancla')h+=`<path class="hit" d="${d}" ${e.kind==='link'?`data-lid="${e.id}"`:`data-pk="${esc(e.key)}"`}/>`;
     if(e.kind==='link'&&on)h+=`<text x="${(A.x+2*cx+B.x)/4}" y="${(A.y+2*cy+B.y)/4}" fill="${col}" font-size="13" text-anchor="middle">${esc(RM_T[e.t]?.[0]||'')}</text>`}
   sv.innerHTML=h}
-function rmInit(){if(S.tab!=='board'||S.bdVista!=='red'||S.vista!=='proyecto')return;const p=S.P[S.cur],wr=$('#rm-wrap');if(!p||!wr||!RM.data)return;
+function rmInit(){if(!enTablero()||S.bdVista!=='red')return;const p=S.P[S.cur],wr=$('#rm-wrap');if(!p||!wr||!RM.data)return;
   const b=RM.bounds,sv=$('#rm-svg'),w=$('#rm-world');if(sv){sv.setAttribute('width',b.w);sv.setAttribute('height',b.h);sv.style.left=b.x+'px';sv.style.top=b.y+'px';sv.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`)}
   if(!S.rmView)rmFit();rmApply();rmLineas()}
 function rmOk(r,F){if(!F)return true;if(F.capa&&r.capa!==F.capa)return false;if(F.est&&!(r.estudio||[]).includes(F.est))return false;if(F.solo==='sueltas'){const D=RM.data;if(D.anc[r.id]||D.links.some(l=>l.a===r.id||l.b===r.id))return false}
@@ -7162,8 +7175,8 @@ function bdBounds(p){const it=bdItems(p);if(!it.length)return null;let x0=1e9,y0
 function bdApply(){const w=$('#bd-world'),v=S.bdView;if(w&&v)w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`}
 function bdFit(){const p=S.P[S.cur],wr=$('#bd-wrap'),b=p&&bdBounds(p);if(!wr||!b)return;const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.05,Math.min(W/b.w,H/b.h)));S.bdView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
 let bdFitT=null;
-function bdInit(){if(S.tab!=='board'||S.vista!=='proyecto')return;const wr=$('#bd-wrap');if(!wr)return;
-  if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(S.tab==='board'&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
+function bdInit(){if(!enTablero())return;const wr=$('#bd-wrap');if(!wr)return;
+  if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(enTablero()&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
 function bdItemHTML(p,i){const sel=S.bdSel===i.id,st=`left:${i.x}px;top:${i.y}px;width:${i.w||240}px;z-index:${i.z||1}`;
   if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
   const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
@@ -7207,7 +7220,7 @@ window.addEventListener('pointerup',e=>{const d=BD.drag;if(!d)return;BD.drag=nul
   if(!d.moved){if(d.mode==='pan'&&e.target.closest?.('#bd-wrap'))bdSelect(null);else if(d.id)bdSelect(d.id)}});
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.bdView||(S.bdView={x:0,y:0,k:1}),k2=Math.max(.04,Math.min(3,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;S.bdTocado=true;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;bdApply()},{passive:false});
-document.addEventListener('keydown',e=>{if(S.tab!=='board'||S.vista!=='proyecto'||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
+document.addEventListener('keydown',e=>{if(!enTablero()||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
   const p=S.P[S.cur];p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
 /* descargas: el tablero se dibuja con las mismas posiciones y tamaños que ves */
 async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0));if(!items.length)return null;
@@ -7242,30 +7255,13 @@ document.addEventListener('input',e=>{const t=e.target,p=S.P[S.cur];if(!p)return
   if(t.dataset.bdw){const i=p.board?.items.find(x=>x.id===t.dataset.bdw);if(i){i.w=+t.value;marcar();const el=document.querySelector('.bd-it[data-id="'+i.id+'"]');if(el)el.style.width=i.w+'px';const l=t.closest('label')?.querySelector('.lbl');if(l)l.textContent='Ancho · '+i.w+'px'}}});
 
 /* ============ Crítica de Claude: la crítica la da Claude en el chat; la app prepara el paquete y guarda la respuesta ============ */
-function claudePaquete(p){const G=S.gd||{},conf=(G.conf||[]).map(x=>'- '+(x.sl==='ref'?'[Referencia] ':'')+x.t),foc=S.critFoco||[];
-  const qs={composicion:'composición y lectura del foco',color:'color, valores y luz',silueta:'silueta y forma',anatomia:'anatomía y estructura',concepto:'concepto, función y coherencia con la dirección de arte',mood:'si transmite el mood que busco'};
-  return [`Claude, críticame esta pieza de mi proyecto «${p.nombre}». No halagues por defecto: dime lo que de verdad funciona, los problemas reales, qué decisiones cuestionarías, qué información te falta y qué probaría en la siguiente ronda.`,
-    foc.length?`Quiero que revises sobre todo: ${foc.map(k=>qs[k]).join('; ')}.`:'',
-    '','CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),
-    conf.length?'\nNOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):\n'+conf.join('\n'):'',
-    '','Te paso la imagen en este mensaje. Responde con estas secciones: Lo que funciona · Problemas reales · Decisiones que cuestionaría · Qué información falta · Qué probar en la siguiente ronda.'].filter(x=>x!==''||true).join('\n')}
 function claudeParsea(txt){const H=[[/^(lo que funciona|qu[eé] funciona|fortalezas)/i,'Lo que funciona'],[/^(problemas? reales?|problemas?|lo que no funciona|debilidades)/i,'Problemas reales'],[/^(decisiones? que cuestionar|qu[eé] cuestionar|cuestion)/i,'Decisiones que cuestionaría'],[/^(informaci[oó]n que falta|qu[eé] falta|lo que falta)/i,'Qué información falta'],[/^(qu[eé] probar|siguiente ronda|experimentos?|siguiente paso)/i,'Qué probar en la siguiente ronda'],[/^(resumen|en una frase|veredicto)/i,'Resumen']];
   const out={};let cur='Crítica';const add=l=>{l=l.replace(/^[\s>*\-–•\d.)]+/,'').replace(/\*\*/g,'').trim();if(l)(out[cur]=out[cur]||[]).push(l)};
   for(const raw of String(txt||'').split('\n')){const l=raw.trim();if(!l)continue;const limpia=l.replace(/^[#>*\s_\-–•\d.)]+/,'').replace(/[*_]/g,'');const h=H.find(([re])=>re.test(limpia)&&limpia.length<70);
     if(h){cur=h[1];const resto=limpia.split(/[:：]/).slice(1).join(':').trim();if(resto)add(resto);continue}add(l)}
   return out}
-function claudeBoxHTML(p){const piezas=(p.piezas||[]).slice().reverse(),foc=S.critFoco||[],ops=[['composicion','Composición'],['color','Color y luz'],['silueta','Silueta'],['anatomia','Anatomía'],['concepto','Concepto y dirección de arte'],['mood','Mood']];
-  return `<div class="box big-q" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Pedirle la crítica a Claude</h3><span class="lbl">La da Claude en el chat, no la app</span></div>
-    <p class="hint" style="margin:0">La crítica de verdad te la doy yo, con tu imagen y tu proyecto a la vista. La app solo te ahorra el trabajo: arma el paquete, y cuando te respondo, guarda mi crítica en tu historial.</p>
-    <div class="chips"><span class="lbl">Que revise sobre todo</span>${ops.map(([k,n])=>`<button class="ch xs ${foc.includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
-    <div class="prow"><b>1.</b><button class="btn sm pri" data-act="claude-copiar">Copiar el paquete para Claude</button>${piezas.length?`<select data-critpieza aria-label="Descargar una pieza"><option value="">…y bajar una pieza para adjuntarla</option>${piezas.map(x=>`<option value="${x.id}">${esc(x.etapa||'Pieza')} · ${fecha(x.creado)}</option>`).join('')}</select>`:''}<button class="btn sm" data-act="claude-tablero" title="Baja el tablero de referencias como imagen para adjuntarla">Bajar el tablero como imagen</button></div>
-    <p class="hint" style="margin:0"><b>2.</b> Pégame el paquete en el chat, con tu imagen adjunta (o dime la ruta del archivo en tu compu y yo la abro). <b>3.</b> Cuando te responda, pega aquí mi crítica y se guarda con sus secciones:</p>
-    <textarea id="claude-resp" placeholder="Pega aquí la crítica de Claude…" style="min-height:90px">${esc(S.claudeResp||'')}</textarea>
-    <div class="prow"><button class="btn sm" data-act="claude-guardar">Guardar la crítica de Claude en el historial</button></div></div>`}
-
 function bdOrdenarCuando(p,m){const t0=Date.now(),esp=()=>{const im=[...document.querySelectorAll('.bd-it img')];if(im.every(i=>i.complete&&i.naturalWidth)||Date.now()-t0>4500){bdOrdenar(p,m);marcar();renderMain()}else setTimeout(esp,150)};esp()}
 document.addEventListener('input',e=>{if(e.target.id==='claude-resp')S.claudeResp=e.target.value});
-document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.critpieza!==undefined&&t.value){const p=S.P[S.cur],x=p?.piezas?.find(z=>z.id===t.value);if(x)blobDeRef(x).then(b=>bajarBlob(slug(p.nombre,40)+'-'+slug(x.etapa||'pieza',20)+'.'+((b.type.split('/')[1]||'png').replace('jpeg','jpg')),b)).catch(()=>toast('No pude abrir esa pieza'));t.value=''}});
 function vBoardTab(p){const red=S.bdVista==='red';
   return `<div class="chips" style="margin-bottom:8px"><button class="ch ${red?'':'on'}" data-act="bd-vista" data-v="libre">Tablero libre</button><button class="ch ${red?'on':''}" data-act="bd-vista" data-v="red">Mapa de relaciones</button></div>${red?vRMapa(p):vBoard(p)}
   <details class="box" data-det="informe" ${S.palAb?.informe?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Informe profesional (PNG para presentar)</h3></summary><p class="hint" style="margin:6px 0">Un documento con formato de industria: encabezado, pilares, paletas y una columna por grupo. El tablero de arriba es tu espacio de trabajo; esto es para enseñarlo.</p>${tableroHTML(p)}</details>`}
@@ -7822,7 +7818,7 @@ function bajarRecetas(p,que,seed){const cat=bajarCat(que),refs=refsParaTarea({en
     out.push({r,a,txt:[r?`Forma de «${etiquetaDe(r)||'tu referencia'}»`:'Silueta simple',a?`idea de ${a.n.split(' (')[0].toLowerCase()}`:'',pz?(pz.c||pz.t):''].filter(Boolean).join(' + '),regla:pick(reglas)})}
   return {refs,anclas:A,palancas:Pz,recetas:out,cat}}
 function vBajar(p){const b=p.bajar=p.bajar||{que:''},que=b.que||'',R=que?bajarRecetas(p,que,S.bajSeed||1):null,cat=R?.cat;
-  return `<p class="intro"><b>De la referencia al thumbnail.</b> Una referencia no se copia: se le saca <b>una forma, una historia o una regla</b> y se cruza con lo que ya decidiste del proyecto (tensión, pilares, materiales). Así deja de parecer «un árbol» y se vuelve <b>tu</b> árbol.</p>
+  return `
   <div class="box"><div class="field"><label for="f-baj">¿Qué vas a diseñar?</label><input type="text" id="f-baj" data-b="bajar.que" value="${esc(que)}" placeholder="Ej. vegetación, templo del dios, arma del guerrero, criatura…" data-enter="bajar-go"></div>
     <div class="prow"><button class="btn pri" data-act="bajar-go">Bajar la idea</button>${['vegetación','arquitectura del templo','arma del guerrero','criatura'].map(x=>`<button class="chip" data-act="bajar-set" data-v="${x}" style="border:0;cursor:pointer;padding:4px 10px">${x}</button>`).join('')}</div></div>
   ${R?`
@@ -8021,7 +8017,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keyup',e=>{if(e.key==='Escape'){$('#overlay').innerHTML='';S.pres=null}});
 document.addEventListener('paste',e=>{
-  if(S.vista==='proyecto'&&S.tab==='critica'){const f=[...(e.clipboardData?.files||[])].find(x=>x.type.startsWith('image/'));if(f){e.preventDefault();analizarYMostrar(f,{etapa:S.anEtapa||'Boceto',nota:S.anNota||''})}return}
+  if(S.vista==='proyecto'&&S.tab==='bocetos'){const f=[...(e.clipboardData?.files||[])].find(x=>x.type.startsWith('image/'));if(f){e.preventDefault();analizarYMostrar(f,{etapa:S.anEtapa||'Boceto',nota:S.anNota||''})}return}
   if(S.vista!=='proyecto'||S.tab!=='refs')return;
   const files=[...(e.clipboardData?.files||[])];if(files.length){e.preventDefault();subir(files)}
 });
@@ -8040,11 +8036,11 @@ async function accion(a,el){
     case 'herr-reset':{if(!S.confirmHerr){S.confirmHerr=true;renderMain();break}S.confirmHerr=false;const q=S.P[HERR_ID];if(q){q.mood=JSON.parse(JSON.stringify(nuevoProyecto().mood));delete q.escena;q.paletasPieza={};S.palImg=null;marcar();renderMain();toast('Colores y luz restablecidos')}break}
     case 'herr-reset-no':S.confirmHerr=false;renderMain();break;
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
-    case 'abrir':S.tabsMas=false;S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
+    case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
-    case 'tabs-mas':S.tabsMas=!S.tabsMas;renderMain();break;
-    case 'tab':S.tab=TAB_ALIAS[ds.tab]||ds.tab;S.confirmDel=false;S.tabsMas=false;renderMain();window.scrollTo({top:0});break;
+    case 'tab':{let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
+    case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
     case 'empuje':{const t=$('#f-empuje'),v=t?.value.trim();if(!v)return;
@@ -8203,10 +8199,7 @@ async function accion(a,el){
     case 'bocetos-pedir':copiarTexto(bocetosPaquete(p,S.carpG||''),'Petición copiada: pégamela en el chat con tus imágenes');break;
     case 'bocetos-zip':{if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}const g=S.carpG||'',xs=piezasGrupo(p,g);if(!xs.length){toast('Sube primero algún boceto');return}const zip=new JSZip(),dir=zip.folder(slug(p.nombre,40)+'-'+slug(g||'general',20));let i=0;for(const x of xs){try{const b=await blobDeRef(x);i++;dir.file(String(i).padStart(2,'0')+'-'+slug(x.nombre||x.etapa||'boceto',30)+'.'+((b.type.split('/')[1]||'png').replace('jpeg','jpg')),b)}catch{}}dir.file('peticion-para-claude.txt',bocetosPaquete(p,g));await bajarBlob(slug(p.nombre,40)+'-bocetos-'+slug(g||'general',20)+'.zip',await zip.generateAsync({type:'blob'}));toast('Paquete descargado');break}
     case 'bocetos-guardar':{const t=($('#claude-resp')?.value||'').trim();if(t.length<20){toast('Pega primero el feedback de Claude');return}p.criticas.push({tipo:'Feedback de bocetos',elemento:S.carpG||'',ts:Date.now(),titulo:S.carpG||'General',r:claudeParsea(t)});S.claudeResp='';marcar();renderMain();toast('Feedback guardado');break}
-    case 'claude-copiar':copiarTexto(claudePaquete(p),'Paquete copiado: pégamelo en el chat con tu imagen');break;
     case 'claude-tablero':if(bdItems(p).length)bdDescarga('png');else tpPNG();break;
-    case 'claude-guardar':{const t=($('#claude-resp')?.value||'').trim();if(t.length<20){toast('Pega primero la crítica de Claude');return}
-      p.criticas.push({tipo:'Crítica de Claude',ts:Date.now(),titulo:'',r:claudeParsea(t)});S.claudeResp='';marcar();renderMain();toast('Crítica guardada en tu historial');break}
     case 'rb-sel':{const i=+ds.i,L=S.rbSel||[];S.rbSel=L.includes(i)?L.filter(x=>x!==i):[...L,i];renderMain();break}
     case 'rb-sel-limpiar':S.rbSel=[];renderMain();break;
     case 'rb-cat':S.refB.fCat=ds.v||'';renderMain();break;
