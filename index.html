@@ -1038,7 +1038,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyo0lo8').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyo45uh').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1366,6 +1366,8 @@ function renderSide(){
       ${nav('retos','target','Retos de estudio')}
       ${nav('ruta','map','Cursos y ruta')}
       ${nav('software','spark','Programas y medios')}
+      ${nav('maestros','frame','Estudio de maestros')}
+      ${nav('semana','target','Mi semana')}
       ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}
       ${nav('potenciar','target','Potenciar mi punto débil')}
       ${nav('recursos','grid','Recursos y pinceles')}
@@ -1452,6 +1454,8 @@ function renderMainInner(){
   if(S.vista==='software'){m.innerHTML=vSoftware();return}
   if(S.vista==='estudios'){m.innerHTML=vEstudios();return}
   if(S.vista==='ventas'){m.innerHTML=vVentas();return}
+  if(S.vista==='maestros'){m.innerHTML=vMaestros();return}
+  if(S.vista==='semana'){m.innerHTML=vSemana();return}
   if(S.vista==='contratos'){m.innerHTML=vContratos();return}
   if(S.vista==='postulaciones'){m.innerHTML=vPostulaciones();return}
   if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
@@ -1704,7 +1708,7 @@ function vHojaVer(p){const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{
     ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:''}
   </article>`}
-function vHoja(p){return `${crBanner(p)}<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
+function vHoja(p){return `${queSigueHTML(p)}<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
 function vHojaEditar(p){
   const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p),
     T=(lab,path,val,ph,alto)=>`<div class="field"><label for="x-${path.replace(/\./g,'-')}">${lab}</label>${tx(path,val,ph,null,alto||46)}</div>`,
@@ -1769,6 +1773,8 @@ function vInicio(){
   ${U().soy?`<p style="margin:2px 0 0;font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2)">${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}
   ${siguientePasoHTML(paso,ult)}
   ${ventasBannerHTML()}
+  ${semBannerHTML()}
+  ${(()=>{const h=portafolioGapHTML();return h.includes('Hueco detectado')?h:''})()}
   <div class="grid2">
     ${ult&&!mismo?(()=>{const P=ult[1];return `<div class="box"><span class="lbl">Último proyecto · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
       <div class="health"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos · ${(P.piezas||[]).filter(x=>x.etapa==='Final'||x.soltada).length} pieza(s) terminada(s)</span></div>
@@ -2968,7 +2974,7 @@ const crGuarda=h=>h.x?marcarAj():h.pid&&h.pid!==S.cur?marcarPid(h.pid):marcar();
 /* ---- la petición que se pega en el chat ---- */
 function crPaquete(p,t){
   const foc=S.critFoco||[],focT=foc.length?[`Quiero que revises sobre todo: ${foc.map(k=>CRIT_FOCOS.find(f=>f[0]===k)[2]).join('; ')}.`,'']:[],conf=(S.gd?.conf||[]).map(x=>'- '+(x.sl==='ref'?'[Referencia] ':'')+x.t);
-  const ctx=['CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...rfParaTxt(p,t.k==='pieza'?(t.z.grupo||''):(t.g||'')),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),''];
+  const ctx=['CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...rfParaTxt(p,t.k==='pieza'?(t.z.grupo||''):(t.g||'')),...erroresTxt(),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),''];
   const NOHALAGO='No halagues por defecto: sé honesto aunque duela y juzga contra el estándar de la industria.';
   if(t.k==='proyecto')return [`Claude, critica mi proyecto «${p.nombre}» completo (idea, dirección de arte, estilo, referencias y lo que he dibujado). ${NOHALAGO}`,'',...focT,'Mira: ¿el concepto es claro y propio o genérico? ¿los pilares se sostienen? ¿qué decisiones están flojas, se contradicen o son "porque se ve cool"? ¿qué falta antes de seguir dibujando?','',...ctx,CR_FORMATO].join('\n');
   if(t.k==='pieza'){const z=t.z;return [`Claude, critica este boceto de mi proyecto «${p.nombre}» (${z.etapa}${z.grupo?', '+z.grupo:''}${z.nombre?', '+z.nombre:''}). ${NOHALAGO}`,z.nota?`Lo que quiero que revises: ${z.nota}`:'','',`QUÉ MIRAR: ${elemGuia(z.grupo||'')}`,...focT,'',...ctx,'Te paso la imagen en este mensaje (o dime la ruta de la carpeta en mi compu y la abres).','',CR_FORMATO].join('\n')}
@@ -3003,6 +3009,7 @@ function vCriticaClaude(p){
     <div class="prow"><span class="lbl">Qué criticar</span><button class="ch ${t.k==='grupo'?'on':''}" data-act="cr-obj" data-v="grupo">Bocetos de «${esc(gn||'General')}»${t.k==='grupo'?` · ${ps.length}`:''}</button><button class="ch ${t.k==='proyecto'?'on':''}" data-act="cr-obj" data-v="proyecto">Todo el proyecto</button>${t.k==='pieza'?`<button class="ch on" data-act="cr-obj" data-v="grupo" title="Volver a todo el grupo">Un boceto: ${esc(corto(t.z.nombre||t.z.etapa,24))} ✕</button>`:''}</div>
     <p class="hint" style="margin:0">Cambia el grupo en «Subir bocetos», arriba. Para criticar un solo boceto, usa su botón «Crítica».</p>
     <div class="chips"><span class="lbl">Que revise sobre todo</span>${CRIT_FOCOS.map(([k,n])=>`<button class="ch xs ${(S.critFoco||[]).includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
+    ${errChecklistHTML()}
     ${crMotorHTML('cr-directo','','p',t.k==='proyecto'?0:t.k==='pieza'?1:ps.length)}
     <details class="cr-man" ${S.sample||window.PC_SHIM?'':'open'}><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary>
     <div class="cr-steps">
@@ -3065,7 +3072,7 @@ async function accionCr(a,el,p,ds){
     case 'cr-prov-g':{if(!p)return true;const i=+ds.i,t=crLocaTxt(i);(p.exploraciones=p.exploraciones||[]).push({ts:Date.now(),titulo:'Idea loca: '+corto(t,80),detalle:t,nota:''});S.crLoca=(S.crLoca||[]).filter(v=>v!==i);marcar();renderMain();toast('Guardada en Explorar');return true}}
   return false}
 document.addEventListener('input',e=>{const k=e.target.dataset?.crresp;if(k)(S.crResp=S.crResp||{})[k]=e.target.value});
-document.addEventListener('change',e=>{const d=e.target.dataset?.crh;if(!d)return;const [id,i]=d.split('|'),h=crBusca(id),m=h?.c.malo?.[+i];if(m){m.hecho=e.target.checked;crGuarda(h);renderMain()}});
+document.addEventListener('change',e=>{const d=e.target.dataset?.crh;if(!d)return;const [id,i]=d.split('|'),h=crBusca(id),m=h?.c.malo?.[+i];if(m){m.hecho=e.target.checked;m.hechoTs=e.target.checked?Date.now():0;crGuarda(h);renderMain()}});
 document.addEventListener('toggle',e=>{if(e.target.classList?.contains('cr-gal'))S.crAb=e.target.open?e.target.dataset.id:null},true);
 
 function vRefsMas(p){const bi=bocetosIniciales(p);return `
@@ -3229,14 +3236,14 @@ function rvInit(r){const st=$('#rv-stage'),im=$('#rv-img');if(!st||!im)return;
   st.addEventListener('dblclick',e=>{if(e.target.closest('button')||S.rv.tool)return;const rc=st.getBoundingClientRect(),real=Math.max(2,im.naturalWidth/Math.max(1,im.clientWidth));rvZoom(S.rv.k>1?1:real,e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)})}
 window.addEventListener('resize',()=>{if(S.rv&&$('#rv'))rvFitBox()});
 /* ---- comparar 2 a 4 (o una contra tu boceto), con el mismo zoom y los mismos filtros ---- */
-function cmpItems(p){return (S.cmp?.items||[]).map(it=>it.k==='r'?{it,x:p.refs.find(r=>r.id===it.id),t:'Ref'}:{it,x:(p.piezas||[]).find(z=>z.id===it.id),t:'Mi boceto'}).filter(o=>o.x)}
+function cmpItems(p){return (S.cmp?.items||[]).map(it=>it.k==='m'?{it,x:it.ref,t:it.t}:it.k==='r'?{it,x:p.refs.find(r=>r.id===it.id),t:'Ref'}:{it,x:(p.piezas||[]).find(z=>z.id===it.id),t:'Mi boceto'}).filter(o=>o.x)}
 function cmpAbre(){const p=S.P[S.cur],ids=(S.rgSel||[]).slice(0,4);if(!p||ids.length<2){toast('Elige 2 a 4 referencias');return}S.cmp={items:ids.map(id=>({k:'r',id})),k:1,x:0,y:0,vista:'normal'};S.rgSel=null;S.rv=null;cmpPinta()}
 function cmpApply(){const v=S.cmp;if(!v)return;document.querySelectorAll('.cmp-img').forEach(im=>{im.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`;im.style.filter=v.vista==='blur'?'grayscale(1) blur(5px)':(RV_FILT[v.vista]||'')})}
 function cmpPinta(){const p=S.P[S.cur],v=S.cmp,L=cmpItems(p);if(!p||!v||!L.length){rvCierra();return}
   $('#overlay').innerHTML=`<div class="cmp" id="cmp">${SVG_POST}<div class="rv-top" style="position:static;background:none"><b>Comparar</b><span style="flex:1"></span>${RV_VISTAS.filter(([k])=>k!=='mini').map(([k,n])=>`<button class="ch xs ${v.vista===k?'on':''}" data-act="cmp-vista" data-v="${k}">${n}</button>`).join('')}
       ${L.length<4&&(p.piezas||[]).length?`<select data-cmpadd aria-label="Agregar mi boceto"><option value="">＋ Mi boceto…</option>${p.piezas.map(z=>`<option value="${z.id}">${esc(z.nombre||z.etapa)}${z.grupo?' · '+esc(z.grupo):''}</option>`).join('')}</select>`:''}
       <button class="btn sm" data-act="cmp-zoom" data-v="fit">Ajustar</button><button class="btn sm pri" data-act="rv-cerrar">Cerrar</button></div>
-    <div class="cmp-grid" id="cmp-grid" style="grid-template-columns:repeat(${L.length<=2?L.length:2},1fr)">${L.map((o,i)=>`<div class="cmp-p"><img class="cmp-img" ${imgAttrs(o.x)} alt="" draggable="false"><span class="cmp-l">${i+1} · ${o.t==='Ref'?esc(corto(o.x.porque||o.x.fuente||'Referencia',60)):'Mi boceto: '+esc(corto(o.x.nombre||o.x.etapa,40))}</span>${L.length>1?`<button class="btn ghost sm cmp-x" data-act="cmp-quita" data-i="${i}" aria-label="Quitar">✕</button>`:''}</div>`).join('')}</div></div>`;
+    <div class="cmp-grid" id="cmp-grid" style="grid-template-columns:repeat(${L.length<=2?L.length:2},1fr)">${L.map((o,i)=>`<div class="cmp-p"><img class="cmp-img" ${imgAttrs(o.x)} alt="" draggable="false"><span class="cmp-l">${i+1} · ${o.t==='Ref'?esc(corto(o.x.porque||o.x.fuente||'Referencia',60)):(o.t==='Mi boceto'?'Mi boceto: '+esc(corto(o.x.nombre||o.x.etapa,40)):esc(o.t))}</span>${L.length>1?`<button class="btn ghost sm cmp-x" data-act="cmp-quita" data-i="${i}" aria-label="Quitar">✕</button>`:''}</div>`).join('')}</div></div>`;
   S.assets?.hydrate?.();cmpApply();const g=$('#cmp-grid');let dr=null;
   g.addEventListener('wheel',e=>{e.preventDefault();const pn=e.target.closest('.cmp-p')||g,rc=pn.getBoundingClientRect(),k0=v.k,k1=clamp(k0*(e.deltaY<0?1.18:1/1.18),1,14),cx=e.clientX-rc.left-rc.width/2,cy=e.clientY-rc.top-rc.height/2;v.x=cx-(cx-v.x)*k1/k0;v.y=cy-(cy-v.y)*k1/k0;v.k=k1;if(k1===1)v.x=v.y=0;cmpApply()},{passive:false});
   g.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dr={x:e.clientX,y:e.clientY,ox:v.x,oy:v.y};try{g.setPointerCapture(e.pointerId)}catch{}});
@@ -3701,6 +3708,101 @@ async function accionVt(a,el,p,ds){
   return false}
 document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.vtest){const g=(S.ajustes.ventasIdeas||[]).find(x=>x.id===t.dataset.vtest);if(g){g.est=t.value;marcarAj()}}});
 
+/* ============ Metodología: qué sigue, cambios que se propagan, revisión semanal, banco de errores propios y estudios de maestros ============ */
+/* ---- 2. Cuando cambias la dirección, lo anterior puede quedar desactualizado ---- */
+const PROP_CAMPOS=[[/^tensiones/,'la tensión'],[/^pilares|^ad(\.|$)/,'los pilares o la dirección de arte'],[/^mood/,'el mood'],[/^lenguaje|^guia|^forma|^materiales|^materialNota/,'el lenguaje visual'],[/^que(\.|$)|^concepto/,'el concepto'],[/^fichas/,'las fichas por elemento']];
+function dirToca(p,path){const m=PROP_CAMPOS.find(([re])=>re.test(String(path||'')));if(m){p.dirTs=Date.now();p.dirCampo=m[1]}}
+function propStale(p){if(!p||!p.dirTs||Date.now()-p.dirTs<10*60e3||p.dirTs<=(p.revTs||0)||Date.now()-p.dirTs>30*864e5)return null;
+  const refs=(p.refs||[]).filter(r=>(r.creado||0)<p.dirTs).length,pz=(p.piezas||[]).filter(x=>(x.creado||0)<p.dirTs).length;let crit=false;try{crit=crUltimas(p).some(c=>c.ts<p.dirTs)}catch{}
+  return (refs||pz||crit)?{campo:p.dirCampo||'la dirección',refs,pz,crit,hace:Math.max(1,Math.round((Date.now()-p.dirTs)/864e5))}:null}
+/* ---- 1. Qué sigue en este proyecto: máximo 3 cosas, con botón ---- */
+function queSigue(p){const L=[];
+  try{for(const c of crUltimas(p)){const m=(c.malo||[]).find(x=>!x.hecho&&x.prio==='alta')||(c.malo||[]).find(x=>!x.hecho);if(m){L.push({tag:'Crítica',t:corto(m.t,100),d:m.fix?'→ '+corto(m.fix,110):'Cambio pendiente de tu última crítica.',go:'tab:bocetos:critica',b:'Ver la lista'});break}}}catch{}
+  const st=propStale(p);if(st)L.push({tag:'Desactualizado',t:`Cambiaste ${st.campo} hace ${st.hace} día${st.hace===1?'':'s'}: revisa lo que ya hiciste`,d:[st.refs&&`${st.refs} referencia${st.refs===1?'':'s'}`,st.pz&&`${st.pz} boceto${st.pz===1?'':'s'}`,st.crit&&'la última crítica'].filter(Boolean).join(', ')+' son anteriores al cambio.',go:'tab:bocetos:critica',b:'Pedir crítica nueva',rev:true});
+  try{const D=DX(p),v=D.vacios[0];if(v)L.push({tag:'Decisión',t:corto(v.q,100),d:'Falta decidir esto para poder seguir con seguridad.',go:'tab:'+v.tab+':',b:'Decidir'})}catch{}
+  const est=estancadas().find(e=>e.pid===S.cur&&e.dias>=4);if(est)L.push({tag:'Pieza fría',t:`Llevas ${est.dias} días con «${corto(est.x.nombre||est.x.nota||est.x.etapa,40)}»`,d:'Termínala o suéltala y sigue.',go:'tab:bocetos:carpetas',b:'Ir a Bocetos'});
+  const sin=(p.refs||[]).filter(r=>(r.porque||'').trim().length<8).length;if(sin>=3)L.push({tag:'Referencias',t:`${sin} referencias sin porqué`,d:'Una referencia sin porqué es solo una imagen bonita.',go:'tab:refs:mesa',b:'Escribirlos'});
+  if(!(p.piezas||[]).length&&(p.refs||[]).length>=5)L.push({tag:'Bocetos',t:'Ya tienes referencias: sube tus primeros bocetos',d:'10 thumbnails sencillos bastan para pedir la primera crítica.',go:'tab:bocetos:carpetas',b:'Subir bocetos'});
+  return L.slice(0,3)}
+function queSigueHTML(p){const L=queSigue(p),n=(()=>{try{return crPend(p)}catch{return 0}})();
+  if(!L.length)return n?crBanner(p):'';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Qué sigue en este proyecto</h3>${n?`<span class="tagp">${n} cambio${n===1?'':'s'} de crítica por hacer</span>`:''}</div>
+    ${L.map(x=>`<div class="des-p" style="cursor:default"><span><b><span class="tagp">${esc(x.tag)}</span> ${esc(x.t)}</b><small>${esc(x.d)}</small></span><span class="prow" style="flex-wrap:nowrap"><button class="btn sm pri" data-act="des-go" data-go="${esc(x.go)}">${esc(x.b)}</button>${x.rev?'<button class="btn sm" data-act="prop-ok" title="Ya lo revisé: no me lo recuerdes">Ya lo revisé</button>':''}</span></div>`).join('')}</div>`}
+/* ---- 4. Banco de errores propios: lo que se repite en tus críticas, convertido en preguntas ---- */
+const ERR_PREG={valores:'¿Se lee en 3 valores (claro, medio y oscuro)?',silueta:'¿Se lee la silueta a 5 cm, en negro?',composicion:'¿Hay un solo foco claro?',color:'¿Hay una luz dominante y una paleta corta?',perspectiva:'¿Hay escala humana y líneas de fuga coherentes?',anatomia:'¿La estructura y las proporciones se sostienen?',diseno:'¿Se siente de ESTE mundo y no genérico?',materiales:'¿Se nota de qué está hecho cada cosa?',storytelling:'¿Cuenta algo sin explicarlo?',acabado:'¿Los bordes y el detalle están donde mandan?'};
+function errBanco(){const D=crecDatos(),top=Object.entries(D.mal).sort((a,b)=>b[1].n-a[1].n).slice(0,5).map(([k,v])=>({id:k,n:v.n,q:ERR_PREG[k]||'',nombre:CR_TEMAS.find(t=>t[0]===k)?.[1]||k})).filter(x=>x.q),propios=(S.ajustes.errores||[]).map(x=>({id:x.id,q:x.t,nombre:'Tuyo',n:0,propio:true}));return {top,propios,todos:[...top,...propios]}}
+function erroresTxt(){const B=errBanco();return B.todos.length?['','ERRORES QUE YA SÉ QUE REPITO (dime si volvieron a aparecer en esto):',...B.todos.map(x=>'- '+x.q)]:[]}
+function errChecklistHTML(){const B=errBanco(),c=S.errChk=S.errChk||{},hechos=B.todos.filter(x=>c[x.id]).length;
+  return `<details class="box" id="det-err" ${S.errAb?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Antes de pedir crítica: tus errores de siempre</h3> <span class="lbl">${B.todos.length?hechos+'/'+B.todos.length+' revisados':'agrega los tuyos'}</span></summary>
+    <p class="hint" style="margin:6px 0">Salen de lo que más se repite en tus críticas. Revísalos tú primero: así la crítica se gasta en lo nuevo, no en lo que ya sabes.</p>
+    ${B.todos.map(x=>`<label class="chk"><input type="checkbox" data-errchk="${esc(x.id)}" ${c[x.id]?'checked':''}><span>${esc(x.q)} <small class="muted">${x.propio?'· tuyo':'· '+x.n+' vez'+(x.n===1?'':'es')+' en tus críticas'}</small></span>${x.propio?`<button class="btn ghost sm danger" data-act="err-del" data-id="${esc(x.id)}" aria-label="Quitar">✕</button>`:''}</label>`).join('')||'<p class="muted">Cuando tengas críticas guardadas aparecerán aquí tus errores que se repiten.</p>'}
+    <div class="prow"><input type="text" id="err-t" placeholder="Un error tuyo, como pregunta (ej. ¿Dejé el fondo plano?)" data-enter="err-add" style="flex:1 1 240px"><button class="btn sm" data-act="err-add">＋</button></div></details>`}
+/* ---- 3. Revisión semanal ---- */
+function semKey(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return hoyKey(x)}
+function semDatos(){const h=Date.now(),d7=h-7*864e5,ps=Object.values(S.P).filter(p=>!p.libre);let crits=0,hechos=0,piezas=0,refs=0;
+  for(const p of ps){for(const c of p.criticas||[]){if(c.tipo==='Crítica'&&c.ts>=d7)crits++;for(const m of c.malo||[])if(m.hecho&&(m.hechoTs||0)>=d7)hechos++}piezas+=(p.piezas||[]).filter(x=>(x.creado||0)>=d7).length;refs+=(p.refs||[]).filter(x=>(x.creado||0)>=d7).length}
+  const est=estLista().filter(x=>x.ts>=d7).length,dias=Object.entries(S.ajustes.rutina?.dias||{}).filter(([k,v])=>v.hecho&&new Date(k).getTime()>=d7).length,des=(S.ajustes.desatorados||[]).filter(x=>x.ts>=d7).length,mae=(S.ajustes.maestros||[]).filter(x=>x.ts>=d7).length;
+  let ej=0;for(const k of Object.keys(S.ajustes.sw||{}))for(const t of Object.values(S.ajustes.sw[k].ej||{}))if(t>=d7)ej++;
+  return {crits,hechos,piezas,refs,est,dias,des,ej,mae}}
+function semBannerHTML(){const k=semKey(),S0=S.ajustes.semanas||{},dow=new Date().getDay();if(!(dow===0||(dow===1&&!S0[k]?.meta)))return '';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">${dow===0?'Hoy toca':'Esta semana'} · revisión semanal</span><p style="margin:2px 0 6px">${dow===0?'Mira qué avanzaste y elige UNA meta para la semana que viene.':'Elige UNA meta para esta semana.'}</p><button class="btn sm pri" data-act="vista" data-v="semana">Abrir mi semana</button></div>`}
+function vSemana(){const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{},cur=W[k]||{meta:'',hecha:false},D=semDatos(),A=crecAnalisis(),mal=Object.entries(A.D.mal).sort((a,b)=>b[1].n-a[1].n).slice(0,3),
+    hist=Object.entries(W).filter(([kk])=>kk!==k).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,4),av=[[D.piezas,'piezas subidas'],[D.crits,'críticas pedidas'],[D.hechos,'cambios de crítica hechos'],[D.est,'estudios sencillos'],[D.mae,'estudios de maestros'],[D.ej,'ejercicios de programas'],[D.dias,'días de estudio diario'],[D.refs,'referencias nuevas'],[D.des,'desatores registrados']].filter(x=>x[0]);
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mi semana</h1>
+  <p class="intro">Una vez por semana: qué avanzaste, qué se repite y UNA meta para la que viene. Lo que no cabe en una meta, no es meta.</p>
+  <div class="stats">${(av.length?av:[[0,'actividad registrada esta semana']]).slice(0,6).map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join('')}</div>
+  <div class="grid2"><div class="box"><h3>Lo que avanzaste</h3>${av.length?`<ul class="why-l">${av.map(([n,t])=>`<li>✓ ${n} ${t}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Nada registrado esta semana todavía. Un estudio sencillo ya cuenta.</p>'}</div>
+    <div class="box"><h3>Lo que se repite</h3>${mal.length?`<ul class="why-l">${mal.map(([kk,v])=>`<li>✗ ${esc(CR_TEMAS.find(t=>t[0]===kk)[1])}: ${v.n} vez${v.n===1?'':'es'} en tus críticas${v.pend?`, ${v.pend} sin corregir`:''}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Aún no hay críticas con patrones.</p>'}</div></div>
+  <div class="box" style="border-top:3px solid var(--accent)"><h3>Mi meta de esta semana</h3><input type="text" id="sem-meta" data-semmeta="1" value="${esc(cur.meta)}" placeholder="Ej. Terminar la lámina de fauna y hacer 3 estudios de rocas">
+    <div class="chips"><span class="lbl">Ideas</span>${A.crecer.slice(0,3).map((x,i)=>`<button class="ch xs" data-act="sem-usa" data-i="${i}">${esc(corto(x.t,48))}</button>`).join('')}</div>
+    <label class="chk"><input type="checkbox" data-semhecha="1" ${cur.hecha?'checked':''}><span>Ya la cumplí</span></label></div>
+  ${hist.length?`<div class="box"><h3>Semanas anteriores</h3><ul class="why-l">${hist.map(([kk,v])=>`<li>${v.hecha?'✓':'○'} Semana del ${fechaCorta(kk)}: ${esc(v.meta||'(sin meta)')}</li>`).join('')}</ul></div>`:''}`}
+/* ---- 5. Estudios de maestros: copiar 20 minutos, comparar lado a lado y medir ---- */
+const MAE_ENF=['Valores','Color','Bordes y pincelada','Composición','Forma y construcción','Luz y atmósfera'];
+function maeAnalisis(a,b){const L=[],f=x=>Math.round(x*100)+'%';
+  const nom=['oscuros','medios','claros'];a.tres.forEach((v,i)=>{const d=b.tres[i]-v;if(Math.abs(d)>.12)L.push(`Tu copia tiene ${d>0?'más':'menos'} ${nom[i]} que la obra (${f(b.tres[i])} contra ${f(v)}).`)});
+  if(b.std<a.std*.8)L.push('Tu copia tiene menos contraste que la obra: refuerza los oscuros y las luces.');else if(b.std>a.std*1.25)L.push('Tu copia tiene más contraste que la obra: el maestro suaviza más los pasos de valor.');
+  if(b.separ<a.separ*.7)L.push('En tu copia la figura se separa menos del fondo que en la obra.');
+  if(b.detalle<a.detalle*.7)L.push('El maestro concentra más detalle en el foco; tu copia reparte más parejo.');else if(b.detalle>a.detalle*1.4)L.push('Tu copia tiene más detalle en el foco que la obra: el maestro simplifica.');
+  return L.length?L:['Tu copia se parece mucho a la obra en valores, contraste y reparto de detalle. Buen estudio.']}
+async function maeCargaArchivo(tipo,f){if(!f)return;const ur=URL.createObjectURL(f);(S.mae=S.mae||{enf:[],min:20,nota:''})[tipo]={f,src:ur,nombre:f.name.replace(/\.[^.]+$/,'')};S.mae.res=null;renderMain()}
+function vMaestros(){const M=S.mae=S.mae||{enf:[],min:20,nota:''},L=(S.ajustes.maestros||[]).slice().sort((a,b)=>b.ts-a.ts),ref=(M.obra&&M.copia);
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudio de maestros</h1>
+  <p class="intro">Copiar a un maestro durante 20 o 30 minutos es una de las formas más rápidas de aprender valores, color y construcción. Aquí eliges la obra, la copias, y la app compara tu copia con la original y te dice qué se parece y qué no. Es solo para estudiar: no la publiques como tuya.</p>
+  <div class="box"><h3>1 · La obra que vas a estudiar</h3><div class="prow"><label class="btn pri" for="mae-obra">Subir la obra</label><input type="file" id="mae-obra" accept="image/*" hidden><span class="muted">${M.obra?esc(M.obra.nombre):'Una pintura o dibujo de un artista que admiras'}</span></div>${M.obra?`<img src="${esc(M.obra.src)}" alt="" style="max-height:220px;width:auto;border-radius:8px">`:''}</div>
+  <div class="box"><h3>2 · Qué vas a estudiar de ella</h3><div class="chips">${MAE_ENF.map(x=>`<button class="ch ${M.enf.includes(x)?'on':''}" data-act="mae-enf" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div><p class="hint" style="margin:0">Elige 1 o 2. Mirar todo a la vez no enseña nada.</p>
+    <div class="chips"><span class="lbl">Tiempo</span>${[20,30,45].map(m=>`<button class="ch xs ${M.min===m?'on':''}" data-act="mae-min" data-v="${m}">${m} min</button>`).join('')}</div>
+    <div class="prow"><button class="btn sm" data-act="sw-timer" data-min="${M.min}">Empezar el reloj</button></div>${S.timer||S.swT?timerHTML(M.min,'Reloj del estudio'):''}</div>
+  <div class="box"><h3>3 · Tu copia</h3><div class="prow"><label class="btn pri" for="mae-copia">Subir mi copia</label><input type="file" id="mae-copia" accept="image/*" hidden><span class="muted">${M.copia?esc(M.copia.nombre):'Foto o captura de lo que hiciste'}</span></div>
+    ${ref?`<div class="prow"><button class="btn pri" data-act="mae-compara">Comparar y medir</button></div>`:'<p class="hint" style="margin:0">Sube la obra y tu copia para compararlas.</p>'}
+    ${M.res?`<div class="cr-res"><div class="cr-sec"><h4>Lo que se ve al compararlas</h4><ul class="why-l">${M.res.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div class="field"><label for="mae-nota">¿Qué aprendiste? (una cosa que harás distinto)</label><input type="text" id="mae-nota" data-maenota="1" value="${esc(M.nota||'')}" placeholder="Ej. dejar el fondo más oscuro para que el rostro brille"></div>
+      <div class="prow"><button class="btn pri" data-act="mae-guarda">Guardar este estudio</button></div></div>`:''}</div>
+  ${L.length?`<div class="box"><h3>Tus estudios de maestros <span class="lbl">${L.length}</span></h3><div class="rcurs">${L.slice(0,12).map(x=>`<div class="rcur"><img ${imgAttrs(x.copiaMini?{asset:x.copiaMini}:{asset:x.copia})} alt="" loading="lazy" data-act="zoom"><div class="rcur-b"><b>${esc(corto(x.obra||'Obra',34))}</b><span class="muted">${esc((x.enf||[]).join(', '))} · ${x.min} min · ${fecha(x.ts)}</span>${x.nota?`<small class="muted">${esc(corto(x.nota,80))}</small>`:''}<div class="prow"><button class="btn sm" data-act="mae-ver" data-id="${x.id}">Comparar</button><button class="btn ghost sm danger" data-act="mae-del" data-id="${x.id}">✕</button></div></div></div>`).join('')}</div></div>`:''}`}
+async function accionProp(a,el,p,ds){
+  switch(a){
+    case 'prop-ok':{if(p){p.revTs=Date.now();marcar();renderMain();toast('Hecho: no te lo vuelvo a recordar')}return true}
+    case 'err-add':{const v=$('#err-t')?.value.trim();if(!v)return true;(S.ajustes.errores=S.ajustes.errores||[]).push({id:uid(),t:v});marcarAj();S.errAb=true;renderMain();return true}
+    case 'err-del':S.ajustes.errores=(S.ajustes.errores||[]).filter(x=>x.id!==ds.id);marcarAj();S.errAb=true;renderMain();return true;
+    case 'sem-usa':{const x=crecAnalisis().crecer[+ds.i];if(!x)return true;const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{}),meta:x.t.replace(/^\d+\.\s*/,'')+': '+x.d,hecha:false,ts:Date.now()};marcarAj();renderMain();return true}
+    case 'mae-enf':{const M=S.mae=S.mae||{enf:[],min:20};const i=M.enf.indexOf(ds.v);i>=0?M.enf.splice(i,1):M.enf.length<2?M.enf.push(ds.v):toast('Elige solo 2');renderMain();return true}
+    case 'mae-min':(S.mae=S.mae||{enf:[]}).min=+ds.v;renderMain();return true;
+    case 'mae-compara':{const M=S.mae;if(!M?.obra||!M?.copia)return true;try{const [a,b]=await Promise.all([analizarImagen(M.obra.f),analizarImagen(M.copia.f)]);M.res=maeAnalisis(a,b);renderMain();
+        S.cmp={items:[{k:'m',ref:{src:M.obra.src},t:'Maestro: '+M.obra.nombre},{k:'m',ref:{src:M.copia.src},t:'Mi copia'}],k:1,x:0,y:0,vista:'normal'};cmpPinta()}catch(e){console.error(e);toast('No pude leer esas imágenes')}return true}
+    case 'mae-guarda':{const M=S.mae;if(!M?.obra||!M?.copia||!M.res)return true;bloquear();try{const o=await guardarImagen(M.obra.f),c=await guardarImagen(M.copia.f,{mini:true});
+        (S.ajustes.maestros=S.ajustes.maestros||[]).push({id:uid(),ts:Date.now(),obra:M.obra.nombre,enf:[...M.enf],min:M.min,nota:(M.nota||'').trim(),master:o.asset||o.src,masterSrc:o.src||'',copia:c.asset||c.src,copiaMini:c.mini||'',res:M.res});
+        const dias=S.ajustes.rutina=S.ajustes.rutina||{dias:{}};dias.dias=dias.dias||{};const k=hoyKey();dias.dias[k]={...(dias.dias[k]||{}),hecho:true,estudio:true};marcarAj();S.mae={enf:[],min:M.min,nota:''};renderMain();toast('Estudio guardado')}catch{toast('No se pudo guardar')}finally{desbloquear()}return true}
+    case 'mae-ver':{const x=(S.ajustes.maestros||[]).find(v=>v.id===ds.id);if(!x)return true;const u=r=>r?(String(r).startsWith('http')||String(r).startsWith('data:')||String(r).startsWith('blob:')?{src:r}:{asset:r}):null;
+      S.cmp={items:[{k:'m',ref:x.master?u(x.master):u(x.masterSrc),t:'Maestro: '+x.obra},{k:'m',ref:u(x.copia),t:'Mi copia'}].filter(i=>i.ref),k:1,x:0,y:0,vista:'normal'};cmpPinta();return true}
+    case 'mae-del':S.ajustes.maestros=(S.ajustes.maestros||[]).filter(x=>x.id!==ds.id);marcarAj();renderMain();return true}
+  return false}
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='mae-obra'){maeCargaArchivo('obra',t.files[0]);t.value=''}else if(t.id==='mae-copia'){maeCargaArchivo('copia',t.files[0]);t.value=''}
+  else if(t.dataset?.errchk){(S.errChk=S.errChk||{})[t.dataset.errchk]=t.checked;S.errAb=true;renderMain()}
+  else if(t.dataset?.semhecha){const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{meta:''}),hecha:t.checked,ts:Date.now()};marcarAj();renderMain()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset?.semmeta){const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{hecha:false}),meta:t.value,ts:Date.now()};marcarAj()}else if(t.dataset?.maenota){(S.mae=S.mae||{}).nota=t.value}});
+document.addEventListener('toggle',e=>{if(e.target.id==='det-err')S.errAb=e.target.open},true);
+
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
   const ev=[];
@@ -4068,7 +4170,7 @@ async function accionCrec(a,el,p,ds){
     case 'des-copiar':{const C=desContexto(),d=S.des;copiarTexto(`Claude, estoy atorado en «${C.p?.nombre||'mi proyecto'}». Lo que me frena: ${DES_TIPOS.find(t=>t[0]===d.tipo)?.[1]}.\n${C.pend?`Tengo ${C.pend} cambios pendientes de tu última crítica.\n`:''}${C.alta?`Lo más grave según la crítica: ${C.alta.t}\n`:''}Ya hice los 3 pasos de la app y sigo igual. Ayúdame a ver qué se me está escapando y dame el siguiente paso más pequeño posible.\n\nCONTEXTO:\n${ctxProyecto(C.p)}`,'Caso copiado: pégalo en el chat con Claude');return true}
     case 'des-go':{const [t,x,y]=String(ds.go||'').split(':');
       if(t==='timer'){S.desMin=+x;S.timer=null;renderMain();setTimeout(()=>$('[data-act="t-go"]')?.click(),50);return true}
-      if(t==='tab'){const pid=desContexto().pid||S.cur;if(pid){S.cur=pid;S.vista='proyecto';S.tab=x;S.ancla=y||null;S.confirmDel=false;recordar();render()}return true}
+      if(t==='tab'){const pid=(S.vista==='proyecto'&&S.P[S.cur]&&!S.P[S.cur].libre)?S.cur:(desContexto().pid||S.cur);if(pid){const r=tabResuelve(x);S.cur=pid;S.vista='proyecto';S.tab=r[0];S.ancla=y||r[1]||null;S.confirmDel=false;recordar();render()}return true}
       if(t==='vista'){S.vista=x;render();return true}
       if(t==='herr'){herrAbre(x);return true}
       if(t==='ruta'){S.rutaF=RUTA_AREAS.some(r=>r[0]===x)?x:'prio';S.vista='ruta';render();return true}
@@ -6471,8 +6573,8 @@ function chatEnviar(p,txt){txt=String(txt||'').trim();if(!txt)return;p.chat=p.ch
   const lg=$('#chat-log');if(lg)lg.scrollTop=lg.scrollHeight;$('#chat-txt')?.focus()}
 async function accionDir(a,el,p,ds){
   switch(a){
-    case 'dx-chip':{if(!p)return;const arr=getPath(p,ds.path)||[];const i=arr.indexOf(ds.v);if(i>=0)arr.splice(i,1);else arr.push(ds.v);setPath(p,ds.path,arr);marcar();renderMain();break}
-    case 'dx-one':{if(!p)return;setPath(p,ds.path,getPath(p,ds.path)===ds.v?'':ds.v);marcar();renderMain();break}
+    case 'dx-chip':{if(!p)return;const arr=getPath(p,ds.path)||[];const i=arr.indexOf(ds.v);if(i>=0)arr.splice(i,1);else arr.push(ds.v);setPath(p,ds.path,arr);dirToca(p,ds.path);marcar();renderMain();break}
+    case 'dx-one':{if(!p)return;setPath(p,ds.path,getPath(p,ds.path)===ds.v?'':ds.v);dirToca(p,ds.path);marcar();renderMain();break}
     case 'etapa':p.etapa=ds.v;S.tab=ds.tab;marcar();renderMain();window.scrollTo({top:0});break;
     case 'chat':chatEnviar(p,$('#chat-txt')?.value);break;
     case 'chat-sug':chatEnviar(p,ds.v);break;
@@ -9379,7 +9481,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.dxan){if(t.dataset.dxan==='etapa')S.anEtapa=t.value;else S.anNota=t.value;return}
   if(t.dataset.blk){S.blk=S.blk||{};S.blk[t.dataset.blk]=t.value;return}
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
-    setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);
+    setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);dirToca(p,t.dataset.b);
     if(t.dataset.b.startsWith('mood.tres'))p.mood.palabras=p.mood.tres.filter(Boolean).join(', ');
     dxVivo(p);mapaVivo(p);if(t.dataset.b.startsWith('mood.paleta'))escRefresca(p);
     if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
@@ -9827,7 +9929,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
