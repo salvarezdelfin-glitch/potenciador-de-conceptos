@@ -1012,7 +1012,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muygoccb').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muygxzjn').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2997,12 +2997,14 @@ function vCriticaClaude(p){
     <div class="prow"><span class="lbl">Qué criticar</span><button class="ch ${t.k==='grupo'?'on':''}" data-act="cr-obj" data-v="grupo">Bocetos de «${esc(gn||'General')}»${t.k==='grupo'?` · ${ps.length}`:''}</button><button class="ch ${t.k==='proyecto'?'on':''}" data-act="cr-obj" data-v="proyecto">Todo el proyecto</button>${t.k==='pieza'?`<button class="ch on" data-act="cr-obj" data-v="grupo" title="Volver a todo el grupo">Un boceto: ${esc(corto(t.z.nombre||t.z.etapa,24))} ✕</button>`:''}</div>
     <p class="hint" style="margin:0">Cambia el grupo en «Subir bocetos», arriba. Para criticar un solo boceto, usa su botón «Crítica».</p>
     <div class="chips"><span class="lbl">Que revise sobre todo</span>${CRIT_FOCOS.map(([k,n])=>`<button class="ch xs ${(S.critFoco||[]).includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
+    ${crMotorHTML('cr-directo','','p',t.k==='proyecto'?0:t.k==='pieza'?1:ps.length)}
+    <details class="cr-man" ${S.sample||window.PC_SHIM?'':'open'}><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary>
     <div class="cr-steps">
       <div class="prow"><b>1.</b><button class="btn sm pri" data-act="cr-pedir">Copiar la petición para Claude</button>${t.k==='grupo'?`<button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar imágenes + petición (.zip)</button>`:''}<button class="btn sm" data-act="claude-tablero" title="Baja el tablero de referencias como imagen para adjuntarla">Tablero (PNG)</button></div>
       <p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta ${t.k==='proyecto'?'lo que quieras que vea':'las imágenes'} (o dile la ruta de la carpeta). Ya incluye todo lo que decidiste del proyecto y pide la respuesta en un formato fijo.</p>
       <p class="hint" style="margin:0"><b>3.</b> Pega aquí su respuesta (${que}): la app la vuelve una lista de qué cambiar, con ideas nuevas.</p>
     </div>
-    ${crPegaHTML(key,'cr-guardar')}</div>
+    ${crPegaHTML(key,'cr-guardar')}</details></div>
   ${L.length?crResHTML(L[0]):'<div class="empty">Aún no hay crítica de esto. Sigue los 3 pasos de arriba: al pegar la respuesta de Claude aquí verás qué está mal, cómo arreglarlo y qué ideas locas probar.</div>'}
   ${L.length>1?`<details class="box"><summary class="lbl" style="cursor:pointer">Rondas anteriores (${L.length-1})</summary>${L.slice(1).map(c=>`<div style="margin-top:10px">${crResHTML(c)}</div>`).join('')}</details>`:''}
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Ideas locas rápidas</h3><button class="btn sm pri" data-act="cr-prov">${S.crLoca?'Otras tres':'Dame ideas locas'}</button></div>
@@ -3010,8 +3012,23 @@ function vCriticaClaude(p){
     ${(S.crLoca||[]).map(i=>`<div class="cr-l"><span><b>${esc(crLocaTxt(i))}</b></span><button class="btn sm" data-act="cr-prov-g" data-i="${i}">Guardar para probar</button></div>`).join('')}</div>`}
 function crBloqueGal(x){const L=(x.crits||[]).slice().sort((a,b)=>b.ts-a.ts),key='g-'+x.id,pend=L[0]?(L[0].malo||[]).filter(m=>!m.hecho).length:0;
   return `<details class="cr-gal" data-id="${x.id}" ${S.crAb===x.id?'open':''}><summary class="btn sm pri" style="display:inline-block;cursor:pointer">Crítica de Claude${L.length?` · ${pend} por cambiar`:''}</summary>
-    <div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm" data-act="cr-pedir-gal" data-id="${x.id}">Copiar la petición</button><span class="hint">2. Pégala en el chat con la imagen. 3. Pega su respuesta aquí:</span></div>${crPegaHTML(key,'cr-guardar-gal',`data-id="${x.id}"`)}</div>
+    ${crMotorHTML('cr-directo-gal',`data-id="${x.id}"`,'g'+x.id,1)}
+    <details class="cr-man" style="margin-top:6px"><summary class="lbl" style="cursor:pointer">Hazlo a mano con el chat de Claude</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm" data-act="cr-pedir-gal" data-id="${x.id}">Copiar la petición</button><span class="hint">2. Pégala en el chat con la imagen. 3. Pega su respuesta aquí:</span></div>${crPegaHTML(key,'cr-guardar-gal',`data-id="${x.id}"`)}</div></details>
     ${L.length?crResHTML(L[0]):''}</details>`}
+/* ---- la app critica sola cuando hay llave conectada (Conexión con Claude); si no, copiar y pegar ---- */
+function crMotorHTML(act,attrs,key,nImg){
+  if(S.sample){if(S.crBusy===key)return `<div class="prow"><span class="muted">Claude está revisando${nImg?' '+Math.min(nImg,5)+' imagen'+(Math.min(nImg,5)===1?'':'es'):''}… puede tardar un minuto.</span><button class="btn sm" data-act="cr-stop">Detener</button></div>`;
+    return `<div class="prow"><button class="btn pri" data-act="${act}" ${attrs} ${S.crBusy?'disabled':''}>Criticar ahora, aquí</button><span class="muted">${nImg?`Claude ve ${nImg>5?'las 5 más recientes de tus '+nImg:nImg===1?'la imagen':'tus '+nImg+' imágenes'} y `:'Claude ve '}todo el contexto del proyecto.</span></div>${S.crErr&&!S.crBusy?`<p class="muted" style="margin:0">${esc(S.crErr)}</p>`:''}`}
+  return window.PC_SHIM?`<div class="nd-box sm"><b>Para que la app critique sola</b>, sin copiar ni pegar, conecta una vez tu llave de Anthropic. <button class="btn sm pri" data-act="cr-conecta">Conectar Claude</button></div>`:''}
+function crEsperaLlave(){clearInterval(S.crPoll);let n=0;S.crPoll=setInterval(async()=>{n++;try{const s=await window.PC_SHIM.use('sample');if(s&&s.conectado()){S.sample=s;clearInterval(S.crPoll);toast('Claude conectado');renderMain()}}catch{}if(n>80)clearInterval(S.crPoll)},1500)}
+const crDirectoTxt=t=>t.replace(/Te paso (las imágenes|la imagen) en este mensaje \(o dime[^)]*\)\.?/,'Las imágenes van adjuntas: obsérvalas con detalle antes de opinar.');
+async function crCorre({key,prompt,blobs,extra,guarda}){
+  if(!S.sample||S.crBusy)return;const ctl=new AbortController();S.crCtl=ctl;S.crBusy=key;S.crErr='';renderMain();
+  try{const r=await S.sample(prompt,{images:blobs.length?blobs:undefined,modelTier:'complex',signal:ctl.signal}),c=crNueva(r.text,extra);guarda(c);
+    toast(c.crudo?'No reconocí el formato: revisa abajo':r.truncated?'La respuesta se cortó: pide otra ronda':'Lista de cambios lista')}
+  catch(e){if(e?.code==='pedir_claude'){S.sample=null;S.crErr='La llave ya no funciona: reconéctala, o usa copiar y pegar.'}else if(e?.code!=='cancelled')S.crErr=e?.code==='rate_limited'?'Demasiadas peticiones seguidas. Espera un momento.':'No se pudo: '+(e?.message||'error')+'. Puedes usar copiar y pegar.'}
+  S.crBusy=null;renderMain()}
+async function crBlobs(xs){const o=[];for(const x of xs)try{o.push(await blobDeRef(x))}catch{}return o}
 function crBanner(p){const n=crPend(p);return n?`<div class="banner"><b>${n} cambio${n===1?'':'s'} pendiente${n===1?'':'s'}</b> de tu última crítica. <button class="btn sm" data-act="cr-ir">Verlos</button></div>`:''}
 async function accionCr(a,el,p,ds){
   const resp=k=>(S.crResp?.[k]||document.querySelector('[data-crresp="'+k+'"]')?.value||'').trim();
@@ -3023,6 +3040,13 @@ async function accionCr(a,el,p,ds){
     case 'cr-guardar':{if(!p)return true;const t=crTarget(p),txt=resp(ds.key);if(txt.length<20){toast('Pega primero la respuesta de Claude');return true}
       const c=crNueva(txt,{elemento:t.k==='grupo'?t.g:'',titulo:t.k==='pieza'?(t.z.nombre||t.z.etapa):t.k==='proyecto'?p.nombre:(t.g||'General'),...(t.k==='pieza'?{pz:t.id}:{}),...(t.k==='proyecto'?{proy:1}:{})});
       (p.criticas=p.criticas||[]).push(c);(S.crResp=S.crResp||{})[ds.key]='';marcar();renderMain();toast(c.crudo?'No reconocí el formato: revisa abajo':'Lista de cambios lista');return true}
+    case 'cr-conecta':window.PC_SHIM?.openSettings();crEsperaLlave();return true;
+    case 'cr-stop':S.crCtl?.abort();return true;
+    case 'cr-directo':{if(!p)return true;const t=crTarget(p),pid=S.cur,xs=t.k==='pieza'?[t.z]:t.k==='grupo'?piezasGrupo(p,t.g).slice().sort((a,b)=>a.creado-b.creado).slice(-5):[],blobs=await crBlobs(xs);
+      if(t.k!=='proyecto'&&!blobs.length){toast('No hay imágenes para criticar: sube bocetos primero');return true}
+      await crCorre({key:'p',prompt:crDirectoTxt(crPaquete(p,t)),blobs,extra:{elemento:t.k==='grupo'?t.g:'',titulo:t.k==='pieza'?(t.z.nombre||t.z.etapa):t.k==='proyecto'?p.nombre:(t.g||'General'),...(t.k==='pieza'?{pz:t.id}:{}),...(t.k==='proyecto'?{proy:1}:{})},guarda:c=>{(p.criticas=p.criticas||[]).push(c);marcarPid(pid)}});return true}
+    case 'cr-directo-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(!x)return true;const blobs=await crBlobs([x]);if(!blobs.length){toast('No pude leer esa imagen');return true}
+      S.crAb=x.id;await crCorre({key:'g'+x.id,prompt:crDirectoTxt(crPaqueteGal(x)),blobs,extra:{titulo:x.titulo||x.tipo||'Ilustración'},guarda:c=>{(x.crits=x.crits||[]).push(c);marcarAj()}});return true}
     case 'cr-pedir-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(x)copiarTexto(crPaqueteGal(x),'Petición copiada: pégamela en el chat con la imagen');return true}
     case 'cr-guardar-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(!x)return true;const txt=resp(ds.key);if(txt.length<20){toast('Pega primero la respuesta de Claude');return true}
       const c=crNueva(txt,{titulo:x.titulo||x.tipo||'Ilustración'});(x.crits=x.crits||[]).push(c);(S.crResp=S.crResp||{})[ds.key]='';S.crAb=x.id;marcarAj();renderMain();toast(c.crudo?'No reconocí el formato: revisa abajo':'Lista de cambios lista');return true}
