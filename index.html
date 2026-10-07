@@ -695,6 +695,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .rl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;align-items:start}.rl-box{position:relative;display:inline-block;max-width:100%}.rl-box canvas{width:100%;height:auto;display:block;border-radius:8px;background:#000}.rl-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:17px;cursor:grab;touch-action:none;box-shadow:0 0 0 2px rgba(0,0,0,.5);color:#000;user-select:none}.rl-panel{display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}.rl-mat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.rl-sw{width:22px;height:22px;border-radius:5px;border:1px solid var(--line2);flex:none}@media(max-width:900px){.rl-wrap{grid-template-columns:1fr}.rl-panel{max-height:none}}
 .sw-q{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:6px 0}.sw-q>span:first-child{flex:1 1 260px;font-size:14px}.sw-tr{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px}.sw-t{display:flex;gap:10px;align-items:baseline;border:1px solid var(--line2);border-radius:8px;padding:6px 10px;background:var(--bg);font-size:13.5px}.sw-t kbd{font-family:var(--mono);font-size:12px;background:var(--surface3);border-radius:5px;padding:2px 7px;white-space:nowrap}.sw-t span{color:var(--ink2);line-height:1.35}
 .vt-ideas{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.vt-ideas li{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}.vt-ideas li>span{flex:1}
+.hi-modal{max-width:780px;width:100%;max-height:90vh;display:flex;flex-direction:column;gap:10px}.hi-body{overflow:auto;display:flex;flex-direction:column;gap:12px;max-height:62vh;padding-right:4px}.hi-f{display:flex;flex-direction:column;gap:4px}.hi-f input[type=text],.hi-f textarea,.hi-pil input[type=text]{width:100%}.hi-pil{display:grid;gap:4px;border:1px solid var(--line2);border-radius:8px;padding:6px}
 .v3-bar{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px;border-bottom:1px solid var(--line)}.v3-pg{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}
 .sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
 .cand{margin:6px 0 0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px;color:var(--ink2)}
@@ -1038,7 +1039,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyon792').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyosr8w').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1526,6 +1527,7 @@ function nombresHTML(p){
   if(!(p.nombres||[]).length)return favBox;
   return `<div class="box"><h3>Nombres guardados</h3><div class="chips">${p.nombres.map((n,i)=>`<span class="chip">${esc(n)}<button data-act="nom-del" data-i="${i}" aria-label="Quitar ${esc(n)}">×</button></span>`).join('')}</div></div>`+favBox}
 function vBrief(p){return `
+  ${historiaSubirHTML(p)}
   <div class="box" style="border-top:3px solid var(--accent)"><h3>Brief de una frase</h3><p class="hint">1 sujeto, 1 lugar, 1 sentimiento. Una sola frase que describa la imagen, y te quedas con ella hasta terminar. Se queda fija arriba del proyecto.</p>
     <div class="grid3" style="gap:10px">
       <div class="field"><label for="f-una-sujeto">Sujeto</label>${it('brief.una.sujeto',p.brief.una?.sujeto||'','Un dios de la guerra','f-una-sujeto')}</div>
@@ -3768,7 +3770,7 @@ function propStale(p){if(!p||!p.dirTs||Date.now()-p.dirTs<10*60e3||p.dirTs<=(p.r
   const refs=(p.refs||[]).filter(r=>(r.creado||0)<p.dirTs).length,pz=(p.piezas||[]).filter(x=>(x.creado||0)<p.dirTs).length;let crit=false;try{crit=crUltimas(p).some(c=>c.ts<p.dirTs)}catch{}
   return (refs||pz||crit)?{campo:p.dirCampo||'la dirección',refs,pz,crit,hace:Math.max(1,Math.round((Date.now()-p.dirTs)/864e5))}:null}
 /* ---- 1. Qué sigue en este proyecto: máximo 3 cosas, con botón ---- */
-function queSigue(p){const L=[];
+function queSigue(p){const L=[];if(p.autoRel&&!p.autoRel.ok)L.push({tag:'Desde tu historia',t:'Revisa lo que la app rellenó',d:`Rellené ${p.autoRel.n} cosas a partir de tu historia: confírmalas o ajústalas, y contesta las preguntas abiertas.`,go:'tab:idea:',b:'Revisar',rev:true});
   try{for(const c of crUltimas(p)){const m=(c.malo||[]).find(x=>!x.hecho&&x.prio==='alta')||(c.malo||[]).find(x=>!x.hecho);if(m){L.push({tag:'Crítica',t:corto(m.t,100),d:m.fix?'→ '+corto(m.fix,110):'Cambio pendiente de tu última crítica.',go:'tab:bocetos:critica',b:'Ver la lista'});break}}}catch{}
   const st=propStale(p);if(st)L.push({tag:'Desactualizado',t:`Cambiaste ${st.campo} hace ${st.hace} día${st.hace===1?'':'s'}: revisa lo que ya hiciste`,d:[st.refs&&`${st.refs} referencia${st.refs===1?'':'s'}`,st.pz&&`${st.pz} boceto${st.pz===1?'':'s'}`,st.crit&&'la última crítica'].filter(Boolean).join(', ')+' son anteriores al cambio.',go:'tab:bocetos:critica',b:'Pedir crítica nueva',rev:true});
   try{const D=DX(p),v=D.vacios[0];if(v)L.push({tag:'Decisión',t:corto(v.q,100),d:'Falta decidir esto para poder seguir con seguridad.',go:'tab:'+v.tab+':',b:'Decidir'})}catch{}
@@ -3834,7 +3836,7 @@ function vMaestros(){const M=S.mae=S.mae||{enf:[],min:20,nota:''},L=(S.ajustes.m
 async function accionProp(a,el,p,ds){
   switch(a){
     case 'proy-tam':{if(!p)return true;p.chico=ds.v==='chico';marcar();render();toast(p.chico?'Quedó en «Trabajos pequeños»':'Ahora es un proyecto grande');return true}
-    case 'prop-ok':{if(p){p.revTs=Date.now();marcar();renderMain();toast('Hecho: no te lo vuelvo a recordar')}return true}
+    case 'prop-ok':{if(p){p.revTs=Date.now();if(p.autoRel)p.autoRel.ok=true;marcar();renderMain();toast('Hecho: no te lo vuelvo a recordar')}return true}
     case 'err-add':{const v=$('#err-t')?.value.trim();if(!v)return true;(S.ajustes.errores=S.ajustes.errores||[]).push({id:uid(),t:v});marcarAj();S.errAb=true;renderMain();return true}
     case 'err-del':S.ajustes.errores=(S.ajustes.errores||[]).filter(x=>x.id!==ds.id);marcarAj();S.errAb=true;renderMain();return true;
     case 'sem-usa':{const x=crecAnalisis().crecer[+ds.i];if(!x)return true;const k=semKey(),W=S.ajustes.semanas=S.ajustes.semanas||{};W[k]={...(W[k]||{}),meta:x.t.replace(/^\d+\.\s*/,'')+': '+x.d,hecha:false,ts:Date.now()};marcarAj();renderMain();return true}
@@ -3955,6 +3957,149 @@ function crMotorHTML(act,attrs,key,nImg){const actL=act.replace('directo','local
   if(busy)return `<div class="prow"><span class="muted">${S.crLocal?'Analizando…':'Claude está revisando… puede tardar un minuto.'}</span>${S.crLocal?'':'<button class="btn sm" data-act="cr-stop">Detener</button>'}</div>`;
   return `<div class="prow"><button class="btn pri" data-act="${actL}" ${attrs} ${S.crBusy?'disabled':''}>Criticar ahora · director de arte de la app</button>${S.sample?`<button class="btn" data-act="${act}" ${attrs} ${S.crBusy?'disabled':''}>Con Claude (más profundo)</button>`:''}</div>
     <p class="hint" style="margin:0">El director de arte de la app mide valores, silueta, foco, color y detalle${nImg?' de '+(nImg>8?'tus 8 imágenes más recientes':nImg===1?'tu imagen':'tus '+nImg+' imágenes'):''}, lo cruza con tu proyecto y te dice qué está mal, cómo arreglarlo y qué probar. No necesita llave ni chat.${S.sample?'':window.PC_SHIM?' <button class="btn ghost sm" data-act="cr-conecta">Opcional: conectar Claude para una lectura más profunda</button>':''}</p>${S.crErr&&!S.crBusy?`<p class="muted" style="margin:0">${esc(S.crErr)}</p>`:''}`}
+
+/* ============ Subir un guion o la historia: la app la lee, rellena el proyecto y deja en preguntas lo que no pudo resolver. Tú solo revisas y ajustas. Todo en tu navegador, sin Claude ============ */
+async function hiDocx(f){const buf=new Uint8Array(await f.arrayBuffer()),dv=new DataView(buf.buffer);let e=buf.length-22;while(e>=0&&dv.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error('El .docx está dañado');
+  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);
+  for(let i=0;i<n;i++){if(dv.getUint32(p,true)!==0x02014b50)break;const comp=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),lho=dv.getUint32(p+42,true),nom=new TextDecoder().decode(buf.subarray(p+46,p+46+nl));
+    if(nom==='word/document.xml'){const ds=lho+30+dv.getUint16(lho+26,true)+dv.getUint16(lho+28,true),data=buf.subarray(ds,ds+cs);let xml;
+      if(comp===0)xml=new TextDecoder().decode(data);else xml=await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+      return xml.replace(/<\/w:p>/g,'\n').replace(/<w:tab\/>/g,'\t').replace(/<w:br\/>/g,'\n').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'")}
+    p+=46+nl+el+cl}
+  throw new Error('No encontré el texto dentro del .docx')}
+async function hiPdf(f){const B='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/',m=await import(B+'pdf.min.mjs');
+  const wt=await (await fetch(B+'pdf.worker.min.mjs')).text();m.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([wt],{type:'text/javascript'}));
+  const doc=await m.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;let t='';
+  for(let i=1;i<=Math.min(doc.numPages,120);i++){const pg=await doc.getPage(i),c=await pg.getTextContent();let last=null;for(const it of c.items){if(last!==null&&Math.abs(it.transform[5]-last)>2)t+='\n';t+=it.str;last=it.transform[5]}t+='\n\n'}return t}
+async function hiLee(f){const n=f.name.toLowerCase();
+  if(/\.docx$/.test(n))return hiDocx(f);if(/\.pdf$/.test(n))return hiPdf(f);
+  if(/\.(txt|md|fountain|text|markdown|rtf)$/.test(n)||/^text\//.test(f.type)){let t=await f.text();if(/\.rtf$/.test(n))t=t.replace(/\\par[d]?/g,'\n').replace(/\\'([0-9a-f]{2})/gi,(m,h)=>String.fromCharCode(parseInt(h,16))).replace(/\{[^}]*\}|\\[a-z]+-?\d* ?/g,'');return t}
+  throw new Error('Usa un archivo .txt, .md, .docx, .pdf o .fountain, o pega el texto')}
+/* ---- análisis local ---- */
+const HI_STOP=new Set('El La Los Las Un Una Unos Unas Pero Cuando Mientras Sin Entonces Por Para Con Como Esta Este Estos Estas Su Sus Si Al En De Del No Ya Aunque Ahora Luego Después Antes Hoy Aquí Allí Así También Todo Toda Todos Todas Cada Solo Sólo Dos Tres Cuatro Uno Primero Segundo Fin Capítulo Acto Escena Lunes Martes Miércoles Jueves Viernes Sábado Domingo Enero Febrero Marzo Abril Mayo Junio Julio Agosto Septiembre Octubre Noviembre Diciembre Se Lo Le Les Me Te Nos Mi Tu Nuestro Qué Quién Cómo Dónde Cuál Eso Esto Ese Esa Aquel Hay Fue Era Es Son Ser Muy Más Menos Sinopsis Resumen Premisa Personajes Historia Mundo Tema Final Inicio Nudo Desenlace Pero Porque Aunque'.split(' '));
+const HI_LUGAR=/^(templo|ciudad|selva|reino|valle|monta[nñ]a|isla|monte|r[ií]o|mar|cielo|inframundo|pir[aá]mide|palacio|aldea|pueblo|bosque|desierto|cueva|castillo|torre|imperio|lago|volc[aá]n|cenote|altar|plaza|puerto|campo|tierra|cumbre)\b/i;
+function hiNombres(txt){const re=/\b([A-ZÁÉÍÓÚÑ][a-záéíóúñ]{2,}(?:(?:\s+(?:de la|del|de|el|la)\s+|\s+)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{2,}){0,3})/g,cu=new Map();let m;
+  while((m=re.exec(txt))){const ini=m.index===0||/[.!?¿¡\n]\s*$/.test(txt.slice(Math.max(0,m.index-3),m.index));let pa=m[1].trim().split(/\s+/);while(pa.length&&HI_STOP.has(pa[0]))pa.shift();if(!pa.length)continue;const nom=pa.join(' ');if(nom.length<3)continue;
+    const e=cu.get(nom)||{n:0,medio:0,pos:m.index};e.n++;if(!ini)e.medio++;cu.set(nom,e)}
+  return [...cu.entries()].map(([nombre,e])=>({nombre,...e})).filter(x=>x.medio>=1||x.n>=3).sort((a,b)=>b.n-a.n)}
+function hiGuion(txt){const L=txt.split(/\r?\n/),pe=new Map(),lu=new Map();let es=0;
+  for(let i=0;i<L.length;i++){const l=L[i].trim();
+    if(/^(INT|EXT|INT\.?\/EXT|I\/E)[.\s]/i.test(l)){es++;const nm=l.replace(/^(INT|EXT|INT\.?\/EXT|I\/E)[.\s]+/i,'').split(/\s+-\s+/)[0].trim();if(nm)lu.set(nm,(lu.get(nm)||0)+1);continue}
+    if(/^[A-ZÁÉÍÓÚÑ0-9 '’().-]{2,32}$/.test(l)&&/[A-ZÁÉÍÓÚÑ]{2}/.test(l)&&L[i+1]&&L[i+1].trim()&&!/^(INT|EXT|FADE|CORTE|CUT|TRANSICI|FIN)/i.test(l)){const nm=l.replace(/\(.*?\)/g,'').trim();pe.set(nm,(pe.get(nm)||0)+1)}}
+  if(es<2)return null;const bonito=s=>cap(s.toLowerCase());
+  return {personajes:[...pe.entries()].filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).map(([nombre,n])=>({nombre:bonito(nombre),n})),lugares:[...lu.entries()].sort((a,b)=>b[1]-a[1]).map(([nombre,n])=>({nombre:bonito(nombre),n}))}}
+const HI_MAT=[[/\b(piedra|roca|rocas|piedras|pedernal)\b/,'Piedra'],[/\b(metal|acero|hierro|espada|armadura de metal)\b/,'Metal'],[/\b(tela|seda|lino|manto|ropaje|capa|tejido)\b/,'Tela'],[/\b(piel|pelaje|pieles)\b/,'Piel'],[/\b(madera|tronco|troncos)\b/,'Madera'],[/\b(cristal|vidrio|espejo|espejos)\b/,'Cristal'],[/\b(hueso|huesos|craneo|calavera)\b/,'Hueso'],[/\b(cuero)\b/,'Cuero'],[/\b(pluma|plumas|plumaje)\b/,'Pluma'],[/\b(escama|escamas)\b/,'Escama'],[/\b(ceramica|barro|arcilla)\b/,'Cerámica'],[/\b(oro|dorado|dorada|dorados)\b/,'Oro'],[/\b(bronce)\b/,'Bronce'],[/\b(obsidiana)\b/,'Obsidiana'],[/\b(carne|sangre)\b/,'Carne'],[/\b(energia|magia|poder sobrenatural)\b/,'Energía']];
+const HI_EXTRA_MAT=[[/\bjade\b/,'jade'],[/\bturquesa\b/,'turquesa'],[/\bbarro\b/,'barro'],[/\bpigment\w+|\bpintura\b/,'pigmentos'],[/\braices|\braiz\b/,'raíces'],[/\bmusgo\b/,'musgo'],[/\bcenizas?\b/,'ceniza']];
+const HI_CULT=[[/\bmaya(s)?\b/,'Maya'],[/\bazteca(s)?\b/,'Azteca'],[/\bmexica(s)?\b/,'Mexica'],[/\bolmeca(s)?\b/,'Olmeca'],[/\bmesoamerica\w*/,'Mesoamérica'],[/\bprehispanic\w*/,'Prehispánico'],[/\binca(s)?\b/,'Inca'],[/\begipci\w*/,'Egipcio'],[/\bgrieg\w*/,'Griego'],[/\bromano(s)?\b/,'Romano'],[/\bviking\w*|\bnordic\w*/,'Nórdico'],[/\bjapon\w*|\bsamurai\b/,'Japonés'],[/\bmedieval\w*/,'Medieval'],[/\bceltas?\b/,'Celta'],[/\bafrican\w*/,'Africano'],[/\bsteampunk\b/,'Steampunk'],[/\bcyberpunk\b/,'Cyberpunk'],[/\bvictorian\w*/,'Victoriano'],[/\bgotic\w*/,'Gótico'],[/\btolteca(s)?\b/,'Tolteca'],[/\btenochtitlan|teotihuacan|chichen|tikal|palenque\b/,'Mesoamérica']];
+const HI_EMO=[[/sagrad|divin|ritual|sacrific/,'sagrado'],[/brutal|violen|sangr|matanza|guerra|batalla/,'brutal'],[/tragic|tragedia|muerte|perdida|pierde|luto/,'trágico'],[/mistic|magia|espiritu|chaman|vision/,'místico'],[/salvaje|bestia|instinto|fiera/,'salvaje'],[/epic|heroic|leyenda|gloria/,'épico'],[/oscur|sombra|tiniebla|noche/,'oscuro'],[/miedo|terror|angusti|amenaza|horror/,'inquietante'],[/soledad|solitari|abandon|olvid/,'solitario'],[/esperanza|renacer|renace|redencion|redime/,'esperanzador'],[/calma|serenidad|paz\b|silencio/,'sereno'],[/melancol|nostalgia|tristeza|llanto|llora/,'melancólico'],[/majestuos|monument|imponente|colos/,'monumental'],[/primitiv|ancestr|arcaic/,'primitivo'],[/transform|metamorf|mutacion/,'cambiante'],[/orgullo|honor|dignidad/,'orgulloso']];
+const HI_CLIMA=[[/niebla|neblina|bruma/,'niebla'],[/humo|ceniza/,'humo y ceniza'],[/lluvia|tormenta|trueno|relampago/,'tormenta'],[/humed|selva|jungla/,'selva húmeda'],[/desierto|arena|polvo/,'polvo y desierto'],[/nieve|hielo|\bfrio\b/,'frío y nieve'],[/volcan|lava|calor/,'calor y lava']],
+  HI_LUZ=[[/fuego|antorcha|llama|hoguera|incendio/,'fuego y antorchas'],[/\bluna\b|lunar|nocturn/,'luz de luna'],[/amanecer|\balba\b|aurora/,'amanecer'],[/atardecer|ocaso|crepusculo/,'atardecer'],[/relampago|\brayo\b/,'relámpagos'],[/oscuridad|tiniebla/,'oscuridad con una fuente dominante'],[/\bsol\b|solar|mediodia/,'sol intenso'],[/bioluminisc|resplandor|sobrenatural/,'luz sobrenatural']];
+const HI_TEMAS=[['poder','Poder'],['sacrific','Sacrificio'],['identidad','Identidad'],['perdida|pierde|perder','Pérdida'],['venganza|vengar','Venganza'],['redencion|redimir','Redención'],['libertad|libre','Libertad'],['miedo|temor','Miedo'],['\\bfe\\b|creencia|devocion','Fe'],['muerte|morir|muere','Muerte'],['\\bvida\\b|vivir','Vida'],['transform|metamorf|cambiar','Transformación'],['destino','Destino'],['honor','Honor'],['traicion|traiciona','Traición'],['\\bamor\\b|amar','Amor'],['familia|hermano|padre|madre','Familia'],['guerra|batalla','Guerra'],['\\bpaz\\b','Paz'],['naturaleza|selva|bosque','Naturaleza'],['civilizacion|imperio|ciudad','Civilización'],['memoria|recuerdo|olvido','Memoria'],['justicia','Justicia'],['ambicion','Ambición'],['humanidad|humano','Humanidad'],['perfecc|perfecto','Perfección'],['equilibrio','Equilibrio'],['ciclo|renacer','Ciclo'],['pacto','Pacto'],['imperfec','Imperfección']];
+const HI_ANTI=[['guerra|batalla','\\bpaz\\b','Guerra','Paz'],['naturaleza|selva|bosque','civilizacion|imperio|ciudad','Naturaleza','Civilización'],['humano|humanidad','\\bdios\\b|deidad|divin','Humano','Dios'],['\\bvida\\b|vivir|nace','muerte|morir|muere','Vida','Muerte'],['\\borden\\b','\\bcaos\\b','Orden','Caos'],['\\bluz\\b|brillo','oscuridad|sombra|tiniebla','Luz','Oscuridad'],['permanen|perfecc|eterno|inmortal','transform|cambio|imperfec|mutacion','Permanencia','Transformación'],['libertad|libre','control|destino|esclav','Libertad','Control'],['destruc|destruye|devasta','creacion|crear|renacer|reconstru','Destrucción','Creación'],['razon|ciencia|logica','instinto|bestia|salvaje','Razón','Instinto'],['\\bpoder\\b|dominio','humanidad|fragil|debil','Poder','Fragilidad'],['tradicion|antiguo','futuro|cambio|nuevo','Tradición','Cambio'],['sagrad|divin','profan|blasfem','Sagrado','Profano'],['organic|selva|raiz|raices','mecanic|maquina|engranaj','Orgánico','Mecánico']];
+const HI_PIL={poder:['El poder cobra lo que no ves','Cada uso del poder deja una marca visible y progresiva en el cuerpo y en el entorno.'],sacrific:['El sacrificio deja huella','Lo que se pierde se ve: cicatrices, ausencias y materiales que reemplazan lo perdido.'],naturaleza:['La naturaleza reclama','Vegetación sobre estructuras, formas orgánicas contra formas rígidas, un mundo que observa y reacciona.'],guerra:['La guerra pesa en todo','Desgaste, cicatrices y silencios; rectas y masas pesadas.'],transform:['La transformación se lee por etapas','Silueta y materiales cambian en pasos claros de principio a final.'],muerte:['La muerte siempre está presente','Huesos, ofrendas y polvo: el final convive con la vida en cada escena.'],sagrad:['Lo sagrado pesa','Escalas monumentales, ornamento exagerado y luz sobrenatural alrededor de lo divino.'],memoria:['Lo que se olvida se ve','Lo perdido deja huecos y rastros reconocibles.'],identidad:['Quién eres se ve en la silueta','Cada personaje se reconoce solo por su forma.'],venganza:['La venganza lo consume','El deseo se refleja en el color, la postura y el desgaste.'],libertad:['La libertad necesita espacio','Composiciones abiertas, horizontes amplios y formas que respiran.'],miedo:['El miedo se ve antes de entenderse','Sombras largas, escalas que abruman y siluetas inquietantes.'],destino:['El destino ya está escrito en el mundo','Símbolos que se repiten y anticipan lo que pasará.'],honor:['El honor se carga encima','Ornamento y postura que cuentan lo que el personaje defiende.'],traicion:['La traición deja grietas','Lo que se rompe se ve roto: simetrías quebradas y materiales fracturados.'],familia:['La familia se reconoce en la forma','Rasgos y formas compartidos entre personajes que se pertenecen.'],pacto:['El pacto tiene un precio visible','Lo que se acuerda se marca en el cuerpo, la ropa o el entorno.'],imperfec:['Lo imperfecto es lo que cambia','Grietas, asimetrías y desgaste como señal de vida, no de error.'],perfecc:['Lo perfecto se vuelve inmóvil','Simetría, rectas y superficies lisas que dejan de respirar.']};
+const HI_CLICHE={mesoam:['Penacho genérico de souvenir azteca','Armas de metal forjado en un mundo de obsidiana','Dios festivo o sonriente'],egip:['Guerrero egipcio genérico con nemes y falda shenti'],japon:['Samurái genérico de película'],nordic:['Vikingos con cascos de cuernos'],medieval:['Caballero genérico de película'],steampunk:['Engranes pegados sin función']};
+function hiOraciones(t){return t.replace(/^(?:#+\s*)?(sinopsis|resumen|premisa|logline|trama|personajes|historia|mundo|tema|final|desarrollo|conflicto)\s*:?\s*$/gim,'').replace(/\s+/g,' ').split(/(?<=[.!?…])\s+/).map(x=>x.trim()).filter(x=>x.length>12)}
+function hiAnaliza(txt){txt=String(txt||'').replace(/\r/g,'').trim();if(txt.length<80)throw new Error('El texto es muy corto: pega al menos un par de párrafos');
+  const n=nz(txt),ora=hiOraciones(txt),cnt=(re)=>(n.match(new RegExp(re.source,'g'))||[]).length,R={};
+  const g=hiGuion(txt);R.guion=!!g;
+  /* brief: sinopsis si la hay, si no las primeras oraciones */
+  const sin=/^(?:#+\s*)?(sinopsis|resumen|premisa|logline|trama)\b[^\n]*\n+([\s\S]{40,900}?)(?:\n\s*\n|$)/im.exec(txt);R.brief=sin?sin[2].trim().replace(/\s+/g,' '):ora.slice(0,3).join(' ').slice(0,600);
+  const es=ora.find(o=>/\b(es un|es una|una historia|historia de|trata de|sigue a|cuenta|narra|mundo)\b/i.test(o))||ora[0]||'';R.queEs=es.length>190?es.slice(0,187)+'…':es;
+  /* temas */
+  const temas=HI_TEMAS.map(([re,n_])=>[n_,(n.match(new RegExp(re,'g'))||[]).length,re]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);R.temas=temas.slice(0,5).map(x=>x[0]);
+  R.tema=R.temas.length?R.temas.slice(0,3).join(', ').replace(/, ([^,]*)$/,' y $1'):'';
+  R.nucleos=R.temas.slice(0,3);
+  /* personajes y lugares */
+  let pj=[],lu=[];
+  if(g){pj=g.personajes.slice(0,8);lu=g.lugares.slice(0,6)}
+  else{const N=hiNombres(txt);for(const x of N){const esLugar=HI_LUGAR.test(x.nombre)||new RegExp('\\b(templo|ciudad|selva|reino|valle|monte|isla|rio|imperio|pueblo|aldea|bosque)s?\\s+(de|del|de la)\\s+'+x.nombre.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i').test(txt);(esLugar?lu:pj).push(x)}pj=pj.slice(0,8);lu=lu.slice(0,6)}
+  R.personajes=pj.map((x,i)=>{const pos=txt.indexOf(x.nombre),ctx=nz(txt.slice(Math.max(0,pos-120),pos+160)),fr=ora.find(o=>o.includes(x.nombre))||'';
+    const cerca=nz(txt.slice(Math.max(0,pos-45),pos+x.nombre.length+60)),nn=nz(x.nombre),
+      rol=/dios|diosa|deidad/.test(nn)||/espejo/.test(nn)?'Deidad':/jaguar|serpiente|bestia|criatura|monstruo|dragon/.test(nn)||/\b(bestia|criatura|monstruo|animal)\b/.test(cerca)?'Criatura':i===0?'Protagonista':/\b(dios|diosa|deidad)\b/.test(cerca)&&/\b(es|era|llamado|llamada)\b/.test(cerca)?'Deidad':/enemigo|rival|villano|tirano|opresor|amenaza|destruir|ataca|persigue|castiga|ordena|considera imperfecta/.test(ctx)?'Antagonista':/ayuda|aliad|amigo|acompan|mentor|guia|hermana|hermano/.test(ctx)?'Aliado':'Secundario';
+    return {nombre:x.nombre,rol,notas:fr.length>170?fr.slice(0,167)+'…':fr}});
+  R.lugares=lu.map(x=>x.nombre);
+  /* materiales, cultura, mood */
+  R.materiales=HI_MAT.filter(([re])=>re.test(n)).map(x=>x[1]);R.matExtra=HI_EXTRA_MAT.filter(([re])=>re.test(n)).map(x=>x[1]);
+  R.cultura=[...new Set(HI_CULT.filter(([re])=>re.test(n)).map(x=>x[1]))];
+  const emo=HI_EMO.map(([re,a])=>[a,(n.match(new RegExp(re.source,'g'))||[]).length]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);R.tres=emo.slice(0,3).map(x=>x[0]);while(R.tres.length<3)R.tres.push('');
+  R.clima=HI_CLIMA.filter(([re])=>re.test(n)).map(x=>x[1]).slice(0,3).join(', ');R.luz=HI_LUZ.filter(([re])=>re.test(n)).map(x=>x[1]).slice(0,3).join(', ');
+  R.formas=['garra','garras','colmillo','cuerno','alas','torre','espada','lanza','escalera','piramide','columna','espiral','raiz','raices'].filter(w=>n.includes(w)).slice(0,6);
+  R.colores=['rojo','verde','negro','dorado','azul','blanco','morado','naranja','turquesa','plateado','gris','sangre','fuego','oro'].filter(w=>new RegExp('\\b'+w+'\\b').test(n));
+  /* tensiones */
+  R.tensiones=HI_ANTI.map(([a,b,na,nb])=>{const ca=(n.match(new RegExp(a,'g'))||[]).length,cb=(n.match(new RegExp(b,'g'))||[]).length;return {a:na,b:nb,ca,cb,s:Math.min(ca,cb)*2+(ca+cb)/10}}).filter(x=>x.ca&&x.cb).sort((x,y)=>y.s-x.s).slice(0,2)
+    .map(x=>({a:x.a,b:x.b,aVis:'',bVis:'',como:'',domina:x.ca>x.cb*1.4?'A domina a B':x.cb>x.ca*1.4?'B domina a A':'Equilibrio inestable'}));
+  /* pilares desde los temas más fuertes */
+  const pil=[];for(const [nombre,c,re] of temas){const k=Object.keys(HI_PIL).find(k=>new RegExp(k).test(nz(nombre))||re.includes(k));if(k&&!pil.some(x=>x.t===HI_PIL[k][0]))pil.push({t:HI_PIL[k][0],f:`Viene del tema «${nombre.toLowerCase()}» de tu historia.`,como:HI_PIL[k][1]});if(pil.length>=3)break}
+  R.pilares=pil;
+  R.evitar=[...new Set(R.cultura.flatMap(c=>{const k=/Maya|Azteca|Mexica|Olmeca|Mesoam|Prehisp|Tolteca/.test(c)?'mesoam':/Egip/.test(c)?'egip':/Japon/.test(c)?'japon':/Nórd/.test(c)?'nordic':/Medieval/.test(c)?'medieval':/Steampunk/.test(c)?'steampunk':'';return HI_CLICHE[k]||[]}))];
+  R.funcion=R.temas.length&&R.tensiones[0]?`Contar visualmente ${R.tema.toLowerCase()}: cada diseño existe para mostrar el choque entre ${R.tensiones[0].a.toLowerCase()} y ${R.tensiones[0].b.toLowerCase()}.`:'';
+  /* lo que no pude resolver: se vuelve pregunta */
+  const Q=[];if(!R.funcion)Q.push('¿Para qué existe este diseño dentro de su mundo? No encontré la función en tu historia.');
+  if(!R.personajes.length)Q.push('No encontré personajes con nombre: ¿quién protagoniza?');
+  R.tensiones.forEach(t=>{Q.push(`¿Cómo se ve «${t.a}»? ¿Y «${t.b}»? (3 adjetivos visuales para cada uno)`);if(t.domina==='Equilibrio inestable')Q.push(`¿Quién domina entre «${t.a}» y «${t.b}»?`)});
+  if(!R.tensiones.length)Q.push('No encontré un conflicto claro: ¿qué dos fuerzas chocan en tu historia?');
+  if(!R.colores.length)Q.push('Tu historia no menciona colores: ¿qué paleta tiene este mundo?');
+  if(!R.cultura.length)Q.push('¿En qué cultura, época o mito se apoya? No lo encontré.');
+  if(!R.luz)Q.push('¿Cómo es la luz de este mundo? No la encontré en el texto.');
+  if(R.temas.includes('Naturaleza'))MUNDO_Q.slice(0,3).forEach(m=>Q.push(m[1]));
+  Q.push('¿Cómo termina? Define si el final cambia al mundo y cómo se vería.');R.preguntas=Q;
+  R.tipo=(R.lugares.length>=2||R.personajes.length>=4)?'Mundo':R.personajes.length<=1&&/criatura/.test(n)?'Criatura':R.personajes.length<=2?'Personaje':'Mundo';
+  R.keywords={forma:R.formas,material:[...R.materiales.map(x=>x.toLowerCase()),...R.matExtra],emocion:R.tres.filter(Boolean),cultura:[...R.cultura,...R.lugares.slice(0,3)],luz:[...R.luz.split(', '),...R.clima.split(', ')].filter(Boolean)};
+  return R}
+/* ---- revisión: editas lo que no te cuadre y aplicas ---- */
+function hiPanel(){const R=S.hi?.res,p=S.P[S.cur];if(!R||!p)return;
+  const vacio=path=>!String(getPath(p,path)||'').trim(),fila=(id,lbl,val,path,ta=false)=>{const v=vacio(path);return `<div class="hi-f"><label class="chk"><input type="checkbox" data-hic="${id}" ${v&&val?'checked':''}><span><b>${esc(lbl)}</b> ${v?'':'<small class="muted">· ya tienes algo (marca para reemplazar)</small>'}</span></label>${ta?`<textarea id="hi-${id}" style="min-height:64px">${esc(val)}</textarea>`:`<input type="text" id="hi-${id}" value="${esc(val)}">`}</div>`};
+  const kw=Object.entries(R.keywords).filter(([,v])=>v.length);
+  $('#overlay').innerHTML=`<div class="modal" role="dialog" aria-label="Revisar lo que entendí"><div class="modal-b hi-modal"><div class="prow" style="justify-content:space-between"><h3 style="margin:0">Lo que entendí de tu historia</h3><button class="btn ghost sm" data-act="hi-cerrar">✕</button></div>
+    <p class="hint" style="margin:0">${R.guion?'Lo leí como guion (escenas y personajes por nombre). ':''}Marca lo que quieres aplicar y edita lo que no te cuadre. Lo que no pude resolver se vuelve pregunta abierta. Nada se pierde: lo que ya tenías solo se reemplaza si lo marcas.</p>
+    <div class="hi-body">
+      ${fila('brief','Encargo (resumen de la historia)',R.brief,'brief.texto',true)}
+      ${fila('queEs','En una línea: ¿qué es?',R.queEs,'que.que')}${fila('tema','Tema: ¿de qué habla en el fondo?',R.tema,'que.tema')}${fila('funcion','Función (propuesta: confírmala o reescríbela)',R.funcion,'que.funcion',true)}
+      <div class="hi-f"><label class="chk"><input type="checkbox" data-hic="historia" checked><span><b>Guardar la historia completa en el proyecto</b></span></label></div>
+      ${R.personajes.length?`<div class="hi-f"><b>Personajes</b>${R.personajes.map((c,i)=>`<div class="prow" style="flex-wrap:nowrap;gap:6px"><input type="checkbox" data-hipj="${i}" checked aria-label="Aplicar"><input type="text" data-hipjn="${i}" value="${esc(c.nombre)}" style="flex:1 1 120px"><select data-hipjr="${i}">${PJ_ROLES.map(r=>`<option ${r===c.rol?'selected':''}>${r}</option>`).join('')}</select><input type="text" data-hipjt="${i}" value="${esc(c.notas)}" style="flex:2 1 200px" placeholder="Qué se sabe de él"></div>`).join('')}</div>`:''}
+      ${R.tensiones.length?`<div class="hi-f"><b>Tensión</b>${R.tensiones.map((t,i)=>`<div class="prow" style="flex-wrap:nowrap;gap:6px"><input type="checkbox" data-hit="${i}" checked aria-label="Aplicar"><input type="text" data-hita="${i}" value="${esc(t.a)}"><span>↔</span><input type="text" data-hitb="${i}" value="${esc(t.b)}"><select data-hitd="${i}">${DOMINA.map(d=>`<option ${d===t.domina?'selected':''}>${d}</option>`).join('')}</select></div>`).join('')}</div>`:''}
+      ${R.pilares.length?`<div class="hi-f"><b>Pilares (propuestas desde tus temas)</b>${R.pilares.map((x,i)=>`<div class="hi-pil"><label class="chk"><input type="checkbox" data-hip="${i}" checked><span>Pilar ${i+1}</span></label><input type="text" data-hipt="${i}" value="${esc(x.t)}"><input type="text" data-hipf="${i}" value="${esc(x.f)}"><input type="text" data-hipc="${i}" value="${esc(x.como)}"></div>`).join('')}</div>`:''}
+      <div class="hi-f"><b>Mood</b><div class="prow">${R.tres.map((t,i)=>`<input type="text" data-hitres="${i}" value="${esc(t)}" placeholder="palabra ${i+1}" style="width:130px">`).join('')}</div>${fila('luz','Luz',R.luz,'mood.luz')}${fila('clima','Clima y atmósfera',R.clima,'mood.clima')}</div>
+      ${R.materiales.length?`<div class="hi-f"><b>Materiales</b><div class="chips">${R.materiales.map((m,i)=>`<label class="ch on" style="cursor:pointer"><input type="checkbox" data-himat="${esc(m)}" checked style="margin-right:4px">${esc(m)}</label>`).join('')}</div>${R.matExtra.length?`<small class="muted">También aparecen: ${esc(R.matExtra.join(', '))} (van a «otros materiales»)</small>`:''}</div>`:''}
+      ${kw.length?`<div class="hi-f"><b>Palabras clave</b>${kw.map(([k,v])=>`<div class="prow"><span class="lbl" style="min-width:110px">${esc(KWCATS.find(x=>x[0]===k)?.[1]||k)}</span><input type="text" data-hikw="${k}" value="${esc(v.join(', '))}" style="flex:1"></div>`).join('')}</div>`:''}
+      ${R.evitar.length?`<div class="hi-f"><b>Para evitar (clichés de esa cultura)</b>${R.evitar.map((x,i)=>`<label class="chk"><input type="checkbox" data-hiev="${i}" checked><span>${esc(x)}</span></label>`).join('')}</div>`:''}
+      <div class="hi-f"><b>Preguntas abiertas (lo que no pude resolver)</b>${R.preguntas.map((x,i)=>`<label class="chk"><input type="checkbox" data-hiq="${i}" checked><span>${esc(x)}</span></label>`).join('')}</div>
+    </div>
+    <div class="prow"><button class="btn pri" data-act="hi-aplica">Aplicar lo marcado</button><button class="btn" data-act="hi-cerrar">Cancelar</button></div></div></div>`}
+function hiAplica(){const R=S.hi?.res,p=S.P[S.cur];if(!R||!p)return;const on=id=>document.querySelector(`[data-hic="${id}"]`)?.checked,v=id=>($('#hi-'+id)?.value||'').trim();let n=0;
+  const set=(path,val)=>{if(val){setPath(p,path,val);n++}};
+  if(on('brief'))set('brief.texto',v('brief'));if(on('queEs'))set('que.que',v('queEs'));if(on('tema'))set('que.tema',v('tema'));if(on('funcion'))set('que.funcion',v('funcion'));
+  if(on('historia')){p.brief.historia=String(S.hi.texto||'').slice(0,60000);n++}
+  if(on('luz'))set('mood.luz',v('luz'));if(on('clima'))set('mood.clima',v('clima'));
+  const tipo=QUE_TIPOS.find(t=>nz(t)===nz(R.tipo));if(tipo&&!p.que.tipo){p.que.tipo=tipo;n++}
+  document.querySelectorAll('[data-hipj]').forEach(c=>{if(!c.checked)return;const i=c.dataset.hipj,nom=document.querySelector(`[data-hipjn="${i}"]`).value.trim();if(!nom||(p.personajes||[]).some(x=>nz(x.nombre)===nz(nom)))return;
+    (p.personajes=p.personajes||[]).push(pjNuevo(p,{nombre:nom,rol:document.querySelector(`[data-hipjr="${i}"]`).value,notas:document.querySelector(`[data-hipjt="${i}"]`).value.trim()}));n++});
+  document.querySelectorAll('[data-hit]').forEach(c=>{if(!c.checked)return;const i=c.dataset.hit,a=document.querySelector(`[data-hita="${i}"]`).value.trim(),b=document.querySelector(`[data-hitb="${i}"]`).value.trim();if(!a||!b||(p.tensiones||[]).some(t=>nz(t.a)===nz(a)&&nz(t.b)===nz(b)))return;(p.tensiones=p.tensiones||[]).push({a,b,aVis:'',bVis:'',como:'',domina:document.querySelector(`[data-hitd="${i}"]`).value});n++});
+  document.querySelectorAll('[data-hip]').forEach(c=>{if(!c.checked)return;const i=c.dataset.hip,slot=p.pilares.findIndex(x=>!x.t.trim());if(slot<0)return;Object.assign(p.pilares[slot],{t:document.querySelector(`[data-hipt="${i}"]`).value.trim(),f:document.querySelector(`[data-hipf="${i}"]`).value.trim(),como:document.querySelector(`[data-hipc="${i}"]`).value.trim()});n++});
+  const tres=[...document.querySelectorAll('[data-hitres]')].map(i=>i.value.trim());if(tres.some(Boolean)&&!(p.mood.tres||[]).some(Boolean)){p.mood.tres=[tres[0]||'',tres[1]||'',tres[2]||''];p.mood.palabras=tres.filter(Boolean).join(', ');if(!p.mood.sensacion)p.mood.sensacion=tres.filter(Boolean).join(', ');n++}
+  const mats=[...document.querySelectorAll('[data-himat]')].filter(c=>c.checked).map(c=>c.dataset.himat),nuevos=mats.filter(m=>!(p.materiales||[]).includes(m));if(nuevos.length){p.materiales=[...(p.materiales||[]),...nuevos];n++}
+  if(R.matExtra.length&&!(p.materialNota||'').trim()){p.materialNota=R.matExtra.join(', ');n++}
+  document.querySelectorAll('[data-hikw]').forEach(i=>{const k=i.dataset.hikw,L=i.value.split(',').map(x=>x.trim()).filter(Boolean),ya=p.keywords[k]||(p.keywords[k]=[]);L.forEach(w=>{if(!ya.some(y=>nz(y)===nz(w))){ya.push(w);n++}})});
+  if(!(p.concepto.nucleos||[]).some(x=>x.trim())&&R.nucleos.length){R.nucleos.forEach((x,i)=>{if(i<3)p.concepto.nucleos[i]=x});n++}
+  document.querySelectorAll('[data-hiev]').forEach(c=>{if(!c.checked)return;const t=R.evitar[+c.dataset.hiev];if(t&&!(p.evitar||[]).includes(t)){(p.evitar=p.evitar||[]).push(t);n++}});
+  document.querySelectorAll('[data-hiq]').forEach(c=>{if(!c.checked)return;const t=R.preguntas[+c.dataset.hiq];if(t&&!(p.preguntas||[]).some(x=>x.t===t)){(p.preguntas=p.preguntas||[]).push({id:uid(),t,ts:Date.now()});n++}});
+  p.autoRel={ts:Date.now(),n,ok:false};dirToca(p,'que.');marcar();$('#overlay').innerHTML='';S.hi.res=null;S.tab='hoja';S.ancla=null;render();toast(`Rellené ${n} cosas desde tu historia. Revísalas y ajústalas.`)}
+function historiaSubirHTML(p){const h=S.hi||{};
+  return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Sube tu guion o tu historia y la app rellena el proyecto</h3>
+    <p class="hint" style="margin:0">Sube un .txt, .docx, .pdf, .md o un guion (.fountain), o pega el texto. La app lo lee y propone qué es, el tema, personajes, mundo, materiales, mood, tensión y pilares, y deja como preguntas lo que no pudo resolver. Tú solo revisas y ajustas. Todo se hace en tu navegador, sin Claude.</p>
+    <div class="prow"><label class="btn pri" for="hi-file">Subir archivo</label><input type="file" id="hi-file" accept=".txt,.md,.docx,.pdf,.fountain,.rtf,text/plain" hidden><span class="muted">${S.hiBusy?'Leyendo…':esc(h.nombre||'')}</span></div>
+    <textarea id="hi-txt" data-hitxt="1" placeholder="…o pega aquí la sinopsis, el lore o el guion" style="min-height:90px">${esc(h.texto||'')}</textarea>
+    ${S.hiErr?`<p class="muted" style="margin:0">${esc(S.hiErr)}</p>`:''}
+    <div class="prow"><button class="btn pri" data-act="hi-analiza">Entender mi historia</button></div></div>`}
+async function accionHi(a,el,p,ds){
+  switch(a){
+    case 'hi-analiza':{const t=($('#hi-txt')?.value||S.hi?.texto||'').trim();S.hi={...(S.hi||{}),texto:t};try{S.hiErr='';S.hi.res=hiAnaliza(t);hiPanel()}catch(e){S.hiErr=e.message;renderMain()}return true}
+    case 'hi-cerrar':$('#overlay').innerHTML='';return true;
+    case 'hi-aplica':hiAplica();return true}
+  return false}
+document.addEventListener('change',async e=>{const t=e.target;if(t.id!=='hi-file'||!t.files[0])return;const f=t.files[0];t.value='';S.hiBusy=true;S.hiErr='';renderMain();
+  try{const txt=(await hiLee(f)).trim();S.hi={texto:txt,nombre:f.name};S.hiBusy=false;S.hi.res=hiAnaliza(txt);renderMain();hiPanel()}catch(er){S.hiBusy=false;S.hiErr=er?.message||'No pude leer ese archivo';renderMain()}});
+document.addEventListener('input',e=>{if(e.target.dataset?.hitxt)(S.hi=S.hi||{}).texto=e.target.value});
 
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
@@ -10082,7 +10227,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionAd(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionAd(a,el,p,ds))&&!(await accionHi(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
