@@ -1003,7 +1003,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muye27nl').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muye9fny').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -5800,8 +5800,51 @@ function notasDir(c,p,x,y,w,maxH){let h=0;const blk=(t,items,col)=>{if(!items.le
 async function bmPieza(id){const p=S.P[S.cur],x=(p?.piezas||[]).find(z=>z.id===id);if(!x)return null;try{return await cargarBitmap(x)}catch{return null}}
 
 /* ---------- 3 · plantillas de hojas de producción ---------- */
-const LAM_TIPOS=[['turn','Turnaround de personaje'],['env','Hoja de entorno'],['key','Presentación de keyframe'],['proc','Breakdown de proceso']];
+const LAM_TIPOS=[['refs','Hoja de referencias'],['thumbs','Hoja de thumbnails'],['turn','Turnaround de personaje'],['env','Hoja de entorno'],['key','Presentación de keyframe'],['proc','Breakdown de proceso'],['final','Producto final · portafolio']];
 function lamDraft(){const p=S.P[S.cur];return S.lam=S.lam||{tipo:'turn',pers:(p?.grupos||[])[0]||'',cabezas:'8',img:'',sel:{}}}
+/* ---------- hojas para el portafolio: referencias, thumbnails y producto final ---------- */
+const bmSeguro=async x=>{try{return await cargarBitmap(x)}catch{return null}};
+const celdasGrid=n=>{const cols=n<=2?n:n<=6?3:n<=12?4:5;return {cols,rows:Math.ceil(n/cols)}};
+async function laminaRefs(c,p,d){const W=3840,H=2160,SX=2800,capa=d.refCapa||'',rs=(p.refs||[]).filter(r=>(!capa||r.capa===capa)&&(r.asset||r.src)).slice(0,15);
+  cabecera(c,W,p,'REFERENCE BOARD'+(capa?' · '+capaNombre(p,capa).toUpperCase():''));
+  if(!rs.length){tx2(c,'Agrega referencias en la pestaña Referencias.',SX/2,H/2,48,PRO.ink2,{al:'center'});return}
+  const {cols,rows}=celdasGrid(rs.length),x0=80,y0=240,gw=SX-160,gh=H-y0-250,gap=28,cw=(gw-(cols-1)*gap)/cols,chh=(gh-(rows-1)*gap)/rows,ih=chh-44;
+  for(let i=0;i<rs.length;i++){const x=x0+(i%cols)*(cw+gap),y=y0+Math.floor(i/cols)*(chh+gap),bm=await bmSeguro(rs[i]);
+    c.fillStyle=PRO.panel;c.fillRect(x,y,cw,ih);if(bm)fitImg(c,bm,x,y,cw,ih);else tx2(c,'sin imagen',x+cw/2,y+ih/2-12,24,PRO.ink3,{f:MONO,al:'center'});
+    c.fillStyle=PRO.bg;c.fillRect(x,y,64,44);tx2(c,String(i+1).padStart(2,'0'),x+32,y+8,26,PRO.acc,{w:'700',f:MONO,al:'center'});
+    tx2(c,corto(rs[i].porque||(rs[i].fuente||'').split(' · ')[0]||'',70),x,y+ih+10,22,PRO.ink2,{max:cw})}
+  const cr=rs.map((r,i)=>[i+1,r]).filter(([,r])=>r.autor||r.fuente).slice(0,10),colW=(SX-160)/2;
+  if(cr.length){tx2(c,'CRÉDITOS',80,H-215,22,PRO.ink3,{w:'500',f:MONO});cr.forEach(([n,r],i)=>tx2(c,String(n).padStart(2,'0')+'  '+corto([(r.fuente||'').split(' · ')[0],r.autor,r.lic].filter(Boolean).join(' · '),88),80+(i%2)*colW,H-175+Math.floor(i/2)*30,18,PRO.ink3,{f:MONO,max:colW-20}))}
+  let y=240;const kw=KWCATS.flatMap(([k])=>p.keywords[k]||[]);
+  tx2(c,'QUÉ BUSCO',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;y+=txW(c,p.ad||queDe(p)||'—',SX+60,y,W-SX-120,40,PRO.ink,{max:5,f:DISP,wt:'700'})+36;
+  if(kw.length){tx2(c,'KEYWORDS',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;y+=txW(c,kw.slice(0,24).join(' · '),SX+60,y,W-SX-120,26,PRO.ink2,{max:6})+36}
+  y+=paletaEn(c,p,SX+60,y,W-SX-120);
+  const por=rs.filter(r=>r.porque).slice(0,4);if(por.length){tx2(c,'POR QUÉ ESTAS',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;for(const r of por){if(y>H-140)break;y+=txW(c,'· '+r.porque,SX+60,y,W-SX-120,24,PRO.ink2,{max:3})+10}}}
+async function laminaThumbs(c,p,d){const W=3840,H=2160,g=d.grupo||'',fav=d.fav||{};
+  cabecera(c,W,p,'THUMBNAIL SHEET'+(g?' · '+g.toUpperCase():''));
+  const xs=piezasGrupo(p,g).filter(x=>(d.sel||{})[x.id]!==false&&(x.asset||x.src)).sort((a,b)=>a.creado-b.creado).slice(0,20);
+  if(!xs.length){tx2(c,'Sube thumbnails en Bocetos (elige el grupo).',W/2,H/2,48,PRO.ink2,{al:'center'});return}
+  const {cols,rows}=celdasGrid(xs.length),x0=80,y0=250,gw=W-160,gh=H-y0-190,gap=30,cw=(gw-(cols-1)*gap)/cols,chh=(gh-(rows-1)*gap)/rows,ih=chh-40;
+  for(let i=0;i<xs.length;i++){const x=x0+(i%cols)*(cw+gap),y=y0+Math.floor(i/cols)*(chh+gap),bm=await bmSeguro(xs[i]),es=!!fav[xs[i].id];
+    c.fillStyle=PRO.papel;c.fillRect(x,y,cw,ih);if(bm)fitImg(c,bm,x+10,y+10,cw-20,ih-20);
+    if(es){c.strokeStyle=PRO.acc;c.lineWidth=10;c.strokeRect(x+5,y+5,cw-10,ih-10)}
+    c.fillStyle=es?PRO.acc:PRO.bg;c.fillRect(x,y,72,46);tx2(c,String(i+1).padStart(2,'0'),x+36,y+9,28,es?'#140905':PRO.acc,{w:'700',f:MONO,al:'center'});
+    if(es)tx2(c,'★ ELEGIDO',x+cw-20,y+10,24,PRO.acc,{w:'700',f:MONO,al:'right'});
+    if(xs[i].nota)tx2(c,corto(xs[i].nota,80),x,y+ih+8,22,PRO.ink2,{max:cw})}
+  const el=xs.map((z,i)=>fav[z.id]?String(i+1).padStart(2,'0'):null).filter(Boolean);
+  tx2(c,el.length?'ELEGIDOS PARA LA SIGUIENTE RONDA: '+el.join(' · '):`${xs.length} THUMBNAILS · DECIDE CUÁLES SIGUEN`,80,H-140,28,PRO.ink2,{w:'500',f:MONO})}
+async function laminaFinal(c,p,d,bm){const W=3840,H=2160,hx=80,hy=100,hw=2820,hh=H-200,x=3000,w=W-x-80;
+  c.fillStyle=PRO.panel;c.fillRect(hx,hy,hw,hh);if(bm)fitImg(c,bm,hx,hy,hw,hh);else tx2(c,'PIEZA FINAL',hx+hw/2,hy+hh/2-40,80,PRO.ink3,{w:'800',f:DISP,al:'center'});
+  let y=hy;tx2(c,(p.tipo||'Concept art').toUpperCase(),x,y,26,PRO.acc,{w:'500',f:MONO});y+=52;
+  y+=txW(c,(p.nombre||'').toUpperCase(),x,y,w,88,PRO.ink,{max:3,f:DISP,wt:'800',lh:1.05})+26;
+  const log=p.concepto.frase||p.ad;if(log)y+=txW(c,log,x,y,w,36,PRO.ink,{max:5,lh:1.3})+40;
+  const desc=p.que?.funcion||queDe(p)||'';if(desc){tx2(c,'CONCEPTO',x,y,22,PRO.ink3,{w:'500',f:MONO});y+=38;y+=txW(c,desc,x,y,w,28,PRO.ink2,{max:5})+34}
+  const med=[p.tecnica.medio,p.tecnica.acabado].filter(Boolean).join(' · ');if(med){tx2(c,'TÉCNICA',x,y,22,PRO.ink3,{w:'500',f:MONO});y+=38;y+=txW(c,med,x,y,w,28,PRO.ink2,{max:3})+34}
+  y+=paletaEn(c,p,x,y,w);
+  const proc=(p.piezas||[]).filter(z=>z.id!==d.img&&(z.asset||z.src)).slice(-3),ph=170,py=H-hy-ph-80;
+  if(proc.length){tx2(c,'PROCESO',x,py-44,22,PRO.ink3,{w:'500',f:MONO});const sw=(w-(proc.length-1)*20)/proc.length;
+    for(let i=0;i<proc.length;i++){const b2=await bmSeguro(proc[i]);c.fillStyle=PRO.bg;c.fillRect(x+i*(sw+20),py,sw,ph);if(b2)fitImg(c,b2,x+i*(sw+20),py,sw,ph)}}
+  tx2(c,PRO_ARTISTA,x,H-hy-48,32,PRO.ink,{w:'600'});tx2(c,'© '+new Date().getFullYear(),x+w,H-hy-44,24,PRO.ink3,{f:MONO,al:'right'})}
 async function lamina(p,d){await document.fonts?.ready;const W=3840,H=2160,cv=lienzo(W,H),c=cv.getContext('2d');c.fillStyle=PRO.bg;c.fillRect(0,0,W,H);
   const bm=d.img?await bmPieza(d.img):null,SX=2800;
   if(d.tipo==='turn'){cabecera(c,W,p,'CHARACTER TURNAROUND · '+(d.pers||'PERSONAJE').toUpperCase());
@@ -5820,6 +5863,9 @@ async function lamina(p,d){await document.fonts?.ready;const W=3840,H=2160,cv=li
   else if(d.tipo==='key'){cabecera(c,W,p,'KEYFRAME');const mw=SX-160,mh=Math.round(mw*9/16);c.fillStyle=PRO.panel;c.fillRect(80,240,mw,mh);if(bm)fitImg(c,bm,80,240,mw,mh,true);else tx2(c,'KEYFRAME',80+mw/2,240+mh/2,70,PRO.ink3,{w:'800',f:DISP,al:'center'});
     const otros=(p.piezas||[]).filter(z=>z.id!==d.img).slice(-3),sw=(mw-60)/3,yy=240+mh+40;for(let i=0;i<otros.length;i++){try{const b2=await cargarBitmap(otros[i]);fitImg(c,b2,80+i*(sw+30),yy,sw,H-yy-110,true);tx2(c,(otros[i].etapa||'').toUpperCase(),80+i*(sw+30),H-100,24,PRO.ink2,{f:MONO})}catch{}}
     let y=240;tx2(c,'QUÉ COMUNICA',SX+60,y,24,PRO.ink3,{w:'500',f:MONO});y+=44;y+=txW(c,p.ad||queDe(p)||'—',SX+60,y,W-SX-120,40,PRO.ink,{max:6,f:DISP,wt:'700'})+40;y+=paletaEn(c,p,SX+60,y,W-SX-120);notasDir(c,p,SX+60,y,W-SX-120,H-y-60)}
+  else if(d.tipo==='refs')await laminaRefs(c,p,d);
+  else if(d.tipo==='thumbs')await laminaThumbs(c,p,d);
+  else if(d.tipo==='final')await laminaFinal(c,p,d,bm);
   else{await breakdown(c,p,d)}
   return cv}
 async function breakdown(c,p,d){const W=3840,H=2160;cabecera(c,W,p,'PROCESS BREAKDOWN');
@@ -5939,10 +5985,13 @@ function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=
     <div class="prow" style="align-items:flex-end">
       ${d.tipo==='turn'?`<div class="field"><label for="lam-pers">Personaje</label><input type="text" id="lam-pers" data-lam="pers" value="${esc(d.pers)}" list="lam-grupos" style="width:200px"><datalist id="lam-grupos">${(p.grupos||[]).map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>
         <div class="field"><label for="lam-cab">Altura en cabezas</label><input type="number" id="lam-cab" data-lam="cabezas" value="${esc(d.cabezas)}" min="2" max="14" step=".5" style="width:90px"></div>`:''}
-      ${d.tipo!=='proc'?`<div class="field"><label for="lam-img">${d.tipo==='turn'?'Diseño actual (referencia)':d.tipo==='env'?'Vista principal':'Keyframe'}</label><select id="lam-img" data-lam="img">${opt(d.img)}</select></div>`:''}
+      ${d.tipo==='refs'?`<div class="field"><label for="lam-rc">Qué capa</label><select id="lam-rc" data-lam="refCapa"><option value="">Todas</option>${capasDe(p).map(l=>`<option value="${l.k}" ${d.refCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div>`:''}
+      ${d.tipo==='thumbs'?`<div class="field"><label for="lam-gr">De qué grupo</label><select id="lam-gr" data-lam="grupo"><option value="">General</option>${(p.grupos||[]).map(g=>`<option ${d.grupo===g?'selected':''}>${esc(g)}</option>`).join('')}</select></div>`:''}
+      ${!['proc','refs','thumbs'].includes(d.tipo)?`<div class="field"><label for="lam-img">${d.tipo==='turn'?'Diseño actual (referencia)':d.tipo==='env'?'Vista principal':d.tipo==='final'?'Pieza final':'Keyframe'}</label><select id="lam-img" data-lam="img">${opt(d.img)}</select></div>`:''}
       <button class="btn" data-act="lam-prev">Vista previa</button><button class="btn pri" data-act="lam-png">Descargar PNG 4K</button></div>
+    ${d.tipo==='thumbs'?`<div class="field"><label>Qué thumbnails entran (toca ★ en los que eliges)</label><div class="chips">${piezasGrupo(p,d.grupo||'').sort((a,b)=>a.creado-b.creado).map((x,i)=>`<span class="prow" style="gap:2px"><button class="ch xs ${(d.sel||{})[x.id]===false?'':'on'}" data-act="lam-sel" data-id="${x.id}">${String(i+1).padStart(2,'0')}</button><button class="ch xs ${(d.fav||{})[x.id]?'on':''}" data-act="lam-fav" data-id="${x.id}" aria-label="Elegir">★</button></span>`).join('')||'<span class="muted">Sube thumbnails en la pestaña Bocetos.</span>'}</div></div>`:''}
     ${d.tipo==='proc'?`<div class="field"><label>Etapas incluidas (la más reciente de cada una)</label><div class="chips">${pz.map(x=>`<button class="ch xs ${(d.sel||{})[x.id]===false?'':'on'}" data-act="lam-sel" data-id="${x.id}">${esc(x.etapa)} · ${fecha(x.creado)}</button>`).join('')||'<span class="muted">Sube piezas en Carpetas o Crítica.</span>'}</div></div>`:''}
-    <p class="hint">${d.tipo==='turn'?'Lienzo gris para pintar encima: frente, perfil y espalda con líneas de altura, callouts numerados, tu paleta y tu dirección (pilares, reglas, evitar).':d.tipo==='env'?'Vista principal, llaves de valor por plano, callouts de tus materiales, paleta y luz.':d.tipo==='key'?'Keyframe grande con qué comunica, paleta, dirección y el proceso debajo.':'Tus etapas en orden con flechas, las notas de cada una y tus decisiones confirmadas.'}</p>
+    <p class="hint">${d.tipo==='refs'?'Tus referencias en cuadrícula con su porqué, los créditos de cada una, qué buscas, keywords y paleta. Lista para enseñar el criterio detrás de tu moodboard.':d.tipo==='thumbs'?'Todos tus thumbnails numerados con los elegidos marcados: se ve que exploraste varias ideas y cuál sigue.':d.tipo==='final'?'Una lámina limpia para portafolio: tu pieza final grande, título, concepto, técnica, paleta y el proceso en miniatura.':d.tipo==='turn'?'Lienzo gris para pintar encima: frente, perfil y espalda con líneas de altura, callouts numerados, tu paleta y tu dirección (pilares, reglas, evitar).':d.tipo==='env'?'Vista principal, llaves de valor por plano, callouts de tus materiales, paleta y luz.':d.tipo==='key'?'Keyframe grande con qué comunica, paleta, dirección y el proceso debajo.':'Tus etapas en orden con flechas, las notas de cada una y tus decisiones confirmadas.'}</p>
     ${S.lamPrev?`<img class="lam-prev" src="${S.lamPrev}" alt="Vista previa de la lámina">`:''}</div>
   <div class="box"><h3>Exportar para publicar</h3><p class="hint">Un ZIP con nombres profesionales: ArtStation (3840 px), carrusel de Instagram 1080×1350 (completa + 2 detalles del foco + proceso), portada 1080×1080 centrada en tu foco, y el texto con tus pilares.</p>
     <div class="prow" style="align-items:flex-end"><div class="field"><label for="pub-img">Pieza</label><select id="pub-img" data-pub="img">${opt(pub.img)}</select></div>
@@ -5954,6 +6003,7 @@ function vLaminas(p){const d=lamDraft(),pz=(p.piezas||[]).slice().reverse(),opt=
 async function accionPro(a,el,p,ds){
   switch(a){
     case 'lam-tipo':lamDraft().tipo=ds.v;S.lamPrev=null;renderMain();return true;
+    case 'lam-fav':{const d=lamDraft();d.fav=d.fav||{};d.fav[ds.id]=!d.fav[ds.id];S.lamPrev=null;renderMain();return true}
     case 'lam-sel':{const d=lamDraft();d.sel=d.sel||{};d.sel[ds.id]=d.sel[ds.id]===false?true:false;S.lamPrev=null;renderMain();return true}
     case 'lam-prev':case 'lam-png':{el.disabled=true;el.textContent='Armando…';try{const cv=await lamina(p,lamDraft());if(a==='lam-prev'){const s=lienzo(1280,720);s.getContext('2d').drawImage(cv,0,0,1280,720);S.lamPrev=s.toDataURL('image/jpeg',.85)}else{const t=LAM_TIPOS.find(x=>x[0]===lamDraft().tipo)[1];await bajarBlob(`${slugP(PRO_ARTISTA)}_${slugP(p.nombre)}_${slugP(t)}${lamDraft().tipo==='turn'&&lamDraft().pers?'_'+slugP(lamDraft().pers):''}.png`,await aBlob(cv))}}catch(e){console.error(e);toast('No se pudo armar la lámina')}renderMain();return true}
     case 'pub-zip':{if(S.pubBusy)return true;S.pubBusy=true;renderMain();try{await paquetePublicar(p,S.pub||{})}catch(e){console.error(e);toast('No se pudo armar el paquete')}S.pubBusy=false;renderMain();return true}
@@ -7954,7 +8004,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.tarnota!==undefined){const tt=tareaActiva(),b=tt?.bocetos[+t.dataset.tarnota];if(b){b.nota=t.value;marcarAj()}return}
   if(t.dataset.mr){S.recNuevo=S.recNuevo||{nombre:'',tipo:'',app:'',url:'',nota:'',habs:[]};S.recNuevo[t.dataset.mr]=t.value;return}
   if(t.dataset.recq){S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};S.recF.q=t.value;const pos=t.selectionStart;renderMain();const el=$('#recu-q');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch{}}return}
-  if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;return}
+  if(t.dataset.lam){lamDraft()[t.dataset.lam]=t.value;S.lamPrev=null;if(['grupo','refCapa'].includes(t.dataset.lam))renderMain();return}
   if(t.dataset.pub){S.pub=S.pub||{};S.pub[t.dataset.pub]=t.value;return}
   if(t.dataset.rectag){S.ajustes.recTags=S.ajustes.recTags||{};S.ajustes.recTags[t.dataset.rectag]=t.value;marcarAj();renderMain();return}
   if(t.dataset.dxan){if(t.dataset.dxan==='etapa')S.anEtapa=t.value;else S.anNota=t.value;return}
