@@ -1008,7 +1008,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyfzorz').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muygd8ct').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1314,6 +1314,7 @@ function renderSide(){
       <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
+      ${nav('compras','folder','Mis compras',(S.ajustes.compras||[]).length?`<span class="s">${S.ajustes.compras.length}</span>`:'')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
       ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
     </div>`;
@@ -1409,6 +1410,7 @@ function renderMainInner(){
   if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
   if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
   if(S.vista==='biblioteca'){m.innerHTML=vBiblioteca();return}
+  if(S.vista==='compras'){m.innerHTML=vCompras();return}
   if(S.vista==='calendario'){m.innerHTML=vCalendario();return}
   if(S.vista==='cv'){m.innerHTML=vCV();return}
   if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
@@ -2914,6 +2916,61 @@ function vBiblioteca(){
     <div class="field"><label for="bib-tema">Tema</label><select id="bib-tema" data-bib="tema"><option value="">Todos (agrupados)</option>${temas.map(t=>`<option ${b.tema===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
     ${SYNC_OK?`<div class="prow" style="margin-top:6px"><button class="btn pri" data-act="bib-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta, organizada por tema</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div><p class="hint" style="margin:4px 0 0">${guardar?`${guardar} sin guardar (nuevas o con tema cambiado).`:'Todo guardado con el tema actual.'} Crea BIBLIOTECA/&lt;tema&gt;/ en tu carpeta y solo agrega lo nuevo cada vez, nunca repite.</p>`:''}</div>
   <div id="bibgrid" style="display:flex;flex-direction:column;gap:10px">${bibGrid()}</div>`}
+
+/* ============ Mis compras: biblioteca ligera. Solo la ficha (texto) + una miniatura de 240 px; los archivos pesados se quedan donde ya los guardas ============ */
+const COM_TIPOS=['Pinceles','Poses / referencias visuales','Fotos de referencia','Texturas / HDRI','Modelos 3D','Plugins / add-ons','Libros / PDFs','Cursos / tutoriales','Paletas / LUTs','Otro'];
+const COM_LIC=['Sin revisar','Uso personal','Comercial','Comercial con crédito'];
+async function comMini(f){try{const m=await miniDe(f,240);if(m&&S.assets)return {thumb:(await S.assets.upload(m)).id}}catch{}try{return {thumbSrc:await comprimir(f,240,.7)}}catch{return {}}}
+const comThumb=x=>x.thumb?{asset:x.thumb}:{src:x.thumbSrc||''};
+function comNueva(o){const d=S.comDef||{};return {id:uid(),nombre:'',tipo:d.tipo||COM_TIPOS[0],tienda:d.tienda||'',url:'',precio:'',fecha:'',donde:'',lic:COM_LIC[0],tags:'',nota:'',fav:false,creado:Date.now(),...o}}
+async function subirCompras(files){
+  const fs_=[...files].filter(x=>/^image\//.test(x.type));if(!fs_.length){toast('Sube imágenes (PNG, JPG o WEBP)');return}
+  const L=lista('compras');let n=0;setStatus(`Guardando ${fs_.length} miniatura${fs_.length>1?'s':''}…`);bloquear();
+  try{for(const f of fs_){L.push(comNueva({nombre:f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim(),...await comMini(f)}));n++}}finally{desbloquear()}
+  marcarAj();renderMain();renderSide();toast(`${n} ficha${n>1?'s':''} agregada${n>1?'s':''}`)}
+function comFiltra(){const f=S.comF=S.comF||{tipo:'',q:''},q=nz(f.q);return lista('compras').map((x,i)=>({x,i})).filter(({x})=>(!f.tipo||x.tipo===f.tipo)&&(!q||nz([x.nombre,x.tienda,x.tags,x.nota,x.tipo,x.donde].join(' ')).includes(q))).sort((a,b)=>(b.x.fav?1:0)-(a.x.fav?1:0)||(b.x.creado||0)-(a.x.creado||0))}
+function comCard({x,i}){
+  const campo=(k,lbl,ph,tipo='text')=>`<div class="field"><label for="com-${k}-${x.id}">${lbl}</label><input type="${tipo}" id="com-${k}-${x.id}" data-aj="compras.${i}.${k}" value="${esc(x[k]||'')}" placeholder="${esc(ph||'')}"></div>`;
+  return `<div class="rcur"><div style="position:relative">${x.thumb||x.thumbSrc?`<img ${imgAttrs(comThumb(x))} alt="${esc(x.nombre)}" loading="lazy">`:`<div class="rcur-ph">${esc(x.tipo)}</div>`}<button class="btn ghost sm" data-act="com-fav" data-id="${x.id}" style="position:absolute;top:4px;right:4px;background:var(--surface)" aria-label="Favorito">${x.fav?'★':'☆'}</button></div>
+    <div class="rcur-b"><b>${esc(corto(x.nombre||'(sin nombre)',48))}</b><span class="muted">${esc(x.tipo)}${x.tienda?' · '+esc(x.tienda):''}</span>${x.precio?`<span class="tagp ${/gratis|free|0$/i.test(x.precio)?'free':''}">${esc(x.precio)}</span>`:''}${x.tags?`<small class="muted">${esc(corto(x.tags,48))}</small>`:''}
+    <div class="prow">${x.url?`<a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a>`:''}</div>
+    <details><summary class="muted" style="cursor:pointer;font-size:12px">Editar ficha</summary>
+      ${campo('nombre','Nombre','Ej. Set de rocas de Fulano')}
+      <div class="field"><label for="com-tipo-${x.id}">Tipo</label><select id="com-tipo-${x.id}" data-aj="compras.${i}.tipo">${COM_TIPOS.map(t=>`<option ${t===x.tipo?'selected':''}>${t}</option>`).join('')}</select></div>
+      ${campo('tienda','Dónde / de quién la compré','Gumroad, ArtStation, un artista…')}${campo('precio','Precio','$15 · gratis')}${campo('fecha','Fecha de compra','',"date")}
+      ${campo('url','Enlace','https://…','url')}${campo('donde','Dónde está el archivo','Carpeta, disco o nube (solo texto)')}
+      <div class="field"><label for="com-lic-${x.id}">Licencia</label><select id="com-lic-${x.id}" data-aj="compras.${i}.lic">${COM_LIC.map(t=>`<option ${t===x.lic?'selected':''}>${t}</option>`).join('')}</select></div>
+      ${campo('tags','Etiquetas','roca, niebla, correr, jaguar')}
+      <div class="field"><label for="com-nota-${x.id}">Notas</label><textarea id="com-nota-${x.id}" data-aj="compras.${i}.nota" placeholder="Para qué sirve, qué pinceles destacan…">${esc(x.nota||'')}</textarea></div>
+      <div class="prow"><label class="btn sm" for="com-th-${x.id}">${x.thumb||x.thumbSrc?'Cambiar miniatura':'Poner miniatura'}</label><input type="file" id="com-th-${x.id}" data-comth="${x.id}" accept="image/*" hidden>
+        <button class="btn ghost sm danger" data-act="com-del" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar ficha?':'✕ Borrar'}</button></div>
+    </details></div></div>`}
+function comGrid(){const r=comFiltra(),f=S.comF||{};
+  return r.length?`<p class="muted" style="margin:0">${r.length} ficha${r.length===1?'':'s'}</p><div class="rcurs">${r.slice(0,S.comN||60).map(comCard).join('')}</div>${r.length>(S.comN||60)?`<button class="btn" data-act="com-mas">Ver más (${r.length-(S.comN||60)})</button>`:''}`:`<div class="empty">${lista('compras').length?'Nada con ese filtro.':'Aún no hay nada. Agrega tu primera compra arriba: puedes subir varias miniaturas a la vez.'}</div>`}
+function vCompras(){
+  const f=S.comF=S.comF||{tipo:'',q:''},d=S.comDef||{},L=lista('compras'),usados=COM_TIPOS.filter(t=>L.some(x=>x.tipo===t));
+  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis compras</h1>
+  <p class="intro">Tu biblioteca de lo que has comprado o descargado: pinceles, poses y referencias visuales, texturas, modelos, plugins, libros y cursos. Aquí solo vive la <b>ficha</b> (nombre, tienda, enlace, licencia, dónde está el archivo) con una miniatura de 240 px, así que no pesa y la app sigue rápida. Los archivos se quedan donde ya los guardas.</p>
+  <div class="box drop" id="drop-com"><div><b>Agrega compras</b> <span class="muted">sube varias imágenes a la vez: cada una es una ficha</span></div>
+    <div class="prow"><select id="com-def-tipo" data-comdef="tipo" style="width:auto" aria-label="Tipo">${COM_TIPOS.map(t=>`<option ${t===(d.tipo||COM_TIPOS[0])?'selected':''}>${t}</option>`).join('')}</select>
+      <input type="text" id="com-def-tienda" data-comdef="tienda" value="${esc(d.tienda||'')}" placeholder="Tienda o artista (opcional)" style="flex:1 1 180px">
+      <label class="btn pri" for="com-file">Subir miniaturas</label><input type="file" id="com-file" accept="image/*" multiple hidden>
+      <button class="btn" data-act="com-nueva">Ficha sin imagen</button></div></div>
+  ${L.length?`<div class="box"><div class="chips"><button class="ch ${!f.tipo?'on':''}" data-act="com-tipo" data-v="">Todo · ${L.length}</button>${usados.map(t=>`<button class="ch ${f.tipo===t?'on':''}" data-act="com-tipo" data-v="${esc(t)}">${esc(t)} · ${L.filter(x=>x.tipo===t).length}</button>`).join('')}</div>
+    <div class="prow"><input type="text" id="com-q" data-comq="1" value="${esc(f.q)}" placeholder="Buscar: roca, niebla, correr, nombre de tienda…" style="flex:1 1 220px"><button class="btn sm" data-act="com-copiar" title="Copia la lista para pegarla en el chat con Claude">Copiar lista para Claude</button></div></div>`:''}
+  <div id="comgrid" style="display:flex;flex-direction:column;gap:10px">${comGrid()}</div>
+  <p class="muted">Antes de usar un recurso en un proyecto de portafolio o comercial, revisa su licencia y márcala en la ficha.</p>`}
+async function accionCom(a,el,p,ds){
+  const f=S.comF=S.comF||{tipo:'',q:''};
+  switch(a){
+    case 'com-tipo':f.tipo=ds.v;S.comN=60;renderMain();return true;
+    case 'com-mas':S.comN=(S.comN||60)+60;renderMain();return true;
+    case 'com-nueva':lista('compras').push(comNueva({nombre:'Nueva compra'}));marcarAj();f.tipo='';f.q='';renderMain();renderSide();return true;
+    case 'com-fav':{const x=lista('compras').find(v=>v.id===ds.id);if(x){x.fav=!x.fav;marcarAj();renderMain()}return true}
+    case 'com-del':{if(S.confirmLi!==ds.id){S.confirmLi=ds.id;renderMain();return true}S.confirmLi=null;const L=lista('compras'),k=L.findIndex(v=>v.id===ds.id);if(k>=0)L.splice(k,1);marcarAj();render();return true}
+    case 'com-copiar':{const L=lista('compras');if(!L.length){toast('Aún no hay fichas');return true}
+      await copiarTexto('# Mi biblioteca de compras\n\n'+L.map(x=>`- **${x.nombre||'(sin nombre)'}** (${x.tipo}${x.tienda?', '+x.tienda:''}${x.lic&&x.lic!==COM_LIC[0]?', '+x.lic:''})${x.tags?' · '+x.tags:''}${x.nota?' — '+x.nota:''}`).join('\n'),'Lista copiada: pégala en el chat con Claude');return true}}
+  return false}
 
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
@@ -8267,6 +8324,8 @@ document.addEventListener('input',e=>{
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
   if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
+  if(t.dataset.comdef){S.comDef=S.comDef||{};S.comDef[t.dataset.comdef]=t.value;return}
+  if(t.dataset.comq){S.comF=S.comF||{tipo:'',q:''};S.comF.q=t.value;const g=$('#comgrid');if(g){g.innerHTML=comGrid();S.assets?.hydrate?.()}return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.refb){S.refB=S.refB||{};const k=t.dataset.refb;S.refB[k]=t.value;if(['q','prop','epoca','amb'].includes(k))S.refB.exacta='';if(t.tagName==='SELECT'&&k==='src'&&S.refB.q)buscarRefs();else if(t.tagName==='SELECT'&&/^f[A-Z]/.test(k))renderMain();const pv=$('#rb-prev');if(pv&&['q','prop','epoca','amb'].includes(k))pv.innerHTML=consultaPrevHTML(S.refB);return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
@@ -8327,6 +8386,8 @@ document.addEventListener('change',e=>{
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};delete r.dias[k].fb;S.anD=null;marcarAj();renderMain();setTimeout(()=>$('[data-act="d-analizar"]')?.click(),50)}).catch(()=>toast('No se pudo subir'))}
   if(e.target.dataset?.carp){subirCarpeta(e.target.files,e.target.dataset.carp);e.target.value=''}
+  if(e.target.id==='com-file'){subirCompras(e.target.files);e.target.value=''}
+  if(e.target.dataset?.comth){const f=e.target.files[0],x=lista('compras').find(v=>v.id===e.target.dataset.comth);e.target.value='';if(f&&x)comMini(f).then(r=>{delete x.thumb;delete x.thumbSrc;Object.assign(x,r);marcarAj();renderMain()})}
   if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
@@ -8738,7 +8799,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCom(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
