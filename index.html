@@ -403,6 +403,13 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .cr-m{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-top:6px;cursor:pointer;background:var(--bg)}.cr-m input{margin-top:3px;flex:none}.cr-m small{display:block;color:var(--ink2);margin-top:3px;font-size:13px;line-height:1.4}.cr-m.ok{opacity:.55}.cr-m.ok span{text-decoration:line-through}
 .cr-p{font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;margin-right:4px;text-transform:uppercase}.cr-p.alta{background:var(--warn);color:#fff}.cr-p.media{background:var(--surface3);color:var(--ink)}.cr-p.baja{background:var(--surface2);color:var(--ink3)}
 .cr-l{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;padding:8px 10px;border:1px dashed var(--accent);border-radius:10px;margin-top:6px}.cr-l small{display:block;color:var(--ink2);margin-top:3px;font-size:13px}.cr-steps{display:grid;gap:8px}
+.rg-grid{column-width:230px;column-gap:10px}.rg{break-inside:avoid;margin:0 0 10px;position:relative;border-radius:8px;overflow:hidden;cursor:zoom-in;background:var(--surface2);border:1px solid var(--line)}.rg img{display:block;width:100%;height:auto;min-height:60px}
+.rg figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 8px 6px;font-size:12px;line-height:1.3;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.78));opacity:0;transition:opacity .15s}.rg:hover figcaption{opacity:1}.rg figcaption em{color:#ffb199;font-style:normal}@media(hover:none){.rg figcaption{opacity:1}}
+.rg-res{position:absolute;top:6px;left:6px;font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.65);color:#fff}.rg-res.baja{background:var(--warn)}.rg-tri{position:absolute;top:6px;right:6px;display:flex;gap:4px}.rg-tri button{border:0;border-radius:6px;padding:3px 9px;cursor:pointer;font-weight:700;background:rgba(0,0,0,.7);color:#fff}
+.rv{position:fixed;inset:0;z-index:60;background:#08090b;display:flex}.rv-stage{flex:1;min-width:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}.rv-stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;will-change:transform}
+.rv-top{position:absolute;top:0;left:0;right:0;display:flex;gap:6px;align-items:center;padding:10px 12px;background:linear-gradient(rgba(0,0,0,.65),transparent);z-index:2}.rv-res{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.rv-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:34px;width:46px;height:72px;cursor:pointer;border-radius:10px}.rv-nav.l{left:8px}.rv-nav.r{right:8px}
+.rv-side{width:360px;max-width:40vw;overflow:auto;background:var(--surface);border-left:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px}@media(max-width:800px){.rv{flex-direction:column}.rv-stage{flex:0 0 56vh}.rv-side{width:auto;max-width:none;flex:1;border-left:0;border-top:1px solid var(--line)}}
 .v3d-cv{position:relative}.v3d-bz{position:absolute;inset:0;z-index:6;background:#0d0f13;display:flex;flex-direction:column}.bz-top{padding:8px 12px;font-size:13px;display:flex;flex-direction:column;gap:2px}.bz-cv{flex:1;min-height:0;position:relative}.bz-cv canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}.bz-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
 .cp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.cp-cv{min-width:0}.cp-cv canvas{width:100%;display:block;border-radius:10px;touch-action:none;background:#0d0f13;cursor:crosshair}.cp-panel{display:flex;flex-direction:column;gap:12px;min-width:0}@media(max-width:900px){.cp-wrap{grid-template-columns:1fr}}
 .pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 16px}
@@ -1012,7 +1019,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyhav69').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyhqycc').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1595,51 +1602,8 @@ function bocetosIniciales(p){
   if(p.mood.sensacion||p.mood.paleta?.length)L.push(`Prueba paleta rápida: aplica ${p.mood.paleta?.length?p.mood.paleta.join(' '):'tu paleta'} sobre uno de los bocetos para ver si transmite "${esc(p.mood.sensacion||'la sensación buscada')}".`);
   return L;
 }
-function vRefs(p){
-  const s=salud(p),sin=p.refs.length-s.conP,bi=bocetosIniciales(p);
-  return `
-  ${herramientasRefHTML()}
-  ${refsBuscaHTML(p)}
-  ${sitiosRefHTML(p)}
-  <div class="drop" id="drop">
-    <div><b>Arrastra imágenes aquí</b> <span class="muted">o pégalas con Ctrl+V (copia imagen en Pinterest/ArtStation y pégala aquí)</span></div>
-    <div class="prow"><label class="lbl" for="f-destino">Van a</label>
-      <select id="f-destino" data-act-change="destino">${capasDe(p).map(l=>`<option value="${l.k}" ${S.destinoCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
-      <label class="btn pri" for="f-file">Subir imágenes</label><input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden></div>
-  </div>
-  <div class="prow"><span class="lbl">${p.refs.length} referencias · ${s.conP} con porqué</span><button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos y licencias</button>${sin?`<span class="banner">${sin} sin porqué: escríbelo o quítala.</span>`:''}</div>
-  <div class="prow"><span class="lbl">Filtrar por estudio</span><div class="chips">${['Todas',...REF_POR].map(c=>`<button class="ch xs ${(S.refF||'Todas')===c?'on':''}" data-act="ref-f" data-v="${c}">${c}</button>`).join('')}</div></div>
-  <div class="board">${capasDe(p).map(l=>{const rs=p.refs.filter(r=>r.capa===l.k&&(!S.refF||S.refF==='Todas'||(r.estudio||[]).includes(S.refF)));const pil=/^p(\d)$/.exec(l.k);
-    const desc=pil?(p.pilares[+pil[1]-1]?.f||'Define este pilar en Mood · Técnica · AD.'):l.d;
-    const qs=p.busquedas.filter(b=>b.capa===l.k).slice(0,4);
-    return `<div class="col layer-${l.k}"><div class="colh"><b>${esc(capaNombre(p,l.k))}</b><span>${rs.length}</span></div><p class="desc">${esc(desc)}</p>
-    ${qs.length?`<div class="colq">${qs.map(b=>`<div class="colq-r"><button class="colq-b" ${S.autoRef?'disabled':''} data-act="buscar-guardada" data-q="${esc(b.q)}" data-capa="${esc(b.capa)}" data-obj="${esc(b.obj||'')}" data-busco="${esc(b.busco||'')}" data-estudiar="${esc(b.estudiar||'')}" title="Traer referencias reales + concept art de esta búsqueda">↓ ${esc(b.q)}</button><a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(b.q)}" target="_blank" rel="noopener" title="Buscar en Pinterest">↗</a></div>`).join('')}</div>`:''}
-    ${rs.map(r=>refHTML(p,r)).join('')||'<div class="empty">Sin referencias todavía</div>'}</div>`}).join('')}</div>
-  ${p.libre?'':`<details id="det-masherr" ${S.masHerr?'open':''}><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Más herramientas: llenado automático, por dónde empezar, balance, búsqueda por objetivo, artistas, tus búsquedas y keywords</summary>
-  ${autoLlenadoHTML(p)}
-  ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
-  ${refsBalanceHTML(p)}
-  <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Buscar algo específico por objetivo (manual)</summary>${generadorHTML(p)}</details>
-  ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
-  <div class="box"><h3>Tus búsquedas</h3>${busquedasHTML(p)}</div>
-  <details class="box"><summary><h3 style="display:inline">Keywords</h3> <span class="lbl">${KWCATS.reduce((n,[k])=>n+(p.keywords[k]||[]).length,0)}</span></summary>
-    <div class="grid3">${KWCATS.map(([k,n])=>`<div class="kwcat"><span class="lbl">${n}</span>
-    <div class="chips">${(p.keywords[k]||[]).map((w,i)=>`<span class="chip">${esc(w)}<button data-act="kw-del" data-kw="${k}" data-i="${i}" aria-label="Quitar ${esc(w)}">×</button></span>`).join('')}</div>
-    <input type="text" id="kw-${k}" data-kwadd="${k}" placeholder="Palabra + Enter"></div>`).join('')}</div>
-    <div class="prow"><input type="text" id="f-bq" placeholder="Tu propia búsqueda" style="flex:1 1 240px" data-enter="bq"><select id="f-bqcapa">${LAYERS.map(l=>`<option value="${l.k}">${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn" data-act="bq">Añadir</button><button class="btn ghost" data-act="tab" data-tab="explorar">Combinar al azar (con intención) →</button></div></details>
-  ${asesor('refs','Asesor: revisa mi moodboard','Lee tus porqués y (si se puede) mira las imágenes: qué falta, qué sobra, qué capa está débil.')}  </details>`}`}
 function refSrc(r){if(r.asset)return S.assets?.url?S.assets.url(r.asset):"/_blob/"+r.asset;return r.src||""}
 function imgAttrs(r){const s=refSrc(r);return (s?`src="${esc(s)}" `:"")+(r.asset?`data-asset="${esc(r.asset)}"`:"")}
-function refHTML(p,r){const nowhy=(r.porque||'').trim().length<8;return `<div class="ref ${nowhy?'nowhy':''}">
-  <div class="ref-imgw">${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir la foto o la obra original">`:''}<img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" loading="lazy" data-act="${r.link?'':'zoom'}">${r.link?'</a>':''}${r.link?`<button class="ref-lupa" data-act="zoom" title="Ver más grande aquí">🔍</button>`:''}</div>
-  ${r.auto?`<div class="ref-triage"><button class="btn sm ok-b" data-act="ref-ok" data-id="${r.id}" title="Sirve: la dejo">✓ Sirve</button><button class="btn sm no-b" data-act="ref-no" data-id="${r.id}" title="${r.origen?'No sirve: la quito y busco otra':'No sirve: la quito'}">✗ No sirve</button></div>`:''}
-  <div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
-  ${nowhy?'<span class="warn">Falta el porqué</span>':''}
-  <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
-  <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${capasDe(p).map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
-  <button class="btn ghost sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button>
-  <button class="btn ghost sm" data-act="ref-bajar" data-id="${r.id}" title="Descargar esta imagen suelta">Descargar</button>
-  <button class="btn ghost sm danger" data-act="ref-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕'}</button></div>${refMetaHTML(r)}${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
 function refMetaHTML(r){const est=r.licEstado||(r.lic?licDeTexto(r.lic):(r.link?'desconocida':''));if(!est&&!r.autor&&!r.w)return '';const L=LIC_EST[est]||LIC_EST.desconocida;
   return `<div class="ref-meta">${est?`<span class="lic ${L[1]}" title="${esc(r.lic||'La fuente no indica licencia')}">${L[0]}</span>`:''}${r.autor?`<small class="muted">${esc(r.autor)}</small>`:''}${r.w&&r.h?`<small class="muted">${r.w}×${r.h}</small>`:''}</div>`}
 
@@ -3061,6 +3025,105 @@ async function accionCr(a,el,p,ds){
 document.addEventListener('input',e=>{const k=e.target.dataset?.crresp;if(k)(S.crResp=S.crResp||{})[k]=e.target.value});
 document.addEventListener('change',e=>{const d=e.target.dataset?.crh;if(!d)return;const [id,i]=d.split('|'),h=crBusca(id),m=h?.c.malo?.[+i];if(m){m.hecho=e.target.checked;crGuarda(h);renderMain()}});
 document.addEventListener('toggle',e=>{if(e.target.classList?.contains('cr-gal'))S.crAb=e.target.open?e.target.dataset.id:null},true);
+
+function vRefsMas(p){const bi=bocetosIniciales(p);return `
+  ${autoLlenadoHTML(p)}
+  ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
+  ${refsBalanceHTML(p)}
+  <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Buscar algo específico por objetivo (manual)</summary>${generadorHTML(p)}</details>
+  ${asesor('artistas','Asesor: artistas a seguir','Concept artists de ArtStation y de la industria (cine, videojuegos) que encajan con tu tema, con qué estudiar de cada uno y en qué capa te sirven.')}
+  <div class="box"><h3>Tus búsquedas</h3>${busquedasHTML(p)}</div>
+  <details class="box"><summary><h3 style="display:inline">Keywords</h3> <span class="lbl">${KWCATS.reduce((n,[k])=>n+(p.keywords[k]||[]).length,0)}</span></summary>
+    <div class="grid3">${KWCATS.map(([k,n])=>`<div class="kwcat"><span class="lbl">${n}</span>
+    <div class="chips">${(p.keywords[k]||[]).map((w,i)=>`<span class="chip">${esc(w)}<button data-act="kw-del" data-kw="${k}" data-i="${i}" aria-label="Quitar ${esc(w)}">×</button></span>`).join('')}</div>
+    <input type="text" id="kw-${k}" data-kwadd="${k}" placeholder="Palabra + Enter"></div>`).join('')}</div>
+    <div class="prow"><input type="text" id="f-bq" placeholder="Tu propia búsqueda" style="flex:1 1 240px" data-enter="bq"><select id="f-bqcapa">${LAYERS.map(l=>`<option value="${l.k}">${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn" data-act="bq">Añadir</button><button class="btn ghost" data-act="tab" data-tab="explorar">Combinar al azar (con intención) →</button></div></details>
+  ${asesor('refs','Asesor: revisa mi moodboard','Lee tus porqués y (si se puede) mira las imágenes: qué falta, qué sobra, qué capa está débil.')}`}
+/* ============ Mesa de referencias: verlas bien (galería + visor con zoom), buscar, ordenar y estudiar. Igual en un proyecto y en Herramientas (piezas sueltas) ============ */
+const RV_HD=1500;
+const rgMax=r=>Math.max(r.w||0,r.h||0);
+const rgResTxt=r=>{const m=rgMax(r);return m?(m>=3000?'4K':m>=RV_HD?'HD':m+' px'):''};
+function rgFiltra(p){const f=S.rgF=S.rgF||{capa:'',hd:false,q:''},q=nz(f.q);
+  return (p.refs||[]).map((r,i)=>({r,i})).filter(({r})=>(!f.capa||r.capa===f.capa)&&(!f.hd||rgMax(r)>=RV_HD)&&(!q||nz([r.porque,r.fuente,r.autor,(r.tags||[]).join(' ')].join(' ')).includes(q))).sort((a,b)=>(b.r.creado||0)-(a.r.creado||0))}
+function rgTile(p,{r}){const t=rgResTxt(r),sin=(r.porque||'').trim().length<8;
+  return `<figure class="rg layer-${esc(r.capa)}" data-act="rv-abrir" data-id="${r.id}" title="Ver en grande"><img class="rg-img" ${imgAttrs(r)} alt="" loading="lazy" data-rid="${r.id}">
+    ${t?`<span class="rg-res ${rgMax(r)<800?'baja':''}">${t}</span>`:'<span class="rg-res" hidden></span>'}
+    ${r.auto?`<span class="rg-tri"><button data-act="ref-ok" data-id="${r.id}" title="Sirve: la dejo">✓</button><button data-act="ref-no" data-id="${r.id}" title="No sirve: la quito">✗</button></span>`:''}
+    <figcaption>${sin?'<em>Sin porqué</em>':esc(corto(r.porque,80))}</figcaption></figure>`}
+function rgGaleriaHTML(p){const L=rgFiltra(p);
+  return L.length?`<p class="muted" style="margin:0">${L.length} referencia${L.length===1?'':'s'}</p><div class="rg-grid">${L.map(x=>rgTile(p,x)).join('')}</div>`:`<div class="empty">${(p.refs||[]).length?'Ninguna cumple ese filtro.':'Aún no hay referencias. Sube, pega (Ctrl+V) o busca arriba.'}</div>`}
+function vMesa(p){
+  const f=S.rgF=S.rgF||{capa:'',hd:false,q:''},vista=S.refVista==='tablero'?'tablero':'galeria',n=(p.refs||[]).length,s=salud(p),sin=n-s.conP,
+    capas=capasDe(p).map(l=>[l,(p.refs||[]).filter(r=>r.capa===l.k).length]).filter(([,c])=>c);
+  S.refB=S.refB||{fRes:'1200',fLic:''};
+  return `<div class="chips"><button class="ch ${vista==='galeria'?'on':''}" data-act="rg-vista" data-v="galeria">Galería · ${n}</button><button class="ch ${vista==='tablero'?'on':''}" data-act="rg-vista" data-v="tablero">Tablero (estilo PureRef)</button></div>
+  <details class="box" id="det-busca" ${S.rgBusca||!n?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Buscar referencias de alta calidad</h3> <span class="lbl">museos · fotos · concept art</span></summary><div style="margin-top:8px">${refsBuscaHTML(p)}</div></details>
+  ${vista==='tablero'?`<div id="sec-tablero">${vBoardTab(p)}</div>`:`
+  <div class="drop" id="drop"><div class="prow"><label class="btn pri" for="f-file">＋ Subir imágenes</label><input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+    <span class="muted">arrastra aquí o pega con Ctrl+V</span><span style="flex:1"></span><label class="lbl" for="f-destino">Van a</label><select id="f-destino" data-act-change="destino">${capasDe(p).map(l=>`<option value="${l.k}" ${S.destinoCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div></div>
+  ${n?`<div class="prow"><div class="chips"><button class="ch xs ${!f.capa?'on':''}" data-act="rg-capa" data-v="">Todas · ${n}</button>${capas.map(([l,c])=>`<button class="ch xs ${f.capa===l.k?'on':''}" data-act="rg-capa" data-v="${l.k}">${esc(capaNombre(p,l.k))} · ${c}</button>`).join('')}</div>
+    <button class="ch xs ${f.hd?'on':''}" data-act="rg-hd" title="Solo imágenes de ${RV_HD} px o más">Alta resolución</button><input type="text" id="rg-q" data-rgq="1" value="${esc(f.q)}" placeholder="Buscar en mis referencias…" style="flex:1 1 180px;max-width:280px">
+    <button class="btn ghost sm" data-act="refs-creditos" title="Autor, fuente y licencia de cada referencia, listos para pegar">Copiar créditos</button></div>
+  ${sin>0?`<span class="banner">${sin} sin porqué: ábrela y escríbelo, o quítala.</span>`:''}`:''}
+  <div id="rg-wrap" style="display:flex;flex-direction:column;gap:8px">${rgGaleriaHTML(p)}</div>`}
+  `}
+/* ---- visor grande: zoom, mover, siguiente/anterior y todos los datos de la referencia ---- */
+function refDetalleHTML(p,r){const nowhy=(r.porque||'').trim().length<8;
+  return `<div class="ref ${nowhy?'nowhy':''}"><div class="rb"><textarea id="rp-${r.id}" data-ref="${r.id}" data-rk="porque" placeholder="¿Por qué está aquí? ¿Qué tomo exactamente de ella?">${esc(r.porque)}</textarea>
+    ${nowhy?'<span class="warn">Falta el porqué</span>':''}
+    <div class="rrow"><input type="text" id="rf-${r.id}" data-ref="${r.id}" data-rk="fuente" value="${esc(r.fuente)}" placeholder="Artista / fuente" style="font-size:12px;padding:4px 8px;background:var(--surface);flex:1;min-width:0">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener" title="Abrir de dónde salió">Fuente ↗</a>`:''}</div>
+    <div class="rrow"><select id="rc-${r.id}" data-ref="${r.id}" data-rk="capa" aria-label="Capa">${capasDe(p).map(l=>`<option value="${l.k}" ${r.capa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div>
+    ${refMetaHTML(r)}${refTableroHTML(p,r)}${refExtra(p,r)}</div></div>`}
+function rvAbre(id){const p=S.P[S.cur];if(!p)return;const L=rgFiltra(p).map(x=>x.r.id);if(!L.includes(id))L.push(id);S.rv={id,lista:L,k:1,x:0,y:0};rvPinta()}
+function rvCierra(){S.rv=null;$('#overlay').innerHTML=''}
+function rvPinta(){const p=S.P[S.cur];if(!p||!S.rv){rvCierra();return}
+  const v=S.rv;v.lista=v.lista.filter(id=>p.refs.some(r=>r.id===id));let r=p.refs.find(x=>x.id===v.id);
+  if(!r){if(!v.lista.length){rvCierra();return}v.id=v.lista[Math.min(v.pos||0,v.lista.length-1)];r=p.refs.find(x=>x.id===v.id)}
+  const i=v.lista.indexOf(r.id),n=v.lista.length;v.pos=i;v.k=1;v.x=v.y=0;
+  $('#overlay').innerHTML=`<div class="rv" id="rv"><div class="rv-stage" id="rv-stage"><img id="rv-img" ${imgAttrs(r)} alt="" draggable="false">
+    <div class="rv-top"><span class="lbl">${i+1} / ${n}</span><span class="rv-res" id="rv-res">${esc(rgResTxt(r)?rgResTxt(r)+(r.w&&r.h?' · '+r.w+'×'+r.h:''):'')}</span><span style="flex:1"></span>
+      <button class="btn sm" data-act="rv-zoom" data-v="out" aria-label="Alejar">−</button><button class="btn sm" data-act="rv-zoom" data-v="fit">Ajustar</button><button class="btn sm" data-act="rv-zoom" data-v="in" aria-label="Acercar">＋</button><button class="btn sm" data-act="rv-zoom" data-v="real">100%</button><button class="btn sm pri" data-act="rv-cerrar">Cerrar</button></div>
+    ${n>1?'<button class="rv-nav l" data-act="rv-prev" aria-label="Anterior">‹</button><button class="rv-nav r" data-act="rv-next" aria-label="Siguiente">›</button>':''}</div>
+    <aside class="rv-side">${r.auto?`<div class="ref-triage" style="position:static"><button class="btn sm ok-b" data-act="rv-ok" data-id="${r.id}">✓ Sirve</button><button class="btn sm no-b" data-act="rv-no" data-id="${r.id}">✗ No sirve</button></div>`:''}
+      ${refDetalleHTML(p,r)}
+      <div class="prow"><button class="btn sm" data-act="ref-copy" data-id="${r.id}" title="Copiar imagen para pegar en PureRef">Copiar</button><button class="btn sm" data-act="ref-bajar" data-id="${r.id}">Descargar</button><button class="btn ghost sm danger" data-act="rv-del" data-id="${r.id}">${S.confirmRef===r.id?'¿Borrar?':'✕ Quitar'}</button></div></aside></div>`;
+  $('#overlay').querySelectorAll('.rx').forEach(d=>{d.open=false});S.assets?.hydrate?.();rvInit(r)}
+const rvApply=()=>{const im=$('#rv-img');if(im&&S.rv)im.style.transform=`translate(${S.rv.x}px,${S.rv.y}px) scale(${S.rv.k})`};
+function rvZoom(k1,cx=0,cy=0){const v=S.rv;if(!v)return;k1=clamp(k1,1,14);const k0=v.k;v.x=cx-(cx-v.x)*k1/k0;v.y=cy-(cy-v.y)*k1/k0;v.k=k1;if(k1===1)v.x=v.y=0;rvApply()}
+function rvIr(d){const v=S.rv;if(!v||v.lista.length<2)return;const i=(v.lista.indexOf(v.id)+d+v.lista.length)%v.lista.length;v.id=v.lista[i];rvPinta()}
+function rvInit(r){const st=$('#rv-stage'),im=$('#rv-img');if(!st||!im)return;
+  im.addEventListener('load',()=>{const p=S.P[S.cur],rr=p?.refs.find(x=>x.id===r.id);if(!rr)return;if(!rr.w||!rr.h){rr.w=im.naturalWidth;rr.h=im.naturalHeight;marcar()}
+    const t=$('#rv-res');if(t)t.textContent=(rgResTxt(rr)?rgResTxt(rr)+' · ':'')+im.naturalWidth+'×'+im.naturalHeight});
+  st.addEventListener('wheel',e=>{e.preventDefault();const rc=st.getBoundingClientRect();rvZoom(S.rv.k*(e.deltaY<0?1.18:1/1.18),e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)},{passive:false});
+  let dr=null;st.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dr={x:e.clientX,y:e.clientY,ox:S.rv.x,oy:S.rv.y};try{st.setPointerCapture(e.pointerId)}catch{}});
+  st.addEventListener('pointermove',e=>{if(!dr||S.rv.k===1)return;S.rv.x=dr.ox+e.clientX-dr.x;S.rv.y=dr.oy+e.clientY-dr.y;rvApply()});
+  st.addEventListener('pointerup',()=>{dr=null});
+  st.addEventListener('dblclick',e=>{if(e.target.closest('button'))return;const rc=st.getBoundingClientRect(),real=Math.max(2,im.naturalWidth/Math.max(1,im.clientWidth));rvZoom(S.rv.k>1?1:real,e.clientX-rc.left-rc.width/2,e.clientY-rc.top-rc.height/2)})}
+document.addEventListener('keydown',e=>{if(!S.rv||!$('#rv')||e.target.matches?.('input,textarea,select'))return;
+  if(e.key==='Escape')rvCierra();else if(e.key==='ArrowRight')rvIr(1);else if(e.key==='ArrowLeft')rvIr(-1);else if(e.key==='+'||e.key==='=')rvZoom(S.rv.k*1.3);else if(e.key==='-')rvZoom(S.rv.k/1.3);else if(e.key==='0')rvZoom(1)});
+/* al cargar cada miniatura se aprende su resolución real (para la insignia y el filtro de alta resolución) */
+document.addEventListener('load',e=>{const im=e.target;if(!im.classList?.contains('rg-img'))return;const p=S.P[S.cur],r=p?.refs.find(x=>x.id===im.dataset.rid);if(!r||!im.naturalWidth)return;
+  if(!r.w||!r.h){r.w=im.naturalWidth;r.h=im.naturalHeight;clearTimeout(S.rgT);S.rgT=setTimeout(marcar,2500)}
+  const b=im.parentElement.querySelector('.rg-res');if(b&&rgResTxt(r)){b.hidden=false;b.textContent=rgResTxt(r);b.classList.toggle('baja',rgMax(r)<800)}},true);
+document.addEventListener('toggle',e=>{if(e.target.id==='det-busca')S.rgBusca=e.target.open},true);
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset?.rgq)return;const p=S.P[S.cur];if(!p)return;S.rgF=S.rgF||{capa:'',hd:false,q:''};S.rgF.q=t.value;const w=$('#rg-wrap');if(w){w.innerHTML=rgGaleriaHTML(p);S.assets?.hydrate?.()}});
+async function accionRg(a,el,p,ds){
+  const f=S.rgF=S.rgF||{capa:'',hd:false,q:''};
+  switch(a){
+    case 'rg-vista':S.refVista=ds.v;renderMain();return true;
+    case 'rg-capa':f.capa=ds.v;renderMain();return true;
+    case 'rg-hd':f.hd=!f.hd;renderMain();return true;
+    case 'rv-abrir':rvAbre(ds.id);return true;
+    case 'rv-cerrar':rvCierra();return true;
+    case 'rv-prev':rvIr(-1);return true;
+    case 'rv-next':rvIr(1);return true;
+    case 'rv-zoom':{const v=S.rv;if(!v)return true;const im=$('#rv-img');if(ds.v==='in')rvZoom(v.k*1.4);else if(ds.v==='out')rvZoom(v.k/1.4);else if(ds.v==='fit')rvZoom(1);else if(im)rvZoom(Math.max(1,im.naturalWidth/Math.max(1,im.clientWidth)));return true}
+    case 'rv-ok':if(p){aprobarRef(p,ds.id);rvPinta()}return true;
+    case 'rv-no':if(p){await reemplazarRef(p,ds.id);S.rv.id=ds.id;rvPinta();renderMain()}return true;
+    case 'rv-del':{if(!p)return true;if(S.confirmRef!==ds.id){S.confirmRef=ds.id;rvPinta();return true}
+      const i=p.refs.findIndex(r=>r.id===ds.id);if(i>=0)p.refs.splice(i,1);S.confirmRef=null;marcar();const v=S.rv;if(v){v.lista=v.lista.filter(id=>id!==ds.id);v.id=v.lista[Math.min(v.pos||0,v.lista.length-1)]}rvPinta();renderMain();return true}}
+  return false}
+const vRefsHerr=p=>vMesa(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`;
 
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
@@ -5350,14 +5413,14 @@ function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class=
     <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
 /* ============ Herramientas: luz y color, referencias, moodboard, tablero y 3D SIN proyecto ============
    Es un espacio libre (un proyecto oculto con libre:true): reutiliza todo lo que ya funciona, pero no aparece en la lista de proyectos. */
-const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias y moodboard'],['board','Tablero'],['herr3d','Referencia 3D'],['comp','Perspectiva y composición']];
+const HERR_ID='herramientas',HERR_TABS=[['luzcolor','Luz y color'],['refs','Referencias'],['herr3d','Referencia 3D'],['comp','Perspectiva y composición']];
 const capasDe=p=>p?.libre?LAYERS.filter(l=>!/^p\d$/.test(l.k)):LAYERS;
 function herrP(){if(!S.P[HERR_ID]){const p=nuevoProyecto('Herramientas');p.libre=true;S.P[HERR_ID]=p}return S.P[HERR_ID]}
 function herrAbre(tab){const nuevo=!S.P[HERR_ID];herrP();S.palImg=null;S.confirmHerr=false;S.cur=HERR_ID;S.vista='proyecto';S.tab=tab||'luzcolor';S.ai={};S.confirmDel=false;recordar();if(nuevo)marcar();render()}
 function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
   return `${conflictoHTML(S.cur)}<div class="phead"><div style="flex:1 1 380px;min-width:0"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,46px);margin:0">Herramientas</h1><p class="muted" style="margin:4px 0 0">Luz y color, referencias, moodboard, tablero y 3D, sin necesidad de un proyecto. Lo que hagas aquí se guarda aparte, y también aparece en tu Biblioteca.</p></div></div>
   <nav class="tabs" role="tablist">${HERR_TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join('')}</nav>
-  <section class="panel">${({luzcolor:vLuzColor,refs:vRefs,board:vBoardTab,herr3d:vHerr3d,comp:vComp}[S.tab])(p)}</section>`}
+  <section class="panel">${({luzcolor:vLuzColor,refs:vRefsHerr,herr3d:vHerr3d,comp:vComp}[S.tab])(p)}</section>`}
 function vLuzColor(p){const m=p.mood,t=tresMood(p),conMood=t.some(Boolean)||m.luz||m.color,
     paso=(n,tit,sub,html)=>`<div class="herr-paso"><span class="herr-n">${n}</span><div><h3 style="margin:0">${tit}</h3><p class="hint" style="margin:2px 0 0">${sub}</p></div></div>${html}`;
   return `<p class="intro">Elige tus colores, ilumínalos con una escena de luz y mira qué paletas funcionan. No necesitas un proyecto.</p>
@@ -5388,10 +5451,10 @@ function pgEstilo(p){return pgNav([['mood','Mood'],['luz','Luz y color'],['lengu
   +pgSec('estilo','lenguaje','Lenguaje visual','De ideas a reglas que se pueden dibujar y revisar.',vLenguaje(p))
   +pgSec('estilo','personajes','Personajes','Cada uno con su paleta, armada con lo que escribes de él.',vPersonajes(p))
   +pgSec('estilo','mundo','Mundo','Haz que el mundo sea un personaje.',vMundo(p))}
-function pgRefs(p){return pgNav([['buscar','Buscar y moodboard'],['tablero','Tablero'],['bajar','Ref → thumbnail']])
-  +pgSec('refs','buscar','Buscar y moodboard','Busca, sube o pega imágenes y escribe el porqué de cada una.',vRefs(p))
-  +pgSec('refs','tablero','Tablero','Ordena todo sobre un lienzo libre y llévalo a PureRef.',vBoardTab(p))
-  +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))}
+function pgRefs(p){return pgNav([['mesa','Referencias'],['bajar','Ref → thumbnail'],['mas','Más herramientas']])
+  +pgSec('refs','mesa','Referencias','Míralas en grande, ordénalas, estudia cada una y busca nuevas; el tablero estilo PureRef está aquí mismo.',vMesa(p))
+  +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))
+  +pgSec('refs','mas','Más herramientas','Llenado automático, balance, búsqueda por objetivo, artistas, sitios y keywords.',vRefsMas(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`)}
 function pgBocetos(p){return pgNav([['carpetas','Subir bocetos'],['critica','Crítica'],['medir','Medir y comparar'],['basicos','Básicos de diseño']])
   +pgSec('bocetos','carpetas','Subir bocetos','Por elemento (personaje, vegetación, rocas…), con el contexto del proyecto.',vCarpetas(p))
   +pgSec('bocetos','critica','Crítica: qué está mal y qué cambiar','Claude critica en el chat; aquí queda como lista de cambios, con ideas fuera de lo ordinario.',vCriticaClaude(p))
@@ -8003,7 +8066,6 @@ document.addEventListener('change',e=>{if(e.target.id==='v3d-file'&&e.target.fil
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&V3.open)v3dCerrar()});
 document.addEventListener('dragover',e=>{if(V3.open&&e.target.closest?.('#v3d'))e.preventDefault()});
 document.addEventListener('drop',e=>{if(!V3.open||!e.target.closest?.('#v3d'))return;e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f&&e.target.closest('#v3d-cv'))v3dCargaArchivo(f)});
-function herramientasRefHTML(){return `<div class="ht-row"><button class="ht-c ht-b" data-act="rb-ir"><b>Buscar referencias</b><span>Museos, fotos y concept art. Toca varias y se van directo a tu moodboard.</span></button><button class="ht-c ht-3" data-act="v3d-abrir" data-m="maniqui"><b>Referencia 3D</b><span>Cuerpos con anatomía, cabeza de Loomis y formas, con tu luz. También tus propios modelos.</span></button><button class="ht-c ht-p" data-act="v3d-abrir" data-m="maniqui" data-t="pose"><b>Poses</b><span>Ponlo en la pose de una imagen, o elige una y busca fotos reales con ese nombre.</span></button></div>`}
 /* ============ Tablero profesional ============ */
 const TP_COL={mood:'#e27cc1',luz:'#e5b04a',pj:'#3fc9a8',mundo:'#5fd08a',cultura:'#7c8cff',materiales:'#ff9a5a',tecnica:'#c9a0ff'};
 function tabGrupos(p){const pj=(p.personajes||[]).filter(c=>c.nombre);
@@ -8495,7 +8557,7 @@ async function accion(a,el){
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
-    case 'tab':{let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
+    case 'tab':{if(ds.tab==='board'){S.refVista='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
@@ -8856,7 +8918,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
