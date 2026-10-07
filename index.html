@@ -1031,7 +1031,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyii534').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muymwcaz').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1231,16 +1231,28 @@ async function guardar(forzar){
         }catch{}
       }
       await S.db.collection('proyectos').doc(id).set(clone(p));
-      S._baseAct=S._baseAct||{};S._baseAct[id]=p.actualizado;
-      if(S.conflicto)delete S.conflicto[id];
+      S._baseAct=S._baseAct||{};S._baseAct[id]=p.actualizado;fijaBase(id);
+      if(S.conflicto?.[id]){delete S.conflicto[id];if(S.vista==='proyecto'&&S.cur===id)renderMain()}
     }else lsSet();
     S.dirty=false;setStatus('Guardado');renderSide();snapshot(id);
   }catch(e){setStatus(e.code==='quota_exceeded'?'Sin espacio: borra proyectos viejos':'No se pudo guardar — reintenta editando');}
 }
 function conflictoHTML(id){
   if(!S.conflicto?.[id])return'';
-  return `<div class="alerta"><p style="margin:0"><b>Este proyecto cambió en otro lugar</b> mientras lo tenías abierto aquí (otra pestaña, otro aparato, o un ajuste hecho por fuera). Si guardas ahora, vas a borrar ese cambio.</p>
-    <div class="prow"><button class="btn pri" data-act="confl-recargar">Traer lo nuevo (pierdo lo que escribí aquí)</button><button class="btn danger" data-act="confl-sobrescribir">Guardar lo mío encima</button></div></div>`}
+  return `<div class="alerta"><p style="margin:0"><b>Este proyecto cambió en otro lugar</b> mientras lo tenías abierto aquí (otra pestaña, otro aparato, o un ajuste hecho por fuera). Mientras no elijas, lo que escribes aquí no se guarda.</p>
+    <div class="prow"><button class="btn pri" data-act="confl-combinar" title="Conserva lo nuevo y le suma lo que cambiaste tú">Combinar los dos (recomendado)</button><button class="btn" data-act="confl-recargar">Traer lo nuevo (pierdo lo que escribí aquí)</button><button class="btn danger" data-act="confl-sobrescribir">Guardar lo mío encima</button></div></div>`}
+/* mezcla de tres vías: base (lo último que ya habíamos sincronizado), mío y lo nuevo del servidor. Lo que solo cambió uno se conserva; si cambiaron lo mismo, gana lo mío. Las listas con id (referencias, piezas, críticas…) se unen por elemento. */
+const igualJ=(a,b)=>JSON.stringify(a)===JSON.stringify(b),esObj=x=>x&&typeof x==='object'&&!Array.isArray(x);
+function mezcla3(b,m,t){
+  if(igualJ(m,t))return m;if(igualJ(m,b))return t;if(igualJ(t,b))return m;
+  if(esObj(m)&&esObj(t)){const o={};for(const k of new Set([...Object.keys(m),...Object.keys(t)]))o[k]=mezcla3(b?.[k],m[k],t[k]);return o}
+  if(Array.isArray(m)&&Array.isArray(t)&&[...m,...t].every(x=>esObj(x)&&x.id!=null)){
+    const bi=new Map((Array.isArray(b)?b:[]).filter(x=>x?.id!=null).map(x=>[x.id,x])),mi=new Map(m.map(x=>[x.id,x])),ti=new Map(t.map(x=>[x.id,x])),ids=[...new Set([...m.map(x=>x.id),...t.map(x=>x.id)])],out=[];
+    for(const id of ids){const x=mi.get(id),y=ti.get(id),z=bi.get(id);
+      if(x&&y)out.push(mezcla3(z,x,y));else if(x&&!y){if(!z||!igualJ(x,z))out.push(x)}else if(y&&!x){if(!z||!igualJ(y,z))out.push(y)}}
+    return out}
+  return m}
+function fijaBase(id){const p=S.P[id];if(p)(S._base=S._base||{})[id]=clone(p)}
 function marcarAj(){S.ajDirty=true;setStatus('Guardando…');clearTimeout(ajT);ajT=setTimeout(async()=>{
   try{if(S.db)await S.db.doc('ajustes/principios').set(clone(S.ajustes));else lsSet();S.ajDirty=false;setStatus('Guardado')}catch{setStatus('No se pudo guardar')}
 },700)}
@@ -1263,7 +1275,7 @@ async function arrancar(){
         if(d.id===S.cur&&(S.dirty||snap.metadata.hasPendingWrites))continue;
         const prev=S.P[d.id];
         if(prev&&prev.actualizado===data.actualizado)continue;
-        S.P[d.id]=normaliza(clone(data));S._baseAct=S._baseAct||{};S._baseAct[d.id]=data.actualizado;if(d.id===S.cur)tocoActual=true;
+        S.P[d.id]=normaliza(clone(data));S._baseAct=S._baseAct||{};S._baseAct[d.id]=data.actualizado;fijaBase(d.id);if(d.id===S.cur)tocoActual=true;
       }
       for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty))delete S.P[id];
       if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);setTimeout(syncAlAbrir,1500);return}
@@ -8490,8 +8502,11 @@ async function accionTp(a,el,p,ds){
     case 'tp-zip':tpZip();break;
     case 'tp-carpeta':tpCarpeta();break;
     case 'bib-carpeta':bibExportarCarpetas();break;
-    case 'confl-sobrescribir':delete S.conflicto[ds.id||S.cur];await guardar(true);break;
-    case 'confl-recargar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(vivo.exists){S.P[id]=normaliza(clone(vivo.data()));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.data().actualizado}delete S.conflicto[id];S.dirty=false;render();toast('Traído lo más nuevo')}catch{toast('No se pudo recargar')}break}
+    case 'confl-sobrescribir':{const id=ds.id||S.cur;if(S.conflicto)delete S.conflicto[id];p.actualizado=Date.now();await guardar(true);render();toast('Guardado: tu versión quedó encima');break}
+    case 'confl-recargar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(vivo.exists){S.P[id]=normaliza(clone(vivo.data()));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.data().actualizado;fijaBase(id)}if(S.conflicto)delete S.conflicto[id];S.dirty=false;render();toast('Traído lo más nuevo')}catch{toast('No se pudo recargar')}break}
+    case 'confl-combinar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(!vivo.exists){toast('No encontré la versión nueva');break}
+      const t=vivo.data(),m=clone(S.P[id]),b=S._base?.[id]||null,r=normaliza(mezcla3(b,m,t));r.actualizado=Date.now();S.P[id]=r;if(S.conflicto)delete S.conflicto[id];
+      await guardar(true);render();toast(b?'Combinado: lo nuevo y lo que cambiaste tú':'Combinado (sin punto de comparación: lo tuyo mandó donde chocaron)')}catch(e){console.error(e);toast('No se pudo combinar')}break}
     default:return false}
   return true}
 
