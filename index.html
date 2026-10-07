@@ -997,13 +997,13 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyce6l3').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muychyg1').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 const TABS = [
   ['cerebro','Cerebro'],['mapa','Mapa'],['brief','Idea'],['concepto','Concepto'],['ad','Art Direction'],['tension','Tensión'],['mood','Mood'],['lenguaje','Lenguaje visual'],['personajes','Personajes'],
-  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['carpetas','Carpetas'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja · brief']
+  ['refs','Referencias'],['board','Tablero'],['bajar','Ref → Thumbnail'],['carpetas','Bocetos'],['mundo','Mundo'],['explorar','Exploración'],['critica','Crítica'],['produccion','Producción'],['laminas','Láminas'],['revision','Revisión'],['hoja','Hoja · brief']
 ];
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
 /* separador visual antes de estos tabs: agrupa las 18 pestañas en bloques con sentido, sin cambiar la navegación */
@@ -1427,6 +1427,7 @@ function renderMainInner(){
     </div>
     <div class="prow" style="gap:10px;align-items:center">
       <div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+      <button class="btn sm" data-act="tab" data-tab="carpetas" title="Sube tus bocetos por elemento y pide feedback">↑ Bocetos</button>
       <button class="btn sm pri" data-act="tab" data-tab="hoja" title="Todo el proyecto en una hoja: brief, historia y estilo visual, para trabajarlo ahí">→ Hoja</button>
       <button class="btn sm blk" data-act="blk" title="Revisa tu contexto y te da preguntas, experimentos y direcciones">Estoy bloqueado</button>
       <details class="phead-mas"><summary class="btn sm ghost" style="list-style:none;cursor:pointer">⋯ Más</summary>
@@ -3331,6 +3332,28 @@ function vGaleria(){
 /* ============ Carpetas del proyecto: bocetos → grises → versiones → final ============ */
 const CARPS=[['bocetos','Bocetos',['Thumbnail','Boceto'],'Boceto','Thumbnails, siluetas, bocetos de idea y composición'],['grises','Escala de grises',['Valores'],'Valores','Estudios de valor: 3–4 grupos, lectura del foco'],['versiones','Versiones',['Color','Render'],'Color','Cada iteración de color y render, en orden'],['final','Final',['Final'],'Final','La pieza terminada']];
 const carpDe=x=>(CARPS.find(c=>c[2].includes(x.etapa))||CARPS[3])[0];
+/* ============ Bocetos por elemento (vegetación, fauna, rocas…) + feedback de Claude con el contexto del proyecto ============ */
+const ELEM_SUG=['Vegetación','Fauna','Rocas','Personaje','Arquitectura','Props'];
+const ELEM_GUIA=[[/vegetaci|planta|flora|arbol|árbol|selva/i,'Silueta legible en negro y variedad de familias (vertical, radial, colgante o rastrera); escala frente a una figura humana; qué cuenta cada planta de ESTE mundo (hábitat, clima, el conflicto del proyecto); cómo toca o se come la arquitectura; valores en 3 planos. Evita plantas genéricas de stock.'],
+  [/fauna|animal|criatura|bestia/i,'Función y hábitat (qué come, cómo se mueve, qué teme); silueta reconocible a distancia; anatomía creíble aunque sea fantástica; cómo cuenta la tensión del mundo; paleta y textura coherentes con su entorno; escala frente a un humano.'],
+  [/roca|piedra|mineral|terreno|monta/i,'Geología coherente (material, erosión, estratificación); formas primarias, secundarias y terciarias; variedad de tamaños y ritmo; escala frente a una figura humana; cómo reciben la luz; cómo dialogan con la vegetación y la arquitectura.'],
+  [/personaje|guerrero|dios|humano/i,'Silueta, proporciones y lenguaje de formas; función y a qué lado de la tensión pertenece; materiales y piel; qué cuenta su pose; paleta bajo la luz del proyecto.'],
+  [/arquitect|templo|ruina|edific/i,'Función del espacio, escala frente a una figura humana, material y desgaste, cómo se integra con la naturaleza, siluetas y ritmo de volúmenes, lectura en valores.'],
+  [/prop|arma|objeto/i,'Función y quién lo usa, silueta, materiales y desgaste, escala en mano, qué historia cuenta su deterioro.']];
+const elemGuia=g=>(ELEM_GUIA.find(([re])=>re.test(g||''))||[])[1]||'Si se siente de ESTE mundo o podría ser de cualquiera; lectura de silueta y de valores; qué decisión de diseño se ve en cada boceto.';
+function bocetosPaquete(p,g){const xs=piezasGrupo(p,g||''),el=g||'general';
+  return [`Claude, dame feedback de mis bocetos de «${el}» para mi proyecto «${p.nombre}». No halagues por defecto: dime lo que de verdad funciona, los problemas reales y qué probaría en la siguiente ronda.`,'',
+    `QUÉ MIRAR EN ESTE ELEMENTO: ${elemGuia(g)}`,'',
+    `BOCETOS (${xs.length}):`,...(xs.length?xs.map((x,i)=>`${i+1}. ${x.nombre||x.etapa||'Boceto'} · ${x.etapa||''}${x.nota?' — '+x.nota:''}`):['(te los paso en este mensaje)']),'',
+    'CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),'',
+    'Te paso las imágenes en este mensaje (o dime la ruta de la carpeta en mi compu y las abres). Responde con estas secciones: Lo que funciona · Problemas reales · Decisiones que cuestionaría · Qué información falta · Qué probar en la siguiente ronda. Además dime, boceto por boceto, si se siente de ESTE mundo o podría ser de cualquier proyecto.'].join('\n')}
+function bocetosFeedbackHTML(p,g,ps){return `<div class="box big-q" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Feedback de Claude · ${esc(g||'General')}</h3><span class="lbl">${ps.length} boceto${ps.length===1?'':'s'}</span></div>
+    <p class="hint" style="margin:0">El feedback te lo doy yo, con tus bocetos y tu proyecto a la vista. La app arma la petición con todo lo que ya decidiste y una guía de lo que mirar en ${esc((g||'este elemento').toLowerCase())}.</p>
+    <div class="prow"><b>1.</b><button class="btn sm pri" data-act="bocetos-pedir">Copiar la petición para Claude</button><button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar las imágenes + la petición (.zip)</button></div>
+    <p class="hint" style="margin:0"><b>2.</b> Pégame la petición en el chat y adjunta las imágenes (o dime la ruta de la carpeta y las abro). <b>3.</b> Cuando te responda, pega aquí mi feedback y se guarda en el historial de este elemento:</p>
+    <textarea id="claude-resp" placeholder="Pega aquí el feedback de Claude…" style="min-height:90px">${esc(S.claudeResp||'')}</textarea>
+    <div class="prow"><button class="btn sm" data-act="bocetos-guardar">Guardar el feedback</button></div>
+    ${(p.criticas||[]).filter(c=>c.elemento===(g||'')&&c.tipo==='Feedback de bocetos').length?`<details><summary class="lbl" style="cursor:pointer">Feedback anterior de ${esc(g||'General')}</summary>${p.criticas.filter(c=>c.elemento===(g||'')&&c.tipo==='Feedback de bocetos').slice().reverse().map(c=>`<div class="crits"><b>${fecha(c.ts)}</b>${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}</div>`).join('')}</details>`:''}</div>`}
 async function subirCarpeta(files,carp){
   const p=S.P[S.cur];if(!p)return;const c=CARPS.find(k=>k[0]===carp);
   const fs_=[...files].filter(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));if(!fs_.length){toast('Sube imágenes PNG, JPG o WEBP');return}
@@ -3343,7 +3366,9 @@ function vCarpetas(p){
   const grupos=p.grupos||[],g=grupos.includes(S.carpG)?S.carpG:'',ps=piezasGrupo(p,g);
   const pr=(p.procesos||[]).filter(x=>(x.grupo||'')===g).at(-1),d=pr?.data;
   return `
-  <p class="intro">Sube cada etapa en su carpeta: así el asesor ve tu <b>proceso completo</b>, no solo el resultado. La <b>crítica de proceso</b> compara boceto → grises → versiones → final y te dice qué mejoró, qué se perdió y qué cambiar en tu método.</p>
+  <p class="intro"><b>Sube tus bocetos por elemento</b> (vegetación, fauna, rocas, personaje…). Elige el elemento, sube las imágenes y pídeme feedback: la petición lleva todo lo que ya decidiste del proyecto.</p>
+  <div class="box"><div class="prow" style="justify-content:space-between"><div><b>1 · ¿De qué elemento son?</b> <span class="muted">${g?`Subiendo a «${esc(g)}»`:'Subiendo a General: elige uno abajo o crea el tuyo'}</span></div><label class="btn pri" for="cf-bocetos">＋ Subir bocetos${g?' de '+esc(g.toLowerCase()):''}</label></div>
+    <div class="chips" style="margin-top:8px">${ELEM_SUG.filter(e=>!grupos.includes(e)).map(e=>`<button class="ch" data-act="carp-add" data-v="${e}">＋ ${e}</button>`).join('')}</div></div>
   ${syncBox()}
   <div class="prow" style="justify-content:space-between">
     <div class="stepper" style="padding:0;flex-wrap:wrap"><button class="step ${!g?'on':''}" data-act="carp-g" data-v=""><span class="st">General · ${piezasGrupo(p,'').length}</span></button>${grupos.map(x=>`<button class="step ${g===x?'on':''}" data-act="carp-g" data-v="${esc(x)}"><span class="st">${esc(x)} · ${piezasGrupo(p,x).length}</span></button>`).join('')}</div>
@@ -3354,10 +3379,11 @@ function vCarpetas(p){
     <label class="btn sm" for="cf-${k}">＋ Subir</label><input type="file" id="cf-${k}" data-carp="${k}" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
     ${xs.map((x,j)=>{const i=p.piezas.indexOf(x);return `<div class="cimg"><img ${imgAttrs(x)} alt="" loading="lazy" data-act="zoom">
       <div class="prow" style="justify-content:space-between;gap:4px"><span class="lbl">${k==='versiones'?'v'+(j+1):esc(x.etapa)} · ${fecha(x.creado)}</span>${x.feedback?`<span class="nivel" style="font-size:9.5px">${esc(x.feedback.nivel||'')}</span>`:''}</div>
-      <input type="text" id="cn-${x.id}" data-b="piezas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Nota: qué cambiaste">
+      <input type="text" id="cn-${x.id}" data-b="piezas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Qué quieres que revise de este boceto">
       <div class="prow" style="gap:4px"><select id="ce-${x.id}" data-b="piezas.${i}.etapa" aria-label="Mover a" style="flex:1">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
         ${grupos.length?`<select id="cg-${x.id}" data-b="piezas.${i}.grupo" aria-label="Subcarpeta" style="flex:1"><option value="">General</option>${grupos.map(gg=>`<option ${gg===(x.grupo||'')?'selected':''}>${esc(gg)}</option>`).join('')}</select>`:''}
         <button class="btn ghost sm" data-act="tab" data-tab="critica" title="Ver o pedir su crítica">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
+  ${ps.length||(p.piezas||[]).length?bocetosFeedbackHTML(p,g,ps):''}
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Crítica de proceso${g?' · '+esc(g):''}</b><p class="muted" style="margin:2px 0 0">Compara tus etapas en orden: qué mejoró, qué se perdió (¿los valores de tus grises llegaron vivos al final?) y qué cambiar en tu método para el próximo proyecto.</p></div>
     ${S.aiBusy.proceso?'<button class="btn sm" data-act="ai-stop" data-k="proceso">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="proceso" ${ps.length<2?'disabled title="Sube al menos 2 imágenes de distintas etapas"':''}>${d?'Analizar de nuevo':'Analizar mi proceso'}</button>`}</div>
     ${S.aiBusy.proceso?'<p class="muted">Revisando tu proceso completo…</p>':S.ai.proceso?.error?`<p class="muted">${esc(S.ai.proceso.error)}</p>`:''}
@@ -8106,7 +8132,7 @@ async function accion(a,el){
       renderMain();break}
     case 'nom-taller':S.nom={...nomDraft(),pid:curReal(),para:'Proyecto'};S.vista='nombres';render();break;
     case 'carp-g':S.carpG=ds.v;renderMain();break;
-    case 'carp-add':{const v=($('#carp-nuevo')?.value||'').trim();if(!v)return;p.grupos=p.grupos||[];if(!p.grupos.includes(v))p.grupos.push(v);S.carpG=v;marcar();renderMain();break}
+    case 'carp-add':{const v=(ds.v||$('#carp-nuevo')?.value||'').trim();if(!v)return;p.grupos=p.grupos||[];if(!p.grupos.includes(v))p.grupos.push(v);S.carpG=v;marcar();renderMain();break}
     case 'carp-del':{const k='g:'+ds.v;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;p.grupos=(p.grupos||[]).filter(x=>x!==ds.v);(p.piezas||[]).forEach(x=>{if(x.grupo===ds.v)x.grupo=''});S.carpG='';marcar();renderMain();break}
     case 'met-principio':{const r=S.ajustes.metodologia?.data?.reglas?.[+ds.i];if(!r)return;S.ajustes.principios=S.ajustes.principios||[];if(!S.ajustes.principios.includes(r.regla))S.ajustes.principios.push(r.regla);marcarAj();renderMain();toast('Agregada a tus principios');break}
     case 'sync':sincronizarCarpeta(false);break;
@@ -8163,6 +8189,9 @@ async function accion(a,el){
     case 'bd-zip':bdDescarga('zip');break;
     case 'bd-copiar':bdDescarga('copiar');break;
     case 'crit-foco':{const f=S.critFoco=S.critFoco||[];S.critFoco=f.includes(ds.k)?f.filter(x=>x!==ds.k):[...f,ds.k];renderMain();break}
+    case 'bocetos-pedir':copiarTexto(bocetosPaquete(p,S.carpG||''),'Petición copiada: pégamela en el chat con tus imágenes');break;
+    case 'bocetos-zip':{if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}const g=S.carpG||'',xs=piezasGrupo(p,g);if(!xs.length){toast('Sube primero algún boceto');return}const zip=new JSZip(),dir=zip.folder(slug(p.nombre,40)+'-'+slug(g||'general',20));let i=0;for(const x of xs){try{const b=await blobDeRef(x);i++;dir.file(String(i).padStart(2,'0')+'-'+slug(x.nombre||x.etapa||'boceto',30)+'.'+((b.type.split('/')[1]||'png').replace('jpeg','jpg')),b)}catch{}}dir.file('peticion-para-claude.txt',bocetosPaquete(p,g));await bajarBlob(slug(p.nombre,40)+'-bocetos-'+slug(g||'general',20)+'.zip',await zip.generateAsync({type:'blob'}));toast('Paquete descargado');break}
+    case 'bocetos-guardar':{const t=($('#claude-resp')?.value||'').trim();if(t.length<20){toast('Pega primero el feedback de Claude');return}p.criticas.push({tipo:'Feedback de bocetos',elemento:S.carpG||'',ts:Date.now(),titulo:S.carpG||'General',r:claudeParsea(t)});S.claudeResp='';marcar();renderMain();toast('Feedback guardado');break}
     case 'claude-copiar':copiarTexto(claudePaquete(p),'Paquete copiado: pégamelo en el chat con tu imagen');break;
     case 'claude-tablero':if(bdItems(p).length)bdDescarga('png');else tpPNG();break;
     case 'claude-guardar':{const t=($('#claude-resp')?.value||'').trim();if(t.length<20){toast('Pega primero la crítica de Claude');return}
