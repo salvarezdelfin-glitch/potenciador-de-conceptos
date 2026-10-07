@@ -399,6 +399,10 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .tab-sep{flex:0 0 auto;width:1px;align-self:stretch;background:var(--line2);margin:4px 4px}
 .tabs{flex-wrap:wrap;overflow:visible}
 .v3d-panel>*,.cp-panel>*{flex-shrink:0}
+.cr-res{display:flex;flex-direction:column;gap:12px}.cr-ver{border-left:4px solid var(--accent);background:var(--surface);padding:10px 14px;border-radius:0 10px 10px 0}.cr-ver p{margin:4px 0 0;font-size:17px;font-weight:600;line-height:1.35}.cr-sec h4{margin:0 0 6px}.cr-sec ul{margin:0;padding-left:18px}
+.cr-m{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-top:6px;cursor:pointer;background:var(--bg)}.cr-m input{margin-top:3px;flex:none}.cr-m small{display:block;color:var(--ink2);margin-top:3px;font-size:13px;line-height:1.4}.cr-m.ok{opacity:.55}.cr-m.ok span{text-decoration:line-through}
+.cr-p{font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:4px;margin-right:4px;text-transform:uppercase}.cr-p.alta{background:var(--warn);color:#fff}.cr-p.media{background:var(--surface3);color:var(--ink)}.cr-p.baja{background:var(--surface2);color:var(--ink3)}
+.cr-l{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;padding:8px 10px;border:1px dashed var(--accent);border-radius:10px;margin-top:6px}.cr-l small{display:block;color:var(--ink2);margin-top:3px;font-size:13px}.cr-steps{display:grid;gap:8px}
 .v3d-cv{position:relative}.v3d-bz{position:absolute;inset:0;z-index:6;background:#0d0f13;display:flex;flex-direction:column}.bz-top{padding:8px 12px;font-size:13px;display:flex;flex-direction:column;gap:2px}.bz-cv{flex:1;min-height:0;position:relative}.bz-cv canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}.bz-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
 .cp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.cp-cv{min-width:0}.cp-cv canvas{width:100%;display:block;border-radius:10px;touch-action:none;background:#0d0f13;cursor:crosshair}.cp-panel{display:flex;flex-direction:column;gap:12px;min-width:0}@media(max-width:900px){.cp-wrap{grid-template-columns:1fr}}
 .pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 16px}
@@ -1008,7 +1012,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muygd8ct').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muygoccb').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1293,7 +1297,7 @@ function salud(p){
     ['Cada referencia con qué aprendes y dónde aplica',refs.length>0&&refs.every(r=>((r.aprendo||r.porque||'').trim().length>=8)&&(r.aplica||[]).length),'refs'],
     ['Checklist de diseño básico (6/8)',dis>=6,'revision'],
     ['Producción: 3+ etapas completas',pipeDe(p).filter((e,i)=>e.check.every((c,j)=>p.prod?.hechos?.[i+'-'+j])).length>=3,'produccion'],
-    ['Crítica de al menos un boceto',(p.piezas||[]).some(x=>x.feedback||x.analisis)||(p.criticas||[]).some(c=>/Boceto|Concepto/.test(c.tipo)),'critica'],
+    ['Crítica de al menos un boceto',(p.piezas||[]).some(x=>x.feedback||x.analisis)||(p.criticas||[]).some(c=>/Boceto|Concepto|Crítica/.test(c.tipo)),'critica'],
     ['Retro: qué aprendí',(p.retro.aprendi||'').trim().length>10,'revision']
   ];
   const ok=items.filter(i=>i[1]).length;
@@ -1314,7 +1318,6 @@ function renderSide(){
       <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
-      ${nav('compras','folder','Mis compras',(S.ajustes.compras||[]).length?`<span class="s">${S.ajustes.compras.length}</span>`:'')}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
       ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
     </div>`;
@@ -1410,7 +1413,6 @@ function renderMainInner(){
   if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
   if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
   if(S.vista==='biblioteca'){m.innerHTML=vBiblioteca();return}
-  if(S.vista==='compras'){m.innerHTML=vCompras();return}
   if(S.vista==='calendario'){m.innerHTML=vCalendario();return}
   if(S.vista==='cv'){m.innerHTML=vCV();return}
   if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
@@ -1701,7 +1703,7 @@ function vHojaVer(p){const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{
     ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:''}
   </article>`}
-function vHoja(p){return `<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
+function vHoja(p){return `${crBanner(p)}<div class="chips" style="margin-bottom:10px"><button class="ch ${S.hojaEdit?'':'on'}" data-act="hoja-modo" data-m="ver">Ver la hoja</button><button class="ch ${S.hojaEdit?'on':''}" data-act="hoja-modo" data-m="editar">Completar y editar</button></div>${S.hojaEdit?vHojaEditar(p):vHojaVer(p)}`}
 function vHojaEditar(p){
   const c=p.concepto,l=p.lenguaje||{},g=p.guia||{},q=p.que||{},mw=tresMood(p),
     T=(lab,path,val,ph,alto)=>`<div class="field"><label for="x-${path.replace(/\./g,'-')}">${lab}</label>${tx(path,val,ph,null,alto||46)}</div>`,
@@ -2917,60 +2919,124 @@ function vBiblioteca(){
     ${SYNC_OK?`<div class="prow" style="margin-top:6px"><button class="btn pri" data-act="bib-carpeta" ${S.exp?'disabled':''}>Guardar en mi carpeta, organizada por tema</button><span class="status" id="exp-status">${esc(S.exp||'')}</span></div><p class="hint" style="margin:4px 0 0">${guardar?`${guardar} sin guardar (nuevas o con tema cambiado).`:'Todo guardado con el tema actual.'} Crea BIBLIOTECA/&lt;tema&gt;/ en tu carpeta y solo agrega lo nuevo cada vez, nunca repite.</p>`:''}</div>
   <div id="bibgrid" style="display:flex;flex-direction:column;gap:10px">${bibGrid()}</div>`}
 
-/* ============ Mis compras: biblioteca ligera. Solo la ficha (texto) + una miniatura de 240 px; los archivos pesados se quedan donde ya los guardas ============ */
-const COM_TIPOS=['Pinceles','Poses / referencias visuales','Fotos de referencia','Texturas / HDRI','Modelos 3D','Plugins / add-ons','Libros / PDFs','Cursos / tutoriales','Paletas / LUTs','Otro'];
-const COM_LIC=['Sin revisar','Uso personal','Comercial','Comercial con crédito'];
-async function comMini(f){try{const m=await miniDe(f,240);if(m&&S.assets)return {thumb:(await S.assets.upload(m)).id}}catch{}try{return {thumbSrc:await comprimir(f,240,.7)}}catch{return {}}}
-const comThumb=x=>x.thumb?{asset:x.thumb}:{src:x.thumbSrc||''};
-function comNueva(o){const d=S.comDef||{};return {id:uid(),nombre:'',tipo:d.tipo||COM_TIPOS[0],tienda:d.tienda||'',url:'',precio:'',fecha:'',donde:'',lic:COM_LIC[0],tags:'',nota:'',fav:false,creado:Date.now(),...o}}
-async function subirCompras(files){
-  const fs_=[...files].filter(x=>/^image\//.test(x.type));if(!fs_.length){toast('Sube imágenes (PNG, JPG o WEBP)');return}
-  const L=lista('compras');let n=0;setStatus(`Guardando ${fs_.length} miniatura${fs_.length>1?'s':''}…`);bloquear();
-  try{for(const f of fs_){L.push(comNueva({nombre:f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim(),...await comMini(f)}));n++}}finally{desbloquear()}
-  marcarAj();renderMain();renderSide();toast(`${n} ficha${n>1?'s':''} agregada${n>1?'s':''}`)}
-function comFiltra(){const f=S.comF=S.comF||{tipo:'',q:''},q=nz(f.q);return lista('compras').map((x,i)=>({x,i})).filter(({x})=>(!f.tipo||x.tipo===f.tipo)&&(!q||nz([x.nombre,x.tienda,x.tags,x.nota,x.tipo,x.donde].join(' ')).includes(q))).sort((a,b)=>(b.x.fav?1:0)-(a.x.fav?1:0)||(b.x.creado||0)-(a.x.creado||0))}
-function comCard({x,i}){
-  const campo=(k,lbl,ph,tipo='text')=>`<div class="field"><label for="com-${k}-${x.id}">${lbl}</label><input type="${tipo}" id="com-${k}-${x.id}" data-aj="compras.${i}.${k}" value="${esc(x[k]||'')}" placeholder="${esc(ph||'')}"></div>`;
-  return `<div class="rcur"><div style="position:relative">${x.thumb||x.thumbSrc?`<img ${imgAttrs(comThumb(x))} alt="${esc(x.nombre)}" loading="lazy">`:`<div class="rcur-ph">${esc(x.tipo)}</div>`}<button class="btn ghost sm" data-act="com-fav" data-id="${x.id}" style="position:absolute;top:4px;right:4px;background:var(--surface)" aria-label="Favorito">${x.fav?'★':'☆'}</button></div>
-    <div class="rcur-b"><b>${esc(corto(x.nombre||'(sin nombre)',48))}</b><span class="muted">${esc(x.tipo)}${x.tienda?' · '+esc(x.tienda):''}</span>${x.precio?`<span class="tagp ${/gratis|free|0$/i.test(x.precio)?'free':''}">${esc(x.precio)}</span>`:''}${x.tags?`<small class="muted">${esc(corto(x.tags,48))}</small>`:''}
-    <div class="prow">${x.url?`<a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a>`:''}</div>
-    <details><summary class="muted" style="cursor:pointer;font-size:12px">Editar ficha</summary>
-      ${campo('nombre','Nombre','Ej. Set de rocas de Fulano')}
-      <div class="field"><label for="com-tipo-${x.id}">Tipo</label><select id="com-tipo-${x.id}" data-aj="compras.${i}.tipo">${COM_TIPOS.map(t=>`<option ${t===x.tipo?'selected':''}>${t}</option>`).join('')}</select></div>
-      ${campo('tienda','Dónde / de quién la compré','Gumroad, ArtStation, un artista…')}${campo('precio','Precio','$15 · gratis')}${campo('fecha','Fecha de compra','',"date")}
-      ${campo('url','Enlace','https://…','url')}${campo('donde','Dónde está el archivo','Carpeta, disco o nube (solo texto)')}
-      <div class="field"><label for="com-lic-${x.id}">Licencia</label><select id="com-lic-${x.id}" data-aj="compras.${i}.lic">${COM_LIC.map(t=>`<option ${t===x.lic?'selected':''}>${t}</option>`).join('')}</select></div>
-      ${campo('tags','Etiquetas','roca, niebla, correr, jaguar')}
-      <div class="field"><label for="com-nota-${x.id}">Notas</label><textarea id="com-nota-${x.id}" data-aj="compras.${i}.nota" placeholder="Para qué sirve, qué pinceles destacan…">${esc(x.nota||'')}</textarea></div>
-      <div class="prow"><label class="btn sm" for="com-th-${x.id}">${x.thumb||x.thumbSrc?'Cambiar miniatura':'Poner miniatura'}</label><input type="file" id="com-th-${x.id}" data-comth="${x.id}" accept="image/*" hidden>
-        <button class="btn ghost sm danger" data-act="com-del" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar ficha?':'✕ Borrar'}</button></div>
-    </details></div></div>`}
-function comGrid(){const r=comFiltra(),f=S.comF||{};
-  return r.length?`<p class="muted" style="margin:0">${r.length} ficha${r.length===1?'':'s'}</p><div class="rcurs">${r.slice(0,S.comN||60).map(comCard).join('')}</div>${r.length>(S.comN||60)?`<button class="btn" data-act="com-mas">Ver más (${r.length-(S.comN||60)})</button>`:''}`:`<div class="empty">${lista('compras').length?'Nada con ese filtro.':'Aún no hay nada. Agrega tu primera compra arriba: puedes subir varias miniaturas a la vez.'}</div>`}
-function vCompras(){
-  const f=S.comF=S.comF||{tipo:'',q:''},d=S.comDef||{},L=lista('compras'),usados=COM_TIPOS.filter(t=>L.some(x=>x.tipo===t));
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Mis compras</h1>
-  <p class="intro">Tu biblioteca de lo que has comprado o descargado: pinceles, poses y referencias visuales, texturas, modelos, plugins, libros y cursos. Aquí solo vive la <b>ficha</b> (nombre, tienda, enlace, licencia, dónde está el archivo) con una miniatura de 240 px, así que no pesa y la app sigue rápida. Los archivos se quedan donde ya los guardas.</p>
-  <div class="box drop" id="drop-com"><div><b>Agrega compras</b> <span class="muted">sube varias imágenes a la vez: cada una es una ficha</span></div>
-    <div class="prow"><select id="com-def-tipo" data-comdef="tipo" style="width:auto" aria-label="Tipo">${COM_TIPOS.map(t=>`<option ${t===(d.tipo||COM_TIPOS[0])?'selected':''}>${t}</option>`).join('')}</select>
-      <input type="text" id="com-def-tienda" data-comdef="tienda" value="${esc(d.tienda||'')}" placeholder="Tienda o artista (opcional)" style="flex:1 1 180px">
-      <label class="btn pri" for="com-file">Subir miniaturas</label><input type="file" id="com-file" accept="image/*" multiple hidden>
-      <button class="btn" data-act="com-nueva">Ficha sin imagen</button></div></div>
-  ${L.length?`<div class="box"><div class="chips"><button class="ch ${!f.tipo?'on':''}" data-act="com-tipo" data-v="">Todo · ${L.length}</button>${usados.map(t=>`<button class="ch ${f.tipo===t?'on':''}" data-act="com-tipo" data-v="${esc(t)}">${esc(t)} · ${L.filter(x=>x.tipo===t).length}</button>`).join('')}</div>
-    <div class="prow"><input type="text" id="com-q" data-comq="1" value="${esc(f.q)}" placeholder="Buscar: roca, niebla, correr, nombre de tienda…" style="flex:1 1 220px"><button class="btn sm" data-act="com-copiar" title="Copia la lista para pegarla en el chat con Claude">Copiar lista para Claude</button></div></div>`:''}
-  <div id="comgrid" style="display:flex;flex-direction:column;gap:10px">${comGrid()}</div>
-  <p class="muted">Antes de usar un recurso en un proyecto de portafolio o comercial, revisa su licencia y márcala en la ficha.</p>`}
-async function accionCom(a,el,p,ds){
-  const f=S.comF=S.comF||{tipo:'',q:''};
+/* ============ Crítica: UN solo flujo. Claude critica en el chat; la app arma la petición, lee su respuesta y la vuelve una lista de cambios (qué está mal → cómo arreglarlo) + ideas fuera de lo ordinario ============ */
+const CR_FORMATO=['Responde EXACTAMENTE con estas 4 secciones (con estos títulos, para que mi app las lea):','',
+  '## Veredicto','Una sola frase honesta sobre dónde está esto hoy y qué lo frena, más el nivel: arranque / prometedor / sólido / listo para portafolio.','',
+  '## Qué está mal','Máximo 6, de la más a la menos importante. UNA línea cada una, con este formato:','- [ALTA|MEDIA|BAJA] Qué falla y dónde → Cómo arreglarlo exactamente (una acción concreta, nunca "mejora la composición")','',
+  '## Qué funciona','2 a 4 cosas que NO debo tocar.','',
+  '## Ideas locas','5 ideas nuevas, fuera de lo ordinario y específicas de ESTE proyecto (nada genérico), para impulsarlo más allá de lo seguro. Cada una en una línea: idea → cómo probarla en 20 minutos.'].join('\n');
+const CR_PN={alta:'Alta',media:'Media',baja:'Baja'},CR_PR={alta:0,media:1,baja:2};
+const CR_H=[['veredicto',/^(veredicto|resumen|en una frase|diagn[oó]stico)/i],['malo',/^(qu[eé] est[aá] mal|lo que est[aá] mal|problemas?( reales?)?|lo que no funciona|qu[eé] cambiar|correcciones|debilidades|decisiones que cuestionar)/i],['bien',/^(qu[eé] funciona|lo que (est[aá] )?(bien|funciona)|fortalezas|qu[eé] no (debo )?tocar)/i],['locas',/^(ideas? (locas?|fuera|nuevas|para impulsar|radicales)|locuras|provocaciones|qu[eé] probar|siguiente ronda)/i]];
+function crMalo(t){t=String(t).replace(/[*_]{2}/g,'').trim();let prio='media';const m=t.match(/^[\[(]?\s*(alta|media|baja)\s*[\])]?\s*[:\-–—·]?\s*/i);if(m){prio=m[1].toLowerCase();t=t.slice(m[0].length)}
+  const k=t.search(/\s*(→|->|=>|\barreglo\s*:|\bc[oó]mo arreglarlo\s*:|\bsoluci[oó]n\s*:|\bfix\s*:)/i);
+  if(k>0)return {t:t.slice(0,k).trim(),fix:t.slice(k).replace(/^\s*(→|->|=>|arreglo\s*:|c[oó]mo arreglarlo\s*:|soluci[oó]n\s*:|fix\s*:)\s*/i,'').trim(),prio,hecho:false};
+  return {t,fix:'',prio,hecho:false}}
+function crLoca(t){t=String(t).replace(/[*_]{2}/g,'').trim();const k=t.search(/\s*(→|->|=>|\bc[oó]mo probarla?\s*:|\bprueba\s*:|\bprobar\s*:)/i);
+  if(k>0)return {t:t.slice(0,k).trim(),como:t.slice(k).replace(/^\s*(→|->|=>|c[oó]mo probarla?\s*:|prueba\s*:|probar\s*:)\s*/i,'').trim(),probada:false};
+  return {t,como:'',probada:false}}
+const crBuild=(k,t)=>k==='malo'?crMalo(t):k==='locas'?crLoca(t):String(t).replace(/[*_]{2}/g,'').trim();
+function crParsea(txt){
+  const out={veredicto:'',nivel:'',malo:[],bien:[],locas:[]},bullet=/^\s*([-*•–]|\d+[.)])\s+/,sec=s=>s.replace(/^#+\s*/,'').replace(/[*_`]/g,'').replace(/^\d+[.)]\s*/,'').trim();
+  let cur='',last=null;
+  const add=l=>{const nuevo=bullet.test(l),t=l.replace(bullet,'');
+    if(cur==='veredicto'){out.veredicto+=(out.veredicto?' ':'')+t.replace(/[*_]{2}/g,'');return}
+    if(!nuevo&&last&&!/[.!?)]$/.test(last.raw)&&!/^[\[(]?\s*(alta|media|baja)\b/i.test(t)){last.raw+=' '+t;last.arr[last.i]=crBuild(cur,last.raw);return}
+    const arr=out[cur];arr.push(crBuild(cur,t));last={arr,i:arr.length-1,raw:t}};
+  for(const raw of String(txt||'').split('\n')){const l=raw.trim();if(!l||/^[-_*=]{3,}$/.test(l))continue;
+    const s=sec(l.replace(bullet,'')),hd=(!bullet.test(l)||/^#/.test(l))?CR_H.find(([,re])=>re.test(s)&&(s.length<70||/^[^:：]{3,45}[:：]/.test(s))):null;
+    if(hd){cur=hd[0];last=null;const i=s.search(/[:：]/),resto=i>=0&&i<48?s.slice(i+1).trim():'';if(resto)add(resto);continue}
+    if(cur)add(l)}
+  if(!out.malo.length&&!out.bien.length&&!out.locas.length&&!out.veredicto){const r=claudeParsea(txt);
+    out.malo=[...(r['Problemas reales']||[]),...(r['Decisiones que cuestionaría']||[])].map(crMalo);out.bien=r['Lo que funciona']||[];out.locas=(r['Qué probar en la siguiente ronda']||[]).map(crLoca);out.veredicto=(r['Resumen']||[])[0]||'';
+    if(!out.malo.length&&!out.bien.length&&!out.locas.length&&!out.veredicto)out.crudo=String(txt||'').trim()}
+  const n=out.veredicto.match(/(arranque|prometedor|s[oó]lido|listo para portafolio|nivel producci[oó]n)/i);if(n)out.nivel=n[1].toLowerCase();
+  return out}
+/* ---- a quién se critica: un grupo de bocetos, un boceto, o el proyecto entero ---- */
+function crTarget(p){const z=S.crPz&&(p.piezas||[]).find(x=>x.id===S.crPz);if(z)return {k:'pieza',id:z.id,z};if(S.crProy)return {k:'proyecto'};return {k:'grupo',g:(p.grupos||[]).includes(S.carpG)?S.carpG:''}}
+function crMigra(p){for(const c of p.criticas||[]){if(c.tipo!=='Feedback de bocetos')continue;const r=c.r||{};c.tipo='Crítica';c.veredicto=(r['Resumen']||[])[0]||'';c.malo=[...(r['Problemas reales']||[]),...(r['Decisiones que cuestionaría']||[])].map(t=>crMalo(t));c.bien=r['Lo que funciona']||[];c.locas=(r['Qué probar en la siguiente ronda']||[]).map(crLoca);c.nivel='';if(!c.id)c.id=uid()}}
+function crLista(p,t){crMigra(p);return (p.criticas||[]).filter(c=>c.tipo==='Crítica'&&(t.k==='pieza'?c.pz===t.id:t.k==='proyecto'?!!c.proy:(!c.pz&&!c.proy&&(c.elemento||'')===t.g))).sort((a,b)=>b.ts-a.ts)}
+function crUltimas(p){crMigra(p);const seen={},out=[];for(const c of (p.criticas||[]).filter(c=>c.tipo==='Crítica').sort((a,b)=>b.ts-a.ts)){const k=c.pz?'z'+c.pz:c.proy?'p':'g'+(c.elemento||'');if(seen[k])continue;seen[k]=1;out.push(c)}return out}
+const crPend=p=>crUltimas(p).reduce((n,c)=>n+(c.malo||[]).filter(m=>!m.hecho).length,0);
+function crBusca(id){for(const [pid,p] of Object.entries(S.P)){const c=(p.criticas||[]).find(x=>x.id===id);if(c)return {c,p,pid}}for(const x of S.ajustes.galeria||[]){const c=(x.crits||[]).find(v=>v.id===id);if(c)return {c,x}}return null}
+const crGuarda=h=>h.x?marcarAj():h.pid&&h.pid!==S.cur?marcarPid(h.pid):marcar();
+/* ---- la petición que se pega en el chat ---- */
+function crPaquete(p,t){
+  const foc=S.critFoco||[],focT=foc.length?[`Quiero que revises sobre todo: ${foc.map(k=>CRIT_FOCOS.find(f=>f[0]===k)[2]).join('; ')}.`,'']:[],conf=(S.gd?.conf||[]).map(x=>'- '+(x.sl==='ref'?'[Referencia] ':'')+x.t);
+  const ctx=['CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),''];
+  const NOHALAGO='No halagues por defecto: sé honesto aunque duela y juzga contra el estándar de la industria.';
+  if(t.k==='proyecto')return [`Claude, critica mi proyecto «${p.nombre}» completo (idea, dirección de arte, estilo, referencias y lo que he dibujado). ${NOHALAGO}`,'',...focT,'Mira: ¿el concepto es claro y propio o genérico? ¿los pilares se sostienen? ¿qué decisiones están flojas, se contradicen o son "porque se ve cool"? ¿qué falta antes de seguir dibujando?','',...ctx,CR_FORMATO].join('\n');
+  if(t.k==='pieza'){const z=t.z;return [`Claude, critica este boceto de mi proyecto «${p.nombre}» (${z.etapa}${z.grupo?', '+z.grupo:''}${z.nombre?', '+z.nombre:''}). ${NOHALAGO}`,z.nota?`Lo que quiero que revises: ${z.nota}`:'','',`QUÉ MIRAR: ${elemGuia(z.grupo||'')}`,...focT,'',...ctx,'Te paso la imagen en este mensaje (o dime la ruta de la carpeta en mi compu y la abres).','',CR_FORMATO].join('\n')}
+  const g=t.g,xs=piezasGrupo(p,g),el=g||'general';
+  return [`Claude, critica mis bocetos de «${el}» para mi proyecto «${p.nombre}». ${NOHALAGO}`,'',`QUÉ MIRAR EN ESTOS BOCETOS: ${elemGuia(g)}`,...focT,`BOCETOS (${xs.length}):`,...(xs.length?xs.map((x,i)=>`${i+1}. ${x.nombre||x.etapa||'Boceto'} · ${x.etapa||''}${x.nota?' — '+x.nota:''}`):['(te los paso en este mensaje)']),'',...ctx,'Te paso las imágenes en este mensaje (o dime la ruta de la carpeta en mi compu y las abres). Dime también, boceto por boceto, si se siente de ESTE mundo o podría ser de cualquier proyecto.','',CR_FORMATO].join('\n')}
+function crPaqueteGal(x){const p=x.pid&&S.P[x.pid];
+  return [`Claude, critica esta ilustración mía${x.titulo?' titulada «'+x.titulo+'»':''} (${x.tipo||'ilustración'}${x.anio?', '+x.anio:''}). No halagues por defecto: sé honesto aunque duela y juzga contra el estándar de la industria.`,x.nota?`Lo que quiero que revises: ${x.nota}`:'','',p?ctxProyecto(p):ctxGeneral(),'','Te paso la imagen en este mensaje (o dime la ruta de la carpeta en mi compu y la abres).','',CR_FORMATO].join('\n')}
+function crPaqueteRonda(c){const m=c.malo||[],hechos=m.filter(x=>x.hecho),pend=m.filter(x=>!x.hecho);
+  return [`Claude, ya trabajé sobre tu crítica anterior${c.titulo?' de «'+c.titulo+'»':''}.`,c.veredicto?`Tu veredicto fue: ${c.veredicto}`:'','',`Lo que dije que corregí (${hechos.length}):`,...(hechos.length?hechos.map(x=>'- '+x.t+(x.fix?' → '+x.fix:'')):['- (nada todavía)']),'',`Lo que sigue pendiente (${pend.length}):`,...(pend.length?pend.map(x=>'- '+x.t):['- (nada)']),'','Te paso la nueva versión (adjúntala). Dime: 1) si de verdad resolví cada punto o solo lo parece, 2) qué empeoró o apareció nuevo, 3) qué sigue ahora. Además, tus ideas locas nuevas.','',CR_FORMATO].join('\n')}
+function crNueva(txt,extra){return {id:uid(),tipo:'Crítica',ts:Date.now(),...extra,...crParsea(txt)}}
+/* ---- cómo se ve el resultado ---- */
+function crResHTML(c){
+  const m=c.malo||[],h=m.filter(x=>x.hecho).length,orden=m.map((x,i)=>[x,i]).sort((a,b)=>(CR_PR[a[0].prio]??1)-(CR_PR[b[0].prio]??1)||a[1]-b[1]);
+  return `<div class="cr-res">
+    <div class="cr-ver"><span class="lbl">Veredicto · ${fecha(c.ts)}${c.nivel?' · '+esc(c.nivel):''}</span>${c.veredicto?`<p>${esc(c.veredicto)}</p>`:'<p class="muted" style="font-weight:400;font-size:14px">Claude no incluyó veredicto.</p>'}</div>
+    ${c.crudo?`<div class="cr-sec"><p class="muted">No reconocí las secciones de esta respuesta. Pídele a Claude: «Responde con el formato de la petición» y pégala otra vez. Esto fue lo que pegaste:</p><pre style="white-space:pre-wrap;font-size:13px;margin:0">${esc(c.crudo)}</pre></div>`:''}
+    ${m.length?`<div class="cr-sec"><div class="prow" style="justify-content:space-between"><h4>Qué cambiar</h4><span class="lbl">${h} de ${m.length} corregidos</span></div><div class="bar"><i style="width:${h/m.length*100}%"></i></div>
+      ${orden.map(([x,i])=>`<label class="cr-m ${x.hecho?'ok':''}"><input type="checkbox" data-crh="${c.id}|${i}" ${x.hecho?'checked':''}><span><b class="cr-p ${x.prio}">${CR_PN[x.prio]||'Media'}</b> ${esc(x.t)}${x.fix?`<small>→ ${esc(x.fix)}</small>`:''}</span></label>`).join('')}</div>`:(c.crudo?'':'<p class="muted">Claude no marcó problemas.</p>')}
+    ${(c.bien||[]).length?`<div class="cr-sec"><h4>Qué funciona · no lo toques</h4><ul>${c.bien.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+    ${(c.locas||[]).length?`<div class="cr-sec"><h4>Ideas locas para impulsarlo</h4>${c.locas.map((x,i)=>`<div class="cr-l"><span><b>${esc(x.t)}</b>${x.como?`<small>Probar: ${esc(x.como)}</small>`:''}</span><button class="btn sm ${x.probada?'':'pri'}" data-act="cr-loca" data-c="${c.id}" data-i="${i}" ${x.probada?'disabled':''}>${x.probada?'Guardada ✓':'Guardar para probar'}</button></div>`).join('')}</div>`:''}
+    <div class="prow"><button class="btn sm" data-act="cr-ronda2" data-c="${c.id}" title="Copia una petición que le dice a Claude qué corregiste y qué no">Ya cambié cosas → siguiente ronda</button><button class="btn ghost sm danger" data-act="cr-del" data-c="${c.id}">${S.confirmLi==='cr'+c.id?'¿Borrar?':'Borrar'}</button></div></div>`}
+const crPegaHTML=(key,act,extra='')=>`<textarea data-crresp="${key}" placeholder="Pega aquí la respuesta de Claude…" style="min-height:90px">${esc(S.crResp?.[key]||'')}</textarea><div class="prow"><button class="btn sm pri" data-act="${act}" data-key="${key}" ${extra}>Convertir en lista de cambios</button></div>`;
+/* ---- ideas locas rápidas, sin esperar a Claude ---- */
+const CR_LOCAS=['Cambia la escala: haz {n} diminuto, del tamaño de una mano. ¿Qué cambia en el diseño y en la historia?','Cambia el material principal por su opuesto (piedra → tela, metal → hueso, madera → vidrio) y redibuja la silueta.','Dibuja {n} desde el punto de vista de lo más pequeño que vive ahí (una hormiga, un insecto).','Hazlo con solo 3 formas (círculo, triángulo, cuadrado) para todo el diseño. ¿Qué tanto aguanta?','Imagina {n} en el fondo del mar, en el cielo o dentro de un cuerpo: rediséñalo para ese hábitat.','Quita el color: diseño solo con valor y textura. Luego agrega UN color que nadie esperaría.','10 siluetas en 10 minutos con pincel enorme y ojos entrecerrados: elige la que no habrías dibujado.','Diséñalo como lo habría hecho otra cultura de hace 2000 años que nunca vio tu referencia.','Cambia la hora: pásalo a las 3 am bajo una sola fuente de luz inusual (pantalla, lava, bioluminiscencia).','Dibújalo 2 minutos con la mano no dominante y rescata las formas accidentales.','Haz el «anuncio» de {n} en un formato inesperado: portada de revista de los 70, sello postal o cartel de circo.','Deja fuera de cuadro lo más importante: sugiérelo solo con sombra, reflejo o la reacción de otros.','Dale a {n} un uso totalmente opuesto al original y rediseña lo que cambiaría.','Mezcla UNA parte del diseño con un animal que no tiene nada que ver (pulpo, mantis, ave carroñera).','Envejécelo 500 años; luego hazlo nuevo de fábrica. ¿Qué detalles sobreviven en ambos?','Escribe el olor y el sonido de {n} y deja que cambien un material y una forma.','Dibuja la versión más aburrida y realista, y rompe UNA sola regla en ella.','Cambia la gravedad: todo flota, o todo cae hacia un lado. Recompón.','Pon al lado una referencia absurda (una cuchara, un paraguas) y toma solo su silueta.','Usa la paleta de una película que no tiene nada que ver (comedia romántica para una tragedia).','Haz la versión «villano» y la «cariñosa» del mismo diseño cambiando solo proporciones y ángulos.','Diseña el daño: ¿cómo se ve {n} tras una batalla, una tormenta o años sin cuidado?','Haz thumbnails en formatos absurdos (tira 1:4, cuadrado diminuto): el formato te obliga a recomponer.','Quita la parte más reconocible y mira si el diseño sigue diciendo quién es.','Míralo como un nivel de videojuego: dónde está el camino, el peligro y la recompensa, sin texto.','Reemplaza tu elemento «cool» favorito por algo feo pero con significado. ¿Gana?','Fotografía algo de tu casa en 3 minutos y úsalo como forma base de un elemento (photobash de lo cotidiano).','Escribe la versión más cliché de tu concepto y haz lo contrario de cada cliché.','Prueba una proporción extrema: cabeza gigante o piernas larguísimas, edificio chato o aguja.','Elimina el protagonista: cuenta {n} solo con sus huellas, sus restos o lo que dejó atrás.','Dibuja a {n} como si fuera un juguete, un mueble o una herramienta de cocina.'];
+function crLocasNuevas(p){const n=p?.nombre||'tu proyecto',usadas=new Set(S.crLoca||[]),pool=CR_LOCAS.map((t,i)=>i).filter(i=>!usadas.has(i)||usadas.size>=CR_LOCAS.length-3);const pick=[];while(pick.length<3&&pool.length)pick.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);S.crLoca=pick;S.crLocaN=n}
+const crLocaTxt=i=>CR_LOCAS[i].replace(/\{n\}/g,'«'+(S.crLocaN||'tu proyecto')+'»');
+/* ---- la sección completa ---- */
+function vCriticaClaude(p){
+  const t=crTarget(p),L=crLista(p,t),gn=t.g||((p.grupos||[]).includes(S.carpG)?S.carpG:''),ps=piezasGrupo(p,t.g||''),key='p-'+S.cur+'-'+t.k+'-'+(t.id||t.g||'');
+  const que=t.k==='pieza'?`Un boceto: «${esc(t.z.nombre||t.z.etapa)}»`:t.k==='proyecto'?'Todo el proyecto':`Bocetos de «${esc(t.g||'General')}»`;
+  return `<div class="box big-q" style="border-top:3px solid var(--accent)">
+    <div class="prow"><span class="lbl">Qué criticar</span><button class="ch ${t.k==='grupo'?'on':''}" data-act="cr-obj" data-v="grupo">Bocetos de «${esc(gn||'General')}»${t.k==='grupo'?` · ${ps.length}`:''}</button><button class="ch ${t.k==='proyecto'?'on':''}" data-act="cr-obj" data-v="proyecto">Todo el proyecto</button>${t.k==='pieza'?`<button class="ch on" data-act="cr-obj" data-v="grupo" title="Volver a todo el grupo">Un boceto: ${esc(corto(t.z.nombre||t.z.etapa,24))} ✕</button>`:''}</div>
+    <p class="hint" style="margin:0">Cambia el grupo en «Subir bocetos», arriba. Para criticar un solo boceto, usa su botón «Crítica».</p>
+    <div class="chips"><span class="lbl">Que revise sobre todo</span>${CRIT_FOCOS.map(([k,n])=>`<button class="ch xs ${(S.critFoco||[]).includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
+    <div class="cr-steps">
+      <div class="prow"><b>1.</b><button class="btn sm pri" data-act="cr-pedir">Copiar la petición para Claude</button>${t.k==='grupo'?`<button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar imágenes + petición (.zip)</button>`:''}<button class="btn sm" data-act="claude-tablero" title="Baja el tablero de referencias como imagen para adjuntarla">Tablero (PNG)</button></div>
+      <p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta ${t.k==='proyecto'?'lo que quieras que vea':'las imágenes'} (o dile la ruta de la carpeta). Ya incluye todo lo que decidiste del proyecto y pide la respuesta en un formato fijo.</p>
+      <p class="hint" style="margin:0"><b>3.</b> Pega aquí su respuesta (${que}): la app la vuelve una lista de qué cambiar, con ideas nuevas.</p>
+    </div>
+    ${crPegaHTML(key,'cr-guardar')}</div>
+  ${L.length?crResHTML(L[0]):'<div class="empty">Aún no hay crítica de esto. Sigue los 3 pasos de arriba: al pegar la respuesta de Claude aquí verás qué está mal, cómo arreglarlo y qué ideas locas probar.</div>'}
+  ${L.length>1?`<details class="box"><summary class="lbl" style="cursor:pointer">Rondas anteriores (${L.length-1})</summary>${L.slice(1).map(c=>`<div style="margin-top:10px">${crResHTML(c)}</div>`).join('')}</details>`:''}
+  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Ideas locas rápidas</h3><button class="btn sm pri" data-act="cr-prov">${S.crLoca?'Otras tres':'Dame ideas locas'}</button></div>
+    <p class="hint" style="margin:0">Provocaciones para sacarte de lo seguro, sin esperar a nadie. Las que te llamen la atención se guardan en Explorar.</p>
+    ${(S.crLoca||[]).map(i=>`<div class="cr-l"><span><b>${esc(crLocaTxt(i))}</b></span><button class="btn sm" data-act="cr-prov-g" data-i="${i}">Guardar para probar</button></div>`).join('')}</div>`}
+function crBloqueGal(x){const L=(x.crits||[]).slice().sort((a,b)=>b.ts-a.ts),key='g-'+x.id,pend=L[0]?(L[0].malo||[]).filter(m=>!m.hecho).length:0;
+  return `<details class="cr-gal" data-id="${x.id}" ${S.crAb===x.id?'open':''}><summary class="btn sm pri" style="display:inline-block;cursor:pointer">Crítica de Claude${L.length?` · ${pend} por cambiar`:''}</summary>
+    <div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm" data-act="cr-pedir-gal" data-id="${x.id}">Copiar la petición</button><span class="hint">2. Pégala en el chat con la imagen. 3. Pega su respuesta aquí:</span></div>${crPegaHTML(key,'cr-guardar-gal',`data-id="${x.id}"`)}</div>
+    ${L.length?crResHTML(L[0]):''}</details>`}
+function crBanner(p){const n=crPend(p);return n?`<div class="banner"><b>${n} cambio${n===1?'':'s'} pendiente${n===1?'':'s'}</b> de tu última crítica. <button class="btn sm" data-act="cr-ir">Verlos</button></div>`:''}
+async function accionCr(a,el,p,ds){
+  const resp=k=>(S.crResp?.[k]||document.querySelector('[data-crresp="'+k+'"]')?.value||'').trim();
   switch(a){
-    case 'com-tipo':f.tipo=ds.v;S.comN=60;renderMain();return true;
-    case 'com-mas':S.comN=(S.comN||60)+60;renderMain();return true;
-    case 'com-nueva':lista('compras').push(comNueva({nombre:'Nueva compra'}));marcarAj();f.tipo='';f.q='';renderMain();renderSide();return true;
-    case 'com-fav':{const x=lista('compras').find(v=>v.id===ds.id);if(x){x.fav=!x.fav;marcarAj();renderMain()}return true}
-    case 'com-del':{if(S.confirmLi!==ds.id){S.confirmLi=ds.id;renderMain();return true}S.confirmLi=null;const L=lista('compras'),k=L.findIndex(v=>v.id===ds.id);if(k>=0)L.splice(k,1);marcarAj();render();return true}
-    case 'com-copiar':{const L=lista('compras');if(!L.length){toast('Aún no hay fichas');return true}
-      await copiarTexto('# Mi biblioteca de compras\n\n'+L.map(x=>`- **${x.nombre||'(sin nombre)'}** (${x.tipo}${x.tienda?', '+x.tienda:''}${x.lic&&x.lic!==COM_LIC[0]?', '+x.lic:''})${x.tags?' · '+x.tags:''}${x.nota?' — '+x.nota:''}`).join('\n'),'Lista copiada: pégala en el chat con Claude');return true}}
+    case 'cr-obj':S.crPz='';S.crProy=ds.v==='proyecto';renderMain();return true;
+    case 'cr-pz':S.crPz=ds.id;S.crProy=false;S.tab='bocetos';S.ancla='critica';renderMain();return true;
+    case 'cr-ir':S.tab='bocetos';S.ancla='critica';renderMain();return true;
+    case 'cr-pedir':if(p)copiarTexto(crPaquete(p,crTarget(p)),'Petición copiada: pégamela en el chat');return true;
+    case 'cr-guardar':{if(!p)return true;const t=crTarget(p),txt=resp(ds.key);if(txt.length<20){toast('Pega primero la respuesta de Claude');return true}
+      const c=crNueva(txt,{elemento:t.k==='grupo'?t.g:'',titulo:t.k==='pieza'?(t.z.nombre||t.z.etapa):t.k==='proyecto'?p.nombre:(t.g||'General'),...(t.k==='pieza'?{pz:t.id}:{}),...(t.k==='proyecto'?{proy:1}:{})});
+      (p.criticas=p.criticas||[]).push(c);(S.crResp=S.crResp||{})[ds.key]='';marcar();renderMain();toast(c.crudo?'No reconocí el formato: revisa abajo':'Lista de cambios lista');return true}
+    case 'cr-pedir-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(x)copiarTexto(crPaqueteGal(x),'Petición copiada: pégamela en el chat con la imagen');return true}
+    case 'cr-guardar-gal':{const x=(S.ajustes.galeria||[]).find(v=>v.id===ds.id);if(!x)return true;const txt=resp(ds.key);if(txt.length<20){toast('Pega primero la respuesta de Claude');return true}
+      const c=crNueva(txt,{titulo:x.titulo||x.tipo||'Ilustración'});(x.crits=x.crits||[]).push(c);(S.crResp=S.crResp||{})[ds.key]='';S.crAb=x.id;marcarAj();renderMain();toast(c.crudo?'No reconocí el formato: revisa abajo':'Lista de cambios lista');return true}
+    case 'cr-ronda2':{const h=crBusca(ds.c);if(h)copiarTexto(crPaqueteRonda(h.c),'Petición copiada: pégamela en el chat con la nueva versión');return true}
+    case 'cr-loca':{const h=crBusca(ds.c);if(!h)return true;const x=h.c.locas[+ds.i];if(!x||x.probada)return true;x.probada=true;
+      const pid=h.pid||h.x?.pid,pp=h.p||(pid&&S.P[pid]);if(pp)(pp.exploraciones=pp.exploraciones||[]).push({ts:Date.now(),titulo:'Idea loca: '+corto(x.t,80),detalle:x.t+(x.como?' · Probar: '+x.como:''),nota:''});
+      crGuarda(h);if(h.x&&pp)marcarPid(pid);renderMain();toast(pp?'Guardada en Explorar':'Guardada');return true}
+    case 'cr-del':{const k='cr'+ds.c;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;const h=crBusca(ds.c);if(!h)return true;const L=h.p?h.p.criticas:h.x.crits,i=L.indexOf(h.c);if(i>=0)L.splice(i,1);crGuarda(h);renderMain();return true}
+    case 'cr-prov':crLocasNuevas(p);renderMain();return true;
+    case 'cr-prov-g':{if(!p)return true;const i=+ds.i,t=crLocaTxt(i);(p.exploraciones=p.exploraciones||[]).push({ts:Date.now(),titulo:'Idea loca: '+corto(t,80),detalle:t,nota:''});S.crLoca=(S.crLoca||[]).filter(v=>v!==i);marcar();renderMain();toast('Guardada en Explorar');return true}}
   return false}
+document.addEventListener('input',e=>{const k=e.target.dataset?.crresp;if(k)(S.crResp=S.crResp||{})[k]=e.target.value});
+document.addEventListener('change',e=>{const d=e.target.dataset?.crh;if(!d)return;const [id,i]=d.split('|'),h=crBusca(id),m=h?.c.malo?.[+i];if(m){m.hecho=e.target.checked;crGuarda(h);renderMain()}});
+document.addEventListener('toggle',e=>{if(e.target.classList?.contains('cr-gal'))S.crAb=e.target.open?e.target.dataset.id:null},true);
 
 /* ============ 5. Calendario de producción ============ */
 function eventos(){
@@ -3383,7 +3449,8 @@ function vGaleria(){
         <input type="text" id="gal-a-${x.id}" data-aj="galeria.${i}.anio" value="${esc(x.anio||'')}" placeholder="Año">
         <select id="gal-p-${x.id}" data-aj="galeria.${i}.pid"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${x.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
       <textarea id="gal-n-${x.id}" data-aj="galeria.${i}.nota" placeholder="Notas o qué quieres que revise la crítica">${esc(x.nota||'')}</textarea>
-      <div class="prow">${S.sample?(busy===x.id?'<button class="btn sm" data-act="crit-stop">Detener</button><span class="muted">Revisando…</span>':`<button class="btn sm pri" data-act="gal-critica" data-id="${x.id}">${fb?'Pedir otra crítica':'Pedir crítica'}</button>`):''}
+      ${crBloqueGal(x)}
+      <div class="prow">
         <button class="btn sm" data-act="gal-pf" data-id="${x.id}">${x.pf?(x.pf.estado==='candidata'?'☆ Candidata':'★ '+(x.pf.estado==='aprobada'?'Con visto bueno':'Publicada')):'☆ Portafolio'}</button>
         <button class="btn ghost sm danger" data-act="gal-del" data-id="${x.id}">${S.confirmLi===x.id?'¿Borrar?':'✕'}</button></div>
       ${S.critErr?.[x.id]?`<p class="muted">${esc(S.critErr[x.id])}</p>`:''}
@@ -3417,14 +3484,6 @@ function bocetosPaquete(p,g){const xs=piezasGrupo(p,g||''),el=g||'general',foc=S
     `BOCETOS (${xs.length}):`,...(xs.length?xs.map((x,i)=>`${i+1}. ${x.nombre||x.etapa||'Boceto'} · ${x.etapa||''}${x.nota?' — '+x.nota:''}`):['(te los paso en este mensaje)']),'',
     'CONTEXTO DEL PROYECTO (lo que ya tengo decidido):',ctxProyecto(p),...(conf.length?['','NOTAS DE COMPOSICIÓN QUE YA CONFIRMÉ EN LA APP (medidas automáticas, no crítica):',...conf]:[]),'',
     'Te paso las imágenes en este mensaje (o dime la ruta de la carpeta en mi compu y las abres). Responde con estas secciones: Lo que funciona · Problemas reales · Decisiones que cuestionaría · Qué información falta · Qué probar en la siguiente ronda. Además dime, boceto por boceto, si se siente de ESTE mundo o podría ser de cualquier proyecto.'].join('\n')}
-function bocetosFeedbackHTML(p,g,ps){return `<div class="box big-q" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Feedback de Claude · ${esc(g||'General')}</h3><span class="lbl">${ps.length} boceto${ps.length===1?'':'s'}</span></div>
-    <p class="hint" style="margin:0">El feedback te lo doy yo, con tus bocetos y tu proyecto a la vista. La app arma la petición con todo lo que ya decidiste y una guía de lo que mirar según el tipo de boceto.</p>
-    <div class="chips"><span class="lbl">Que revise sobre todo</span>${CRIT_FOCOS.map(([k,n])=>`<button class="ch xs ${(S.critFoco||[]).includes(k)?'on':''}" data-act="crit-foco" data-k="${k}">${n}</button>`).join('')}</div>
-    <div class="prow"><b>1.</b><button class="btn sm pri" data-act="bocetos-pedir">Copiar la petición para Claude</button><button class="btn sm" data-act="claude-tablero" title="Baja el tablero de referencias como imagen para adjuntarla">Bajar el tablero (PNG)</button><button class="btn sm" data-act="bocetos-zip" ${ps.length?'':'disabled'}>Bajar las imágenes + la petición (.zip)</button></div>
-    <p class="hint" style="margin:0"><b>2.</b> Pégame la petición en el chat y adjunta las imágenes (o dime la ruta de la carpeta y las abro). <b>3.</b> Cuando te responda, pega aquí mi feedback y se guarda en el historial de este elemento:</p>
-    <textarea id="claude-resp" placeholder="Pega aquí el feedback de Claude…" style="min-height:90px">${esc(S.claudeResp||'')}</textarea>
-    <div class="prow"><button class="btn sm" data-act="bocetos-guardar">Guardar el feedback</button></div>
-    ${(p.criticas||[]).filter(c=>c.elemento===(g||'')&&c.tipo==='Feedback de bocetos').length?`<details><summary class="lbl" style="cursor:pointer">Feedback anterior de ${esc(g||'General')}</summary>${p.criticas.filter(c=>c.elemento===(g||'')&&c.tipo==='Feedback de bocetos').slice().reverse().map(c=>`<div class="crits"><b>${fecha(c.ts)}</b>${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}</div>`).join('')}</details>`:''}</div>`}
 async function subirCarpeta(files,carp){
   const p=S.P[S.cur];if(!p)return;const c=CARPS.find(k=>k[0]===carp);
   const fs_=[...files].filter(x=>/^image\/(png|jpeg|webp|gif)$/.test(x.type));if(!fs_.length){toast('Sube imágenes PNG, JPG o WEBP');return}
@@ -3453,8 +3512,8 @@ function vCarpetas(p){
       <input type="text" id="cn-${x.id}" data-b="piezas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Qué quieres que revise de este boceto">
       <div class="prow" style="gap:4px"><select id="ce-${x.id}" data-b="piezas.${i}.etapa" aria-label="Mover a" style="flex:1">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
         ${grupos.length?`<select id="cg-${x.id}" data-b="piezas.${i}.grupo" aria-label="Subcarpeta" style="flex:1"><option value="">General</option>${grupos.map(gg=>`<option ${gg===(x.grupo||'')?'selected':''}>${esc(gg)}</option>`).join('')}</select>`:''}
-        <button class="btn ghost sm" data-act="comp-abrir" data-id="${x.id}" title="Estudiar su composición y su perspectiva">Composición</button><button class="btn ghost sm" data-act="tab" data-tab="critica" title="Ver o pedir su crítica">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
-  ${ps.length||(p.piezas||[]).length?bocetosFeedbackHTML(p,g,ps):''}
+        <button class="btn ghost sm" data-act="comp-abrir" data-id="${x.id}" title="Estudiar su composición y su perspectiva">Composición</button><button class="btn ghost sm" data-act="cr-pz" data-id="${x.id}" title="Pedir la crítica de este boceto">Crítica</button><button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></div></div>`}).join('')||'<div class="empty">Vacía</div>'}</div>`}).join('')}</div>
+  ${ps.length||(p.piezas||[]).length?'<div class="prow"><button class="btn pri" data-act="ir-sec" data-id="critica">Pedir crítica de estos bocetos ↓</button><span class="muted">Qué está mal, cómo arreglarlo e ideas nuevas.</span></div>':''}
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Crítica de proceso${g?' · '+esc(g):''}</b><p class="muted" style="margin:2px 0 0">Compara tus etapas en orden: qué mejoró, qué se perdió (¿los valores de tus grises llegaron vivos al final?) y qué cambiar en tu método para el próximo proyecto.</p></div>
     ${S.aiBusy.proceso?'<button class="btn sm" data-act="ai-stop" data-k="proceso">Detener</button>':`<button class="btn sm pri" data-act="ai" data-k="proceso" ${ps.length<2?'disabled title="Sube al menos 2 imágenes de distintas etapas"':''}>${d?'Analizar de nuevo':'Analizar mi proceso'}</button>`}</div>
     ${S.aiBusy.proceso?'<p class="muted">Revisando tu proceso completo…</p>':S.ai.proceso?.error?`<p class="muted">${esc(S.ai.proceso.error)}</p>`:''}
@@ -4011,32 +4070,6 @@ async function subirEstilo(files){
   for(const f of fs_)try{S.ajustes.estiloImgs.push({id:uid(),...await guardarImagen(f)})}catch{toast('No se pudo subir una imagen')}
   marcarAj();renderMain();
 }
-function vCritica(p){
-  const piezas=p.piezas.map((x,i)=>[x,i]).reverse();
-  return `
-  <p class="intro">Aquí viven tus piezas, <strong>del thumbnail a la final</strong>, por etapa. La crítica te la doy yo, Claude, en el chat: usa «Pedirle la crítica a Claude» arriba.${S.sample?' Con una llave conectada también puedes pedirla aquí mismo a los asesores de la app.':''}</p>
-  <div class="drop" id="drop-pieza">
-    <div class="field" style="flex:1 1 260px"><label for="f-nota">¿Qué quieres que revisen? (opcional)</label><input type="text" id="f-nota" placeholder="Ej. no sé si se lee la serpiente; dudo de la composición"></div>
-    <div class="prow"><label class="lbl" for="f-etapa">Etapa</label><select id="f-etapa">${ETAPAS.map(e=>`<option>${e}</option>`).join('')}</select>
-      <label class="btn pri" for="f-pieza">Subir pieza</label><input type="file" id="f-pieza" accept="image/png,image/jpeg,image/webp,image/gif" hidden></div>
-  </div>
-  ${piezas.length?piezas.map(([x,i])=>piezaHTML(p,x,i)).join(''):'<div class="empty">Todavía no subes piezas. Empieza con tus thumbnails: es donde la crítica te ahorra más tiempo.</div>'}
-  ${asesor('encuadres','Asesor: ideas de encuadre','Antes de bocetar: 6 encuadres distintos para tu concepto, con cámara, lente, composición y qué pilar refuerza cada uno.')}
-  ${p.encuadres.length?`<div class="box"><h3>Encuadres guardados</h3><ul class="list">${p.encuadres.map((e,i)=>`<li><span><b>${esc(e.nombre)}</b> · ${esc(e.camara)}<br><span class="muted">${esc(e.composicion)}</span></span><button class="btn ghost sm" data-act="enc-del" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul></div>`:''}`}
-function piezaHTML(p,x,i){
-  const f=x.feedback,busy=S.critBusy===x.id;
-  return `<div class="box pieza"><div class="pz">
-    <div class="pzimg"><img ${imgAttrs(x)} alt="Pieza ${esc(x.etapa)}" loading="lazy" data-act="zoom"></div>
-    <div class="pzbody">
-      <div class="prow" style="justify-content:space-between"><span class="lbl">${esc(x.etapa)} · ${fecha(x.creado)}</span>
-        <span class="prow"><select id="pe-${x.id}" data-b="piezas.${i}.etapa" aria-label="Etapa" style="font-size:12px;padding:3px">${ETAPAS.map(e=>`<option ${e===x.etapa?'selected':''}>${e}</option>`).join('')}</select>
-        <button class="btn sm" data-act="pz-proponer" data-id="${x.id}" title="Proponer para portafolio">${x.pf?(x.pf.estado==='candidata'?'☆ Candidata':x.pf.estado==='aprobada'?'★ Con visto bueno':'★ Publicada'):'☆ Portafolio'}</button>
-        <button class="btn ghost sm danger" data-act="pz-del" data-id="${x.id}">${S.confirmRef===x.id?'¿Borrar?':'✕'}</button></span></div>
-      ${x.nota?`<p class="muted" style="margin:0">Pediste: ${esc(x.nota)}</p>`:''}
-      ${S.sample?`<div class="prow">${busy?'<button class="btn sm" data-act="crit-stop">Detener</button><span class="muted">El estudio está revisando tu pieza…</span>':`<button class="btn sm pri" data-act="critica" data-id="${x.id}">${f?'Pedir otra crítica':'Pedir crítica'}</button>`}</div>`:''}
-      ${S.critErr?.[x.id]?`<p class="muted">${esc(S.critErr[x.id])}</p>`:''}
-      ${f?feedbackHTML(f,i):''}
-    </div></div></div>`}
 function feedbackHTML(f,i,base){const attr=base?'data-aj':'data-b';base=base||'piezas';
   return `<div class="fb">
     <div class="fbtop"><span class="nivel">${esc(f.nivel||'')}</span><p style="margin:0"><b>Se lee en 3 segundos:</b> ${esc(f.lectura||'')}</p>
@@ -5335,9 +5368,10 @@ function pgRefs(p){return pgNav([['buscar','Buscar y moodboard'],['tablero','Tab
   +pgSec('refs','buscar','Buscar y moodboard','Busca, sube o pega imágenes y escribe el porqué de cada una.',vRefs(p))
   +pgSec('refs','tablero','Tablero','Ordena todo sobre un lienzo libre y llévalo a PureRef.',vBoardTab(p))
   +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))}
-function pgBocetos(p){return pgNav([['carpetas','Subir y feedback'],['critica','Medir un boceto'],['basicos','Básicos de diseño']])
-  +pgSec('bocetos','carpetas','Subir bocetos y pedir feedback','Por elemento, con el contexto del proyecto.',vCarpetas(p))
-  +pgSec('bocetos','critica','Medir un boceto','Datos de tu boceto (valores, silueta, foco) y el historial de críticas.',vCritica2(p))
+function pgBocetos(p){return pgNav([['carpetas','Subir bocetos'],['critica','Crítica'],['medir','Medir y comparar'],['basicos','Básicos de diseño']])
+  +pgSec('bocetos','carpetas','Subir bocetos','Por elemento (personaje, vegetación, rocas…), con el contexto del proyecto.',vCarpetas(p))
+  +pgSec('bocetos','critica','Crítica: qué está mal y qué cambiar','Claude critica en el chat; aquí queda como lista de cambios, con ideas fuera de lo ordinario.',vCriticaClaude(p))
+  +pgSec('bocetos','medir','Medir y comparar','Datos medidos por la app (no es opinión): valores, silueta, foco, y comparar dos versiones.',vMedir(p))
   +pgSec('bocetos','basicos','Básicos de diseño','Revísalos en cada boceto y en el final.',vBasicos(p))}
 function pgExplorar(p){return pgSec('explorar','explorar','Explorar','Explora antes de casarte con una idea.',vExplorar(p))}
 function pgProduccion(p){return pgNav([['produccion','Producción'],['laminas','Láminas y publicar']])
@@ -5457,7 +5491,7 @@ function darlingsHTML(p){const L=darlingsLista(p),lab={funciona:'Existe porque f
       <div class="prow">${['Se queda','Simplificar','Eliminar','Protagonista'].map(v=>`<button class="ch xs ${x.ver===v?'on':''}" data-act="darl" data-k="${esc(x.k)}" data-v="${v}">${v}</button>`).join('')}${porqueBtn(x.k)}</div></div>`).join('')}</div>`:'<p class="muted">No detecto elementos todavía. Describe tu diseño en Concepto, pilares o decisiones (máscara, armadura, alas, raíces…) o elige materiales.</p>'}</div>`}
 
 /* ---------- CRÍTICA: boceto al instante + concepto escrito ---------- */
-function vCritica2(p){const an=S.anP?.[S.cur],piezas=(p.piezas||[]).slice().reverse();
+function vMedir(p){const an=S.anP?.[S.cur],piezas=(p.piezas||[]).slice().reverse();
   return `
   ${guiasHTML(p)}
   <div class="box big-q" id="drop-an"><div class="prow" style="justify-content:space-between"><h3>Medir mi boceto · datos, no crítica</h3><span class="lbl">Funciona en cel, iPad y compu</span></div>
@@ -5469,9 +5503,8 @@ function vCritica2(p){const an=S.anP?.[S.cur],piezas=(p.piezas||[]).slice().reve
     ${S.anBusy?'<p class="muted">Analizando…</p>':''}
     ${an?analisisHTML(an.a,an.cr,{id:'p',guardar:`<div class="prow">${an.guardada?'<span class="ok-box sm">✓ Guardada en críticas y en tus piezas</span>':'<button class="btn sm pri" data-act="an-guardar">Guardar crítica (y el boceto en Carpetas)</button>'}<button class="btn sm" data-act="an-ronda">Convertir problemas en ronda</button></div>`}):''}</div>
   ${rondasHTML(p)}
-  ${(p.criticas||[]).length?`<div class="box"><h3>Historial de críticas <span class="lbl">${p.criticas.length}</span></h3><div class="crits">${p.criticas.slice().reverse().map(c=>{const i=p.criticas.indexOf(c);return `<details><summary><b>${esc(c.tipo)}</b> · ${fecha(c.ts)} ${c.titulo?'· '+esc(corto(c.titulo,60)):''}</summary>${c.img?`<img src="${esc(c.img)}" alt="" style="max-height:160px;width:auto;border-radius:6px">`:''}
-    ${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}<div class="prow"><button class="btn sm" data-act="crit-ronda" data-i="${i}">Convertir en ronda</button><button class="btn ghost sm danger" data-act="crit-del" data-i="${i}">Borrar</button></div></details>`}).join('')}</div></div>`:''}
-  ${vCritica(p)}`}
+  ${(p.criticas||[]).some(c=>c.tipo!=='Crítica')?`<div class="box"><h3>Historial de mediciones y auditorías <span class="lbl">${p.criticas.filter(c=>c.tipo!=='Crítica').length}</span></h3><div class="crits">${p.criticas.slice().reverse().filter(c=>c.tipo!=='Crítica').map(c=>{const i=p.criticas.indexOf(c);return `<details><summary><b>${esc(c.tipo)}</b> · ${fecha(c.ts)} ${c.titulo?'· '+esc(corto(c.titulo,60)):''}</summary>${c.img?`<img src="${esc(c.img)}" alt="" style="max-height:160px;width:auto;border-radius:6px">`:''}
+    ${Object.entries(c.r||{}).filter(([,l])=>Array.isArray(l)&&l.length).map(([k,l])=>`<p class="lbl">${esc(k)}</p><ul>${l.map(x=>`<li>${esc(typeof x==='string'?x:x.t||'')}</li>`).join('')}</ul>`).join('')}<div class="prow"><button class="btn sm" data-act="crit-ronda" data-i="${i}">Convertir en ronda</button><button class="btn ghost sm danger" data-act="crit-del" data-i="${i}">Borrar</button></div></details>`}).join('')}</div></div>`:''}`}
 async function analizarYMostrar(src,{etapa,nota,pieza}={}){const p=S.P[S.cur];if(!p)return;S.anBusy=true;renderMain();
   try{const a=await analizarImagen(src),cr=criticaImagen(a,p,{etapa:etapa||'Boceto',nota});registrarMetrica(a,'boceto',S.cur);S.anP=S.anP||{};S.anP[S.cur]={a,cr,etapa,nota,file:src instanceof Blob?src:null,pieza};
     if(pieza)pieza.analisis={ts:Date.now(),...cr}}
@@ -7373,7 +7406,6 @@ function claudeParsea(txt){const H=[[/^(lo que funciona|qu[eé] funciona|fortale
     if(h){cur=h[1];const resto=limpia.split(/[:：]/).slice(1).join(':').trim();if(resto)add(resto);continue}add(l)}
   return out}
 function bdOrdenarCuando(p,m){const t0=Date.now(),esp=()=>{const im=[...document.querySelectorAll('.bd-it img')];if(im.every(i=>i.complete&&i.naturalWidth)||Date.now()-t0>4500){bdOrdenar(p,m);marcar();renderMain()}else setTimeout(esp,150)};esp()}
-document.addEventListener('input',e=>{if(e.target.id==='claude-resp')S.claudeResp=e.target.value});
 function vBoardTab(p){const red=S.bdVista==='red';
   return `<div class="chips" style="margin-bottom:8px"><button class="ch ${red?'':'on'}" data-act="bd-vista" data-v="libre">Tablero libre</button><button class="ch ${red?'on':''}" data-act="bd-vista" data-v="red">Mapa de relaciones</button></div>${red?vRMapa(p):vBoard(p)}
   <details class="box" data-det="informe" ${S.palAb?.informe?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Informe profesional (PNG para presentar)</h3></summary><p class="hint" style="margin:6px 0">Un documento con formato de industria: encabezado, pilares, paletas y una columna por grupo. El tablero de arriba es tu espacio de trabajo; esto es para enseñarlo.</p>${tableroHTML(p)}</details>`}
@@ -8324,8 +8356,6 @@ document.addEventListener('input',e=>{
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
   if(t.dataset.unlpid){S.unlPid=t.value;renderMain();return}
-  if(t.dataset.comdef){S.comDef=S.comDef||{};S.comDef[t.dataset.comdef]=t.value;return}
-  if(t.dataset.comq){S.comF=S.comF||{tipo:'',q:''};S.comF.q=t.value;const g=$('#comgrid');if(g){g.innerHTML=comGrid();S.assets?.hydrate?.()}return}
   if(t.dataset.galdef){S.galDef=S.galDef||{};S.galDef[t.dataset.galdef]=t.value;return}
   if(t.dataset.refb){S.refB=S.refB||{};const k=t.dataset.refb;S.refB[k]=t.value;if(['q','prop','epoca','amb'].includes(k))S.refB.exacta='';if(t.tagName==='SELECT'&&k==='src'&&S.refB.q)buscarRefs();else if(t.tagName==='SELECT'&&/^f[A-Z]/.test(k))renderMain();const pv=$('#rb-prev');if(pv&&['q','prop','epoca','amb'].includes(k))pv.innerHTML=consultaPrevHTML(S.refB);return}
   if(t.dataset.adp){adaptarDraft()[t.dataset.adp]=t.value;return}
@@ -8386,8 +8416,6 @@ document.addEventListener('change',e=>{
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};delete r.dias[k].fb;S.anD=null;marcarAj();renderMain();setTimeout(()=>$('[data-act="d-analizar"]')?.click(),50)}).catch(()=>toast('No se pudo subir'))}
   if(e.target.dataset?.carp){subirCarpeta(e.target.files,e.target.dataset.carp);e.target.value=''}
-  if(e.target.id==='com-file'){subirCompras(e.target.files);e.target.value=''}
-  if(e.target.dataset?.comth){const f=e.target.files[0],x=lista('compras').find(v=>v.id===e.target.dataset.comth);e.target.value='';if(f&&x)comMini(f).then(r=>{delete x.thumb;delete x.thumbSrc;Object.assign(x,r);marcarAj();renderMain()})}
   if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
   if(e.target.id==='nom-img'){S.nomImg2=e.target.files[0]||null;renderMain()}
   if(e.target.id==='f-nomimg'){S.nomImg=e.target.files[0]||null;renderMain()}
@@ -8593,9 +8621,7 @@ async function accion(a,el){
     case 'bd-zip':bdDescarga('zip');break;
     case 'bd-copiar':bdDescarga('copiar');break;
     case 'crit-foco':{const f=S.critFoco=S.critFoco||[];S.critFoco=f.includes(ds.k)?f.filter(x=>x!==ds.k):[...f,ds.k];renderMain();break}
-    case 'bocetos-pedir':copiarTexto(bocetosPaquete(p,S.carpG||''),'Petición copiada: pégamela en el chat con tus imágenes');break;
     case 'bocetos-zip':{if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}const g=S.carpG||'',xs=piezasGrupo(p,g);if(!xs.length){toast('Sube primero algún boceto');return}const zip=new JSZip(),dir=zip.folder(slug(p.nombre,40)+'-'+slug(g||'general',20));let i=0;for(const x of xs){try{const b=await blobDeRef(x);i++;dir.file(String(i).padStart(2,'0')+'-'+slug(x.nombre||x.etapa||'boceto',30)+'.'+((b.type.split('/')[1]||'png').replace('jpeg','jpg')),b)}catch{}}dir.file('peticion-para-claude.txt',bocetosPaquete(p,g));await bajarBlob(slug(p.nombre,40)+'-bocetos-'+slug(g||'general',20)+'.zip',await zip.generateAsync({type:'blob'}));toast('Paquete descargado');break}
-    case 'bocetos-guardar':{const t=($('#claude-resp')?.value||'').trim();if(t.length<20){toast('Pega primero el feedback de Claude');return}p.criticas.push({tipo:'Feedback de bocetos',elemento:S.carpG||'',ts:Date.now(),titulo:S.carpG||'General',r:claudeParsea(t)});S.claudeResp='';marcar();renderMain();toast('Feedback guardado');break}
     case 'claude-tablero':if(bdItems(p).length)bdDescarga('png');else tpPNG();break;
     case 'rb-sel':{const i=+ds.i,L=S.rbSel||[];S.rbSel=L.includes(i)?L.filter(x=>x!==i):[...L,i];renderMain();break}
     case 'rb-sel-limpiar':S.rbSel=[];renderMain();break;
@@ -8799,7 +8825,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCom(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
