@@ -690,6 +690,8 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .palrol{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink2)}.palrol i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 .why-l{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:3px}
 .reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}.reglas li{display:flex;gap:4px;align-items:center}.reglas li input{flex:1;min-width:0}.v3-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.v3-sw{display:inline-flex;gap:5px}.v3-c{width:26px;height:26px;border-radius:50%;border:2px solid var(--line2);cursor:pointer;padding:0}.v3-c.on{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.crec-l{display:flex;flex-direction:column;gap:6px}.crec-i{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}.crec-i span{font-size:13px;color:var(--ink2);line-height:1.4}.crec-i .btn{align-self:flex-start}
+.des-pasos{display:flex;flex-direction:column;gap:8px}.des-p{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;background:var(--bg)}.des-p span{flex:1}.des-p small{display:block;color:var(--ink2);margin-top:2px;line-height:1.4}.des-p.ok{opacity:.6}.des-p input{margin-top:3px}
 .v3-bar{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px;border-bottom:1px solid var(--line)}.v3-pg{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}
 .sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
 .cand{margin:6px 0 0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px;color:var(--ink2)}
@@ -1033,7 +1035,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyn608s').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muynb8xs').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1359,7 +1361,7 @@ function renderSide(){
       ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
-      ${nav('ruta','map','Ruta de aprendizaje')}
+      ${nav('ruta','map','Cursos y ruta')}
       ${nav('potenciar','target','Potenciar mi punto débil')}
       ${nav('recursos','grid','Recursos y pinceles')}
       ${nav('progreso','chart','Mi progreso')}
@@ -1842,6 +1844,7 @@ function vProgreso(){
   const aprend=ps.filter(([,p])=>p.retro.aprendi||p.retro.mejorar);
   return `
   <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mi progreso</h1>
+  ${vCrecimiento()}
   ${progresoMedidoHTML()}
   <div class="stats">
     <div class="stat"><b>${ps.length}</b><span>proyectos</span></div>
@@ -2321,6 +2324,8 @@ function vDesatorar(){
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Desatorarme</h1>
   <p class="intro">Cuando te atoras casi nunca es por técnica: es identidad, dirección, voz, arranque, cierre o el porqué. Elige <b>solo el que más te frena hoy</b> y haz su ejercicio. <span class="muted">Basado en la guía "Stuck" de Mick Javaid (método UNLOCK).</span></p>
+  ${desPlanHTML()}
+  <h3 style="margin:14px 0 6px">Si es algo más de fondo</h3>
   <div class="unlk">${UNLOCK.map(x=>`<button class="unl" data-act="unl" data-k="${x.k}" aria-pressed="${k===x.k}"><b>${x.k}</b><span>${esc(x.n)}</span></button>`).join('')}</div>
   ${card?`<div class="banner" style="background:var(--surface2)"><i>${esc(card.s)}</i> → <b>${esc(card.c)}</b></div>${body}`
     :`<div class="grid3">${UNLOCK.map(x=>`<button class="box" data-act="unl" data-k="${x.k}" style="text-align:left;cursor:pointer"><span class="lbl" style="color:var(--accent)">${x.k} · ${esc(x.n)}</span><span><i>${esc(x.s)}</i></span><b>${esc(x.c)}</b></button>`).join('')}</div>`}`}
@@ -3527,23 +3532,127 @@ const RUTA={
   entornos:[['libro','The Skillful Huntsman','Mike Yamada, Khang Le, Felix Yoon'],['youtube','Environment design','Feng Zhu (FZD)'],['curso','Environment Design','CGMA']]
 };
 const RUTA_EST=['Pendiente','En curso','Terminado'];
+/* ============ Crecer: qué funciona, qué no y cómo crecer (sale de TUS críticas y TU práctica) · cursos por herramienta · Desatorarme con plan ============ */
+/* temas que se repiten en las críticas: qué se te elogia y qué se te marca una y otra vez */
+const CR_TEMAS=[['valores','Valores y contraste',/valor|contraste|escala de grises|claro y oscuro|tonal/i,'valores'],['silueta','Silueta y lectura',/silueta|miniatura|lectura a|se lee|forma grande/i,'silueta'],['composicion','Composición y foco',/composici|foco|punto focal|encuadre|jerarqu|tercio|mirada/i,'composicion'],['color','Color y luz',/color|paleta|saturaci|temperatura|armon|luz|ilumin|sombra|rebote|atm[oó]sfera|niebla/i,'color'],['perspectiva','Perspectiva y escala',/perspectiva|punto de fuga|horizonte|lente|c[aá]mara|escala|figura humana/i,'perspectiva'],['anatomia','Anatomía y estructura',/anatom|proporci|estructura|pose|gesto|esquelet|articul|peso/i,'anatomia'],['diseno','Diseño original y coherencia',/gen[eé]ric|original|lenguaje de formas|de este mundo|cliché|clich|stock|zool[oó]gico/i,'diseno'],['materiales','Materiales y textura',/material|textura|superficie|desgaste|piel|piedra|obsidiana|pincelada/i,'photobash'],['storytelling','Historia y narrativa',/historia|cuenta|narrat|momento|funci[oó]n/i,'storytelling'],['acabado','Acabado y bordes',/bordes|acabado|render|ruido|detalle|limpi/i,'fundamentos']];
+const crTemaDe=t=>CR_TEMAS.filter(([,,re])=>re.test(t||'')).map(x=>x[0]);
+function crecDatos(){const mal={},bien={},res={total:0,hechos:0,criticas:0};
+  const nota=(o,t,x)=>{for(const k of crTemaDe(t)){(o[k]=o[k]||{n:0,pend:0,ej:[]}).n++;if(x?.pend)o[k].pend++;if(o[k].ej.length<2)o[k].ej.push(t)}};
+  const crits=[];for(const p of Object.values(S.P)){try{crMigra(p)}catch{}for(const c of p.criticas||[])if(c.tipo==='Crítica')crits.push({c,p})}
+  for(const x of S.ajustes.galeria||[])for(const c of x.crits||[])crits.push({c,p:null});
+  for(const {c} of crits){res.criticas++;for(const m of c.malo||[]){res.total++;if(m.hecho)res.hechos++;nota(mal,m.t+' '+(m.fix||''),{pend:!m.hecho})}for(const b of c.bien||[])nota(bien,b)}
+  return {mal,bien,res}}
+function crecAnalisis(){
+  const D=crecDatos(),{orden,prom}=debilidades(),ra=racha(),est=estancadas(),fin=terminadas(),ps=ordenados(),dias=S.ajustes.rutina?.dias||{},hechos14=Object.entries(dias).filter(([k,v])=>v.hecho&&Date.now()-new Date(k).getTime()<14*864e5).length;
+  const top=(o,n=3)=>Object.entries(o).sort((a,b)=>b[1].n-a[1].n).slice(0,n).map(([k,v])=>({k,...v,nombre:CR_TEMAS.find(t=>t[0]===k)[1],area:CR_TEMAS.find(t=>t[0]===k)[3]}));
+  const fuertes=top(D.bien),debiles=top(D.mal),pct=D.res.total?Math.round(D.res.hechos/D.res.total*100):null;
+  const funciona=[],falla=[],crecer=[];
+  fuertes.forEach(f=>funciona.push(`${f.nombre}: te lo elogian ${f.n} ${f.n===1?'vez':'veces'} en tus críticas (${corto(f.ej[0],70)}). No lo toques; úsalo como ancla.`));
+  Object.entries(prom).filter(([,v])=>v>=7).slice(0,2).forEach(([k,v])=>funciona.push(`${SKILLS[k]}: promedio ${v.toFixed(1)}/10 en tus piezas.`));
+  if(ra>=3)funciona.push(`Constancia: ${ra} días seguidos de estudio diario.`);
+  if(pct!=null&&pct>=60)funciona.push(`Aplicas la crítica: corregiste ${pct}% de lo que te marcaron (${D.res.hechos} de ${D.res.total}).`);
+  if(fin>=1)funciona.push(`Terminas piezas: ${fin} terminada${fin===1?'':'s'} o soltada${fin===1?'':'s'}.`);
+  debiles.forEach(d=>falla.push(`${d.nombre}: aparece ${d.n} ${d.n===1?'vez':'veces'} entre los problemas de tus críticas${d.pend?` y ${d.pend} siguen sin corregir`:''}. Es un patrón, no un descuido.`));
+  Object.entries(prom).filter(([,v])=>v<6).slice(0,2).forEach(([k,v])=>falla.push(`${SKILLS[k]}: promedio ${v.toFixed(1)}/10 en tus piezas.`));
+  if(pct!=null&&pct<40&&D.res.total>=4)falla.push(`Corriges poco de lo que te marcan: ${pct}% (${D.res.hechos} de ${D.res.total}). Si no se aplica, la crítica no te hace crecer.`);
+  if(est.length>=4)falla.push(`${est.length} piezas sin terminar; la más vieja lleva ${est[0].dias} días. Acumular sin cerrar frena más que cualquier técnica.`);
+  if(!fin&&ps.length)falla.push('Ninguna pieza terminada todavía: el portafolio se arma con finales, no con exploraciones.');
+  if(hechos14<3)falla.push(`Estudio diario flojo: ${hechos14} de los últimos 14 días.`);
+  if(!D.res.criticas)falla.push('Aún no hay críticas guardadas: sin ellas no puedo ver tus patrones. Pide la primera en Bocetos → Crítica.');
+  const areas=[...debiles.map(d=>d.area),...orden.slice(0,2)].filter((a,i,arr)=>a&&arr.indexOf(a)===i&&RUTA[a]);
+  areas.slice(0,3).forEach((a,i)=>crecer.push({t:`${i+1}. Ataca ${a==='photobash'?'materiales y photobash':(SKILLS[a]||a).toLowerCase()}`,d:`Estudia: ${RUTA[a].slice(0,2).map(r=>r[1]+' ('+r[2]+')').join(' · ')}. Practica con el ejercicio del día.`,a}));
+  if(est.length)crecer.push({t:'Cierra antes de abrir',d:`Elige UNA de tus ${est.length} piezas sin terminar y llévala a Final esta semana (Desatorarme → Terminar).`,go:'vista:desatorar'});
+  if(pct!=null&&D.res.total-D.res.hechos>0)crecer.push({t:'Aplica lo pendiente',d:`Te quedan ${D.res.total-D.res.hechos} cambios por hacer de tus críticas: haz primero los de prioridad alta.`,go:'tab:bocetos:critica'});
+  if(hechos14<8)crecer.push({t:'Estudio diario de 30 minutos',d:'El ejercicio sale de tu punto más débil. Pocos días seguidos valen más que una tarde larga.',go:'vista:diario'});
+  return {D,funciona,falla,crecer,pct,ra,fin,hechos14}}
+function vCrecimiento(){const A=crecAnalisis(),lista=(L,ico)=>L.length?`<ul class="why-l">${L.map(x=>`<li>${ico} ${esc(x)}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Todavía no hay datos para esto.</p>';
+  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Mi crecimiento: qué funciona, qué no y cómo seguir</h3><button class="btn sm" data-act="crec-copiar" title="Copia este análisis para pegarlo en el chat con Claude">Copiar para Claude</button></div>
+    <p class="hint" style="margin:0">Sale de tus críticas, tus piezas, tu estudio diario y lo que corriges. ${A.D.res.criticas?`Leí ${A.D.res.criticas} crítica${A.D.res.criticas===1?'':'s'} (${A.D.res.total} puntos).`:'Con 2 o 3 críticas guardadas ya aparecen tus patrones.'}</p>
+    <div class="grid3"><div><span class="lbl" style="color:var(--ok)">Lo que funciona</span>${lista(A.funciona,'✓')}</div><div><span class="lbl" style="color:var(--warn)">Lo que no</span>${lista(A.falla,'✗')}</div>
+      <div><span class="lbl" style="color:var(--accent)">Cómo crecer</span>${A.crecer.length?`<div class="crec-l">${A.crecer.map(x=>`<div class="crec-i"><b>${esc(x.t)}</b><span>${esc(x.d)}</span>${x.a?`<button class="btn sm" data-act="ruta-f" data-v="${x.a}">Ver cursos de esto →</button>`:x.go?`<button class="btn sm" data-act="des-go" data-go="${esc(x.go)}">Ir →</button>`:''}</div>`).join('')}</div>`:'<p class="muted" style="margin:0">Sigue estudiando y subiendo piezas.</p>'}</div></div></div>`}
+function crecTexto(){const A=crecAnalisis(),L=(t,a)=>a.length?t+'\n'+a.map(x=>'- '+x).join('\n'):'';
+  return ['# Mi crecimiento (generado por la app)','',L('## Lo que funciona',A.funciona),'',L('## Lo que no',A.falla),'',L('## Cómo crecer',A.crecer.map(x=>x.t+': '+x.d)),'','Claude: dime con esto un plan de 4 semanas, con ejercicios concretos y qué cursos de mi lista priorizar.'].join('\n')}
+/* ---------- cursos y ruta de aprendizaje por herramienta ---------- */
+Object.assign(RUTA,{
+  fundamentos:[['youtube','Pintura digital y fundamentos (colección gratis)','Ctrl+Paint · Matt Kohr'],['youtube','Pintura, color y valores','Marco Bucci'],['curso','Dibujo desde cero (ejercicios de caja y perspectiva, gratis)','Drawabox'],['youtube','Dibujo y pintura para ilustradores','Aaron Blaise'],['curso','Anatomía y figura','Proko']],
+  photoshop:[['curso','Tutoriales oficiales de Photoshop','Adobe'],['youtube','Pintura y concept art en Photoshop','Marco Bucci · Aaron Blaise'],['youtube','Flujos de trabajo, máscaras y capas de ajuste','PiXimperfect'],['youtube','Pintura digital paso a paso','Ctrl+Paint'],['curso','Concept art y paintover','Gnomon Workshop']],
+  procreate:[['curso','Manual oficial de Procreate','Procreate Handbook'],['curso','Pinceles y proyectos de la comunidad','Procreate Folio'],['youtube','Procreate paso a paso','Bardot Brush'],['youtube','Pintura y pinceles en Procreate','Art with Flo']],
+  dreams:[['curso','Manual oficial de Procreate Dreams','Procreate'],['youtube','Animación en Procreate Dreams (busca los más recientes)','Varios creadores'],['libro','The Animator\'s Survival Kit','Richard Williams'],['youtube','Los 12 principios de la animación','Varios creadores']],
+  photobash:[['youtube','Photobashing para entornos y concept art (busca por tema)','Varios artistas'],['curso','Kits de entornos para bashear en 3D y fotos','Kitbash3D'],['curso','Matte painting e integración de fotos','Gnomon Workshop'],['recurso','Fotos y texturas libres: CC0 y de uso libre','Poly Haven · ambientCG · Unsplash · Pexels']]});
+const RUTA_AREAS=[['prio','Mis prioridades'],['blender','Blender'],['zbrush','ZBrush'],['procreate','Procreate'],['dreams','Procreate Dreams'],['photoshop','Photoshop'],['photobash','Photobash'],['fundamentos','Fundamentos'],['todo','Todo']];
+function photobashHTML(){const pasos=[['Primero la idea, luego las fotos','Haz un thumbnail con silueta, planos y dirección de luz ANTES de buscar fotos. Si no, armas un collage sin intención.'],['Reúne con una sola luz','Elige fotos con la misma dirección de luz y temperatura que tu escena. Es lo que más delata un photobash.'],['Bloquea por planos y valores','Primero frente, medio y fondo en 3 valores; los detalles van al final.'],['Unifica antes de detallar','Curvas, mapa de degradado y temperatura de color sobre todo el conjunto; mismo grano o ruido para que parezca una sola imagen.'],['Integra bordes y atmósfera','Bordes suaves o duros según la distancia, niebla en los planos lejanos, sombras proyectadas y color rebotado entre piezas.'],['Pinta encima','Cambia formas, añade tu historia y quita lo reconocible de la foto: lo que queda debe ser tu diseño, no la foto.'],['Revísalo','Blanco y negro, miniatura y espejo. ¿Se nota el collage? ¿Se lee la silueta?']],
+    lic=['Usa solo fotos tuyas o de uso libre (CC0): Poly Haven, ambientCG, Unsplash, Pexels, Wikimedia Commons.','Si es para portafolio, di que es photobash en tu breakdown: los estudios lo esperan y lo valoran si se ve tu diseño.','Evita fotos con marca, rostro reconocible o licencia desconocida.'],
+    ej=['20 min · Una roca: junta 3 fotos de roca y arma UNA formación con la misma luz.','45 min · Un entorno: thumbnail + 6 fotos + paintover encima.','60 min · El mismo kit en 3 moods distintos (amanecer, tormenta, noche).'];
+  return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Photobash: el método</h3><p class="hint" style="margin:0">Photobash no es pegar fotos: es diseñar con fotos como material. Estos 7 pasos separan un collage de una pieza de concept art.</p>
+    <ol class="reglas">${pasos.map(([t,d])=>`<li><span><b>${esc(t)}.</b> ${esc(d)}</span></li>`).join('')}</ol>
+    <div class="grid2"><div><span class="lbl">Ejercicios</span><ul class="why-l">${ej.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div><span class="lbl">Licencias y ética</span><ul class="why-l">${lic.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>
+    <div class="prow"><button class="btn sm pri" data-act="des-go" data-go="herr:refs">Buscar fotos para photobash →</button><button class="btn sm" data-act="des-go" data-go="herr:comp">Composición y perspectiva →</button></div></div>`}
 function vRuta(){
-  const {orden,prom}=debilidades(),r=S.ajustes.ruta=S.ajustes.ruta||{};
-  const skills=[...orden.filter(k=>!(k in SKILLS_3D)&&RUTA[k]).slice(0,3),'entornos','blender','zbrush',...orden.slice(3)].filter((k,i,a)=>a.indexOf(k)===i&&RUTA[k]);
-  const nombre=k=>k==='entornos'?'Diseño de entornos (tu meta)':k==='blender'?'Blender · blockout, luz y render para concept':k==='zbrush'?'ZBrush · escultura de criaturas, personajes y props':SKILLS[k];
-  const total=Object.values(RUTA).flat().length,hechos=Object.values(r).filter(v=>v==='Terminado').length;
-  const link=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`;
+  const {orden,prom}=debilidades(),r=S.ajustes.ruta=S.ajustes.ruta||{},F=S.rutaF||'prio';
+  const nombre=k=>({entornos:'Diseño de entornos (tu meta)',blender:'Blender · blockout, luz y render para concept',zbrush:'ZBrush · escultura de criaturas, personajes y props',procreate:'Procreate',dreams:'Procreate Dreams · animación',photoshop:'Photoshop',photobash:'Photobash y materiales',fundamentos:'Fundamentos de dibujo y pintura'}[k]||SKILLS[k]||k);
+  const prio=[...orden.filter(k=>!(k in SKILLS_3D)&&RUTA[k]).slice(0,3),'entornos'],resto=Object.keys(RUTA).filter(k=>!prio.includes(k));
+  const mostrar=F==='prio'?prio:F==='todo'?[...prio,...resto]:[F==='blender'||F==='zbrush'||F==='procreate'||F==='dreams'||F==='photoshop'||F==='photobash'||F==='fundamentos'?F:prio[0]].filter(Boolean);
+  const total=Object.values(RUTA).flat().length,hechos=Object.values(r).filter(v=>v==='Terminado').length,enCurso=Object.values(r).filter(v=>v==='En curso').length;
+  const g=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`,yt=(t,a)=>`https://www.youtube.com/results?search_query=${encodeURIComponent(t+' '+a)}`;
   return `
-  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ruta de aprendizaje</h1>
-  <p class="intro">Libros, cursos y canales de referencia en la industria, ordenados por tus puntos más débiles (según tus críticas y tu evaluación). Hazlos de uno en uno y aplícalos en el Estudio diario.</p>
-  <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
-  ${skills.map((k,i)=>`<div class="box"><div class="prow" style="justify-content:space-between"><h3>${i<3?`<span style="color:var(--accent)">Prioridad ${i+1} · </span>`:''}${esc(nombre(k))}</h3></div>
-    <ul class="list">${RUTA[k].map(([tipo,t,a])=>{const key=k+'|'+t,e=r[key]||'Pendiente';return `<li style="grid-template-columns:1fr auto"><span><span class="tag" style="--lc:var(--ink3)">${tipo}</span> <b>${esc(t)}</b> · <span class="muted">${esc(a)}</span></span>
-      <span class="prow" style="flex-wrap:nowrap"><a class="btn ghost sm" href="${link(t,a)}" target="_blank" rel="noopener">Buscar ↗</a><select id="ru-${esc(key)}" data-ruta="${esc(key)}" style="width:auto">${RUTA_EST.map(s=>`<option ${s===e?'selected':''}>${s}</option>`).join('')}</select></span></li>`}).join('')}</ul></div>`).join('')}
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cursos y ruta de aprendizaje</h1>
+  <p class="intro">Libros, cursos y canales de la industria para Blender, ZBrush, Procreate, Procreate Dreams, Photoshop, photobash y los fundamentos. «Mis prioridades» ordena todo por tus puntos débiles (según tus críticas). Márcalos «En curso» o «Terminado» y aparecen en tu análisis de crecimiento.</p>
+  <div class="chips">${RUTA_AREAS.map(([k,n])=>`<button class="ch ${F===k?'on':''}" data-act="ruta-f" data-v="${k}">${n}</button>`).join('')}</div>
+  <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div><div class="stat"><b>${enCurso}</b><span>en curso</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
+  ${F==='photobash'?photobashHTML():''}
+  ${mostrar.map((k,i)=>`<div class="box"><div class="prow" style="justify-content:space-between"><h3>${F==='prio'&&i<3?`<span style="color:var(--accent)">Prioridad ${i+1} · </span>`:''}${esc(nombre(k))}</h3></div>
+    <ul class="list">${(RUTA[k]||[]).map(([tipo,t,a])=>{const key=k+'|'+t,e=r[key]||'Pendiente';return `<li style="grid-template-columns:1fr auto"><span><span class="tag" style="--lc:var(--ink3)">${esc(tipo)}</span> <b>${esc(t)}</b> · <span class="muted">${esc(a)}</span></span>
+      <span class="prow" style="flex-wrap:nowrap">${tipo==='youtube'||tipo==='curso'?`<a class="btn ghost sm" href="${yt(t,a)}" target="_blank" rel="noopener">YouTube ↗</a>`:''}<a class="btn ghost sm" href="${g(t,a)}" target="_blank" rel="noopener">Buscar ↗</a><select id="ru-${esc(key)}" data-ruta="${esc(key)}" style="width:auto">${RUTA_EST.map(s=>`<option ${s===e?'selected':''}>${s}</option>`).join('')}</select></span></li>`}).join('')}</ul></div>`).join('')}
+  <p class="muted">Los nombres son canales, cursos y libros reales de la industria; los enlaces abren una búsqueda para que veas lo más reciente (los cursos de pago los puedes ver en su sitio). Revisa precios y vigencia.</p>
   ${S.sample?`<div class="asesor"><div class="top"><div><b>Plan de estudio de 8 semanas</b><p class="muted" style="margin:2px 0 0">Combina estos recursos, tus debilidades y tus horas por semana en un plan semana por semana.</p></div>
     ${S.aiBusy.ruta?'<span class="muted">Armando tu plan…</span>':'<button class="btn sm pri" data-act="ai" data-k="ruta">Armar plan</button>'}</div>
     ${S.ai.ruta?.error?`<p class="muted">${esc(S.ai.ruta.error)}</p>`:S.ajustes.rutaPlan?`<div class="plan">${S.ajustes.rutaPlan.map(s=>`<div class="etapa"><span class="lbl">Semana ${esc(s.semana)}</span><b>${esc(s.foco)}</b><ul style="margin:0;padding-left:18px">${(s.tareas||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}</div>`:''}</div>`:''}`}
-
+/* ---------- Desatorarme con plan: dices qué te frena y te doy 3 pasos con botones que te llevan a la herramienta ---------- */
+const DES_TIPOS=[['idea','No sé qué dibujar','Ideas y arranque'],['gusto','No me gusta cómo va','Perfeccionismo y calidad'],['refs','Me faltan referencias o no sé cómo se ve','Investigación'],['tecnica','No sé cómo hacerlo','Técnica'],['animo','Sin ganas o sin tiempo','Arranque mínimo'],['decidir','No sé decidir entre opciones','Decisión'],['luz','No me sale la luz, el color o la composición','Imagen']];
+function desContexto(){const ps=ordenados(),pid=S.des?.pid&&S.P[S.des.pid]?S.des.pid:ps[0]?.[0],p=S.P[pid];if(!p)return {pid:null,p:null};
+  let alta=null;try{for(const c of crUltimas(p))for(const m of c.malo||[])if(!m.hecho&&m.prio==='alta'&&!alta)alta=m}catch{}
+  let vacio=null;try{vacio=DX(p).vacios[0]}catch{}
+  return {pid,p,alta,vacio,est:estancadas().find(e=>e.pid===pid),pend:(()=>{try{return crPend(p)}catch{return 0}})(),deb:debilidades().orden[0]}}
+function desPlan(tipo,C){const p=C.p,n=p?p.nombre:'tu proyecto';
+  const P={
+  idea:[['10 thumbnails en 10 minutos','Sin borrar y sin detalle: solo siluetas y masas de valor. Cantidad antes que calidad.','timer:10','Empezar el reloj'],['Una provocación fuera de lo normal','Te doy ideas locas para sacarte de lo seguro; guarda las que te llamen.',`tab:bocetos:critica`,'Ir a ideas locas'],['Elige UNA y hazla grande 15 minutos','La que más te asuste o te sorprenda, no la más segura.','timer:15','Empezar 15 min']],
+  gusto:[['Míralo en 3 valores y en miniatura','Si no se lee así, el detalle no lo va a salvar.','tab:bocetos:medir','Abrir «Medir y comparar»'],['Pide la crítica con el formato claro',C.pend?`Ya tienes ${C.pend} cambios pendientes de una crítica anterior.`:'Qué está mal y cómo arreglarlo, con prioridad.','tab:bocetos:critica','Ir a Crítica'],[C.alta?`Corrige SOLO lo de prioridad alta`:'Corrige UNA sola cosa',C.alta?`${corto(C.alta.t,110)}${C.alta.fix?' → '+corto(C.alta.fix,110):''}`:'Una, la más importante. Lo demás, en la siguiente ronda.','timer:25','Empezar 25 min']],
+  refs:[['Búscalas con tu proyecto, no con palabras sueltas','Las búsquedas «Para tu proyecto» traen lo mejor, ya filtrado.','tab:refs:mesa','Ir a Referencias'],['Elige 3 y escribe qué tomas de cada una','Si no puedes escribir el porqué, no sirve.','tab:refs:mesa','Escribir los porqués'],['5 thumbnails usando UNA de ellas','Aplica la referencia, no la copies.','timer:15','Empezar 15 min']],
+  tecnica:[['Mira un curso para tu punto débil',C.deb?`Tu punto más débil hoy: ${SKILLS[C.deb]||C.deb}.`:'Elige el área que te falta.',`ruta:${C.deb||'prio'}`,'Ver cursos'],['Haz el ejercicio de hoy','30 minutos aplicando justo eso.','vista:diario','Ir al Estudio diario'],['Aplícalo 20 minutos en tu pieza','Sin pausa: una idea de lo que viste, en tu dibujo.','timer:20','Empezar 20 min']],
+  animo:[['Solo 5 minutos','Abre el archivo y haz una línea. Nada más. Después decides si paras.','timer:5','Empezar 5 min'],['Una sola tarea pequeña',C.vacio?`Decide esto: ${corto(C.vacio.q,110)}`:'Elige lo más fácil que avance algo.','tab:idea:que','Ir a la decisión'],['Registra que empezaste','Empezar ya es ganar: cuenta como arranque.','des-reg','Registrar arranque']],
+  decidir:[['Pon tus opciones lado a lado','Compara dos o tres referencias o bocetos con el mismo zoom y en blanco y negro.','tab:refs:mesa','Comparar'],['Pregunta: ¿cuál sirve a tu pilar y a tu función?','Elimina la que solo «se ve cool». Kill your darlings.','tab:explorar:explorar','Ir a Explorar'],['Decide y escríbelo','Una decisión con su porqué vale más que seguir dudando.','tab:proyecto:asistente','Guardar la decisión']],
+  luz:[['Prueba la luz con tu paleta','Esfera, rampas y escena con tus colores.','herr:luzcolor','Abrir Luz y color'],['Elige cómo componer','Recetas de cine y perspectiva recomendadas para tu idea.','herr:comp','Abrir Composición'],['3 thumbnails con esa receta','Mismo tema, tres encuadres; luego eliges.','timer:15','Empezar 15 min']]};
+  return (P[tipo]||[]).map(([t,d,go,b])=>({t,d,go,b}))}
+function desPlanHTML(){const ps=ordenados();if(!ps.length)return '';const C=desContexto(),d=S.des=S.des||{tipo:'',pasos:{}},plan=d.tipo?desPlan(d.tipo,C):[],hist=(S.ajustes.desatorados||[]);
+  const hechos=plan.filter((x,i)=>d.pasos?.[d.tipo+i]).length;
+  return `<div class="box" style="border-top:3px solid var(--accent)"><h3>¿Qué te tiene atorado hoy?</h3><p class="hint" style="margin:0">Elige lo que más se parece. Te armo 3 pasos y cada uno te lleva directo a la herramienta.</p>
+    <div class="prow"><label class="lbl" for="des-pid">Proyecto</label><select id="des-pid" data-despid="1">${ps.map(([id,p])=>`<option value="${esc(id)}" ${id===C.pid?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
+    <div class="chips">${DES_TIPOS.map(([k,n])=>`<button class="ch ${d.tipo===k?'on':''}" data-act="des-tipo" data-v="${k}">${esc(n)}</button>`).join('')}</div>
+    ${d.tipo?`<div class="prow" style="gap:12px;flex-wrap:wrap;font-size:13px" class="muted"><span class="muted">Tu situación en «${esc(C.p.nombre)}»:</span>${C.pend?`<span class="tagp">${C.pend} cambios pendientes de crítica</span>`:''}${C.est?`<span class="tagp">una pieza lleva ${C.est.dias} días sin cerrar</span>`:''}${C.vacio?`<span class="tagp">falta decidir: ${esc(corto(C.vacio.n||C.vacio.q,40))}</span>`:''}${!C.pend&&!C.est&&!C.vacio?'<span class="tagp free">sin pendientes graves</span>':''}</div>
+      <div class="des-pasos">${plan.map((x,i)=>`<label class="des-p ${d.pasos[d.tipo+i]?'ok':''}"><input type="checkbox" data-despaso="${d.tipo}${i}" ${d.pasos[d.tipo+i]?'checked':''}><span><b>${i+1}. ${esc(x.t)}</b><small>${esc(x.d)}</small></span><button class="btn sm ${x.go.startsWith('timer')?'':'pri'}" data-act="des-go" data-go="${esc(x.go)}">${esc(x.b)}</button></label>`).join('')}</div>
+      ${S.timer||plan.some(x=>x.go.startsWith('timer'))?timerHTML(S.desMin||15,'Reloj de este paso'):''}
+      ${hechos===plan.length&&plan.length?`<div class="ok-box"><b>Pasos hechos.</b> ¿Cómo te fue?</div><div class="prow"><button class="btn pri sm" data-act="des-res" data-v="destrabe">Me destrabé</button><button class="btn sm" data-act="des-res" data-v="avance">Avancé un poco</button><button class="btn sm" data-act="des-res" data-v="igual">Sigo igual</button></div>`:''}
+      ${d.res==='igual'?`<div class="nd-box"><b>Sigues atorado y está bien.</b> Pásame tu caso y lo resolvemos juntos: <button class="btn sm" data-act="des-copiar">Copiar mi caso para Claude</button></div>`:''}`:''}
+    ${hist.length?`<p class="muted" style="margin:0">Llevas ${hist.length} desatore${hist.length===1?'':'s'} registrado${hist.length===1?'':'s'}: ${hist.filter(x=>x.res==='destrabe').length} te destrabaron${hist.length>=3?`. Lo que más te frena: ${(()=>{const c={};hist.forEach(x=>c[x.tipo]=(c[x.tipo]||0)+1);const k=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];return esc(DES_TIPOS.find(t=>t[0]===k)?.[1]||k)})()}`:''}.</p>`:''}</div>`}
+async function accionCrec(a,el,p,ds){
+  switch(a){
+    case 'ruta-f':S.rutaF=ds.v;if(S.vista!=='ruta'){S.vista='ruta';render()}else renderMain();return true;
+    case 'crec-copiar':copiarTexto(crecTexto(),'Análisis copiado: pégalo en el chat con Claude');return true;
+    case 'des-tipo':{S.des=S.des||{tipo:'',pasos:{}};S.des.tipo=S.des.tipo===ds.v?'':ds.v;S.des.res='';renderMain();return true}
+    case 'des-reg':{S.ajustes.unlock=S.ajustes.unlock||{};U().arranques=(U().arranques||0)+1;marcarAj();toast('Arranque registrado');return true}
+    case 'des-res':{const d=S.des;(S.ajustes.desatorados=S.ajustes.desatorados||[]).push({id:uid(),ts:Date.now(),tipo:d.tipo,pid:desContexto().pid,res:ds.v});if(ds.v!=='igual')S.des={tipo:'',pasos:{},res:ds.v};else d.res='igual';marcarAj();renderMain();toast(ds.v==='destrabe'?'¡Qué bueno! Quedó registrado':ds.v==='avance'?'Avanzar cuenta. Registrado':'Registrado');return true}
+    case 'des-copiar':{const C=desContexto(),d=S.des;copiarTexto(`Claude, estoy atorado en «${C.p?.nombre||'mi proyecto'}». Lo que me frena: ${DES_TIPOS.find(t=>t[0]===d.tipo)?.[1]}.\n${C.pend?`Tengo ${C.pend} cambios pendientes de tu última crítica.\n`:''}${C.alta?`Lo más grave según la crítica: ${C.alta.t}\n`:''}Ya hice los 3 pasos de la app y sigo igual. Ayúdame a ver qué se me está escapando y dame el siguiente paso más pequeño posible.\n\nCONTEXTO:\n${ctxProyecto(C.p)}`,'Caso copiado: pégalo en el chat con Claude');return true}
+    case 'des-go':{const [t,x,y]=String(ds.go||'').split(':');
+      if(t==='timer'){S.desMin=+x;S.timer=null;renderMain();setTimeout(()=>$('[data-act="t-go"]')?.click(),50);return true}
+      if(t==='tab'){const pid=desContexto().pid||S.cur;if(pid){S.cur=pid;S.vista='proyecto';S.tab=x;S.ancla=y||null;S.confirmDel=false;recordar();render()}return true}
+      if(t==='vista'){S.vista=x;render();return true}
+      if(t==='herr'){herrAbre(x);return true}
+      if(t==='ruta'){S.rutaF=RUTA_AREAS.some(r=>r[0]===x)?x:'prio';S.vista='ruta';render();return true}
+      return true}}
+  return false}
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset?.despid){S.des=S.des||{tipo:'',pasos:{}};S.des.pid=t.value;renderMain()}
+  else if(t.dataset?.despaso){S.des=S.des||{tipo:'',pasos:{}};S.des.pasos[t.dataset.despaso]=t.checked;renderMain()}});
 /* ============ Contratos ============ */
 function contratoDraft(){return S.ctr=S.ctr||{idioma:'es',cliente:'',proyecto:'',alcance:'',revisiones:'2',anticipo:'50',total:'',mon:'MXN',inicio:hoyKey(),entrega:'',uso:1,cancelacion:'30',ciudad:'Ciudad de México'}}
 function contratoTexto(c){
@@ -9294,7 +9403,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
