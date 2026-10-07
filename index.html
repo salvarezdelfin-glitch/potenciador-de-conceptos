@@ -689,7 +689,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .palbar{display:flex;height:46px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
 .palrol{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink2)}.palrol i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 .why-l{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:3px}
-.reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}
+.reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}.reglas li{display:flex;gap:4px;align-items:center}.reglas li input{flex:1;min-width:0}.sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
 .cand{margin:6px 0 0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px;color:var(--ink2)}
 .bal{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 16px}
 .bal-r{display:grid;grid-template-columns:96px 1fr 24px;gap:8px;align-items:center;font-size:12.5px}
@@ -1031,7 +1031,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muymwcaz').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyn0y55').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1883,6 +1883,7 @@ function ctxProyecto(p,{refs=false}={}){
     `Lenguaje visual: formas ${(l.formas||[]).join(', ')}; silueta ${p.forma?.silueta||'—'}; materiales ${(p.materiales||[]).join(', ')}; color ${l.colorDom||'—'} / acento ${l.colorAcento||'—'}; composición ${l.composicion||'—'}`,
     (l.reglas||[]).length&&'Reglas visuales: '+l.reglas.join(' | '),(p.evitar||[]).length&&'Evitar: '+p.evitar.join(', '),
     (p.decisiones||[]).length&&'Decisiones: '+p.decisiones.filter(d=>d.estado!=='Descartada').slice(0,15).map(d=>d.t+(d.motivo?' ('+d.motivo+')':'')).join(' | '))}
+  {const fx=fcFichasTxt(p);if(fx)L.push(fx)}
   if(refs)L.push('Referencias:\n'+p.refs.map((r,i)=>`${i+1}. [${capaNombre(p,r.capa)}] ${r.porque||'(sin porqué)'}${r.fuente?' — '+r.fuente:''}`).join('\n'));
   L.push('Principios del artista: '+S.ajustes.principios.join(' | '));
   if(p.brief.una?.frase)L.push('Brief de una frase (la pieza no debe salirse de aquí): '+p.brief.una.frase);
@@ -5509,26 +5510,98 @@ function vCerebro(p){const D=DX(p),pq=(p.preguntas||[]);
   </div>`}
 
 /* ---------- CONCEPTO ---------- */
-function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto;
+/* ---------- ¿Qué estoy diseñando? Lo que eliges cambia las preguntas, los ejemplos y qué revisar ---------- */
+const FORMA_CAMPOS=['silueta','proporcion','anatomia','geometria','lenguaje'];
+const QUE_CFG={
+ Personaje:{este:'este personaje',que:'Un guerrero que acepta transformarse en un dios jaguar',tema:'Identidad, el precio del poder, perder lo humano…',fn:'Dentro de su mundo, no para ti: ¿qué hace, a quién sirve o enfrenta, qué quiere y qué le cuesta?',
+  forma:{silueta:['Silueta','¿Se reconoce en negro, a 5 cm? ¿Qué lo separa de los otros personajes?'],proporcion:['Proporción','Altura en cabezas, masa en los hombros, piernas cortas…'],anatomia:['Anatomía / estructura','Esqueleto, dónde carga el peso, cómo se mueve'],geometria:['Geometría','Triángulo invertido, óvalo, rectángulo…'],lenguaje:['Lenguaje de formas','Curvas = instinto, ángulos = disciplina…']},
+  mat:'Piel, tela, armadura: ¿qué dice cada capa de quién es?',claves:['Que su silueta se lea a 5 cm en negro.','Que su pose cuente quién es antes de ver el detalle.','Que se distinga de los otros personajes del mismo mundo.','Que su diseño muestre lo que le pasa (cicatrices, desgaste, cambios).']},
+ Criatura:{este:'esta criatura',que:'Una bestia de la selva que vigila un templo hundido',tema:'Naturaleza que se defiende, miedo, territorio…',fn:'¿Qué come, cómo caza o se defiende, dónde vive y qué teme? La anatomía sale de ahí.',
+  forma:{silueta:['Silueta','Reconocible a distancia y distinta de un animal real'],proporcion:['Proporción','Cabeza contra cuerpo, patas, cola, escala frente a un humano'],anatomia:['Anatomía / estructura','Esqueleto, músculo dominante, articulaciones y cómo se mueve'],geometria:['Geometría','Masa que la contiene: triángulo bajo, óvalo alargado…'],lenguaje:['Lenguaje de formas','Qué comunica: garras = amenaza, curvas = sigilo…']},
+  mat:'Piel, escamas, plumas, pelaje, hueso: ¿qué textura cuenta su hábitat?',claves:['Que la anatomía crea creíble aunque sea fantástica.','Que su función (caza, vigila, huye) mande sobre la forma.','Que su paleta y textura vengan de su entorno.','Que tenga una pose de alerta con intención.']},
+ Prop:{este:'este objeto',que:'Un cuchillo ritual de obsidiana con mango de hueso',tema:'Sacrificio, poder que corta, memoria…',fn:'¿Quién lo usa, para qué, cómo se sostiene y qué historia cuenta su desgaste?',
+  forma:{silueta:['Silueta','Se reconoce en negro y en tamaño de miniatura'],proporcion:['Proporción / escala','Tamaño en la mano, largo contra ancho, escala frente a un humano'],anatomia:['Construcción','Piezas, cómo se arma, dónde se une'],geometria:['Geometría','Forma básica: triángulo alargado, cilindro, disco…'],lenguaje:['Lenguaje de formas','Qué comunican sus formas: filo = peligro, curva = ceremonia…']},
+  mat:'Materiales y desgaste: qué dice cada uno de quién lo hizo y cómo se usó.',claves:['Que su función se vea en la forma (cómo se agarra, cómo corta).','Que se lea en silueta y en miniatura.','Que el desgaste cuente una historia.','Que sea coherente con la cultura del mundo.']},
+ Arma:{este:'esta arma',que:'Un mazo ceremonial con filos de obsidiana',tema:'Guerra, ritual, el precio de matar…',fn:'¿Quién la empuña, cómo se mueve con ella y qué hace diferente a cada golpe?',
+  forma:{silueta:['Silueta','Reconocible en negro, en mano y en el suelo'],proporcion:['Proporción / escala','Largo contra cuerpo del portador, peso visual (cabeza pesada o ligera)'],anatomia:['Construcción','Empuñadura, balance, cómo se une cada pieza'],geometria:['Geometría','Línea y masa: recta, curva, ensanchada en la punta…'],lenguaje:['Lenguaje de formas','Filos, picos, curvas: qué dicen del portador']},
+  mat:'Obsidiana, madera, hueso, cuero: ¿qué material manda y dónde se desgasta?',claves:['Que se entienda cómo se empuña y se mueve.','Que su peso visual coincida con su peso real.','Que su silueta no se confunda con otra arma.','Que el material sea de este mundo, no de otro.']},
+ 'Vehículo':{este:'este vehículo',que:'Una canoa ceremonial que cruza el río de niebla',tema:'Viaje, frontera, lo que se deja atrás…',fn:'¿Qué transporta, cómo se mueve y quién lo conduce? La mecánica sale de ahí.',
+  forma:{silueta:['Silueta','Se lee en miniatura y en movimiento'],proporcion:['Proporción / escala','Largo, alto, tamaño de la tripulación o el piloto'],anatomia:['Estructura / mecánica','Qué lo mueve, qué lo sostiene, dónde se abre'],geometria:['Geometría','Masa básica: aguja, cuña, caja…'],lenguaje:['Lenguaje de formas','Velocidad, peso, protección: qué dicen las formas']},
+  mat:'Materiales y desgaste: ¿de qué está hecho y cómo lo han usado?',claves:['Que la lógica mecánica sea creíble.','Que su silueta diga cómo se mueve.','Que tenga escala clara con una figura humana.','Que el desgaste cuente su historia.']},
+ Environment:{este:'este entorno',que:'Una selva que reclama un templo en ruinas',tema:'Naturaleza contra civilización, el paso del tiempo…',fn:'¿Qué pasó aquí, quién lo usa y cómo se siente al entrar? El espacio cuenta su historia.',
+  forma:{silueta:['Silueta general','La forma grande del lugar a 5 cm: ¿se lee el espacio?'],proporcion:['Escala','Figura humana contra el entorno, qué lo hace sentir enorme o íntimo'],anatomia:['Estructura del espacio','Planos (frente, medio, fondo), caminos, puntos de interés'],geometria:['Composición base','Tercios, diagonal, centro, cámara alta o baja'],lenguaje:['Lenguaje de formas','Qué dominan: verticales rígidas (poder) o curvas orgánicas (naturaleza)']},
+  mat:'Materiales del lugar: piedra, vegetación, agua… y cómo los toca el tiempo.',claves:['Que se lea en 3 planos de valor (frente, medio, fondo).','Que haya escala humana para sentir el tamaño.','Que la luz y la atmósfera separen los planos.','Que cuente qué pasó ahí sin explicarlo.']},
+ Arquitectura:{este:'esta construcción',que:'Un templo escalonado donde se hacían los sacrificios',tema:'Poder sagrado, el tiempo, quién sube y quién baja…',fn:'¿Para qué se construyó, quién la usa y qué ritual pasa en ella?',
+  forma:{silueta:['Silueta','Se reconoce a 5 cm contra el cielo'],proporcion:['Proporción / escala','Altura contra ancho, escalones, escala humana'],anatomia:['Estructura','Cimientos, muros, techos, cómo se sostiene'],geometria:['Geometría','Pirámide, talud, rectángulo, simetría o asimetría'],lenguaje:['Lenguaje de formas','Qué dicen sus formas: verticales = poder, taludes = peso…']},
+  mat:'Piedra, estuco, madera, vegetación encima: ¿cómo envejece cada uno?',claves:['Que su función (ritual, defensa, vivienda) se vea en la forma.','Que la escala humana la haga sentir monumental.','Que el desgaste dirija la mirada.','Que sea auténtica de la cultura de referencia.']},
+ Keyframe:{este:'este keyframe',que:'El guerrero frente al Dios de la Guerra al amanecer',tema:'Confrontación, transformación, el costo de cambiar…',fn:'¿Qué momento cuenta y qué siente el que mira? Todo en la imagen existe para ese momento.',
+  forma:{silueta:['Silueta del foco','El sujeto principal se lee en negro, a 5 cm'],proporcion:['Escala: figura contra entorno','Quién domina el encuadre y cuánto (70/30, 60/40…)'],anatomia:['Estructura de la escena','Planos, líneas guía, hacia dónde mira el ojo'],geometria:['Composición base','Tercios, diagonal, triángulo, cámara y lente'],lenguaje:['Lenguaje de formas','Qué formas dominan y qué dicen en este momento']},
+  mat:'Materiales y luz sobre ellos: qué se ve de cerca y qué se pierde de lejos.',claves:['Una sola idea de lectura en 3 segundos.','Foco claro: valor, color o detalle donde debe mirar el ojo.','Luz con intención (una fuente dominante).','Composición que cuente el momento antes de ver el detalle.']},
+ 'Ilustración':{este:'esta ilustración',que:'Una escena que cuenta un momento de mi mundo',tema:'De qué habla en el fondo',fn:'¿Qué quiero que sienta quien la ve y qué momento cuenta?',
+  forma:{silueta:['Silueta del foco','Lo principal se lee en negro'],proporcion:['Proporción / escala','Relación entre figuras y entorno'],anatomia:['Estructura','Planos y líneas guía'],geometria:['Composición base','Tercios, diagonal, centro…'],lenguaje:['Lenguaje de formas','Qué formas dominan y qué comunican']},
+  mat:'Materiales y acabado visual.',claves:['Una idea clara de lectura.','Jerarquía de valores y de foco.','Color que sostenga el mood.','Un detalle que cuente más que el resto.']},
+ Mundo:{este:'este mundo',que:'Un mundo mesoamericano fantástico dominado por la guerra',tema:'El conflicto central del mundo',fn:'¿Qué hace funcionar a este mundo, quién manda y qué se está rompiendo?',
+  forma:{silueta:['Silueta del mundo','Lo que lo hace reconocible a 5 cm: su paisaje, su arquitectura'],proporcion:['Escala','Relación entre humanos, dioses, naturaleza y arquitectura'],anatomia:['Estructura','Regiones, culturas, lugares clave'],geometria:['Geometría base','Las formas madre del mundo (pirámide, selva curva…)'],lenguaje:['Lenguaje de formas','Qué formas pertenecen a cada fuerza del mundo']},
+  mat:'Materiales del mundo y qué significa cada uno.',claves:['Que cada fuerza del mundo tenga su lenguaje de formas.','Que el mundo tenga su paleta propia.','Que los personajes, entornos y props parezcan del mismo lugar.','Que haya una regla que no se rompe nunca.']},
+ Otro:{este:'este proyecto',que:'Una criatura marina que vive sola en una fosa abisal',tema:'Aislamiento, culpa, fe, poder que se paga…',fn:'Dentro de su mundo, no para ti. ¿Qué hace, a quién sirve, qué necesita para sobrevivir o para cumplir su papel?',
+  forma:{silueta:['Silueta','¿Qué lo hace reconocible en negro, a 5 cm?'],proporcion:['Proporción','Cabeza pequeña, masa en los hombros, piernas cortas…'],anatomia:['Anatomía / estructura','¿Qué la sostiene? Esqueleto, articulaciones, estructura…'],geometria:['Geometría','Forma básica que lo contiene: triángulo invertido, círculo…'],lenguaje:['Lenguaje de formas','Qué comunican las formas: curvas = orgánico, puntas = amenaza…']},
+  mat:'Cada material cuenta algo. Elige y pregúntate por qué.',claves:['Que su función mande sobre la forma.','Que se lea en silueta y en miniatura.','Que el material cuente algo.']}};
+/* ---------- enfocarme en una cosa o personaje: sus reglas, solo las suyas ---------- */
+const fcSlug=s=>nz(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,30)||'x';
+function fcElementos(p){const L=[];
+  (p.personajes||[]).filter(c=>c.nombre).forEach(c=>L.push({id:'pj-'+c.id,n:c.nombre,ico:c.rol==='Criatura'?'🐆':'🧍',cfg:c.rol==='Criatura'?'Criatura':'Personaje'}));
+  try{detectarElementos(p).forEach(e=>L.push({id:'el-'+fcSlug(e.n),n:e.n,ico:e.ico||'◆',cfg:/Arquitect|Ruinas/.test(e.n)?'Arquitectura':/Armas|Herramientas/.test(e.n)?'Prop':/Veh/.test(e.n)?'Vehículo':'Environment'}))}catch{}
+  Object.entries(p.fichas||{}).filter(([,f])=>f.propio).forEach(([id,f])=>{if(!L.some(x=>x.id===id))L.push({id,n:f.nombre||'Elemento',ico:'✎',cfg:f.cfg||'Otro'})});
+  return L}
+const fcActual=p=>fcElementos(p).find(e=>e.id===S.foco&&S.focoP===S.cur);
+const fcFicha=(p,id)=>{p.fichas=p.fichas||{};return p.fichas[id]=p.fichas[id]||{forma:{},materiales:[],nota:'',reglas:[]}};
+function fcHeredado(p,n){const w=toks(n).filter(x=>x.length>3);if(!w.length)return [];
+  const fuentes=[...(p.lenguaje?.reglas||[]),p.guia?.formas,p.guia?.materiales,p.guia?.luz,p.guia?.estilizacion,p.lenguaje?.escala,p.lenguaje?.composicion,p.que?.funcion,...(p.decisiones||[]).map(d=>d.t)].filter(Boolean);
+  const out=[];for(const t of fuentes)for(const s of String(t).split(/(?<=[.;])\s+|\n+/)){const z=nz(s);if(s.trim().length>12&&w.some(x=>z.includes(x))&&!out.includes(s.trim()))out.push(s.trim())}return out.slice(0,8)}
+function fcSelectorHTML(p){const L=fcElementos(p);if(!L.length&&!S.foco)return '';
+  return `<div class="box fc-sel"><div class="prow" style="justify-content:space-between"><span class="lbl">Enfocarme en</span><button class="btn ghost sm" data-act="fc-nuevo">＋ Otro elemento</button></div>
+    <div class="chips"><button class="ch ${fcActual(p)?'':'on'}" data-act="fc-foco" data-id="">Todo el proyecto</button>${L.map(e=>`<button class="ch ${S.foco===e.id&&S.focoP===S.cur?'on':''}" data-act="fc-foco" data-id="${esc(e.id)}">${e.ico} ${esc(corto(e.n,26))}</button>`).join('')}</div>
+    <p class="hint" style="margin:0">Elige un personaje o una cosa para ver solo sus reglas: su forma, sus materiales y lo que el proyecto ya dice de él.</p></div>`}
+function fcHTML(p){const e=fcActual(p);if(!e)return '';const f=fcFicha(p,e.id),cfg=QUE_CFG[e.cfg]||QUE_CFG.Otro,her=fcHeredado(p,e.n),pr=`fichas.${e.id}`;
+  return `<div class="box big-q" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>${e.ico} ${esc(e.n)}</h3><span class="prow">${f.propio?`<button class="btn ghost sm danger" data-act="fc-del" data-id="${esc(e.id)}">${S.confirmLi==='fc'+e.id?'¿Borrar?':'Borrar'}</button>`:''}<button class="btn sm" data-act="fc-foco" data-id="">← Todo el proyecto</button></span></div>
+    ${f.propio?`<div class="field"><label for="fc-nombre">Nombre</label><input type="text" id="fc-nombre" data-b="${pr}.nombre" value="${esc(f.nombre||'')}" placeholder="Ej. Templo del sol"></div>`:''}
+    <p class="hint" style="margin:0">Sus reglas, solas. Lo que escribas aquí es solo de «${esc(e.n)}» y también viaja al contexto de la crítica y del asesor.</p></div>
+  <div class="grid2">
+    <div class="box"><h3>Forma de ${esc(e.n)}</h3>${FORMA_CAMPOS.map(k=>`<div class="field"><label for="fc-${k}">${cfg.forma[k][0]}</label>${tx(`${pr}.forma.${k}`,f.forma?.[k],cfg.forma[k][1],'fc-'+k,44)}</div>`).join('')}</div>
+    <div class="box"><h3>Material de ${esc(e.n)}</h3><p class="hint">${esc(cfg.mat)}</p>${chSel(`${pr}.materiales`,MATERIALES,f.materiales)}
+      <div class="field"><label for="fc-nota">Notas y estado (oxidado, pulido, quemado…)</label>${tx(`${pr}.nota`,f.nota,'Qué lo hace único frente al resto del mundo…','fc-nota',70)}</div></div></div>
+  <div class="box"><h3>Reglas de ${esc(e.n)} <span class="lbl">${(f.reglas||[]).length}</span></h3><p class="hint">Pocas y claras: lo que siempre debe cumplir este elemento (y lo que nunca).</p>
+    ${(f.reglas||[]).length?`<ol class="reglas">${f.reglas.map((r,i)=>`<li><input type="text" data-b="${pr}.reglas.${i}" value="${esc(r)}" aria-label="Regla ${i+1}"><button class="btn ghost sm danger" data-act="fc-regla-del" data-i="${i}" aria-label="Quitar regla">✕</button></li>`).join('')}</ol>`:''}
+    <div class="prow"><input type="text" id="fc-regla-t" placeholder="Nueva regla de ${esc(e.n)} + Enter" data-enter="fc-regla-add" style="flex:1 1 240px"><button class="btn sm" data-act="fc-regla-add">＋</button></div>
+    ${her.length?`<details open><summary class="lbl">Lo que tu proyecto ya dice de «${esc(e.n)}» (pásalo a sus reglas si te sirve)</summary><ul class="cand">${her.map(s=>`<li>${esc(s)} <button class="btn ghost sm" data-act="fc-regla-pasa" data-v="${esc(s)}">＋ regla</button></li>`).join('')}</ul></details>`:'<p class="muted">Nada del proyecto menciona todavía a «'+esc(e.n)+'» en sus reglas, guía o decisiones.</p>'}</div>`}
+/* ---------- ¿Qué estoy diseñando? (la pantalla cambia según lo que eliges) ---------- */
+function vConcepto2(p){const q=p.que||{},f=p.forma||{},c=p.concepto,cfg=QUE_CFG[q.tipo]||QUE_CFG.Otro,foco=fcActual(p);
   return `
   <div class="box"><h3>¿Qué estoy diseñando?</h3>${chSel('que.tipo',QUE_TIPOS,q.tipo,false)}
-    <div class="grid2"><div class="field"><label for="x-que-que">En una línea: ¿qué es?</label>${inp('que.que',q.que,'Una criatura marina que vive sola en una fosa abisal')}</div>
-    <div class="field"><label for="x-que-tema">Tema: ¿de qué habla en el fondo?</label>${inp('que.tema',q.tema,'Aislamiento, culpa, fe, poder que se paga…')}</div></div></div>
-  <div class="box big-q"><h3>Función · ¿Para qué existe este elemento?</h3><p class="hint">Dentro de su mundo, no para ti. ¿Qué hace, a quién sirve, qué necesita para sobrevivir o para cumplir su papel?</p>
+    ${q.tipo?`<div class="tipo-guia"><b>En ${esc(cfg.este.replace(/^(este|esta) /,'un '))} importa sobre todo:</b><ul>${cfg.claves.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>`:'<p class="hint" style="margin:0">Elige qué estás diseñando: las preguntas, los ejemplos y lo que se revisa se adaptan.</p>'}
+    <div class="grid2"><div class="field"><label for="x-que-que">En una línea: ¿qué es?</label>${inp('que.que',q.que,cfg.que)}</div>
+    <div class="field"><label for="x-que-tema">Tema: ¿de qué habla en el fondo?</label>${inp('que.tema',q.tema,cfg.tema)}</div></div></div>
+  <div class="box big-q"><h3>Función · ¿Para qué existe ${esc(cfg.este)}?</h3><p class="hint">${esc(cfg.fn)}</p>
     ${tx('que.funcion',q.funcion,'Protege la entrada de un templo que nadie visita desde hace siglos…','x-que-funcion',70)}
     <div data-vivo="funcion">${vivoFuncion(p)}</div></div>
-  <div class="grid2">
+  ${fcSelectorHTML(p)}
+  ${foco?fcHTML(p):`<div class="grid2">
     <div class="box"><h3>Forma</h3>
-      ${[['silueta','Silueta','¿Qué lo hace reconocible en negro, a 5 cm?'],['proporcion','Proporción','Cabeza pequeña, masa en los hombros, piernas cortas…'],['anatomia','Anatomía / estructura','¿Qué la sostiene? Esqueleto, articulaciones, estructura…'],['geometria','Geometría','Forma básica que lo contiene: triángulo invertido, círculo…'],['lenguaje','Lenguaje de formas','Qué comunican las formas: curvas = orgánico, puntas = amenaza…']].map(([k,n,ph])=>`<div class="field"><label for="x-forma-${k}">${n}</label>${tx('forma.'+k,f[k],ph,null,44)}</div>`).join('')}</div>
-    <div class="box"><h3>Material</h3><p class="hint">Cada material cuenta algo. Elige y pregúntate por qué.</p>${chSel('materiales',MATERIALES,p.materiales)}
+      ${FORMA_CAMPOS.map(k=>`<div class="field"><label for="x-forma-${k}">${cfg.forma[k][0]}</label>${tx('forma.'+k,f[k],cfg.forma[k][1],null,44)}</div>`).join('')}</div>
+    <div class="box"><h3>Material</h3><p class="hint">${esc(cfg.mat)}</p>${chSel('materiales',MATERIALES,p.materiales)}
       <div class="prow">${(p.materiales||[]).map(m=>porqueBtn('este material: '+m.toLowerCase())).join('')}</div>
       <div class="field"><label for="x-materialNota">Otros materiales / estado (oxidado, pulido, quemado…)</label>${tx('materialNota',p.materialNota,'Bronce con pátina verde, tela empapada de sal…',null,44)}</div>
       <div class="field"><label for="x-guia-mat">Material dominante (qué predomina en el diseño)</label>${tx('guia.materiales',(p.guia||{}).materiales,'Obsidiana pulida, piedra volcánica, oro martillado…','x-guia-mat',40)}</div></div>
-  </div>
+  </div>`}
   <details class="box" ${c.nucleos.some(Boolean)||c.frase?'open':''}><summary><h3 style="display:inline">Núcleos y frase del concepto</h3></summary>
     <div class="nucleos">${c.nucleos.map((n,i)=>`<label class="nuc"><span>IDEA ${i+1}</span><input type="text" id="f-nuc-${i}" data-b="concepto.nucleos.${i}" value="${esc(n)}" placeholder="Idea ${i+1}"></label>`).join('')}</div>
     <div class="field"><label for="f-concepto-frase">Todo el proyecto en una frase: «Es un ___ que ___ porque ___»</label>${it('concepto.frase',c.frase,'Es un … que … porque …')}</div></details>
   ${asesor('concepto','Asesor Claude: empuja mi concepto','Diagnostica tu tensión, te hace preguntas y propone empujes concretos.')}`}
+/* ---------- tensión: borradores de «cómo se verá», independientes del léxico ---------- */
+const tensPal=s=>String(s||'').split(/[,;·\n]+|\s+/).map(x=>x.trim()).filter(x=>x.length>2);
+function tensBorradores(t){const A=t.a||'A',B=t.b||'B',av=tensPal(t.aVis).slice(0,3).join(', ').toLowerCase()||'…',bv=tensPal(t.bVis).slice(0,3).join(', ').toLowerCase()||'…',
+  dom={'A domina a B':`${A} ocupa ~70% del encuadre y ${B} aparece como acento`,'B domina a A':`${B} ocupa ~70% del encuadre y ${A} aparece como acento`,'Equilibrio inestable':`${A} y ${B} se reparten la imagen sin que ninguno gane: la tensión se nota en el borde donde se tocan`,'A se convierte en B':`el diseño va de ${A} a ${B} por etapas (de un lado de la imagen al otro, o de una pieza a la siguiente)`,'Se necesitan':`ninguno funciona solo: cada uno completa lo que le falta al otro`}[t.domina]||`decide quién domina (un 50/50 no toma partido)`;
+  return [['En la silueta',`En la silueta, ${A} se lee ${av} y ${B} se lee ${bv}; ${dom}.`],['En material y color',`${A} tiene la superficie y el color de lo ${av}; ${B}, los de lo ${bv}. Donde se tocan, el material cambia poco a poco, nunca de golpe; ${dom}.`],['En una sola imagen',`El conflicto se ve en una sola imagen: ${A} (${av}) y ${B} (${bv}) comparten el mismo espacio; ${dom}.`]]}
 function vivoFuncion(p){const f=(p.que?.funcion||'').trim();if(!f)return '<p class="nd-box"><b>NO DEFINIDO.</b> Sin función, cada decisión de forma es gusto. Empieza aquí.</p>';
   const n=nz(f),G=[];if(genericidad(f)>=.3||/cool|bonit|bien|chid/.test(n))G.push('Eso describe cómo se ve, no para qué existe.');
   if(!/(para|proteg|sirv|cuid|vigil|caz|transport|guard|atac|defend|castig|recuerd|represent|guia|comerc|sobreviv|alimen|escond|carg)/.test(n))G.push('No veo un verbo de función (protege, caza, vigila, transporta…).');
@@ -5585,15 +5658,35 @@ function vTension(p){const T=p.tensiones||[],c=p.concepto;
       ${c.empujes.length?`<ul class="list">${c.empujes.map((e,i)=>`<li><span>${esc(e)}</span><button class="btn ghost sm" data-act="del-empuje" data-i="${i}" aria-label="Quitar">✕</button></li>`).join('')}</ul>`:'<p class="muted">Aún no hay empujes.</p>'}</div></div>
   <details class="box"><summary><h3 style="display:inline">Tipo de relación (método del asesor)</h3></summary><div class="tensions">${TENSIONES.map(([t,d])=>`<button class="tens" data-act="tension" data-v="${esc(t)}" aria-pressed="${c.tension===t}"><b>${t}</b><small>${d}</small></button>`).join('')}</div>
     <div class="field"><label for="f-concepto-tensionTexto">¿Qué está en juego?</label>${ta('concepto.tensionTexto',c.tensionTexto,'Qué se pierde, quién gana…')}</div></details>`}
+function fcFichasTxt(p){const E=fcElementos(p),out=[];for(const e of E){const f=(p.fichas||{})[e.id];if(!f)continue;
+  const forma=FORMA_CAMPOS.map(k=>f.forma?.[k]&&`${k} ${f.forma[k]}`).filter(Boolean).join('; '),mat=(f.materiales||[]).join(', '),reg=(f.reglas||[]).join(' | ');
+  if(forma||mat||f.nota||reg)out.push(`${e.n}: ${[forma&&'forma — '+forma,mat&&'materiales — '+mat,f.nota&&'notas — '+f.nota,reg&&'reglas — '+reg].filter(Boolean).join('. ')}`)}
+  return out.length?'Fichas por elemento (reglas propias de cada cosa o personaje):\n- '+out.join('\n- '):''}
+function tensDom(t){const A=t.a||'A',B=t.b||'B';return {'A domina a B':`${A} ocupa ~70% del encuadre y ${B} aparece como acento`,'B domina a A':`${B} ocupa ~70% del encuadre y ${A} aparece como acento`,'Equilibrio inestable':`${A} y ${B} se reparten la imagen sin que ninguno gane: la tensión se nota en el borde donde se tocan`,'A se convierte en B':`el diseño va de ${A} a ${B} por etapas (de un lado de la imagen al otro, o de una pieza a la siguiente)`,'Se necesitan':`ninguno funciona solo: cada uno completa lo que le falta al otro`}[t.domina]||`decide quién domina (un 50/50 no toma partido)`}
 function vivoTension(p,i){const t=(p.tensiones||[])[i];if(!t||!t.a||!t.b)return '';const va=vecDe([t.a,t.aVis]),vb=vecDe([t.b,t.bVis]),V=vecDe(visTextos(p));
   const ejes=Object.keys(AXN).map(a=>[a,Math.abs(va[a].v-vb[a].v)]).filter(x=>x[1]>=.6).sort((x,y)=>y[1]-x[1]);
-  if(!ejes.length)return `<p class="nd-box sm">No sé cómo se ven «${esc(t.a)}» y «${esc(t.b)}» todavía. Escribe arriba 3 adjetivos visuales para cada uno y te propongo decisiones.</p>`;
-  const sug=ejes.slice(0,3).map(([a])=>`Usar ${visDe(a,va[a].v)} para «${t.a}», y ${visDe(a,vb[a].v)} para «${t.b}».`);
-  const extra=['Diseña el punto de contacto: donde A toca a B es donde vive la historia.',t.domina?`${t.domina.replace('A',t.a).replace(/B/,t.b)}: que se note en la proporción de la imagen (~70/30).`:'Decide quién domina: un 50/50 no toma partido.','Silueta = una idea, detalle = la otra.'];
-  const falta=ejes.filter(([a])=>Math.abs(V[a].v)<.3);
-  return `<div class="sug"><span class="lbl">Posibles decisiones visuales (eliges tú)</span><ul>${[...sug,...extra].map(s=>`<li>${esc(s)} <button class="btn ghost sm" data-act="regla-add" data-v="${esc(s)}">＋ regla</button></li>`).join('')}</ul>
-    ${falta.length?`<p class="muted">Tu lenguaje visual todavía no muestra el eje ${falta.map(([a])=>AXN[a].join('/')).join(', ')}.</p>`:''}</div>`}
-
+  const sug=ejes.slice(0,3).map(([a])=>`Usar ${visDe(a,va[a].v)} para «${t.a}», y ${visDe(a,vb[a].v)} para «${t.b}».`),
+    extra=[`Diseña el punto de contacto: donde «${t.a}» toca a «${t.b}» es donde vive la historia.`,t.domina?cap(tensDom(t))+'.':'Decide quién domina: un 50/50 no toma partido.','Silueta = una idea, detalle = la otra.'],
+    falta=ejes.filter(([a])=>Math.abs(V[a].v)<.3);
+  return `<div class="sug"><span class="lbl">Posibles decisiones visuales (edítalas y pásalas a tus reglas)</span>
+    ${!ejes.length?'<p class="nd-box sm">Con esos adjetivos no logro leer cómo se ven. Usa los borradores de abajo, o escribe adjetivos visuales más concretos (curvo, rígido, húmedo, frío…).</p>':''}
+    <ul class="sug-l">${[...sug,...extra].map(s=>`<li><input type="text" class="sug-i" value="${esc(s)}" aria-label="Regla propuesta"><button class="btn ghost sm" data-act="regla-add-i">＋ regla</button></li>`).join('')}</ul>
+    ${falta.length?`<p class="muted">Tu lenguaje visual todavía no muestra el eje ${falta.map(([a])=>AXN[a].join('/')).join(', ')}.</p>`:''}
+    <span class="lbl">Borradores para «¿Cómo se verá este conflicto en el diseño?»</span>
+    <div class="borrs">${tensBorradores(t).map(([n,x],k)=>`<div class="borr"><b>${esc(n)}</b><p>${esc(x)}</p><button class="btn sm" data-act="tens-usar" data-i="${i}" data-k="${k}">Usar este</button></div>`).join('')}</div></div>`}
+async function accionFc(a,el,p,ds){
+  switch(a){
+    case 'fc-foco':S.foco=ds.id||'';S.focoP=S.cur;renderMain();return true;
+    case 'fc-nuevo':{if(!p)return true;const id='u-'+uid();p.fichas=p.fichas||{};p.fichas[id]={nombre:'Nuevo elemento',propio:true,cfg:'Otro',forma:{},materiales:[],nota:'',reglas:[]};S.foco=id;S.focoP=S.cur;marcar();renderMain();setTimeout(()=>$('#fc-nombre')?.select(),60);return true}
+    case 'fc-del':{if(!p)return true;const k='fc'+ds.id;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return true}S.confirmLi=null;delete p.fichas[ds.id];S.foco='';marcar();renderMain();return true}
+    case 'fc-regla-add':{const e=fcActual(p),v=$('#fc-regla-t')?.value.trim();if(!e||!v)return true;const f=fcFicha(p,e.id);f.reglas.push(v);marcar();renderMain();$('#fc-regla-t')?.focus();return true}
+    case 'fc-regla-pasa':{const e=fcActual(p);if(!e||!ds.v)return true;const f=fcFicha(p,e.id);if(!f.reglas.includes(ds.v))f.reglas.push(ds.v);marcar();renderMain();return true}
+    case 'fc-regla-del':{const e=fcActual(p);if(!e)return true;fcFicha(p,e.id).reglas.splice(+ds.i,1);marcar();renderMain();return true}
+    case 'regla-add-i':{const v=el.closest('li')?.querySelector('.sug-i')?.value.trim();if(!v||!p)return true;p.lenguaje.reglas=p.lenguaje.reglas||[];if(!p.lenguaje.reglas.includes(v))p.lenguaje.reglas.push(v);marcar();el.textContent='✓ en tus reglas';el.disabled=true;return true}
+    case 'regla-mov':{if(!p)return true;const L=p.lenguaje.reglas||[],i=+ds.i,j=i+ +ds.d;if(j<0||j>=L.length)return true;[L[i],L[j]]=[L[j],L[i]];marcar();renderMain();return true}
+    case 'tens-usar':{const t=(p?.tensiones||[])[+ds.i];if(!t)return true;t.como=tensBorradores(t)[+ds.k][1];marcar();renderMain();toast('Puesto: edítalo con tus palabras');return true}}
+  return false}
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.b&&/^tensiones\.\d+\.(a|b)$/.test(t.dataset.b))renderMain()});
 /* ---------- MOOD ---------- */
 function vMood(p){const m=p.mood,t=tresMood(p);
   return `
@@ -5688,7 +5781,7 @@ function vLenguaje(p){const l=p.lenguaje||{},g=p.guia||{},c=reglasCandidatas(p);
     <div class="box"><h3>Composición · ¿cómo se organiza la imagen?</h3>${tx('lenguaje.composicion',l.composicion,'Cámara baja, figura en el tercio derecho, diagonales hacia el foco…',null,50)}</div>
   </div>
   <div class="box"><h3>Reglas visuales <span class="lbl">${(l.reglas||[]).length}</span></h3><p class="hint">Lo que gobierna cada decisión del proyecto. Pocas y claras.</p>
-    ${(l.reglas||[]).length?`<ol class="reglas">${l.reglas.map((r,i)=>`<li><span>${esc(r)}</span><button class="btn ghost sm" data-act="regla-del" data-i="${i}" aria-label="Quitar regla">✕</button></li>`).join('')}</ol>`:''}
+    ${(l.reglas||[]).length?`<ol class="reglas">${l.reglas.map((r,i)=>`<li><input type="text" data-b="lenguaje.reglas.${i}" value="${esc(r)}" aria-label="Regla ${i+1}"><button class="btn ghost sm" data-act="regla-mov" data-i="${i}" data-d="-1" aria-label="Subir">▲</button><button class="btn ghost sm" data-act="regla-mov" data-i="${i}" data-d="1" aria-label="Bajar">▼</button><button class="btn ghost sm" data-act="regla-del" data-i="${i}" aria-label="Quitar regla">✕</button></li>`).join('')}</ol>`:''}
     <div class="prow"><input type="text" id="regla-t" placeholder="Tu propia regla + Enter" data-enter="regla-add-t" style="flex:1 1 240px"><button class="btn sm" data-act="regla-add-t">＋</button></div>
     ${c.length?`<details open><summary class="lbl">Reglas candidatas (salen de tu tensión, pilares, formas y mood)</summary><ul class="cand">${c.map(r=>`<li>${esc(r)} <button class="btn ghost sm" data-act="regla-add" data-v="${esc(r)}">＋</button></li>`).join('')}</ul></details>`:'<p class="muted">Completa tensión, pilares y formas para que aparezcan reglas candidatas.</p>'}</div>
   <div class="box"><h3>Técnica · cómo está hecho</h3><div class="grid2">
@@ -9132,7 +9225,7 @@ async function accion(a,el){
     case 'exportar-md':{const txt=aMarkdown(p);
       if(S.downloads){try{await S.downloads.save({filename:(p.nombre||'concepto').replace(/[^\w\- ]+/g,'').trim()+'.md',data:txt});toast('Descargado')}catch(e){if(e?.code!=='declined')toast('No se pudo descargar')}}
       else{try{await navigator.clipboard.writeText(txt);toast('Descarga no disponible: copiado al portapapeles')}catch{toast('Descarga no disponible aquí')}}break}
-    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
+    default:if(!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
 window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
