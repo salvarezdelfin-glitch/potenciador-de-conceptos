@@ -414,6 +414,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .rv-pin{position:absolute;transform:translate(-50%,-50%) scale(var(--ik,1));min-width:20px;height:20px;border-radius:10px;background:#ff6a3d;color:#140905;font:700 12px/20px var(--mono);text-align:center;padding:0 5px}.rv-n{display:inline-block;min-width:20px;height:20px;border-radius:10px;background:#ff6a3d;color:#140905;font:700 12px/20px var(--mono);text-align:center}
 .rv-stage.dibuja{cursor:crosshair}.rv-bar{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px 12px;background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:2}.rv-sep{width:1px;height:20px;background:var(--line2);margin:0 4px}
 .rv-crop{position:absolute;left:50%;top:56px;transform:translateX(-50%);z-index:3;display:flex;gap:8px;background:rgba(0,0,0,.75);padding:8px;border-radius:10px}
+.rg.rota{min-height:110px}.rg.rota img{visibility:hidden;height:110px}.rg.rota::before{content:"No carga la imagen";position:absolute;inset:0;display:grid;place-items:center;color:var(--ink3);font-size:12px}.rb-f img{min-height:70px}
 .rg.sel{outline:3px solid var(--accent);outline-offset:-3px}.rg-ok{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:12px;background:var(--accent);color:#140905;font-weight:800;text-align:center;line-height:24px}
 .rg-pal{display:inline-flex;gap:2px;margin-left:6px;vertical-align:middle}.rg-pal i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(255,255,255,.35)}.rg-pal b{color:#ffcf6a;margin-left:2px;font-size:12px}
 .rf-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:8px}.rf-m{text-align:left;border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 11px;cursor:pointer;display:flex;flex-direction:column;gap:3px}.rf-m small{color:var(--ink3);font-size:12px;line-height:1.35}.rf-m:hover,.rf-m.on{border-color:var(--accent)}
@@ -1030,7 +1031,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyi7nk1').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyii534').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3236,7 +3237,12 @@ document.addEventListener('keydown',e=>{if(e.target.matches?.('input,textarea,se
 /* al cargar cada miniatura se aprende su resolución real (para la insignia y el filtro de alta resolución) */
 document.addEventListener('load',e=>{const im=e.target;if(!im.classList?.contains('rg-img'))return;const p=S.P[S.cur],r=p?.refs.find(x=>x.id===im.dataset.rid);if(!r||!im.naturalWidth)return;
   if(!r.w||!r.h){r.w=im.naturalWidth;r.h=im.naturalHeight;clearTimeout(S.rgT);S.rgT=setTimeout(marcar,2500)}
+  if(!r.pal&&!r.palErr){try{r.pal=rfPaletaDe(im);clearTimeout(S.rgT);S.rgT=setTimeout(marcar,2500)}catch{}}
   const b=im.parentElement.querySelector('.rg-res');if(b&&rgResTxt(r)){b.hidden=false;b.textContent=rgResTxt(r);b.classList.toggle('baja',rgMax(r)<800)}},true);
+/* con Esc se sale de la pantalla completa: el modo pintar se cierra con ella */
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&S.pn&&$('#pn'))rvCierra()});
+/* una imagen que no carga no debe dejar un hueco roto: en resultados de búsqueda se oculta; en tu galería queda marcada */
+document.addEventListener('error',e=>{const im=e.target;if(im.tagName!=='IMG')return;const f=im.closest('.rb-f');if(f){f.style.display='none';return}const g=im.closest('.rg');if(g)g.classList.add('rota')},true);
 document.addEventListener('toggle',e=>{if(e.target.id==='det-busca')S.rgBusca=e.target.open;else if(e.target.id==='det-rev')S.rgRev=e.target.open},true);
 document.addEventListener('input',e=>{const t=e.target;
   if(t.dataset?.rgq){const p=S.P[S.cur];if(!p)return;S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false};S.rgF.q=t.value;const w=$('#rg-wrap');if(w){w.innerHTML=rgGaleriaHTML(p);S.assets?.hydrate?.()}return}
@@ -3250,7 +3256,10 @@ async function accionRg(a,el,p,ds){
     case 'rg-vista':S.refVista=ds.v;renderMain();return true;
     case 'rg-capa':f.capa=ds.v;renderMain();return true;
     case 'rg-hd':f.hd=!f.hd;renderMain();return true;
-    case 'rg-pal':f.pal=!f.pal;renderMain();return true;
+    case 'rg-pal':{f.pal=!f.pal;renderMain();if(f.pal&&p){const L=(p.refs||[]).filter(r=>!r.pal&&!r.palErr);
+        if(L.length){toast(`Midiendo los colores de ${L.length} referencia${L.length===1?'':'s'}…`);let n=0;
+          for(const r of L){try{const bm=await createImageBitmap(await blobDeRef(r));r.pal=rfPaletaDe(bm);n++}catch{r.palErr=1}}
+          marcar();renderMain();if(n<L.length)toast(`${L.length-n} no se pudieron medir: su sitio de origen no deja leerlas (ábrelas en el visor o súbelas tú).`)}}return true}
     case 'rg-selmodo':S.rgSel=S.rgSel?null:[];renderMain();return true;
     case 'rg-sel':{const L=S.rgSel=S.rgSel||[];S.rgSel=L.includes(ds.id)?L.filter(x=>x!==ds.id):(L.length>=4?(toast('Máximo 4 a la vez'),L):[...L,ds.id]);renderMain();return true}
     case 'rg-para':{const r=p?.refs.find(x=>x.id===ds.id);if(!r||!S.rgPara)return true;r.para=r.para||[];const i=r.para.indexOf(S.rgPara);i>=0?r.para.splice(i,1):r.para.push(S.rgPara);marcar();renderMain();return true}
@@ -3919,7 +3928,8 @@ async function provFotos(prov,q,{n=20,orient=''}={}){
     w:x.w||0,h:x.h||0,tags:x.tags||[],cat:'Foto',dl:x.dl||'',creditos:'Foto de '+(x.autor||'autor desconocido')+(x.autorUrl?' ('+x.autorUrl+')':'')+' en '+nombre+' · '+x.link}))}
 const provPx=(q,o)=>provFotos('pexels',q,o),provUs=(q,o)=>provFotos('unsplash',q,o);
 const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv,px:provPx,us:provUs};
-const PROV_GRUPOS={'':['met','aic','wm','ov'],museos:['met','aic'],met:['met'],aic:['aic'],wm:['wm'],ov:['ov'],px:['px'],us:['us']};
+/* Art Institute of Chicago ya no se busca: sus imágenes devuelven 403 al abrirse desde otra página y salían rotas */
+const PROV_GRUPOS={'':['met','wm','ov'],museos:['met'],met:['met'],wm:['wm'],ov:['ov'],px:['px'],us:['us']};
 async function buscarTodos(q,fuentes,opts,alts){const est={};
   /* si una fuente no devuelve nada con la consulta completa, reintenta con versiones más simples (las APIs buscan por coincidencia estricta) */
   const res=await Promise.all(fuentes.map(async k=>{try{let r=await PROV_FN[k](q,opts||{});est[k]={ok:true,n:r.length};
@@ -4053,14 +4063,14 @@ function refsBuscaHTML(p){
   const sel=(k,opts,w)=>`<select data-refb="${k}" style="width:${w||'auto'}">${opts.map(([v,n])=>`<option value="${v}" ${String(b[k]||'')===String(v)?'selected':''}>${n}</option>`).join('')}</select>`;
   const inpSt='border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:8px 10px';
   const fuentesUsadas=Object.keys(b.estado||{});
-  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">The Met · Art Institute of Chicago · Wikimedia Commons · Openverse · ArtStation</span></div>
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Buscar referencias visuales</h3><span class="muted" style="font-size:12px">The Met · Wikimedia Commons · Openverse · ArtStation</span></div>
     <p class="hint" style="margin:0">Cuéntame qué necesitas y para qué: armo la búsqueda en inglés (donde hay más material) y te propongo variaciones. Cada resultado trae su licencia tal como la declara la fuente; si no la declara, lo digo. Nada se presenta como libre sin comprobarse.</p>
     <div class="prow"><input type="text" id="rb-q" data-refb="q" value="${esc(b.q||'')}" placeholder="Qué buscas: cuchillo de obsidiana, jaguar, templo en ruinas…" style="flex:1 1 240px;${inpSt}" data-enter="rb-buscar">
       ${sel('prop',Object.entries(PROPOS).map(([k,v])=>[k,k?'Para estudiar: '+v[0]:'Propósito (cualquiera)']))}
       <input type="text" id="rb-ep" data-refb="epoca" list="rb-eps" value="${esc(b.epoca||'')}" placeholder="Época o cultura" style="width:150px;${inpSt}" data-enter="rb-buscar"><datalist id="rb-eps">${CULTURAS.map(c=>`<option value="${c}">`).join('')}</datalist>
       <input type="text" id="rb-am" data-refb="amb" value="${esc(b.amb||'')}" placeholder="Ambiente (niebla, noche…)" style="width:170px;${inpSt}" data-enter="rb-buscar"></div>
     <div class="prow">
-      ${sel('src',[['','Todas las fuentes'],['museos','Museos (Met + Chicago)'],['met','The Met'],['aic','Art Institute of Chicago'],['wm','Wikimedia Commons'],['ov','Openverse'],['px','Pexels (requiere clave)'],['us','Unsplash (requiere clave)'],['as','Artistas (ArtStation)']])}
+      ${sel('src',[['','Todas las fuentes'],['museos','Museos (The Met)'],['met','The Met'],['wm','Wikimedia Commons'],['ov','Openverse'],['px','Pexels (requiere clave)'],['us','Unsplash (requiere clave)'],['as','Artistas (ArtStation)']])}
       <select id="rb-capa" data-refb="capa" style="width:auto">${capasDe(p).map(l=>`<option value="${l.k}" ${capaDestino(b)===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
       <button class="btn pri" data-act="rb-buscar">Buscar</button></div>
     <p class="hint" id="rb-prev" style="margin:0">${consultaPrevHTML(b)}</p>
