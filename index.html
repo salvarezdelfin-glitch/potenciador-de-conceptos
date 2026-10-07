@@ -689,7 +689,9 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .palbar{display:flex;height:46px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
 .palrol{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink2)}.palrol i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 .why-l{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:3px}
-.reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}.reglas li{display:flex;gap:4px;align-items:center}.reglas li input{flex:1;min-width:0}.sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
+.reglas{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.reglas li{font-size:14px}.reglas li span{margin-right:6px}.reglas li{display:flex;gap:4px;align-items:center}.reglas li input{flex:1;min-width:0}.v3-pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.v3-sw{display:inline-flex;gap:5px}.v3-c{width:26px;height:26px;border-radius:50%;border:2px solid var(--line2);cursor:pointer;padding:0}.v3-c.on{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.v3-bar{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:6px;border-bottom:1px solid var(--line)}.v3-pg{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}
+.sug-l{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}.sug-l li{display:flex;gap:6px;align-items:center}.sug-l input{flex:1;min-width:0}.borrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.borr{border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}.borr p{margin:0;font-size:13.5px;line-height:1.4}.tipo-guia{background:var(--surface);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}.tipo-guia ul{margin:4px 0 0;padding-left:18px}.fc-sel .ch{max-width:100%}
 .cand{margin:6px 0 0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px;color:var(--ink2)}
 .bal{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 16px}
 .bal-r{display:grid;grid-template-columns:96px 1fr 24px;gap:8px;align-items:center;font-size:12.5px}
@@ -1031,7 +1033,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyn0y55').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyn608s').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -8250,19 +8252,19 @@ function v3dInit(){const {T,OrbitControls}=V3.lib,box=$('#v3d-cv');V3.T=T;
   V3.ro=new ResizeObserver(()=>v3dResize());V3.ro.observe(box);v3dResize();
   const loop=()=>{if(!V3.open)return;if(V3.dirty){V3.controls.update();V3.renderer.render(V3.scene,V3.camera);V3.dirty=false}V3.raf=requestAnimationFrame(loop)};V3.raf=requestAnimationFrame(loop)}
 function v3dResize(){const box=$('#v3d-cv');if(!box||!V3.renderer)return;const w=box.clientWidth||600,h=box.clientHeight||400;V3.renderer.setSize(w,h);V3.camera.aspect=w/h;V3.camera.updateProjectionMatrix();V3.dirty=true}
-function v3dLuz(){const L=S.v3d.luz,T=V3.T,az=L.dir*RAD,[dx,dy,dz]=luzDir(L.dir,L.alt);
+function v3dLuz(){v3dPersistePronto();const L=S.v3d.luz,T=V3.T,az=L.dir*RAD,[dx,dy,dz]=luzDir(L.dir,L.alt);
   V3.key.position.set(dx*6,dy*6+.9,dz*6);V3.key.target.position.set(0,.9,0);V3.key.color.set(L.color);V3.key.intensity=L.int;
   V3.hemi.intensity=L.amb;V3.hemi.color.set(L.color).lerp(new T.Color('#ffffff'),.5);V3.hemi.groundColor.set(L.ambc);
-  V3.rim.intensity=L.rim||0;V3.rim.color.set(L.color);V3.rim.position.set(-Math.cos(az)*4,3,Math.sin(az)*4);V3.rim.target.position.set(0,.9,0);V3.dirty=true}
-function v3dEscena(){const S3=S.v3d;V3.scene.background=new V3.T.Color(V3_FONDOS[S3.fondo]||V3_FONDOS.oscuro);V3.rej.visible=!!S3.rej;V3.suelo.visible=!!S3.sombra;V3.key.castShadow=!!S3.sombra;
+  V3.rim.intensity=L.rim||0;V3.rim.color.set(L.rimc||L.color);V3.rim.position.set(-Math.cos(az)*4,3,Math.sin(az)*4);V3.rim.target.position.set(0,.9,0);V3.dirty=true}
+function v3dEscena(){v3dPersistePronto();const S3=S.v3d;V3.scene.background=new V3.T.Color(V3_FONDOS[S3.fondo]||V3_FONDOS.oscuro);V3.rej.visible=!!S3.rej;V3.suelo.visible=!!S3.sombra;V3.key.castShadow=!!S3.sombra;
   V3.camera.fov=2*Math.atan(12/S3.lente)*180/Math.PI;V3.camera.updateProjectionMatrix();V3.dirty=true}
 function v3dSuelo(){const m=V3.model;if(!m||V3.noSuelo)return;m.position.y=0;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m);if(isFinite(b.min.y))m.position.y=-b.min.y;V3.dirty=true}
-function v3dPose(){const m=V3.model,J=m?.userData?.J;if(!J)return;const P=S.v3d.pose,r=d=>(d||0)*RAD;
+function v3dPose(){v3dPersistePronto();const m=V3.model,J=m?.userData?.J;if(!J)return;const P=S.v3d.pose,r=d=>(d||0)*RAD;
   J.pelvis.rotation.set(0,r(P.py),r(P.pz));J.spine.rotation.set(r(P.tb)/2,r(P.tt)/2,r(P.tl)/2);J.chest.rotation.set(r(P.tb)/2,r(P.tt)/2,r(P.tl)/2);
   J.neck.rotation.set(r(P.hn)/2,r(P.hy)/2,r(P.hl)/2);J.head.rotation.set(r(P.hn)/2,r(P.hy)/2,r(P.hl)/2);
   for(const [s,sg] of [['L',1],['R',-1]]){J['sh'+s].rotation.set(-r(P['a'+s+'s']),r(P['a'+s+'r']),sg*r(P['a'+s+'p']));J['el'+s].rotation.set(-r(P['a'+s+'e']),0,0);J['hip'+s].rotation.set(-r(P['l'+s+'s']),0,sg*r(P['l'+s+'p']));J['kn'+s].rotation.set(r(P['l'+s+'k']),0,0)}
   m.userData.aplica?.();v3dGiro()}
-function v3dGiro(){const m=V3.model;if(!m)return;const g=S.v3d.giro,r=d=>d*RAD;m.rotation.set(r(g.x),r(g.y),r(g.z));v3dSuelo();V3.dirty=true}
+function v3dGiro(){v3dPersistePronto();const m=V3.model;if(!m)return;const g=S.v3d.giro,r=d=>d*RAD;m.rotation.set(r(g.x),r(g.y),r(g.z));v3dSuelo();V3.dirty=true}
 function v3dEncuadra(){const m=V3.model;if(!m)return;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m),c=b.getCenter(new V3.T.Vector3()),sz=b.getSize(new V3.T.Vector3()),fov=V3.camera.fov*Math.PI/180,
     d=Math.max(sz.y,sz.x*.9,sz.z*.9)/(2*Math.tan(fov/2))*1.45+sz.z/2;V3.controls.target.copy(c);V3.camera.position.set(c.x,c.y+sz.y*.08,c.z+d);V3.controls.update();V3.dirty=true}
 function v3dDispone(root){const ms=new Set();root.traverse(o=>{o.geometry?.dispose?.();for(const m of [o.material,o.userData?.mat0].flat())if(m&&m!==V3.mat)ms.add(m)});ms.forEach(m=>{for(const k in m)if(m[k]?.isTexture)m[k].dispose();m.dispose?.()})}
@@ -8316,9 +8318,14 @@ function v3dTabPose(s){const ch=v3Ch;
         ${hay?`<div class="v3-g"><b>Huesos (${hay})</b><select data-v3bone>${V3.bones.map(b=>`<option ${b.name===s.hueso?'selected':''}>${esc(b.name)}</option>`).join('')}</select>
           ${['X','Y','Z'].map((a,i)=>v3Sl('Girar '+a,'bone.'+i,-180,180,1,(s.bones[s.hueso]||[0,0,0])[i])).join('')}<button class="btn sm" data-act="v3d-huesos-reset">Restablecer pose</button></div>`:(an?'':'<p class="hint">Este modelo no trae esqueleto, así que no se puede posar; sí puedes girarlo y cambiarle la luz.</p>')}`}
     return '<p class="hint">Esta pieza no se posa. Cámbiate a «Maniquí» o carga un modelo con esqueleto («Mi modelo»).</p>'}
+/* ---------- luces con los colores de tu paleta: tú decides qué color hace cada trabajo ---------- */
+function v3dPaletaLuz(s,p){const pal=(p?.mood?.paleta||[]).filter(Boolean),L=s.luz;if(!pal.length)return '<p class="hint">Define la paleta de tu proyecto (Mood) y aquí podrás repartir sus colores entre las luces.</p>';
+  const fila=(k,n,hint)=>`<div class="v3-pl"><span class="lbl">${n}</span><span class="v3-sw">${pal.map(h=>`<button class="v3-c ${(L[k]||'').toLowerCase()===h.toLowerCase()?'on':''}" style="background:${esc(h)}" data-act="v3d-luzc" data-r="${k}" data-c="${esc(h)}" title="${esc(h)}" aria-label="${esc(h)}"></button>`).join('')}</span><span class="hint">${hint}</span></div>`;
+  return `<div class="v3-g"><b>Colorea las luces con tu paleta</b><p class="hint" style="margin:0">Elige qué color de tu paleta hace cada trabajo; la luz cambia cómo se ve el modelo.</p>${fila('color','Luz principal','la que pega fuerte')}${fila('rimc','Contraluz','borde brillante de la silueta')}${fila('ambc','Sombra y rebote','lo que se ve donde no llega la luz')}${v3Sl('Fuerza del contraluz','luz.rim',0,3,.05,L.rim||0,'')}</div>`}
 function v3dTabLuz(s,p){const ch=v3Ch,L=s.luz,E=p?.escena;return `<div class="chips">${Object.entries(V3_LUCES).map(([k,v])=>ch('v3d-luzp',k,v.n,s.luzN===v.n)).join('')}</div>
       ${v3Sl('Dirección','luz.dir',0,360,1,L.dir)}${v3Sl('Altura','luz.alt',-40,90,1,L.alt)}${v3Sl('Intensidad','luz.int',0,5,.05,L.int,'')}${v3Sl('Ambiente','luz.amb',0,2,.05,L.amb,'')}
       <div class="prow"><label class="esc-r"><span class="lbl">Color de la luz</span><input type="color" data-v3c="color" value="${esc(L.color)}"></label><label class="esc-r"><span class="lbl">Color de la sombra</span><input type="color" data-v3c="ambc" value="${esc(L.ambc)}"></label></div>
+      ${v3dPaletaLuz(s,p)}
       <div class="v3-g"><b>Usar las luces de tu proyecto</b><div class="chips">${E?`<button class="ch" data-act="v3d-escena" data-k="proyecto">Mi escena: ${esc(escNombre(p,E))}</button>`:''}${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch" data-act="v3d-escena" data-k="${k}">${esc(v.n)}</button>`).join('')}</div>
       <button class="btn sm" data-act="v3d-guardar-luz" title="La guarda en «Mis escenas» de Mood">Guardar esta luz como escena</button></div>`}
 function v3dTabCamara(s){const ch=v3Ch;return `${v3Sl('Lente (mm)','lente',18,135,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
@@ -8331,18 +8338,73 @@ function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
     <label class="esc-r"><span class="lbl">Su porqué</span><input type="text" data-v3txt="porque" value="${esc(s.porque||v3dPorque())}" placeholder="¿Qué estudias con esta imagen?"></label>
     <label class="chk"><input type="checkbox" data-v3chk="tablero" ${s.tablero?'checked':''}><span>y ponerla en el Tablero</span></label>
     <div class="prow"><button class="btn pri" data-act="v3d-save" data-k="moodboard">Añadir al moodboard</button><button class="btn sm" data-act="v3d-save" data-k="png">Descargar PNG</button><button class="btn sm" data-act="v3d-save" data-k="copiar">Copiar imagen</button></div>
+    <div class="v3-g"><b>Para Photoshop o Procreate</b><p class="hint" style="margin:0">Lo que ves ahora, con la pose y la luz puestas.</p>
+      <div class="prow"><button class="btn sm" data-act="v3d-exp" data-k="png-sin-fondo" title="La figura sola, con transparencia">PNG sin fondo</button><button class="btn pri sm" data-act="v3d-exp" data-k="psd" title="Fondo, sombra, figura, silueta negra y una capa vacía para pintar">PSD en capas</button></div>
+      <div class="prow"><button class="btn sm" data-act="v3d-exp" data-k="usdz" title="Procreate lo abre para pintar sobre el 3D">Modelo USDZ (Procreate)</button><button class="btn sm" data-act="v3d-exp" data-k="obj">OBJ</button><button class="btn sm" data-act="v3d-exp" data-k="glb">GLB</button></div>
+      <p class="hint" style="margin:0"><b>PSD:</b> Fondo, Sombra (multiplicar), Figura, Silueta negra (oculta) y «Pintar aquí». Se abre en Photoshop y en Procreate (Importar). <b>USDZ/OBJ/GLB:</b> el cuerpo ya con la pose puesta, para pintarlo en 3D o llevarlo a otro programa.</p></div>
     ${s.modelo==='maniqui'?`<div class="v3-g"><b>Buscar fotos de esta pose</b><p class="hint" style="margin:0">Busca en tus fuentes fotos que se llaman como tu pose («${esc(V3_POSES[s.preset]?.en||'figure pose reference')}»). No compara tu pose con las fotos: busca por nombre.</p><button class="btn sm" data-act="v3d-buscar-pose">Buscar fotos de «${esc(s.preset)}»</button></div>`:''}`}
-const V3_TABS={modelo:v3dTabModelo,pose:v3dTabPose,luz:v3dTabLuz,camara:v3dTabCamara,guardar:v3dTabGuardar};
-function v3dPanelHTML(){const s=S.v3d;return (V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
+/* ---------- poses del visor 3D: se recuerdan, hay pose neutra y puedes guardar pose + luces + lente con nombre ---------- */
+const V3_NEUTRA=()=>({...V3_POSES['De pie']});
+const V3_GUARDA=['modelo','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla'];
+const v3dEstadoUtil=()=>{const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
+function v3dRecuerda(){try{if(S.v3d)localStorage.setItem('cdc.v3d',JSON.stringify(v3dEstadoUtil()))}catch{}}
+function v3dPersistePronto(){clearTimeout(V3.rT);V3.rT=setTimeout(v3dRecuerda,1500)}
+function v3dRestaura(){try{const o=JSON.parse(localStorage.getItem('cdc.v3d')||'null');if(!o)return null;if(o.modelo==='mio')o.modelo='maniqui';return {...v3Def(),...o,tab:'modelo'}}catch{return null}}
+function v3dAplica(e,soloPose){const s=S.v3d;
+  if(soloPose){s.pose={...e.pose};s.giro=clone(e.giro||{x:0,y:0,z:0});s.preset=e.preset||'Mía';v3dPose();v3dGiro()}
+  else{const o=clone(e);if(o.modelo==='mio')o.modelo='maniqui';Object.assign(s,o);v3dModelo();v3dPose();v3dGiro();v3dLuz();v3dEscena()}
+  v3dPanel()}
+function v3dNeutra(todo){const s=S.v3d;s.pose=V3_NEUTRA();s.preset='De pie';s.giro={x:0,y:0,z:0};s.bones={};
+  if(todo){s.luz=luz3dPre('suave');s.luzN='Suave';s.lente=50;s.fondo='oscuro'}
+  v3dPose();v3dGiro();if(V3.bones?.length)v3dHuesos();if(todo){v3dLuz();v3dEscena();v3dEncuadra()}v3dPanel()}
+function v3dTabPoses(s){const L=(S.ajustes.poses3d||[]).slice().sort((a,b)=>b.ts-a.ts);
+  return `<div class="v3-g"><b>Guardar lo que ves</b><p class="hint" style="margin:0">Guarda la pose junto con el cuerpo, las luces y el lente, para volver a ella cuando quieras. Se queda en tu cuenta.</p>
+    <input type="text" id="v3d-np" data-v3txt="nombrePose" value="${esc(s.nombrePose||'')}" placeholder="Ej. Dios Jaguar en guardia" aria-label="Nombre de la pose">
+    <div class="prow"><button class="btn pri sm" data-act="v3d-pose-guarda">★ Guardar pose</button><button class="btn sm" data-act="v3d-neutra">↺ Pose neutra</button><button class="btn sm" data-act="v3d-todo-neutro">↺ Todo neutro</button></div></div>
+  ${L.length?`<div class="v3-g"><b>Mis poses (${L.length})</b>${L.map(x=>`<div class="v3-pg"><div><b>${esc(x.nombre)}</b><br><small class="muted">${esc(V3_CUERPOS[x.cuerpo]?.n||x.cuerpo||'')} · luz ${esc(x.luzN||'propia')} · ${fecha(x.ts)}</small></div><div class="prow"><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}">Cargar todo</button><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}" data-solo="1">Solo la pose</button><button class="btn ghost sm danger" data-act="v3d-pose-borra" data-id="${x.id}">${S.confirmLi==='v3'+x.id?'¿Borrar?':'✕'}</button></div></div>`).join('')}</div>`:'<p class="hint">Todavía no guardas ninguna. Pon el cuerpo como quieras, ponle nombre y toca «Guardar pose».</p>'}`}
+function v3dBarra(){const n=(S.ajustes.poses3d||[]).length;return `<div class="v3-bar"><button class="btn sm" data-act="v3d-neutra" title="Vuelve el cuerpo a la pose neutra">↺ Pose neutra</button><button class="btn sm ghost" data-act="v3d-todo-neutro" title="Pose, luz, lente y fondo como al empezar">↺ Todo</button><button class="btn sm" data-act="v3d-tab" data-k="poses">★ Mis poses${n?` (${n})`:''}</button></div>`}
+/* ---------- exportar el 3D para Photoshop y Procreate: PNG sin fondo, PSD en capas y el modelo con la pose puesta ---------- */
+/* PNG con transparencia a partir de dos renders (fondo negro y fondo blanco): la diferencia da el alfa exacto, incluso en bordes suavizados y sombras */
+async function v3dMatte(prep){const r=V3.renderer,cv=r.domElement,T=V3.T,sc=V3.scene,bg0=sc.background,pr=r.getPixelRatio(),vis=[V3.suelo.visible,V3.rej.visible];
+  r.setPixelRatio(Math.max(2,pr));v3dResize();const rest=prep?.()||(()=>{});let B,W;
+  try{const pas=c=>{sc.background=new T.Color(c);r.render(sc,V3.camera);const t=document.createElement('canvas');t.width=cv.width;t.height=cv.height;const g=t.getContext('2d',{willReadFrequently:true});g.drawImage(cv,0,0);return g.getImageData(0,0,t.width,t.height)};B=pas('#000000');W=pas('#ffffff')}
+  finally{rest();sc.background=bg0;V3.suelo.visible=vis[0];V3.rej.visible=vis[1];r.setPixelRatio(pr);v3dResize()}
+  const out=lienzo(B.width,B.height),g=out.getContext('2d'),o=g.createImageData(B.width,B.height),b=B.data,w=W.data,d=o.data;
+  for(let i=0;i<d.length;i+=4){const a=Math.max(0,Math.min(1,1-((w[i]-b[i])+(w[i+1]-b[i+1])+(w[i+2]-b[i+2]))/765));d[i+3]=Math.round(a*255);if(a>.004){d[i]=Math.min(255,b[i]/a);d[i+1]=Math.min(255,b[i+1]/a);d[i+2]=Math.min(255,b[i+2]/a)}}
+  g.putImageData(o,0,0);return out}
+const v3dSoloFigura=()=>{V3.suelo.visible=false;V3.rej.visible=false;return ()=>{}};
+function v3dSoloSombra(){const s=S.v3d,ms=[];V3.suelo.visible=!!s.sombra;V3.rej.visible=false;V3.model?.traverse(o=>{if(o.material)[].concat(o.material).forEach(m=>{ms.push([m,m.colorWrite]);m.colorWrite=false})});return ()=>ms.forEach(([m,c])=>{m.colorWrite=c})}
+function v3dSoloSilueta(){V3.suelo.visible=false;V3.rej.visible=false;V3.scene.overrideMaterial=new V3.T.MeshBasicMaterial({color:0});return ()=>{V3.scene.overrideMaterial=null}}
+/* la pose puesta: cada malla con los huesos aplicados, para que otros programas la reciban ya posada */
+function v3dHorneado(){const T=V3.T,g=new T.Group(),v=new T.Vector3();V3.model.updateMatrixWorld(true);
+  V3.model.traverse(o=>{if(!o.isMesh||!o.visible)return;const geo=o.geometry.clone(),pos=geo.attributes.position;
+    if(o.isSkinnedMesh){o.skeleton.update();for(let i=0;i<pos.count;i++){o.getVertexPosition(i,v);v.applyMatrix4(o.matrixWorld);pos.setXYZ(i,v.x,v.y,v.z)}}else geo.applyMatrix4(o.matrixWorld);
+    geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');geo.computeVertexNormals();g.add(new T.Mesh(geo,o.material))});return g}
+async function v3dExporta(k){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!V3.model){toast('Abre primero un cuerpo o un modelo');return}
+  const nom=slug(p?.nombre||'3d',40)+'-'+(s.modelo==='maniqui'?slug(s.preset||'pose',20):s.modelo)+'-3d',base='https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/exporters/';
+  try{
+    if(k==='png-sin-fondo'){const cv=await v3dMatte(v3dSoloFigura);await bajarBlob(nom+'-sin-fondo.png',await aBlob(cv));return}
+    if(k==='psd'){toast('Armando el PSD en capas…');const figura=await v3dMatte(v3dSoloFigura),sombra=await v3dMatte(v3dSoloSombra),silueta=await v3dMatte(v3dSoloSilueta),w=figura.width,h=figura.height,
+        fondo=lienzo(w,h),fg=fondo.getContext('2d');fg.fillStyle=V3_FONDOS[s.fondo]||V3_FONDOS.oscuro;fg.fillRect(0,0,w,h);
+      const plano=lienzo(w,h),pg=plano.getContext('2d');pg.drawImage(fondo,0,0);pg.globalCompositeOperation='multiply';pg.drawImage(sombra,0,0);pg.globalCompositeOperation='source-over';pg.drawImage(figura,0,0);
+      const {writePsd}=await import('https://cdn.jsdelivr.net/npm/ag-psd@28.2.1/+esm'),buf=writePsd({width:w,height:h,canvas:plano,children:[{name:'Fondo',canvas:fondo},{name:'Sombra (multiplicar)',canvas:sombra,blendMode:'multiply'},{name:'Figura',canvas:figura},{name:'Silueta negra (oculta)',canvas:silueta,hidden:true},{name:'Pintar aquí',canvas:lienzo(w,h)}]});
+      await bajarBlob(nom+'.psd',new Blob([buf],{type:'image/vnd.adobe.photoshop'}));return}
+    toast('Preparando el modelo con la pose puesta…');const g=v3dHorneado();
+    if(k==='glb'){const {GLTFExporter}=await import(base+'GLTFExporter.js/+esm'),buf=await new GLTFExporter().parseAsync(g,{binary:true});await bajarBlob(nom+'.glb',new Blob([buf],{type:'model/gltf-binary'}))}
+    else if(k==='obj'){const {OBJExporter}=await import(base+'OBJExporter.js/+esm');await bajarBlob(nom+'.obj',new Blob([new OBJExporter().parse(g)],{type:'text/plain'}))}
+    else if(k==='usdz'){const {USDZExporter}=await import(base+'USDZExporter.js/+esm'),buf=await new USDZExporter().parse(g);await bajarBlob(nom+'.usdz',new Blob([buf],{type:'model/vnd.usdz+zip'}))}
+  }catch(e){console.error(e);toast('No se pudo exportar (necesita internet la primera vez): '+(e?.message||'error'))}}
+const V3_TABS={modelo:v3dTabModelo,pose:v3dTabPose,luz:v3dTabLuz,camara:v3dTabCamara,poses:v3dTabPoses,guardar:v3dTabGuardar};
+function v3dPanelHTML(){const s=S.v3d;return v3dBarra()+(V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
 function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?`Pose 3D: ${s.preset}`:s.modelo==='loomis'?'Cabeza de Loomis con luz':s.modelo==='formas'?`Estudio de luz sobre ${s.forma}`:'Estudio 3D de '+(s.mioNombre||'modelo');return `${n} · luz ${s.luzN||'a mano'}`}
-function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[['modelo','Modelo'],['pose','Pose'],['luz','Luz'],['camara','Cámara'],['guardar','Guardar']].map(([k,n])=>`<button class="${s.tab===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
-async function v3dAbrir(modo,tab){if(V3.open)return;S.v3d=S.v3d||v3Def();if(modo)S.v3d.modelo=modo;if(tab)S.v3d.tab=tab;
+function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[['modelo','Modelo'],['pose','Pose'],['luz','Luz'],['camara','Cámara'],['poses','Poses'],['guardar','Guardar']].map(([k,n])=>`<button class="${s.tab===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
+async function v3dAbrir(modo,tab){if(V3.open)return;S.v3d=S.v3d||v3dRestaura()||v3Def();if(modo)S.v3d.modelo=modo;if(tab)S.v3d.tab=tab;
   const ov=$('#overlay');ov.innerHTML=`<div class="v3d" id="v3d"><div class="v3d-top"><span class="v3d-hint">Arrastra para girar · rueda para acercar · clic derecho para mover</span><button class="btn sm" data-act="v3d-cerrar">✕ Cerrar</button></div><div class="v3d-cv" id="v3d-cv"><div class="v3d-carga" id="v3d-carga">Cargando el motor 3D…</div></div><div class="v3d-panel" id="v3d-panel"></div><nav class="v3d-tabs" id="v3d-tabs"></nav><input type="file" id="v3d-file" accept=".glb,.gltf,.obj,.fbx,.stl" hidden></div>`;
   V3.open=true;const tk=V3.tk=(V3.tk||0)+1;
   try{await v3dLib()}catch(e){V3.open=false;ov.innerHTML='';toast('No pude cargar el motor 3D. Revisa tu conexión e inténtalo de nuevo.');return}
   if(!V3.open||V3.tk!==tk)return;$('#v3d-carga')?.remove();v3dInit();v3dPanel();v3dModelo()}
 const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model'];/* lo que vive solo mientras el visor está abierto */
-function v3dCerrar(){V3.open=false;cancelAnimationFrame(V3.raf);
+function v3dCerrar(){v3dRecuerda();V3.open=false;cancelAnimationFrame(V3.raf);
   try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model)v3dDispone(V3.model);[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
   V3_RT.forEach(k=>V3[k]=null);V3.mixer=null;V3.bones=[];$('#overlay').innerHTML=''}
 async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)return;
@@ -9050,6 +9112,13 @@ async function accion(a,el){
     case 'v3d-guardar-luz':{const L=S.v3d.luz;p.escenas=p.escenas||[];p.escenas.push(luz3dAEsc(L,'Luz 3D '+(p.escenas.length+1)));marcar();toast('Guardada en «Mis escenas» (pestaña Mood)');break}
     case 'v3d-fondo':S.v3d.fondo=ds.k;v3dEscena();v3dPanel();break;
     case 'v3d-encuadra':v3dEncuadra();break;
+    case 'v3d-luzc':{const L=S.v3d.luz;L[ds.r]=ds.c;S.v3d.luzN='';if(ds.r==='rimc'&&!(L.rim>0))L.rim=1.2;v3dLuz();v3dPanel();break}
+    case 'v3d-exp':v3dExporta(ds.k);break;
+    case 'v3d-neutra':v3dNeutra(false);toast('Pose neutra');break;
+    case 'v3d-todo-neutro':v3dNeutra(true);toast('Todo como al empezar');break;
+    case 'v3d-pose-guarda':{const sv=S.v3d,L=S.ajustes.poses3d=S.ajustes.poses3d||[],nom=($('#v3d-np')?.value||sv.nombrePose||'').trim()||('Pose '+(L.length+1));L.push({id:uid(),nombre:nom,ts:Date.now(),...v3dEstadoUtil()});sv.nombrePose='';marcarAj();v3dPanel();toast('Pose guardada: '+nom);break}
+    case 'v3d-pose-carga':{const x=(S.ajustes.poses3d||[]).find(v=>v.id===ds.id);if(!x)return;v3dAplica(x,!!ds.solo);toast(ds.solo?'Pose puesta':'Pose, luces y lente puestos');break}
+    case 'v3d-pose-borra':{const k='v3'+ds.id;if(S.confirmLi!==k){S.confirmLi=k;v3dPanel();return}S.confirmLi=null;S.ajustes.poses3d=(S.ajustes.poses3d||[]).filter(v=>v.id!==ds.id);marcarAj();v3dPanel();break}
     case 'v3d-reset-giro':S.v3d.giro={x:0,y:0,z:0};v3dGiro();v3dPanel();break;
     case 'v3d-huesos-reset':S.v3d.bones={};v3dHuesos();v3dPanel();break;
     case 'v3d-save':v3dGuardar(ds.k);break;
