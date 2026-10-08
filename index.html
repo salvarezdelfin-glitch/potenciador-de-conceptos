@@ -1044,7 +1044,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzqwv8k').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzr1435').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1203,7 +1203,7 @@ let saveT=null,ajT=null;
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
 function lsSet(){try{localStorage.setItem('cdc.v1',JSON.stringify({P:S.P,ajustes:S.ajustes}))}catch{}}
 
-function marcar(){const p=S.P[S.cur];if(!p)return;p.actualizado=Date.now();S.dirty=true;setStatus('Guardando…');clearTimeout(saveT);saveT=setTimeout(guardar,700)}
+function marcar(){const p=S.P[S.cur];if(!p)return;try{bdAutoLlena(p)}catch{}p.actualizado=Date.now();S.dirty=true;setStatus('Guardando…');clearTimeout(saveT);saveT=setTimeout(guardar,700)}
 /* ---- historial: una foto del proyecto cada 15 min de trabajo, al abrirlo y antes de restaurar ---- */
 const HIST_MAX=40;
 function histLocal(){try{return JSON.parse(localStorage.getItem('cdc.hist')||'[]')}catch{return []}}
@@ -8734,7 +8734,12 @@ function bdItems(p){const ids=new Set((p.refs||[]).map(r=>r.id));return ((p.boar
 const bdRef=(p,i)=>(p.refs||[]).find(r=>r.id===i.ref);
 const bdZmax=p=>Math.max(0,...((p.board&&p.board.items)||[]).map(x=>x.z||0));
 function bdCentro(){const wr=$('#bd-wrap'),v=S.bdView;if(!wr||!v)return {x:300,y:200};return {x:(wr.clientWidth/2-v.x)/v.k,y:(wr.clientHeight/2-v.y)/v.k}}
-function bdAdd(p,list){p.board=p.board||{items:[]};const c=bdCentro();let k=0;
+/* el tablero se llena solo: cada referencia nueva del proyecto (búsqueda, subida, render 3D, lámina…) aparece en el tablero, en la columna más corta. Lo que quitas a mano no vuelve. */
+function bdAutoLlena(p){if(!p||p.board?.auto===false)return 0;const B=p.board=p.board||{items:[]};B.items=B.items||[];if(B.desde===undefined)B.desde=B.items.length?Date.now():0;
+  const en=new Set(B.items.filter(i=>i.t==='img').map(i=>i.ref)),qt=new Set(B.quitados||[]),falt=(p.refs||[]).filter(r=>refSrc(r)&&!en.has(r.id)&&!qt.has(r.id)&&(r.creado||0)>=B.desde);if(!falt.length)return 0;
+  const W=240,G=16,C=6,alt=Array(C).fill(0);for(const i of B.items){if(i.t!=='img')continue;const c=clamp(Math.round((i.x||0)/(W+G)),0,C-1),r=bdRef(p,i),asp=r?.h&&r?.w?r.h/r.w:.75;alt[c]=Math.max(alt[c],(i.y||0)+asp*(i.w||W)+G)}
+  for(const r of falt){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=r.h&&r.w?r.h/r.w:.75;B.items.push({id:uid(),t:'img',ref:r.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}return falt.length}
+function bdAdd(p,list){p.board=p.board||{items:[]};if(p.board.quitados)p.board.quitados=p.board.quitados.filter(q=>!list.some(it=>it.ref===q));const c=bdCentro();let k=0;
   list.forEach(it=>{it.id=uid();it.z=bdZmax(p)+1;if(it.x==null){it.x=c.x-110+(k%6)*28;it.y=c.y-90+(k%6)*28}k++;p.board.items.push(it)})}
 const bdAsp=id=>{const e=document.querySelector('.bd-it[data-id="'+id+'"]');return e&&e.offsetWidth?e.offsetHeight/e.offsetWidth:.75};
 function bdOrdenar(p,m){if(!p.board)return;const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
@@ -8767,12 +8772,12 @@ function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
     <label class="esc-r"><span class="lbl">Ancho · ${Math.round(s.w||240)}px</span><input type="range" data-bdw="${s.id}" min="60" max="1200" step="10" value="${Math.round(s.w||240)}"></label>
     ${refMetaHTML(r)}<div class="prow">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener">Fuente ↗</a>`:''}<button class="btn sm" data-act="bd-front" data-id="${s.id}">Al frente</button><button class="btn sm" data-act="bd-back" data-id="${s.id}">Al fondo</button><button class="btn sm danger" data-act="bd-del" data-id="${s.id}">Quitar del tablero</button></div>
     <p class="hint" style="margin:0">Quitarla del tablero no la borra del moodboard.</p></div>`}
-function vBoard(p){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0)),ids=new Set(items.filter(i=>i.t==='img').map(i=>i.ref)),refs=(p.refs||[]).filter(r=>refSrc(r)),faltan=refs.filter(r=>!ids.has(r.id));
+function vBoard(p){bdAutoLlena(p);const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0)),ids=new Set(items.filter(i=>i.t==='img').map(i=>i.ref)),refs=(p.refs||[]).filter(r=>refSrc(r)),faltan=refs.filter(r=>!ids.has(r.id));
   if(!refs.length)return `<p class="intro"><b>Tablero de referencias.</b> Un lienzo libre para poner tus referencias juntas, como en PureRef.</p><div class="box"><h3>Todavía no hay referencias</h3><p class="hint">Agrega imágenes en la pestaña Referencias (búsqueda, subir o pegar) y aquí las ordenas sobre el lienzo.</p><div class="prow"><button class="btn pri" data-act="tab" data-tab="refs">Ir a Referencias</button></div></div>`;
   const pk=S.bdPick,fil=S.bdPickCapa||'',lista=faltan.filter(r=>!fil||r.capa===fil);
   return `<p class="intro"><b>Tablero de referencias.</b> Pon tus referencias donde quieras, escálalas, agrega notas y descarga el tablero para PureRef. Se guarda en el proyecto.</p>
   <div class="bd-bar"><button class="btn sm pri" data-act="bd-pick">＋ Del moodboard${faltan.length?` (${faltan.length})`:''}</button><label class="btn sm" for="bd-file">Subir imágenes</label><input type="file" id="bd-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
-    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
+    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><label class="chk" title="Cada referencia nueva del proyecto aparece sola en el tablero"><input type="checkbox" data-bdauto ${p.board?.auto===false?'':'checked'}><span>Llenar solo</span></label><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
     <span class="bd-sep"></span><span class="lbl">Descargar</span><button class="btn sm" data-act="bd-png" ${S.bdBusy?'disabled':''}>PNG</button><button class="btn sm" data-act="bd-zip" ${S.bdBusy?'disabled':''} title="Tablero como imagen + cada referencia por separado, para PureRef">ZIP para PureRef</button><button class="btn sm" data-act="bd-copiar" ${S.bdBusy?'disabled':''} title="Copia el tablero como imagen; pégalo en PureRef con Ctrl+V">Copiar imagen</button><span class="status" id="bd-status">${esc(S.bdBusy||'')}</span></div>
   ${pk?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Añadir del moodboard</h3><span class="prow"><select data-bdpickcapa><option value="">Todas las capas</option>${LAYERS.map(l=>`<option value="${l.k}" ${fil===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn sm pri" data-act="bd-addtodas" ${lista.length?'':'disabled'}>Añadir ${lista.length||'0'}</button><button class="btn ghost sm" data-act="bd-pick">Cerrar</button></span></div>
     ${lista.length?`<div class="rm-mini" style="gap:6px">${lista.slice(0,80).map(r=>`<img ${imgAttrs(r)} alt="" data-act="bd-addone" data-id="${r.id}" title="${esc(etiquetaDe(r)||'Añadir')}" style="width:64px;height:64px">`).join('')}</div><p class="hint" style="margin:0">Toca una imagen para añadirla, o «Añadir» para traer todas las de la lista.</p>`:'<p class="muted" style="margin:0">Ya están todas en el tablero.</p>'}</div>`:''}
@@ -8795,7 +8800,7 @@ window.addEventListener('pointerup',e=>{const d=BD.drag;if(!d)return;BD.drag=nul
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.bdView||(S.bdView={x:0,y:0,k:1}),k2=Math.max(.04,Math.min(3,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;S.bdTocado=true;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;bdApply()},{passive:false});
 document.addEventListener('keydown',e=>{if(!enTablero()||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
-  const p=S.P[S.cur];p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
+  const p=S.P[S.cur],it0=p.board.items.find(i=>i.id===S.bdSel);if(it0?.ref)(p.board.quitados=p.board.quitados||[]).push(it0.ref);p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
 /* descargas: el tablero se dibuja con las mismas posiciones y tamaños que ves */
 async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0));if(!items.length)return null;
   const BM={};for(const i of items)if(i.t==='img'){try{BM[i.id]=await createImageBitmap(await blobDeRef(bdRef(p,i)))}catch{}}
@@ -8822,7 +8827,7 @@ async function bdDescarga(modo){const p=S.P[S.cur];if(!p||S.bdBusy)return;if(!bd
 async function bdSubir(files){const p=S.P[S.cur];if(!p)return;const imgs=[...files].filter(f=>/^image\/(png|jpeg|webp|gif)$/.test(f.type));if(!imgs.length){toast('Solo imágenes PNG, JPG, WEBP o GIF');return}
   const nuevos=[];for(const f of imgs){try{const r={id:uid(),capa:capaDestino(),porque:'',fuente:'',creado:Date.now()};Object.assign(r,await guardarImagen(f));p.refs.push(r);nuevos.push({t:'img',ref:r.id,w:240})}catch(e){toast(e?.code==='too_large'?'Imagen demasiado grande (máx. 20 MB)':'No se pudo subir una imagen')}}
   if(nuevos.length){bdAdd(p,nuevos);marcar();renderMain();toast(`${nuevos.length} imagen${nuevos.length>1?'es':''} al tablero y al moodboard`)}}
-document.addEventListener('change',e=>{const t=e.target;if(t.id==='bd-file'){bdSubir(t.files);t.value='';return}if(t.dataset?.bdpickcapa!==undefined){S.bdPickCapa=t.value;renderMain()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.bdauto!==undefined){const p=S.P[S.cur];if(!p)return;const B=p.board=p.board||{items:[]};B.auto=t.checked;if(t.checked){B.desde=B.items.length?Date.now():0;bdAutoLlena(p)}marcar();renderMain();return}if(t.id==='bd-file'){bdSubir(t.files);t.value='';return}if(t.dataset?.bdpickcapa!==undefined){S.bdPickCapa=t.value;renderMain()}});
 document.addEventListener('input',e=>{const t=e.target,p=S.P[S.cur];if(!p)return;
   if(t.dataset.bdt){const i=p.board?.items.find(x=>x.id===t.dataset.bdt);if(i){i.text=t.value;marcar();const el=document.querySelector('.bd-it[data-id="'+i.id+'"] .bd-tx');if(el)el.innerHTML=esc(t.value).replace(/\n/g,'<br>')}return}
   if(t.dataset.bdfs){const i=p.board?.items.find(x=>x.id===t.dataset.bdfs);if(i){i.fs=+t.value;marcar();const el=document.querySelector('.bd-it[data-id="'+i.id+'"]');if(el)el.style.fontSize=i.fs+'px';const l=t.closest('label')?.querySelector('.lbl');if(l)l.textContent='Tamaño de letra · '+i.fs+'px'}return}
@@ -10521,7 +10526,7 @@ async function accion(a,el){
     case 'bd-ord':if(!bdItems(p).length)return;bdOrdenarCuando(p,ds.m);break;
     case 'bd-front':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=bdZmax(p)+1;marcar();renderMain()}break}
     case 'bd-back':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=Math.min(...p.board.items.map(x=>x.z||0))-1;marcar();renderMain()}break}
-    case 'bd-del':{if(p.board){p.board.items=p.board.items.filter(x=>x.id!==ds.id);S.bdSel=null;marcar();renderMain()}break}
+    case 'bd-del':{if(p.board){const it0=p.board.items.find(x=>x.id===ds.id);if(it0?.ref)(p.board.quitados=p.board.quitados||[]).push(it0.ref);p.board.items=p.board.items.filter(x=>x.id!==ds.id);S.bdSel=null;marcar();renderMain()}break}
     case 'bd-zoom':{const wr=$('#bd-wrap'),v=S.bdView;if(!wr||!v)return;const f=+ds.v,k2=Math.max(.04,Math.min(3,v.k*f)),mx=wr.clientWidth/2,my=wr.clientHeight/2;v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;S.bdTocado=true;bdApply();break}
     case 'bd-fit':S.bdView=null;S.bdTocado=false;bdFit();bdApply();break;
     case 'bd-png':bdDescarga('png');break;
