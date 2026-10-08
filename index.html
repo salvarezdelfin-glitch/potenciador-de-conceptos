@@ -1043,7 +1043,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muz0shqf').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muz13j72').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9261,6 +9261,9 @@ function v3dPoseDeLandmarks(W){const T=V3.T,V=T.Vector3,rad=Math.PI/180,deg=180/
     const Qh=Qp.clone().multiply(E(-out['l'+s+'s'],0,sg*out['l'+s+'p'])),sl=dir(ks,as_).applyQuaternion(Qh.invert());out['l'+s+'k']=cl('l'+s+'k',Math.max(0,Math.atan2(-sl.z,-sl.y)*deg))}
   return {pose:out,giro:clamp(th*deg,-180,180)}}
 /* ---- boceto sin marcar puntos: la app busca sola la pose y te enseña las mejores para que elijas la que más se parece ---- */
+/* misma silueta con el cuerpo volteado: pose espejada y giro 180° − giro (solo cambia qué lado es cuál y si mira a la cámara o de espaldas) */
+function ajVoltea(v){const p=v3dEspeja({...V3_POSES['De pie'],...ajPoseDe(v)});for(const q in p)if(V3_RANGOS[q])p[q]=clamp(p[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);return ajVec(p,((((180-v[v.length-1])+180)%360)+360)%360-180)}
+const ajFrente=v=>Math.abs(v[v.length-1])>90?ajVoltea(v):v;
 function ajDibuja(cv,bm,tn,det,zoom){const W=tn.W,H=tn.H,dpr=zoom||1;cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.fillStyle='#fff';g.fillRect(0,0,W,H);g.globalAlpha=.55;g.drawImage(bm,0,0,W,H);g.globalAlpha=1;
   if(!det)return;g.fillStyle='rgba(255,106,61,.75)';for(const p of det.borde)g.fillRect(p[0]-1,p[1]-1,2.2,2.2);
   g.lineCap='round';g.lineWidth=3;for(const [i,l] of det.lineas.entries()){const L=AJ_SEG[i][0].endsWith('L')&&AJ_SEG[i][1].endsWith('L'),R=AJ_SEG[i][0].endsWith('R')&&AJ_SEG[i][1].endsWith('R');g.strokeStyle=L?'#2f7bff':R?'#ff5a1f':'#ffb020';g.beginPath();g.moveTo(l[0],l[1]);g.lineTo(l[2],l[3]);g.stroke()}}
@@ -9277,19 +9280,19 @@ async function ajFlujoBoceto(bm){const box=$('#v3d-cv');if(!box||!V3.open)return
   try{const tn=ajTintaDeBoceto(bm),T=tn.pts.length>=30?ajPreparaTinta(tn.pts):null;if(!T){msg('No encontré un dibujo: usa líneas oscuras sobre papel claro.');el.querySelector('.bz-top b').textContent='No encontré el dibujo';el.querySelector('.bar')?.remove();return}
     const cu=S.v3d.cuerpo||'michelle';if(!V3_CACHE[cu]){msg('Espera a que cargue el personaje.');return}E=ajMotor(cu);
     const r=await ajAjusta(E,T,{prog:p=>{const b=$('#aj-bar');if(b)b.style.width=Math.round(p*100)+'%'}});if(cancelado||!V3.open){E.dispose();return}
-    const cands=r.cands.slice(0,4).map(c=>({...c,det:ajDetalle(E,T,c.v)})).filter(c=>c.det);E.dispose();E=null;
+    const cands=r.cands.slice(0,4).map(c=>({...c,det:ajDetalle(E,T,c.v),vApl:ajFrente(c.v)})).filter(c=>c.det);E.dispose();E=null;
     if(!cands.length){msg('No pude acomodar la figura.');return}
     let sel=0;const k=tn.W/bm.width;
     const pinta=()=>{el.innerHTML=`<div class="bz-top"><b>Elige la pose que más se parece</b><span class="muted">Naranja y azul = el maniquí sobre tu boceto (${esc(cands[sel].det.estilo==='palitos'?'lo leí como figura de palitos':'lo leí como contorno')}). Si ninguna es, toca «Ajustar a mano».</span></div>
       <div class="aj-cands">${cands.map((c,i)=>`<button class="aj-c ${i===sel?'on':''}" data-aj="sel:${i}" aria-label="Opción ${i+1}"><canvas data-ajc="${i}"></canvas><small>${i===0?'La mejor':'Opción '+(i+1)}</small></button>`).join('')}</div>
-      <div class="bz-bar"><button class="btn sm ghost" data-aj="espalda">Ver de espaldas</button><button class="btn sm" data-aj="manual">Ajustar a mano</button><span style="flex:1"></span><button class="btn sm ghost" data-aj="cancelar">Cancelar</button><button class="btn sm pri" data-aj="usar">Usar esta pose</button></div>`;
+      <div class="bz-bar"><button class="btn sm ghost" data-aj="espalda" title="Misma silueta, pero el cuerpo mira hacia el otro lado">Voltear: de frente / de espaldas</button><button class="btn sm" data-aj="manual">Ajustar a mano</button><span style="flex:1"></span><button class="btn sm ghost" data-aj="cancelar">Cancelar</button><button class="btn sm pri" data-aj="usar">Usar esta pose</button></div>`;
       el.querySelectorAll('canvas[data-ajc]').forEach(cv=>ajDibuja(cv,bm,tn,cands[+cv.dataset.ajc].det,1))};
     pinta();
     el.onclick=ev=>{const b=ev.target.closest('[data-aj]');if(!b)return;const [a,x]=b.dataset.aj.split(':');
       if(a==='cancelar'){el.remove();return}
       if(a==='sel'){sel=+x;pinta();return}
       const c=cands[sel];
-      if(a==='usar'||a==='espalda'){let pose={...V3_POSES['De pie'],...ajPoseDe(c.v)},yaw=c.v[c.v.length-1];if(a==='espalda'){pose=v3dEspeja(pose);yaw=((yaw+180+540)%360)-180}
+      if(a==='usar'||a==='espalda'){const vv=a==='espalda'?ajVoltea(c.vApl):c.vApl;let pose={...V3_POSES['De pie'],...ajPoseDe(vv)},yaw=vv[vv.length-1];
         for(const q in pose)if(V3_RANGOS[q])pose[q]=clamp(pose[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);S.v3d.pose=pose;S.v3d.giro.y=Math.round(yaw);S.v3d.preset='Pose de boceto';v3dPose();v3dPanel();el.remove();toast(a==='espalda'?'Pose puesta, vista de espaldas (misma silueta)':'Pose puesta: ajústala con los controles si algo no coincide');return}
       if(a==='manual'){const kp=ajAPuntos(c.det,k);if(kp){BZ.bm=bm;BZ.ini=bzTinta(bm);BZ.kp=kp;BZ.manual=false;BZ.vista=bzVistaDe(kp)}el.remove();bzEditor()}}}
   catch(e){console.error(e);msg('No pude procesar el boceto: '+(e?.message||'error'));E?.dispose()}}
@@ -9367,7 +9370,7 @@ function ajObjetivoFoto(res,i,bm){const L=res.landmarks[i],Wd=res.worldLandmarks
   if(pts.length<20){const xs=Object.values(kp).map(p=>p[0]),ys=Object.values(kp).map(p=>p[1]);if(xs.length<6)return null;pts=[];const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);for(let t=0;t<40;t++){pts.push([x0+(x1-x0)*t/39,y0],[x0+(x1-x0)*t/39,y1],[x0,y0+(y1-y0)*t/39],[x1,y0+(y1-y0)*t/39])}}
   return {pts,kp,kp3,mask,init:v3dPoseDeLandmarks(Wd)}}
 function ajMotor(cuerpo){const T=V3.T,r=V3.renderer,m=v3dInstancia(cuerpo),esc=new T.Scene();esc.background=new T.Color('#ffffff');esc.add(m);esc.overrideMaterial=new T.MeshBasicMaterial({color:0});
-  const cam=new T.OrthographicCamera(-AJ_VIS,AJ_VIS,AJ_CY+AJ_VIS,AJ_CY-AJ_VIS,.1,20);cam.position.set(0,AJ_CY,6);cam.lookAt(0,AJ_CY,0);
+  const cam=new T.OrthographicCamera(-AJ_VIS,AJ_VIS,AJ_VIS,-AJ_VIS,.1,20);cam.position.set(0,AJ_CY,6);cam.lookAt(0,AJ_CY,0);
   const W=AJ_TL*AJ_NT,rt=new T.WebGLRenderTarget(W,W,{depthBuffer:true}),buf=new Uint8Array(W*W*4);m.traverse(o=>{if(o.isSkinnedMesh)o.frustumCulled=false});
   return {T,r,m,esc,cam,rt,buf,W,dispose(){rt.dispose();esc.overrideMaterial.dispose()}}}
 function ajRenderLote(E,vecs){const {r,m,esc,cam,rt,buf,W}=E,old=r.getRenderTarget(),oc=new E.T.Color(),oa=r.getClearAlpha();r.getClearColor(oc);r.setClearColor(0xffffff,1);rt.scissorTest=true;
