@@ -1039,7 +1039,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muypqsln').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyrr0ee').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9263,6 +9263,13 @@ function v3dLoomis(T,mat){const G=new T.Group(),W=.36,cl=[new T.Plane(new T.Vect
   G.add(arco(0),arco(.36));
   const recta=(y,z,w)=>ln([V(-w,y,z+.004),V(w,y,z+.004)]);G.add(recta(-.36,.4,.27),recta(-.68,.36,.14));
   G.userData.cabeza=true;return G}
+/* cabeza de Loomis real: «Planes of the Head – Andrew Loomis Method», de Josh Galeto (Sketchfab, CC-BY). Aligerada a 4 pasos de ≤26 mil triángulos; está en modelos/ del sitio. Si no carga, se usa la cabeza sencilla de arriba. */
+const V3_LOOMIS=[['Paso 1','Planos de la cabeza'],['Paso 2','Nariz, boca y orejas'],['Paso 3','Rasgos definidos'],['Paso 4','Cara completa']],V3_LOOM_S={};
+function v3dLoomisMod(n){const sc=V3_LOOM_S[n];if(!sc)return null;const g=new V3.T.Group(),c=sc.clone(true);c.traverse(o=>{if(o.isMesh){o.geometry=o.geometry.clone();o.material=V3.mat}});g.add(c);g.userData.cabeza=true;return g}
+async function v3dLoomisBaja(n){if(V3.loomCarga===n)return;V3.loomCarga=n;
+  try{const r=await fetch('modelos/loomis-'+n+'.glb');if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer(),g=await new Promise((ok,no)=>new V3.lib.GLTFLoader().parse(buf,'',ok,no));V3_LOOM_S[n]=g.scene}
+  catch(e){V3.loomCarga=null;if(!V3.loomAvisado){V3.loomAvisado=true;toast('No pude cargar la cabeza de Loomis detallada: te dejo la sencilla')}return}
+  V3.loomCarga=null;if(V3.open&&S.v3d?.modelo==='loomis'&&(S.v3d.loomis||1)===n)v3dModelo()}
 function v3dFormas(T,mat,k){const G=new T.Group();let m;
   if(k==='esfera')m=new T.Mesh(new T.SphereGeometry(.6,56,36),mat);else if(k==='cubo')m=new T.Mesh(new T.BoxGeometry(1,1,1),mat);else if(k==='cilindro')m=new T.Mesh(new T.CylinderGeometry(.45,.45,1.1,48),mat);
   else if(k==='cono')m=new T.Mesh(new T.ConeGeometry(.55,1.2,48),mat);else if(k==='toro')m=new T.Mesh(new T.TorusGeometry(.5,.2,28,64),mat);else{m=new T.Mesh(new T.SphereGeometry(.5,56,36),mat);m.scale.set(.8,1.15,.8)}
@@ -9300,7 +9307,7 @@ function v3dDispone(root){const ms=new Set();root.traverse(o=>{o.geometry?.dispo
 function v3dModelo(){const T=V3.T,S3=S.v3d;if(V3.model){V3.scene.remove(V3.model);v3dDispone(V3.model);V3.model=null}
   if(!['maniqui','loomis','formas','mio'].includes(S3.modelo)||(S3.modelo==='mio'&&!V3.mio))S3.modelo='maniqui';
   const mio=S3.modelo==='mio';V3.noSuelo=S3.modelo==='loomis';V3.mixer=mio?V3.mioMixer:null;V3.bones=mio?V3.mioBones:[];
-  const m=S3.modelo==='loomis'?v3dLoomis(T,V3.mat):S3.modelo==='formas'?v3dFormas(T,V3.mat,S3.forma):mio?V3.mioW:v3dCuerpo(T,V3.mat,S3.cuerpo||'michelle');
+  const m=S3.modelo==='loomis'?(v3dLoomisMod(S3.loomis||1)||(v3dLoomisBaja(S3.loomis||1),v3dLoomis(T,V3.mat))):S3.modelo==='formas'?v3dFormas(T,V3.mat,S3.forma):mio?V3.mioW:v3dCuerpo(T,V3.mat,S3.cuerpo||'michelle');
   if(!m){v3dListoVista();return}
   m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});V3.model=m;V3.scene.add(m);
   if(S3.modelo==='loomis')m.position.y=.75;
@@ -9328,7 +9335,7 @@ const v3Ch=(act,k,n,on,extra='')=>`<button class="ch ${on?'on':''}" data-act="${
 const v3Sp=(lbl,k,val)=>v3Sl(lbl,'pose.'+k,V3_RANGOS[k][0],V3_RANGOS[k][1],1,val);/* los rangos salen de V3_RANGOS: una sola verdad */
 function v3dTabModelo(s){const ch=v3Ch;return `<div class="chips">${ch('v3d-modelo','maniqui','Cuerpo',s.modelo==='maniqui')}${ch('v3d-modelo','loomis','Cabeza de Loomis',s.modelo==='loomis')}${ch('v3d-modelo','formas','Formas básicas',s.modelo==='formas')}${ch('v3d-modelo','mio','Mi modelo',s.modelo==='mio')}</div>
     ${s.modelo==='formas'?`<div class="chips">${V3_FORMAS.map(([k,n])=>ch('v3d-forma',k,n,s.forma===k)).join('')}</div><p class="hint">Para estudiar cómo cae la luz y la sombra sobre formas simples.</p>`:''}
-    ${s.modelo==='loomis'?`<p class="hint">Esta es una cabeza sencilla de partida (planos laterales cortados y líneas guía). Para una de verdad, descarga una hecha por un artista y cárgala aquí: se ve en tu navegador y no se sube a ningún lado.</p><div class="prow"><label class="btn sm pri" for="v3d-file">Cargar mi cabeza de Loomis (.glb, .obj, .fbx)</label></div><details class="v3-d"><summary>Cabezas de Loomis gratis para descargar</summary><p class="hint" style="margin:4px 0"><a href="https://sketchfab.com/3d-models/loomis-head-557bbaffa96a44a18ed649572410118a" target="_blank" rel="noopener" style="color:var(--accent)"><b>Loomis Head · chummy-island ↗</b></a> · ligera (unos 1,100 triángulos), la más cómoda para girar y mover la luz. Licencia CC-BY: da crédito si publicas.</p><p class="hint" style="margin:4px 0"><a href="https://sketchfab.com/3d-models/loomis-head-study-with-a-neck-3b7c75bc122943959f0d61abac11c413" target="_blank" rel="noopener" style="color:var(--accent)"><b>Loomis Head Study with a neck · foresterchelle ↗</b></a> · con cuello y líneas guía. CC-BY.</p><p class="hint" style="margin:4px 0"><a href="https://sketchfab.com/3d-models/planes-of-the-head-andrew-loomis-method-19424b7aa2fc4a4d8987efe4bdb62395" target="_blank" rel="noopener" style="color:var(--accent)"><b>Planes of the Head · Josh Galeto ↗</b></a> · los 4 pasos del método, muy detallada y pesada. CC-BY.</p><p class="hint" style="margin:4px 0">En Sketchfab elige «Download 3D model» y el formato glTF/GLB (pide una cuenta gratis). Revisa la licencia de cada una antes de usarla en algo público.</p></details>`:''}
+    ${s.modelo==='loomis'?`<div class="chips"><span class="lbl">Paso del método</span>${V3_LOOMIS.map(([n,d],i)=>ch('v3d-loomis',String(i+1),n,(s.loomis||1)===i+1)).join('')}</div><p class="hint" style="margin:0">${esc(V3_LOOMIS[(s.loomis||1)-1][1])}. Gírala y cámbiale la luz: los planos de la cabeza se leen mejor con luz lateral. Modelo «Planes of the Head – Andrew Loomis Method» de <a href="https://sketchfab.com/3d-models/planes-of-the-head-andrew-loomis-method-19424b7aa2fc4a4d8987efe4bdb62395" target="_blank" rel="noopener" style="color:var(--accent)">Josh Galeto ↗</a> (licencia CC-BY, aligerado para la app).</p><div class="prow"><label class="btn ghost sm" for="v3d-file">O cargar otra cabeza (.glb, .obj, .fbx)</label></div>`:''}
     ${s.modelo==='maniqui'?`<div class="chips"><span class="lbl">Personaje</span>${Object.entries(V3_CUERPOS).map(([k,v])=>ch('v3d-cuerpo',k,v.n,(s.cuerpo||'michelle')===k)).join('')}</div><p class="hint" style="margin:0">${esc(V3_CUERPOS[s.cuerpo||'michelle'].d)}. Se posan con los mismos controles: elige una pose, sube la foto de una pose o pídemela. Son personajes de ejemplo de three.js (Mixamo): para estudio y referencia; revisa su licencia antes de usarlos en algo público.</p>`:''}
     ${s.modelo!=='mio'||s.arcilla?`<div class="chips"><span class="lbl">Material</span>${Object.entries(V3_MATS).map(([k,v])=>ch('v3d-mat',k,v.n,(s.material||'arcilla')===k)).join('')}</div>`:''}
     ${s.modelo==='mio'||V3.mio?`<div class="prow"><label class="btn sm pri" for="v3d-file">${V3.mio?'Cambiar de modelo':'Cargar un modelo'}</label><span class="muted" style="font-size:12px">${esc(s.mioNombre||'')}</span></div>`:''}
@@ -10124,6 +10131,7 @@ async function accion(a,el){
     case 'v3d-abrir':v3dAbrir(ds.m,ds.t);break;
     case 'v3d-cerrar':v3dCerrar();break;
     case 'v3d-tab':S.v3d.tab=ds.k;v3dPanel();break;
+    case 'v3d-loomis':{S.v3d.loomis=+ds.k;v3dModelo();v3dPanel();break}
     case 'v3d-modelo':{S.v3d.modelo=ds.k;if(ds.k==='mio'&&!V3.mio){v3dPanel();break}v3dModelo();v3dPanel();break}
     case 'v3d-cuerpo':S.v3d.cuerpo=ds.k;v3dModelo();v3dPanel();break;
     case 'v3d-mat':S.v3d.material=ds.k;v3dMaterial();v3dPanel();break;
