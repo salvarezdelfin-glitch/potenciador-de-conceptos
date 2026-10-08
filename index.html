@@ -693,6 +693,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .crec-l{display:flex;flex-direction:column;gap:6px}.crec-i{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;background:var(--bg)}.crec-i span{font-size:13px;color:var(--ink2);line-height:1.4}.crec-i .btn{align-self:flex-start}
 .des-pasos{display:flex;flex-direction:column;gap:8px}.des-p{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;background:var(--bg)}.des-p span{flex:1}.des-p small{display:block;color:var(--ink2);margin-top:2px;line-height:1.4}.des-p.ok{opacity:.6}.des-p input{margin-top:3px}
 .rl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;align-items:start}.rl-box{position:relative;display:inline-block;max-width:100%}.rl-box canvas{width:100%;height:auto;display:block;border-radius:8px;background:#000}.rl-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:17px;cursor:grab;touch-action:none;box-shadow:0 0 0 2px rgba(0,0,0,.5);color:#000;user-select:none}.rl-panel{display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}.rl-panel>*{flex:none}
+.v3-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 body.arrastrando,body.arrastrando *{-webkit-user-select:none!important;user-select:none!important}
 .esc-r,input[type=range],input[type=color]{-webkit-user-select:none;user-select:none}.rl-mat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.rl-sw{width:22px;height:22px;border-radius:5px;border:1px solid var(--line2);flex:none}@media(max-width:900px){.rl-wrap{grid-template-columns:1fr}.rl-panel{max-height:none}}
 .sw-q{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:6px 0}.sw-q>span:first-child{flex:1 1 260px;font-size:14px}.sw-tr{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px}.sw-t{display:flex;gap:10px;align-items:baseline;border:1px solid var(--line2);border-radius:8px;padding:6px 10px;background:var(--bg);font-size:13.5px}.sw-t kbd{font-family:var(--mono);font-size:12px;background:var(--surface3);border-radius:5px;padding:2px 7px;white-space:nowrap}.sw-t span{color:var(--ink2);line-height:1.35}
@@ -1041,7 +1042,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muys7hop').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muyzw4ks').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -8319,7 +8320,7 @@ function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
   if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
   return escColsHTML(pal.map(hex=>({hex})),E,'')}
 function escDibuja(root){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
-  (root||document).querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
+  (root&&root.querySelectorAll?root:document).querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
     if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
     if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
     const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
@@ -9062,7 +9063,37 @@ const V3_POSES={
  'Arrodillado':{tb:8,tt:0,tl:0,py:0,pz:0,hn:-8,hy:0,hl:0,aLs:10,aLp:8,aLr:0,aLe:60,aRs:10,aRp:8,aRr:0,aRe:60,lLs:88,lLp:6,lLk:92,lRs:-5,lRp:4,lRk:110,en:'kneeling pose'},
  'Golpe':{tb:10,tt:38,tl:0,py:-20,pz:0,hn:-4,hy:-22,hl:0,aLs:-30,aLp:12,aLr:0,aLe:105,aRs:88,aRp:6,aRr:0,aRe:12,lLs:36,lLp:12,lLk:16,lRs:-26,lRp:14,lRk:12,en:'punching fighting stance'},
  'Guardia':{tb:6,tt:20,tl:0,py:-12,pz:0,hn:-6,hy:-14,hl:0,aLs:48,aLp:10,aLr:0,aLe:112,aRs:52,aRp:12,aRr:0,aRe:120,lLs:26,lLp:14,lLk:14,lRs:-22,lRp:14,lRk:18,en:'defensive guard stance'},
- 'Salto':{tb:-6,tt:0,tl:0,py:0,pz:0,hn:-10,hy:0,hl:0,aLs:150,aLp:18,aLr:0,aLe:20,aRs:150,aRp:18,aRr:0,aRe:20,lLs:62,lLp:8,lLk:85,lRs:38,lRp:8,lRk:100,en:'jumping pose'}};
+ 'Salto':{tb:-6,tt:0,tl:0,py:0,pz:0,hn:-10,hy:0,hl:0,aLs:150,aLp:18,aLr:0,aLe:20,aRs:150,aRp:18,aRr:0,aRe:20,lLs:62,lLp:8,lLk:85,lRs:38,lRp:8,lRk:100,en:'jumping pose'},
+ 'Sentado':{tb:5,tt:0,tl:0,py:0,pz:0,hn:0,hy:0,hl:0,aLs:20,aLp:8,aLr:0,aLe:70,aRs:20,aRp:8,aRr:0,aRe:70,lLs:90,lLp:6,lLk:90,lRs:90,lRp:6,lRk:90,en:'sitting pose reference'},
+ 'Reverencia':{tb:42,tt:0,tl:0,py:0,pz:0,hn:20,hy:0,hl:0,aLs:12,aLp:8,aLr:0,aLe:20,aRs:12,aRp:8,aRr:0,aRe:20,lLs:4,lLp:3,lLk:6,lRs:4,lRp:3,lRk:6,en:'bowing pose reference'},
+ 'Defensa con escudo':{tb:16,tt:-20,tl:0,py:12,pz:0,hn:10,hy:12,hl:0,aLs:92,aLp:14,aLr:0,aLe:98,aRs:32,aRp:22,aRr:0,aRe:125,lLs:30,lLp:8,lLk:42,lRs:-32,lRp:14,lRk:32,en:'warrior shield defensive stance'},
+ 'Bloqueo alto':{tb:16,tt:6,tl:0,py:0,pz:0,hn:22,hy:0,hl:0,aLs:64,aLp:14,aLr:0,aLe:138,aRs:64,aRp:14,aRr:0,aRe:138,lLs:22,lLp:8,lLk:20,lRs:-20,lRp:8,lRk:26,en:'blocking pose arms up guard'},
+ 'Defensa baja':{tb:40,tt:0,tl:0,py:0,pz:0,hn:22,hy:0,hl:0,aLs:140,aLp:12,aLr:0,aLe:125,aRs:140,aRp:12,aRr:0,aRe:125,lLs:55,lLp:10,lLk:85,lRs:40,lRp:10,lRk:95,en:'crouching defensive cover pose'},
+ 'Esquiva':{tb:-12,tt:14,tl:20,py:-8,pz:-8,hn:6,hy:10,hl:-10,aLs:50,aLp:10,aLr:0,aLe:110,aRs:56,aRp:12,aRr:0,aRe:116,lLs:18,lLp:10,lLk:20,lRs:-30,lRp:12,lRk:36,en:'dodging pose leaning back'},
+ 'Embestida':{tb:38,tt:10,tl:0,py:0,pz:0,hn:-18,hy:0,hl:0,aLs:-40,aLp:10,aLr:0,aLe:20,aRs:-40,aRp:10,aRr:0,aRe:20,lLs:55,lLp:6,lLk:70,lRs:-45,lRp:6,lRk:20,en:'charging lunge pose'},
+ 'Estocada':{tb:12,tt:30,tl:0,py:-14,pz:0,hn:-4,hy:-18,hl:0,aLs:-25,aLp:12,aLr:0,aLe:60,aRs:92,aRp:6,aRr:0,aRe:6,lLs:60,lLp:6,lLk:82,lRs:-40,lRp:8,lRk:5,en:'spear thrust lunge pose'},
+ 'Golpe cargado':{tb:-10,tt:14,tl:0,py:0,pz:0,hn:-12,hy:0,hl:0,aLs:160,aLp:10,aLr:0,aLe:70,aRs:160,aRp:10,aRr:0,aRe:70,lLs:14,lLp:14,lLk:16,lRs:-14,lRp:14,lRk:16,en:'overhead strike wind up pose'},
+ 'Derribado':{tb:-28,tt:0,tl:6,py:0,pz:4,hn:-10,hy:0,hl:6,aLs:70,aLp:18,aLr:0,aLe:30,aRs:60,aRp:22,aRr:0,aRe:40,lLs:30,lLp:10,lLk:10,lRs:-40,lRp:14,lRk:30,en:'stumbling backwards pose'},
+ 'Acechar':{tb:42,tt:6,tl:0,py:0,pz:0,hn:-26,hy:0,hl:0,aLs:20,aLp:12,aLr:0,aLe:34,aRs:22,aRp:12,aRr:0,aRe:30,lLs:46,lLp:10,lLk:60,lRs:-28,lRp:10,lRk:40,en:'stalking crouch pose'},
+ 'Vigía':{tb:4,tt:8,tl:0,py:0,pz:0,hn:-4,hy:22,hl:0,aLs:6,aLp:8,aLr:0,aLe:10,aRs:118,aRp:20,aRr:0,aRe:128,lLs:6,lLp:6,lLk:6,lRs:-4,lRp:6,lRk:6,en:'lookout hand over eyes pose'},
+ 'Invocando':{tb:-6,tt:0,tl:0,py:0,pz:0,hn:-30,hy:0,hl:0,aLs:150,aLp:38,aLr:0,aLe:24,aRs:150,aRp:38,aRr:0,aRe:24,lLs:12,lLp:16,lLk:8,lRs:12,lRp:16,lRk:8,en:'arms raised summoning ritual pose'},
+ 'Ofrenda':{tb:10,tt:0,tl:0,py:0,pz:0,hn:14,hy:0,hl:0,aLs:72,aLp:-4,aLr:0,aLe:64,aRs:72,aRp:-4,aRr:0,aRe:64,lLs:3,lLp:3,lLk:4,lRs:3,lRp:3,lRk:4,en:'offering pose arms forward'},
+ 'Rendido':{tb:6,tt:0,tl:0,py:0,pz:0,hn:-4,hy:0,hl:0,aLs:150,aLp:22,aLr:0,aLe:42,aRs:150,aRp:22,aRr:0,aRe:42,lLs:88,lLp:6,lLk:92,lRs:-5,lRp:4,lRk:110,en:'kneeling surrender hands up pose'}};
+const V3_POSES_G=[['Básicas',['De pie','Contrapposto','Caminar','Correr','Agachado','Arrodillado','Salto','Sentado','Reverencia']],['Combate y defensa',['Golpe','Guardia','Defensa con escudo','Bloqueo alto','Defensa baja','Esquiva','Embestida','Estocada','Golpe cargado','Derribado']],['Personaje',['Acechar','Vigía','Invocando','Ofrenda','Rendido']]];
+/* escenas de partida: cada personaje con pose (nombre o {base,o,m}), posición x/z, giro y, y ajustes extra (ex). Lo de los contactos hay que afinarlo a mano. */
+const V3_ESCENAS=[
+ {k:'pelea',n:'Pelea',d:'Uno golpea y el otro se defiende con el escudo',figs:[{p:'Golpe',x:-.5,y:90},{p:'Defensa con escudo',x:.5,y:-90}]},
+ {k:'bloqueo',n:'Ataque y bloqueo',d:'Golpe desde arriba contra un bloqueo alto',figs:[{p:'Golpe cargado',x:-.55,y:90},{p:'Bloqueo alto',x:.5,y:-90}]},
+ {k:'mano',n:'De la mano',d:'Caminando juntos de la mano',figs:[{p:'Caminar',x:-.3,y:8,ex:{aLs:4,aLp:15,aLe:6}},{p:'Caminar',x:.3,y:-8,ex:{aRs:4,aRp:15,aRe:6}}]},
+ {k:'abrazo',n:'Abrazo',d:'Frente a frente, abrazándose',figs:[{p:'De pie',x:-.2,y:90,ex:{aLs:78,aLp:-22,aLe:60,aRs:78,aRp:-22,aRe:60,hy:25,tb:6}},{p:'De pie',x:.2,y:-90,ex:{aLs:78,aLp:-22,aLe:60,aRs:78,aRp:-22,aRe:60,hy:-25,tb:6}}]},
+ {k:'conversa',n:'Conversando',d:'Dos personajes de pie, de tres cuartos',figs:[{p:'Contrapposto',x:-.55,y:55},{p:{base:'Contrapposto',m:true},x:.55,y:-55}]},
+ {k:'espalda',n:'Espalda con espalda',d:'Defensa en pareja',figs:[{p:'Guardia',x:-.22,y:-90},{p:'Guardia',x:.22,y:90}]},
+ {k:'protege',n:'Uno protege al otro',d:'El escudero al frente, el otro agachado detrás',figs:[{p:'Defensa con escudo',x:0,z:.35,y:0},{p:'Defensa baja',x:.15,z:-.45,y:0,e:.92}]},
+ {k:'persigue',n:'Persecución',d:'Uno corre y el otro lo persigue',figs:[{p:'Correr',x:.5,y:90},{p:'Correr',x:-.9,y:90}]},
+ {k:'ante',n:'Ante el otro',d:'Uno de pie, imponente; el otro arrodillado',figs:[{p:'Contrapposto',x:-.5,y:90,ex:{aLs:-10,aLp:45,aLe:105,aRs:-10,aRp:45,aRe:105}},{p:'Arrodillado',x:.5,y:-90}]},
+ {k:'v',n:'Formación en V',d:'Tres guerreros avanzando',figs:[{p:'Guardia',x:0,z:.4,y:0},{p:'Guardia',x:-.75,z:-.35,y:0},{p:{base:'Guardia',m:true},x:.75,z:-.35,y:0}]},
+ {k:'circulo',n:'Círculo de defensa',d:'Cuatro de espaldas, mirando hacia afuera',figs:[{p:'Defensa con escudo',x:.45,z:.45,y:45},{p:'Defensa con escudo',x:-.45,z:.45,y:-45},{p:'Defensa con escudo',x:.45,z:-.45,y:135},{p:'Defensa con escudo',x:-.45,z:-.45,y:-135}]},
+ {k:'grupo',n:'Grupo caminando',d:'Cuatro caminando en la misma dirección',figs:[{p:'Caminar',x:-1.05,y:12},{p:{base:'Caminar',m:true},x:-.35,y:6},{p:'Caminar',x:.35,y:-6},{p:{base:'Caminar',m:true},x:1.05,y:-12}]}];
 const V3_LUZ_BASE={color:'#ffffff',ambc:'#8e96a8'},V3_INT_BASE=2.2,V3_INT_MAX=4.5,V3_REB='#6b5a4a';
 const V3_LUCES={suave:{n:'Suave',dir:225,alt:32,int:2.2,amb:.6,rim:0},cenital:{n:'Cenital',dir:225,alt:85,int:2.7,amb:.35,rim:0},abajo:{n:'Desde abajo',dir:225,alt:-28,int:2.4,amb:.35,rim:0},lateral:{n:'Lateral',dir:0,alt:10,int:2.8,amb:.25,rim:0},contraluz:{n:'Contraluz',dir:100,alt:28,int:2.2,amb:.4,rim:1.6}};
 const luz3dPre=k=>{const {n,...L}=V3_LUCES[k];return {...L,...V3_LUZ_BASE}};
@@ -9073,8 +9104,8 @@ const V3_FORMAS=[['esfera','Esfera'],['cubo','Cubo'],['cilindro','Cilindro'],['c
 const V3_FONDOS={oscuro:'#14161b',gris:'#5b5f66',claro:'#d8d7d3'};
 const v3Def=()=>({tab:'modelo',modelo:'maniqui',cuerpo:'michelle',material:'arcilla',forma:'esfera',preset:'De pie',pose:{...V3_POSES['De pie']},giro:{x:0,y:0,z:0},luz:luz3dPre('suave'),lente:50,fondo:'oscuro',rej:true,sombra:true,arcilla:true,capa:'',porque:'',tablero:true,anim:{clip:0,t:0},hueso:'',bones:{},luzN:'Suave'});
 async function v3dLib(){if(V3.lib)return V3.lib;const b='https://cdn.jsdelivr.net/npm/three@0.160.1/',j=b+'examples/jsm/';
-  const [T,O,G,OB,F,ST]=await Promise.all([import(b+'+esm'),import(j+'controls/OrbitControls.js/+esm'),import(j+'loaders/GLTFLoader.js/+esm'),import(j+'loaders/OBJLoader.js/+esm'),import(j+'loaders/FBXLoader.js/+esm'),import(j+'loaders/STLLoader.js/+esm')]);
-  return V3.lib={T,OrbitControls:O.OrbitControls,GLTFLoader:G.GLTFLoader,OBJLoader:OB.OBJLoader,FBXLoader:F.FBXLoader,STLLoader:ST.STLLoader}}
+  const [T,O,G,OB,F,ST,SU]=await Promise.all([import(b+'+esm'),import(j+'controls/OrbitControls.js/+esm'),import(j+'loaders/GLTFLoader.js/+esm'),import(j+'loaders/OBJLoader.js/+esm'),import(j+'loaders/FBXLoader.js/+esm'),import(j+'loaders/STLLoader.js/+esm'),import(j+'utils/SkeletonUtils.js/+esm')]);
+  return V3.lib={T,OrbitControls:O.OrbitControls,GLTFLoader:G.GLTFLoader,OBJLoader:OB.OBJLoader,FBXLoader:F.FBXLoader,STLLoader:ST.STLLoader,SkeletonUtils:SU}}
 const V3_MATS={arcilla:{n:'Arcilla',c:'#cdc7be',r:.88},piel:{n:'Piel',c:'#c99d88',r:.62},musculo:{n:'Músculo',c:'#a64a40',r:.5}};
 const V3_FUENTES=[['Sketchfab','https://sketchfab.com/search?features=downloadable&q=male+body+anatomy&type=models','Miles de cuerpos y écorchés. Filtra «Downloadable» y baja el .glb. Cada modelo trae su licencia (muchos piden poner el crédito).'],
   ['Mixamo','https://www.mixamo.com/','Personajes con esqueleto y miles de animaciones: elige una, congela el cuadro aquí y tienes la pose. Descarga en .fbx.'],
@@ -9088,8 +9119,10 @@ const V3_CACHE={};
 /* [hueso, articulación del visor, giro de reposo: la T pasa a brazos abajo (−90° / +90° en z)] */
 const V3_MAPA=[['Hips','pelvis',0],['Spine','spine',0],['Spine1','chest',0],['Neck','neck',0],['Head','head',0],['LeftArm','shL',-1],['LeftForeArm','elL',-1],['LeftUpLeg','hipL',0],['LeftLeg','knL',0],['RightArm','shR',1],['RightForeArm','elR',1],['RightUpLeg','hipR',0],['RightLeg','knR',0]];
 const V3_PADRE={spine:'pelvis',chest:'spine',neck:'chest',head:'neck',shL:'chest',shR:'chest',elL:'shL',elR:'shR',hipL:'pelvis',hipR:'pelvis',knL:'hipL',knR:'hipR'};
-async function v3dListoCarga(tipo,avance){if(V3_CACHE[tipo])return V3_CACHE[tipo];const L=V3.lib,T=V3.T,c=V3_CUERPOS[tipo];avance?.(.05);const r=await fetch(V3_LISTOS_URL+c.f);if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer();avance?.(.7);
-  const g=await new Promise((ok,ko)=>new L.GLTFLoader().parse(buf,'',ok,ko)),sc=g.scene,root=new T.Group(),env=new T.Group();env.add(sc);root.add(env);
+async function v3dListoCarga(tipo,avance){if(V3_CACHE[tipo])return V3_CACHE[tipo];const L=V3.lib,c=V3_CUERPOS[tipo];avance?.(.05);const r=await fetch(V3_LISTOS_URL+c.f);if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer();avance?.(.7);
+  const g=await new Promise((ok,ko)=>new L.GLTFLoader().parse(buf,'',ok,ko));avance?.(1);return V3_CACHE[tipo]={sc:g.scene}}
+/* cada personaje de la escena es una copia propia (huesos y pose independientes) del modelo, que se descarga una sola vez */
+function v3dInstancia(tipo){const L=V3.lib,T=V3.T,sc=L.SkeletonUtils.clone(V3_CACHE[tipo].sc),root=new T.Group(),env=new T.Group();env.add(sc);root.add(env);
   const bn={};sc.traverse(o=>{if(o.isBone)bn[o.name.replace(/^mixamorig:?/,'')]=o;if(o.isSkinnedMesh)o.frustumCulled=false;if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
   root.updateMatrixWorld(true);{const a=new T.Vector3(),b=new T.Vector3();bn.LeftArm.getWorldPosition(a);bn.LeftForeArm.getWorldPosition(b);if(b.x<a.x)env.rotation.y=Math.PI}/* algunos vienen girados: el brazo izquierdo debe quedar hacia +x */
   root.updateMatrixWorld(true);{const bx=new T.Box3().setFromObject(sc),k=1.75/(bx.max.y-bx.min.y);env.scale.setScalar(k);root.updateMatrixWorld(true);env.position.y-=new T.Box3().setFromObject(sc).min.y;root.updateMatrixWorld(true)}
@@ -9099,19 +9132,19 @@ async function v3dListoCarga(tipo,avance){if(V3_CACHE[tipo])return V3_CACHE[tipo
   const orden=['pelvis','spine','chest','neck','head','shL','elL','shR','elR','hipL','knL','hipR','knR'],eu=new T.Euler();
   root.userData.J=J;root.userData.aplica=()=>{const W={};for(const j of orden){const R=J[j].rotation;eu.set(R.x,R.y,R.z,'XYZ');const q=new T.Quaternion().setFromEuler(eu);W[j]=V3_PADRE[j]?W[V3_PADRE[j]].clone().multiply(q):q}
     for(const h of huesos){const wb=W[h.j].clone().multiply(h.H),pq=h.b.parent===root?new T.Quaternion():qMundo(h.b.parent);h.b.quaternion.copy(pq.invert().multiply(wb))}};
-  avance?.(1);return V3_CACHE[tipo]={root}}
-const v3dCuerpo=(T,mat,tipo)=>V3_CACHE[tipo]?.root||null;
+  return root}
+const v3dCuerpo=(T,mat,tipo)=>V3_CACHE[tipo]?v3dInstancia(tipo):null;
 /* la primera vez de cada personaje se descarga; después queda en memoria */
-async function v3dListoVista(){const k=S.v3d.cuerpo||'michelle';if(V3.cargandoListo===k)return;V3.cargandoListo=k;const box=$('#v3d-cv');let ov=$('#v3d-esc');if(!ov&&box){ov=document.createElement('div');ov.id='v3d-esc';ov.className='v3d-carga';box.append(ov)}
-  const nom=V3_CUERPOS[k]?.n||'el personaje',msg=p=>{const e=$('#v3d-esc');if(e)e.textContent='Cargando a '+nom+'… '+Math.round(p*100)+'%'};msg(0);
-  try{await v3dListoCarga(k,msg)}catch(e){console.error(e);toast('No pude cargar a '+nom+'. Revisa tu conexión e inténtalo de nuevo.');$('#v3d-esc')?.remove();V3.cargandoListo=null;return}
-  $('#v3d-esc')?.remove();V3.cargandoListo=null;if(V3.open&&S.v3d.modelo==='maniqui'&&(S.v3d.cuerpo||'michelle')===k)v3dModelo()}
+async function v3dListoVista(){if(V3.cargandoListo)return;const S3=S.v3d,ks=[...new Set((S3.figs?.length?S3.figs:[{cuerpo:S3.cuerpo||'michelle'}]).map(f=>f.cuerpo||'michelle'))].filter(k=>!V3_CACHE[k]);if(!ks.length)return;
+  V3.cargandoListo=true;const box=$('#v3d-cv');let ov=$('#v3d-esc');if(!ov&&box){ov=document.createElement('div');ov.id='v3d-esc';ov.className='v3d-carga';box.append(ov)}
+  try{for(const k of ks){const nom=V3_CUERPOS[k]?.n||'el personaje',msg=p=>{const e=$('#v3d-esc');if(e)e.textContent='Cargando a '+nom+'… '+Math.round(p*100)+'%'};msg(0);await v3dListoCarga(k,msg)}}
+  catch(e){console.error(e);toast('No pude cargar a los personajes. Revisa tu conexión e inténtalo de nuevo.');$('#v3d-esc')?.remove();V3.cargandoListo=null;return}
+  $('#v3d-esc')?.remove();V3.cargandoListo=null;if(V3.open&&S.v3d.modelo==='maniqui')v3dModelo()}
 
 const V3_RANGOS={tb:[-40,70],tt:[-70,70],tl:[-35,35],py:[-45,45],pz:[-25,25],hn:[-50,50],hy:[-70,70],hl:[-35,35],aLs:[-90,180],aLp:[-20,170],aLr:[-90,90],aLe:[0,150],aRs:[-90,180],aRp:[-20,170],aRr:[-90,90],aRe:[0,150],lLs:[-60,120],lLp:[-15,70],lLk:[0,150],lRs:[-60,120],lRp:[-15,70],lRk:[0,150]};
-function v3dMaterial(){const M=V3_MATS[S.v3d.material]||V3_MATS.arcilla;V3.mat.color.set(M.c);V3.mat.roughness=M.r;V3.dirty=true}
 /* ---- pose descrita con palabras: «corriendo, con la cabeza un poco torcida mirando hacia atrás» ---- */
-const V3_ACC=[[/\b(corr\w*|sprint\w*|trot\w*)/,'Correr'],[/\b(camin\w*|andand\w*|pase\w*)/,'Caminar'],[/\b(salt\w*|brinc\w*)/,'Salto'],[/(?<!cabeza )(agachad|cuclilla)/,'Agachado'],[/(arrodillad|de rodillas|hincad)/,'Arrodillado'],
-  [/(golpe|punetazo|pegand|boxe|lanzando un punetazo)/,'Golpe'],[/(guardia|pelea|combate|defensa|lucha)/,'Guardia'],[/(contrapposto|relajad|casual|tranquil)/,'Contrapposto'],[/(de pie|parad|firmes|erguid)/,'De pie']];
+const V3_ACC=[[/(escudo|defendiendose con|defensa con)/,'Defensa con escudo'],[/(bloque|cubriendose la cara|cubriendo la cara)/,'Bloqueo alto'],[/(acech|sigil|al acecho)/,'Acechar'],[/(esquiv)/,'Esquiva'],[/(embest|cargando contra)/,'Embestida'],[/(estocada|apunalad|lanzando una lanza)/,'Estocada'],[/(rendid)/,'Rendido'],[/(invoc|conjur|ritual)/,'Invocando'],[/(ofrenda|ofreciendo)/,'Ofrenda'],[/(reverencia|inclinandose ante)/,'Reverencia'],[/(vigilando|vigia|oteando)/,'Vigía'],[/\b(corr\w*|sprint\w*|trot\w*)/,'Correr'],[/\b(camin\w*|andand\w*|pase\w*)/,'Caminar'],[/\b(salt\w*|brinc\w*)/,'Salto'],[/(?<!cabeza )(agachad|cuclilla)/,'Agachado'],[/(arrodillad|de rodillas|hincad)/,'Arrodillado'],
+  [/(golpe|punetazo|pegand|boxe|lanzando un punetazo)/,'Golpe'],[/(guardia|pelea|combate|defensa|lucha)/,'Guardia'],[/(derribad|tropezand|cayendo hacia atras)/,'Derribado'],[/(contrapposto|relajad|casual|tranquil)/,'Contrapposto'],[/(de pie|parad|firmes|erguid)/,'De pie']];
 const V3_EXTRA=[[/(patad|pateand)/,{lRs:85,lRk:15,tb:-12,aLs:-30,aLp:40,aLe:60,aRs:40,aRp:30,aRe:70},'patada'],
   [/(apuntand|senalando|senala\b)/,{aRs:90,aRp:5,aRe:5},'brazo señalando'],[/(saludand|saludo|saluda\b)/,{aRs:150,aRp:25,aRe:80},'saludando'],
   [/brazos cruzados|cruzando los brazos|cruzado de brazos/,{aLs:35,aLp:-5,aLe:125,aRs:35,aRp:-5,aRe:125},'brazos cruzados'],[/manos en (la )?cadera|brazos en jarra|jarras/,{aLs:-10,aLp:45,aLe:105,aRs:-10,aRp:45,aRe:105},'manos en la cadera'],
@@ -9304,24 +9337,83 @@ function v3dLuz(){v3dPersistePronto();const L=S.v3d.luz,T=V3.T,az=L.dir*RAD,[dx,
 function v3dEscena(){v3dPersistePronto();const S3=S.v3d;V3.scene.background=new V3.T.Color(V3_FONDOS[S3.fondo]||V3_FONDOS.oscuro);V3.rej.visible=!!S3.rej;V3.suelo.visible=!!S3.sombra;V3.key.castShadow=!!S3.sombra;
   V3.camera.fov=2*Math.atan(12/S3.lente)*180/Math.PI;V3.camera.updateProjectionMatrix();V3.dirty=true}
 function v3dSuelo(){const m=V3.model;if(!m||V3.noSuelo)return;m.position.y=0;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m);if(isFinite(b.min.y))m.position.y=-b.min.y;V3.dirty=true}
-function v3dPose(){v3dPersistePronto();const m=V3.model,J=m?.userData?.J;if(!J)return;const P=S.v3d.pose,r=d=>(d||0)*RAD;
+/* ============ Varios personajes en la escena (hasta 4): cada uno con su cuerpo, pose, posición, giro y tamaño ============
+   S.v3d.pose / giro / cuerpo / preset son siempre los del personaje seleccionado (S.v3d.figs[S.v3d.sel]); así todos los controles de pose siguen igual. */
+const V3_TINTES=['','#7fa6d6','#d6967f','#8fd68a'],V3_MAX_FIGS=4;
+const v3dPoseDe=d=>{const b=typeof d==='string'?{...V3_POSES[d]}:{...V3_POSES[d?.base||'De pie'],...(d?.o||{})};delete b.en;return d?.m?v3dEspeja(b):b};
+function v3dFigSync(){const S3=S.v3d;if(!S3||S3.modelo!=='maniqui'||!S3.figs?.length)return;const f=S3.figs[Math.min(S3.sel||0,S3.figs.length-1)];f.pose=clone(S3.pose);f.giro=clone(S3.giro||{x:0,y:0,z:0});f.cuerpo=S3.cuerpo||f.cuerpo;f.preset=S3.preset}
+function v3dFigsInit(){const S3=S.v3d;if(!S3.figs?.length){S3.figs=[{id:uid(),cuerpo:S3.cuerpo||'michelle',pose:clone(S3.pose),giro:clone(S3.giro||{x:0,y:0,z:0}),preset:S3.preset,px:0,pz:0,esc:1,nom:''}];S3.sel=0}else{if(!(S3.sel>=0&&S3.sel<S3.figs.length))S3.sel=0;v3dFigSync()}}
+function v3dCargaSel(){const S3=S.v3d,f=S3.figs[S3.sel||0];S3.cuerpo=f.cuerpo;S3.pose=clone(f.pose);S3.giro=clone(f.giro||{x:0,y:0,z:0});S3.preset=f.preset||'Mía'}
+function v3dSueloDe(m){m.position.y=0;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m);if(isFinite(b.min.y))m.position.y=-b.min.y}
+function v3dColoca(m,f){const g=f.giro||{x:0,y:0,z:0};m.rotation.set(g.x*RAD,g.y*RAD,g.z*RAD);m.scale.setScalar(f.esc||1);m.position.set(f.px||0,0,f.pz||0);v3dSueloDe(m)}
+function v3dAnillo(){const T=V3.T;if(!T||!V3.scene)return;const S3=S.v3d,n=V3.figs?.length||0;
+  if(!V3.anillo){V3.anillo=new T.Mesh(new T.RingGeometry(.34,.4,56),new T.MeshBasicMaterial({color:0xff6a3d,transparent:true,opacity:.9,side:T.DoubleSide,depthWrite:false}));V3.anillo.rotation.x=-Math.PI/2;V3.anillo.renderOrder=2;V3.scene.add(V3.anillo)}
+  const e=V3.figs?.[S3.sel||0];V3.anillo.visible=n>1&&!!e;if(e){V3.anillo.position.set(e.f.px||0,.012,e.f.pz||0);V3.anillo.scale.setScalar(e.f.esc||1)}V3.dirty=true}
+function v3dMatTinte(i){const T=V3.T;V3.matsF=V3.matsF||{};const m=V3.matsF[i]||(V3.matsF[i]=V3.mat.clone());m.color.copy(V3.mat.color).lerp(new T.Color(V3_TINTES[i]||'#ffffff'),.3);m.roughness=V3.mat.roughness;return m}
+function v3dMontaFigs(){const S3=S.v3d;v3dFigsInit();if(S3.figs.some(f=>!V3_CACHE[f.cuerpo])){v3dListoVista();return}
+  V3.noSuelo=false;V3.mixer=null;V3.bones=[];
+  V3.figs=S3.figs.map(f=>{const m=v3dInstancia(f.cuerpo);m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});V3.scene.add(m);return {f,model:m}});
+  V3.model=V3.figs[S3.sel||0].model;v3dMaterial();v3dArcilla();for(const e of V3.figs){v3dPoseA(e.model,e.f.pose);v3dColoca(e.model,e.f)}v3dAnillo();v3dEncuadra();v3dLuz();v3dEscena()}
+function v3dFigSel(i){const S3=S.v3d;v3dFigSync();if(!S3.figs?.[i])return;S3.sel=i;v3dCargaSel();if(V3.figs?.[i])V3.model=V3.figs[i].model;v3dAnillo();v3dPanel();V3.dirty=true}
+function v3dFigMas(){const S3=S.v3d;v3dFigSync();if(S3.figs.length>=V3_MAX_FIGS){toast('El máximo es '+V3_MAX_FIGS+' personajes');return}
+  const cu=Object.keys(V3_CUERPOS),ult=S3.figs[S3.figs.length-1];S3.figs.push({id:uid(),cuerpo:cu[S3.figs.length%cu.length],pose:V3_NEUTRA(),giro:{x:0,y:0,z:0},preset:'De pie',px:Math.min(2.4,(ult.px||0)+.8),pz:0,esc:1,nom:''});S3.sel=S3.figs.length-1;v3dCargaSel();v3dModelo();v3dPanel()}
+function v3dFigMenos(){const S3=S.v3d;if((S3.figs?.length||0)<2)return;S3.figs.splice(S3.sel||0,1);S3.sel=Math.max(0,Math.min(S3.sel||0,S3.figs.length-1));v3dCargaSel();v3dModelo();v3dPanel()}
+function v3dFigMira(){const S3=S.v3d,L=S3.figs||[],f=L[S3.sel||0];if(!f||L.length<2)return;let o=null,dm=1e9;L.forEach((x,i)=>{if(i===(S3.sel||0))return;const d=Math.hypot((x.px||0)-(f.px||0),(x.pz||0)-(f.pz||0));if(d<dm){dm=d;o=x}});
+  S3.giro.y=Math.round(Math.atan2((o.px||0)-(f.px||0),(o.pz||0)-(f.pz||0))/RAD);v3dGiro();v3dPanel()}
+/* orientación del personaje respecto a la cámara: frontal, ¾, lateral, de espaldas */
+const V3_VISTAS=[['Frontal',0],['¾ izq.',-35],['¾ der.',35],['Lateral izq.',-90],['Lateral der.',90],['¾ espalda izq.',-145],['¾ espalda der.',145],['De espaldas',180]];
+const V3_CAMS=[['Frontal',0],['¾ izq.',-35],['¾ der.',35],['Lateral izq.',-90],['Lateral der.',90],['De espaldas',180]];
+function v3dVistaFig(a){S.v3d.giro.y=a;v3dGiro();v3dPanel()}
+function v3dCamAz(a){const c=V3.controls,cam=V3.camera;if(!c||!cam)return;const t=c.target,dx=cam.position.x-t.x,dz=cam.position.z-t.z,r=Math.hypot(dx,dz)||4;cam.position.set(t.x+r*Math.sin(a*RAD),cam.position.y,t.z+r*Math.cos(a*RAD));c.update();V3.dirty=true}
+function v3dEscenaFig(k){const sc=V3_ESCENAS.find(x=>x.k===k),S3=S.v3d;if(!sc)return;v3dFigSync();const old=S3.figs||[],cu=Object.keys(V3_CUERPOS);
+  S3.figs=sc.figs.map((d,i)=>{const pose=v3dPoseDe(d.p);Object.assign(pose,d.ex||{});for(const q in pose)if(V3_RANGOS[q])pose[q]=clamp(pose[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);
+    return {id:uid(),cuerpo:old[i]?.cuerpo||cu[i%cu.length],pose,giro:{x:0,y:d.y||0,z:0},preset:typeof d.p==='string'?d.p:(d.p?.base||'Escena'),px:d.x||0,pz:d.z||0,esc:d.e||1,nom:old[i]?.nom||''}});
+  S3.sel=0;v3dCargaSel();v3dModelo();v3dPanel();toast('Escena «'+sc.n+'»: ajusta cada pose y su posición')}
+function v3dPick(e){if(!V3.figs||V3.figs.length<2||!V3.renderer)return;const T=V3.T,r=V3.renderer.domElement.getBoundingClientRect(),ray=new T.Raycaster();ray.setFromCamera(new T.Vector2((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1),V3.camera);
+  const h=ray.intersectObjects(V3.figs.map(x=>x.model),true)[0];if(!h)return;let o=h.object;while(o&&!V3.figs.some(x=>x.model===o))o=o.parent;const i=V3.figs.findIndex(x=>x.model===o);if(i>=0&&i!==(S.v3d.sel||0))v3dFigSel(i)}
+function v3dFigChips(){const S3=S.v3d,L=S3.figs||[];if(L.length<2||S3.modelo!=='maniqui')return '';
+  return `<div class="chips"><span class="lbl">Posando a</span>${L.map((f,i)=>`<button class="ch xs ${i===(S3.sel||0)?'on':''}" data-act="v3d-fig" data-k="${i}"><i class="v3-dot" style="background:${i?V3_TINTES[i]:'#cdc7be'}"></i>${i+1}${f.nom?' · '+esc(corto(f.nom,14)):''}</button>`).join('')}</div>`}
+function v3dFigsHTML(s){const L=s.figs?.length?s.figs:[{px:0,pz:0,esc:1,nom:''}],n=L.length,i=Math.min(s.sel||0,n-1),f=L[i],pj=(S.P[S.cur]?.personajes||[]).filter(c=>c.nombre),
+    sl=(lbl,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${lbl} <b id="v3f-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3f="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`;
+  return `<div class="v3-g"><b>Personajes en la escena (${n} de ${V3_MAX_FIGS})</b><p class="hint" style="margin:0">Pon hasta ${V3_MAX_FIGS} maniquíes para estudiar cómo interactúan. Toca uno en la escena (o aquí) para posarlo; el anillo naranja marca al seleccionado.</p>
+    <div class="chips">${L.map((x,j)=>`<button class="ch ${j===i?'on':''}" data-act="v3d-fig" data-k="${j}"><i class="v3-dot" style="background:${j?V3_TINTES[j]:'#cdc7be'}"></i>${j+1}${x.nom?' · '+esc(corto(x.nom,16)):''}</button>`).join('')}${n<V3_MAX_FIGS?'<button class="btn sm pri" data-act="v3d-fig-mas">＋ Agregar personaje</button>':''}${n>1?'<button class="btn sm ghost danger" data-act="v3d-fig-menos">Quitar este</button>':''}</div>
+    <label class="esc-r"><span class="lbl">Nombre</span><input type="text" data-v3f="nom" value="${esc(f.nom||'')}" placeholder="Ej. Guerrero Jaguar"></label>
+    ${pj.length?`<div class="chips"><span class="lbl">Ponerle el de</span>${pj.slice(0,6).map(c=>`<button class="ch xs" data-act="v3d-fig-nom" data-n="${esc(c.nombre)}">${esc(corto(c.nombre,18))}</button>`).join('')}</div>`:''}
+    <div class="chips"><span class="lbl">Cómo lo ve la cámara</span>${V3_VISTAS.map(([nm,a])=>`<button class="ch xs ${Math.round(s.giro.y)===a?'on':''}" data-act="v3d-vista" data-a="${a}">${nm}</button>`).join('')}</div>
+    ${sl('Izquierda ↔ derecha','px',-2.5,2.5,.05,f.px||0,'')}${sl('Adelante ↔ atrás','pz',-2.5,2.5,.05,f.pz||0,'')}${sl('Tamaño','esc',.5,1.4,.01,f.esc||1,'×')}${v3Sl('Girar','giro.y',-180,180,1,s.giro.y)}
+    <div class="prow"><button class="btn sm" data-act="v3d-fig-mira" ${n<2?'disabled':''}>Que mire al otro</button></div></div>
+  <div class="v3-g"><b>Escenas de partida</b><p class="hint" style="margin:0">Acomodan a los personajes en una situación; después ajustas cada pose y su posición. En los contactos (manos, abrazo) afina hombros y brazos hasta que se toquen.</p><div class="chips">${V3_ESCENAS.map(e=>`<button class="ch xs" data-act="v3d-escena-fig" data-k="${e.k}" title="${esc(e.d)}">${esc(e.n)} · ${e.figs.length}</button>`).join('')}</div></div>
+  <div class="v3-g"><b>Ver la escena desde</b><div class="chips">${V3_CAMS.map(([nm,a])=>`<button class="ch xs" data-act="v3d-cam" data-a="${a}">${nm}</button>`).join('')}</div></div>`}
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.v3f;if(!k||!t.closest?.('#v3d'))return;const S3=S.v3d,f=S3.figs?.[S3.sel||0];if(!f)return;
+  if(k==='nom'){f.nom=t.value;return}
+  f[k]=+t.value;const lb=$('#v3f-'+k);if(lb)lb.textContent=(Math.round(+t.value*100)/100)+(k==='esc'?'×':'');
+  const en=V3.figs?.[S3.sel||0];if(en){v3dColoca(en.model,f);v3dAnillo()}v3dPersistePronto()});
+document.addEventListener('pointerdown',e=>{if(V3.open&&e.target.id==='v3d-canvas')V3.d0=[e.clientX,e.clientY]},true);
+document.addEventListener('pointerup',e=>{if(!V3.open||e.target.id!=='v3d-canvas'||!V3.d0)return;const d=Math.hypot(e.clientX-V3.d0[0],e.clientY-V3.d0[1]);V3.d0=null;if(d<5)v3dPick(e)},true);
+function v3dPoseA(m,P){const J=m?.userData?.J;if(!J)return;const r=d=>(d||0)*RAD;
   J.pelvis.rotation.set(0,r(P.py),r(P.pz));J.spine.rotation.set(r(P.tb)/2,r(P.tt)/2,r(P.tl)/2);J.chest.rotation.set(r(P.tb)/2,r(P.tt)/2,r(P.tl)/2);
   J.neck.rotation.set(r(P.hn)/2,r(P.hy)/2,r(P.hl)/2);J.head.rotation.set(r(P.hn)/2,r(P.hy)/2,r(P.hl)/2);
   for(const [s,sg] of [['L',1],['R',-1]]){J['sh'+s].rotation.set(-r(P['a'+s+'s']),r(P['a'+s+'r']),sg*r(P['a'+s+'p']));J['el'+s].rotation.set(-r(P['a'+s+'e']),0,0);J['hip'+s].rotation.set(-r(P['l'+s+'s']),0,sg*r(P['l'+s+'p']));J['kn'+s].rotation.set(r(P['l'+s+'k']),0,0)}
-  m.userData.aplica?.();v3dGiro()}
-function v3dGiro(){v3dPersistePronto();const m=V3.model;if(!m)return;const g=S.v3d.giro,r=d=>d*RAD;m.rotation.set(r(g.x),r(g.y),r(g.z));v3dSuelo();V3.dirty=true}
-function v3dEncuadra(){const m=V3.model;if(!m)return;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m),c=b.getCenter(new V3.T.Vector3()),sz=b.getSize(new V3.T.Vector3()),fov=V3.camera.fov*Math.PI/180,
-    d=Math.max(sz.y,sz.x*.9,sz.z*.9)/(2*Math.tan(fov/2))*1.45+sz.z/2;V3.controls.target.copy(c);V3.camera.position.set(c.x,c.y+sz.y*.08,c.z+d);V3.controls.update();V3.dirty=true}
+  m.userData.aplica?.()}
+function v3dPose(){v3dPersistePronto();v3dFigSync();const m=V3.model;if(!m?.userData?.J)return;v3dPoseA(m,S.v3d.pose);v3dGiro()}
+function v3dGiro(){v3dPersistePronto();v3dFigSync();const m=V3.model;if(!m)return;const e=V3.figs?.find(x=>x.model===m);
+  if(e){v3dColoca(m,e.f);v3dAnillo()}else{const g=S.v3d.giro,r=d=>d*RAD;m.rotation.set(r(g.x),r(g.y),r(g.z));v3dSuelo()}V3.dirty=true}
+function v3dEncuadra(){const ms=V3.figs?V3.figs.map(x=>x.model):(V3.model?[V3.model]:[]);if(!ms.length)return;const b=new V3.T.Box3();
+  ms.forEach(m=>{m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});b.union(new V3.T.Box3().setFromObject(m))});
+  const c=b.getCenter(new V3.T.Vector3()),sz=b.getSize(new V3.T.Vector3()),fov=V3.camera.fov*Math.PI/180,d=Math.max(sz.y,sz.x*.9,sz.z*.9)/(2*Math.tan(fov/2))*1.45+sz.z/2;V3.controls.target.copy(c);V3.camera.position.set(c.x,c.y+sz.y*.08,c.z+d);V3.controls.update();V3.dirty=true}
+function v3dMaterial(){const M=V3_MATS[S.v3d.material]||V3_MATS.arcilla;V3.mat.color.set(M.c);V3.mat.roughness=M.r;if(V3.matsF)for(const i in V3.matsF)v3dMatTinte(+i);V3.dirty=true}
+function v3dArcilla(){const s=S.v3d;if(!['mio','maniqui'].includes(s.modelo)||!V3.model)return;(V3.figs||[{model:V3.model}]).forEach((e,i)=>e.model.traverse(o=>{if(o.isMesh){if(!o.userData.mat0)o.userData.mat0=o.material;o.material=s.arcilla?(i?v3dMatTinte(i):V3.mat):o.userData.mat0}}));V3.dirty=true}
 function v3dDispone(root){const ms=new Set();root.traverse(o=>{o.geometry?.dispose?.();for(const m of [o.material,o.userData?.mat0].flat())if(m&&m!==V3.mat)ms.add(m)});ms.forEach(m=>{for(const k in m)if(m[k]?.isTexture)m[k].dispose();m.dispose?.()})}
-function v3dModelo(){const T=V3.T,S3=S.v3d;if(V3.model){V3.scene.remove(V3.model);v3dDispone(V3.model);V3.model=null}
+function v3dModelo(){const T=V3.T,S3=S.v3d;if(V3.figs){V3.figs.forEach(x=>V3.scene.remove(x.model));V3.figs=null;V3.model=null}else if(V3.model){V3.scene.remove(V3.model);v3dDispone(V3.model);V3.model=null}
   if(!['maniqui','loomis','formas','mio'].includes(S3.modelo)||(S3.modelo==='mio'&&!V3.mio))S3.modelo='maniqui';
+  if(S3.modelo==='maniqui'){v3dMontaFigs();return}
+  if(V3.anillo)V3.anillo.visible=false;
   const mio=S3.modelo==='mio';V3.noSuelo=S3.modelo==='loomis';V3.mixer=mio?V3.mioMixer:null;V3.bones=mio?V3.mioBones:[];
   const m=S3.modelo==='loomis'?(v3dLoomisMod(S3.loomis||1)||(v3dLoomisBaja(S3.loomis||1),v3dLoomis(T,V3.mat))):S3.modelo==='formas'?v3dFormas(T,V3.mat,S3.forma):mio?V3.mioW:v3dCuerpo(T,V3.mat,S3.cuerpo||'michelle');
   if(!m){v3dListoVista();return}
   m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});V3.model=m;V3.scene.add(m);
   if(S3.modelo==='loomis')m.position.y=.75;
   v3dMaterial();v3dPose();v3dArcilla();v3dEncuadra();v3dLuz();v3dEscena()}
-function v3dArcilla(){if(!['mio','maniqui'].includes(S.v3d.modelo)||!V3.model)return;V3.model.traverse(o=>{if(o.isMesh){if(!o.userData.mat0)o.userData.mat0=o.material;o.material=S.v3d.arcilla?V3.mat:o.userData.mat0}});V3.dirty=true}
 async function v3dCargaArchivo(f){if(!V3.lib){toast('Espera a que cargue el motor 3D');return}const L=V3.lib,T=V3.T,ext=(f.name.split('.').pop()||'').toLowerCase();let obj,anims=[];
   try{const buf=await f.arrayBuffer();
     if(ext==='glb'||ext==='gltf'){const g=await new Promise((ok,no)=>new L.GLTFLoader().parse(buf,'',ok,no));obj=g.scene;anims=g.animations||[]}
@@ -9345,7 +9437,8 @@ const v3Sp=(lbl,k,val)=>v3Sl(lbl,'pose.'+k,V3_RANGOS[k][0],V3_RANGOS[k][1],1,val
 function v3dTabModelo(s){const ch=v3Ch;return `<div class="chips">${ch('v3d-modelo','maniqui','Cuerpo',s.modelo==='maniqui')}${ch('v3d-modelo','loomis','Cabeza de Loomis',s.modelo==='loomis')}${ch('v3d-modelo','formas','Formas básicas',s.modelo==='formas')}${ch('v3d-modelo','mio','Mi modelo',s.modelo==='mio')}</div>
     ${s.modelo==='formas'?`<div class="chips">${V3_FORMAS.map(([k,n])=>ch('v3d-forma',k,n,s.forma===k)).join('')}</div><p class="hint">Para estudiar cómo cae la luz y la sombra sobre formas simples.</p>`:''}
     ${s.modelo==='loomis'?`<div class="chips"><span class="lbl">Paso del método</span>${V3_LOOMIS.map(([n,d],i)=>ch('v3d-loomis',String(i+1),n,(s.loomis||1)===i+1)).join('')}</div><p class="hint" style="margin:0">${esc(V3_LOOMIS[(s.loomis||1)-1][1])}. Gírala y cámbiale la luz: los planos de la cabeza se leen mejor con luz lateral. Modelo «Planes of the Head – Andrew Loomis Method» de <a href="https://sketchfab.com/3d-models/planes-of-the-head-andrew-loomis-method-19424b7aa2fc4a4d8987efe4bdb62395" target="_blank" rel="noopener" style="color:var(--accent)">Josh Galeto ↗</a> (licencia CC-BY, aligerado para la app).</p><div class="prow"><label class="btn ghost sm" for="v3d-file">O cargar otra cabeza (.glb, .obj, .fbx)</label></div>`:''}
-    ${s.modelo==='maniqui'?`<div class="chips"><span class="lbl">Personaje</span>${Object.entries(V3_CUERPOS).map(([k,v])=>ch('v3d-cuerpo',k,v.n,(s.cuerpo||'michelle')===k)).join('')}</div><p class="hint" style="margin:0">${esc(V3_CUERPOS[s.cuerpo||'michelle'].d)}. Se posan con los mismos controles: elige una pose, sube la foto de una pose o pídemela. Son personajes de ejemplo de three.js (Mixamo): para estudio y referencia; revisa su licencia antes de usarlos en algo público.</p>`:''}
+    ${s.modelo==='maniqui'?`<div class="chips"><span class="lbl">Cuerpo del seleccionado</span>${Object.entries(V3_CUERPOS).map(([k,v])=>ch('v3d-cuerpo',k,v.n,(s.cuerpo||'michelle')===k)).join('')}</div><p class="hint" style="margin:0">${esc(V3_CUERPOS[s.cuerpo||'michelle'].d)}. Se posan con los mismos controles: elige una pose, sube la foto de una pose o pídemela. Son personajes de ejemplo de three.js (Mixamo): para estudio y referencia; revisa su licencia antes de usarlos en algo público.</p>`:''}
+    ${s.modelo==='maniqui'?v3dFigsHTML(s):''}
     ${s.modelo!=='mio'||s.arcilla?`<div class="chips"><span class="lbl">Material</span>${Object.entries(V3_MATS).map(([k,v])=>ch('v3d-mat',k,v.n,(s.material||'arcilla')===k)).join('')}</div>`:''}
     ${s.modelo==='mio'||V3.mio?`<div class="prow"><label class="btn sm pri" for="v3d-file">${V3.mio?'Cambiar de modelo':'Cargar un modelo'}</label><span class="muted" style="font-size:12px">${esc(s.mioNombre||'')}</span></div>`:''}
     ${s.modelo==='mio'?`<div class="prow"><input type="text" data-v3url placeholder="o pega el enlace directo a un .glb" style="flex:1 1 160px;min-width:0"><button class="btn sm" data-act="v3d-url">Cargar</button></div><details class="v3-d"><summary>Dónde conseguir cuerpos 3D</summary>${V3_FUENTES.map(([n,u,d])=>`<p class="hint" style="margin:4px 0"><a href="${u}" target="_blank" rel="noopener" style="color:var(--accent)"><b>${n} ↗</b></a> · ${d}</p>`).join('')}<p class="hint" style="margin:4px 0">También puedes arrastrar el archivo y soltarlo sobre el visor.</p></details>`:''}
@@ -9353,7 +9446,7 @@ function v3dTabModelo(s){const ch=v3Ch;return `<div class="chips">${ch('v3d-mode
     ${(V3.mio&&s.modelo==='mio')||s.modelo==='maniqui'?`<label class="chk"><input type="checkbox" data-v3chk="arcilla" ${s.arcilla?'checked':''}><span>Ver como arcilla gris <small class="muted">(estudia forma y luz sin texturas)</small></span></label>`:''}`}
 function v3dTabPose(s){const ch=v3Ch;
     if(s.modelo==='maniqui')return `<details class="v3-d" open><summary>Ponlo en una pose</summary><p class="hint" style="margin:4px 0"><b>Descríbela:</b> escribe qué hace y cómo, con tus palabras.</p><textarea id="v3d-desc" data-v3txt="desc" placeholder="Ej. corriendo, con la cabeza un poco torcida mirando hacia atrás" style="min-height:56px">${esc(s.desc||'')}</textarea><div class="prow"><button class="btn sm pri" data-act="v3d-pose-texto">Poner la pose</button></div><span class="muted" id="v3d-desc-msg" style="font-size:12px"></span><div class="chips">${V3_EJEMPLOS.map((e,i)=>`<button class="ch xs" data-act="v3d-ejemplo" data-i="${i}">${esc(e)}</button>`).join('')}</div><p class="hint" style="margin:8px 0 4px"><b>Desde un boceto:</b> sube un dibujo sencillo de la pose (figura de palitos, gesto o boceto) y el cuerpo la copia. Si no la reconoce sola, marcas los puntos y listo.</p><div class="prow"><label class="btn sm pri" for="v3d-bz-file">Subir boceto de la pose</label><input type="file" id="v3d-bz-file" accept="image/*" hidden>${BZ.kp?'<button class="btn sm" data-act="v3d-bz-ajusta">Ajustar los puntos</button>':''}${compImagenes('').length?`<select data-v3bzproj aria-label="Usar un boceto de mis proyectos"><option value="">…o uno de mis proyectos</option>${compImagenes('').slice(0,80).map((x,i)=>`<option value="${i}">${esc(x.t)}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-bz-msg" style="font-size:12px"></span><p class="hint" style="margin:8px 0 4px"><b>Con Claude:</b> copia la petición, pégamela en el chat con tu imagen de la pose, y pega aquí lo que te responda.</p><button class="btn sm pri" data-act="v3d-pose-copiar">Copiar la petición para Claude</button><p class="hint" style="margin:6px 0 2px"><b>Automático:</b> sube la foto de la pose y el cuerpo la copia (se procesa en tu navegador).</p><div class="prow"><label class="btn sm" for="v3d-foto">Subir foto de la pose</label><input type="file" id="v3d-foto" accept="image/*" hidden>${(S.P[S.cur]?.refs||[]).filter(r=>refSrc(r)).length?`<select data-v3fotoref><option value="">…o una de tu moodboard</option>${S.P[S.cur].refs.filter(r=>refSrc(r)).slice(0,60).map(r=>`<option value="${r.id}">${esc(corto((r.fuente||'Referencia').split(' · ')[0],36))}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-foto-msg" style="font-size:12px"></span><textarea id="v3d-pose-txt" placeholder="Pega aquí la pose que te dio Claude (el bloque JSON)" style="min-height:64px"></textarea><div class="prow"><button class="btn sm" data-act="v3d-pose-aplicar">Aplicar pose</button><span class="muted" id="v3d-pose-msg" style="font-size:12px"></span></div></details>
-      <div class="chips">${Object.keys(V3_POSES).map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div>
+      ${(()=>{const G=V3_POSES_G.map(([n,l])=>[n,l.slice()]),usados=new Set(G.flatMap(g=>g[1]));Object.keys(V3_POSES).forEach(k=>{if(!usados.has(k))G[G.length-1][1].push(k)});return G.map(([n,l])=>`<div class="chips"><span class="lbl">${n}</span>${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div>`).join('')})()}
       <details class="v3-d" open><summary>Torso y cabeza</summary>${v3Sp('Inclinar adelante','tb',s.pose.tb)}${v3Sp('Girar torso','tt',s.pose.tt)}${v3Sp('Ladear torso','tl',s.pose.tl)}${v3Sp('Cadera: giro','py',s.pose.py)}${v3Sp('Cadera: ladeo','pz',s.pose.pz)}${v3Sp('Cabeza: asentir','hn',s.pose.hn)}${v3Sp('Cabeza: girar','hy',s.pose.hy)}${v3Sp('Cabeza: ladear','hl',s.pose.hl)}</details>
       ${[['L','Brazo izquierdo'],['R','Brazo derecho']].map(([l,n])=>`<details class="v3-d"><summary>${n}</summary>${v3Sp('Adelante / atrás','a'+l+'s',s.pose['a'+l+'s'])}${v3Sp('Abrir al costado','a'+l+'p',s.pose['a'+l+'p'])}${v3Sp('Giro del brazo','a'+l+'r',s.pose['a'+l+'r'])}${v3Sp('Doblar codo','a'+l+'e',s.pose['a'+l+'e'])}</details>`).join('')}
       ${[['L','Pierna izquierda'],['R','Pierna derecha']].map(([l,n])=>`<details class="v3-d"><summary>${n}</summary>${v3Sp('Adelante / atrás','l'+l+'s',s.pose['l'+l+'s'])}${v3Sp('Abrir al costado','l'+l+'p',s.pose['l'+l+'p'])}${v3Sp('Doblar rodilla','l'+l+'k',s.pose['l'+l+'k'])}</details>`).join('')}
@@ -9373,7 +9466,7 @@ function v3dTabLuz(s,p){const ch=v3Ch,L=s.luz,E=p?.escena;return `<div class="ch
       ${v3dPaletaLuz(s,p)}
       <div class="v3-g"><b>Usar las luces de tu proyecto</b><div class="chips">${E?`<button class="ch" data-act="v3d-escena" data-k="proyecto">Mi escena: ${esc(escNombre(p,E))}</button>`:''}${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch" data-act="v3d-escena" data-k="${k}">${esc(v.n)}</button>`).join('')}</div>
       <button class="btn sm" data-act="v3d-guardar-luz" title="La guarda en «Mis escenas» de Mood">Guardar esta luz como escena</button></div>`}
-function v3dTabCamara(s){const ch=v3Ch;return `${v3Sl('Lente (mm)','lente',18,135,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
+function v3dTabCamara(s){const ch=v3Ch;return `<div class="chips"><span class="lbl">${s.figs?.length>1?'El seleccionado visto de':'El modelo visto de'}</span>${V3_VISTAS.map(([nm,a])=>`<button class="ch xs ${Math.round(s.giro.y)===a?'on':''}" data-act="v3d-vista" data-a="${a}">${nm}</button>`).join('')}</div><div class="chips"><span class="lbl">Cámara</span>${V3_CAMS.map(([nm,a])=>`<button class="ch xs" data-act="v3d-cam" data-a="${a}">${nm}</button>`).join('')}</div>${v3Sl('Lente (mm)','lente',18,135,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
     <div class="chips"><span class="lbl">Fondo</span>${['oscuro','gris','claro'].map(k=>ch('v3d-fondo',k,k[0].toUpperCase()+k.slice(1),s.fondo===k)).join('')}</div>
     <label class="chk"><input type="checkbox" data-v3chk="rej" ${s.rej?'checked':''}><span>Cuadrícula</span></label><label class="chk"><input type="checkbox" data-v3chk="sombra" ${s.sombra?'checked':''}><span>Suelo y sombra</span></label>
     <div class="prow"><button class="btn sm" data-act="v3d-encuadra">Encuadrar</button><button class="btn sm" data-act="v3d-reset-giro">Quitar giro del modelo</button></div>`}
@@ -9390,8 +9483,8 @@ function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
     ${s.modelo==='maniqui'?`<div class="v3-g"><b>Buscar fotos de esta pose</b><p class="hint" style="margin:0">Busca en tus fuentes fotos que se llaman como tu pose («${esc(V3_POSES[s.preset]?.en||'figure pose reference')}»). No compara tu pose con las fotos: busca por nombre.</p><button class="btn sm" data-act="v3d-buscar-pose">Buscar fotos de «${esc(s.preset)}»</button></div>`:''}`}
 /* ---------- poses del visor 3D: se recuerdan, hay pose neutra y puedes guardar pose + luces + lente con nombre ---------- */
 const V3_NEUTRA=()=>({...V3_POSES['De pie']});
-const V3_GUARDA=['modelo','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla'];
-const v3dEstadoUtil=()=>{const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
+const V3_GUARDA=['modelo','figs','sel','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla'];
+const v3dEstadoUtil=()=>{v3dFigSync();const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
 function v3dRecuerda(){try{if(S.v3d)localStorage.setItem('cdc.v3d',JSON.stringify(v3dEstadoUtil()))}catch{}}
 function v3dPersistePronto(){clearTimeout(V3.rT);V3.rT=setTimeout(v3dRecuerda,1500)}
 function v3dRestaura(){try{const o=JSON.parse(localStorage.getItem('cdc.v3d')||'null');if(!o)return null;if(o.modelo==='mio')o.modelo='maniqui';return {...v3Def(),...o,tab:'modelo'}}catch{return null}}
@@ -9407,26 +9500,26 @@ function v3dTabPoses(s){const L=(S.ajustes.poses3d||[]).slice().sort((a,b)=>b.ts
     <input type="text" id="v3d-np" data-v3txt="nombrePose" value="${esc(s.nombrePose||'')}" placeholder="Ej. Dios Jaguar en guardia" aria-label="Nombre de la pose">
     <div class="prow"><button class="btn pri sm" data-act="v3d-pose-guarda">★ Guardar pose</button><button class="btn sm" data-act="v3d-neutra">↺ Pose neutra</button><button class="btn sm" data-act="v3d-todo-neutro">↺ Todo neutro</button></div></div>
   ${L.length?`<div class="v3-g"><b>Mis poses (${L.length})</b>${L.map(x=>`<div class="v3-pg"><div><b>${esc(x.nombre)}</b><br><small class="muted">${esc(V3_CUERPOS[x.cuerpo]?.n||x.cuerpo||'')} · luz ${esc(x.luzN||'propia')} · ${fecha(x.ts)}</small></div><div class="prow"><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}">Cargar todo</button><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}" data-solo="1">Solo la pose</button><button class="btn ghost sm danger" data-act="v3d-pose-borra" data-id="${x.id}">${S.confirmLi==='v3'+x.id?'¿Borrar?':'✕'}</button></div></div>`).join('')}</div>`:'<p class="hint">Todavía no guardas ninguna. Pon el cuerpo como quieras, ponle nombre y toca «Guardar pose».</p>'}`}
-function v3dBarra(){const n=(S.ajustes.poses3d||[]).length;return `<div class="v3-bar"><button class="btn sm" data-act="v3d-neutra" title="Vuelve el cuerpo a la pose neutra">↺ Pose neutra</button><button class="btn sm ghost" data-act="v3d-todo-neutro" title="Pose, luz, lente y fondo como al empezar">↺ Todo</button><button class="btn sm" data-act="v3d-tab" data-k="poses">★ Mis poses${n?` (${n})`:''}</button></div>`}
+function v3dBarra(){const n=(S.ajustes.poses3d||[]).length;return v3dFigChips()+`<div class="v3-bar"><button class="btn sm" data-act="v3d-neutra" title="Vuelve el cuerpo a la pose neutra">↺ Pose neutra</button><button class="btn sm ghost" data-act="v3d-todo-neutro" title="Pose, luz, lente y fondo como al empezar">↺ Todo</button><button class="btn sm" data-act="v3d-tab" data-k="poses">★ Mis poses${n?` (${n})`:''}</button></div>`}
 /* ---------- exportar el 3D para Photoshop y Procreate: PNG sin fondo, PSD en capas y el modelo con la pose puesta ---------- */
 /* PNG con transparencia a partir de dos renders (fondo negro y fondo blanco): la diferencia da el alfa exacto, incluso en bordes suavizados y sombras */
-async function v3dMatte(prep){const r=V3.renderer,cv=r.domElement,T=V3.T,sc=V3.scene,bg0=sc.background,pr=r.getPixelRatio(),vis=[V3.suelo.visible,V3.rej.visible];
+async function v3dMatte(prep){const r=V3.renderer,cv=r.domElement,T=V3.T,sc=V3.scene,bg0=sc.background,pr=r.getPixelRatio(),vis=[V3.suelo.visible,V3.rej.visible],an0=V3.anillo?.visible;if(V3.anillo)V3.anillo.visible=false;
   r.setPixelRatio(Math.max(2,pr));v3dResize();const rest=prep?.()||(()=>{});let B,W;
   try{const pas=c=>{sc.background=new T.Color(c);r.render(sc,V3.camera);const t=document.createElement('canvas');t.width=cv.width;t.height=cv.height;const g=t.getContext('2d',{willReadFrequently:true});g.drawImage(cv,0,0);return g.getImageData(0,0,t.width,t.height)};B=pas('#000000');W=pas('#ffffff')}
-  finally{rest();sc.background=bg0;V3.suelo.visible=vis[0];V3.rej.visible=vis[1];r.setPixelRatio(pr);v3dResize()}
+  finally{rest();sc.background=bg0;V3.suelo.visible=vis[0];V3.rej.visible=vis[1];if(V3.anillo)V3.anillo.visible=!!an0;r.setPixelRatio(pr);v3dResize()}
   const out=lienzo(B.width,B.height),g=out.getContext('2d'),o=g.createImageData(B.width,B.height),b=B.data,w=W.data,d=o.data;
   for(let i=0;i<d.length;i+=4){const a=Math.max(0,Math.min(1,1-((w[i]-b[i])+(w[i+1]-b[i+1])+(w[i+2]-b[i+2]))/765));d[i+3]=Math.round(a*255);if(a>.004){d[i]=Math.min(255,b[i]/a);d[i+1]=Math.min(255,b[i+1]/a);d[i+2]=Math.min(255,b[i+2]/a)}}
   g.putImageData(o,0,0);return out}
 const v3dSoloFigura=()=>{V3.suelo.visible=false;V3.rej.visible=false;return ()=>{}};
-function v3dSoloSombra(){const s=S.v3d,ms=[];V3.suelo.visible=!!s.sombra;V3.rej.visible=false;V3.model?.traverse(o=>{if(o.material)[].concat(o.material).forEach(m=>{ms.push([m,m.colorWrite]);m.colorWrite=false})});return ()=>ms.forEach(([m,c])=>{m.colorWrite=c})}
+function v3dSoloSombra(){const s=S.v3d,ms=[];V3.suelo.visible=!!s.sombra;V3.rej.visible=false;(V3.figs?V3.figs.map(x=>x.model):[V3.model]).forEach(M=>M?.traverse(o=>{if(o.material)[].concat(o.material).forEach(m=>{ms.push([m,m.colorWrite]);m.colorWrite=false})}));return ()=>ms.forEach(([m,c])=>{m.colorWrite=c})}
 function v3dSoloSilueta(){V3.suelo.visible=false;V3.rej.visible=false;V3.scene.overrideMaterial=new V3.T.MeshBasicMaterial({color:0});return ()=>{V3.scene.overrideMaterial=null}}
 /* la pose puesta: cada malla con los huesos aplicados, para que otros programas la reciban ya posada */
-function v3dHorneado(){const T=V3.T,g=new T.Group(),v=new T.Vector3();V3.model.updateMatrixWorld(true);
-  V3.model.traverse(o=>{if(!o.isMesh||!o.visible)return;const geo=o.geometry.clone(),pos=geo.attributes.position;
+function v3dHorneado(){const T=V3.T,g=new T.Group(),v=new T.Vector3();for(const M of (V3.figs?V3.figs.map(x=>x.model):[V3.model])){M.updateMatrixWorld(true);
+  M.traverse(o=>{if(!o.isMesh||!o.visible)return;const geo=o.geometry.clone(),pos=geo.attributes.position;
     if(o.isSkinnedMesh){o.skeleton.update();for(let i=0;i<pos.count;i++){o.getVertexPosition(i,v);v.applyMatrix4(o.matrixWorld);pos.setXYZ(i,v.x,v.y,v.z)}}else geo.applyMatrix4(o.matrixWorld);
-    geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');geo.computeVertexNormals();g.add(new T.Mesh(geo,o.material))});return g}
+    geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');geo.computeVertexNormals();g.add(new T.Mesh(geo,o.material))})}return g}
 async function v3dExporta(k){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!V3.model){toast('Abre primero un cuerpo o un modelo');return}
-  const nom=slug(p?.nombre||'3d',40)+'-'+(s.modelo==='maniqui'?slug(s.preset||'pose',20):s.modelo)+'-3d',base='https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/exporters/';
+  const nom=slug(p?.nombre||'3d',40)+'-'+(s.modelo==='maniqui'?(V3.figs?.length>1?'escena-'+V3.figs.length:slug(s.preset||'pose',20)):s.modelo)+'-3d',base='https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/exporters/';
   try{
     if(k==='png-sin-fondo'){const cv=await v3dMatte(v3dSoloFigura);await bajarBlob(nom+'-sin-fondo.png',await aBlob(cv));return}
     if(k==='psd'){toast('Armando el PSD en capas…');const figura=await v3dMatte(v3dSoloFigura),sombra=await v3dMatte(v3dSoloSombra),silueta=await v3dMatte(v3dSoloSilueta),w=figura.width,h=figura.height,
@@ -9441,21 +9534,21 @@ async function v3dExporta(k){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!V3.mod
   }catch(e){console.error(e);toast('No se pudo exportar (necesita internet la primera vez): '+(e?.message||'error'))}}
 const V3_TABS={modelo:v3dTabModelo,pose:v3dTabPose,luz:v3dTabLuz,camara:v3dTabCamara,poses:v3dTabPoses,guardar:v3dTabGuardar};
 function v3dPanelHTML(){const s=S.v3d;return v3dBarra()+(V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
-function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?`Pose 3D: ${s.preset}`:s.modelo==='loomis'?'Cabeza de Loomis con luz':s.modelo==='formas'?`Estudio de luz sobre ${s.forma}`:'Estudio 3D de '+(s.mioNombre||'modelo');return `${n} · luz ${s.luzN||'a mano'}`}
+function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?(s.figs?.length>1?`Escena 3D con ${s.figs.length} personajes${s.figs.some(f=>f.nom)?' ('+s.figs.map(f=>f.nom).filter(Boolean).join(', ')+')':''}`:`Pose 3D: ${s.preset}`):s.modelo==='loomis'?'Cabeza de Loomis con luz':s.modelo==='formas'?`Estudio de luz sobre ${s.forma}`:'Estudio 3D de '+(s.mioNombre||'modelo');return `${n} · luz ${s.luzN||'a mano'}`}
 function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[['modelo','Modelo'],['pose','Pose'],['luz','Luz'],['camara','Cámara'],['poses','Poses'],['guardar','Guardar']].map(([k,n])=>`<button class="${s.tab===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
 async function v3dAbrir(modo,tab){if(V3.open)return;S.v3d=S.v3d||v3dRestaura()||v3Def();if(modo)S.v3d.modelo=modo;if(tab)S.v3d.tab=tab;
   const ov=$('#overlay');ov.innerHTML=`<div class="v3d" id="v3d"><div class="v3d-top"><span class="v3d-hint">Arrastra para girar · rueda para acercar · clic derecho para mover</span><button class="btn sm" data-act="v3d-cerrar">✕ Cerrar</button></div><div class="v3d-cv" id="v3d-cv"><div class="v3d-carga" id="v3d-carga">Cargando el motor 3D…</div></div><div class="v3d-panel" id="v3d-panel"></div><nav class="v3d-tabs" id="v3d-tabs"></nav><input type="file" id="v3d-file" accept=".glb,.gltf,.obj,.fbx,.stl" hidden></div>`;
   V3.open=true;const tk=V3.tk=(V3.tk||0)+1;
   try{await v3dLib()}catch(e){V3.open=false;ov.innerHTML='';toast('No pude cargar el motor 3D. Revisa tu conexión e inténtalo de nuevo.');return}
   if(!V3.open||V3.tk!==tk)return;$('#v3d-carga')?.remove();v3dInit();v3dPanel();v3dModelo()}
-const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model'];/* lo que vive solo mientras el visor está abierto */
+const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model','anillo','figs','matsF'];/* lo que vive solo mientras el visor está abierto */
 function v3dCerrar(){v3dRecuerda();V3.open=false;cancelAnimationFrame(V3.raf);
-  try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model)v3dDispone(V3.model);[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
+  try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model&&!V3.figs)v3dDispone(V3.model);V3.anillo?.geometry?.dispose();V3.anillo?.material?.dispose();Object.values(V3.matsF||{}).forEach(m=>m.dispose());[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
   V3_RT.forEach(k=>V3[k]=null);V3.mixer=null;V3.bones=[];$('#overlay').innerHTML=''}
 async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)return;
-  const r=V3.renderer,cv=r.domElement,pr=r.getPixelRatio();r.setPixelRatio(Math.max(2,pr));v3dResize();r.render(V3.scene,V3.camera);const blob=await new Promise(ok=>cv.toBlob(ok,'image/png'));r.setPixelRatio(pr);v3dResize();
+  const r=V3.renderer,cv=r.domElement,pr=r.getPixelRatio(),an0=V3.anillo?.visible;if(V3.anillo)V3.anillo.visible=false;r.setPixelRatio(Math.max(2,pr));v3dResize();r.render(V3.scene,V3.camera);const blob=await new Promise(ok=>cv.toBlob(ok,'image/png'));if(V3.anillo)V3.anillo.visible=!!an0;r.setPixelRatio(pr);v3dResize();
   if(!blob){toast('No se pudo capturar la imagen');return}
-  const nom=slug(p.nombre,40)+'-'+(s.modelo==='maniqui'?slug(s.preset,20):s.modelo)+'-3d';
+  const nom=slug(p.nombre,40)+'-'+(s.modelo==='maniqui'?(V3.figs?.length>1?'escena-'+V3.figs.length:slug(s.preset,20)):s.modelo)+'-3d';
   if(modo==='png'){await bajarBlob(nom+'.png',blob);return}
   if(modo==='copiar'){try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);toast('Imagen copiada')}catch{toast('Tu navegador no deja copiar imágenes; usa Descargar PNG')}return}
   try{const f=new File([blob],nom+'.png',{type:'image/png'}),propio=s.modelo!=='mio'&&s.modelo!=='maniqui',ref=refNueva({capa:capaDestino({capa:s.capa}),porque:(s.porque||v3dPorque()).trim(),fuente:propio?'Referencia 3D · hecha en la app':s.modelo==='maniqui'?'Render de un personaje de ejemplo (Mixamo / three.js)':'Render de un modelo 3D tuyo',tipoRef:'primaria',clase:'Referencia 3D',
@@ -10141,6 +10234,14 @@ async function accion(a,el){
     case 'v3d-cerrar':v3dCerrar();break;
     case 'v3d-tab':S.v3d.tab=ds.k;v3dPanel();break;
     case 'v3d-loomis':{S.v3d.loomis=+ds.k;v3dModelo();v3dPanel();break}
+    case 'v3d-fig':v3dFigSel(+ds.k);break;
+    case 'v3d-fig-mas':v3dFigMas();break;
+    case 'v3d-fig-menos':v3dFigMenos();break;
+    case 'v3d-fig-mira':v3dFigMira();break;
+    case 'v3d-fig-nom':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f){f.nom=ds.n;v3dPanel()}break}
+    case 'v3d-vista':v3dVistaFig(+ds.a);break;
+    case 'v3d-cam':v3dCamAz(+ds.a);break;
+    case 'v3d-escena-fig':v3dEscenaFig(ds.k);break;
     case 'v3d-modelo':{S.v3d.modelo=ds.k;if(ds.k==='mio'&&!V3.mio){v3dPanel();break}v3dModelo();v3dPanel();break}
     case 'v3d-cuerpo':S.v3d.cuerpo=ds.k;v3dModelo();v3dPanel();break;
     case 'v3d-mat':S.v3d.material=ds.k;v3dMaterial();v3dPanel();break;
