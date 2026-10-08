@@ -699,6 +699,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .rl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;align-items:start}.rl-box{position:relative;display:inline-block;max-width:100%}.rl-box canvas{width:100%;height:auto;display:block;border-radius:8px;background:#000}.rl-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:17px;cursor:grab;touch-action:none;box-shadow:0 0 0 2px rgba(0,0,0,.5);color:#000;user-select:none}.rl-panel{display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}.rl-panel>*{flex:none}
 .aj-cands{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:6px 12px;overflow:auto}.aj-c{border:2px solid var(--line2);border-radius:12px;background:var(--surface);padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink)}.aj-c.on{border-color:var(--accent)}.aj-c canvas{display:block;width:clamp(96px,17vw,150px);height:auto;border-radius:8px}
 .bib-ov{position:fixed;inset:0;z-index:10000;background:var(--bg,#101216);display:flex;flex-direction:column;color:var(--ink,#eee)}.bib-top,.bib-bar{padding:10px 14px}.bib-bar{display:flex;flex-direction:column;gap:8px}.bib-prog{padding:0 14px}.bib-grid{flex:1;overflow:auto;padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;align-content:start}.bib-c{display:flex;flex-direction:column;gap:4px;align-items:center}.bib-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:zoom-in;background:#1b1d22}.bib-b{display:flex;gap:4px}.bib-vis,.bib-prac{align-items:center;justify-content:center;background:#000}.bib-vis img,.bib-prac>img{max-width:100%;max-height:100%;object-fit:contain}.bib-prac>img{max-height:calc(100% - 90px)}.bib-hud{position:absolute;left:0;right:0;bottom:0;padding:10px 16px;background:rgba(0,0,0,.7);display:flex;flex-direction:column;gap:6px}.bib-cfg{display:flex;flex-direction:column;gap:12px;align-items:center;padding:20px;text-align:center}
+.pg-arm{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.pg-b{border:1px solid var(--line2);background:var(--surface);border-radius:10px;padding:6px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:4px;text-align:left}.pg-b:hover{border-color:var(--accent)}.pg-s{display:flex;height:34px;border-radius:6px;overflow:hidden}.pg-s i{flex:1}.pg-b small{font-size:12px}
 .v3-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 body.arrastrando,body.arrastrando *{-webkit-user-select:none!important;user-select:none!important}
 .esc-r,input[type=range],input[type=color]{-webkit-user-select:none;user-select:none}.rl-mat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.rl-sw{width:22px;height:22px;border-radius:5px;border:1px solid var(--line2);flex:none}@media(max-width:900px){.rl-wrap{grid-template-columns:1fr}.rl-panel{max-height:none}}
@@ -1048,7 +1049,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzrh2gd').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzs08f7').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1623,7 +1624,7 @@ function vDireccion(p){return `
     <div class="box layer-mood" style="border-top:4px solid var(--c-mood)"><h3>Mood · la sensación</h3>
       <div class="field"><label for="f-mood-sensacion">¿Qué tiene que sentir quien lo vea?</label>${ta('mood.sensacion',p.mood.sensacion,'Opresión sagrada, calma antes del golpe…')}</div>
       <div class="field"><label for="f-mood-palabras">3 palabras de mood</label>${it('mood.palabras',p.mood.palabras,'solemne, húmedo, inevitable')}</div>
-      <div class="field"><label>Paleta</label><div class="pal">${p.mood.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${p.mood.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div></div>
+      <div class="field"><label>Paleta</label><div class="pal">${p.mood.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${p.mood.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>${palGenHTML(p)}</div>
     </div>
     <div class="box" style="border-top:4px solid var(--c-tecnica)"><h3>Técnica · cómo está hecho</h3>
       <div class="field"><label for="f-tecnica-medio">Medio y proceso</label>${ta('tecnica.medio',p.tecnica.medio,'Photobash + overpaint, 3D base en Blender, pincel seco…')}</div>
@@ -6730,7 +6731,20 @@ function vMood(p){const m=p.mood,t=tresMood(p);
   <div class="box"><h3>3 palabras de mood</h3><div class="tres">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
     <div data-vivo="sintesis">${vivoSintesis(p)}</div>
     <div class="field"><label for="f-mood-sensacion">La sensación en una frase (opcional)</label>${ta('mood.sensacion',m.sensacion,'Opresión sagrada, calma antes del golpe…')}</div></div>`}
-function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>
+/* paletas por armonía de color (rueda cromática): monocromática, análogos, complementarios, complementarios adyacentes, tríada y tetrádico */
+const PAL_ARM=[['mono','Monocromática'],['analogos','Colores análogos'],['compl','Complementarios'],['adyac','Complementarios adyacentes'],['triada','Tríada'],['tetra','Tetrádico']];
+function palArmonia(tipo,base){const {h,s:s0,l:L}=hexHsl(base)||{h:0,s:.6,l:.5},s=Math.max(.4,s0),sh=(hh,l,ss)=>hslHex(hh,ss??s,l);
+  if(tipo==='mono')return [sh(h,.16),sh(h,.28,s*.9),sh(h,clamp(L,.35,.6)),sh(h,.55,s*.8),sh(h,.72,s*.6),sh(h,.88,s*.4)];
+  if(tipo==='analogos')return [sh(h-30,.3),sh(h-15,.42),sh(h,clamp(L,.35,.6)),sh(h+15,.5),sh(h+30,.36),sh(h,.16,s*.7)];
+  if(tipo==='compl')return [sh(h,.2),sh(h,clamp(L,.35,.6)),sh(h,.72,s*.7),sh(h+180,.2),sh(h+180,.5),sh(h+180,.75,s*.6)];
+  if(tipo==='adyac')return [sh(h,.2),sh(h,clamp(L,.35,.6)),sh(h+150,.25),sh(h+150,.5),sh(h+210,.3),sh(h+210,.55)];
+  if(tipo==='triada')return [sh(h,.2),sh(h,clamp(L,.35,.6)),sh(h+120,.28),sh(h+120,.5),sh(h+240,.28),sh(h+240,.5)];
+  return [sh(h,.22),sh(h,clamp(L,.35,.6)),sh(h+60,.3),sh(h+60,.52),sh(h+180,.26),sh(h+240,.5)]}
+const palArmHTML=base=>PAL_ARM.map(([k,n])=>`<button class="pg-b" data-act="pal-arm" data-k="${k}" title="Usar esta paleta"><span class="pg-s">${palArmonia(k,base).map(c=>`<i style="background:${c}"></i>`).join('')}</span><small>${n}</small></button>`).join('');
+function palGenHTML(p){const base=S.palBase||(p.mood.paleta||[])[0]||'#c8323c';
+  return `<div class="v3-g"><b>Generar la paleta por armonía</b><p class="hint" style="margin:0">Elige un color base y toca una armonía: se ve cómo quedaría y se aplica con un toque.</p><div class="prow"><label class="esc-r"><span class="lbl">Color base</span><input type="color" id="pg-base" data-pgbase="1" value="${esc(base)}"></label><button class="btn sm" data-act="pal-azar">Color al azar</button>${p.mood.paletaAnt?.length?'<button class="btn ghost sm" data-act="pal-ant">↶ Volver a la anterior</button>':''}</div><div class="pg-arm" id="pg-arm">${palArmHTML(base)}</div></div>`}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset?.pgbase)return;S.palBase=t.value;const a=$('#pg-arm');if(a)a.innerHTML=palArmHTML(t.value)});
+function moodPaletaHTML(p){const m=p.mood;return `<div class="grid2"><div class="box"><h3>Tu paleta</h3><div class="pal">${m.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${m.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>${palGenHTML(p)}
       <div data-vivo="palcheck">${vivoPalCheck(p)}</div></div>
     <div class="box" data-vivo="palsug">${vivoPalSug(p)}</div></div>`}
 /* ============ Herramientas: luz y color, referencias, moodboard, tablero y 3D SIN proyecto ============
@@ -9099,7 +9113,96 @@ const V3_POSES={
  'Invocando':{tb:-6,tt:0,tl:0,py:0,pz:0,hn:-30,hy:0,hl:0,aLs:150,aLp:38,aLr:0,aLe:24,aRs:150,aRp:38,aRr:0,aRe:24,lLs:12,lLp:16,lLk:8,lRs:12,lRp:16,lRk:8,en:'arms raised summoning ritual pose'},
  'Ofrenda':{tb:10,tt:0,tl:0,py:0,pz:0,hn:14,hy:0,hl:0,aLs:72,aLp:-4,aLr:0,aLe:64,aRs:72,aRp:-4,aRr:0,aRe:64,lLs:3,lLp:3,lLk:4,lRs:3,lRp:3,lRk:4,en:'offering pose arms forward'},
  'Rendido':{tb:6,tt:0,tl:0,py:0,pz:0,hn:-4,hy:0,hl:0,aLs:150,aLp:22,aLr:0,aLe:42,aRs:150,aRp:22,aRr:0,aRe:42,lLs:88,lLp:6,lLk:92,lRs:-5,lRp:4,lRk:110,en:'kneeling surrender hands up pose'}};
-const V3_POSES_G=[['Básicas',['De pie','Contrapposto','Caminar','Correr','Agachado','Arrodillado','Salto','Sentado','Reverencia']],['Combate y defensa',['Golpe','Patada frontal','Patada lateral','Guardia','Defensa con escudo','Bloqueo alto','Defensa baja','Esquiva','Embestida','Estocada','Golpe cargado','Derribado']],['Personaje',['Acechar','Vigía','Invocando','Ofrenda','Rendido']]];
+/* ---- muchas más poses: se definen solo por lo que cambia respecto a «De pie» ---- */
+const V3_POSES_NUEVAS={
+ /* actitud y emoción */
+ 'Brazos en jarra':{aLs:-10,aLp:45,aLe:105,aRs:-10,aRp:45,aRe:105,hn:-4},
+ 'Brazos cruzados':{aLs:35,aLp:-5,aLe:125,aRs:35,aRp:-5,aRe:125,tb:2},
+ 'Manos en los bolsillos':{aLs:-8,aLp:10,aLe:30,aRs:-8,aRp:10,aRe:30,tb:4,hn:6},
+ 'Saludando':{aRs:150,aRp:25,aRe:80,hy:8},
+ 'Señalando':{aRs:90,aRp:5,aRe:5,tt:10,hy:-12},
+ 'Pensativo':{aRs:60,aRp:-10,aRe:140,aLs:25,aLp:5,aLe:105,hn:12,tl:4},
+ 'Peso en una pierna':{pz:-8,tl:5,lLs:-4,lLk:10,lRs:6,lRk:2,aLp:12,aRp:6},
+ 'Héroe':{tb:-6,aLs:-8,aLp:30,aLe:25,aRs:-8,aRp:30,aRe:25,hn:-8,lLp:18,lRp:18,lLk:2,lRk:2},
+ 'Villano encorvado':{tb:24,hn:14,aLs:15,aLp:15,aLe:55,aRs:15,aRp:15,aRe:55,lLs:6,lRs:-6,lLk:8,lRk:8},
+ 'Tímido':{tb:10,hn:18,hl:8,aLs:25,aLp:-4,aLe:90,aRs:25,aRp:-4,aRe:90,lLs:4,lRs:-2,lRk:6,tt:-8},
+ 'Triste':{tb:18,hn:28,aLs:8,aLp:6,aLe:12,aRs:8,aRp:6,aRe:12,lLk:6,lRk:6,hl:6},
+ 'Cansado':{tb:22,hn:20,aLs:12,aLp:10,aLe:20,aRs:12,aRp:10,aRe:20,lLk:12,lRk:6,pz:-6,tl:6},
+ 'Enojado':{tb:12,hn:10,aLs:60,aLp:8,aLe:115,aRs:60,aRp:8,aRe:115,lLs:12,lLp:12,lRs:-12,lRp:12,lLk:8,lRk:8},
+ 'Asustado':{tb:-12,hn:-4,aLs:75,aLp:20,aLe:105,aRs:60,aRp:25,aRe:120,lLs:-14,lRs:10,lLk:18,lRk:24,tt:-12,hy:10},
+ 'Sorprendido':{tb:-8,hn:-6,aLs:55,aLp:30,aLe:60,aRs:55,aRp:30,aRe:60,lLs:-6,lRs:6},
+ 'Alegría':{tb:-8,hn:-18,aLs:165,aLp:25,aLe:10,aRs:165,aRp:25,aRe:10,lLp:12,lRp:12},
+ 'Celebrando':{tb:-6,hn:-14,aLs:160,aLp:30,aLe:25,aRs:150,aRp:25,aRe:35,lLs:40,lLk:70,lRs:20,lRk:90},
+ 'Rezando':{tb:10,hn:20,aLs:50,aLp:-6,aLe:120,aRs:50,aRp:-6,aRe:120,lLk:4,lRk:4},
+ 'Mirando a lo lejos':{aRs:130,aRp:10,aRe:125,hy:15,hn:-6,tb:2,lLs:-6,lRs:6},
+ 'Saludo militar':{aRs:100,aRp:25,aRe:140,aLs:2,aLp:6,aLe:5,hn:-4,tb:-4},
+ 'Reverencia noble':{tb:30,hn:14,aRs:60,aRp:-6,aRe:105,aLs:-14,aLp:12,aLe:20,lRs:-18,lRk:10,lLs:10,lLk:12},
+ 'Genuflexión':{tb:20,hn:24,aLs:30,aLp:10,aLe:40,aRs:30,aRp:10,aRe:40,lLs:88,lLk:92,lRs:-5,lRk:110},
+ 'Rogando':{tb:14,hn:10,aLs:110,aLp:12,aLe:70,aRs:110,aRp:12,aRe:70,lLs:88,lLk:92,lRs:-5,lRk:110},
+ 'Escuchando atento':{tb:8,hn:6,hl:10,aLs:20,aLp:6,aLe:40,aRs:55,aRp:-6,aRe:130,tl:4},
+ 'Sosteniendo un bastón':{aRs:35,aRp:6,aRe:60,aLs:3,aLp:10,aLe:10,pz:-4},
+ 'Sosteniendo una antorcha':{aRs:100,aRp:12,aRe:70,aLs:3,aLp:10,aLe:10,hy:8},
+ 'Cargando al hombro':{tb:6,aRs:60,aRp:-4,aRe:140,aLs:5,aLp:15,aLe:20},
+ 'Mirando por encima del hombro':{tt:35,hy:60,tb:4,aLp:12,aRp:12},
+ /* caminar y correr */
+ 'Caminar rápido':{tb:10,tt:8,py:7,aLs:-30,aLe:35,aRs:34,aRe:40,lLs:34,lLk:8,lRs:-26,lRk:34},
+ 'Caminar sigiloso':{tb:20,hn:-6,aLs:20,aLp:12,aLe:50,aRs:25,aRp:12,aRe:55,lLs:30,lLk:50,lRs:-12,lRk:60,py:4},
+ 'Caminar cansado':{tb:20,hn:22,aLs:-8,aLe:12,aRs:10,aRe:14,lLs:18,lLk:10,lRs:-10,lRk:22},
+ 'Trotar':{tb:8,aLs:-35,aLe:90,aRs:30,aRe:95,lLs:36,lLk:20,lRs:-28,lRk:70,tt:6},
+ 'Sprint':{tb:22,hn:-12,aLs:-70,aLe:100,aRs:62,aRe:105,lLs:70,lLk:40,lRs:-48,lRk:105,tt:10},
+ 'Frenando':{tb:-18,aLs:50,aLp:30,aLe:25,aRs:40,aRp:30,aRe:30,lLs:38,lLk:12,lRs:-12,lRk:60},
+ 'Subiendo un escalón':{tb:10,aLs:-10,aLe:20,aRs:25,aRe:35,lLs:70,lLk:85,lRs:-18,lRk:8},
+ 'Empujando':{tb:30,aLs:90,aLe:20,aRs:90,aRe:20,lLs:30,lLk:30,lRs:-40,lRk:6},
+ 'Jalando una cuerda':{tb:-10,aLs:80,aLe:70,aRs:80,aRe:70,lLs:30,lLk:20,lRs:-30,lRk:12},
+ 'Cargando algo pesado':{tb:12,aLs:60,aLp:-4,aLe:80,aRs:60,aRp:-4,aRe:80,lLk:14,lRk:14},
+ 'Escalando':{tb:-8,aLs:160,aLe:30,aRs:130,aRe:90,lLs:60,lLk:80,lRs:10,lRk:30},
+ /* sentado y agachado */
+ 'Sentado erguido':{aLs:12,aLp:6,aLe:70,aRs:12,aRp:6,aRe:70,lLs:90,lLk:90,lRs:90,lRk:90},
+ 'Sentado relajado':{tb:-12,hn:-4,aLs:20,aLp:14,aLe:40,aRs:20,aRp:14,aRe:40,lLs:80,lLp:14,lLk:70,lRs:60,lRp:20,lRk:50},
+ 'Sentado inclinado':{tb:28,hn:6,aLs:35,aLp:8,aLe:95,aRs:35,aRp:8,aRe:95,lLs:90,lLk:90,lRs:90,lRk:90},
+ 'Sentado con piernas cruzadas':{tb:4,aLs:30,aLe:80,aRs:30,aRe:80,lLs:90,lLk:90,lRs:90,lRp:-10,lRk:50,pz:-4},
+ 'Sentado leyendo':{tb:12,hn:24,aLs:55,aLp:-6,aLe:100,aRs:55,aRp:-6,aRe:100,lLs:90,lLk:95,lRs:90,lRk:95},
+ 'Sentado derrotado':{tb:30,hn:26,aLs:35,aLp:4,aLe:45,aRs:35,aRp:4,aRe:45,lLs:85,lLp:12,lLk:80,lRs:85,lRp:12,lRk:80},
+ 'Rodilla en tierra':{tb:30,hn:-8,aLs:10,aLp:10,aLe:30,aRs:50,aRp:20,aRe:15,lLs:90,lLk:95,lRs:-8,lRk:110,tt:6},
+ 'Cuclillas':{tb:35,hn:-10,aLs:60,aLp:10,aLe:60,aRs:60,aRp:10,aRe:60,lLs:90,lLp:18,lLk:130,lRs:90,lRp:18,lRk:130},
+ 'Recogiendo algo':{tb:60,hn:-10,aLs:80,aLe:25,aRs:25,aRe:30,lLs:30,lLk:50,lRs:20,lRk:45},
+ 'Atándose el zapato':{tb:35,hn:25,aLs:70,aLe:80,aRs:80,aRe:90,lLs:90,lLk:110,lRs:6,lRk:8},
+ 'Aterrizaje de héroe':{tb:42,hn:-4,aLs:40,aLp:30,aLe:12,aRs:10,aRp:40,aRe:20,lLs:88,lLk:100,lRs:-40,lRk:22},
+ /* combate y armas */
+ 'Gancho':{tb:14,tt:46,aRs:70,aRp:20,aRe:95,aLs:55,aLe:115,lLs:22,lLk:18,lRs:-26,lRk:20,py:-18},
+ 'Uppercut':{tb:-6,tt:30,aRs:100,aRp:8,aRe:60,aLs:48,aLe:120,lLs:18,lLk:50,lRs:-30,lRk:20},
+ 'Codazo':{tb:12,tt:35,aRs:70,aRp:30,aRe:140,aLs:50,aLe:120,lLs:20,lLk:20,lRs:-26,lRk:20},
+ 'Rodillazo':{tb:-10,aLs:70,aLe:100,aRs:60,aRe:110,lLs:80,lLk:100,lRs:2,lRk:6},
+ 'Patada baja':{tb:-6,aLs:50,aLe:110,aRs:40,aRe:110,lLs:2,lLk:6,lRs:55,lRk:8,tl:-8},
+ 'Patada giratoria':{tb:8,tt:-40,aLs:60,aLp:40,aLe:40,aRs:55,aRp:40,aRe:45,lLs:6,lLk:12,lRs:60,lRp:50,lRk:20,tl:-14},
+ 'Bloqueo bajo':{tb:18,aLs:25,aLp:14,aLe:80,aRs:25,aRp:14,aRe:80,lLs:20,lLk:24,lRs:-18,lRk:20},
+ 'Parada con espada':{tb:8,tt:22,aRs:70,aRp:10,aRe:90,aLs:55,aLp:12,aLe:100,lLs:30,lLk:30,lRs:-28,lRk:18},
+ 'Corte horizontal':{tb:6,tt:46,py:-14,aRs:80,aRp:30,aRe:30,aLs:60,aLp:30,aLe:60,lLs:30,lLk:25,lRs:-30,lRk:22},
+ 'Corte descendente':{tb:30,aLs:95,aLe:20,aRs:95,aRe:20,lLs:40,lLk:40,lRs:-30,lRk:20},
+ 'Arquero tensando':{tb:4,tt:-32,hy:-30,aLs:90,aLp:6,aLe:6,aRs:55,aRp:50,aRe:140,lLs:6,lLp:26,lRs:-6,lRp:26,lLk:4,lRk:4},
+ 'Lanzando jabalina':{tb:-10,tt:-30,aRs:130,aRp:15,aRe:80,aLs:80,aLp:20,aLe:20,lLs:30,lLk:20,lRs:-30,lRk:25},
+ 'Lanzando una piedra':{tb:10,tt:34,aRs:100,aRp:12,aRe:20,aLs:60,aLe:40,lLs:30,lLk:30,lRs:-24,lRk:20},
+ 'Apuntando una pistola':{tb:6,tt:16,hy:-8,aRs:90,aRp:4,aRe:6,aLs:80,aLp:8,aLe:30,lLs:18,lLp:14,lLk:14,lRs:-14,lRp:14,lRk:12},
+ 'Apuntando un rifle':{tb:6,tt:-24,hy:-26,aRs:75,aRp:-6,aRe:70,aLs:85,aLp:-4,aLe:50,lLs:14,lLp:10,lLk:12,lRs:-18,lRp:10,lRk:8},
+ 'Salto de ataque':{tb:14,aRs:150,aRe:40,aLs:60,aLe:90,lLs:70,lLk:90,lRs:-30,lRk:60},
+ 'Victoria con arma en alto':{tb:-6,hn:-10,aRs:165,aRe:20,aLs:20,aLp:30,aLe:30,lLs:18,lLp:16,lLk:14,lRs:-14,lRp:16,lRk:10},
+ 'Lanzando un hechizo':{tb:6,tt:22,hy:-14,aRs:95,aRp:5,aRe:8,aLs:-25,aLp:35,aLe:70,lLs:30,lLk:30,lRs:-26,lRk:18},
+ 'Hechizo con ambas manos':{tb:8,hn:4,aLs:92,aLp:18,aLe:20,aRs:92,aRp:18,aRe:20,lLs:20,lLp:10,lLk:20,lRs:-20,lRp:10,lRk:20},
+ /* deportes y baile */
+ 'Pateando un balón':{tb:-6,aLs:-25,aLp:40,aLe:30,aRs:40,aRp:20,aRe:30,lLs:2,lLk:8,lRs:70,lRk:50,tl:-6},
+ 'Golpe de bate':{tb:10,tt:-50,py:16,aLs:60,aLp:20,aLe:70,aRs:60,aRp:20,aRe:70,lLs:10,lLp:20,lLk:20,lRs:-10,lRp:20,lRk:20},
+ 'Saque de tenis':{tb:-8,aRs:160,aRe:30,aLs:90,aLe:20,lLs:10,lLk:10,lRs:-8,lRk:12},
+ 'Estirando':{tb:-8,aLs:170,aLp:10,aLe:5,aRs:170,aRp:10,aRe:5},
+ 'Baile con cadera':{tl:-12,pz:12,aLs:150,aLp:30,aLe:60,aRs:60,aRp:20,aRe:100,lLs:10,lLp:20,lLk:20,lRs:-6,lRp:10,lRk:6},
+ 'Baile con giro':{tt:20,aLs:0,aLp:80,aLe:10,aRs:0,aRp:80,aRe:10,lLs:8,lLk:60,lRs:-6},
+ 'Pose elegante':{tl:6,pz:6,hn:4,hy:10,aLs:30,aLp:20,aLe:40,aRs:-10,aRp:30,aRe:30,lLs:10,lLk:6,lRs:-20,lRk:30}};
+(()=>{const b=V3_POSES['De pie'];for(const k in V3_POSES_NUEVAS){if(!V3_POSES[k]){const q={...b,...V3_POSES_NUEVAS[k]};q.en=k.toLowerCase()+' pose reference';V3_POSES[k]=q}}})();
+const V3_POSES_G=[['Básicas',['De pie','Contrapposto','Caminar','Correr','Agachado','Arrodillado','Salto','Sentado','Reverencia']],['Combate y defensa',['Golpe','Patada frontal','Patada lateral','Guardia','Defensa con escudo','Bloqueo alto','Defensa baja','Esquiva','Embestida','Estocada','Golpe cargado','Derribado']],['Personaje',['Acechar','Vigía','Invocando','Ofrenda','Rendido']],
+ ['Actitud y emoción',['Brazos en jarra','Brazos cruzados','Manos en los bolsillos','Saludando','Señalando','Pensativo','Peso en una pierna','Héroe','Villano encorvado','Tímido','Triste','Cansado','Enojado','Asustado','Sorprendido','Alegría','Celebrando','Rezando','Mirando a lo lejos','Saludo militar','Reverencia noble','Genuflexión','Rogando','Escuchando atento','Sosteniendo un bastón','Sosteniendo una antorcha','Cargando al hombro','Mirando por encima del hombro']],
+ ['Caminar, correr y esfuerzo',['Caminar rápido','Caminar sigiloso','Caminar cansado','Trotar','Sprint','Frenando','Subiendo un escalón','Empujando','Jalando una cuerda','Cargando algo pesado','Escalando']],
+ ['Sentado y agachado',['Sentado erguido','Sentado relajado','Sentado inclinado','Sentado con piernas cruzadas','Sentado leyendo','Sentado derrotado','Rodilla en tierra','Cuclillas','Recogiendo algo','Atándose el zapato','Aterrizaje de héroe']],
+ ['Combate y armas (más)',['Gancho','Uppercut','Codazo','Rodillazo','Patada baja','Patada giratoria','Bloqueo bajo','Parada con espada','Corte horizontal','Corte descendente','Arquero tensando','Lanzando jabalina','Lanzando una piedra','Apuntando una pistola','Apuntando un rifle','Salto de ataque','Victoria con arma en alto','Lanzando un hechizo','Hechizo con ambas manos']],
+ ['Deportes y baile',['Pateando un balón','Golpe de bate','Saque de tenis','Estirando','Baile con cadera','Baile con giro','Pose elegante']]];
 /* escenas de partida: cada personaje con pose (nombre o {base,o,m}), posición x/z, giro y, y ajustes extra (ex). Lo de los contactos hay que afinarlo a mano. */
 const V3_ESCENAS=[
  {k:'pelea',n:'Pelea',d:'Uno golpea y el otro se defiende con el escudo',figs:[{p:'Golpe',x:-.5,y:90},{p:'Defensa con escudo',x:.5,y:-90}]},
@@ -9173,7 +9276,7 @@ const V3_EXTRA=[[/(patad|pateand)/,{lRs:85,lRk:15,tb:-12,aLs:-30,aLp:40,aLe:60,a
 const v3dEspeja=P=>{const o={};for(const k of Object.keys(P)){if(/^[al][LR]/.test(k))o[k[0]+(k[1]==='L'?'R':'L')+k.slice(2)]=P[k];else o[k]=['tt','tl','py','pz','hy','hl'].includes(k)?-P[k]:P[k]}return o};
 function v3dPoseDeTexto(txt){const t=nz(String(txt||'')),cl=t.split(/[,;.]|\by\b|\bmientras\b|\bpero\b|\bcon\b/).map(c=>c.trim()).filter(Boolean),P={},notas=[];let base=null,giro=null;
   const set=(k,v)=>{P[k]=clamp(Math.round(v),V3_RANGOS[k][0],V3_RANGOS[k][1])},fuerza=c=>/\b(muy|mucho|bastante|totalmente|completamente|exagerad\w*|fuerte)\b/.test(c)?1:/\b(un poco|poco|ligeramente|levemente|algo|apenas|medio)\b/.test(c)?.45:.75,lado=c=>/izquierd/.test(c)?1:/derech/.test(c)?-1:0;
-  for(const [re,n] of V3_ACC){if(re.test(t)){base=n;notas.push(n.toLowerCase());break}}
+  for(const k of Object.keys(V3_POSES)){if(k.length>5&&t.includes(nz(k))){base=k;notas.push(k.toLowerCase());break}}if(!base)for(const [re,n] of V3_ACC){if(re.test(t)){base=n;notas.push(n.toLowerCase());break}}
   const extra={};let ladoExtra=0;for(const [re,P2,n] of V3_EXTRA){if(re.test(t)){const l=lado(t)||-1;Object.assign(extra,l===1&&['patada','brazo señalando','saludando'].includes(n)?v3dEspeja(P2):P2);notas.push(n);ladoExtra=1}}
   for(const c of cl){const iM=c.indexOf('mirando'),antes=iM>0?c.slice(0,iM):c,desp=iM>=0?c.slice(iM):c,f=fuerza(antes),fm=fuerza(desp)===.75?1:fuerza(desp),l=lado(c);
     if(/mirando (hacia )?atras|(por )?encima del hombro|mirada atras|voltea\w* atras|mira\w* hacia atras/.test(c)){const s=l===-1?-1:1;set('hy',70*fm*s);set('tt',(base==='Correr'||base==='Caminar'?18:25)*fm*s);notas.push(`cabeza girada hacia atrás (${Math.round(70*fm)}°, sobre su ${s===1?'izquierdo':'derecho'})`)}
@@ -9796,7 +9899,7 @@ function v3dTabModelo(s){const ch=v3Ch;return `<div class="chips">${ch('v3d-mode
     ${(V3.mio&&s.modelo==='mio')||s.modelo==='maniqui'?`<label class="chk"><input type="checkbox" data-v3chk="arcilla" ${s.arcilla?'checked':''}><span>Ver como arcilla gris <small class="muted">(estudia forma y luz sin texturas)</small></span></label>`:''}`}
 function v3dTabPose(s){const ch=v3Ch;
     if(s.modelo==='maniqui')return `<label class="chk"><input type="checkbox" data-v3chk="hnd" ${s.hnd?'checked':''}><span><b>Arrastrar las articulaciones en la escena</b> <small class="muted">(puntos de color en manos, codos, pies, rodillas, cabeza y torso; los deslizantes de abajo siguen funcionando)</small></span></label><details class="v3-d" open><summary>Ponlo en una pose</summary><p class="hint" style="margin:4px 0"><b>Descríbela:</b> escribe qué hace y cómo, con tus palabras.</p><textarea id="v3d-desc" data-v3txt="desc" placeholder="Ej. corriendo, con la cabeza un poco torcida mirando hacia atrás" style="min-height:56px">${esc(s.desc||'')}</textarea><div class="prow"><button class="btn sm pri" data-act="v3d-pose-texto">Poner la pose</button></div><span class="muted" id="v3d-desc-msg" style="font-size:12px"></span><div class="chips">${V3_EJEMPLOS.map((e,i)=>`<button class="ch xs" data-act="v3d-ejemplo" data-i="${i}">${esc(e)}</button>`).join('')}</div><p class="hint" style="margin:8px 0 4px"><b>Desde un boceto:</b> sube tu dibujo rápido de la pose (figura de palitos, contorno o gesto, líneas oscuras sobre papel claro). La app busca sola la pose y te enseña las mejores para que elijas la que más se parece; no tienes que marcar puntos.</p><div class="prow"><label class="btn sm pri" for="v3d-bz-file">Subir boceto de la pose</label><input type="file" id="v3d-bz-file" accept="image/*" hidden>${BZ.kp?'<button class="btn sm" data-act="v3d-bz-ajusta">Ajustar los puntos</button>':''}${compImagenes('').length?`<select data-v3bzproj aria-label="Usar un boceto de mis proyectos"><option value="">…o uno de mis proyectos</option>${compImagenes('').slice(0,80).map((x,i)=>`<option value="${i}">${esc(x.t)}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-bz-msg" style="font-size:12px"></span><p class="hint" style="margin:8px 0 4px"><b>Con Claude:</b> copia la petición, pégamela en el chat con tu imagen de la pose, y pega aquí lo que te responda.</p><button class="btn sm pri" data-act="v3d-pose-copiar">Copiar la petición para Claude</button><p class="hint" style="margin:6px 0 2px"><b>Desde una foto:</b> sube la foto y el cuerpo copia la pose; si hay varias personas (hasta 4), las acomoda todas en la escena. Se procesa en tu navegador.</p><div class="prow"><label class="btn sm" for="v3d-foto">Subir foto de la pose</label><input type="file" id="v3d-foto" accept="image/*" hidden>${(S.P[S.cur]?.refs||[]).filter(r=>refSrc(r)).length?`<select data-v3fotoref><option value="">…o una de tu moodboard</option>${S.P[S.cur].refs.filter(r=>refSrc(r)).slice(0,60).map(r=>`<option value="${r.id}">${esc(corto((r.fuente||'Referencia').split(' · ')[0],36))}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-foto-msg" style="font-size:12px"></span>${V3.refUrl?`<div class="v3-g"><b>Foto sobre el maniquí</b><label class="v3-s"><span>Transparencia de la foto <b id="v3v-refOp">${Math.round((s.refOp??.45)*100)}%</b></span><input type="range" data-v3ref="1" min="0.1" max="1" step="0.05" value="${s.refOp??.45}"></label><div class="prow"><button class="btn sm ghost" data-act="v3d-ref-quita">Quitar la foto</button></div><p class="hint" style="margin:0">Mueve y acerca la cámara hasta que el maniquí quede del mismo tamaño que la persona y ajusta brazos, piernas y torso con los controles hasta que coincidan.</p></div>`:''}<textarea id="v3d-pose-txt" placeholder="Pega aquí la pose que te dio Claude (el bloque JSON)" style="min-height:64px"></textarea><div class="prow"><button class="btn sm" data-act="v3d-pose-aplicar">Aplicar pose</button><span class="muted" id="v3d-pose-msg" style="font-size:12px"></span></div></details>
-      ${(()=>{const G=V3_POSES_G.map(([n,l])=>[n,l.slice()]),usados=new Set(G.flatMap(g=>g[1]));Object.keys(V3_POSES).forEach(k=>{if(!usados.has(k))G[G.length-1][1].push(k)});return G.map(([n,l])=>`<div class="chips"><span class="lbl">${n}</span>${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div>`).join('')})()}
+      ${(()=>{const G=V3_POSES_G.map(([n,l])=>[n,l.slice()]),usados=new Set(G.flatMap(g=>g[1]));Object.keys(V3_POSES).forEach(k=>{if(!usados.has(k))G[G.length-1][1].push(k)});return G.map(([n,l],gi)=>gi<3?`<div class="chips"><span class="lbl">${n}</span>${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div>`:`<details class="v3-d" ${l.includes(s.preset)?'open':''}><summary>${n} (${l.length})</summary><div class="chips">${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div></details>`).join('')})()}
       <details class="v3-d" open><summary>Torso y cabeza</summary>${v3Sp('Inclinar adelante','tb',s.pose.tb)}${v3Sp('Girar torso','tt',s.pose.tt)}${v3Sp('Ladear torso','tl',s.pose.tl)}${v3Sp('Cadera: giro','py',s.pose.py)}${v3Sp('Cadera: ladeo','pz',s.pose.pz)}${v3Sp('Cabeza: asentir','hn',s.pose.hn)}${v3Sp('Cabeza: girar','hy',s.pose.hy)}${v3Sp('Cabeza: ladear','hl',s.pose.hl)}</details>
       ${[['L','Brazo izquierdo'],['R','Brazo derecho']].map(([l,n])=>`<details class="v3-d"><summary>${n}</summary>${v3Sp('Adelante / atrás','a'+l+'s',s.pose['a'+l+'s'])}${v3Sp('Abrir al costado','a'+l+'p',s.pose['a'+l+'p'])}${v3Sp('Giro del brazo','a'+l+'r',s.pose['a'+l+'r'])}${v3Sp('Doblar codo','a'+l+'e',s.pose['a'+l+'e'])}</details>`).join('')}
       ${[['L','Pierna izquierda'],['R','Pierna derecha']].map(([l,n])=>`<details class="v3-d"><summary>${n}</summary>${v3Sp('Adelante / atrás','l'+l+'s',s.pose['l'+l+'s'])}${v3Sp('Abrir al costado','l'+l+'p',s.pose['l'+l+'p'])}${v3Sp('Doblar rodilla','l'+l+'k',s.pose['l'+l+'k'])}</details>`).join('')}
@@ -10337,7 +10440,8 @@ document.addEventListener('input',e=>{
   if(t.dataset.b){const p=S.P[S.cur];if(!p)return;
     setPath(p,t.dataset.b,t.type==='checkbox'?t.checked:t.value);dirToca(p,t.dataset.b);
     if(t.dataset.b.startsWith('mood.tres'))p.mood.palabras=p.mood.tres.filter(Boolean).join(', ');
-    dxVivo(p);mapaVivo(p);if(t.dataset.b.startsWith('mood.paleta'))escRefresca(p);
+    if(t.dataset.b.startsWith('mood.paleta')){p.mood.paletaPropia=true;marcar();if(t.type==='color')t.parentElement.style.background=t.value;clearTimeout(V3.palT);V3.palT=setTimeout(()=>{const q=S.P[S.cur];if(!q)return;dxVivo(q);mapaVivo(q);escDiferido(q);const sg=$('#seis');if(sg)sg.innerHTML=seisHTML(q)},350);return}
+    dxVivo(p);mapaVivo(p);
     if(t.dataset.b==='tipo'&&/Proyecto completo/.test(t.value)&&!(p.grupos||[]).length)p.grupos=[...GRUPOS_MUNDO];
     if(t.dataset.b.startsWith('mood.paleta'))p.mood.paletaPropia=true;
     marcar();
@@ -10429,6 +10533,9 @@ async function accion(a,el){
       const partes=[pick('forma')||pick('cultura'),pick('material'),pick('luz')||pick('emocion')].filter(Boolean);
       if(partes.length<2){toast('Agrega más keywords para combinar');return}
       const t=$('#f-bq');if(t){t.value=partes.join(' ');t.focus()}break}
+    case 'pal-arm':{const base=S.palBase||p.mood.paleta[0]||'#c8323c';p.mood.paletaAnt=[...p.mood.paleta];p.mood.paleta=palArmonia(ds.k,base);p.mood.paletaPropia=true;marcar();renderMain();toast('Paleta aplicada: '+(PAL_ARM.find(a=>a[0]===ds.k)?.[1]||''));break}
+    case 'pal-azar':{S.palBase=hslHex(Math.random()*360,.5+Math.random()*.35,.4+Math.random()*.2);renderMain();break}
+    case 'pal-ant':{if(p.mood.paletaAnt?.length){const x=p.mood.paleta;p.mood.paleta=p.mood.paletaAnt;p.mood.paletaAnt=x;marcar();renderMain()}break}
     case 'pal-add':p.mood.paleta.push('#888888');marcar();renderMain();break;
     case 'pal-del':p.mood.paleta.splice(+ds.i,1);marcar();renderMain();break;
     case 'unl':$('#overlay').innerHTML='';S.unlK=ds.k;S.vista='desatorar';render();window.scrollTo({top:0});break;
