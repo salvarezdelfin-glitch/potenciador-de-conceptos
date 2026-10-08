@@ -694,6 +694,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .des-pasos{display:flex;flex-direction:column;gap:8px}.des-p{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;background:var(--bg)}.des-p span{flex:1}.des-p small{display:block;color:var(--ink2);margin-top:2px;line-height:1.4}.des-p.ok{opacity:.6}.des-p input{margin-top:3px}
 .rl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;align-items:start}.rl-box{position:relative;display:inline-block;max-width:100%}.rl-box canvas{width:100%;height:auto;display:block;border-radius:8px;background:#000}.rl-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:17px;cursor:grab;touch-action:none;box-shadow:0 0 0 2px rgba(0,0,0,.5);color:#000;user-select:none}.rl-panel{display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}.rl-panel>*{flex:none}
 .aj-cands{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:6px 12px;overflow:auto}.aj-c{border:2px solid var(--line2);border-radius:12px;background:var(--surface);padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink)}.aj-c.on{border-color:var(--accent)}.aj-c canvas{display:block;width:clamp(96px,17vw,150px);height:auto;border-radius:8px}
+.bib-ov{position:fixed;inset:0;z-index:10000;background:var(--bg,#101216);display:flex;flex-direction:column;color:var(--ink,#eee)}.bib-top,.bib-bar{padding:10px 14px}.bib-bar{display:flex;flex-direction:column;gap:8px}.bib-prog{padding:0 14px}.bib-grid{flex:1;overflow:auto;padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;align-content:start}.bib-c{display:flex;flex-direction:column;gap:4px;align-items:center}.bib-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:zoom-in;background:#1b1d22}.bib-b{display:flex;gap:4px}.bib-vis,.bib-prac{align-items:center;justify-content:center;background:#000}.bib-vis img,.bib-prac>img{max-width:100%;max-height:100%;object-fit:contain}.bib-prac>img{max-height:calc(100% - 90px)}.bib-hud{position:absolute;left:0;right:0;bottom:0;padding:10px 16px;background:rgba(0,0,0,.7);display:flex;flex-direction:column;gap:6px}.bib-cfg{display:flex;flex-direction:column;gap:12px;align-items:center;padding:20px;text-align:center}
 .v3-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 body.arrastrando,body.arrastrando *{-webkit-user-select:none!important;user-select:none!important}
 .esc-r,input[type=range],input[type=color]{-webkit-user-select:none;user-select:none}.rl-mat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.rl-sw{width:22px;height:22px;border-radius:5px;border:1px solid var(--line2);flex:none}@media(max-width:900px){.rl-wrap{grid-template-columns:1fr}.rl-panel{max-height:none}}
@@ -1043,7 +1044,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muz13j72').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muz39tk9').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9438,6 +9439,85 @@ function ajPerdidaKp(m,T,v,v0){const J=ajJuntas(m,ajPoseDe(v),v[v.length-1]),ks=
 function ajAjustaKp(m,T,init,opt={}){const rg=AJ_K.map(k=>V3_RANGOS[k]).concat([[-180,180]]),cl=v=>v.map((x,i)=>Math.max(rg[i][0],Math.min(rg[i][1],x))),v0=cl(init);let v=v0.slice(),f=ajPerdidaKp(m,T,v,v0);
   for(const pf of [20,10,5,2.5,1.2]){for(let it=0;it<4;it++){let mejoro=false;for(let j=0;j<v.length;j++){const sc=j===v.length-1?pf*1.5:pf*(rg[j][1]-rg[j][0])/120*1.2;for(const sg of [1,-1]){const u=v.slice();u[j]+=sg*sc;const w=cl(u),g=ajPerdidaKp(m,T,w,v0);if(g<f-1e-7){f=g;v=w;mejoro=true}}}if(!mejoro)break}}
   return {loss:f,pose:ajPoseDe(v),yaw:v[v.length-1]}}
+/* ============ Biblioteca de fotos de referencia ============
+   Tus fotos se quedan en tu computadora. Aquí solo se guarda, por cada una, la pose que se leyó y una miniatura chica (en este navegador). */
+const BIB={rec:[],cargada:false,job:null,handles:{},files:{},ui:{orden:'recientes',carpeta:'',tag:'',fav:false,n:60,esp:true}};
+const bibDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('cdc-biblio',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('poses',{keyPath:'id'});d.createObjectStore('handles')};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const bibTx=async(st,modo,fn)=>{const d=await bibDB();return new Promise((ok,no)=>{const t=d.transaction(st,modo),r=fn(t.objectStore(st));t.oncomplete=()=>ok(r?.result);t.onerror=()=>no(t.error)})};
+async function bibCarga(){if(BIB.cargada)return BIB.rec;BIB.rec=(await bibTx('poses','readonly',s=>s.getAll()))||[];BIB.cargada=true;
+  try{const ks=await bibTx('handles','readonly',s=>s.getAllKeys());for(const k of ks)BIB.handles[k]=await bibTx('handles','readonly',s=>s.get(k))}catch{}try{navigator.storage?.persist?.()}catch{}return BIB.rec}
+/* etiquetas sencillas a partir de los ángulos */
+function bibEtiquetas(P){const t=[],k=(a,b)=>Math.max(P[a]||0,P[b]||0),kn=((P.lLk||0)+(P.lRk||0))/2;
+  if(k('aLs','aRs')>120)t.push('brazos arriba');if(k('aLs','aRs')>70&&Math.min(P.aLe||0,P.aRe||0)<45)t.push('brazos extendidos');
+  if(kn>70&&Math.max(P.lLs||0,P.lRs||0)>60)t.push('sentado');else if(kn>85)t.push('agachado');else if(kn<30)t.push('de pie');
+  if(Math.abs((P.lLs||0)-(P.lRs||0))>35)t.push('en paso');if((P.tb||0)>25)t.push('inclinado');if(Math.abs(P.tt||0)>25||Math.abs(P.py||0)>25)t.push('torsión');return t}
+const bibTagsTodos=['de pie','sentado','agachado','en paso','inclinado','torsión','brazos arriba','brazos extendidos'];
+async function bibBitmap(file,max=768){const b=file,t=await createImageBitmap(b),k=Math.min(1,max/Math.max(t.width,t.height)),bm=await createImageBitmap(b,{resizeWidth:Math.max(8,Math.round(t.width*k)),resizeHeight:Math.max(8,Math.round(t.height*k)),resizeQuality:'high'});t.close();return bm}
+function bibThumb(bm){const W=96,H=128,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');g.fillStyle='#1b1d22';g.fillRect(0,0,W,H);const k=Math.min(W/bm.width,H/bm.height);g.drawImage(bm,(W-bm.width*k)/2,(H-bm.height*k)/2,bm.width*k,bm.height*k);return cv.toDataURL('image/jpeg',.62)}
+/* lee la pose de una foto (la persona más grande) */
+function bibLee(bm,det,m){const r=det.detect(bm);if(!r.landmarks?.length)return null;let mi=0,ma=-1;r.landmarks.forEach((L,i)=>{const ys=L.map(q=>q.y),h=Math.max(...ys)-Math.min(...ys);if(h>ma){ma=h;mi=i}});
+  const o=ajObjetivoFoto(r,mi,bm);if(!o)return null;const conf=['hombroL','hombroR','caderaL','caderaR','rodL','rodR'].reduce((a,k)=>a+(r.landmarks[mi][AJ_MP[k]].visibility??1),0)/6;
+  const T=ajPreparaTinta(o.pts,{kp:o.kp,kp3:o.kp3,wk:1,w3:1});let f={pose:o.init.pose,yaw:o.init.giro};if(T){T.reg=.05;f=ajAjustaKp(m,T,ajVec({...V3_POSES['De pie'],...o.init.pose},o.init.giro))}
+  const pose={};for(const k of AJ_K)pose[k]=Math.round(f.pose[k]||0);return {pose,yaw:Math.round(f.yaw),conf:Math.round(conf*100)/100}}
+async function bibRecorre(dir,ruta=''){const out=[];for await(const [n,h] of dir.entries()){if(h.kind==='directory')out.push(...await bibRecorre(h,ruta+n+'/'));else if(/\.(jpe?g|png|webp)$/i.test(n))out.push({ruta:ruta+n,h})}return out}
+async function bibImporta(items,etiqueta){if(BIB.job)return;await bibCarga();const ya=new Set(BIB.rec.map(r=>r.id)),job=BIB.job={total:items.length,hechos:0,nuevos:0,sinPose:0,t0:Date.now(),cancelar:false,etiqueta};
+  try{const det=await v3dDetector(),cu=Object.keys(V3_CACHE)[0]||'michelle';if(!V3_CACHE[cu])await v3dListoCarga(cu);const m=v3dInstancia(cu);
+    for(const it of items){if(job.cancelar)break;job.hechos++;let file;try{file=it.h?await it.h.getFile():it.file}catch{continue}
+      const id=etiqueta+'/'+it.ruta+'|'+file.size+'|'+file.lastModified;if(it.file)BIB.files[etiqueta+'/'+it.ruta]=file;if(ya.has(id)){bibProgreso();continue}
+      let rec={id,carpeta:etiqueta,ruta:it.ruta,pose:null,yaw:0,conf:0,thumb:'',fav:false,tags:[],ts:Date.now()};
+      try{const bm=await bibBitmap(file),r=bibLee(bm,det,m);rec.thumb=bibThumb(bm);bm.close?.();if(r){Object.assign(rec,r);rec.tags=bibEtiquetas(r.pose)}else job.sinPose++}catch(e){job.sinPose++}
+      await bibTx('poses','readwrite',s=>s.put(rec));BIB.rec.push(rec);job.nuevos++;bibProgreso();await new Promise(r=>setTimeout(r))}
+  }catch(e){console.error(e);toast('La biblioteca se detuvo: '+(e?.message||'error'))}
+  BIB.job=null;bibProgreso(true)}
+function bibProgreso(fin){const el=$('#bib-prog');const j=BIB.job;if(!el)return;if(!j||fin){el.innerHTML='';bibPinta();return}
+  const seg=(Date.now()-j.t0)/1000,rest=j.hechos>3?Math.max(0,Math.round(seg/j.hechos*(j.total-j.hechos)/60)):null;
+  el.innerHTML=`<div class="bar"><i style="width:${Math.round(j.hechos/j.total*100)}%"></i></div><div class="prow"><span class="muted">Analizando ${j.hechos} de ${j.total}${rest!=null?' · faltan ~'+rest+' min':''} · ${j.nuevos} nuevas${j.sinPose?' · '+j.sinPose+' sin persona clara':''}</span><span style="flex:1"></span><button class="btn sm ghost" data-bib="parar">Pausar</button></div>`}
+/* parecido entre dos poses (ángulos relativos al cuerpo, sin importar desde dónde se ve) */
+function bibDist(a,b){let s=0;for(const k of AJ_K){const w=/^(tb|tt|tl|py|pz|hn|hy|hl|aLr|aRr)$/.test(k)?.6:1,rg=(V3_RANGOS[k][1]-V3_RANGOS[k][0])/2;s+=w*(((a[k]||0)-(b[k]||0))/rg)**2}return Math.sqrt(s/AJ_K.length)}
+const bibEspejo=P=>{const o=v3dEspeja(P);for(const q in o)if(V3_RANGOS[q])o[q]=clamp(o[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);return o};
+function bibLista(){const u=BIB.ui;let L=BIB.rec.filter(r=>r.pose&&(!u.carpeta||r.carpeta===u.carpeta)&&(!u.tag||(r.tags||[]).includes(u.tag))&&(!u.fav||r.fav)).map(r=>({r,d:0,esp:false}));
+  if(u.orden==='parecidas'){const P={...V3_POSES['De pie'],...S.v3d.pose};L.forEach(x=>{const d1=bibDist(P,x.r.pose);let d2=9;if(u.esp)d2=bibDist(P,bibEspejo(x.r.pose));x.d=Math.min(d1,d2);x.esp=d2<d1});L.sort((a,b)=>a.d-b.d)}
+  else if(u.orden==='azar'){L.sort(()=>Math.random()-.5)}else L.sort((a,b)=>b.r.ts-a.r.ts);return L}
+async function bibArchivo(rec){const f=BIB.files[rec.carpeta+'/'+rec.ruta];if(f)return f;const h=BIB.handles[rec.carpeta];if(!h)return null;
+  let ok=(await h.queryPermission({mode:'read'}))==='granted';if(!ok)ok=(await h.requestPermission({mode:'read'}))==='granted';if(!ok)return null;
+  let d=h;const p=rec.ruta.split('/');for(const q of p.slice(0,-1))d=await d.getDirectoryHandle(q);return (await d.getFileHandle(p[p.length-1])).getFile()}
+function bibAplica(x){const rec=x.r||x,esp=!!x.esp,pose=esp?bibEspejo(rec.pose):rec.pose,S3=S.v3d;S3.pose={...V3_POSES['De pie'],...pose};S3.preset='Foto de referencia';S3.giro.y=clamp(esp?-rec.yaw:rec.yaw,-180,180);v3dPose();v3dPanel();toast('Pose de la foto puesta en el maniquí')}
+function bibPinta(){const ov=$('#bib-ov');if(!ov)return;const u=BIB.ui,L=bibLista(),tot=BIB.rec.filter(r=>r.pose).length,carp=[...new Set(BIB.rec.map(r=>r.carpeta))];
+  $('#bib-top').innerHTML=`<b>Biblioteca de fotos de referencia</b> <span class="muted">${tot} con pose · ${BIB.rec.length-tot} sin persona clara · en este navegador</span>`;
+  $('#bib-bar').innerHTML=`<div class="prow"><button class="btn sm pri" data-bib="agregar">＋ Agregar carpeta</button><button class="btn sm ${u.orden==='parecidas'?'pri':''}" data-bib="orden:parecidas" title="Ordena las fotos por parecido con la pose actual del maniquí">Parecidas a mi pose</button><button class="btn sm ${u.orden==='recientes'?'pri':''}" data-bib="orden:recientes">Recientes</button><button class="btn sm ${u.orden==='azar'?'pri':''}" data-bib="orden:azar">Al azar</button><button class="btn sm" data-bib="practica">Práctica de gesto</button><span style="flex:1"></span><button class="btn sm ghost" data-bib="cerrar">Cerrar</button></div>
+    <div class="chips"><button class="ch xs ${!u.carpeta?'on':''}" data-bib="carpeta:">Todas</button>${carp.map(c=>`<button class="ch xs ${u.carpeta===c?'on':''}" data-bib="carpeta:${esc(c)}">${esc(c)}</button>`).join('')}<button class="ch xs ${u.fav?'on':''}" data-bib="fav">★ Favoritas</button>${u.orden==='parecidas'?`<button class="ch xs ${u.esp?'on':''}" data-bib="esp" title="Cuenta también las fotos que se parecen a tu pose al espejo">Incluir espejo</button>`:''}</div>
+    <div class="chips">${bibTagsTodos.map(t=>`<button class="ch xs ${u.tag===t?'on':''}" data-bib="tag:${t}">${t}</button>`).join('')}</div>`;
+  $('#bib-grid').innerHTML=L.length?L.slice(0,u.n).map((x,i)=>`<div class="bib-c" data-i="${i}"><img src="${x.r.thumb}" alt="" loading="lazy" data-bib="ver:${i}"><div class="bib-b"><button class="btn xs" data-bib="poner:${i}" title="Poner esta pose en el maniquí">Maniquí</button><button class="btn xs ghost" data-bib="fav:${i}">${x.r.fav?'★':'☆'}</button></div>${u.orden==='parecidas'?`<small class="muted">${Math.round(100-x.d*100)}%${x.esp?' · espejo':''}</small>`:''}</div>`).join('')+(L.length>u.n?`<button class="btn" data-bib="mas">Ver más (${L.length-u.n})</button>`:''):`<p class="muted" style="padding:20px">${BIB.rec.length?'Ninguna foto cumple ese filtro.':'Todavía no hay fotos. Toca «Agregar carpeta» y elige la carpeta donde tienes tus referencias.'}</p>`;
+  bibPinta.L=L}
+async function bibAbre(){await bibCarga();$('#bib-ov')?.remove();const ov=document.createElement('div');ov.id='bib-ov';ov.className='bib-ov';ov.innerHTML='<div id="bib-top" class="bib-top"></div><div id="bib-bar" class="bib-bar"></div><div id="bib-prog" class="bib-prog"></div><div id="bib-grid" class="bib-grid"></div><input type="file" id="bib-file" webkitdirectory multiple hidden>';document.body.append(ov);bibPinta();bibProgreso();
+  ov.onclick=async e=>{const b=e.target.closest('[data-bib]');if(!b)return;const [a,x]=b.dataset.bib.split(':'),u=BIB.ui,L=bibPinta.L||[];
+    if(a==='cerrar'){ov.remove();return}if(a==='orden'){u.orden=x;u.n=60;bibPinta();return}if(a==='carpeta'){u.carpeta=x;u.n=60;bibPinta();return}if(a==='tag'){u.tag=u.tag===x?'':x;u.n=60;bibPinta();return}
+    if(a==='esp'){u.esp=!u.esp;bibPinta();return}if(a==='mas'){u.n+=60;bibPinta();return}if(a==='parar'){if(BIB.job)BIB.job.cancelar=true;return}
+    if(a==='fav'&&x===undefined){u.fav=!u.fav;bibPinta();return}
+    if(a==='fav'){const r=L[+x]?.r;if(r){r.fav=!r.fav;await bibTx('poses','readwrite',s=>s.put(r));bibPinta()}return}
+    if(a==='poner'){const it=L[+x];if(it){bibAplica(it);ov.remove()}return}
+    if(a==='ver'){const r=L[+x]?.r;if(r)bibVer(r);return}
+    if(a==='practica'){bibPractica(L.map(x=>x.r));return}
+    if(a==='agregar'){
+      if(window.showDirectoryPicker){try{const d=await window.showDirectoryPicker({mode:'read'}),etq=d.name;BIB.handles[etq]=d;try{await bibTx('handles','readwrite',s=>s.put(d,etq))}catch{}const items=await bibRecorre(d);if(!items.length){toast('No encontré fotos en esa carpeta');return}bibImporta(items,etq)}catch(e){if(e?.name!=='AbortError')toast('No pude abrir la carpeta')}}
+      else $('#bib-file').click()}};
+  $('#bib-file').onchange=e=>{const fs=[...e.target.files].filter(f=>/\.(jpe?g|png|webp)$/i.test(f.name));if(!fs.length)return;const raiz=(fs[0].webkitRelativePath||'').split('/')[0]||'Carpeta';bibImporta(fs.map(f=>({ruta:(f.webkitRelativePath||f.name).split('/').slice(1).join('/')||f.name,file:f})),raiz);e.target.value=''}}
+async function bibVer(rec){let f=null;try{f=await bibArchivo(rec)}catch{}if(!f){toast('No tengo acceso a la foto original: toca «Agregar carpeta» y elige otra vez esa carpeta');return}
+  const u=URL.createObjectURL(f),v=document.createElement('div');v.className='bib-ov bib-vis';v.innerHTML=`<img src="${u}" alt=""><button class="btn sm" style="position:absolute;top:12px;right:12px">Cerrar</button>`;v.onclick=()=>{URL.revokeObjectURL(u);v.remove()};document.body.append(v)}
+/* práctica de gesto: una foto tras otra con cronómetro */
+async function bibPractica(lista){const L=lista.slice().sort(()=>Math.random()-.5).slice(0,60);if(!L.length){toast('No hay fotos con ese filtro');return}
+  const v=document.createElement('div');v.className='bib-ov bib-prac';document.body.append(v);let seg=60,i=0,hechas=0,t=null,corre=true,u=null;const t0=Date.now();
+  const cierra=()=>{clearInterval(t);if(u)URL.revokeObjectURL(u);v.remove();document.removeEventListener('keydown',tecla);if(hechas){const lg=S.ajustes.practicaPoses=S.ajustes.practicaPoses||[];lg.push({fecha:hoyKey(),n:hechas,min:Math.round((Date.now()-t0)/60000)});marcarAj();toast('Sesión: '+hechas+' poses · '+Math.max(1,Math.round((Date.now()-t0)/60000))+' min')}};
+  const tecla=e=>{if(e.key==='Escape')cierra();else if(e.key===' '||e.key==='ArrowRight'){e.preventDefault();sig()}};document.addEventListener('keydown',tecla);
+  const inicio=()=>{v.innerHTML=`<div class="bib-cfg"><h2>Práctica de gesto</h2><p class="muted">${L.length} fotos al azar. Dibuja rápido: línea de acción, ritmo y proporciones.</p><div class="chips">${[30,60,120,300].map(s=>`<button class="ch ${s===seg?'on':''}" data-t="${s}">${s<60?s+' s':s/60+' min'}</button>`).join('')}</div><div class="prow"><button class="btn pri" data-go="1">Empezar</button><button class="btn ghost" data-x="1">Cancelar</button></div></div>`;
+    v.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.t){seg=+b.dataset.t;inicio()}else if(b.dataset.go)muestra();else if(b.dataset.x)cierra()}};
+  const sig=()=>{hechas++;i++;if(i>=L.length)return fin();muestra()};
+  const fin=()=>{clearInterval(t);v.innerHTML=`<div class="bib-cfg"><h2>¡Listo!</h2><p>${hechas} poses · ${Math.max(1,Math.round((Date.now()-t0)/60000))} min</p><div class="prow"><button class="btn pri" data-x="1">Cerrar</button></div></div>`;v.onclick=e=>{if(e.target.closest('[data-x]'))cierra()}};
+  const muestra=async()=>{clearInterval(t);const r=L[i];let f=null;try{f=await bibArchivo(r)}catch{}if(u){URL.revokeObjectURL(u);u=null}let falta=seg;
+    v.innerHTML=`${f?`<img src="${(u=URL.createObjectURL(f))}" alt="">`:`<img src="${r.thumb}" alt="" style="image-rendering:auto">`}<div class="bib-hud"><div class="bar"><i id="bp-b" style="width:100%"></i></div><div class="prow"><b id="bp-t">${falta} s</b><span class="muted">${i+1} de ${L.length}</span><span style="flex:1"></span><button class="btn sm" data-p="1">Pausa</button><button class="btn sm pri" data-n="1">Siguiente</button><button class="btn sm ghost" data-x="1">Terminar</button></div></div>`;
+    v.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.n)sig();else if(b.dataset.x)cierra();else if(b.dataset.p){corre=!corre;b.textContent=corre?'Pausa':'Seguir'}};
+    t=setInterval(()=>{if(!corre)return;falta--;const tt=$('#bp-t'),bb=$('#bp-b');if(tt)tt.textContent=falta+' s';if(bb)bb.style.width=Math.max(0,falta/seg*100)+'%';if(falta<=0)sig()},1000)};
+  inicio()}
 function v3dLoomis(T,mat){const G=new T.Group(),W=.36,cl=[new T.Plane(new T.Vector3(-1,0,0),W),new T.Plane(new T.Vector3(1,0,0),W)],m2=mat.clone();m2.clippingPlanes=cl;m2.side=T.DoubleSide;
   /* cráneo: esfera con los dos lados cortados (planos de Loomis) */
   G.add(new T.Mesh(new T.SphereGeometry(.5,56,36),m2));
@@ -9650,7 +9730,8 @@ function v3dNeutra(todo){const s=S.v3d;s.pose=V3_NEUTRA();s.preset='De pie';s.gi
   if(todo){s.luz=luz3dPre('suave');s.luzN='Suave';s.lente=50;s.fondo='oscuro'}
   v3dPose();v3dGiro();if(V3.bones?.length)v3dHuesos();if(todo){v3dLuz();v3dEscena();v3dEncuadra()}v3dPanel()}
 function v3dTabPoses(s){const L=(S.ajustes.poses3d||[]).slice().sort((a,b)=>b.ts-a.ts);
-  return `<div class="v3-g"><b>Guardar lo que ves</b><p class="hint" style="margin:0">Guarda la pose junto con el cuerpo, las luces y el lente, para volver a ella cuando quieras. Se queda en tu cuenta.</p>
+  return `<div class="v3-g"><b>Biblioteca de fotos de referencia</b><p class="hint" style="margin:0">Tus fotos de modelos posando se quedan en tu computadora: aquí solo se guarda la pose de cada una. Busca fotos parecidas a tu pose, pon la pose de una foto en el maniquí y practica gesto con cronómetro.</p><div class="prow"><button class="btn pri sm" data-act="v3d-bib">Abrir la biblioteca${BIB.rec.length?' ('+BIB.rec.length+')':''}</button></div></div>
+  <div class="v3-g"><b>Guardar lo que ves</b><p class="hint" style="margin:0">Guarda la pose junto con el cuerpo, las luces y el lente, para volver a ella cuando quieras. Se queda en tu cuenta.</p>
     <input type="text" id="v3d-np" data-v3txt="nombrePose" value="${esc(s.nombrePose||'')}" placeholder="Ej. Dios Jaguar en guardia" aria-label="Nombre de la pose">
     <div class="prow"><button class="btn pri sm" data-act="v3d-pose-guarda">★ Guardar pose</button><button class="btn sm" data-act="v3d-neutra">↺ Pose neutra</button><button class="btn sm" data-act="v3d-todo-neutro">↺ Todo neutro</button></div></div>
   ${L.length?`<div class="v3-g"><b>Mis poses (${L.length})</b>${L.map(x=>`<div class="v3-pg"><div><b>${esc(x.nombre)}</b><br><small class="muted">${esc(V3_CUERPOS[x.cuerpo]?.n||x.cuerpo||'')} · luz ${esc(x.luzN||'propia')} · ${fecha(x.ts)}</small></div><div class="prow"><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}">Cargar todo</button><button class="btn sm" data-act="v3d-pose-carga" data-id="${x.id}" data-solo="1">Solo la pose</button><button class="btn ghost sm danger" data-act="v3d-pose-borra" data-id="${x.id}">${S.confirmLi==='v3'+x.id?'¿Borrar?':'✕'}</button></div></div>`).join('')}</div>`:'<p class="hint">Todavía no guardas ninguna. Pon el cuerpo como quieras, ponle nombre y toca «Guardar pose».</p>'}`}
@@ -10388,6 +10469,7 @@ async function accion(a,el){
     case 'v3d-cerrar':v3dCerrar();break;
     case 'v3d-tab':S.v3d.tab=ds.k;v3dPanel();break;
     case 'v3d-loomis':{S.v3d.loomis=+ds.k;v3dModelo();v3dPanel();break}
+    case 'v3d-bib':bibAbre();break;
     case 'v3d-fig':v3dFigSel(+ds.k);break;
     case 'v3d-fig-mas':v3dFigMas();break;
     case 'v3d-fig-menos':v3dFigMenos();break;
