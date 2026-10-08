@@ -526,10 +526,12 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .v3-d{border:1px solid var(--line);border-radius:10px;padding:6px 8px}.v3-d summary{cursor:pointer;font-weight:600;font-size:13px}.v3-g{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:8px}
 .bd-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 8px}.bd-sep{width:1px;height:20px;background:var(--line2);margin:0 4px}
 .bd-lay{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:start}@media(max-width:900px){.bd-lay{grid-template-columns:minmax(0,1fr)}.bd-wrap{height:62vh}}
-.bd-wrap{position:relative;height:72vh;min-height:380px;background:#0f1014;background-image:radial-gradient(circle,rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--line2);border-radius:12px;overflow:hidden;touch-action:none;cursor:grab}
+.bd-wrap{position:relative;height:72vh;min-height:380px;background:#0e0f13;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:40px 40px;border:2px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;touch-action:none;cursor:grab}
 .bd-world{position:absolute;left:0;top:0;transform-origin:0 0}.bd-it{position:absolute;cursor:move;user-select:none;-webkit-user-select:none;line-height:0}
 .bd-it img{width:100%;height:auto;display:block;border-radius:3px;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.45)}
 .bd-it.sel{outline:2px solid var(--accent);outline-offset:3px}.bd-h{position:absolute;right:-9px;bottom:-9px;width:18px;height:18px;border-radius:50%;background:var(--accent);border:2px solid #0b0c0f;cursor:nwse-resize;line-height:0}
+.bd-fl{position:absolute;top:12px;right:12px;display:flex;gap:2px;padding:4px;border-radius:12px;background:rgba(24,26,32,.92);border:1px solid var(--line2);z-index:5;cursor:default}.bd-fl button,.bd-fl label{width:36px;height:36px;border:0;border-radius:9px;background:transparent;color:var(--ink);font-size:17px;display:grid;place-items:center;cursor:pointer}.bd-fl button:hover,.bd-fl label:hover{background:rgba(255,255,255,.1)}.bd-zp{position:absolute;left:14px;bottom:14px;padding:3px 9px;border-radius:999px;background:rgba(24,26,32,.9);border:1px solid var(--line2);font-size:12px;color:var(--ink2);z-index:5}
+.bd-pal{line-height:1.2;background:#1b1d23;border-radius:10px;padding:10px;box-shadow:0 4px 18px rgba(0,0,0,.45)}.bd-sw{display:flex;height:64px;border-radius:6px;overflow:hidden}.bd-sw i{flex:1}.bd-pal small{display:block;margin-top:6px;color:var(--ink2);font-size:12px}
 .bd-tx{line-height:1.3;font-family:var(--display);font-weight:700;color:var(--ink);white-space:pre-wrap;word-break:break-word}.bd-t{cursor:move}
 .bd-vacio{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;text-align:center;color:var(--ink2);padding:20px;pointer-events:none}.bd-vacio .btn{pointer-events:auto}
 .gd-lay{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}.gd-cv{max-width:100%;height:auto;border-radius:10px;background:#0b0c0f;flex:1 1 320px;min-width:0}.gd-w{display:flex;flex-direction:column;gap:6px;align-items:center;max-width:240px}
@@ -1044,7 +1046,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzr1435').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muzr5q3i').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -8730,16 +8732,19 @@ document.addEventListener('change',e=>{const t=e.target;
    Lienzo infinito con tus referencias del moodboard puestas donde quieras, notas de texto, ordenar automático y descarga.
    p.board.items: {id,t:'img'|'txt',ref,x,y,w,z,text,fs,auto}. Las imágenes se referencian por id: no se duplican. */
 const BD={drag:null};
-function bdItems(p){const ids=new Set((p.refs||[]).map(r=>r.id));return ((p.board&&p.board.items)||[]).filter(i=>i.t==='txt'||ids.has(i.ref))}
-const bdRef=(p,i)=>(p.refs||[]).find(r=>r.id===i.ref);
+function bdItems(p){const ids=new Set((p.refs||[]).map(r=>r.id)),pz=new Set((p.piezas||[]).map(r=>r.id));return ((p.board&&p.board.items)||[]).filter(i=>i.t==='txt'||i.t==='pal'||(i.pz?pz.has(i.pz):ids.has(i.ref)))}
+const bdRef=(p,i)=>i.pz?(p.piezas||[]).find(r=>r.id===i.pz):(p.refs||[]).find(r=>r.id===i.ref);
 const bdZmax=p=>Math.max(0,...((p.board&&p.board.items)||[]).map(x=>x.z||0));
 function bdCentro(){const wr=$('#bd-wrap'),v=S.bdView;if(!wr||!v)return {x:300,y:200};return {x:(wr.clientWidth/2-v.x)/v.k,y:(wr.clientHeight/2-v.y)/v.k}}
 /* el tablero se llena solo: cada referencia nueva del proyecto (búsqueda, subida, render 3D, lámina…) aparece en el tablero, en la columna más corta. Lo que quitas a mano no vuelve. */
 function bdAutoLlena(p){if(!p||p.board?.auto===false)return 0;const B=p.board=p.board||{items:[]};B.items=B.items||[];if(B.desde===undefined)B.desde=B.items.length?Date.now():0;
-  const en=new Set(B.items.filter(i=>i.t==='img').map(i=>i.ref)),qt=new Set(B.quitados||[]),falt=(p.refs||[]).filter(r=>refSrc(r)&&!en.has(r.id)&&!qt.has(r.id)&&(r.creado||0)>=B.desde);if(!falt.length)return 0;
+  const en=new Set(B.items.filter(i=>i.t==='img'&&i.ref).map(i=>i.ref)),enz=new Set(B.items.filter(i=>i.pz).map(i=>i.pz)),qt=new Set(B.quitados||[]),falt=(p.refs||[]).filter(r=>refSrc(r)&&!en.has(r.id)&&!qt.has(r.id)&&(r.creado||0)>=B.desde),
+    faltz=(p.piezas||[]).filter(z=>(z.asset||z.src)&&!enz.has(z.id)&&!qt.has('pz:'+z.id)&&(z.creado||0)>=B.desde),palFalta=(p.mood?.paleta||[]).filter(Boolean).length>=2&&!B.items.some(i=>i.t==='pal')&&!qt.has('pal');if(!falt.length&&!faltz.length&&!palFalta)return 0;
   const W=240,G=16,C=6,alt=Array(C).fill(0);for(const i of B.items){if(i.t!=='img')continue;const c=clamp(Math.round((i.x||0)/(W+G)),0,C-1),r=bdRef(p,i),asp=r?.h&&r?.w?r.h/r.w:.75;alt[c]=Math.max(alt[c],(i.y||0)+asp*(i.w||W)+G)}
-  for(const r of falt){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=r.h&&r.w?r.h/r.w:.75;B.items.push({id:uid(),t:'img',ref:r.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}return falt.length}
-function bdAdd(p,list){p.board=p.board||{items:[]};if(p.board.quitados)p.board.quitados=p.board.quitados.filter(q=>!list.some(it=>it.ref===q));const c=bdCentro();let k=0;
+  for(const r of falt){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=r.h&&r.w?r.h/r.w:.75;B.items.push({id:uid(),t:'img',ref:r.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}
+  for(const z of faltz){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=z.h&&z.w?z.h/z.w:.75;B.items.push({id:uid(),t:'img',pz:z.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}
+  if(palFalta){B.items.push({id:uid(),t:'pal',w:W,x:0,y:-150,z:bdZmax(p)+1})}return falt.length+faltz.length+(palFalta?1:0)}
+function bdAdd(p,list){p.board=p.board||{items:[]};if(p.board.quitados)p.board.quitados=p.board.quitados.filter(q=>!list.some(it=>it.ref===q||('pz:'+it.pz)===q));const c=bdCentro();let k=0;
   list.forEach(it=>{it.id=uid();it.z=bdZmax(p)+1;if(it.x==null){it.x=c.x-110+(k%6)*28;it.y=c.y-90+(k%6)*28}k++;p.board.items.push(it)})}
 const bdAsp=id=>{const e=document.querySelector('.bd-it[data-id="'+id+'"]');return e&&e.offsetWidth?e.offsetHeight/e.offsetWidth:.75};
 function bdOrdenar(p,m){if(!p.board)return;const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
@@ -8751,14 +8756,15 @@ function bdOrdenar(p,m){if(!p.board)return;const W=240,G=16;p.board.items=p.boar
   S.bdView=null}
 function bdBounds(p){const it=bdItems(p);if(!it.length)return null;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   it.forEach(i=>{const e=document.querySelector('.bd-it[data-id="'+i.id+'"]'),w=i.w||240,h=e?e.offsetHeight:w*.75;x0=Math.min(x0,i.x);y0=Math.min(y0,i.y);x1=Math.max(x1,i.x+w);y1=Math.max(y1,i.y+h)});return {x:x0-60,y:y0-60,w:x1-x0+120,h:y1-y0+120}}
-function bdApply(){const w=$('#bd-world'),v=S.bdView;if(w&&v)w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`}
+function bdApply(){const w=$('#bd-world'),v=S.bdView;if(w&&v){w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`;const z=$('#bd-zp');if(z)z.textContent=Math.round(v.k*100)+'%'}}
 function bdFit(){const p=S.P[S.cur],wr=$('#bd-wrap'),b=p&&bdBounds(p);if(!wr||!b)return;const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.05,Math.min(W/b.w,H/b.h)));S.bdView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
 let bdFitT=null;
 function bdInit(){if(!enTablero())return;const wr=$('#bd-wrap');if(!wr)return;
   if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(enTablero()&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
 function bdItemHTML(p,i){const sel=S.bdSel===i.id,st=`left:${i.x}px;top:${i.y}px;width:${i.w||240}px;z-index:${i.z||1}`;
   if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
-  const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||'Referencia')}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
+  if(i.t==='pal'){const pal=(p.mood?.paleta||[]).filter(Boolean);return `<div class="bd-it bd-pal ${sel?'sel':''}" data-id="${i.id}" style="${st}"><div class="bd-sw">${pal.map(h=>`<i style="background:${esc(h)}"></i>`).join('')}</div><small>Paleta · ${pal.length} colores</small>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
+  const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||(i.pz?'Boceto':'Referencia'))}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
 function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
   if(!s)return `<div class="box"><h3>Tu tablero</h3><p class="hint" style="margin:0">Arrastra una imagen para moverla; arrastra el fondo para desplazarte; rueda del ratón para acercar. Toca una imagen para escalarla (esquina), cambiarle el porqué o quitarla. Supr borra lo seleccionado.</p>
     <p class="hint" style="margin:0"><b>PureRef:</b> «ZIP para PureRef» trae tu tablero como una sola imagen y cada referencia por separado. Descomprime y arrastra la carpeta (o board.png) a PureRef, o usa «Copiar imagen» y pega con Ctrl+V. El archivo propio de PureRef (.pur) es un formato cerrado: no se puede generar desde aquí.</p>
@@ -8767,6 +8773,7 @@ function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
     <textarea data-bdt="${s.id}" style="min-height:90px" placeholder="Escribe tu nota">${esc(s.text||'')}</textarea>
     <label class="esc-r" style="max-width:220px"><span class="lbl">Tamaño de letra · ${s.fs||18}px</span><input type="range" data-bdfs="${s.id}" min="12" max="72" step="2" value="${s.fs||18}"></label>
     <div class="prow"><button class="btn sm" data-act="bd-front" data-id="${s.id}">Al frente</button><button class="btn sm danger" data-act="bd-del" data-id="${s.id}">Quitar</button></div></div>`;
+  if(s.t==='pal'||s.pz)return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>${s.pz?'Boceto del proyecto':'Paleta del proyecto'}</h3><button class="btn ghost sm" data-act="bd-sel" data-id="">Cerrar</button></div><p class="hint" style="margin:0">${s.pz?'Se trajo solo desde tus bocetos.':'Se actualiza sola cuando cambias la paleta en Mood.'}</p><label class="esc-r"><span class="lbl">Ancho · ${Math.round(s.w||240)}px</span><input type="range" data-bdw="${s.id}" min="60" max="1200" step="10" value="${Math.round(s.w||240)}"></label><div class="prow"><button class="btn sm" data-act="bd-front" data-id="${s.id}">Al frente</button><button class="btn sm danger" data-act="bd-del" data-id="${s.id}">Quitar del tablero</button></div></div>`;
   const r=bdRef(p,s);return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Referencia</h3><button class="btn ghost sm" data-act="bd-sel" data-id="">Cerrar</button></div>
     <label class="esc-r"><span class="lbl">¿Para qué sirve? (su porqué)</span><textarea id="bdp-${r.id}" data-ref="${r.id}" data-rk="porque" style="min-height:60px" placeholder="¿Qué tomo exactamente de ella?">${esc(r.porque||'')}</textarea></label>
     <label class="esc-r"><span class="lbl">Ancho · ${Math.round(s.w||240)}px</span><input type="range" data-bdw="${s.id}" min="60" max="1200" step="10" value="${Math.round(s.w||240)}"></label>
@@ -8783,11 +8790,12 @@ function vBoard(p){bdAutoLlena(p);const items=bdItems(p).slice().sort((a,b)=>(a.
     ${lista.length?`<div class="rm-mini" style="gap:6px">${lista.slice(0,80).map(r=>`<img ${imgAttrs(r)} alt="" data-act="bd-addone" data-id="${r.id}" title="${esc(etiquetaDe(r)||'Añadir')}" style="width:64px;height:64px">`).join('')}</div><p class="hint" style="margin:0">Toca una imagen para añadirla, o «Añadir» para traer todas las de la lista.</p>`:'<p class="muted" style="margin:0">Ya están todas en el tablero.</p>'}</div>`:''}
   <div class="bd-lay"><div><div class="bd-wrap" id="bd-wrap"><div class="bd-world" id="bd-world">${items.map(i=>bdItemHTML(p,i)).join('')}</div>
     ${items.length?'':`<div class="bd-vacio"><b>Tu tablero está vacío</b><span>Trae tus ${refs.length} referencias y ordénalas.</span><button class="btn pri" data-act="bd-addtodas" data-ord="mosaico">Traer todas en mosaico</button></div>`}
+    <div class="bd-fl"><label for="bd-file" title="Subir imágenes" aria-label="Subir imágenes">⬆</label><button data-act="bd-txt" title="Agregar texto" aria-label="Agregar texto">T</button><button data-act="bd-png" title="Descargar el tablero en PNG" aria-label="Descargar PNG">⤓</button><button data-act="bd-full" title="Pantalla completa" aria-label="Pantalla completa">⤢</button></div><div class="bd-zp" id="bd-zp">100%</div>
     <div class="rm-ctl"><button class="btn sm" data-act="bd-zoom" data-v="1.25" aria-label="Acercar">＋</button><button class="btn sm" data-act="bd-zoom" data-v="0.8" aria-label="Alejar">－</button><button class="btn sm" data-act="bd-fit">Ver todo</button></div></div></div>
     <div id="bd-panel">${bdPanelHTML(p)}</div></div>`}
 function bdSelect(id){const p=S.P[S.cur];S.bdSel=id||null;document.querySelectorAll('.bd-it').forEach(e=>{const on=e.dataset.id===id;e.classList.toggle('sel',on);const h=e.querySelector('.bd-h');if(on&&!h){const i=document.createElement('i');i.className='bd-h';i.setAttribute('aria-label','Cambiar tamaño');e.append(i)}else if(!on&&h)h.remove()});
   const pn=$('#bd-panel');if(pn&&p)pn.innerHTML=bdPanelHTML(p)}
-document.addEventListener('pointerdown',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr||e.button>0||e.target.closest('.rm-ctl,.bd-vacio'))return;const p=S.P[S.cur],v=S.bdView||(S.bdView={x:0,y:0,k:1}),h=e.target.closest('.bd-h'),el=e.target.closest('.bd-it'),m=el&&p?.board?.items.find(x=>x.id===el.dataset.id);
+document.addEventListener('pointerdown',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr||e.button>0||e.target.closest('.rm-ctl,.bd-vacio,.bd-fl,.bd-zp'))return;const p=S.P[S.cur],v=S.bdView||(S.bdView={x:0,y:0,k:1}),h=e.target.closest('.bd-h'),el=e.target.closest('.bd-it'),m=el&&p?.board?.items.find(x=>x.id===el.dataset.id);
   S.bdTocado=true;BD.drag={mode:h?'size':m?'move':'pan',id:m?.id,sx:e.clientX,sy:e.clientY,moved:false,ox:v.x,oy:v.y,x0:m?.x,y0:m?.y,w0:m?.w||240,el};
   if(m){m.z=bdZmax(p)+1;el.style.zIndex=m.z}});
 window.addEventListener('pointermove',e=>{const d=BD.drag;if(!d)return;const v=S.bdView,dx=e.clientX-d.sx,dy=e.clientY-d.sy;if(!d.moved&&Math.hypot(dx,dy)<4)return;d.moved=true;const p=S.P[S.cur],m=d.id&&p.board.items.find(x=>x.id===d.id);
@@ -8800,15 +8808,16 @@ window.addEventListener('pointerup',e=>{const d=BD.drag;if(!d)return;BD.drag=nul
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.bdView||(S.bdView={x:0,y:0,k:1}),k2=Math.max(.04,Math.min(3,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;S.bdTocado=true;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;bdApply()},{passive:false});
 document.addEventListener('keydown',e=>{if(!enTablero()||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
-  const p=S.P[S.cur],it0=p.board.items.find(i=>i.id===S.bdSel);if(it0?.ref)(p.board.quitados=p.board.quitados||[]).push(it0.ref);p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
+  const p=S.P[S.cur],it0=p.board.items.find(i=>i.id===S.bdSel),k0=it0?.pz?'pz:'+it0.pz:it0?.t==='pal'?'pal':it0?.ref;if(k0)(p.board.quitados=p.board.quitados||[]).push(k0);p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
 /* descargas: el tablero se dibuja con las mismas posiciones y tamaños que ves */
 async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0));if(!items.length)return null;
   const BM={};for(const i of items)if(i.t==='img'){try{BM[i.id]=await createImageBitmap(await blobDeRef(bdRef(p,i)))}catch{}}
-  const R=items.map(i=>{const e=document.querySelector('.bd-it[data-id="'+i.id+'"]'),w=i.w||240,b=BM[i.id];return {i,x:i.x,y:i.y,w,h:e?e.offsetHeight:(i.t==='txt'?60:b?w*b.height/b.width:w*.75)}});
+  const R=items.map(i=>{const e=document.querySelector('.bd-it[data-id="'+i.id+'"]'),w=i.w||240,b=BM[i.id];return {i,x:i.x,y:i.y,w,h:e?e.offsetHeight:(i.t==='txt'?60:i.t==='pal'?w*.5:b?w*b.height/b.width:w*.75)}});
   const x0=Math.min(...R.map(r=>r.x))-40,y0=Math.min(...R.map(r=>r.y))-40,x1=Math.max(...R.map(r=>r.x+r.w))+40,y1=Math.max(...R.map(r=>r.y+r.h))+40,sc=Math.min(2,maxLado/Math.max(x1-x0,y1-y0)),cv=lienzo(Math.ceil((x1-x0)*sc),Math.ceil((y1-y0)*sc)),c=cv.getContext('2d');
   c.fillStyle='#0f1014';c.fillRect(0,0,cv.width,cv.height);
   for(const r of R){const it=r.i,X=(r.x-x0)*sc,Y=(r.y-y0)*sc;
     if(it.t==='txt'){const fs=(it.fs||18)*sc;c.font=`700 ${fs}px ${BODY}`;c.fillStyle='#eceef2';c.textBaseline='top';envolver(c,it.text||'',r.w*sc).forEach((l,k)=>c.fillText(l,X,Y+k*fs*1.3))}
+    else if(it.t==='pal'){const pal=(p.mood?.paleta||[]).filter(Boolean),n=Math.max(1,pal.length),sw=r.w*sc/n;pal.forEach((h,k)=>{c.fillStyle=h;c.fillRect(X+k*sw,Y,sw,r.h*sc*.7)});c.fillStyle='#9aa0ac';c.font=`600 ${14*sc}px ${BODY}`;c.textBaseline='top';c.fillText('Paleta',X,Y+r.h*sc*.75)}
     else{if(BM[it.id])c.drawImage(BM[it.id],X,Y,r.w*sc,r.h*sc);else{c.fillStyle='#262a33';c.fillRect(X,Y,r.w*sc,r.h*sc)}}}
   return cv}
 const bdPNG=cv=>new Promise(r=>cv.toBlob(r,'image/png'));
@@ -10526,7 +10535,8 @@ async function accion(a,el){
     case 'bd-ord':if(!bdItems(p).length)return;bdOrdenarCuando(p,ds.m);break;
     case 'bd-front':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=bdZmax(p)+1;marcar();renderMain()}break}
     case 'bd-back':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=Math.min(...p.board.items.map(x=>x.z||0))-1;marcar();renderMain()}break}
-    case 'bd-del':{if(p.board){const it0=p.board.items.find(x=>x.id===ds.id);if(it0?.ref)(p.board.quitados=p.board.quitados||[]).push(it0.ref);p.board.items=p.board.items.filter(x=>x.id!==ds.id);S.bdSel=null;marcar();renderMain()}break}
+    case 'bd-full':{const w=$('#bd-wrap');if(!w)break;if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen?.().catch(()=>toast('Tu navegador no permite pantalla completa aquí'));break}
+    case 'bd-del':{if(p.board){const it0=p.board.items.find(x=>x.id===ds.id),k0=it0?.pz?'pz:'+it0.pz:it0?.t==='pal'?'pal':it0?.ref;if(k0)(p.board.quitados=p.board.quitados||[]).push(k0);p.board.items=p.board.items.filter(x=>x.id!==ds.id);S.bdSel=null;marcar();renderMain()}break}
     case 'bd-zoom':{const wr=$('#bd-wrap'),v=S.bdView;if(!wr||!v)return;const f=+ds.v,k2=Math.max(.04,Math.min(3,v.k*f)),mx=wr.clientWidth/2,my=wr.clientHeight/2;v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;S.bdTocado=true;bdApply();break}
     case 'bd-fit':S.bdView=null;S.bdTocado=false;bdFit();bdApply();break;
     case 'bd-png':bdDescarga('png');break;
