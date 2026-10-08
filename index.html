@@ -1041,7 +1041,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muys4t0f').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=muys7hop').catch(()=>{}));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -8318,11 +8318,14 @@ function escColsHTML(items,E,pjid){return `<div class="esc-cols">${items.map((it
 function escOutHTML(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);
   if(!pal.length)return '<p class="muted">Primero define colores en «Tu paleta» (arriba): aquí los ves iluminados.</p>';
   return escColsHTML(pal.map(hex=>({hex})),E,'')}
-function escDibuja(){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
-  document.querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
+function escDibuja(root){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
+  (root||document).querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
     if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
     if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
     const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
+/* mientras arrastras el selector de color o un deslizante, dibujar todas las esferas cuesta ~½ segundo: se guarda al momento, las esferas de la paleta se redibujan al pausar un instante y el resto (personajes y revisión) un poco después */
+let escT1=0,escT2=0;
+function escDiferido(p){clearTimeout(escT1);clearTimeout(escT2);escT1=setTimeout(()=>{const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja(o)}},120);escT2=setTimeout(()=>escRefresca(p),420)}
 function escRefresca(p){const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);const r=$('#esc-rev');if(r)r.innerHTML=escRevHTML(p);escDibuja()}escRefrescaPj(p)}
 /* personajes: cada color de su paleta, iluminado con la escena */
 const pjItems=(p,c)=>pjPaletaBase(p,c).pal.slice(0,6).map(x=>({hex:x.hex,rol:x.rol}));
@@ -9855,7 +9858,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.pjluz){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluz);if(c){c.luzAfecta=t.checked;if(c.luzK==null||c.luzK===.6)c.luzK=.85;marcar();renderMain()}return}
   if(t.dataset.pjluzk){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluzk);if(c){c.luzK=+t.value;marcar();const l=t.closest('label')?.querySelector('.lbl');if(l)l.textContent='Cuánto lo afecta · '+Math.round(c.luzK*100)+'%';escRefrescaPj(p)}return}
   if(t.dataset.pjesc){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjesc);if(c){c.luzEsc=t.value;marcar();escRefrescaPj(p)}return}
-  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escRefresca(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
+  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escDiferido(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
