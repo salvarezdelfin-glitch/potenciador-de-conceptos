@@ -1050,7 +1050,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv03erjj').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv03qqfv').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9249,15 +9249,19 @@ const V3_PADRE={spine:'pelvis',chest:'spine',neck:'chest',head:'neck',shL:'chest
 /* ============ Tus propios cuerpos: un .fbx o .glb con el esqueleto de Mixamo (por ejemplo, el de MakeHuman o una base de modelado pasado por el auto-rig de Mixamo) ============ */
 const v3dCuDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('cdc-cuerpos',1);r.onupgradeneeded=()=>r.result.createObjectStore('c',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
 const v3dCuTx=async(modo,fn)=>{const d=await v3dCuDB();return new Promise((ok,no)=>{const t=d.transaction('c',modo),r=fn(t.objectStore('c'));t.oncomplete=()=>ok(r?.result);t.onerror=()=>no(t.error)})};
-async function v3dCuerposCarga(){try{const L=(await v3dCuTx('readonly',s=>s.getAll()))||[];for(const c of L)if(!V3_CUERPOS[c.id])V3_CUERPOS[c.id]={n:c.n,d:'Cuerpo que agregaste tú',propio:true,buf:c.buf,ext:c.ext};if(L.length&&V3.open&&S.v3d?.tab==='modelo')v3dPanel()}catch{}}
+async function v3dCuerposCarga(){try{const L=(await v3dCuTx('readonly',s=>s.getAll()))||[];for(const c of L)if(!V3_CUERPOS[c.id])V3_CUERPOS[c.id]={n:c.n,d:'Cuerpo que agregaste tú',propio:true,buf:c.buf,ext:c.ext,asset:c.asset};if(L.length&&V3.open&&S.v3d?.tab==='modelo')v3dPanel()}catch{}v3dCuNubeBaja()}
+async function v3dCuNubeSube(id){const c=V3_CUERPOS[id];if(!S.db||!S.assets||!c?.buf)return;try{const r=await S.assets.upload(new Blob([c.buf],{type:'application/octet-stream'}));c.asset=r.id;await S.db.collection('cuerpos').doc(id).set({n:c.n,ext:c.ext,asset:r.id});try{await v3dCuTx('readwrite',st=>st.put({id,n:c.n,ext:c.ext,buf:c.buf,asset:r.id}))}catch{}toast('Cuerpo guardado también en tu cuenta')}catch(e){toast('El cuerpo quedó en este dispositivo; no pude subirlo a tu cuenta'+(e?.code==='too_large'?' (pesa demasiado)':''))}}
+async function v3dCuNubeBaja(){if(!S.db||!S.assets?.blob)return;try{const snap=await S.db.collection('cuerpos').get();let n=0;for(const d of snap.docs){if(V3_CUERPOS[d.id])continue;const m=d.data();if(!m?.asset)continue;try{const b=await S.assets.blob(m.asset),buf=await b.arrayBuffer();V3_CUERPOS[d.id]={n:m.n,d:'Cuerpo que agregaste tú',propio:true,buf,ext:m.ext,asset:m.asset};try{await v3dCuTx('readwrite',st=>st.put({id:d.id,n:m.n,ext:m.ext,buf,asset:m.asset}))}catch{}n++}catch{}}
+  if(n&&V3.open){v3dPanel();toast(n+' cuerpo(s) traído(s) de tu cuenta')}}catch(e){console.warn('nube cuerpos',e)}}
 async function v3dCuerpoAgrega(file){const ext=(file.name.split('.').pop()||'').toLowerCase();if(!['fbx','glb'].includes(ext)){toast('Usa un archivo .fbx o .glb');return}const buf=await file.arrayBuffer(),id='u'+uid(),n=file.name.replace(/\.[^.]+$/,'').slice(0,24);
   V3_CUERPOS[id]={n,d:'Cuerpo que agregaste tú',propio:true,buf,ext};
   try{await v3dListoCarga(id)}catch(e){delete V3_CUERPOS[id];delete V3_CACHE[id];toast('Ese modelo no sirve para posarse: necesita el esqueleto de Mixamo ('+(e?.message||'sin huesos')+')');return}
   try{await v3dCuTx('readwrite',s=>s.put({id,n,ext,buf}))}catch{toast('Se usará esta vez, pero no pude guardarlo en el navegador')}
+  v3dCuNubeSube(id);
   S.v3d.cuerpo=id;v3dModelo();v3dPanel();toast('Cuerpo agregado: '+n)}
-async function v3dCuerpoQuita(id){try{await v3dCuTx('readwrite',s=>s.delete(id))}catch{}delete V3_CUERPOS[id];delete V3_CACHE[id];for(const f of S.v3d.figs||[])if(f.cuerpo===id)f.cuerpo='michelle';if(S.v3d.cuerpo===id)S.v3d.cuerpo='michelle';v3dModelo();v3dPanel()}
+async function v3dCuerpoQuita(id){const as=V3_CUERPOS[id]?.asset;try{await v3dCuTx('readwrite',s=>s.delete(id))}catch{}try{if(S.db)await S.db.doc('cuerpos/'+id).delete();if(as&&S.assets?.delete)await S.assets.delete(as)}catch{}delete V3_CUERPOS[id];delete V3_CACHE[id];for(const f of S.v3d.figs||[])if(f.cuerpo===id)f.cuerpo='michelle';if(S.v3d.cuerpo===id)S.v3d.cuerpo='michelle';v3dModelo();v3dPanel()}
 document.addEventListener('change',e=>{const t=e.target;if(t.id==='v3d-cuerpo-file'&&t.files?.[0]){v3dCuerpoAgrega(t.files[0]);t.value=''}});
-async function v3dListoCarga(tipo,avance){if(V3_CACHE[tipo])return V3_CACHE[tipo];const L=V3.lib,c=V3_CUERPOS[tipo];avance?.(.05);
+async function v3dListoCarga(tipo,avance){if(V3_CACHE[tipo])return V3_CACHE[tipo];const L=V3.lib,c=V3_CUERPOS[tipo];if(!c)return v3dListoCarga('michelle',avance);avance?.(.05);
   if(c.buf){const buf=c.buf.slice(0);let sc;if(c.ext==='fbx')sc=new L.FBXLoader().parse(buf,'');else{const g=await new Promise((ok,no)=>new L.GLTFLoader().parse(buf,'',ok,no));sc=g.scene}
     const nm=new Set();sc.traverse(o=>{if(o.isBone)nm.add(o.name.replace(/^mixamorig:?/,''))});if(!['Hips','Spine','Head','LeftArm','RightArm','LeftUpLeg','RightUpLeg','LeftForeArm','RightForeArm','LeftLeg','RightLeg'].every(n=>nm.has(n)))throw new Error('faltan huesos como Hips, Spine o LeftArm');avance?.(1);return V3_CACHE[tipo]={sc}}const r=await fetch(V3_LISTOS_URL+c.f);if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer();avance?.(.7);
   const g=await new Promise((ok,ko)=>new L.GLTFLoader().parse(buf,'',ok,ko));avance?.(1);return V3_CACHE[tipo]={sc:g.scene}}
@@ -9402,9 +9406,10 @@ function v3dPoseDeLandmarks(W){const T=V3.T,V=T.Vector3,rad=Math.PI/180,deg=180/
   return {pose:out,giro:clamp(th*deg,-180,180)}}
 /* ---- escena descrita con palabras: «tres personajes peleando, uno da una patada karateka al otro» ---- */
 const V3_REL=[[/espalda con espalda/,'espalda'],[/de la mano|tomad\w* de la mano/,'mano'],[/abraz/,'abrazo'],[/persigu|persecu|corriendo tras/,'persigue'],[/proteg|defiend\w* al? (otro|ni)/,'protege'],[/arrodill|ante el|se inclina ante/,'ante'],[/formacion/,'v'],[/circulo/,'circulo'],[/convers|habl|platic/,'conversa'],[/pele|combat|luch|karate|patad|golpe|ataca|puñet|punet|boxe/,'pelea'],[/camin\w* juntos|grupo/,'grupo']];
-const V3_ACC_ESC=[[/karate|yoko|patada lateral/,'Patada lateral'],[/patad|pateand|kick/,'Patada frontal'],[/estocada|apunal|lanza\b|espada|ensarta/,'Estocada'],[/punetazo|golpe|golpea|pega|puño|boxea/,'Golpe'],[/bloque|se cubre/,'Bloqueo alto'],[/esquiv/,'Esquiva'],[/cae|caid|derrib|tumb|recibe|tropiez/,'Derribado'],[/escudo|se defiende|defensa/,'Defensa con escudo'],[/corre|corriend|persigue/,'Correr'],[/salt/,'Salto'],[/rendid|suplic/,'Rendido'],[/agach|se oculta|se esconde/,'Agachado'],[/guardia|espera|listo para/,'Guardia']];
+const V3_ATAQUE_RE=/Patada|Golpe|Estocada|Gancho|Uppercut|Codazo|Rodillazo|Corte|Embestida|Salto de ataque/;
+const V3_ACC_ESC=[[/uppercut|gancho al menton/,'Uppercut'],[/gancho/,'Gancho'],[/codazo/,'Codazo'],[/rodillazo/,'Rodillazo'],[/patada baja|barrido/,'Patada baja'],[/patada giratoria|patada circular|patada voladora/,'Patada giratoria'],[/corte horizontal|tajo|sablazo/,'Corte horizontal'],[/corte descendente|hachazo|golpe desde arriba|mandoble/,'Corte descendente'],[/parada|detiene el golpe con la espada|choque de espadas/,'Parada con espada'],[/flecha|arco\b|arquer/,'Arquero tensando'],[/jabalina|lanza una lanza/,'Lanzando jabalina'],[/lanza una piedra|tira una piedra|arroja/,'Lanzando una piedra'],[/pistola|dispara|revolver/,'Apuntando una pistola'],[/rifle|francotirador/,'Apuntando un rifle'],[/hechizo|conjura|magia|invoca/,'Lanzando un hechizo'],[/balon|futbol|pelota/,'Pateando un balón'],[/bate|beisbol/,'Golpe de bate'],[/tenis|raqueta/,'Saque de tenis'],[/bail/,'Baile con giro'],[/celebr|festej|victoria/,'Celebrando'],[/rez|ora\b|orando/,'Rezando'],[/lee\b|leyendo|libro/,'Sentado leyendo'],[/saluda|saludo|despide/,'Saludando'],[/seña|apunta hacia|indica/,'Señalando'],[/empuja/,'Empujando'],[/jala|tira de la cuerda/,'Jalando una cuerda'],[/carga|cargando/,'Cargando algo pesado'],[/escala|trepa/,'Escalando'],[/sigilo|sigilos|acecha/,'Caminar sigiloso'],[/llora|triste|lamenta/,'Triste'],[/miedo|asustad|aterrad/,'Asustado'],[/enojad|furios|grita/,'Enojado'],[/piensa|pensativ|reflexiona/,'Pensativo'],[/trota|trotando/,'Trotar'],[/sprint|corre a toda velocidad/,'Sprint'],[/aterriza|aterrizaje/,'Aterrizaje de héroe'],[/arrodilla|rodilla en tierra/,'Rodilla en tierra'],[/cuclillas/,'Cuclillas'],[/estira|calienta/,'Estirando'],[/karate|yoko|patada lateral/,'Patada lateral'],[/patad|pateand|kick/,'Patada frontal'],[/estocada|apunal|lanza\b|espada|ensarta/,'Estocada'],[/punetazo|golpe|golpea|pega|puño|boxea/,'Golpe'],[/bloque|se cubre/,'Bloqueo alto'],[/esquiv/,'Esquiva'],[/cae|caid|derrib|tumb|recibe|tropiez/,'Derribado'],[/escudo|se defiende|defensa/,'Defensa con escudo'],[/corre|corriend|persigue/,'Correr'],[/salt/,'Salto'],[/rendid|suplic/,'Rendido'],[/agach|se oculta|se esconde/,'Agachado'],[/guardia|espera|listo para/,'Guardia']];
 function v3dPoseDeFrase(c){const t=nz(c);let base=null;for(const [re,k] of V3_ACC_ESC)if(re.test(t)){base=k;break}let pose=null,notas=[];if(base){pose={...V3_POSES[base]}}else{const r=v3dPoseDeTexto(c);if(r.ok)pose={...r.pose}}
-  let izq=false;if(pose&&/pierna izquierd|con la izquierd|con la pierna izquierd/.test(t)&&/Patada|Estocada|Golpe/.test(base||'')){pose=v3dEspeja(pose);izq=true}return pose?{pose,base,izq}:null}
+  let izq=false;if(pose&&/pierna izquierd|con la izquierd|con la pierna izquierd/.test(t)&&V3_ATAQUE_RE.test(base||'')){pose=v3dEspeja(pose);izq=true}return pose?{pose,base,izq}:null}
 function v3dContacto(i,j){const L=V3.figs;if(!L?.[i]||!L?.[j])return;const T=V3.T,v=new T.Vector3(),pos=(m,n)=>{const b=m.userData.bn?.[n];if(!b)return null;m.updateMatrixWorld(true);b.getWorldPosition(v);return v.clone()},A=L[i],B=L[j];
   for(let it=0;it<3;it++){const c=pos(B.model,'Spine2')||pos(B.model,'Spine1'),dir=new T.Vector3(c.x-A.model.position.x,0,c.z-A.model.position.z).normalize();let mejor=null,mp=-1e9;
     for(const n of ['LeftFoot','RightFoot','LeftHand','RightHand']){const p=pos(A.model,n);if(!p)continue;const pr=(p.x-A.model.position.x)*dir.x+(p.z-A.model.position.z)*dir.z;if(pr>mp){mp=pr;mejor=p}}
@@ -9417,15 +9422,19 @@ function v3dEscenaTexto(txt){const t=nz(String(txt||'')),S3=S.v3d;if(!t.trim()){
   let figs=tpl?tpl.figs.map(f=>({...f})):[];while(figs.length<n){const k=figs.length,ang=(k/n)*Math.PI*2;figs.push({p:'Guardia',x:Math.sin(ang)*.9,z:Math.cos(ang)*.9,y:Math.round((Math.atan2(-Math.sin(ang),-Math.cos(ang)))/RAD)})}figs=figs.slice(0,n);
   const poses=figs.map(f=>v3dPoseDe(f.p));let ataca=-1,recibe=-1,aBase='',aIzq=false;
   /* quién hace qué: se parte la frase en los «uno… el otro…» */
-  const marcas=[...t.matchAll(/\b(uno|una|el primero|la primera|el otro|la otra|otro|otra|el segundo|la segunda|el tercero|la tercera|el cuarto|la cuarta|el de la izquierda|el de la derecha)\b/g)];
+  const marcas=[...t.matchAll(/\b(uno|una|el primero|la primera|el otro|la otra|otro|otra|el segundo|la segunda|el tercero|la tercera|el cuarto|la cuarta|el de la izquierda|el de la derecha)\b/g)].filter(m=>!/\b(con|de|del|en|sin|por|para)\s$/.test(t.slice(Math.max(0,m.index-6),m.index)));
   if(marcas.length){let otros=0;marcas.forEach((m,idx)=>{const ini=m.index+m[0].length,fin=idx+1<marcas.length?marcas[idx+1].index:t.length,cl=t.slice(ini,fin);const w=m[0];let r;if(/^(uno|una|el primero|la primera|el de la izquierda)$/.test(w))r=0;else if(/tercer/.test(w))r=2;else if(/cuart/.test(w))r=3;else if(/segund|derecha/.test(w))r=1;else r=1+otros++;r=clamp(r,0,n-1);
-      const f=v3dPoseDeFrase(cl);if(f){poses[r]=f.pose;if(/Patada|Golpe|Estocada/.test(f.base||'')){ataca=r;aBase=f.base;aIzq=f.izq}if(/Derribado|Bloqueo|Esquiva|Defensa/.test(f.base||''))recibe=r}})}
-  else{const f=v3dPoseDeFrase(t);if(f){poses[0]=f.pose;if(/Patada|Golpe|Estocada/.test(f.base||'')){ataca=0;aBase=f.base;aIzq=f.izq}}}
+      const f=v3dPoseDeFrase(cl);if(f){poses[r]=f.pose;if(V3_ATAQUE_RE.test(f.base||'')){ataca=r;aBase=f.base;aIzq=f.izq}if(/Derribado|Bloqueo|Esquiva|Defensa/.test(f.base||''))recibe=r}})}
+  else{const f=v3dPoseDeFrase(t);if(f){poses[0]=f.pose;if(V3_ATAQUE_RE.test(f.base||'')){ataca=0;aBase=f.base;aIzq=f.izq}}}
   if(ataca>=0&&recibe<0){recibe=(ataca+1)%n;if(!marcas.length||!/Derribado|Bloqueo|Esquiva|Defensa/.test(t))poses[recibe]=v3dPoseDe(/derrib|cae|tumb/.test(t)?'Derribado':'Defensa con escudo')}
   if(ataca<0&&rel==='pelea'){ataca=0;poses[0]=v3dPoseDe('Golpe');recibe=1}
   v3dFigSync();const old=S3.figs||[],cu=Object.keys(V3_CUERPOS);
   S3.figs=figs.map((d,i)=>{const pose=poses[i];for(const q in pose)if(V3_RANGOS[q])pose[q]=clamp(pose[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);return {id:uid(),cuerpo:old[i]?.cuerpo||cu[i%cu.length],pose,giro:{x:0,y:d.y||0,z:0},preset:typeof d.p==='string'?d.p:'Escena',px:d.x||0,pz:d.z||0,esc:d.e||1,nom:old[i]?.nom||''}});
   if(ataca>=0&&recibe>=0){/* el que ataca mira a quien recibe */const a=S3.figs[ataca],b=S3.figs[recibe];a.giro.y=Math.round(Math.atan2((b.px||0)-(a.px||0),(b.pz||0)-(a.pz||0))/RAD);b.giro.y=Math.round(Math.atan2((a.px||0)-(b.px||0),(a.pz||0)-(b.pz||0))/RAD);if(aBase==='Patada lateral')a.giro.y=((((a.giro.y+(aIzq?-90:90))+180)%360)+360)%360-180}
+  {const pr=[],add=(k,fi,x,z,ry)=>{const A=V3_PROPS_AGARRE[k]||{};pr.push({id:uid(),k,x:x||0,z:z||0,y:0,ry:ry||0,e:A.e||1,mano:V3_PROPS_MANO[k]||'',fig:fi})},ar=ataca>=0?ataca:0,de=recibe>=0?recibe:Math.min(1,n-1);
+    if(/espada|sable|katana/.test(t))add('Espada',ar);if(/\bhacha/.test(t))add('Hacha',ar);if(/\bpico\b/.test(t))add('Pico',ar);if(/antorcha/.test(t))add('Antorcha',ar);if(/escudo/.test(t))add('Escudo',de);
+    const sit=t.match(/sentad\w*[^.]*\b(silla|banco|banca|sofa|cama)\b/);if(sit){const k={silla:'Silla',banco:'Banco',banca:'Banca',sofa:'Sofá',cama:'Cama'}[sit[1]],f=S3.figs[0];f.pose={...V3_POSES['Sentado erguido']};f.preset='Sentado erguido';add(k,0,f.px||0,f.pz||0,f.giro.y);f.pz=(f.pz||0)+.04}
+    S3.props=pr;S3.propSel=pr.length?pr[pr.length-1].id:null}
   S3.sel=ataca>=0?ataca:0;v3dCargaSel();v3dModelo();v3dPanel();
   if(ataca>=0&&recibe>=0){let k=0;const esp=()=>{if(V3.figs?.length===n&&V3.figs.every(e=>e.model)){v3dContacto(ataca,recibe);v3dEncuadra()}else if(k++<30)setTimeout(esp,150)};setTimeout(esp,200)}
   toast('Escena armada: ajusta cada pose o su posición si algo no coincide')}
@@ -9644,6 +9653,21 @@ const bibDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('cdc-biblio',1);r.o
 const bibTx=async(st,modo,fn)=>{const d=await bibDB();return new Promise((ok,no)=>{const t=d.transaction(st,modo),r=fn(t.objectStore(st));t.oncomplete=()=>ok(r?.result);t.onerror=()=>no(t.error)})};
 async function bibCarga(){if(BIB.cargada)return BIB.rec;BIB.rec=(await bibTx('poses','readonly',s=>s.getAll()))||[];BIB.cargada=true;
   try{const ks=await bibTx('handles','readonly',s=>s.getAllKeys());for(const k of ks)BIB.handles[k]=await bibTx('handles','readonly',s=>s.get(k))}catch{}try{navigator.storage?.persist?.()}catch{}return BIB.rec}
+/* ---- nube: las poses leídas y las miniaturas (no las fotos) se guardan en tu cuenta, para verlas en otro dispositivo ---- */
+const NUBE={ocupado:false,t:0,cubos:64};
+const nubeH=t=>{let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)};
+const nubeCubo=id=>parseInt(nubeH(id),36)%NUBE.cubos;
+async function bibNubeSube(){if(!S.db||NUBE.ocupado||!BIB.cargada)return;NUBE.ocupado=true;
+  try{const C=Array.from({length:NUBE.cubos},()=>[]);for(const r of BIB.rec)C[nubeCubo(r.id)].push(r);let h={};try{h=JSON.parse(localStorage.getItem('cdc.nubehash')||'{}')}catch{}
+    for(let i=0;i<C.length;i++){const sj=JSON.stringify(C[i]),k=sj.length+':'+nubeH(sj);if(h['c'+i]===k)continue;
+      if(!C[i].length&&!h['c'+i])continue;await S.db.collection('bib').doc('c'+i).set({n:i,rec:C[i]});h['c'+i]=k}
+    try{localStorage.setItem('cdc.nubehash',JSON.stringify(h))}catch{}}
+  catch(e){console.warn('nube',e)}NUBE.ocupado=false}
+function bibNubePronto(){clearTimeout(NUBE.t);NUBE.t=setTimeout(bibNubeSube,2500)}
+async function bibNubeBaja(){if(!S.db)return 0;try{const snap=await S.db.collection('bib').get(),ya=new Map(BIB.rec.map(r=>[r.id,r]));let nuevos=0;
+    for(const d of snap.docs){const arr=d.data()?.rec||[],poner=[];for(const r of arr){const l=ya.get(r.id);if(!l){BIB.rec.push(r);ya.set(r.id,r);poner.push(r);nuevos++}else if((r.favT||0)>(l.favT||0)){l.fav=r.fav;l.favT=r.favT;poner.push(l)}}
+      if(poner.length)await bibTx('poses','readwrite',st=>{for(const r of poner)st.put(r)})}
+    return nuevos}catch(e){console.warn('nube',e);return 0}}
 /* etiquetas sencillas a partir de los ángulos */
 function bibEtiquetas(P){const t=[],k=(a,b)=>Math.max(P[a]||0,P[b]||0),kn=((P.lLk||0)+(P.lRk||0))/2;
   if(k('aLs','aRs')>120)t.push('brazos arriba');if(k('aLs','aRs')>70&&Math.min(P.aLe||0,P.aRe||0)<45)t.push('brazos extendidos');
@@ -9664,9 +9688,9 @@ async function bibImporta(items,etiqueta){if(BIB.job)return;await bibCarga();con
       const id=etiqueta+'/'+it.ruta+'|'+file.size+'|'+file.lastModified;if(it.file)BIB.files[etiqueta+'/'+it.ruta]=file;if(ya.has(id)){bibProgreso();continue}
       let rec={id,carpeta:etiqueta,ruta:it.ruta,pose:null,yaw:0,conf:0,thumb:'',fav:false,tags:[],ts:Date.now()};
       try{const bm=await bibBitmap(file),r=bibLee(bm,det,m);rec.thumb=bibThumb(bm);bm.close?.();if(r){Object.assign(rec,r);rec.tags=bibEtiquetas(r.pose)}else job.sinPose++}catch(e){job.sinPose++}
-      await bibTx('poses','readwrite',s=>s.put(rec));BIB.rec.push(rec);job.nuevos++;bibProgreso();await new Promise(r=>setTimeout(r))}
+      await bibTx('poses','readwrite',s=>s.put(rec));BIB.rec.push(rec);job.nuevos++;bibProgreso();if(job.nuevos%100===0)bibNubePronto();await new Promise(r=>setTimeout(r))}
   }catch(e){console.error(e);toast('La biblioteca se detuvo: '+(e?.message||'error'))}
-  BIB.job=null;bibProgreso(true)}
+  BIB.job=null;bibProgreso(true);bibNubeSube()}
 function bibProgreso(fin){const el=$('#bib-prog');const j=BIB.job;if(!el)return;if(!j||fin){el.innerHTML='';bibPinta();return}
   const seg=(Date.now()-j.t0)/1000,rest=j.hechos>3?Math.max(0,Math.round(seg/j.hechos*(j.total-j.hechos)/60)):null;
   el.innerHTML=`<div class="bar"><i style="width:${Math.round(j.hechos/j.total*100)}%"></i></div><div class="prow"><span class="muted">Analizando ${j.hechos} de ${j.total}${rest!=null?' · faltan ~'+rest+' min':''} · ${j.nuevos} nuevas${j.sinPose?' · '+j.sinPose+' sin persona clara':''}</span><span style="flex:1"></span><button class="btn sm ghost" data-bib="parar">Pausar</button></div>`}
@@ -9682,18 +9706,18 @@ async function bibArchivo(rec){const f=BIB.files[rec.carpeta+'/'+rec.ruta];if(f)
 async function bibRefOriginal(rec){try{const f=await bibArchivo(rec);if(f)v3dRefFoto(f)}catch{}}
 function bibAplica(x){const rec=x.r||x,esp=!!x.esp,pose=esp?bibEspejo(rec.pose):rec.pose,S3=S.v3d;S3.pose={...V3_POSES['De pie'],...pose};S3.preset='Foto de referencia';S3.giro.y=clamp(esp?-rec.yaw:rec.yaw,-180,180);v3dPose();v3dPanel();toast('Pose de la foto puesta en el maniquí')}
 function bibPinta(){const ov=$('#bib-ov');if(!ov)return;const u=BIB.ui,L=bibLista(),tot=BIB.rec.filter(r=>r.pose).length,carp=[...new Set(BIB.rec.map(r=>r.carpeta))];
-  $('#bib-top').innerHTML=`<b>Biblioteca de fotos de referencia</b> <span class="muted">${tot} con pose · ${BIB.rec.length-tot} sin persona clara · en este navegador</span>`;
+  $('#bib-top').innerHTML=`<b>Biblioteca de fotos de referencia</b> <span class="muted">${tot} con pose · ${BIB.rec.length-tot} sin persona clara · ${S.db?'sincronizada con tu cuenta (las fotos se quedan en tu equipo)':'en este navegador'}</span>`;
   $('#bib-bar').innerHTML=`<div class="prow"><button class="btn sm pri" data-bib="agregar">＋ Agregar carpeta</button><button class="btn sm ${u.orden==='parecidas'?'pri':''}" data-bib="orden:parecidas" title="Ordena las fotos por parecido con la pose actual del maniquí">Parecidas a mi pose</button><button class="btn sm ${u.orden==='recientes'?'pri':''}" data-bib="orden:recientes">Recientes</button><button class="btn sm ${u.orden==='azar'?'pri':''}" data-bib="orden:azar">Al azar</button><button class="btn sm" data-bib="practica">Práctica de gesto</button><span style="flex:1"></span><button class="btn sm ghost" data-bib="cerrar">Cerrar</button></div>
     <div class="chips"><button class="ch xs ${!u.carpeta?'on':''}" data-bib="carpeta:">Todas</button>${carp.map(c=>`<button class="ch xs ${u.carpeta===c?'on':''}" data-bib="carpeta:${esc(c)}">${esc(c)}</button>`).join('')}<button class="ch xs ${u.fav?'on':''}" data-bib="fav">★ Favoritas</button>${u.orden==='parecidas'?`<button class="ch xs ${u.esp?'on':''}" data-bib="esp" title="Cuenta también las fotos que se parecen a tu pose al espejo">Incluir espejo</button>`:''}</div>
     <div class="chips">${bibTagsTodos.map(t=>`<button class="ch xs ${u.tag===t?'on':''}" data-bib="tag:${t}">${t}</button>`).join('')}</div>`;
   $('#bib-grid').innerHTML=L.length?L.slice(0,u.n).map((x,i)=>`<div class="bib-c" data-i="${i}"><img src="${x.r.thumb}" alt="" loading="lazy" data-bib="ver:${i}"><div class="bib-b"><button class="btn xs" data-bib="poner:${i}" title="Poner esta pose en el maniquí">Maniquí</button><button class="btn xs ghost" data-bib="fav:${i}">${x.r.fav?'★':'☆'}</button></div>${u.orden==='parecidas'?`<small class="muted">${Math.round(100-x.d*100)}%${x.esp?' · espejo':''}</small>`:''}</div>`).join('')+(L.length>u.n?`<button class="btn" data-bib="mas">Ver más (${L.length-u.n})</button>`:''):`<p class="muted" style="padding:20px">${BIB.rec.length?'Ninguna foto cumple ese filtro.':'Todavía no hay fotos. Toca «Agregar carpeta» y elige la carpeta donde tienes tus referencias.'}</p>`;
   bibPinta.L=L}
-async function bibAbre(){await bibCarga();$('#bib-ov')?.remove();const ov=document.createElement('div');ov.id='bib-ov';ov.className='bib-ov';ov.innerHTML='<div id="bib-top" class="bib-top"></div><div id="bib-bar" class="bib-bar"></div><div id="bib-prog" class="bib-prog"></div><div id="bib-grid" class="bib-grid"></div><input type="file" id="bib-file" webkitdirectory multiple hidden>';document.body.append(ov);bibPinta();bibProgreso();
+async function bibAbre(){await bibCarga();bibNubeBaja().then(n=>{if(n&&$('#bib-ov')){bibPinta();toast(n+' poses más traídas de tu cuenta')}bibNubeSube()});$('#bib-ov')?.remove();const ov=document.createElement('div');ov.id='bib-ov';ov.className='bib-ov';ov.innerHTML='<div id="bib-top" class="bib-top"></div><div id="bib-bar" class="bib-bar"></div><div id="bib-prog" class="bib-prog"></div><div id="bib-grid" class="bib-grid"></div><input type="file" id="bib-file" webkitdirectory multiple hidden>';document.body.append(ov);bibPinta();bibProgreso();
   ov.onclick=async e=>{const b=e.target.closest('[data-bib]');if(!b)return;const [a,x]=b.dataset.bib.split(':'),u=BIB.ui,L=bibPinta.L||[];
     if(a==='cerrar'){ov.remove();return}if(a==='orden'){u.orden=x;u.n=60;bibPinta();return}if(a==='carpeta'){u.carpeta=x;u.n=60;bibPinta();return}if(a==='tag'){u.tag=u.tag===x?'':x;u.n=60;bibPinta();return}
     if(a==='esp'){u.esp=!u.esp;bibPinta();return}if(a==='mas'){u.n+=60;bibPinta();return}if(a==='parar'){if(BIB.job)BIB.job.cancelar=true;return}
     if(a==='fav'&&x===undefined){u.fav=!u.fav;bibPinta();return}
-    if(a==='fav'){const r=L[+x]?.r;if(r){r.fav=!r.fav;await bibTx('poses','readwrite',s=>s.put(r));bibPinta()}return}
+    if(a==='fav'){const r=L[+x]?.r;if(r){r.fav=!r.fav;r.favT=Date.now();await bibTx('poses','readwrite',s=>s.put(r));bibPinta();bibNubePronto()}return}
     if(a==='poner'){const it=L[+x];if(it){bibAplica(it);bibRefOriginal(it.r);ov.remove()}return}
     if(a==='ver'){const r=L[+x]?.r;if(r)bibVer(r);return}
     if(a==='practica'){bibPractica(L.map(x=>x.r));return}
@@ -9755,7 +9779,7 @@ function v3dLoomis(T,mat){const G=new T.Group(),W=.36,cl=[new T.Plane(new T.Vect
 const V3_LOOMIS=[['Paso 1','Planos de la cabeza'],['Paso 2','Nariz, boca y orejas'],['Paso 3','Rasgos definidos'],['Paso 4','Cara completa']],V3_LOOM_S={};
 function v3dLoomisMod(n){const sc=V3_LOOM_S[n];if(!sc)return null;const g=new V3.T.Group(),c=sc.clone(true);c.traverse(o=>{if(o.isMesh){o.geometry=o.geometry.clone();o.material=V3.mat}});g.add(c);g.userData.cabeza=true;return g}
 async function v3dLoomisBaja(n){if(V3.loomCarga===n)return;V3.loomCarga=n;
-  try{const r=await fetch('modelos/loomis-'+n+'.glb');if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer(),g=await new Promise((ok,no)=>new V3.lib.GLTFLoader().parse(buf,'',ok,no));V3_LOOM_S[n]=g.scene}
+  try{const r=await v3dModeloFetch('loomis-'+n+'.glb');const buf=await r.arrayBuffer(),g=await new Promise((ok,no)=>new V3.lib.GLTFLoader().parse(buf,'',ok,no));V3_LOOM_S[n]=g.scene}
   catch(e){V3.loomCarga=null;if(!V3.loomAvisado){V3.loomAvisado=true;toast('No pude cargar la cabeza de Loomis detallada: te dejo la sencilla')}return}
   V3.loomCarga=null;if(V3.open&&S.v3d?.modelo==='loomis'&&(S.v3d.loomis||1)===n)v3dModelo()}
 function v3dFormas(T,mat,k){const G=new T.Group();let m;
@@ -9767,7 +9791,7 @@ function v3dInit(){const {T,OrbitControls}=V3.lib,box=$('#v3d-cv');V3.T=T;
   box.append(r.domElement);r.domElement.id='v3d-canvas';
   V3.scene=new T.Scene();V3.camera=new T.PerspectiveCamera(30,1,.05,200);V3.camera.position.set(0,1.1,4.2);
   V3.controls=new OrbitControls(V3.camera,r.domElement);V3.controls.target.set(0,.95,0);V3.controls.addEventListener('change',()=>{V3.dirty=true});
-  V3.key=new T.DirectionalLight(0xffffff,2);V3.key.castShadow=true;V3.key.shadow.mapSize.set(2048,2048);V3.key.shadow.bias=-.0004;const sc=V3.key.shadow.camera;sc.left=-3;sc.right=3;sc.top=3;sc.bottom=-3;sc.near=.5;sc.far=20;
+  V3.key=new T.DirectionalLight(0xffffff,2);V3.key.castShadow=true;V3.key.shadow.mapSize.set(2048,2048);V3.key.shadow.bias=-.0004;setTimeout(v3dRendimiento,0);const sc=V3.key.shadow.camera;sc.left=-3;sc.right=3;sc.top=3;sc.bottom=-3;sc.near=.5;sc.far=20;
   V3.hemi=new T.HemisphereLight(0xffffff,0x8e96a8,.6);V3.rim=new T.DirectionalLight(0xffffff,0);V3.l2=new T.DirectionalLight(0xffffff,0);V3.l3=new T.DirectionalLight(0xffffff,0);
   V3.suelo=new T.Mesh(new T.PlaneGeometry(40,40),new T.ShadowMaterial({opacity:.38}));V3.suelo.rotation.x=-Math.PI/2;V3.suelo.receiveShadow=true;
   V3.rej=new T.GridHelper(12,24,0x59606e,0x2c3038);
@@ -9775,6 +9799,8 @@ function v3dInit(){const {T,OrbitControls}=V3.lib,box=$('#v3d-cv');V3.T=T;
   V3.scene.add(V3.key,V3.key.target,V3.hemi,V3.rim,V3.l2,V3.l2.target,V3.l3,V3.l3.target,V3.suelo,V3.rej);
   V3.ro=new ResizeObserver(()=>v3dResize());V3.ro.observe(box);v3dResize();
   const loop=()=>{if(!V3.open)return;if(V3.dirty){V3.controls.update();V3.renderer.render(V3.scene,V3.camera);V3.dirty=false;if(V3.anat)v3dAnatActualiza();if(S.v3d?.hnd)v3dHandles();else if($('#v3d-hnd'))$('#v3d-hnd').remove()}V3.raf=requestAnimationFrame(loop)};V3.raf=requestAnimationFrame(loop)}
+const v3dLigero=()=>S.v3d?.rend?S.v3d.rend==='ligero':(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<820));
+function v3dRendimiento(){const r=V3.renderer;if(!r)return;const lig=v3dLigero();r.setPixelRatio(lig?Math.min(devicePixelRatio||1,1.5):Math.min(devicePixelRatio||1,2));if(V3.key){const m=lig?1024:2048;if(V3.key.shadow.mapSize.x!==m){V3.key.shadow.mapSize.set(m,m);V3.key.shadow.map?.dispose();V3.key.shadow.map=null}}v3dResize()}
 function v3dResize(){const box=$('#v3d-cv');if(!box||!V3.renderer)return;const w=box.clientWidth||600,h=box.clientHeight||400;V3.renderer.setSize(w,h);V3.camera.aspect=w/h;V3.camera.updateProjectionMatrix();V3.dirty=true}
 function v3dLuz(){v3dPersistePronto();const L=S.v3d.luz,T=V3.T,az=L.dir*RAD,[dx,dy,dz]=luzDir(L.dir,L.alt);
   V3.key.position.set(dx*6,dy*6+.9,dz*6);V3.key.target.position.set(0,.9,0);V3.key.color.set(L.color);V3.key.intensity=L.int;
@@ -9850,8 +9876,10 @@ function v3dCuerpoHTML(s){const f=s.figs?.[s.sel||0];if(!f)return '';const capa=
 const V3_PROPS_N=['Silla','Silla acolchada','Sofá','Sofá largo','Cama','Mesa','Mesa de centro','Banca','Banco','Mesa grande','Caja de madera','Cofre','Barril','Espada','Hacha','Pico','Escudo','Antorcha','Maniquí de entrenamiento','Yunque','Mesa de trabajo','Caldero','Cubeta'];
 const V3_PROPS_FORMAS=[['f:caja','Caja'],['f:escalon','Escalón'],['f:escalera','Escalera de 3'],['f:plataforma','Plataforma alta'],['f:cilindro','Cilindro'],['f:rampa','Rampa'],['f:esfera','Esfera'],['f:pared','Pared de fondo']];
 const V3_PROPS_MANO={'Espada':'R','Hacha':'R','Pico':'R','Antorcha':'R','Escudo':'L'},V3_PROPS_SILLAS=['Silla','Silla acolchada','Sofá','Sofá largo','Cama','Banca','Banco'];
+const V3_WEB='https://salvarezdelfin-glitch.github.io/potenciador-de-conceptos/';
+async function v3dModeloFetch(nombre){let r;try{r=await fetch('modelos/'+nombre);if(!r.ok)throw new Error('http')}catch{r=await fetch(V3_WEB+'modelos/'+nombre);if(!r.ok)throw new Error('http')}return r}
 async function v3dPropsCarga(){if(V3.propsS)return V3.propsS;if(V3.propsP)return V3.propsP;
-  return V3.propsP=(async()=>{try{const r=await fetch('modelos/props.glb');if(!r.ok)throw new Error('http');const buf=await r.arrayBuffer(),g=await new Promise((ok,no)=>new V3.lib.GLTFLoader().parse(buf,'',ok,no)),M={};g.scene.traverse(o=>{const nm=o.name.replace(/_/g,' ');if(V3_PROPS_N.includes(nm)&&!M[nm])M[nm]=o});return V3.propsS=M}catch(e){V3.propsP=null;toast('No pude cargar los objetos: '+(e?.message||'error'));return {}}})()}
+  return V3.propsP=(async()=>{try{const r=await v3dModeloFetch('props.glb');const buf=await r.arrayBuffer(),g=await new Promise((ok,no)=>new V3.lib.GLTFLoader().parse(buf,'',ok,no)),M={};g.scene.traverse(o=>{const nm=o.name.replace(/_/g,' ');if(V3_PROPS_N.includes(nm)&&!M[nm])M[nm]=o});return V3.propsS=M}catch(e){V3.propsP=null;toast('No pude cargar los objetos: '+(e?.message||'error'));return {}}})()}
 function v3dPropObj(k){const T=V3.T;if(k.startsWith('f:')){const mat=new T.MeshStandardMaterial({color:0x8d939c,roughness:.85});let g;
     if(k==='f:caja')g=new T.BoxGeometry(.5,.5,.5).translate(0,.25,0);else if(k==='f:escalon')g=new T.BoxGeometry(.9,.2,.35).translate(0,.1,0);else if(k==='f:plataforma')g=new T.BoxGeometry(1.2,.6,1.2).translate(0,.3,0);else if(k==='f:cilindro')g=new T.CylinderGeometry(.3,.3,.8,32).translate(0,.4,0);else if(k==='f:esfera')g=new T.SphereGeometry(.4,32,24).translate(0,.4,0);else if(k==='f:pared')g=new T.BoxGeometry(3,2.4,.06).translate(0,1.2,0);
     else if(k==='f:rampa'){const sh=new T.Shape();sh.moveTo(0,0);sh.lineTo(1.2,0);sh.lineTo(0,.5);sh.closePath();g=new T.ExtrudeGeometry(sh,{depth:.9,bevelEnabled:false});g.translate(-.6,0,-.45);g.rotateY(Math.PI/2)}
@@ -9859,23 +9887,34 @@ function v3dPropObj(k){const T=V3.T;if(k.startsWith('f:')){const mat=new T.MeshS
     const m=new T.Mesh(g,mat);m.castShadow=m.receiveShadow=true;return m}
   const src=V3.propsS?.[k];if(!src)return null;const c=src.clone(true);c.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});const G=new T.Group();G.add(c);c.position.set(0,0,0);c.rotation.set(0,0,0);c.scale.set(1,1,1);return G}
 function v3dPropsMonta(){if(!V3.scene)return;(V3.propObjs||[]).forEach(o=>V3.scene.remove(o));V3.propObjs=[];for(const p of S.v3d?.props||[]){const o=v3dPropObj(p.k);if(!o)continue;o.userData.pid=p.id;V3.scene.add(o);V3.propObjs.push(o)}v3dPropsPos()}
+/* cómo se sostiene cada objeto: y = hacia dónde apunta, x = hacia dónde mira su lado ancho (en el marco del personaje: z hacia adelante), g = dónde está el puño sobre el objeto, e = tamaño de partida */
+const V3_PROPS_AGARRE={Espada:{g:.09,y:[0,.8,.6],x:[0,0,1],e:.8},Hacha:{g:.12,y:[0,.8,.6],x:[0,0,1],e:.9},Pico:{g:.12,y:[0,.8,.6],x:[1,0,0],e:.9},Antorcha:{g:.1,y:[0,1,.35],x:[1,0,0],e:1},Escudo:{g:0,y:[0,1,0],x:[1,0,0],e:1}};
+function v3dPropAgarre(o,p){const T=V3.T,en=V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)],bn=en?.model.userData.bn;if(!bn)return false;const L=p.mano==='L'?'Left':'Right',esc=p.k==='Escudo',b=bn[L+(esc?'ForeArm':'Hand')];if(!b)return false;
+  const A=V3_PROPS_AGARRE[p.k]||{y:[0,1,0],x:[1,0,0],g:0};en.model.updateMatrixWorld(true);
+  const bq=new T.Quaternion(),bp=new T.Vector3(),s3=new T.Vector3(),mq=en.model.getWorldQuaternion(new T.Quaternion());b.matrixWorld.decompose(bp,bq,s3);
+  if(!p.q){const Y=new T.Vector3(...A.y).normalize().applyQuaternion(mq),X0=new T.Vector3(...A.x).applyQuaternion(mq),Z=new T.Vector3().crossVectors(X0,Y).normalize(),X=new T.Vector3().crossVectors(Y,Z).normalize(),qd=new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Y,Z));p.q=bq.clone().invert().multiply(qd).toArray()}
+  o.quaternion.copy(bq).multiply(new T.Quaternion().fromArray(p.q)).multiply(new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)));
+  const P=bp.clone(),sc=en.model.scale.y;
+  if(esc){const H=bn[L+'Hand'];if(H)P.lerp(H.getWorldPosition(new T.Vector3()),.5);P.add(new T.Vector3(0,0,.09*sc).applyQuaternion(mq))}
+  else{const M=bn[L+'HandMiddle1'];if(M)P.lerp(M.getWorldPosition(new T.Vector3()),.6)}
+  P.addScaledVector(new T.Vector3(0,1,0).applyQuaternion(o.quaternion),-(A.g||0)*(p.e||1));o.position.copy(P);return true}
 function v3dPropsPos(){const T=V3.T;if(!T||!V3.propObjs)return;const v=new T.Vector3(),q=new T.Quaternion(),sc=new T.Vector3();
   for(const o of V3.propObjs){const p=(S.v3d.props||[]).find(x=>x.id===o.userData.pid);if(!p)continue;o.scale.setScalar(p.e||1);
     const en=p.mano?V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)]:null;const bn=en?.model.userData.bn,b=bn?.[(p.mano==='L'?'Left':'Right')+(p.k==='Escudo'?'ForeArm':'Hand')];
-    if(b){en.model.updateMatrixWorld(true);b.matrixWorld.decompose(v,q,sc);const lado=p.mano==='L'?1:-1,off=new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(lado*90+(p.rz||0))*RAD));o.quaternion.copy(q).multiply(off);o.position.copy(v);if(p.k==='Escudo'){const d=new T.Vector3(0,.12,0).applyQuaternion(q);o.position.add(d)}}
+    if(b&&v3dPropAgarre(o,p)){}
     else{o.position.set(p.x||0,p.y||0,p.z||0);o.rotation.set((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)}}
   V3.dirty=true}
 async function v3dPropAgrega(k){const S3=S.v3d;S3.props=S3.props||[];if(!k.startsWith('f:'))await v3dPropsCarga();const f=S3.figs?.[S3.sel||0],fx=f?(f.px||0)+.9:.9,mano=V3_PROPS_MANO[k]||'';
-  const p={id:uid(),k,x:clamp(fx,-3,3),z:0,y:0,ry:0,e:1,mano,fig:S3.sel||0};if(k==='Escudo')p.ry=90;S3.props.push(p);S3.propSel=p.id;v3dPropsMonta();v3dPanel()}
+  const p={id:uid(),k,x:clamp(fx,-3,3),z:0,y:0,ry:0,e:V3_PROPS_AGARRE[k]?.e||1,mano,fig:S3.sel||0};S3.props.push(p);S3.propSel=p.id;v3dPropsMonta();v3dPanel()}
 function v3dPropSienta(){const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propSel),f=S3.figs?.[S3.sel||0];if(!p||!f)return;f.pose={...V3_POSES['Sentado erguido']};S3.pose={...f.pose};S3.preset='Sentado erguido';f.px=p.x||0;f.pz=(p.z||0)+.04;f.py=0;f.giro={x:0,y:p.ry||0,z:0};S3.giro={...f.giro};v3dCargaSel();v3dPose();v3dPanel()}
 function v3dPropsHTML(s){const L=s.props||[],p=L.find(x=>x.id===s.propSel)||L[L.length-1],sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3p-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3p="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`;
   return `<div class="v3-g"><b>Objetos en la escena</b><p class="hint" style="margin:0">Muebles, armas y formas (silla, banco, escalera, espada, escudo…). Arrástralos por el piso con el mouse. Las armas se pueden poner en la mano del personaje seleccionado.</p>
     <div class="chips"><span class="lbl">Muebles y armas</span>${V3_PROPS_N.map(n=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${n}">${n}</button>`).join('')}</div>
     <div class="chips"><span class="lbl">Formas</span>${V3_PROPS_FORMAS.map(([k,n])=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${k}">${n}</button>`).join('')}</div>
     ${L.length?`<div class="chips"><span class="lbl">En la escena</span>${L.map(x=>`<button class="ch xs ${p&&x.id===p.id?'on':''}" data-act="v3d-prop-sel" data-id="${x.id}">${esc((V3_PROPS_FORMAS.find(f=>f[0]===x.k)||[0,x.k])[1])}</button>`).join('')}</div>`:''}
-    ${p?`${p.mano?'':sl('Izquierda ↔ derecha','x',-3.2,3.2,.05,p.x||0)+sl('Adelante ↔ atrás','z',-3.2,3.2,.05,p.z||0)+sl('Altura','y',0,2,.02,p.y||0)}${sl('Girar','ry',-180,180,1,p.ry||0,'°')}${p.mano?sl('Inclinar','rx',-180,180,1,p.rx||0,'°')+sl('Ladear','rz',-180,180,1,p.rz||0,'°'):''}${sl('Tamaño','e',.3,2.5,.02,p.e||1,'×')}
+    ${p?`${p.mano?'':sl('Izquierda ↔ derecha','x',-3.2,3.2,.05,p.x||0)+sl('Adelante ↔ atrás','z',-3.2,3.2,.05,p.z||0)+sl('Altura','y',0,2,.02,p.y||0)}${sl('Girar','ry',-180,180,1,p.ry||0,'°')}${p.mano?sl('Inclinar','rx',-180,180,1,p.rx||0,'°')+sl('Ladear','rz',-180,180,1,p.rz||0,'°')+'<p class="hint" style="margin:0">Se acomoda según la pose que tiene el personaje al ponérsela. Si cambias mucho la pose, usa «Reacomodar».</p>':''}${sl('Tamaño','e',.3,2.5,.02,p.e||1,'×')}
       <div class="chips"><span class="lbl">Dónde está</span><button class="ch xs ${!p.mano?'on':''}" data-act="v3d-prop-mano" data-m="">Suelto</button><button class="ch xs ${p.mano==='L'?'on':''}" data-act="v3d-prop-mano" data-m="L">En la mano izquierda</button><button class="ch xs ${p.mano==='R'?'on':''}" data-act="v3d-prop-mano" data-m="R">En la mano derecha</button></div>
-      <div class="prow">${V3_PROPS_SILLAS.includes(p.k)?'<button class="btn sm pri" data-act="v3d-prop-sienta">Sentar al personaje aquí</button>':''}<button class="btn sm" data-act="v3d-prop-dup">Duplicar</button><button class="btn sm ghost danger" data-act="v3d-prop-quita">Quitar este objeto</button></div>`:''}</div>`}
+      <div class="prow">${V3_PROPS_SILLAS.includes(p.k)?'<button class="btn sm pri" data-act="v3d-prop-sienta">Sentar al personaje aquí</button>':''}${p.mano?'<button class="btn sm" data-act="v3d-prop-reor">Reacomodar en la mano</button>':''}<button class="btn sm" data-act="v3d-prop-dup">Duplicar</button><button class="btn sm ghost danger" data-act="v3d-prop-quita">Quitar este objeto</button></div>`:''}</div>`}
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.v3p;if(!k||!t.closest?.('#v3d'))return;const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propSel)||(S3.props||[]).slice(-1)[0];if(!p)return;p[k]=+t.value;const lb=$('#v3p-'+k);if(lb)lb.textContent=(Math.round(+t.value*100)/100)+(/^r/.test(k)?'°':k==='e'?'×':'');v3dPropsPos();v3dPersistePronto()});
 /* ============ Capa de anatomía: esqueleto y mapa de músculos simplificado, que siguen la pose ============ */
 const V3_AN_HUESOS=[['Hips','Spine'],['Spine','Spine1'],['Spine1','Spine2'],['Spine2','Neck'],['Neck','Head'],['Head','HeadTop_End']];
@@ -10026,6 +10065,7 @@ function v3dTabLuz(s,p){const ch=v3Ch,L=s.luz,E=p?.escena;return `<div class="ch
       <div class="v3-g"><b>Usar las luces de tu proyecto</b><div class="chips">${E?`<button class="ch" data-act="v3d-escena" data-k="proyecto">Mi escena: ${esc(escNombre(p,E))}</button>`:''}${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch" data-act="v3d-escena" data-k="${k}">${esc(v.n)}</button>`).join('')}</div>
       <button class="btn sm" data-act="v3d-guardar-luz" title="La guarda en «Mis escenas» de Mood">Guardar esta luz como escena</button></div>`}
 function v3dTabCamara(s){const ch=v3Ch;return `<div class="chips"><span class="lbl">${s.figs?.length>1?'El seleccionado visto de':'El modelo visto de'}</span>${V3_VISTAS.map(([nm,a])=>`<button class="ch xs ${Math.round(s.giro.y)===a?'on':''}" data-act="v3d-vista" data-a="${a}">${nm}</button>`).join('')}</div><div class="chips"><span class="lbl">Cámara</span>${V3_CAMS.map(([nm,a])=>`<button class="ch xs" data-act="v3d-cam" data-a="${a}">${nm}</button>`).join('')}</div>${v3Sl('Lente (mm)','lente',18,135,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
+    <div class="chips"><span class="lbl">Rendimiento</span><button class="ch xs ${!v3dLigero()?'on':''}" data-act="v3d-rend" data-k="normal">Normal (nítido)</button><button class="ch xs ${v3dLigero()?'on':''}" data-act="v3d-rend" data-k="ligero">Ligero (celular)</button></div>
     <div class="chips"><span class="lbl">Fondo</span>${Object.keys(V3_FONDO_N).map(k=>ch('v3d-fondo',k,V3_FONDO_N[k],s.fondo===k)).join('')}</div>
     <label class="chk"><input type="checkbox" data-v3chk="rej" ${s.rej?'checked':''}><span>Cuadrícula</span></label><label class="chk"><input type="checkbox" data-v3chk="sombra" ${s.sombra?'checked':''}><span>Suelo y sombra</span></label>
     <div class="prow"><button class="btn sm" data-act="v3d-encuadra">Encuadrar</button><button class="btn sm" data-act="v3d-reset-giro">Quitar giro del modelo</button></div>`}
@@ -10042,7 +10082,7 @@ function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
     ${s.modelo==='maniqui'?`<div class="v3-g"><b>Buscar fotos de esta pose</b><p class="hint" style="margin:0">Busca en tus fuentes fotos que se llaman como tu pose («${esc(V3_POSES[s.preset]?.en||'figure pose reference')}»). No compara tu pose con las fotos: busca por nombre.</p><button class="btn sm" data-act="v3d-buscar-pose">Buscar fotos de «${esc(s.preset)}»</button></div>`:''}`}
 /* ---------- poses del visor 3D: se recuerdan, hay pose neutra y puedes guardar pose + luces + lente con nombre ---------- */
 const V3_NEUTRA=()=>({...V3_POSES['De pie']});
-const V3_GUARDA=['modelo','figs','sel','props','capa','luz2','luz3','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla'];
+const V3_GUARDA=['modelo','rend','figs','sel','props','capa','luz2','luz3','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla'];
 const v3dEstadoUtil=()=>{v3dFigSync();const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
 function v3dRecuerda(){try{if(S.v3d)localStorage.setItem('cdc.v3d',JSON.stringify(v3dEstadoUtil()))}catch{}}
 function v3dPersistePronto(){clearTimeout(V3.rT);V3.rT=setTimeout(v3dRecuerda,1500)}
@@ -10095,7 +10135,7 @@ async function v3dExporta(k){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!V3.mod
 const v3dTabCuerpo=s=>s.modelo==='maniqui'?v3dCuerpoHTML(s):'<p class="hint">La complexión, las manos, los tonos de piel y la anatomía son para el cuerpo posable. Cambia a «Cuerpo» en la pestaña Modelo.</p>';
 const v3dTabObjetos=s=>v3dPropsHTML(s);
 const V3_TABS={modelo:v3dTabModelo,pose:v3dTabPose,cuerpo:v3dTabCuerpo,objetos:v3dTabObjetos,luz:v3dTabLuz,camara:v3dTabCamara,poses:v3dTabPoses,guardar:v3dTabGuardar};
-function v3dNovedades(){let v=false;try{v=localStorage.getItem('cdc.v3dnov2')==='1'}catch{}if(v)return '';return `<div class="v3-nov"><b>Novedades del visor</b><ul><li><b>Modelo:</b> hasta 4 personajes, escenas y escenas con palabras.</li><li><b>Pose:</b> 100+ poses con buscador, desde foto o boceto, y arrastrar articulaciones.</li><li><b>Cuerpo:</b> complexión, piel, manos y pies, esqueleto y músculos.</li><li><b>Objetos:</b> muebles, armas y formas.</li><li><b>Luz:</b> 3 luces. <b>Cámara:</b> fondos. <b>Poses:</b> tu biblioteca de fotos.</li></ul><button class="btn sm pri" data-act="v3d-nov">Entendido</button></div>`}
+function v3dNovedades(){let v=false;try{v=localStorage.getItem('cdc.v3dnov3')==='1'}catch{}if(v)return '';return `<div class="v3-nov"><b>Novedades del visor</b><ul><li><b>Modelo:</b> hasta 4 personajes, escenas y escenas con palabras.</li><li><b>Pose:</b> 100+ poses con buscador, desde foto o boceto, y arrastrar articulaciones.</li><li><b>Cuerpo:</b> complexión, piel, manos y pies, esqueleto y músculos.</li><li><b>Objetos:</b> muebles, armas y formas.</li><li><b>Luz:</b> 3 luces. <b>Cámara:</b> fondos y modo ligero para celular. <b>Poses:</b> tu biblioteca de fotos, que ahora se guarda en tu cuenta.</li></ul><button class="btn sm pri" data-act="v3d-nov">Entendido</button></div>`}
 function v3dPanelHTML(){const s=S.v3d;return v3dNovedades()+v3dBarra()+(V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
 function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?(s.figs?.length>1?`Escena 3D con ${s.figs.length} personajes${s.figs.some(f=>f.nom)?' ('+s.figs.map(f=>f.nom).filter(Boolean).join(', ')+')':''}`:`Pose 3D: ${s.preset}`):s.modelo==='loomis'?'Cabeza de Loomis con luz':s.modelo==='formas'?`Estudio de luz sobre ${s.forma}`:'Estudio 3D de '+(s.mioNombre||'modelo');return `${n} · luz ${s.luzN||'a mano'}`}
 function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[['modelo','Modelo'],['pose','Pose'],['cuerpo','Cuerpo'],['objetos','Objetos'],['luz','Luz'],['camara','Cámara'],['poses','Poses'],['guardar','Guardar']].map(([k,n])=>`<button class="${s.tab===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
@@ -10808,13 +10848,14 @@ async function accion(a,el){
     case 'v3d-piel':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f){if(ds.k)f.mat=ds.k;else delete f.mat;v3dArcilla();v3dPanel()}break}
     case 'v3d-prop-add':v3dPropAgrega(ds.k);break;
     case 'v3d-prop-sel':{S.v3d.propSel=ds.id;v3dPanel();break}
-    case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
+    case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.q=null;if(ds.m)p.rx=p.ry=p.rz=0;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
     case 'v3d-prop-sienta':v3dPropSienta();break;
     case 'v3d-prop-quita':{const S3=S.v3d;S3.props=(S3.props||[]).filter(x=>x.id!==S3.propSel);S3.propSel=S3.props.slice(-1)[0]?.id||null;v3dPropsMonta();v3dPanel();break}
     case 'v3d-luz3p':{const e=V3_LUZ3P[ds.k];if(e){Object.assign(S.v3d.luz,e.luz);S.v3d.luz2={...e.luz2};S.v3d.luz3={...e.luz3};S.v3d.luzN=ds.k;v3dLuz();v3dPanel()}break}
     case 'v3d-capa':{S.v3d.capa=ds.k;v3dMaterial();v3dArcilla();v3dAnatConstruye();v3dPanel();break}
     case 'v3d-cuerpo-del':v3dCuerpoQuita(ds.k);break;
-    case 'v3d-nov':{try{localStorage.setItem('cdc.v3dnov2','1')}catch{}v3dPanel();break}
+    case 'v3d-nov':{try{localStorage.setItem('cdc.v3dnov3','1')}catch{}v3dPanel();break}
+    case 'v3d-prop-reor':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.q=null;p.rx=p.ry=p.rz=0;v3dPropsPos();v3dPanel()}break}
     case 'v3d-prop-dup':{const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propSel);if(p){const n={...p,id:uid(),x:clamp((p.x||0)+.5,-3.2,3.2)};S3.props.push(n);S3.propSel=n.id;v3dPropsMonta();v3dPanel()}break}
     case 'v3d-cx':{const f=S.v3d.figs?.[S.v3d.sel||0],c=V3_COMPLEXION[ds.k];if(f&&c){const {esc,...r}=c;f.cx={...r};f.esc=esc;const en=V3.figs?.[S.v3d.sel||0];if(en){v3dColoca(en.model,f);v3dAnillo()}v3dPanel()}break}
     case 'v3d-mano':{const f=S.v3d.figs?.[S.v3d.sel||0],v=V3_MANOS[ds.k];if(f&&v){f.dedos=f.dedos||{L:V3_MANOS['Relajada'].slice(),R:V3_MANOS['Relajada'].slice()};f.dedos[ds.l]=v.slice();const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
@@ -10844,6 +10885,7 @@ async function accion(a,el){
     case 'v3d-luzp':{if(!V3_LUCES[ds.k])return;Object.assign(S.v3d.luz,luz3dPre(ds.k));S.v3d.luzN=V3_LUCES[ds.k].n;v3dLuz();v3dPanel();break}
     case 'v3d-escena':{const E=ds.k==='proyecto'?p?.escena:ESC_PRE[ds.k];if(!E)return;Object.assign(S.v3d.luz,escALuz3d(E));S.v3d.luzN=ds.k==='proyecto'?escNombre(p,E):E.n;v3dLuz();v3dPanel();break}
     case 'v3d-guardar-luz':{const L=S.v3d.luz;p.escenas=p.escenas||[];p.escenas.push(luz3dAEsc(L,'Luz 3D '+(p.escenas.length+1)));marcar();toast('Guardada en «Mis escenas» (pestaña Mood)');break}
+    case 'v3d-rend':{S.v3d.rend=ds.k;v3dRendimiento();V3.dirty=true;v3dPanel();break}
     case 'v3d-fondo':S.v3d.fondo=ds.k;v3dEscena();v3dPanel();break;
     case 'v3d-encuadra':v3dEncuadra();break;
     case 'v3d-luzc':{const L=S.v3d.luz;L[ds.r]=ds.c;S.v3d.luzN='';if(ds.r==='rimc'&&!(L.rim>0))L.rim=1.2;v3dLuz();v3dPanel();break}

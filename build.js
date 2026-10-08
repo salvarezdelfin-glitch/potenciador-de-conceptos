@@ -29,7 +29,7 @@ const libs = `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.
 <script>
 ${shim}
 </script>
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=${v}').catch(()=>{}));</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=${v}').catch(()=>{}))}</script>
 `;
 const marker = '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/';
 if (!src.includes(marker)) throw new Error('No encontré el script de JSZip en la fuente');
