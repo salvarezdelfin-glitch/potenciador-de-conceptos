@@ -1057,7 +1057,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1cehhp').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1cjmdh').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3463,6 +3463,7 @@ function fndAgrega(p){const st=S.fnd;if(!st)return 0;const ya=new Set((p.refs||[
   const poner=(f,x,fn)=>{if(ya.has(x.big||x.src)||ya.has(x.src))return;ya.add(x.big||x.src);
     const r=refNueva({capa:f.c||'concepto',porque:f.t,paraQue:f.t,facet:f.n,facetN:fn,fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,autor:x.autor||'',lic:x.lic?.texto||'',licEstado:x.lic?.estado||(x.as?'inspiracion':'desconocida'),licUrl:x.lic?.url||'',w:x.w||0,h:x.h||0,tags:x.tags||[],prov:x.prov||'',creditos:x.creditos||'',tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':claseDeFuente(x.fuente),concepto:st.txt});p.refs.push(r);n++;relevMarca({fuente:x.fuente,prov:x.prov},1)};
   st.F.forEach((f,i)=>f.pool.forEach(x=>{if(st.sel.includes(x.clave))poner(f,x,i+1)}));
+  if(p.libre&&n){p.board=p.board||{items:[]};p.board.titulo=st.txt}
   return n}
 /* ---- referencias ligadas a un grupo de bocetos ---- */
 function rfParaHTML(p,g){if(!g||!(p.refs||[]).length)return '';const rs=p.refs.filter(r=>(r.para||[]).includes(g));
@@ -9078,7 +9079,7 @@ const bdAsp=id=>{const e=document.querySelector('.bd-it[data-id="'+id+'"]');retu
 function bdPro(p){const B=p.board,W0=1240,G=14,H=230,LADO=340,all=bdItems(p),imgs=all.filter(i=>i.t==='img'),pals=all.filter(i=>i.t==='pal'),notas=all.filter(i=>i.t==='txt'&&!i.auto);
   B.items=B.items.filter(i=>!i.auto);const z=()=>bdZmax(p)+1,T=(text,x,y,w,fs,cap)=>B.items.push({id:uid(),t:'txt',text,x,y,w,fs,auto:true,cap:!!cap,z:z()}),
     asp=i=>{const r=bdRef(p,i);return r&&r.w&&r.h?r.h/r.w:(bdAsp(i.id)||.75)},tres=(p.mood?.tres||[]).filter(Boolean),pq=i=>{const r=bdRef(p,i);return (r?.paraQue||r?.porque||'').trim()},alto=(t,w,fs)=>Math.ceil(String(t).length*fs*.52/w)*Math.round(fs*1.35)+8;
-  T((p.nombre||'Proyecto').toUpperCase(),0,0,W0-460,54);T([p.tipo,tres.join(' · ')].filter(Boolean).join('   ·   '),0,70,W0-460,18,1);
+  T((p.libre?(B.titulo||'Moodboard'):(p.nombre||'Proyecto')).toUpperCase(),0,0,W0-460,54);T([p.tipo,tres.join(' · ')].filter(Boolean).join('   ·   '),0,70,W0-460,18,1);
   const idea=(p.concepto?.frase||p.brief?.texto||'').trim();if(idea)T(corto(idea,220),0,104,W0-460,15,1);
   if(pals[0]){pals[0].x=W0-420;pals[0].y=0;pals[0].w=420}
   let y=170;const grupos=[],mapa={};
