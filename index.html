@@ -509,6 +509,13 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .ht-c{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid var(--line2);border-radius:16px;padding:14px;color:var(--ink);cursor:pointer;min-height:92px;transition:transform .15s ease,border-color .15s ease}.ht-c:hover{border-color:var(--accent)}.ht-c:active{transform:scale(.98)}
 .ht-c b{font-family:var(--display);font-size:19px}.ht-c span{font-size:12.5px;color:var(--ink2)}
 .ht-b{background:linear-gradient(135deg,#3a2a24,#1a1c22)}.ht-3{background:linear-gradient(135deg,#232b3d,#1a1c22)}.ht-p{background:linear-gradient(135deg,#243a33,#1a1c22)}
+.rf-modos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.rf-modo{flex:1 1 150px;display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 14px;border-radius:12px;background:var(--surface2);border:1px solid var(--line2);color:var(--ink);cursor:pointer;font:inherit}.rf-modo b{font-size:14px}.rf-modo small{color:var(--muted);font-size:11.5px}.rf-modo.on{background:rgba(255,106,61,.12);border-color:var(--accent)}
+.fnd{display:flex;flex-direction:column;gap:12px}.fnd-ctx{margin:0;font-size:13.5px;line-height:1.5;color:var(--muted)}.fnd-ctx b{color:var(--ink)}
+.fct{border:1px solid var(--line2);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}.fct header{display:flex;align-items:center;gap:10px}.fct header>div{flex:1;display:flex;flex-direction:column;line-height:1.25}.fct header small{color:var(--muted);font-size:11.5px}.fct-n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#111;font:700 13px var(--mono,monospace);display:grid;place-items:center;flex:none}
+.fct-t{margin:0;font-size:13px;line-height:1.5}.fct-t b{color:var(--accent)}.fct-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.fct-c{position:relative;margin:0;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface2);-webkit-user-select:none;user-select:none}.fct-c img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;pointer-events:none}.fct-c.sel{outline:3px solid var(--accent);outline-offset:-3px}.fct-c.ya{opacity:.55;cursor:default}
+.fct-c figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(8,9,12,.88));display:flex;flex-direction:column;gap:3px;line-height:1.25}.fct-c figcaption small{color:#d6d9df;font-size:10.5px}.fct-c .rb-chk{position:absolute;top:6px;left:6px}.fct-c .rb-z{position:absolute;top:6px;right:6px}.fct-c .rb-ya{position:absolute;top:6px;left:6px}
+.fnd-bar{position:sticky;bottom:78px;z-index:6}
+.bd-cap .bd-tx{font-family:var(--body);font-weight:400;opacity:.78}
 .rb-feed{column-width:170px;column-gap:8px}.rb-f{break-inside:avoid;position:relative;margin:0 0 8px;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface2);-webkit-user-select:none;user-select:none}
 .rb-f img{width:100%;display:block;pointer-events:none}.rb-f.sel{outline:3px solid var(--accent);outline-offset:-3px}.rb-f.ya{opacity:.55;cursor:default}
 .rb-chk{position:absolute;top:8px;left:8px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:rgba(8,9,12,.45);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-size:14px}.rb-f.sel .rb-chk{background:var(--accent);border-color:var(--accent)}
@@ -1050,7 +1057,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv054iet').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1btmgx').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3146,13 +3153,17 @@ function rfMisionesHTML(p){const M=S.rfM=rfMisiones(p),b=S.refB||{},lib=p.libre,
   return M.length?`<div class="box"><h3>${lib&&!ctx?'Búsquedas rápidas':'Para tu proyecto'}</h3>${lib?`<div class="prow"><label class="lbl" for="herr-ctx">Armar con el contexto de</label><select id="herr-ctx" data-herrctx="1"><option value="">Ninguno: búsquedas generales</option>${proys.map(([id,x])=>`<option value="${esc(id)}" ${S.herrCtx===id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></div>`:''}<p class="hint" style="margin:0">${lib&&!ctx?'Búsquedas de partida para estudiar. Elige un proyecto arriba para que se armen con su tema, materiales y mood, o usa «Buscar otra cosa» para escribir la tuya. ':'Búsquedas armadas con tu tema, personajes, materiales y texturas, mood y luz. '}De cada una te muestro solo lo mejor: alta resolución y sin lo que pusiste en «Evitar».</p>
     <div class="rf-ms">${M.map((m,i)=>`<button class="rf-m ${b.mision===m.t?'on':''}" data-act="rf-mision" data-i="${i}"><b>${esc(corto(m.t,52))}</b><small>${esc(corto(m.sub,90))}</small></button>`).join('')}</div></div>`:`<p class="hint">Escribe qué es tu proyecto, sus materiales, el mood o tus personajes y aquí aparecerán búsquedas hechas a la medida.</p>`}
 /* ---- la mesa ---- */
-function vMesa(p){
-  const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false},vista=S.refVista==='tablero'?'tablero':'galeria',n=(p.refs||[]).length,s=salud(p),sin=n-s.conP,hayPal=(p.mood?.paleta||[]).length>1,
+const refModo=p=>S.refModo||(S.refVista==='galeria'?'galeria':S.refVista==='tablero'?'tablero':((p.refs||[]).length?'tablero':'conseguir'));
+function vMesa(p){const n=(p.refs||[]).length,m=refModo(p),nb=bdItems(p).filter(i=>i.t==='img').length;
+  const T=[['tablero','Tablero',nb?nb+' en el tablero':'tu moodboard ordenado'],['conseguir','Conseguir','lo que necesitas, con su para qué'],['galeria','Mis referencias',n+' guardadas']];
+  return '<div class="rf-modos" role="tablist">'+T.map(([k,t,d])=>'<button class="rf-modo '+(m===k?'on':'')+'" role="tab" data-act="rf-modo" data-v="'+k+'"><b>'+t+'</b><small>'+d+'</small></button>').join('')+'</div>'
+   +(m==='tablero'?'<div id="sec-tablero">'+vBoardTab(p)+'</div>':m==='conseguir'?vConseguir(p):vMesaGaleria(p))}
+function vMesaGaleria(p){
+  const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false},vista='galeria',n=(p.refs||[]).length,s=salud(p),sin=n-s.conP,hayPal=(p.mood?.paleta||[]).length>1,
     capas=capasDe(p).map(l=>[l,(p.refs||[]).filter(r=>r.capa===l.k).length]).filter(([,c])=>c),selN=(S.rgSel||[]).length,rv=(p.criticas||[]).filter(c=>c.tipo==='Crítica'&&c.refs).sort((a,b)=>b.ts-a.ts)[0];
   S.refB=S.refB||{fRes:'1200',fLic:''};
-  return `<div class="chips"><button class="ch ${vista==='galeria'?'on':''}" data-act="rg-vista" data-v="galeria">Galería · ${n}</button><button class="ch ${vista==='tablero'?'on':''}" data-act="rg-vista" data-v="tablero">Tablero (estilo PureRef)</button></div>
+  return `
   ${S.rgPara?`<div class="banner">Eligiendo referencias para «${esc(S.rgPara)}»: toca las que sirven. <button class="btn sm pri" data-act="rf-listo">Listo</button></div>`:''}
-  <details class="box" id="det-busca" ${S.rgBusca||!n?'open':''}><summary style="cursor:pointer"><h3 style="display:inline">Buscar referencias de alta calidad</h3> <span class="lbl" style="margin-left:10px">museos · fotos · concept art</span></summary><div style="margin-top:8px;display:flex;flex-direction:column;gap:10px">${rfMisionesHTML(p)}<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Buscar otra cosa</h3></summary>${refsBuscaHTML(p)}</details>${S.refB?.mision?refsResultadoHTML(p):''}</div></details>
   ${vista==='tablero'?`<div id="sec-tablero">${vBoardTab(p)}</div>`:`
   <div class="drop" id="drop"><div class="prow"><label class="btn pri" for="f-file">＋ Subir imágenes</label><input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
     <span class="muted">arrastra aquí o pega con Ctrl+V</span><span style="flex:1"></span><label class="lbl" for="f-destino">Van a</label><select id="f-destino" data-act-change="destino">${capasDe(p).map(l=>`<option value="${l.k}" ${S.destinoCapa===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select></div></div>
@@ -3173,6 +3184,159 @@ function refsResultadoHTML(p){const b=S.refB||{},ya=new Set((p.refs||[]).map(r=>
   if(b.cargando)return '<p class="muted">Buscando en varias fuentes…</p>';if(b.error)return `<p class="muted">${esc(b.error)}</p>`;if(!(b.items||[]).length)return '';
   return `<div class="box" style="border-top:3px solid var(--accent)"><p class="hint" style="margin:0"><b>${esc(b.mision)}</b> · las ${Math.min(vis.length,n)} mejores de ${vis.length}, ordenadas por tu proyecto. Debajo de cada una dice por qué.</p>
     ${vis.length?`<div class="rb-feed">${rfTop(vis,n).map(({x,i})=>refFeedHTML(x,i,ya)).join('')}</div>${vis.length>n?`<button class="btn" data-act="rb-mas">Ver más (${vis.length-n})</button>`:''}${refSelBar(p,b)}`:'<p class="muted">Ningún resultado cumple los filtros de calidad. Abre «Buscar otra cosa» y relaja alguno.</p>'}</div>`}
+/* ============ Conseguir referencias: pocas, y cada una con su para qué ============
+   Escribes qué diseñas («monstruo de fuego») y la app lo descompone en lo que de verdad necesitas para dibujarlo: cómo se ve y se mueve el fuego, de dónde sale el cuerpo, cómo lo ilumina…
+   Por cada necesidad trae 2 imágenes buenas (fotos reales, naturalistas, museos), con la razón escrita. Todo cae al tablero ordenado por necesidad. */
+const FND_FOTO=()=>[...(window.PC_SHIM?.fotos?['px','us']:[]),'ov','wm'],FND_MUSEO=['cma','met'],FND_NAT=['inat'];
+const FND_ELEM=[
+ {k:'fuego',n:'Fuego',en:'fire',re:/fuego|llama|ardiente|incendi|flam|\bfire\b|infern|igne|brasa|ember|inflam|candente|pirom/,f:[
+  {n:'Cómo se ve y se mueve el fuego',t:'Dibujar las llamas con ritmo: lenguas largas, puntas que se desprenden y zonas de color (casi blanco al centro, rojo en la orilla).',q:['flames fire dark background','fire flames close up','fire'],s:'foto'},
+  {n:'Brasas y carbón',t:'Textura para piel o armadura quemada: costra negra con grietas que dejan ver luz roja por dentro.',q:['glowing embers charcoal','embers','charcoal fire'],s:'foto'},
+  {n:'Magma y roca fundida',t:'Cómo se parte una corteza oscura y brilla por las grietas: sirve para escamas, rocas y bordes incandescentes.',q:['lava flow glowing cracks','lava flow','lava'],s:'foto'},
+  {n:'Luz de fuego sobre una forma',t:'Cómo ilumina el fuego: luz naranja desde abajo, sombras profundas y borde cálido. Así se lee el volumen de tu diseño.',q:['campfire night light','campfire night','campfire'],s:'foto',c:'mood'},
+  {n:'Chispas, humo y ceniza',t:'Partículas y humo para el aura: por dónde suben, cómo se dispersan y qué tan oscuro es el humo.',q:['sparks smoke dark night','sparks','smoke'],s:'foto',c:'mood'},
+  {n:'Metal al rojo vivo',t:'El cambio de color por calor (blanco, amarillo, naranja, rojo, negro) para marcar dónde está más caliente.',q:['red hot iron glowing forge','glowing hot metal','forge'],s:'foto'}]},
+ {k:'volcan',n:'Volcán y lava',en:'volcano',re:/volc|lava|magma|ceniza|obsidian|erupci|caldera/,f:[
+  {n:'Erupción y columna de humo',t:'Escala y silueta de una explosión: cómo sube la columna, el color del interior y los rayos.',q:['volcano eruption night','volcano eruption','volcano'],s:'foto',c:'mood'},
+  {n:'Magma y roca fundida',t:'Cómo se parte una corteza oscura y brilla por las grietas.',q:['lava flow glowing cracks','lava flow','lava'],s:'foto'},
+  {n:'Obsidiana',t:'Vidrio volcánico: negro profundo con reflejos y bordes afilados (conchoidales).',q:['obsidian rock polished','obsidian','obsidian blade'],s:'foto'},
+  {n:'Basalto y ceniza',t:'Columnas y rocas oscuras para suelos, armaduras o estructuras.',q:['basalt columns','volcanic rock','basalt'],s:'foto'}]},
+ {k:'hielo',n:'Hielo y nieve',en:'ice',re:/hielo|helad|nieve|glaci|frio|escarcha|\bice\b|frost|snow|frozen|ventisca/,f:[
+  {n:'Cristales y grietas de hielo',t:'Formas angulosas y translúcidas, y cómo se fractura: para armaduras, espinas y garras de hielo.',q:['ice crystals close up','ice crystals','ice'],s:'foto'},
+  {n:'Hielo azul y glaciar',t:'El gradiente del blanco al azul profundo y dónde se vuelve translúcido.',q:['glacier blue ice','blue ice','glacier'],s:'foto'},
+  {n:'Escarcha y patrones',t:'Patrones ramificados de escarcha para ornamento y texturas.',q:['frost pattern window','frost patterns','frost'],s:'foto'},
+  {n:'Luz fría y cueva de hielo',t:'Luz azulada con sombras violetas: atmósfera helada.',q:['ice cave blue light','ice cave','snow blue hour'],s:'foto',c:'mood'}]},
+ {k:'agua',n:'Agua y océano',en:'water',re:/\bagua|\bmar\b|oceano|marin|lago|\brio\b|\bola\b|tsunami|water|ocean|abismo|kraken|coral|acuatic|sirena/,f:[
+  {n:'Salpicaduras y olas',t:'Formas del agua en movimiento: crestas, gotas y espuma congeladas en un instante.',q:['water splash high speed','water splash','wave crest'],s:'foto'},
+  {n:'Bajo el agua',t:'Luz que baja en rayos, partículas y color que se enfría con la profundidad.',q:['underwater light rays','underwater','ocean underwater'],s:'foto',c:'mood'},
+  {n:'Medusas y cuerpos translúcidos',t:'Transparencias y bordes luminosos para criaturas de agua.',q:['Aurelia aurita','Chrysaora','Pelagia noctiluca'],s:'nat',m:1},
+  {n:'Peces de aguas profundas',t:'Bocas, dientes y luces propias: anatomía real de lo que vive en el abismo.',q:['Lophius piscatorius','Chauliodus sloani','Eurypharynx pelecanoides'],s:'nat',m:1}]},
+ {k:'tormenta',n:'Tormenta y electricidad',en:'storm',re:/rayo|trueno|tormenta|electric|storm|lightning|relampag|tempestad|plasma/,f:[
+  {n:'Rayos y descargas',t:'Cómo se ramifica un rayo: ángulos, grosor y halo de luz.',q:['lightning bolt storm night','lightning','thunderstorm'],s:'foto'},
+  {n:'Cielo de tormenta',t:'Masas de nubes oscuras con bordes iluminados para el fondo.',q:['storm clouds dramatic','storm clouds','thunderstorm sky'],s:'foto',c:'mood'},
+  {n:'Arcos eléctricos',t:'Líneas finas y brillantes para energía sobre el cuerpo.',q:['plasma globe electric','electric arc','plasma ball'],s:'foto'}]},
+ {k:'roca',n:'Roca y piedra',en:'rock',re:/\broca|piedra|golem|montana|mountain|rock|stone|mineral|pedreg|petre/,f:[
+  {n:'Estratos y grietas de roca',t:'Cómo se rompe y se apila la roca: para cuerpos de piedra y golems.',q:['rock strata cliff','cracked rock','rock formation'],s:'foto'},
+  {n:'Musgo sobre piedra',t:'Detalle orgánico sobre roca: da edad y vida.',q:['moss covered stone','moss on rock','moss'],s:'foto'},
+  {n:'Cristales que salen de la roca',t:'Racimos de cristal: espinas, gemas y brillos para el diseño.',q:['crystal cluster geode','quartz crystals','geode'],s:'foto'}]},
+ {k:'planta',n:'Planta y bosque',en:'forest',re:/planta|bosque|arbol|raiz|raices|hongo|musgo|selva|vegeta|druida|\bforest\b|plant|fungus|vine|jungla|follaje|natura/,f:[
+  {n:'Raíces y troncos',t:'Cómo se enredan y sostienen: para cuerpos, brazos o patas vegetales.',q:['tree roots exposed','tree roots','roots'],s:'foto'},
+  {n:'Corteza y madera',t:'Textura de corteza y nudos para piel y armadura vegetal.',q:['tree bark close up','bark texture','bark'],s:'foto'},
+  {n:'Hongos',t:'Sombreros, laminillas y crecimientos: formas reales para parásitos y brotes.',q:['Amanita muscaria','Ganoderma applanatum','Cantharellus cibarius'],s:'nat',m:1},
+  {n:'Lianas y follaje denso',t:'Cómo cuelgan y envuelven las plantas: capas y ritmo.',q:['jungle vines hanging','liana jungle','vines'],s:'foto'}]},
+ {k:'veneno',n:'Veneno y corrosión',en:'toxic',re:/venen|toxic|poison|acid|plaga|radioact|corros|putrefac|podrid/,f:[
+  {n:'Animales venenosos y su color',t:'Colores de advertencia (rojo, amarillo, azul brillante sobre negro) para criaturas y vestuario.',q:['Dendrobates tinctorius','Phyllobates terribilis','Ranitomeya'],s:'nat',m:1},
+  {n:'Corrosión y óxido',t:'Cómo se corroe el metal: manchas, escurrido y costras.',q:['corroded metal rust','rust texture','rust'],s:'foto'},
+  {n:'Limo y algas',t:'Superficies viscosas verdes para charcos, piel húmeda y secreciones.',q:['green algae slime pond','algae bloom','algae'],s:'foto'}]},
+ {k:'sombra',n:'Sombra y oscuridad',en:'shadow',re:/sombra|oscur|noche|tinieblas|shadow|\bdark\b|\bvoid\b|vacio|niebla|fantasma|espectr|ghost|nocturn/,f:[
+  {n:'Niebla y profundidad',t:'Cómo la distancia se pierde en la bruma: planos de valor para separar capas.',q:['fog forest dark','dark fog','fog'],s:'foto',c:'mood'},
+  {n:'Siluetas a contraluz',t:'Leer la forma solo con el borde de luz: así se prueba la silueta del diseño.',q:['backlit silhouette fog','backlit silhouette','silhouette'],s:'foto',c:'mood'},
+  {n:'Humo negro',t:'Zarcillos de humo para cuerpos de sombra, capas y colas.',q:['smoke tendrils black background','smoke black background','smoke'],s:'foto'}]},
+ {k:'hueso',n:'Hueso y muerte',en:'bone',re:/hueso|esquelet|muert|cadaver|craneo|undead|\bbone|skull|zombi|necro|calavera|osamenta/,f:[
+  {n:'Cráneos y cuernos reales',t:'Forma real de mandíbulas, cuencas y cuernos: base para cabezas óseas.',q:['animal skull','skull','bone'],s:'foto'},
+  {n:'Esqueleto y costillas',t:'Cómo encajan columna y costillas: para exoesqueletos y torsos.',q:['animal skeleton museum','skeleton','ribcage'],s:'foto'},
+  {n:'Hueso viejo',t:'Textura de hueso desgastado: grietas, poros y manchas.',q:['weathered bone texture','old bone','bone texture'],s:'foto'}]},
+ {k:'metal',n:'Metal y máquina',en:'machine',re:/metal|robot|maquina|mecan|cyber|androide|acero|steel|machine|mech\b|engran|autom/,f:[
+  {n:'Maquinaria oxidada',t:'Piezas, remaches y desgaste para criaturas y armaduras mecánicas.',q:['rusted machinery close up','rusted machinery','machinery'],s:'foto'},
+  {n:'Engranes y mecanismos',t:'Estructura interna articulada: cómo se conectan las piezas.',q:['clock mechanism gears','gears','watch movement'],s:'foto'},
+  {n:'Armadura de placas',t:'Cómo se articulan las placas y dónde se refuerza.',q:['plate armor','armor','helmet'],s:'museo'}]},
+ {k:'cristal',n:'Cristal y gema',en:'crystal',re:/cristal|gema|joya|crystal|\bgem\b|quartz|amatista|diamante/,f:[
+  {n:'Racimos de cristal',t:'Cómo crecen y se apuntan: espinas, gemas y brillos.',q:['crystal cluster macro','crystal','quartz'],s:'foto'},
+  {n:'Geodas y amatista',t:'Interior de cristales, color y transparencia.',q:['amethyst geode','geode','amethyst'],s:'foto'}]},
+ {k:'desierto',n:'Desierto y arena',en:'desert',re:/desiert|arena\b|duna|sand|desert|momia|arid/,f:[
+  {n:'Dunas y viento',t:'Ondas y crestas de arena: ritmo para piel, capas y paisajes.',q:['sand dunes wind','sand dunes','dunes'],s:'foto'},
+  {n:'Roca de desierto',t:'Formaciones erosionadas y colores cálidos.',q:['desert rock formations','desert rocks','canyon'],s:'foto'}]},
+ {k:'celestial',n:'Luz sagrada',en:'light',re:/angel|celest|divin|sagrad|holy|\bsol\b|\bsun\b|dios|halo|aurora|estrella|cosmic|galax/,f:[
+  {n:'Rayos de luz entre nubes',t:'Cómo baja la luz en haces: dirección, borde y atmósfera.',q:['sun rays clouds','crepuscular rays','sun rays'],s:'foto',c:'mood'},
+  {n:'Vitrales y luz coloreada',t:'Luz que se tiñe al atravesar cristal: paleta y sombras de color.',q:['stained glass light cathedral','stained glass','cathedral light'],s:'foto',c:'mood'},
+  {n:'Aurora',t:'Cortinas de luz verde y violeta para cielos y energía.',q:['aurora borealis','aurora'],s:'foto',c:'mood'}]},
+ {k:'insecto',n:'Insectos y arácnidos',en:'insect',re:/insect|arana|escorpi|escarabaj|abeja|mantis|spider|scorpion|beetle|hormig|enjambre|avispa/,f:[
+  {n:'Exoesqueletos de insectos',t:'Armadura natural: segmentos, cuernos y brillo.',q:['Lucanus cervus','Dynastes hercules','Goliathus goliatus'],s:'nat',m:1},
+  {n:'Arañas y escorpiones',t:'Patas articuladas, quelíceros y proporciones.',q:['Theraphosa blondi','Pandinus imperator','Latrodectus mactans'],s:'nat',m:1},
+  {n:'Alas de insecto',t:'Nervaduras y transparencia para alas y capas.',q:['dragonfly wings close up','dragonfly wing','wing venation'],s:'foto'}]}];
+const FND_TIPO=[
+ {k:'monstruo',n:'Monstruo',en:'monster',re:/monstruo|bestia|criatura|kaiju|engendro|aberraci|quimera|\bente\b|monster|beast|creature|abominaci/,f:[
+  {n:'Anatomía base: un animal grande real',t:'Elige UN animal como esqueleto del diseño: cómo carga el peso, dónde están hombros y cadera, cómo se doblan las patas. Así el monstruo se cree.',q:['Ursus arctos','Ceratotherium simum','Varanus komodoensis'],s:'nat',m:1},
+  {n:'Cabeza, cuernos y colmillos',t:'Formas reales para la cabeza: curvatura de cuernos, mandíbulas y dientes. Mezcla dos para algo nuevo.',q:['Capra ibex','Bison bison','Crocodylus niloticus'],s:'nat',m:1}]},
+ {k:'dragon',n:'Dragón',en:'dragon',re:/dragon|wyvern|drake|serpiente alada/,f:[
+  {n:'Anatomía base de reptil',t:'Proporciones de cuello, cola y patas de reptiles reales.',q:['Varanus komodoensis','Crocodylus porosus','Iguana iguana'],s:'nat',m:1},
+  {n:'Alas: murciélago y ave',t:'Cómo se pliegan y se extienden la membrana o las plumas, y dónde están los huesos.',q:['Pteropus vampyrus','Aquila chrysaetos','Pteropus'],s:'nat',m:1},
+  {n:'Escamas y cuernos',t:'Texturas reales de escamas, crestas y espinas.',q:['Phrynosoma','Moloch horridus','Chamaeleo calyptratus'],s:'nat',m:1}]},
+ {k:'demonio',n:'Demonio',en:'demon',re:/demoni|diablo|infernal|demon\b|devil|diabl/,f:[
+  {n:'Cuernos y patas de cabra',t:'Anatomía de patas con articulación inversa y cuernos reales.',q:['Capra hircus','Ovis canadensis','Capra ibex'],s:'nat',m:1},
+  {n:'Alas de murciélago',t:'Estructura de la membrana y el dedo largo.',q:['Pteropus vampyrus','Desmodus rotundus'],s:'nat',m:1}]},
+ {k:'gigante',n:'Gigante o golem',en:'giant',re:/gigante|golem|coloso|titan|giant|colossus|ciclope/,f:[
+  {n:'Escala y peso',t:'Cómo se ve algo enorme: patas gruesas, apoyo y proporciones de animales muy grandes.',q:['Loxodonta africana','Hippopotamus amphibius','Elephas maximus'],s:'nat',m:1}]},
+ {k:'depredador',n:'Depredador',en:'predator',re:/lobo|jaguar|felino|pantera|\bleon\b|tigre|wolf|depredador|puma|\bgato\b|zorro|hiena|bestia felina/,f:[
+  {n:'Anatomía de depredador',t:'Cómo se mueve el cuerpo de un cazador: columna flexible, hombros sueltos y patas traseras fuertes.',q:['Panthera onca','Canis lupus','Puma concolor'],s:'nat',m:1},
+  {n:'Poses de acecho y ataque',t:'Gestos reales para la pose: agazapado, salto, carrera.',q:['leopard stalking','wolf running','jaguar crouching'],s:'foto'}]},
+ {k:'ave',n:'Ave',en:'bird',re:/\bave\b|pajaro|phoenix|fenix|aguila|buho|cuervo|\bbird\b|raptor|garuda|thunderbird|quetzal|halcon/,f:[
+  {n:'Plumaje y alas',t:'Cómo se organizan las plumas por capas: cobertoras, primarias y cola.',q:['Pharomachrus mocinno','Aquila chrysaetos','Falco peregrinus'],s:'nat',m:1},
+  {n:'Garras y picos',t:'Formas reales de garras, patas y picos de rapaces.',q:['Harpia harpyja','Bubo virginianus','Haliaeetus leucocephalus'],s:'nat',m:1}]},
+ {k:'serpiente',n:'Serpiente',en:'snake',re:/serpiente|vibora|\bnaga\b|snake|cobra|quetzalcoatl|ouroboros|reptil/,f:[
+  {n:'Anatomía y escamas',t:'Patrones, cabezas y proporciones reales.',q:['Crotalus atrox','Python regius','Ophiophagus hannah'],s:'nat',m:1},
+  {n:'Movimiento y enrosque',t:'Cómo se enrosca, se alza y ataca: líneas de acción para la pose.',q:['snake coiled','snake striking','cobra hood'],s:'foto'}]},
+ {k:'humanoide',n:'Personaje',en:'warrior',re:/guerrer|caballer|personaje|heroe|heroina|mago|hechicer|samurai|chaman|sacerdot|\brey\b|reina|princesa|cazador|arquer|ladron|warrior|knight|character|hero\b|wizard|mage|priest|humano|soldado|brujo|bruja/,f:[
+  {n:'Pose y gesto',t:'Lo primero de un personaje es el gesto: usa el maniquí 3D y tu biblioteca de fotos para encontrar la pose y compara con tu boceto.',poses:1},
+  {n:'Vestuario y armadura reales',t:'Cómo se construye y se articula lo que viste: capas, correas, placas y desgaste.',q:['armor','helmet','sword'],s:'museo'}]},
+ {k:'espiritu',n:'Espíritu',en:'spirit',re:/espiritu|fantasma|\balma\b|espectro|ghost|spirit|wraith|etere/,f:[
+  {n:'Formas fluidas y translúcidas',t:'Cuerpos que parecen flotar: bordes que se disuelven y luz interior.',q:['Aurelia aurita','Chrysaora','Physalia physalis'],s:'nat',m:1},
+  {n:'Telas al viento',t:'Cómo se mueven los pliegues: líneas de acción largas.',q:['fabric flowing wind','flowing cloth','cloth'],s:'foto'}]}];
+const FND_CULT=[
+ {re:/mexic|azteca|mexica|maya|mesoamer|obsidian|tenochtit|olmec|nahua|zapotec|prehispan|teotihuac|quetzal|xolotl|tolteca|mixteca/,f:{n:'Mesoamérica: forma y ornamento',t:'Cómo se diseñaban ornamentos y símbolos: geometría, plumas, jade y proporción. Para que tu diseño se sienta de ahí y no solo «azteca genérico».',q:['Aztec','Mixtec','Maya'],s:'museo',m:1}},
+ {re:/japon|samurai|feudal|edo|ninja|yokai/,f:{n:'Japón: construcción de la armadura',t:'Cómo se arma una armadura japonesa: placas atadas, colores y laca.',q:['samurai armor','Japanese helmet kabuto','Japanese sword guard'],s:'museo',m:1}},
+ {re:/egipt|faraon|egypt|anubis/,f:{n:'Egipto: ornamento y símbolos',t:'Cómo se ven los símbolos, collares y proporciones.',q:['Egyptian','Egyptian collar jewelry','Egyptian amulet'],s:'museo',m:1}},
+ {re:/medieval|castillo|feudal europeo|gotic|knight/,f:{n:'Medieval: armas y armaduras',t:'Cómo son realmente las armaduras y armas de la época.',q:['medieval armor','sword','helmet'],s:'museo',m:1}},
+ {re:/vikingo|nordic|norse|escandinav|runa/,f:{n:'Nórdico: ornamento y metal',t:'Entrelazados, hebillas y forjas de la época.',q:['Viking','Norse sword','Scandinavian jewelry'],s:'museo',m:1}}];
+const fndTexto=p=>nz([p?.nombre,p?.brief?.texto,p?.brief?.historia,(p?.concepto?.nucleos||[]).join(' '),p?.concepto?.frase,Object.values(p?.keywords||{}).flat().join(' '),p?.mood?.sensacion,p?.mood?.palabras,(p?.mood?.tres||[]).join(' '),p?.que?.tema,p?.que?.que,p?.mundo?JSON.stringify(p.mundo):''].filter(Boolean).join(' '));
+const fndConceptoDe=p=>(p?.que?.que||'').trim()||(p?.concepto?.frase||'').trim()||'';
+function fndPlan(p,txt){const t=nz(txt),el=FND_ELEM.filter(e=>e.re.test(t)),ti=FND_TIPO.filter(e=>e.re.test(t)),F=[],vistos=new Set(),poner=(f,e)=>{if(vistos.has(f.n))return;vistos.add(f.n);F.push({...f,de:e})};
+  ti.slice(0,2).forEach((e,i)=>e.f.slice(0,i?1:2).forEach(f=>poner(f,e.n)));
+  el.slice(0,2).forEach((e,i)=>e.f.slice(0,i?2:4).forEach(f=>poner(f,e.n)));
+  const proy=fndTexto(p);for(const c of FND_CULT)if(c.re.test(t)||c.re.test(proy)){poner(c.f,'Tu proyecto');break}
+  if(!F.length){const q=(consultaDe({q:txt}).principal||txt).trim();poner({n:'Lo más parecido a tu idea',t:'Fotos directas del tema para ver cómo es en la realidad: formas, colores y detalles que se repiten.',q:[q,q.split(/\s+/).slice(0,2).join(' ')],s:'foto'},'Tu idea');
+    poner({n:'Detalle y textura',t:'Acércate: superficies, bordes y desgaste que dan carácter.',q:[q+' close up',q+' texture',q],s:'foto'},'Tu idea');poner({n:'Cómo lo resolvieron en objetos y obras',t:'Museos: cómo otros diseñaron algo parecido, con forma y ornamento.',q:[q,q.split(/\s+/)[0]],s:'museo'},'Tu idea')}
+  return {F:F.slice(0,7),el,ti}}
+const fndEn=(txt,pl)=>[...pl.el.map(e=>e.en),...pl.ti.map(e=>e.en)].join(' ')||consultaDe({q:txt}).principal||txt;
+const fndBueno=x=>!WM_BASURA.test(x.titulo||'')&&!/herbarium|specimen|vector|clip ?art|illustration of|stock vector|\bsvg\b|logo\b|screenshot|collage|montage|poster/i.test(x.titulo||'')&&!/guitar|skewer|squid|bbq|barbecue|grill|restaurant|food|cook|candle|cigarette|firefight|fire ?truck|fire ?department|performer|dancer|wedding|selfie|(girl|woman|man|boy|people|crowd|couple|child|kid|baby|model|dress|bikini)|toy|lego|cartoon|drawing|painting|cake|dinner|lunch|kitchen|stove|burger|pizza/i.test(x.titulo||'')&&(!(x.w||x.h)||Math.max(x.w||0,x.h||0)>=700);
+function fndDiversos(L,max){const cnt={},out=[];for(const x of L){const k=nz(x.titulo).replace(/[\d_-]+/g,' ').split(/\s+/).slice(0,3).join(' ')+'|'+(x.autor||'');cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=1)out.push(x)}return out.concat(L.filter(x=>!out.includes(x))).slice(0,max)}
+async function fndFaceta(f){const fuentes=f.s==='museo'?FND_MUSEO:f.s==='nat'?FND_NAT:FND_FOTO();let pool=[];
+  try{if(f.m){const rs=await Promise.all(f.q.map(q=>buscarTodos(q,fuentes,{n:8}).then(r=>puntuaRefs(r.items.filter(fndBueno),q).slice(0,3)).catch(()=>[])));rs.forEach(l=>{if(l[0])pool.push(l[0])});rs.forEach(l=>pool.push(...l.slice(1)))}
+    else{const r=await buscarTodos(f.q[0],fuentes,{n:18},f.q.slice(1));pool=fndDiversos(puntuaRefs(r.items.filter(fndBueno),f.q[0]),10)}}catch(e){pool=[]}
+  const vistos=new Set();return pool.filter(x=>{if(vistos.has(x.clave))return false;vistos.add(x.clave);return true})}
+async function fndGenera(p,txt){txt=(txt||'').trim();if(!txt){toast('Escribe qué estás diseñando');return}
+  const pl=fndPlan(p,txt),en=fndEn(txt,pl),st=S.fnd={txt,en,cargando:true,F:pl.F.map(f=>({...f,pool:[],off:0})),sel:[],art:null,ok:0};renderMain();
+  await Promise.all(st.F.map(async f=>{if(f.poses){st.ok++;return}f.pool=await fndFaceta(f);st.ok++;if(S.fnd===st&&S.refModo==='conseguir'&&st.ok<st.F.length)renderMain()}));
+  if(S.fnd!==st)return;for(const f of st.F){const k=f.m?1:2;f.pool.slice(0,k).forEach(x=>st.sel.push(x.clave))}st.cargando=false;
+  if(window.PC_SHIM?.artistas){window.PC_SHIM.artistas({q:en+' concept art'}).then(r=>{if(S.fnd!==st)return;st.art=(r.items||[]).slice(0,4).map(x=>({...mkRef({prov:'as',id:'as-'+(x.link||x.src),titulo:x.titulo,autor:x.artista||'',fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'},cat:'Arte'}),as:true}));renderMain()}).catch(()=>{})}
+  renderMain()}
+function fndCardHTML(fi,j,x){const L=LIC_EST[x.lic?.estado||'desconocida'],sel=S.fnd.sel.includes(x.clave),ya=(S.P[S.cur]?.refs||[]).some(r=>r.src===(x.big||x.src)||r.src===x.src);
+  return '<figure class="fct-c '+(sel?'sel':'')+(ya?' ya':'')+'" '+(ya?'':'data-act="fnd-tog" data-f="'+fi+'" data-j="'+j+'"')+'><img src="'+esc(x.src)+'" alt="'+esc(x.titulo)+'" loading="lazy" referrerpolicy="no-referrer" draggable="false">'+(ya?'<span class="rb-ya">En tu moodboard ✓</span>':'<span class="rb-chk">'+(sel?'✓':'')+'</span>')+'<button class="rb-z" data-act="fnd-zoom" data-f="'+fi+'" data-j="'+j+'" aria-label="Ver más grande">🔍</button>'
+    +'<figcaption><span class="lic '+L[1]+'" title="'+esc(x.lic?.texto||'')+'">'+L[0]+'</span><small>'+esc(corto(x.titulo,52))+(x.autor?' · '+esc(corto(x.autor,20)):'')+' · '+esc((x.fuente||'').split(' · ')[0])+(x.w&&x.h?' · '+x.w+'×'+x.h:'')+'</small></figcaption></figure>'}
+function vConseguir(p){const st=S.fnd,ej=['monstruo de fuego','guerrera de hielo','dragón de tormenta','golem de obsidiana','criatura abisal con luz propia','bosque encantado con hongos'],pre=st?.txt??fndConceptoDe(p);
+  let h='<div class="fnd"><p class="fnd-ctx"><b>Pocas referencias, cada una con su para qué.</b> Escribe qué estás diseñando y la app lo descompone en lo que necesitas para dibujarlo (cómo se ve el material, de dónde sale el cuerpo, cómo lo ilumina la luz…). Trae 2 imágenes buenas por cada necesidad, con la razón escrita.</p>'
+   +'<div class="prow"><input type="text" id="fnd-txt" value="'+esc(pre)+'" placeholder="¿Qué estás diseñando? Ej. monstruo de fuego" style="flex:1 1 240px"><button class="btn pri" data-act="fnd-go">Armar mis referencias</button></div>'
+   +'<div class="chips"><span class="lbl">Ejemplos</span>'+ej.map(e=>'<button class="ch xs" data-act="fnd-ej" data-v="'+esc(e)+'">'+esc(e)+'</button>').join('')+'</div>';
+  if(st?.cargando)h+='<p class="muted">Buscando referencias para «'+esc(st.txt)+'»… '+st.ok+' de '+st.F.length+' listas.</p>';
+  if(st){st.F.forEach((f,fi)=>{const k=f.m?3:2,vis=f.pool.slice(f.off,f.off+k);
+      h+='<section class="fct"><header><span class="fct-n">'+(fi+1)+'</span><div><b>'+esc(f.n)+'</b><small>'+esc(f.de||'')+'</small></div>'+(f.pool.length>k?'<button class="btn sm ghost" data-act="fnd-otra" data-f="'+fi+'">Ver otras</button>':'')+'</header><p class="fct-t"><b>Para qué sirve:</b> '+esc(f.t)+'</p>';
+      if(f.poses)h+='<div class="prow"><button class="btn sm pri" data-act="fnd-3d">Abrir maniquí 3D · poses</button><button class="btn sm" data-act="v3d-bib">Mi biblioteca de fotos</button></div>';
+      else if(vis.length)h+='<div class="fct-imgs">'+vis.map((x,j)=>fndCardHTML(fi,f.off+j,x)).join('')+'</div>';
+      else h+='<p class="muted" style="margin:0">'+(st.cargando?'Buscando…':'No salió nada que valga la pena para esto. Prueba «Ver otras» o busca a mano abajo.')+'</p>';
+      h+='</section>'});
+    if(!st.cargando||st.F.length){const q=encodeURIComponent(st.en+' concept art');
+      h+='<section class="fct"><header><span class="fct-n">★</span><div><b>Cómo lo resuelven otros artistas</b><small>concept art de verdad</small></div></header><p class="fct-t"><b>Para qué sirve:</b> Ver cómo otros bajaron una idea parecida a boceto: siluetas, thumbnails y decisiones de diseño. Estudia, no copies.</p>'
+        +(st.art?.length?'<div class="fct-imgs">'+st.art.map((x,j)=>fndCardHTML(-1,j,x)).join('')+'</div>':'')
+        +'<div class="prow"><a class="btn sm" href="https://www.artstation.com/search?sort_by=relevance&query='+q+'" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn sm" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn sm" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener">Google ↗</a></div></section>'}
+    const nsel=st.sel.length;
+    h+='<div class="rb-bar fnd-bar"><b>'+nsel+' elegida'+(nsel===1?'':'s')+'</b><span class="muted">Toca una imagen para elegirla o quitarla.</span><span style="flex:1"></span><button class="btn pri" data-act="fnd-add" '+(nsel?'':'disabled')+'>Añadir al tablero ordenado</button></div>'}
+  h+='<details class="box" '+(S.refB?.items?.length||S.refB?.cargando?'open':'')+'><summary style="cursor:pointer"><h3 style="display:inline">Buscar otra cosa a mano</h3> <span class="lbl">búsqueda libre en museos, fotos y naturalistas</span></summary><div style="margin-top:8px">'+refsBuscaHTML(p)+refsResultadoHTML(p)+'</div></details></div>';
+  return h}
+function fndAgrega(p){const st=S.fnd;if(!st)return 0;const ya=new Set((p.refs||[]).map(r=>r.src));let n=0;
+  const poner=(f,x,fn)=>{if(ya.has(x.big||x.src)||ya.has(x.src))return;ya.add(x.big||x.src);
+    const r=refNueva({capa:f.c||'concepto',porque:f.t,paraQue:f.t,facet:f.n,facetN:fn,fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,autor:x.autor||'',lic:x.lic?.texto||'',licEstado:x.lic?.estado||(x.as?'inspiracion':'desconocida'),licUrl:x.lic?.url||'',w:x.w||0,h:x.h||0,tags:x.tags||[],prov:x.prov||'',creditos:x.creditos||'',tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':claseDeFuente(x.fuente),concepto:st.txt});p.refs.push(r);n++;relevMarca({fuente:x.fuente,prov:x.prov},1)};
+  st.F.forEach((f,i)=>f.pool.forEach(x=>{if(st.sel.includes(x.clave))poner(f,x,i+1)}));(st.art||[]).forEach(x=>{if(st.sel.includes(x.clave))poner({n:'Cómo lo resuelven otros artistas',t:'Ver cómo otro artista bajó una idea parecida a boceto: silueta, ritmo y decisiones. Estudiar, no copiar.',c:'tecnica'},x,98)});
+  return n}
 /* ---- referencias ligadas a un grupo de bocetos ---- */
 function rfParaHTML(p,g){if(!g||!(p.refs||[]).length)return '';const rs=p.refs.filter(r=>(r.para||[]).includes(g));
   return `<div class="box"><div class="prow" style="justify-content:space-between"><b>Referencias de «${esc(g)}»</b><button class="btn sm" data-act="rf-elegir" data-g="${esc(g)}">${rs.length?'Cambiar selección':'＋ Elegir de mis referencias'}</button></div>${rs.length?`<div class="rf-strip">${rs.map(r=>`<img ${imgAttrs(r)} alt="" data-act="rv-abrir-para" data-id="${r.id}" data-g="${esc(g)}" title="${esc(corto(r.porque,80))}">`).join('')}</div>`:'<p class="hint" style="margin:0">Marca cuáles de tus referencias sirven para estos bocetos: las verás aquí mientras dibujas y viajan en la petición de crítica.</p>'}</div>`}
@@ -3306,7 +3470,15 @@ document.addEventListener('change',e=>{const t=e.target;
 async function accionRg(a,el,p,ds){
   const f=S.rgF=S.rgF||{capa:'',hd:false,q:'',pal:false};
   switch(a){
-    case 'rg-vista':S.refVista=ds.v;renderMain();return true;
+    case 'rg-vista':S.refVista=ds.v;S.refModo=ds.v;renderMain();return true;
+    case 'rf-modo':S.refModo=ds.v;if(ds.v!=='conseguir')S.refVista=ds.v;renderMain();return true;
+    case 'fnd-go':{fndGenera(p,$('#fnd-txt')?.value||'');return true}
+    case 'fnd-ej':{fndGenera(p,ds.v);return true}
+    case 'fnd-tog':{const st=S.fnd,x=+ds.f<0?st?.art?.[+ds.j]:st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;const i=st.sel.indexOf(x.clave);i<0?st.sel.push(x.clave):st.sel.splice(i,1);renderMain();return true}
+    case 'fnd-zoom':{const st=S.fnd,x=+ds.f<0?st?.art?.[+ds.j]:st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;$('#overlay').innerHTML='<div class="lightbox" data-act="unzoom"><img src="'+esc(x.big||x.src)+'" alt="" referrerpolicy="no-referrer"></div>';return true}
+    case 'fnd-otra':{const f=S.fnd?.F[+ds.f];if(!f)return true;const k=f.m?3:2;f.off=f.off+k>=f.pool.length?0:f.off+k;renderMain();return true}
+    case 'fnd-3d':{v3dAbrir('maniqui','poses');return true}
+    case 'fnd-add':{const n=fndAgrega(p);if(!n){toast('Esas ya están en tu moodboard');return true}S.refModo='tablero';S.refVista='tablero';marcar();renderMain();toast(n+' referencia'+(n>1?'s':'')+' en el tablero, ordenadas por necesidad');return true}
     case 'rg-capa':f.capa=ds.v;renderMain();return true;
     case 'rg-hd':f.hd=!f.hd;renderMain();return true;
     case 'rg-pal':{f.pal=!f.pal;renderMain();if(f.pal&&p){const L=(p.refs||[]).filter(r=>!r.pal&&!r.palErr);
@@ -3316,7 +3488,7 @@ async function accionRg(a,el,p,ds){
     case 'rg-selmodo':S.rgSel=S.rgSel?null:[];renderMain();return true;
     case 'rg-sel':{const L=S.rgSel=S.rgSel||[];S.rgSel=L.includes(ds.id)?L.filter(x=>x!==ds.id):(L.length>=4?(toast('Máximo 4 a la vez'),L):[...L,ds.id]);renderMain();return true}
     case 'rg-para':{const r=p?.refs.find(x=>x.id===ds.id);if(!r||!S.rgPara)return true;r.para=r.para||[];const i=r.para.indexOf(S.rgPara);i>=0?r.para.splice(i,1):r.para.push(S.rgPara);marcar();renderMain();return true}
-    case 'rf-elegir':S.rgPara=ds.g;S.rgSel=null;S.refVista='galeria';S.tab='refs';S.ancla='mesa';renderMain();return true;
+    case 'rf-elegir':S.rgPara=ds.g;S.rgSel=null;S.refVista='galeria';S.refModo='galeria';S.tab='refs';S.ancla='mesa';renderMain();return true;
     case 'rf-listo':S.rgPara=null;S.tab='bocetos';S.ancla='carpetas';renderMain();return true;
     case 'rf-mision':{const m=(S.rfM||[])[+ds.i];if(!m)return true;const b=S.refB=S.refB||{};b.q=m.q;b.exacta=m.q;b.capa=m.capa;b.prop=m.prop;b.mision=m.t;b.src='';S.rgBusca=true;buscarRefs();return true}
     case 'rb-mas':(S.refB=S.refB||{}).n=(S.refB.n||12)+12;renderMain();return true;
@@ -4926,7 +5098,7 @@ function syncBox(){
    Sin claves: The Met, Art Institute of Chicago, Wikimedia Commons y Openverse tienen API pública y gratuita.
    ArtStation entra por la función del servidor (PC_SHIM.artistas): ahí vive su acceso autorizado, no se raspa nada desde aquí.
    La licencia sale SIEMPRE de la fuente; si la fuente no la da, se marca «no verificada». */
-const REF_PROV={met:'The Met',aic:'Art Institute of Chicago',wm:'Wikimedia Commons',ov:'Openverse',px:'Pexels',us:'Unsplash',as:'ArtStation'};
+const REF_PROV={inat:'iNaturalist',cma:'Cleveland Museum of Art',met:'The Met',aic:'Art Institute of Chicago',wm:'Wikimedia Commons',ov:'Openverse',px:'Pexels',us:'Unsplash',as:'ArtStation'};
 const LIC_EST={dominio:['Dominio público','ok'],abierta:['Licencia abierta · pide atribución','ok'],libreuso:['Uso libre (licencia propia de la fuente)','ok'],propia:['Hecha por ti o por la app','ok'],restringida:['Solo estudio (NC/ND)','warn'],museo:['Derechos del museo · verifica','warn'],inspiracion:['© del autor · solo inspiración','no'],desconocida:['Licencia no verificada','no']};
 function licDeTexto(t){const n=String(t||'').toLowerCase();if(!n.trim())return 'desconocida';
   if(/\bnc\b|-nc|\bnd\b|-nd|non.?commercial|noderiv/.test(n))return 'restringida';
@@ -4969,7 +5141,14 @@ async function provFotos(prov,q,{n=20,orient=''}={}){
     lic:{estado:'libreuso',texto:'Licencia de '+nombre+': uso libre, sin revender la foto tal cual',url:prov==='pexels'?'https://www.pexels.com/license/':'https://unsplash.com/license'},
     w:x.w||0,h:x.h||0,tags:x.tags||[],cat:'Foto',dl:x.dl||'',creditos:'Foto de '+(x.autor||'autor desconocido')+(x.autorUrl?' ('+x.autorUrl+')':'')+' en '+nombre+' · '+x.link}))}
 const provPx=(q,o)=>provFotos('pexels',q,o),provUs=(q,o)=>provFotos('unsplash',q,o);
-const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv,px:provPx,us:provUs};
+async function provInat(q,{n=18}={}){const j=await jget('https://api.inaturalist.org/v1/observations?q='+encodeURIComponent(q)+'&quality_grade=research&photos=true&photo_license=cc0,cc-by,cc-by-sa&order_by=votes&per_page='+Math.min(40,n*2)+'&locale=es'),vistos=new Set(),porUser={};
+  return (j.results||[]).map(o=>{const ph=o.photos?.[0];if(!ph||vistos.has(ph.id))return null;vistos.add(ph.id);const u=o.user?.id||0;porUser[u]=(porUser[u]||0)+1;if(porUser[u]>2)return null;const lc=String(ph.license_code||'').toLowerCase(),d=ph.original_dimensions||{},t=o.taxon||{},mk=sz=>ph.url.replace(/square(\.\w+)$/,sz+'$1');
+    return mkRef({prov:'inat',id:'inat-'+ph.id,src:mk('large'),big:mk('original'),titulo:((t.preferred_common_name||t.name||'')+(t.preferred_common_name&&t.name?' ('+t.name+')':'')).slice(0,100),autor:(ph.attribution||'').replace(/\(c\)\s*/i,'').split(',')[0]||o.user?.login||'',fuente:'iNaturalist',link:o.uri,
+      lic:{estado:lc==='cc0'?'dominio':'abierta',texto:lc==='cc0'?'CC0':'CC '+lc.replace('cc-','').toUpperCase(),url:lc==='cc0'?'https://creativecommons.org/publicdomain/zero/1.0/':'https://creativecommons.org/licenses/'+lc.replace('cc-','')+'/4.0/'},w:d.width||0,h:d.height||0,tags:[t.name,o.place_guess].filter(Boolean).slice(0,3),cat:'Foto',creditos:ph.attribution||''})}).filter(Boolean).slice(0,n)}
+async function provCma(q,{n=14}={}){const j=await jget('https://openaccess-api.clevelandart.org/api/artworks/?q='+encodeURIComponent(q)+'&has_image=1&cc0=1&limit='+(n+6)+'&fields=id,title,images,url,creation_date,culture,type');
+  return (j.data||[]).filter(o=>o.images?.web?.url).slice(0,n).map(o=>mkRef({prov:'cma',id:'cma-'+o.id,src:o.images.web.url,big:o.images.print?.url||o.images.web.url,titulo:[o.title,(o.culture||[])[0]?.split(',').slice(-1)[0]?.trim(),o.creation_date].filter(Boolean).join(' · ').slice(0,110),fuente:'Cleveland Museum of Art',link:o.url,
+    lic:{estado:'dominio',texto:'Dominio público (CC0, Cleveland Open Access)',url:'https://www.clevelandart.org/open-access'},w:+o.images.web.width||0,h:+o.images.web.height||0,cat:'Museo'}))}
+const PROV_FN={met:provMet,aic:provAic,wm:provWm,ov:provOv,px:provPx,us:provUs,inat:provInat,cma:provCma};
 /* Art Institute of Chicago ya no se busca: sus imágenes devuelven 403 al abrirse desde otra página y salían rotas */
 const PROV_GRUPOS={'':['met','wm','ov'],museos:['met'],met:['met'],wm:['wm'],ov:['ov'],px:['px'],us:['us']};
 async function buscarTodos(q,fuentes,opts,alts){const est={};
@@ -4999,7 +5178,7 @@ const consultaPrevHTML=b=>{if(!(b.q||'').trim())return '';const c=consultaDe(b);
 /* lleva a Referencias y abre el desplegable de búsqueda manual (si estaba cerrado) y hace scroll hasta ahí.
    S.masHerr se guarda en el estado porque cada renderMain() reconstruye el <details> desde cero: si solo abriéramos
    el atributo open en el DOM, el siguiente render (por ejemplo cuando llega la búsqueda) lo volvería a cerrar. */
-function irABuscarRefs(){S.tab='refs';S.masHerr=true;render();
+function irABuscarRefs(){S.tab='refs';S.refModo='conseguir';S.masHerr=true;render();
   setTimeout(()=>$('#rb-q')?.scrollIntoView({block:'center',behavior:'smooth'}),30)}
 document.addEventListener('toggle',e=>{if(e.target.id==='det-masherr')S.masHerr=e.target.open},true);
 /* al arrastrar un control deslizante o un selector de color no se debe seleccionar texto de la página (un renderizado a media arrastrada dejaba toda la hoja resaltada) */
@@ -5428,7 +5607,7 @@ async function pedirCritica(id,gal){
 const EXP={bg:'#f4f5f7',ink:'#14161a',ink2:'#4b515b',ink3:'#7a818c',concepto:'#2a3ccc',mood:'#962c74',tecnica:'#9c6604',p1:'#0c7563',p2:'#0c7563',p3:'#0c7563'};
 const DISP='"Bricolage Grotesque", "Segoe UI", sans-serif',BODY='"IBM Plex Sans", "Segoe UI", sans-serif',MONO='"IBM Plex Mono", Consolas, monospace';
 function expStatus(t){S.exp=t;const el=$('#exp-status');if(el)el.textContent=t||''}
-async function blobDeRef(r){if(r.asset&&S.assets?.blob)return S.assets.blob(r.asset);const res=await fetch(refSrc(r));if(!res.ok)throw new Error('img');return res.blob()}
+async function blobDeRef(r){if(r.asset&&S.assets?.blob)return S.assets.blob(r.asset);const u=refSrc(r);try{const res=await fetch(u);if(res.ok)return await res.blob()}catch{}/* hay fuentes (iNaturalist, Flickr…) que no dejan leer la imagen desde otra página: se pide por un proxy de imágenes que sí lo permite */const r2=await fetch('https://wsrv.nl/?url='+encodeURIComponent(u));if(!r2.ok)throw new Error('img');return r2.blob()}
 function slug(s,n=48){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,n).replace(/-+$/,'')||'ref'}
 function envolver(ctx,txt,w){const out=[];for(const par of String(txt||'').split('\n')){let l='';for(const word of par.split(/\s+/)){const t=l?l+' '+word:word;if(ctx.measureText(t).width>w&&l){out.push(l);l=word}else l=t}out.push(l)}return out}
 function lienzo(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
@@ -6790,7 +6969,7 @@ function pgEstilo(p){return pgNav([['mood','Mood'],['luz','Luz y color'],['lengu
   +pgSec('estilo','personajes','Personajes','Cada uno con su paleta, armada con lo que escribes de él.',vPersonajes(p))
   +pgSec('estilo','mundo','Mundo','Haz que el mundo sea un personaje.',vMundo(p))}
 function pgRefs(p){return pgNav([['mesa','Referencias'],['bajar','Ref → thumbnail'],['mas','Más herramientas']])
-  +pgSec('refs','mesa','Referencias','Míralas en grande, ordénalas, estudia cada una y busca nuevas; el tablero estilo PureRef está aquí mismo.',vMesa(p))
+  +pgSec('refs','mesa','Referencias','Consigue pocas referencias que sirvan, cada una con su para qué, y ármalas en un moodboard ordenado.',vMesa(p))
   +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))
   +pgSec('refs','mas','Más herramientas','Llenado automático, balance, búsqueda por objetivo, artistas, sitios y keywords.',vRefsMas(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`)}
 function pgBocetos(p){return pgNav([['carpetas','Subir bocetos'],['critica','Crítica'],['medir','Medir y comparar'],['basicos','Básicos de diseño']])
@@ -8755,17 +8934,38 @@ const bdRef=(p,i)=>i.pz?(p.piezas||[]).find(r=>r.id===i.pz):(p.refs||[]).find(r=
 const bdZmax=p=>Math.max(0,...((p.board&&p.board.items)||[]).map(x=>x.z||0));
 function bdCentro(){const wr=$('#bd-wrap'),v=S.bdView;if(!wr||!v)return {x:300,y:200};return {x:(wr.clientWidth/2-v.x)/v.k,y:(wr.clientHeight/2-v.y)/v.k}}
 /* el tablero se llena solo: cada referencia nueva del proyecto (búsqueda, subida, render 3D, lámina…) aparece en el tablero, en la columna más corta. Lo que quitas a mano no vuelve. */
-function bdAutoLlena(p){if(!p||p.board?.auto===false)return 0;const B=p.board=p.board||{items:[]};B.items=B.items||[];if(B.desde===undefined)B.desde=B.items.length?Date.now():0;
+function bdAutoLlena(p){if(!p||p.board?.auto===false)return 0;const B=p.board=p.board||{items:[]};B.items=B.items||[];if(B.desde===undefined)B.desde=B.items.length?Date.now():0;if(B.layout===undefined)B.layout=B.items.length?'libre':'pro';
   const en=new Set(B.items.filter(i=>i.t==='img'&&i.ref).map(i=>i.ref)),enz=new Set(B.items.filter(i=>i.pz).map(i=>i.pz)),qt=new Set(B.quitados||[]),falt=(p.refs||[]).filter(r=>refSrc(r)&&!en.has(r.id)&&!qt.has(r.id)&&(r.creado||0)>=B.desde),
     faltz=(p.piezas||[]).filter(z=>(z.asset||z.src)&&!enz.has(z.id)&&!qt.has('pz:'+z.id)&&(z.creado||0)>=B.desde),palFalta=(p.mood?.paleta||[]).filter(Boolean).length>=2&&!B.items.some(i=>i.t==='pal')&&!qt.has('pal');if(!falt.length&&!faltz.length&&!palFalta)return 0;
   const W=240,G=16,C=6,alt=Array(C).fill(0);for(const i of B.items){if(i.t!=='img')continue;const c=clamp(Math.round((i.x||0)/(W+G)),0,C-1),r=bdRef(p,i),asp=r?.h&&r?.w?r.h/r.w:.75;alt[c]=Math.max(alt[c],(i.y||0)+asp*(i.w||W)+G)}
   for(const r of falt){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=r.h&&r.w?r.h/r.w:.75;B.items.push({id:uid(),t:'img',ref:r.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}
   for(const z of faltz){let c=0;for(let k=1;k<C;k++)if(alt[k]<alt[c])c=k;const asp=z.h&&z.w?z.h/z.w:.75;B.items.push({id:uid(),t:'img',pz:z.id,w:W,x:c*(W+G),y:alt[c],z:bdZmax(p)+1});alt[c]+=asp*W+G}
-  if(palFalta){B.items.push({id:uid(),t:'pal',w:W,x:0,y:-150,z:bdZmax(p)+1})}return falt.length+faltz.length+(palFalta?1:0)}
+  if(palFalta){B.items.push({id:uid(),t:'pal',w:W,x:0,y:-150,z:bdZmax(p)+1})}if(B.layout==='pro'){try{bdPro(p)}catch(e){console.warn(e)}}return falt.length+faltz.length+(palFalta?1:0)}
 function bdAdd(p,list){p.board=p.board||{items:[]};if(p.board.quitados)p.board.quitados=p.board.quitados.filter(q=>!list.some(it=>it.ref===q||('pz:'+it.pz)===q));const c=bdCentro();let k=0;
   list.forEach(it=>{it.id=uid();it.z=bdZmax(p)+1;if(it.x==null){it.x=c.x-110+(k%6)*28;it.y=c.y-90+(k%6)*28}k++;p.board.items.push(it)})}
 const bdAsp=id=>{const e=document.querySelector('.bd-it[data-id="'+id+'"]');return e&&e.offsetWidth?e.offsetHeight/e.offsetWidth:.75};
-function bdOrdenar(p,m){if(!p.board)return;const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
+/* moodboard profesional: cabecera con el nombre y el mood, paleta, una imagen héroe con la idea, y una sección por necesidad con su para qué; cada imagen lleva su porqué debajo. Nada al azar. */
+function bdPro(p){const B=p.board,W0=1240,G=14,H=230,LADO=340,all=bdItems(p),imgs=all.filter(i=>i.t==='img'),pals=all.filter(i=>i.t==='pal'),notas=all.filter(i=>i.t==='txt'&&!i.auto);
+  B.items=B.items.filter(i=>!i.auto);const z=()=>bdZmax(p)+1,T=(text,x,y,w,fs,cap)=>B.items.push({id:uid(),t:'txt',text,x,y,w,fs,auto:true,cap:!!cap,z:z()}),
+    asp=i=>{const r=bdRef(p,i);return r&&r.w&&r.h?r.h/r.w:(bdAsp(i.id)||.75)},tres=(p.mood?.tres||[]).filter(Boolean),pq=i=>{const r=bdRef(p,i);return (r?.paraQue||r?.porque||'').trim()},alto=(t,w,fs)=>Math.ceil(String(t).length*fs*.52/w)*Math.round(fs*1.35)+8;
+  T((p.nombre||'Proyecto').toUpperCase(),0,0,W0-460,54);T([p.tipo,tres.join(' · ')].filter(Boolean).join('   ·   '),0,70,W0-460,18,1);
+  const idea=(p.concepto?.frase||p.brief?.texto||'').trim();if(idea)T(corto(idea,220),0,104,W0-460,15,1);
+  if(pals[0]){pals[0].x=W0-420;pals[0].y=0;pals[0].w=420}
+  let y=170;const grupos=[],mapa={};
+  imgs.forEach(i=>{const r=bdRef(p,i);if(!r)return;const k=r.facet||capaNombre(p,r.capa),g=mapa[k]||(mapa[k]={k,n:r.facetN||99,t:'',imgs:[]});if(!g.t&&r.paraQue)g.t=r.paraQue;if(!grupos.includes(g))grupos.push(g);g.imgs.push(i)});
+  grupos.sort((a,b)=>a.n-b.n);
+  /* la referencia principal: la marcada con ★; si no, la más grande y no demasiado alta */
+  let heroe=null;if(imgs.length>=4){const buenas=imgs.filter(i=>asp(i)<=1.25);heroe=imgs.find(i=>bdRef(p,i)?.heroe)||(buenas.length?buenas:imgs).slice().sort((a,b)=>(bdRef(p,b)?.w||0)-(bdRef(p,a)?.w||0))[0];
+    const a=asp(heroe),w=Math.min(620,Math.round(400/a));heroe.w=w;heroe.x=0;heroe.y=y;const r=bdRef(p,heroe),tx=w+40,tw=W0-tx;
+    T('LA REFERENCIA PRINCIPAL',tx,y,tw,13,1);T(corto(r?.facet||'',80)||'Qué manda en el diseño',tx,y+26,tw,30);T(corto(r?.paraQue||r?.porque||'Escribe aquí por qué esta imagen manda en el diseño.',260),tx,y+70,tw,18,1);
+    if(r?.fuente)T(corto(r.fuente,110),tx,y+Math.round(w*a)-18,tw,11,1);y+=Math.round(w*a)+60}
+  grupos.forEach((g,gi)=>{const list=g.imgs.filter(i=>i!==heroe);if(!list.length)return;
+    T(String(gi+1).padStart(2,'0')+'  ·  '+g.k.toUpperCase(),0,y,W0,24);y+=40;const lado=g.t?LADO:0,Wr=W0-lado,y0=y;if(g.t)T('PARA QUÉ SIRVE\n'+g.t,0,y,LADO-40,14,1);
+    let row=[];const flush=ultima=>{if(!row.length)return;const sum=row.reduce((a,i)=>a+1/asp(i),0),gaps=(row.length-1)*G;let h=(Wr-gaps)/sum;if(ultima&&h>H*1.15)h=H;h=Math.min(h,H*1.6);let x=lado,cap=false;
+      row.forEach(i=>{const w=Math.round(h/asp(i));i.w=w;i.x=Math.round(x);i.y=y;x+=w+G;const c=!g.t&&pq(i);if(c){T(corto(c,70),i.x,y+Math.round(h)+5,w,11,1);cap=true}});y+=Math.round(h)+(cap?40:0)+G;row=[]};
+    list.forEach(i=>{row.push(i);const sum=row.reduce((a,j)=>a+H/asp(j),0)+(row.length-1)*G;if(sum>=Wr)flush(false)});flush(true);y=Math.max(y,y0+(g.t?alto(g.t,LADO-40,14)+30:0))+30});
+  notas.forEach((t,k)=>{t.x=W0+60;t.y=170+k*130});B.layout='pro'}
+function bdOrdenar(p,m){if(!p.board)return;if(m==='pro'){bdPro(p);S.bdView=null;return}p.board.layout='libre';const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
   if(m==='capa'){const cols=LAYERS.map(l=>[l,imgs.filter(i=>bdRef(p,i)?.capa===l.k)]).filter(c=>c[1].length);let x=0;
     cols.forEach(([l,list])=>{p.board.items.push({id:uid(),t:'txt',text:capaNombre(p,l.k),x,y:0,w:W,fs:22,auto:true,z:bdZmax(p)+1});let y=52;list.forEach(i=>{i.w=W;i.x=x;i.y=y;y+=bdAsp(i.id)*W+G});x+=W+44});
     txts.filter(t=>!t.auto).forEach((t,k)=>{t.x=x+20;t.y=k*110})}
@@ -8780,7 +8980,7 @@ let bdFitT=null;
 function bdInit(){if(!enTablero())return;const wr=$('#bd-wrap');if(!wr)return;
   if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(enTablero()&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
 function bdItemHTML(p,i){const sel=S.bdSel===i.id,st=`left:${i.x}px;top:${i.y}px;width:${i.w||240}px;z-index:${i.z||1}`;
-  if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
+  if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}${i.cap?' bd-cap':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
   if(i.t==='pal'){const pal=(p.mood?.paleta||[]).filter(Boolean);return `<div class="bd-it bd-pal ${sel?'sel':''}" data-id="${i.id}" style="${st}"><div class="bd-sw">${pal.map(h=>`<i style="background:${esc(h)}"></i>`).join('')}</div><small>Paleta · ${pal.length} colores</small>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
   const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||(i.pz?'Boceto':'Referencia'))}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
 function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
@@ -8802,7 +9002,7 @@ function vBoard(p){bdAutoLlena(p);const items=bdItems(p).slice().sort((a,b)=>(a.
   const pk=S.bdPick,fil=S.bdPickCapa||'',lista=faltan.filter(r=>!fil||r.capa===fil);
   return `<p class="intro"><b>Tablero de referencias.</b> Pon tus referencias donde quieras, escálalas, agrega notas y descarga el tablero para PureRef. Se guarda en el proyecto.</p>
   <div class="bd-bar"><button class="btn sm pri" data-act="bd-pick">＋ Del moodboard${faltan.length?` (${faltan.length})`:''}</button><label class="btn sm" for="bd-file">Subir imágenes</label><input type="file" id="bd-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
-    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><label class="chk" title="Cada referencia nueva del proyecto aparece sola en el tablero"><input type="checkbox" data-bdauto ${p.board?.auto===false?'':'checked'}><span>Llenar solo</span></label><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
+    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><label class="chk" title="Cada referencia nueva del proyecto aparece sola en el tablero"><input type="checkbox" data-bdauto ${p.board?.auto===false?'':'checked'}><span>Llenar solo</span></label><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm pri" data-act="bd-ord" data-m="pro" title="Título, paleta, referencia principal y una sección por necesidad, cada imagen con su para qué">Ordenar como moodboard profesional</button><button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
     <span class="bd-sep"></span><span class="lbl">Descargar</span><button class="btn sm" data-act="bd-png" ${S.bdBusy?'disabled':''}>PNG</button><button class="btn sm" data-act="bd-zip" ${S.bdBusy?'disabled':''} title="Tablero como imagen + cada referencia por separado, para PureRef">ZIP para PureRef</button><button class="btn sm" data-act="bd-copiar" ${S.bdBusy?'disabled':''} title="Copia el tablero como imagen; pégalo en PureRef con Ctrl+V">Copiar imagen</button><span class="status" id="bd-status">${esc(S.bdBusy||'')}</span></div>
   ${pk?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Añadir del moodboard</h3><span class="prow"><select data-bdpickcapa><option value="">Todas las capas</option>${LAYERS.map(l=>`<option value="${l.k}" ${fil===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn sm pri" data-act="bd-addtodas" ${lista.length?'':'disabled'}>Añadir ${lista.length||'0'}</button><button class="btn ghost sm" data-act="bd-pick">Cerrar</button></span></div>
     ${lista.length?`<div class="rm-mini" style="gap:6px">${lista.slice(0,80).map(r=>`<img ${imgAttrs(r)} alt="" data-act="bd-addone" data-id="${r.id}" title="${esc(etiquetaDe(r)||'Añadir')}" style="width:64px;height:64px">`).join('')}</div><p class="hint" style="margin:0">Toca una imagen para añadirla, o «Añadir» para traer todas las de la lista.</p>`:'<p class="muted" style="margin:0">Ya están todas en el tablero.</p>'}</div>`:''}
@@ -8834,7 +9034,7 @@ async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b
   const x0=Math.min(...R.map(r=>r.x))-40,y0=Math.min(...R.map(r=>r.y))-40,x1=Math.max(...R.map(r=>r.x+r.w))+40,y1=Math.max(...R.map(r=>r.y+r.h))+40,sc=Math.min(2,maxLado/Math.max(x1-x0,y1-y0)),cv=lienzo(Math.ceil((x1-x0)*sc),Math.ceil((y1-y0)*sc)),c=cv.getContext('2d');
   c.fillStyle='#0f1014';c.fillRect(0,0,cv.width,cv.height);
   for(const r of R){const it=r.i,X=(r.x-x0)*sc,Y=(r.y-y0)*sc;
-    if(it.t==='txt'){const fs=(it.fs||18)*sc;c.font=`700 ${fs}px ${BODY}`;c.fillStyle='#eceef2';c.textBaseline='top';envolver(c,it.text||'',r.w*sc).forEach((l,k)=>c.fillText(l,X,Y+k*fs*1.3))}
+    if(it.t==='txt'){const fs=(it.fs||18)*sc;c.font=`${it.cap?'400':'700'} ${fs}px ${BODY}`;c.fillStyle=it.cap?'#aab0bc':'#eceef2';c.textBaseline='top';envolver(c,it.text||'',r.w*sc).forEach((l,k)=>c.fillText(l,X,Y+k*fs*1.3))}
     else if(it.t==='pal'){const pal=(p.mood?.paleta||[]).filter(Boolean),n=Math.max(1,pal.length),sw=r.w*sc/n;pal.forEach((h,k)=>{c.fillStyle=h;c.fillRect(X+k*sw,Y,sw,r.h*sc*.7)});c.fillStyle='#9aa0ac';c.font=`600 ${14*sc}px ${BODY}`;c.textBaseline='top';c.fillText('Paleta',X,Y+r.h*sc*.75)}
     else{if(BM[it.id])c.drawImage(BM[it.id],X,Y,r.w*sc,r.h*sc);else{c.fillStyle='#262a33';c.fillRect(X,Y,r.w*sc,r.h*sc)}}}
   return cv}
@@ -10789,7 +10989,7 @@ async function accion(a,el){
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
-    case 'tab':{if(ds.tab==='board'){S.refVista='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
+    case 'tab':{if(ds.tab==='board'){S.refVista='tablero';S.refModo='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
     case 'provo':S.provo=(S.provo+1+Math.floor(Math.random()*(PROVOCACIONES.length-1)))%PROVOCACIONES.length;renderMain();break;
