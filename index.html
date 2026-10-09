@@ -425,7 +425,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .pn{position:fixed;inset:0;z-index:60;background:#000;display:flex;align-items:center;justify-content:center}.pn-img{max-width:100%;max-height:100%;object-fit:contain}.pn-bar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px;background:linear-gradient(transparent,rgba(0,0,0,.8));opacity:.25;transition:opacity .2s}.pn:hover .pn-bar{opacity:1}
 
 .v3d-cv{position:relative}.v3d-bz{position:absolute;inset:0;z-index:6;background:#0d0f13;display:flex;flex-direction:column}.bz-top{padding:8px 12px;font-size:13px;display:flex;flex-direction:column;gap:2px}.bz-cv{flex:1;min-height:0;position:relative}.bz-cv canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}.bz-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
-.cp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.cp-cv{min-width:0}.cp-cv canvas{width:100%;display:block;border-radius:10px;touch-action:none;background:#0d0f13;cursor:crosshair}.cp-panel{display:flex;flex-direction:column;gap:12px;min-width:0}@media(max-width:900px){.cp-wrap{grid-template-columns:1fr}}
+.cp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.cp-cv{min-width:0;position:sticky;top:8px;z-index:5;align-self:start;background:var(--bg);padding-bottom:4px}.cp-cv canvas{width:100%;display:block;border-radius:10px;touch-action:none;background:#0d0f13;cursor:crosshair}.cp-panel{display:flex;flex-direction:column;gap:12px;min-width:0}@media(max-width:900px){.cp-wrap{grid-template-columns:1fr}.cp-cv{top:0;padding-top:6px}}
 .pg-sec{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 16px}
 .pg-h{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;padding:14px 18px 6px}
 .pg-h h2{margin:0;font-family:var(--display);font-size:20px;text-transform:uppercase}
@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1lsxom').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1lyc3k').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9501,7 +9501,7 @@ function compManijas(){const P=C.persp,A=C.A,hy=P.hy*A,H=[];
   if(P.modo==='3')H.push({id:'v3',x:.5,y:P.v3*A});
   if(C.fig.on)H.push({id:'fig',x:C.fig.x,y:C.fig.y*A});
   return H}
-function compDibuja(){const cv=document.getElementById('cp-canvas');if(!cv)return;const box=cv.parentElement,cw=box.clientWidth,ch=Math.max(300,Math.round(Math.min(innerHeight*.74,cw*.64))),dpr=window.devicePixelRatio||1;
+function compDibuja(){const cv=document.getElementById('cp-canvas');if(!cv)return;const box=cv.parentElement,cw=box.clientWidth,ch=innerWidth<=900?Math.max(200,Math.round(Math.min(innerHeight*.4,cw*.64))):Math.max(300,Math.round(Math.min(innerHeight*.74,cw*.64))),dpr=window.devicePixelRatio||1;
   if(cv.width!==Math.round(cw*dpr)||cv.height!==Math.round(ch*dpr)){cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);cv.style.height=ch+'px'}
   const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);const T=compT(cw,ch);C.Tx={X:x=>T.ox+x*T.s,Y:y=>T.oy+y*T.s,s:T.s,ox:T.ox,oy:T.oy};compRender(g,C.Tx,{cw,ch,manijas:true});compLecturas()}
 function compLecturas(){const e=document.getElementById('cp-lect');if(!e)return;const P=C.persp,M=compMarco(),r=M.w/M.h;
