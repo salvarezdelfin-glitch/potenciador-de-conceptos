@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1lhdxh').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1lsxom').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9429,7 +9429,7 @@ const COMP_RECETAS=[
  {n:'Curva en S y espiral',ar:'1.7778',ov:['curvaS','espiral'],persp:{modo:'ninguna'},tip:'Guía el ojo en un recorrido: de la esquina al foco. Ideal para caminos, ríos, cuerpos y telas.'}];
 const C={pid:'',bm:null,A:.5625,nombre:'',srcLic:'propia',ar:'1.7778',zoom:1,fx:0,fy:0,ov:{tercios:true},esp:0,cuad:4,color:'#ff6a3d',op:.9,gr:2,dim:true,receta:'',
   pad:{x:.3,y:.25},persp:{modo:'ninguna',hy:.5,u1:.12,u2:.88,v3:-1.2,rayos:24,f1:.9,suelo:false,caja:false,vert:false,cajaD:3.2,cajaX:0,cajaS:2},
-  fig:{on:false,x:.5,y:.82,altura:1.75,cam:1.6}};
+  fig:{on:false,x:.5,y:.82,altura:1.75,cam:1.6},vols:[],vSel:'',vfill:true};
 const compMarco=()=>{const A=C.A,r=parseFloat(C.ar)||1/A;let fw=Math.min(1,A*r),fh=fw/r;fw*=C.zoom;fh*=C.zoom;C.fx=clamp(C.fx,0,Math.max(0,1-fw));C.fy=clamp(C.fy,0,Math.max(0,A-fh));return {x:C.fx,y:C.fy,w:fw,h:fh}};
 const compT=(cw,ch)=>{const A=C.A,px=C.pad.x,py=C.pad.y,s=Math.min(cw/(1+2*px),ch/(A+2*py));return {s,ox:(cw-(1+2*px)*s)/2+px*s,oy:(ch-(A+2*py)*s)/2+py*s}};
 /* cámara para la cuadrícula de suelo y la caja: en 2 puntos la distancia focal sale de los dos puntos de fuga (deben quedar a lados opuestos del centro) */
@@ -9458,12 +9458,10 @@ function compPersp(g,Tx,o){const P=C.persp,A=C.A,hy=P.hy*A,col=C.color,sw=C.gr;i
     else if(P.vert){g.beginPath();const paso=1/Math.max(6,P.rayos/2);for(let x=-.6;x<=1.6;x+=paso){g.moveTo(Tx.X(x),Tx.Y(-.6));g.lineTo(Tx.X(x),Tx.Y(A+.6))}g.stroke()}}
   else if(P.modo==='iso'){const st=.07;g.beginPath();for(const ang of [Math.PI/6,5*Math.PI/6]){const m=Math.tan(ang);for(let c=-3;c<=4;c+=st){/* y = m·x + c */g.moveTo(Tx.X(-1),Tx.Y(m*-1+c));g.lineTo(Tx.X(2),Tx.Y(m*2+c))}}for(let x=-1;x<=2;x+=st*1.2){g.moveTo(Tx.X(x),Tx.Y(-1));g.lineTo(Tx.X(x),Tx.Y(A+1))}g.stroke()}
   const K=compCam();
-  if(K&&(P.modo==='1'||P.modo==='2')&&(P.suelo||P.caja)){const d1=[Math.cos(K.th),Math.sin(K.th)],d2=[-Math.sin(K.th),Math.cos(K.th)];
+  if(K&&(P.modo==='1'||P.modo==='2')&&P.suelo){const d1=[Math.cos(K.th),Math.sin(K.th)],d2=[-Math.sin(K.th),Math.cos(K.th)];
     if(P.suelo){g.beginPath();g.globalAlpha=C.op*.55;g.lineWidth=Math.max(1,sw*.5);const cel=.5;
       for(let k=-24;k<=24;k++){const o1=[k*cel*d2[0],k*cel*d2[1]],o2=[k*cel*d1[0],k*cel*d1[1]];compSegZ(g,K,[o1[0],o1[1]],d1,-40,40,Tx,.25);compSegZ(g,K,[o2[0],o2[1]],d2,-40,40,Tx,.25)}g.stroke()}
-    if(P.caja){const s=P.cajaS*.5,c=[P.cajaX,P.cajaD],ax=(a,b)=>[c[0]+a*d1[0]+b*d2[0],c[1]+a*d1[1]+b*d2[1]];
-      const cr=[[-s,-s],[s,-s],[s,s],[-s,s]].map(([a,b])=>ax(a,b)),pr=(q,h)=>{const u=compProy(K,q[0],h,q[1]);return [Tx.X(u[0]),Tx.Y(u[1])]},ba=cr.map(q=>pr(q,0)),to=cr.map(q=>pr(q,P.cajaS));
-      g.globalAlpha=C.op;g.lineWidth=sw;g.beginPath();for(let i=0;i<4;i++){const j=(i+1)%4;g.moveTo(ba[i][0],ba[i][1]);g.lineTo(ba[j][0],ba[j][1]);g.moveTo(to[i][0],to[i][1]);g.lineTo(to[j][0],to[j][1]);g.moveTo(ba[i][0],ba[i][1]);g.lineTo(to[i][0],to[i][1])}g.stroke()}}
+}
   g.restore();
   /* figura a escala: su cabeza queda donde manda el horizonte (altura de la cámara frente a la altura de la persona) */
   if(C.fig.on){const F=C.fig,fy=F.y*A,alto=(fy-hy)*(F.altura/F.cam);if(alto>.004){const x=Tx.X(F.x),y=Tx.Y(fy),h=alto*Tx.s,w=h*.26;g.save();g.fillStyle=col;g.globalAlpha=.88;g.beginPath();
@@ -9489,11 +9487,12 @@ function compOverlays(g,x,y,w,h){g.save();g.lineWidth=C.gr;g.strokeStyle=C.color
 function compRender(g,Tx,o){const A=C.A,iw=Tx.s,ih=A*Tx.s,M=compMarco(),mx=Tx.X(M.x),my=Tx.Y(M.y),mw=M.w*Tx.s,mh=M.h*Tx.s;
   if(o.manijas){g.fillStyle='#0d0f13';g.fillRect(0,0,o.cw,o.ch)}
   g.save();if(o.region){const r=o.region;g.beginPath();g.rect(Tx.X(r.x),Tx.Y(r.y),r.w*Tx.s,r.h*Tx.s);g.clip()}
-  if(C.bm)g.drawImage(C.bm,Tx.X(0),Tx.Y(0),iw,ih);else{g.fillStyle='#23262d';g.fillRect(Tx.X(0),Tx.Y(0),iw,ih);if(o.manijas){g.fillStyle='#6f7683';g.font='600 15px sans-serif';g.textAlign='center';g.fillText('Sube una imagen o trabaja sobre el marco vacío',Tx.X(.5),Tx.Y(A/2));g.textAlign='left'}}
+  if(!o.solo||o.solo==='fondo')if(C.bm)g.drawImage(C.bm,Tx.X(0),Tx.Y(0),iw,ih);else{g.fillStyle='#23262d';g.fillRect(Tx.X(0),Tx.Y(0),iw,ih);if(o.manijas){g.fillStyle='#6f7683';g.font='600 15px sans-serif';g.textAlign='center';g.fillText('Sube una imagen o trabaja sobre el marco vacío',Tx.X(.5),Tx.Y(A/2));g.textAlign='left'}}
   if(o.manijas&&C.dim){g.fillStyle='rgba(0,0,0,.5)';g.beginPath();g.rect(Tx.X(0),Tx.Y(0),iw,ih);g.rect(mx,my,mw,mh);g.fill('evenodd')}
   if(o.manijas){g.save();g.strokeStyle='#ffffff';g.globalAlpha=.8;g.lineWidth=1.5;g.strokeRect(mx,my,mw,mh);g.restore()}
-  g.save();g.beginPath();g.rect(mx,my,mw,mh);g.clip();compOverlays(g,mx,my,mw,mh);g.restore();
-  compPersp(g,Tx,o);g.restore();
+  if(!o.solo||o.solo==='comp'){g.save();g.beginPath();g.rect(mx,my,mw,mh);g.clip();compOverlays(g,mx,my,mw,mh);g.restore()}
+  if(!o.solo||o.solo==='vols')compVolDibuja(g,Tx,o);
+  if(!o.solo||o.solo==='guias')compPersp(g,Tx,o);g.restore();
   if(o.manijas){for(const h of compManijas()){g.save();g.fillStyle='#fff';g.strokeStyle=C.color;g.lineWidth=2.5;g.beginPath();if(h.id==='hz'){g.rect(Tx.X(h.x)-9,Tx.Y(h.y)-9,18,18)}else{g.arc(Tx.X(h.x),Tx.Y(h.y),9,0,7)}g.fill();g.stroke();g.restore()}}}
 function compManijas(){const P=C.persp,A=C.A,hy=P.hy*A,H=[];
   if(P.modo!=='ninguna'&&P.modo!=='iso')H.push({id:'hz',x:-.04,y:hy});
@@ -9531,6 +9530,65 @@ function compRecomienda(pr){const txt=nz([...intTextos(pr),...visTextos(pr),...O
     pun[i]=s;res.push({i,s,motivos:[...new Set(mot)].slice(0,3)})});
   res.sort((a,b)=>b.s-a.s);let top=res.filter(r=>r.s>=.45).slice(0,3);if(!top.length)top=[{i:1,s:.3,motivos:['es la base que casi siempre funciona; escribe más de tu idea (mood, tensión, mundo) para afinar']}];
   return {pun,top}}
+/* ============ Volúmenes: rectángulos, círculos, casas y torres puestos EN tu perspectiva (ciudades, pueblos, edificios) ============
+   Cada volumen vive en metros sobre el piso, delante de la cámara (que está a «altura de la cámara» sobre el piso). Con r=0 sus lados siguen los puntos de fuga; con otro giro se rotan. Se dibujan con la misma cámara que el horizonte y los puntos de fuga (1, 2 o 3 puntos), así que todo converge solo. */
+const COMP_VOLS=[['caja','▭ Rectángulo'],['cil','◯ Círculo'],['casa','⌂ Casa'],['cono','▲ Torre cónica'],['plano','▬ Plaza o calle']];
+const compVolDef=t=>({caja:{w:4,l:4,h:4},cil:{w:4,l:4,h:4},casa:{w:6,l:8,h:4},cono:{w:4,l:4,h:9},plano:{w:12,l:12,h:.03}})[t]||{w:4,l:4,h:4};
+const compVolNuevo=(t,x,z)=>({id:uid(),t,x:x??0,z:z??14,...compVolDef(t),r:0});
+/* caras (polígonos [X,Y,Z] en metros) de un volumen */
+function compVolCaras(v){const K=compCam(),th=(K?K.th:Math.PI/2)+v.r*Math.PI/180,a=[Math.cos(th),Math.sin(th)],b=[-Math.sin(th),Math.cos(th)],hw=v.w/2,hl=v.l/2,h=v.h,
+    rxr=(v.rx||0)*Math.PI/180,rzr=(v.rz||0)*Math.PI/180,cx1=Math.cos(rxr),sx1=Math.sin(rxr),cz1=Math.cos(rzr),sz1=Math.sin(rzr),
+    Q=(i,j,y)=>{/* inclinación adelante/atrás (rx) y de lado (rz) sobre el centro de la base, luego giro y posición */const y1=y*cx1-j*sx1,j1=y*sx1+j*cx1,i2=i*cz1-y1*sz1,y2=i*sz1+y1*cz1;return [v.x+i2*a[0]+j1*b[0],(v.y||0)+y2,v.z+i2*a[1]+j1*b[1]]},F=[];
+  if(v.t==='cil'||v.t==='cono'){const n=22,ring=y=>Array.from({length:n},(_,k)=>Q(Math.cos(2*Math.PI*k/n)*hw,Math.sin(2*Math.PI*k/n)*hl,y)),ba=ring(0);
+    if(v.t==='cil'){const to=ring(h);for(let k=0;k<n;k++){const m=(k+1)%n;F.push([ba[k],ba[m],to[m],to[k]])}F.push(to);F.push(ba.slice().reverse())}
+    else{const ap=Q(0,0,h);for(let k=0;k<n;k++){const m=(k+1)%n;F.push([ba[k],ba[m],ap])}F.push(ba.slice().reverse())}}
+  else if(v.t==='casa'){const rh=Math.min(hw*.9,h*.6),A0=Q(-hw,-hl,0),A1=Q(hw,-hl,0),A2=Q(hw,hl,0),A3=Q(-hw,hl,0),B0=Q(-hw,-hl,h),B1=Q(hw,-hl,h),B2=Q(hw,hl,h),B3=Q(-hw,hl,h),R0=Q(0,-hl,h+rh),R1=Q(0,hl,h+rh);
+    F.push([A0,A1,B1,R0,B0],[A3,B3,R1,B2,A2],[A1,A2,B2,B1],[A3,A0,B0,B3],[B0,R0,R1,B3],[R0,B1,B2,R1],[A3,A2,A1,A0])}
+  else{const A0=Q(-hw,-hl,0),A1=Q(hw,-hl,0),A2=Q(hw,hl,0),A3=Q(-hw,hl,0),B0=Q(-hw,-hl,h),B1=Q(hw,-hl,h),B2=Q(hw,hl,h),B3=Q(-hw,hl,h);
+    F.push([B0,B1,B2,B3],[A0,A1,B1,B0],[A1,A2,B2,B1],[A2,A3,B3,B2],[A3,A0,B0,B3],[A3,A2,A1,A0])}
+  return F}
+/* mundo → cámara (X, arriba, profundidad), en alturas de cámara */
+function compVolCam(K){const cm=C.fig.cam||1.6,ph=K.phi||0,cs=Math.cos(ph),sn=Math.sin(ph);return (X,Y,Z)=>{const x=X/cm,y=Y/cm-1,z=Z/cm;return [x,y*cs+z*sn,z*cs-y*sn]}}
+const compVolProy=(K,p)=>[K.cx+K.f*p[0]/p[2],(K.py??K.hy)-K.f*p[1]/p[2]];
+function compVolRecorta(P,zmin){const R=[];for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],da=a[2]-zmin,db=b[2]-zmin;if(da>=0)R.push(a);if((da>=0)!==(db>=0)){const t=da/(da-db);R.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1]),zmin])}}return R}
+/* un clic en la imagen → punto del piso en metros (o null si apunta por encima del horizonte) */
+function compVolSuelo(u,v){const K=compCam();if(!K)return null;const ph=K.phi||0,cs=Math.cos(ph),sn=Math.sin(ph),xc=(u-K.cx)/K.f,uc=((K.py??K.hy)-v)/K.f,dy=uc*cs-sn,dz=cs+uc*sn;if(dy>=-1e-4)return null;const t=-1/dy,cm=C.fig.cam||1.6;return {x:t*xc*cm,z:t*dz*cm}}
+function compVolDibuja(g,Tx,o){const K=compCam();if(!K||!C.vols?.length)return;const cam=compVolCam(K),col=C.color,sw=C.gr,L=[-.4,.8,-.45],ln=Math.hypot(...L),acc='#ff7a3d';
+  const orden=C.vols.slice().sort((p,q)=>Math.hypot(q.x,q.z)-Math.hypot(p.x,p.z)),hit=[];
+  g.save();g.lineJoin='round';
+  for(const v of orden){const caras=compVolCaras(v),c=(()=>{const t=[0,0,0];let n=0;for(const f of caras)for(const p of f){t[0]+=p[0];t[1]+=p[1];t[2]+=p[2];n++}return t.map(x=>x/n)})(),sel=o.manijas&&v.id===C.vSel,polis=[];
+    for(const f of caras){/* normal hacia afuera y descarte de las caras de atrás */
+      const e1=[f[1][0]-f[0][0],f[1][1]-f[0][1],f[1][2]-f[0][2]],e2=[f[2][0]-f[0][0],f[2][1]-f[0][1],f[2][2]-f[0][2]];let n=[e1[1]*e2[2]-e1[2]*e2[1],e1[2]*e2[0]-e1[0]*e2[2],e1[0]*e2[1]-e1[1]*e2[0]];const nl=Math.hypot(...n)||1;n=n.map(x=>x/nl);
+      const mid=f.reduce((s,p)=>[s[0]+p[0]/f.length,s[1]+p[1]/f.length,s[2]+p[2]/f.length],[0,0,0]);if(n[0]*(mid[0]-c[0])+n[1]*(mid[1]-c[1])+n[2]*(mid[2]-c[2])<0)n=n.map(x=>-x);
+      if(n[0]*(0-mid[0])+n[1]*(C.fig.cam||1.6)-n[1]*mid[1]+n[2]*(0-mid[2])<=0)continue;
+      const P3=compVolRecorta(f.map(p=>cam(p[0],p[1],p[2])),.12);if(P3.length<3)continue;
+      const P2=P3.map(p=>compVolProy(K,p));polis.push(P2);
+      g.beginPath();P2.forEach((q,i)=>i?g.lineTo(Tx.X(q[0]),Tx.Y(q[1])):g.moveTo(Tx.X(q[0]),Tx.Y(q[1])));g.closePath();
+      if(C.vfill!==false){const lum=v.h<=.05?.55:.38+.62*Math.max(0,(n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/ln),k=Math.round(70+170*lum);g.globalAlpha=C.vfillA??.86;g.fillStyle=`rgb(${k},${k},${Math.min(255,k+10)})`;g.fill()}
+      g.globalAlpha=C.op;g.strokeStyle=sel?acc:col;g.lineWidth=sel?sw*1.8:sw;g.stroke()}
+    if(o.manijas)hit.push({id:v.id,polis})}
+  g.restore();if(o.manijas)C.vHit=hit.reverse()}
+/* ¿qué volumen hay bajo este punto (en coordenadas de la imagen)? el de más adelante */
+function compVolEn(x,y){for(const h of C.vHit||[])for(const P of h.polis){let d=false;for(let i=0,j=P.length-1;i<P.length;j=i++){if((P[i][1]>y)!==(P[j][1]>y)&&x<(P[j][0]-P[i][0])*(y-P[i][1])/(P[j][1]-P[i][1])+P[i][0])d=!d}if(d)return h.id}return ''}
+function compVolPreset(k){const R=(a,b)=>a+Math.random()*(b-a),Rp=a=>a[Math.floor(Math.random()*a.length)],L=[],add=(t,x,z,o={})=>{const v=compVolNuevo(t,x,z);Object.assign(v,o);L.push(v)};
+  if(k==='pueblo'){add('plano',0,22,{w:16,l:16});
+    for(let i=0;i<11;i++){let x,z,t=0;do{x=R(-26,26);z=R(10,40);t++}while(Math.abs(x)<11&&Math.abs(z-22)<11&&t<30);add('casa',x,z,{w:R(5,8),l:R(6,10),h:R(3,4.6),r:Rp([0,0,0,90,90,Math.round(R(-25,25))])})}
+    add('cono',-12,34,{w:5,l:5,h:12});add('cil',12,30,{w:3,l:3,h:6})}
+  else if(k==='ciudad'){for(let zi=0;zi<4;zi++)for(let xi=-3;xi<=3;xi++){if(Math.random()<.12)continue;const w=R(6,9),l=R(6,9);add('caja',xi*13,12+zi*14,{w,l,h:R(7,38)*(1-zi*.1)})}
+    for(let zi=0;zi<4;zi++)add('plano',0,12+zi*14+7,{w:100,l:4})}
+  else if(k==='plaza'){add('plano',0,20,{w:22,l:22});add('cono',0,20,{w:3,l:3,h:16});add('cil',0,20,{w:5,l:5,h:1.2});for(let i=0;i<8;i++){const an=i*Math.PI/4,x=Math.cos(an)*16,z=20+Math.sin(an)*16;add('caja',x,z,{w:5,l:5,h:R(5,10),r:Math.round(an*180/Math.PI)})}}
+  C.vols=L;C.vSel=L[0]?.id||''}
+function compVolPanelHTML(sl,ck,chip,P){const K=compCam(),V=C.vols||[],s=V.find(v=>v.id===C.vSel);
+  if(P.modo==='ninguna'||P.modo==='iso')return '';
+  return `<div class="v3-g"><b>5 · Volúmenes (ciudades, pueblos, edificios)</b><p class="hint" style="margin:0">Pon rectángulos, círculos, casas y torres sobre tu perspectiva: se acomodan solos al horizonte y a los puntos de fuga. Arrástralos sobre el lienzo para moverlos por el piso.${K?'':' <b>Primero pon los puntos de fuga en lados opuestos del centro.</b>'}</p>
+    <div class="chips">${COMP_VOLS.map(([k,n])=>chip('vadd',k,'＋ '+n,false)).join('')}</div>
+    <div class="chips"><span class="lbl">Armar de golpe</span>${chip('vpre','pueblo','Pueblo',false)}${chip('vpre','ciudad','Ciudad',false)}${chip('vpre','plaza','Plaza con torre',false)}${V.length?chip('vclr','1','Borrar todo',false):''}</div>
+    ${V.length?`<div class="chips"><span class="lbl">Volúmenes (${V.length})</span>${V.slice(0,40).map((v,i)=>chip('vsel',v.id,(COMP_VOLS.find(x=>x[0]===v.t)?.[1].slice(0,1)||'▭')+(i+1),v.id===C.vSel)).join('')}${V.length>40?'…':''}</div>`:''}
+    ${s?`${sl('v_z','Distancia (m)',2,120,.5,s.z)}${sl('v_x','Lateral (m)',-80,80,.5,s.x)}${sl('v_w','Ancho (m)',.5,60,.5,s.w)}${sl('v_l','Largo (m)',.5,60,.5,s.l)}${sl('v_h','Alto (m)',.03,80,s.h<2?.01:.5,s.h)}${sl('v_r','Giro (°)',-90,90,1,s.r)}${sl('v_y','Altura sobre el piso (m)',0,60,.5,s.y||0)}${sl('v_rx','Inclinar adelante / atrás (°)',-90,90,1,s.rx||0)}${sl('v_rz','Inclinar de lado (°)',-90,90,1,s.rz||0)}<div class="prow"><button class="btn sm" data-cp="vdup:1">Duplicar</button><button class="btn sm" data-cp="vdel:1">Quitar este</button></div>`:''}
+    ${V.length?`${ck('vfill','Rellenar con sombreado (si no, solo líneas)',C.vfill!==false)}${sl('camh','Altura de la cámara (m)',.3,12,.1,C.fig.cam)}<div class="prow"><button class="btn sm pri" data-cp="vpsd:1">PSD en capas para pintar encima</button></div><p class="hint" style="margin:0">El PSD sale con capas: tu boceto, la composición, el horizonte y los puntos de fuga, los volúmenes y una capa vacía para pintar.</p>`:''}</div>`}
+async function compPsd(){const {writePsd}=await import('https://cdn.jsdelivr.net/npm/ag-psd@28.2.1/+esm'),plano=await compSalida('enc'),w=plano.width,h=plano.height,
+    cp=await compSalida('enc','comp'),gu=await compSalida('enc','guias'),vo=await compSalida('enc','vols'),fo=await compSalida('enc','fondo'),hijos=[{name:C.bm?'Mi boceto':'Marco',canvas:fo},{name:'Composición',canvas:cp},{name:'Horizonte y puntos de fuga',canvas:gu},{name:'Volúmenes',canvas:vo},{name:'Pintar aquí',canvas:lienzo(w,h)}];
+  const buf=writePsd({width:w,height:h,canvas:plano,children:hijos});await bajarBlob('composicion-'+slug(C.nombre||'marco',30)+'.psd',new Blob([buf],{type:'image/vnd.adobe.photoshop'}));toast('PSD en capas listo: '+w+' × '+h+' px')}
 function compPanelHTML(){const P=C.persp,chip=(a,k,n,on)=>`<button class="ch xs ${on?'on':''}" data-cp="${a}:${k}">${n}</button>`,sl=(n,lab,min,max,st,v,u='')=>`<label class="v3-s"><span>${lab} <b id="cpv-${n}">${v}${u}</b></span><input type="range" data-cpi="${n}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`,ck=(n,lab,v)=>`<label class="chk"><input type="checkbox" data-cpi="${n}" ${v?'checked':''}><span>${lab}</span></label>`;
   const reales=Object.entries(S.P).filter(([,q])=>!q.libre),pr=C.pid&&S.P[C.pid]&&!S.P[C.pid].libre?S.P[C.pid]:null,rec=pr?compRecomienda(pr):null,imgs=compImagenes(pr?C.pid:''),sel=COMP_RECETAS.find(r=>r.n===C.receta),orden=COMP_RECETAS.map((r,i)=>i),top=rec?rec.top.map(t=>t.i):[];
   if(rec)orden.sort((a,b)=>(rec.pun[b]||0)-(rec.pun[a]||0));
@@ -9546,11 +9604,12 @@ function compPanelHTML(){const P=C.persp,chip=(a,k,n,on)=>`<button class="ch xs 
     <div class="v3-g"><b>4 · Perspectiva</b><div class="chips">${[['ninguna','Ninguna'],['1','1 punto'],['2','2 puntos'],['3','3 puntos'],['iso','Isométrica']].map(([k,n])=>chip('modo',k,n,P.modo===k)).join('')}</div>
       ${P.modo!=='ninguna'&&P.modo!=='iso'?`<div class="chips"><span class="lbl">Cámara</span>${chip('hz','.2','Picado',P.hy<.35)}${chip('hz','.5','Nivel de ojo',P.hy>=.35&&P.hy<=.65)}${chip('hz','.8','Contrapicado',P.hy>.65)}</div>${sl('rayos','Líneas de fuga',8,60,2,P.rayos)}`:''}
       ${P.modo==='1'?sl('f1','Ángulo de visión',50,160,5,Math.round(P.f1*100),'%'):''}
-      ${P.modo==='1'||P.modo==='2'?`${ck('suelo','Cuadrícula de suelo (en perspectiva real)',P.suelo)}${ck('caja','Caja de referencia',P.caja)}${P.caja?`${sl('cajaD','Distancia de la caja',1.5,10,.1,P.cajaD)}${sl('cajaX','Lateral',-4,4,.1,P.cajaX)}${sl('cajaS','Tamaño',1,6,.1,P.cajaS)}`:''}`:''}
+      ${P.modo==='1'||P.modo==='2'?`${ck('suelo','Cuadrícula de suelo (en perspectiva real)',P.suelo)}`:''}
       ${P.modo==='2'?ck('vert','Verticales paralelas',P.vert):''}
       ${P.modo!=='ninguna'&&P.modo!=='iso'?`${ck('fig','Figura a escala (arrastra sus pies)',C.fig.on)}${C.fig.on?`${sl('camh','Altura de la cámara (m)',.3,6,.1,C.fig.cam)}${sl('figh','Altura de la persona (m)',.5,2.5,.05,C.fig.altura)}`:''}`:''}
       <p class="hint" style="margin:0">Arrastra el cuadrado (horizonte) y los círculos (puntos de fuga) sobre el lienzo.</p></div>
-    ${(P.modo==='1'||P.modo==='2'||P.modo==='3')?`<div class="v3-g"><b>5 · Personajes 3D</b><p class="hint" style="margin:0">Pon maniquíes (con tus poses y proporciones de monstruo) sobre esta perspectiva: el piso, la escala y el tamaño salen de tu horizonte y tus puntos de fuga, y el render sale del tamaño del encuadre.</p><div class="prow"><button class="btn sm pri" data-cp="v3d:1">Colocar personajes en esta perspectiva</button></div></div>`:''}
+    ${compVolPanelHTML(sl,ck,chip,P)}
+    ${(P.modo==='1'||P.modo==='2'||P.modo==='3')?`<div class="v3-g"><b>6 · Personajes 3D</b><p class="hint" style="margin:0">Pon maniquíes (con tus poses y proporciones de monstruo) sobre esta perspectiva: el piso, la escala y el tamaño salen de tu horizonte y tus puntos de fuga, y el render sale del tamaño del encuadre.</p><div class="prow"><button class="btn sm pri" data-cp="v3d:1">Colocar personajes en esta perspectiva</button></div></div>`:''}
     <div class="v3-g"><b>Recetas de cine</b><div class="chips">${orden.map(i=>chip('rec',i,(top.includes(i)?'★ ':'')+COMP_RECETAS[i].n,C.receta===COMP_RECETAS[i].n)).join('')}</div>${sel?`<p class="hint" style="margin:0"><b>${esc(sel.n)}.</b> ${esc(sel.tip)}</p>`:`<p class="hint" style="margin:0">${rec?'Las marcadas con ★ son las que más encajan con tu proyecto.':'Cada receta acomoda el encuadre, las guías y la perspectiva, y te dice cuándo usarla.'}</p>`}</div>
     <div class="v3-g"><b>Líneas</b><div class="prow"><label class="muted" style="font-size:12px">Color <input type="color" data-cpi="color" value="${esc(C.color)}"></label></div>${sl('op','Opacidad',20,100,5,Math.round(C.op*100),'%')}${sl('gr','Grosor',1,6,.5,C.gr)}</div>
     <div class="v3-g"><b>Salida</b><div class="prow"><button class="btn sm pri" data-cp="mood:1">${pr?'Guardar en el moodboard de «'+esc(corto(pr.nombre,22))+'»':'Añadir al moodboard'}</button>${pr?`<button class="btn sm" data-cp="boc:1">Guardar como boceto de «${esc(corto(pr.nombre,22))}»</button>`:''}</div><div class="prow"><button class="btn sm" data-cp="png:enc">Descargar el encuadre</button><button class="btn sm" data-cp="png:todo">Descargar la imagen completa</button><button class="btn sm" data-cp="copiar:1">Copiar</button></div></div>`}
@@ -9567,17 +9626,17 @@ async function compCargaArchivo(f){try{const bm=await createImageBitmap(f);await
 function compPanel(){const e=document.getElementById('cp-panel');if(e)e.innerHTML=compPanelHTML()}
 function compReceta(r){C.receta=r.n;C.ar=r.ar;C.zoom=1;C.ov={};r.ov.forEach(k=>C.ov[k]=true);const P=C.persp;P.modo=r.persp.modo;if(r.persp.hy!=null)P.hy=r.persp.hy;if(r.persp.u1!=null)P.u1=r.persp.u1;if(r.persp.u2!=null)P.u2=r.persp.u2;P.rayos=r.persp.rayos||24;P.suelo=false;P.caja=false;
   if(r.fig){C.fig.on=!!r.fig.on;if(r.fig.y!=null)C.fig.y=r.fig.y}else C.fig.on=false;compAjusta();compPanel();compDibuja()}
-async function compSalida(modo){const M=compMarco(),A=C.A,reg=modo==='enc'?M:{x:0,y:0,w:1,h:A},W=modo==='enc'?compPxW(reg):Math.min(2400,Math.round((C.bm?C.bm.width:1600)*reg.w)),s=W/reg.w,cv=lienzo(Math.round(reg.w*s),Math.round(reg.h*s)),g=cv.getContext('2d'),Tx={X:x=>(x-reg.x)*s,Y:y=>(y-reg.y)*s,s,ox:-reg.x*s,oy:-reg.y*s};
-  const gr0=C.gr;C.gr=gr0*s/((C.Tx&&C.Tx.s)||s);try{compRender(g,Tx,{cw:cv.width,ch:cv.height,manijas:false,region:reg})}finally{C.gr=gr0}return cv}
+async function compSalida(modo,solo){const M=compMarco(),A=C.A,reg=modo==='enc'?M:{x:0,y:0,w:1,h:A},W=modo==='enc'?compPxW(reg):Math.min(2400,Math.round((C.bm?C.bm.width:1600)*reg.w)),s=W/reg.w,cv=lienzo(Math.round(reg.w*s),Math.round(reg.h*s)),g=cv.getContext('2d'),Tx={X:x=>(x-reg.x)*s,Y:y=>(y-reg.y)*s,s,ox:-reg.x*s,oy:-reg.y*s};
+  const gr0=C.gr;C.gr=gr0*s/((C.Tx&&C.Tx.s)||s);try{compRender(g,Tx,{cw:cv.width,ch:cv.height,manijas:false,region:reg,solo})}finally{C.gr=gr0}return cv}
 function compInit(){const cv=document.getElementById('cp-canvas'),box=document.getElementById('comp-box');if(!cv||!box)return;
   if(C.pend){const q=C.pend;C.pend=null;C.pid=S.P[q.pid]&&!S.P[q.pid].libre?q.pid:'';const x=(S.P[q.pid]?.[q.lista]||[]).find(z=>z.id===q.id);if(x)cargarBitmap(x).then(bm=>compCargaBitmap(bm,x.nombre||x.etapa||'pieza','propia')).catch(()=>toast('No pude abrir esa imagen'))}
   let drag=null;const pos=e=>{const r=cv.getBoundingClientRect(),Tx=C.Tx;return {sx:e.clientX-r.left,sy:e.clientY-r.top,x:(e.clientX-r.left-Tx.ox)/Tx.s,y:(e.clientY-r.top-Tx.oy)/Tx.s}};
   cv.addEventListener('pointerdown',e=>{if(!C.Tx)return;const q=pos(e),Tx=C.Tx;let h=null,best=22;for(const m of compManijas()){const d=Math.hypot(Tx.X(m.x)-q.sx,Tx.Y(m.y)-q.sy);if(d<best){best=d;h=m}}
-    if(h)drag={id:h.id};else{const M=compMarco();if(q.x>=M.x&&q.x<=M.x+M.w&&q.y>=M.y&&q.y<=M.y+M.h)drag={id:'marco',dx:q.x-M.x,dy:q.y-M.y}}
+    if(h)drag={id:h.id};else if((()=>{const id=compVolEn(q.x,q.y);if(!id)return false;C.vSel=id;const v=C.vols.find(x=>x.id===id),g0=compVolSuelo(q.x,q.y);drag={id:'vol',vid:id,dx:g0?v.x-g0.x:0,dz:g0?v.z-g0.z:0};return true})()){}else{const M=compMarco();if(q.x>=M.x&&q.x<=M.x+M.w&&q.y>=M.y&&q.y<=M.y+M.h)drag={id:'marco',dx:q.x-M.x,dy:q.y-M.y}}
     if(drag){cv.setPointerCapture(e.pointerId);e.preventDefault()}});
   cv.addEventListener('pointermove',e=>{if(!drag||!C.Tx)return;const q=pos(e),P=C.persp,A=C.A;
     if(drag.id==='hz')P.hy=clamp(q.y/A,-1.5,2.5);else if(drag.id==='u1')P.u1=clamp(q.x,-3,4);else if(drag.id==='u2')P.u2=clamp(q.x,-3,4);else if(drag.id==='v3')P.v3=clamp(q.y/A,-4,5);
-    else if(drag.id==='fig'){C.fig.x=clamp(q.x,0,1);C.fig.y=clamp(q.y/A,P.hy+.02,1.6)}else if(drag.id==='marco'){C.fx=q.x-drag.dx;C.fy=q.y-drag.dy}
+    else if(drag.id==='fig'){C.fig.x=clamp(q.x,0,1);C.fig.y=clamp(q.y/A,P.hy+.02,1.6)}else if(drag.id==='vol'){const v=C.vols.find(x=>x.id===drag.vid),g0=compVolSuelo(q.x,q.y);if(v&&g0){v.x=clamp(g0.x+drag.dx,-200,200);v.z=clamp(g0.z+drag.dz,1,400)}}else if(drag.id==='marco'){C.fx=q.x-drag.dx;C.fy=q.y-drag.dy}
     C.receta='';compDibuja()});
   const fin=()=>{if(drag){drag=null;compAjusta();compDibuja();compPanel()}};cv.addEventListener('pointerup',fin);cv.addEventListener('pointercancel',fin);
   cv.addEventListener('dragover',e=>e.preventDefault());cv.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f&&/^image\//.test(f.type))compCargaArchivo(f)});
@@ -9588,13 +9647,18 @@ function compInit(){const cv=document.getElementById('cp-canvas'),box=document.g
     else if(a==='rec'){compReceta(COMP_RECETAS[+k]);return}
     else if(a==='png'){const cv2=await compSalida(k);await bajarBlob(`composicion-${slug(C.nombre||'marco',30)}-${k==='enc'?'encuadre':'completa'}.png`,await aBlob(cv2));return}
     else if(a==='copiar'){try{const cv2=await compSalida('enc');await navigator.clipboard.write([new ClipboardItem({'image/png':await aBlob(cv2)})]);toast('Imagen copiada')}catch{toast('Tu navegador no deja copiar imágenes; usa Descargar')}return}
+    else if(a==='vadd'){C.vols=C.vols||[];const n=C.vols.length,v=compVolNuevo(k,((n%5)-2)*7,14+Math.floor(n/5)*9);C.vols.push(v);C.vSel=v.id}
+    else if(a==='vsel')C.vSel=k;else if(a==='vclr'){C.vols=[];C.vSel=''}else if(a==='vpre')compVolPreset(k);
+    else if(a==='vdup'){const v=(C.vols||[]).find(x=>x.id===C.vSel);if(v){const c={...v,id:uid(),x:v.x+v.w*1.2};C.vols.push(c);C.vSel=c.id}}
+    else if(a==='vdel'){C.vols=(C.vols||[]).filter(x=>x.id!==C.vSel);C.vSel=C.vols[0]?.id||''}
+    else if(a==='vpsd'){try{await compPsd()}catch(er){toast('No pude armar el PSD')}return}
     else if(a==='v3d'){await v3dPerspAbre();return}
     else if(a==='mood'||a==='boc'){await compGuarda(a);return}
     compAjusta();compPanel();compDibuja()});
   const entrada=async e=>{const t=e.target,n=t.dataset?.cpi;if(!n)return;if(e.type==='input'&&t.tagName==='SELECT')return;const P=C.persp,v=t.type==='checkbox'?t.checked:t.type==='range'||t.type==='number'?+t.value:t.value;
     if(n==='pid'){C.pid=v;C.receta=v?C.receta:'';compPanel();return}
     if(n==='proj'){if(v==='')return;const q=compImagenes(C.pid&&S.P[C.pid]&&!S.P[C.pid].libre?C.pid:'')[+v];if(q){if(q.pid&&S.P[q.pid]&&!S.P[q.pid].libre)C.pid=q.pid;try{await compCargaBitmap(await cargarBitmap(q.r),q.r.nombre||q.r.etapa||'pieza','propia')}catch{toast('No pude abrir esa imagen')}}return}
-    if(n==='zoom')C.zoom=v/100;else if(n==='dim')C.dim=v;else if(n==='cuad')C.cuad=clamp(v,2,12);else if(n==='rayos')P.rayos=v;else if(n==='f1')P.f1=v/100;else if(n==='suelo')P.suelo=v;else if(n==='caja'){P.caja=v;compPanel()}else if(n==='vert')P.vert=v;
+    if(n==='vfill')C.vfill=v;else if(/^v_/.test(n)){const sv=(C.vols||[]).find(x=>x.id===C.vSel);if(sv)sv[n.slice(2)]=v}else if(n==='zoom')C.zoom=v/100;else if(n==='dim')C.dim=v;else if(n==='cuad')C.cuad=clamp(v,2,12);else if(n==='rayos')P.rayos=v;else if(n==='f1')P.f1=v/100;else if(n==='suelo')P.suelo=v;else if(n==='caja'){P.caja=v;compPanel()}else if(n==='vert')P.vert=v;
     else if(n==='fig'){C.fig.on=v;compPanel()}else if(n==='camh')C.fig.cam=v;else if(n==='figh')C.fig.altura=v;else if(n==='cajaD')P.cajaD=v;else if(n==='cajaX')P.cajaX=v;else if(n==='cajaS')P.cajaS=v;else if(n==='color')C.color=v;else if(n==='op')C.op=v/100;else if(n==='gr')C.gr=v;
     const lb=document.getElementById('cpv-'+n);if(lb)lb.textContent=(n==='zoom'||n==='f1'||n==='op')?v+'%':v;compDibuja()};
   box.addEventListener('input',entrada);box.addEventListener('change',e=>{if(e.target.id==='cp-file'&&e.target.files?.[0]){compCargaArchivo(e.target.files[0]);e.target.value=''}else if(e.target.tagName==='SELECT')entrada(e)});
@@ -10371,17 +10435,33 @@ function v3dPerspAplica(){const P=S.v3d.persp,T=V3.T;if(!P||!T)return;
   const sc=V3.key.shadow.camera;sc.left=-9;sc.right=9;sc.top=9;sc.bottom=-9;sc.far=40;sc.updateProjectionMatrix();
   const h=$('.v3d-hint');if(h)h.textContent='Arrastra a los personajes por el piso: cambian de tamaño solos según la perspectiva · Mayús + arrastrar: subir o bajar';
   v3dEscena();v3dLuz();v3dResize()}
+function v3dPerspSync(){const P=S.v3d?.persp,K=compCam();if(!P||!K)return false;const p=C.persp,n=(a,b)=>{const L=Math.hypot(a,b)||1;return [a/L,b/L]};P.K={cx:K.cx,hy:K.hy,f:K.f,py:K.py,phi:K.phi||0,fz:K.fz||K.f,v3:K.v3};P.d1=p.modo==='1'?[0,1]:n(p.u1-K.cx,K.fz||K.f);P.d2=p.modo==='1'?[1,0]:n(p.u2-K.cx,K.fz||K.f);P.M={...compMarco()};P.modo=p.modo;v3dPerspCam();v3dResize();V3.dirty=true;return true}
 function v3dPerspSale(){const S3=S.v3d;if(!S3?.persp)return;v3dPerspGuardaCfg();S3.persp=null;V3.perspTex?.dispose?.();V3.perspTex=null;V3.perspBg=null;$('#v3d-pg')?.remove();if(V3.controls)V3.controls.enabled=true;const sc=V3.key.shadow.camera;sc.left=-3;sc.right=3;sc.top=3;sc.bottom=-3;sc.far=20;sc.updateProjectionMatrix();v3dEscena();v3dResize();v3dEncuadra();if(S3.tab==='persp')S3.tab='modelo';v3dPanel()}
 /* el piso en perspectiva y el horizonte, dibujados con la misma cámara */
 function v3dPerspPunto(P,x,z){const K=P.K,ph=K.phi||0,Zh=P.D-z,zc=Zh*Math.cos(ph)+P.camH*Math.sin(ph);if(zc<=.25)return null;const up=-P.camH*Math.cos(ph)+Zh*Math.sin(ph);return [K.cx+K.f*x/zc,(K.py??K.hy)-K.f*up/zc]}
+/* la hoja de cuadrícula: un plano que se mueve (x, y, z) y se gira (giro, inclinación adelante/atrás, inclinación de lado). Sin mover nada es el piso. */
+const v3dRot=(v,e,t)=>{const c=Math.cos(t),s=Math.sin(t),d=e[0]*v[0]+e[1]*v[1]+e[2]*v[2],x=[e[1]*v[2]-e[2]*v[1],e[2]*v[0]-e[0]*v[2],e[0]*v[1]-e[1]*v[0]];return [v[0]*c+x[0]*s+e[0]*d*(1-c),v[1]*c+x[1]*s+e[1]*d*(1-c),v[2]*c+x[2]*s+e[2]*d*(1-c)]};
+function v3dHojaEjes(A,B,H){const R=Math.PI/180;let u=[A[0],0,A[1]],w=[B[0],0,B[1]],n=[0,1,0];
+  if(H.ry){u=v3dRot(u,n,H.ry*R);w=v3dRot(w,n,H.ry*R)}
+  if(H.rx){w=v3dRot(w,u,H.rx*R);n=v3dRot(n,u,H.rx*R)}
+  if(H.rz){u=v3dRot(u,w,H.rz*R);n=v3dRot(n,w,H.rz*R)}
+  return {u,w,n}}
+/* segmento 3D → imagen (recortado delante de la cámara) */
+function v3dPerspSeg(P,p,q){const K=P.K,ph=K.phi||0,cs=Math.cos(ph),sn=Math.sin(ph),c=r=>{const up=r[1]-P.camH,Zh=P.D-r[2];return [r[0],up*cs+Zh*sn,Zh*cs-up*sn]};let a=c(p),b=c(q);const zm=.25;if(a[2]<zm&&b[2]<zm)return null;
+  if(a[2]<zm){const t=(zm-a[2])/(b[2]-a[2]);a=[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1]),zm]}else if(b[2]<zm){const t=(zm-b[2])/(a[2]-b[2]);b=[b[0]+t*(a[0]-b[0]),b[1]+t*(a[1]-b[1]),zm]}
+  const f=r=>[K.cx+K.f*r[0]/r[2],(K.py??K.hy)-K.f*r[1]/r[2]];return [f(a),f(b)]}
+function v3dHojaDibuja(g,P,K,px,A,B,k){const H=P.hoja||{x:0,y:0,z:0,ry:0,rx:0,rz:0},R=v3dHojaEjes(A,B,H),O=[H.x||0,H.y||0,H.z||0],E=150;
+  const pt=(s,t)=>[O[0]+R.u[0]*s+R.w[0]*t,O[1]+R.u[1]*s+R.w[1]*t,O[2]+R.u[2]*s+R.w[2]*t],tr=(dir,col)=>{for(let i=-40;i<=40;i++){const sg=dir==='u'?v3dPerspSeg(P,pt(-E,i),pt(E,i)):v3dPerspSeg(P,pt(i,-E),pt(i,E));if(!sg)continue;
+      const a=px(sg[0][0],sg[0][1]),b=px(sg[1][0],sg[1][1]);g.globalAlpha=i%5===0?.5:.22;g.strokeStyle=col;g.lineWidth=(i%5===0?1.4:.8)*k;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke()}};
+  tr('u','#4cc9f0');tr('w','#ffb703');
+  /* el origen de la hoja, con su normal */
+  const o=v3dPerspSeg(P,O,[O[0]+R.n[0],O[1]+R.n[1],O[2]+R.n[2]]);if(o){const a=px(o[0][0],o[0][1]),b=px(o[1][0],o[1][1]);g.globalAlpha=1;g.strokeStyle='#ff4d9d';g.lineWidth=2*k;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();g.fillStyle='#ff4d9d';g.beginPath();g.arc(a[0],a[1],3*k,0,7);g.fill()}}
 function v3dPerspGuiasDibuja(g,W,H,k){const P=S.v3d?.persp;if(!P||!P.guias)return;const M=P.M,K=P.K,px=(u,v)=>[(u-M.x)/M.w*W,(v-M.y)/M.h*H],pt=(x,z)=>{const q=v3dPerspPunto(P,x,z);return q&&px(q[0],q[1])},
     mundo=d=>[d[0],-d[1]],A=mundo(P.d1),B=mundo(P.d2);
   g.save();g.lineCap='round';
   /* horizonte */const hy=px(0,K.hy)[1];g.strokeStyle='#ff4d9d';g.globalAlpha=.9;g.lineWidth=1.6*k;g.setLineDash([]);g.beginPath();g.moveTo(0,hy);g.lineTo(W,hy);g.stroke();
   g.fillStyle='#ff4d9d';g.font='600 '+Math.round(11*k)+'px system-ui,sans-serif';g.textBaseline='bottom';g.fillText('HORIZONTE · ojos de la cámara a '+(Math.round(P.camH*100)/100)+' m',8*k,hy-4*k);
-  if(P.grid){const ph=K.phi||0,zmin=(.6-P.camH*Math.sin(ph))/Math.cos(ph),linea=(dir,otra,col)=>{for(let i=-40;i<=40;i++){const x0=otra[0]*i,z0=otra[1]*i;let s0=-150,s1=150;const dz=dir[1];/* recorte: la profundidad Zc = D − z debe ser > zmin */const lim=(P.D-z0-zmin)/(dz||1e-9);if(dz>1e-6)s1=Math.min(s1,lim);else if(dz<-1e-6)s0=Math.max(s0,lim);else if(P.D-z0<zmin)continue;if(s0>=s1)continue;
-        const a=pt(x0+dir[0]*s0,z0+dir[1]*s0),b=pt(x0+dir[0]*s1,z0+dir[1]*s1);if(!a||!b)continue;g.globalAlpha=i%5===0?.5:.22;g.strokeStyle=col;g.lineWidth=(i%5===0?1.4:.8)*k;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke()}};
-    linea(A,B,'#4cc9f0');linea(B,A,'#ffb703')}
+  if(P.grid)v3dHojaDibuja(g,P,K,px,A,B,k);
   /* puntos de fuga */g.globalAlpha=1;g.lineWidth=2*k;for(const [d,c,t] of [[P.d1,'#4cc9f0','PF1'],[P.d2,'#ffb703','PF2']]){if(P.modo==='1'&&t==='PF2')continue;const u=K.cx+(K.fz||K.f)*d[0]/(d[1]||1e-9),q=px(u,K.hy);if(q[0]>-20*k&&q[0]<W+20*k){g.strokeStyle=c;g.beginPath();g.arc(q[0],q[1],8*k,0,7);g.stroke();g.fillStyle=c;g.textBaseline='top';g.fillText(t,q[0]+11*k,q[1]+3*k)}}
   if(P.modo==='3'&&K.v3!=null){const q=px(K.cx,K.v3),dentro=q[1]>-20*k&&q[1]<H+20*k;g.globalAlpha=1;g.strokeStyle='#b8f35c';g.fillStyle='#b8f35c';g.lineWidth=2*k;g.textBaseline='top';
     if(dentro){g.beginPath();g.arc(q[0],q[1],8*k,0,7);g.stroke();g.fillText('PF3',q[0]+11*k,q[1]+3*k)}else{const arriba=q[1]<0;g.textBaseline=arriba?'top':'bottom';g.textAlign='center';g.fillText('PF3 '+(arriba?'▲ arriba':'▼ abajo'),W/2,arriba?6*k:H-6*k);g.textAlign='left'}
@@ -10397,7 +10477,7 @@ function v3dPerspOrienta(op){const S3=S.v3d,P=S3.persp;if(!P)return;const y=v3dP
 function v3dTabPersp(s){const P=s.persp;if(!P)return '<p class="hint">Esta pestaña se activa desde Herramientas → Perspectiva y composición → «Personajes 3D».</p>';
   const sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3pp-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3pp="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,chk=(k,n)=>`<label class="chk"><input type="checkbox" data-v3ppc="${k}" ${P[k]!==false?'checked':''}><span>${n}</span></label>`,
     ori=[['1','Mira hacia PF1'],['1o','Mira de PF1 hacia ti'],['2','Mira hacia PF2'],['2o','Mira de PF2 hacia ti'],['f','De frente a la cámara'],['b','De espaldas']].filter(([k])=>!(P.modo==='1'&&k[0]==='2'));
-  return `<div class="v3-g"><b>Tu perspectiva</b><p class="hint" style="margin:0">La cámara sale de tu horizonte y tus puntos de fuga (${P.modo==='1'?'1 punto':P.modo==='3'?'3 puntos, con la cámara inclinada':'2 puntos'}) y no se mueve. Arrastra a los personajes por el piso: cambian de tamaño solos y se ven en perspectiva real. Un personaje de pie con la altura de la cámara tiene los ojos justo en el horizonte.</p>${sl('Altura de la cámara (m)','camH',.3,8,.1,P.camH)}${sl('Distancia al grupo (m)','D',3,40,.5,P.D)}${chk('guias','Mostrar horizonte y puntos de fuga')}${chk('grid','Cuadrícula del piso (1 m)')}${V3.perspBg?chk('fondo','Mi boceto de fondo'):''}</div>
+  return `<div class="v3-g"><b>Tu perspectiva</b><p class="hint" style="margin:0">La cámara sale de tu horizonte y tus puntos de fuga (${P.modo==='1'?'1 punto':P.modo==='3'?'3 puntos, con la cámara inclinada':'2 puntos'}) y no se mueve. Arrastra a los personajes por el piso: cambian de tamaño solos y se ven en perspectiva real. Un personaje de pie con la altura de la cámara tiene los ojos justo en el horizonte.</p>${sl('Altura de la cámara (m)','camH',.3,8,.1,P.camH)}${sl('Distancia al grupo (m)','D',3,40,.5,P.D)}<span class="lbl">Horizonte y puntos de fuga (cambian también en la herramienta)</span>${sl('Horizonte (arriba ← → abajo)','hy',-.5,1.5,.01,C.persp.hy).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${sl('PF1 (izquierda)','u1',-3,P.modo==='1'?2:.45,.01,C.persp.u1).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${P.modo==='1'?sl('Ángulo de visión','f1',.5,1.6,.01,C.persp.f1).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-'):sl('PF2 (derecha)','u2',.55,4,.01,C.persp.u2).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${P.modo==='3'?sl('PF3 (arriba o abajo)','v3',-5,6,.01,C.persp.v3).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-'):''}${chk('guias','Mostrar horizonte y puntos de fuga')}${chk('grid','Hoja de cuadrícula (1 m)')}${P.grid!==false?`<span class="lbl">Mover y girar la hoja (empieza como el piso)</span>${[['x','Izquierda ← → derecha (m)',-30,30,.1,'x'],['y','Altura (m)',-5,30,.1,'y'],['z','Al fondo ← → hacia ti (m)',-60,30,.1,'z'],['ry','Girar (°)',-180,180,1,'ry'],['rx','Inclinar adelante / atrás (°)',-90,90,1,'rx'],['rz','Inclinar de lado (°)',-90,90,1,'rz']].map(([k,l,mn,mx,st])=>sl(l,k,mn,mx,st,(P.hoja||{})[k]||0).replace('data-v3pp','data-v3ph').replace('id="v3pp-','id="v3ph-')).join('')}<div class="prow"><button class="btn sm" data-act="v3d-hoja-0">Volver al piso</button></div>`:''}${V3.perspBg?chk('fondo','Mi boceto de fondo'):''}</div>
   <div class="v3-g"><b>Orientar al personaje seleccionado</b><div class="chips">${ori.map(([k,n])=>`<button class="ch xs" data-act="v3d-pp-yaw" data-o="${k}">${n}</button>`).join('')}</div></div>
   <div class="v3-g"><b>Armar el espacio</b><p class="hint" style="margin:0">Cajas, escalones y muros para dar escala y apoyo. Se arrastran por el piso igual que los personajes.</p><div class="chips">${[['f:caja','Caja'],['f:escalon','Escalón'],['f:plataforma','Plataforma'],['f:pared','Muro'],['f:escalera','Escalera']].map(([k,n])=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${k}">＋ ${n}</button>`).join('')}<button class="ch xs on" data-act="v3d-tab" data-k="objetos">Todos los objetos →</button></div></div>
   <div class="v3-g"><b>Sacar el render</b><p class="hint" style="margin:0">El render sale del tamaño de tu encuadre, listo para usarlo sobre tu boceto.</p><div class="prow"><button class="btn sm pri" data-act="v3d-pp-png" data-g="0">PNG sobre mi boceto</button><button class="btn sm" data-act="v3d-pp-png" data-g="1">PNG con guías</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-sin">Solo personajes (PNG transparente)</button><button class="btn sm" data-act="v3d-pp-psd">PSD en capas</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-vuelve">Volver a la herramienta</button><button class="btn sm ghost" data-act="v3d-pp-sale">Salir de la perspectiva</button></div></div>`}
@@ -10409,7 +10489,8 @@ async function v3dPerspAbre(){const P=C.persp,K=compCam();if(!K||!['1','2','3'].
   const n=(a,b)=>{const L=Math.hypot(a,b)||1;return [a/L,b/L]},d1=P.modo==='1'?[0,1]:n(P.u1-K.cx,K.fz||K.f),d2=P.modo==='1'?[1,0]:n(P.u2-K.cx,K.fz||K.f);
   if(V3.open)v3dCerrar();S.v3d=S.v3d||v3dRestaura()||v3Def();S.v3d.sombra=true;S.v3d.persp={K:{cx:K.cx,hy:K.hy,f:K.f,py:K.py,phi:K.phi||0,fz:K.fz||K.f,v3:K.v3},M,camH:Math.max(.3,S.v3d.perspCfg?.camH||C.fig?.cam||1.6),D:S.v3d.perspCfg?.D||8,d1,d2,guias:S.v3d.perspCfg?.guias!==false,grid:S.v3d.perspCfg?.grid!==false,fondo:!!cv&&S.v3d.perspCfg?.fondo!==false,modo:P.modo,nombre:C.nombre||'marco'};V3.perspBg=cv;
   await v3dAbrir('maniqui','persp')}
-document.addEventListener('input',e=>{const t=e.target,P=S.v3d?.persp;if(!P)return;if(t.dataset?.v3pp){P[t.dataset.v3pp]=+t.value;const b=$('#v3pp-'+t.dataset.v3pp);if(b)b.textContent=Math.round(+t.value*100)/100;v3dPerspCam();v3dPerspGuardaCfg();v3dPersistePronto()}});
+document.addEventListener('input',e=>{const t=e.target,P=S.v3d?.persp;if(!P)return;if(t.dataset?.v3ph){const k=t.dataset.v3ph;P.hoja=P.hoja||{x:0,y:0,z:0,ry:0,rx:0,rz:0};P.hoja[k]=+t.value;const b=$('#v3ph-'+k);if(b)b.textContent=Math.round(+t.value*100)/100;V3.dirty=true;return}
+  if(t.dataset?.v3pk){const k=t.dataset.v3pk,p=C.persp,ant=p[k];p[k]=+t.value;if(v3dPerspSync()){const b=$('#v3pk-'+k);if(b)b.textContent=Math.round(+t.value*100)/100}else{p[k]=ant;t.value=ant;toast('Esa posición no arma una cámara real: los puntos de fuga deben quedar a lados opuestos del centro y el 3.º lejos del horizonte')}return}if(t.dataset?.v3pp){P[t.dataset.v3pp]=+t.value;const b=$('#v3pp-'+t.dataset.v3pp);if(b)b.textContent=Math.round(+t.value*100)/100;v3dPerspCam();v3dPerspGuardaCfg();v3dPersistePronto()}});
 document.addEventListener('change',e=>{const t=e.target,P=S.v3d?.persp;if(!P||!t.dataset?.v3ppc)return;P[t.dataset.v3ppc]=t.checked;if(t.dataset.v3ppc==='fondo')v3dEscena();v3dPerspGuardaCfg();v3dPersistePronto();V3.dirty=true});
 function v3dInit(){const {T,OrbitControls}=V3.lib,box=$('#v3d-cv');V3.T=T;
   const r=V3.renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));r.shadowMap.enabled=true;r.shadowMap.type=T.PCFSoftShadowMap;r.localClippingEnabled=true;r.outputColorSpace=T.SRGBColorSpace;
@@ -11582,6 +11663,7 @@ async function accion(a,el){
     case 'v3d-pp-psd':v3dExporta('psd');break;
     case 'v3d-pp-vuelve':v3dCerrar();break;
     case 'v3d-pp-sale':v3dPerspSale();break;
+    case 'v3d-hoja-0':{const P=S.v3d?.persp;if(P){P.hoja=null;v3dPanel();V3.dirty=true}break}
     case 'v3d-tab':S.v3d.tab=ds.k;v3dPanel();break;
     case 'v3d-loomis':{S.v3d.loomis=+ds.k;v3dModelo();v3dPanel();break}
     case 'v3d-bib':bibAbre();break;
