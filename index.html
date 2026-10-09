@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1ld9nh').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1ldvnj').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9409,6 +9409,10 @@ document.addEventListener('input',e=>{if(e.target.id==='rb-tab')S.rbTablero=e.ta
 /* ============ Perspectiva y composición: encuadres de cine, guías de composición y perspectiva con geometría real ============
    Unidad del mundo = ancho de la imagen (la imagen va de 0 a 1 en x y de 0 a A en y). Los puntos de fuga pueden quedar fuera de la imagen. */
 const COMP_RATIOS=[['2.39','Cine ancho · 2.39:1'],['2.00','Cine · 2:1'],['1.85','Cine · 1.85:1'],['1.7778','HD · 4K · 8K · 16:9'],['1.43','IMAX · 1.43'],['1.3333','Ilustración · 4:3'],['1','Cuadrado · 1:1'],['0.8','Retrato · 4:5'],['0.5625','Vertical celular · 9:16'],['0','Libre']];
+/* tamaño de salida: lado largo en píxeles (0 = el de tu imagen, hasta 2400) */
+const COMP_RES=[[0,'Automático'],[1920,'HD · 1920'],[2560,'2K · 2560'],[3840,'4K · 3840'],[7680,'8K · 7680']];
+function compPxW(M){if(!C.res)return Math.min(2400,Math.round((C.bm?C.bm.width:1600)*M.w));return Math.round(M.w>=M.h?C.res:C.res*M.w/M.h)}
+const compPxTxt=()=>{const M=compMarco(),W=compPxW(M),H=Math.round(W*M.h/M.w);return W+' × '+H+' px'+(W*H>16e6?' · muy grande: en iPhone puede no salir':'')};
 const COMP_OV=[['tercios','Tercios'],['cuadricula','Cuadrícula'],['aurea','Áurea'],['espiral','Espiral áurea'],['diagonales','Diagonales'],['triangulos','Método de la diagonal'],['simetria','Simetría'],['curvaS','Curva en S'],['capas','Capas de profundidad'],['negativo','Espacio negativo'],['marco','Marco dentro del marco'],['mirada','Espacio de mirada'],['seguras','Zonas seguras']];
 const COMP_RECETAS=[
  {n:'Simetría central',ar:'2.39',ov:['simetria'],persp:{modo:'1',hy:.5,u1:.5},tip:'Sujeto al centro y mundo en espejo: solemne, ritual, opresivo. Muy usado en el cine de Kubrick y de Wes Anderson. Funciona si todo lo demás también obedece al eje.'},
@@ -9536,7 +9540,7 @@ function compPanelHTML(){const P=C.persp,chip=(a,k,n,on)=>`<button class="ch xs 
     <div class="v3-g"><b>1 · Imagen</b><div class="prow"><label class="btn sm pri" for="cp-file">Subir imagen</label><input type="file" id="cp-file" accept="image/*" hidden>
       ${imgs.length?`<select data-cpi="proj" aria-label="Usar un boceto o referencia"><option value="">…o un boceto${pr?' de este proyecto':' de mis proyectos'}</option>${imgs.map((x,i)=>`<option value="${i}">${esc(x.t)}</option>`).join('')}</select>`:''}
       <button class="btn sm" data-cp="sinimg:1">Marco vacío</button></div><p class="hint" style="margin:0">También puedes arrastrar una imagen sobre el lienzo o pegarla con Ctrl+V. La imagen no se sube a ningún lado.</p></div>
-    <div class="v3-g"><b>2 · Encuadre</b><div class="chips">${COMP_RATIOS.map(([k,n])=>chip('ar',k,n,String(C.ar)===k)).join('')}</div>${sl('zoom','Tamaño del marco',30,100,1,Math.round(C.zoom*100),'%')}${ck('dim','Oscurecer lo que queda fuera',C.dim)}<p class="hint" style="margin:0">Arrastra el marco sobre la imagen para elegir qué entra en el plano.</p></div>
+    <div class="v3-g"><b>2 · Encuadre</b><div class="chips">${COMP_RATIOS.map(([k,n])=>chip('ar',k,n,String(C.ar)===k)).join('')}</div><span class="lbl">Tamaño de salida (lado largo)</span><div class="chips">${COMP_RES.map(([k,n])=>chip('res',k,n,(C.res||0)===k)).join('')}</div><p class="hint" style="margin:0">Saldrá de <b>${compPxTxt()}</b>. Los píxeles son el tamaño del archivo que guardas; el encuadre solo decide la forma.</p>${sl('zoom','Tamaño del marco',30,100,1,Math.round(C.zoom*100),'%')}${ck('dim','Oscurecer lo que queda fuera',C.dim)}<p class="hint" style="margin:0">Arrastra el marco sobre la imagen para elegir qué entra en el plano.</p></div>
     <div class="v3-g"><b>3 · Composición</b><div class="chips">${COMP_OV.map(([k,n])=>chip('ov',k,n,!!C.ov[k])).join('')}</div>
       <div class="prow">${C.ov.espiral?`<button class="btn sm" data-cp="espiral:1">Girar la espiral ⟳</button>`:''}${C.ov.cuadricula?`<label class="muted" style="font-size:12px">Divisiones <input type="number" data-cpi="cuad" min="2" max="12" value="${C.cuad}" style="width:56px"></label>`:''}</div></div>
     <div class="v3-g"><b>4 · Perspectiva</b><div class="chips">${[['ninguna','Ninguna'],['1','1 punto'],['2','2 puntos'],['3','3 puntos'],['iso','Isométrica']].map(([k,n])=>chip('modo',k,n,P.modo===k)).join('')}</div>
@@ -9563,7 +9567,7 @@ async function compCargaArchivo(f){try{const bm=await createImageBitmap(f);await
 function compPanel(){const e=document.getElementById('cp-panel');if(e)e.innerHTML=compPanelHTML()}
 function compReceta(r){C.receta=r.n;C.ar=r.ar;C.zoom=1;C.ov={};r.ov.forEach(k=>C.ov[k]=true);const P=C.persp;P.modo=r.persp.modo;if(r.persp.hy!=null)P.hy=r.persp.hy;if(r.persp.u1!=null)P.u1=r.persp.u1;if(r.persp.u2!=null)P.u2=r.persp.u2;P.rayos=r.persp.rayos||24;P.suelo=false;P.caja=false;
   if(r.fig){C.fig.on=!!r.fig.on;if(r.fig.y!=null)C.fig.y=r.fig.y}else C.fig.on=false;compAjusta();compPanel();compDibuja()}
-async function compSalida(modo){const M=compMarco(),A=C.A,reg=modo==='enc'?M:{x:0,y:0,w:1,h:A},W=Math.min(2400,Math.round((C.bm?C.bm.width:1600)*reg.w)),s=W/reg.w,cv=lienzo(Math.round(reg.w*s),Math.round(reg.h*s)),g=cv.getContext('2d'),Tx={X:x=>(x-reg.x)*s,Y:y=>(y-reg.y)*s,s,ox:-reg.x*s,oy:-reg.y*s};
+async function compSalida(modo){const M=compMarco(),A=C.A,reg=modo==='enc'?M:{x:0,y:0,w:1,h:A},W=modo==='enc'?compPxW(reg):Math.min(2400,Math.round((C.bm?C.bm.width:1600)*reg.w)),s=W/reg.w,cv=lienzo(Math.round(reg.w*s),Math.round(reg.h*s)),g=cv.getContext('2d'),Tx={X:x=>(x-reg.x)*s,Y:y=>(y-reg.y)*s,s,ox:-reg.x*s,oy:-reg.y*s};
   const gr0=C.gr;C.gr=gr0*s/((C.Tx&&C.Tx.s)||s);try{compRender(g,Tx,{cw:cv.width,ch:cv.height,manijas:false,region:reg})}finally{C.gr=gr0}return cv}
 function compInit(){const cv=document.getElementById('cp-canvas'),box=document.getElementById('comp-box');if(!cv||!box)return;
   if(C.pend){const q=C.pend;C.pend=null;C.pid=S.P[q.pid]&&!S.P[q.pid].libre?q.pid:'';const x=(S.P[q.pid]?.[q.lista]||[]).find(z=>z.id===q.id);if(x)cargarBitmap(x).then(bm=>compCargaBitmap(bm,x.nombre||x.etapa||'pieza','propia')).catch(()=>toast('No pude abrir esa imagen'))}
@@ -9579,7 +9583,7 @@ function compInit(){const cv=document.getElementById('cp-canvas'),box=document.g
   cv.addEventListener('dragover',e=>e.preventDefault());cv.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f&&/^image\//.test(f.type))compCargaArchivo(f)});
   new ResizeObserver(()=>compDibuja()).observe(box.querySelector('.cp-cv'));
   box.addEventListener('click',async e=>{const b=e.target.closest('[data-cp]');if(!b)return;const [a,k]=b.dataset.cp.split(':'),P=C.persp;
-    if(a==='ar'){C.ar=k;C.receta='';C.fx=0;C.fy=0}else if(a==='ov'){C.ov[k]=!C.ov[k];C.receta=''}else if(a==='modo'){P.modo=k;C.receta='';if(k==='1'&&Math.abs(P.u1-.5)>1)P.u1=.5;if((k==='2'||k==='3')&&!(P.u1<.5&&P.u2>.5)){P.u1=-.4;P.u2=1.4}if(k==='3'&&P.v3>=0&&P.v3<=1)P.v3=-1.2}
+    if(a==='res'){C.res=+k}else if(a==='ar'){C.ar=k;C.receta='';C.fx=0;C.fy=0}else if(a==='ov'){C.ov[k]=!C.ov[k];C.receta=''}else if(a==='modo'){P.modo=k;C.receta='';if(k==='1'&&Math.abs(P.u1-.5)>1)P.u1=.5;if((k==='2'||k==='3')&&!(P.u1<.5&&P.u2>.5)){P.u1=-.4;P.u2=1.4}if(k==='3'&&P.v3>=0&&P.v3<=1)P.v3=-1.2}
     else if(a==='hz')P.hy=parseFloat(k);else if(a==='espiral')C.esp=(C.esp+1)%4;else if(a==='sinimg'){C.bm=null;C.A=C.ar==='0'?.5625:1/(parseFloat(C.ar)||1.7778);C.nombre='';C.fx=0;C.fy=0}
     else if(a==='rec'){compReceta(COMP_RECETAS[+k]);return}
     else if(a==='png'){const cv2=await compSalida(k);await bajarBlob(`composicion-${slug(C.nombre||'marco',30)}-${k==='enc'?'encuadre':'completa'}.png`,await aBlob(cv2));return}
