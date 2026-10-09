@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1l8boh').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1ld9nh').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9408,7 +9408,7 @@ document.addEventListener('input',e=>{if(e.target.id==='rb-tab')S.rbTablero=e.ta
 
 /* ============ Perspectiva y composición: encuadres de cine, guías de composición y perspectiva con geometría real ============
    Unidad del mundo = ancho de la imagen (la imagen va de 0 a 1 en x y de 0 a A en y). Los puntos de fuga pueden quedar fuera de la imagen. */
-const COMP_RATIOS=[['2.39','2.39:1'],['2.00','2:1'],['1.85','1.85:1'],['1.7778','16:9'],['1.43','IMAX 1.43'],['1.3333','4:3'],['1','1:1'],['0.8','4:5'],['0.5625','9:16'],['0','Libre']];
+const COMP_RATIOS=[['2.39','Cine ancho · 2.39:1'],['2.00','Cine · 2:1'],['1.85','Cine · 1.85:1'],['1.7778','HD · 4K · 8K · 16:9'],['1.43','IMAX · 1.43'],['1.3333','Ilustración · 4:3'],['1','Cuadrado · 1:1'],['0.8','Retrato · 4:5'],['0.5625','Vertical celular · 9:16'],['0','Libre']];
 const COMP_OV=[['tercios','Tercios'],['cuadricula','Cuadrícula'],['aurea','Áurea'],['espiral','Espiral áurea'],['diagonales','Diagonales'],['triangulos','Método de la diagonal'],['simetria','Simetría'],['curvaS','Curva en S'],['capas','Capas de profundidad'],['negativo','Espacio negativo'],['marco','Marco dentro del marco'],['mirada','Espacio de mirada'],['seguras','Zonas seguras']];
 const COMP_RECETAS=[
  {n:'Simetría central',ar:'2.39',ov:['simetria'],persp:{modo:'1',hy:.5,u1:.5},tip:'Sujeto al centro y mundo en espejo: solemne, ritual, opresivo. Muy usado en el cine de Kubrick y de Wes Anderson. Funciona si todo lo demás también obedece al eje.'},
