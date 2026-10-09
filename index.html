@@ -279,6 +279,7 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .post input,.post select,.post textarea{width:100%;border:1px solid var(--line2);background:var(--surface);border-radius:8px;padding:7px 9px;font-size:13.5px;min-width:0}
 .post textarea{min-height:44px}
 .post label.lbl{display:flex;flex-direction:column;gap:4px}
+.bd-secs{display:flex;flex-direction:column;gap:4px;margin:6px 0}.bd-sec{display:flex;gap:6px;align-items:center}.bd-sec input{flex:1;min-width:0;font-size:12.5px;padding:4px 8px}.bd-sec .btn{padding:3px 8px}
 .bib-temas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.bib-t{display:flex;flex-direction:column;gap:2px;text-align:left;padding:8px;border-radius:14px;background:var(--surface2);border:1px solid var(--line2);color:var(--ink);cursor:pointer;font:inherit}.bib-t:hover{border-color:var(--accent)}.bib-t b{padding:6px 4px 0;font-size:14px}.bib-t small{padding:0 4px 4px;color:var(--muted);font-size:12px}.bib-mos{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:10px;overflow:hidden;height:150px;background:var(--surface)}.bib-mos img{width:100%;height:100%;object-fit:cover;display:block}
 .bib{columns:4 200px;column-gap:12px}
 .bib figure{break-inside:avoid;margin:0 0 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -1059,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1dpp89').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1ef6ch').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9158,27 +9159,54 @@ function bdAutoLlena(p){if(!p||p.board?.auto===false)return 0;const B=p.board=p.
 function bdAdd(p,list){p.board=p.board||{items:[]};if(p.board.quitados)p.board.quitados=p.board.quitados.filter(q=>!list.some(it=>it.ref===q||('pz:'+it.pz)===q));const c=bdCentro();let k=0;
   list.forEach(it=>{it.id=uid();it.z=bdZmax(p)+1;if(it.x==null){it.x=c.x-110+(k%6)*28;it.y=c.y-90+(k%6)*28}k++;p.board.items.push(it)})}
 const bdAsp=id=>{const e=document.querySelector('.bd-it[data-id="'+id+'"]');return e&&e.offsetWidth?e.offsetHeight/e.offsetWidth:.75};
-/* moodboard profesional: cabecera con el nombre y el mood, paleta, una imagen héroe con la idea, y una sección por necesidad con su para qué; cada imagen lleva su porqué debajo. Nada al azar. */
+const BD_SIN='Por clasificar';
+/* a qué sección pertenece una referencia: la que tú le diste, la de su necesidad (Conseguir), su tema o, si nada, «Por clasificar» (''). */
+function bdSecDe(p,r){if(!r||r.seccion==='__sin')return '';return String(r.seccion||r.facet||(r.tema||'').trim()||temaAuto(r)||'').trim()}
+const bdNSin=p=>bdItems(p).filter(i=>i.t==='img'&&!bdSecDe(p,bdRef(p,i))).length;
+/* moodboard por secciones: cabecera con el nombre y el mood, paleta, una referencia principal con su razón, y una sección por necesidad con su «para qué»; lo que aún no tiene sección queda al final en «Por clasificar». Arrastrar una imagen a otra sección la cambia de sección y todo se reacomoda. */
 function bdPro(p){const B=p.board,W0=1240,G=14,H=230,LADO=340,all=bdItems(p),imgs=all.filter(i=>i.t==='img'),pals=all.filter(i=>i.t==='pal'),notas=all.filter(i=>i.t==='txt'&&!i.auto);
-  B.items=B.items.filter(i=>!i.auto);const z=()=>bdZmax(p)+1,T=(text,x,y,w,fs,cap)=>B.items.push({id:uid(),t:'txt',text,x,y,w,fs,auto:true,cap:!!cap,z:z()}),
+  B.items=B.items.filter(i=>!i.auto);B.bandas=[];const z=()=>bdZmax(p)+1,T=(text,x,y,w,fs,cap)=>B.items.push({id:uid(),t:'txt',text,x,y,w,fs,auto:true,cap:!!cap,z:z()}),
     asp=i=>{const r=bdRef(p,i);return r&&r.w&&r.h?r.h/r.w:(bdAsp(i.id)||.75)},tres=(p.mood?.tres||[]).filter(Boolean),pq=i=>{const r=bdRef(p,i);return (r?.paraQue||r?.porque||'').trim()},alto=(t,w,fs)=>Math.ceil(String(t).length*fs*.52/w)*Math.round(fs*1.35)+8;
   T((p.libre?(B.titulo||'Moodboard'):(p.nombre||'Proyecto')).toUpperCase(),0,0,W0-460,54);T([p.tipo,tres.join(' · ')].filter(Boolean).join('   ·   '),0,70,W0-460,18,1);
   const idea=(p.concepto?.frase||p.brief?.texto||'').trim();if(idea)T(corto(idea,220),0,104,W0-460,15,1);
   if(pals[0]){pals[0].x=W0-420;pals[0].y=0;pals[0].w=420}
-  let y=170;const grupos=[],mapa={};
-  imgs.forEach(i=>{const r=bdRef(p,i);if(!r)return;const k=r.facet||capaNombre(p,r.capa),g=mapa[k]||(mapa[k]={k,n:r.facetN||99,t:'',imgs:[]});if(!g.t&&r.paraQue)g.t=r.paraQue;if(!grupos.includes(g))grupos.push(g);g.imgs.push(i)});
-  grupos.sort((a,b)=>a.n-b.n);
-  /* la referencia principal: la marcada con ★; si no, la más grande y no demasiado alta */
-  let heroe=null;if(imgs.length>=4){const buenas=imgs.filter(i=>asp(i)<=1.25);heroe=imgs.find(i=>bdRef(p,i)?.heroe)||(buenas.length?buenas:imgs).slice().sort((a,b)=>(bdRef(p,b)?.w||0)-(bdRef(p,a)?.w||0))[0];
+  let y=170;const mapa={};
+  imgs.forEach(i=>{const r=bdRef(p,i);if(!r)return;const k=bdSecDe(p,r)||BD_SIN,g=mapa[k]||(mapa[k]={k,n:r.facetN||99,t:'',imgs:[]});if(!g.t&&r.paraQue&&k!==BD_SIN)g.t=r.paraQue;g.imgs.push(i)});
+  (B.orden||[]).forEach(n=>{if(n!==BD_SIN&&!mapa[n])mapa[n]={k:n,n:0,t:'',imgs:[]}});
+  const pos=n=>{const i=(B.orden||[]).indexOf(n);return i<0?1e6:i};let grupos=Object.values(mapa).filter(g=>g.k!==BD_SIN).sort((a,b)=>pos(a.k)-pos(b.k)||a.n-b.n);B.orden=grupos.map(g=>g.k);if(mapa[BD_SIN])grupos.push(mapa[BD_SIN]);
+  /* la referencia principal: la marcada con ★; si no, la más grande y no demasiado alta, de entre las que ya tienen sección */
+  let heroe=null;const clas=imgs.filter(i=>bdSecDe(p,bdRef(p,i)));if(clas.length>=4){const buenas=clas.filter(i=>asp(i)<=1.25);heroe=clas.find(i=>bdRef(p,i)?.heroe)||(buenas.length?buenas:clas).slice().sort((a,b)=>(bdRef(p,b)?.w||0)-(bdRef(p,a)?.w||0))[0];
     const a=asp(heroe),w=Math.min(620,Math.round(400/a));heroe.w=w;heroe.x=0;heroe.y=y;const r=bdRef(p,heroe),tx=w+40,tw=W0-tx;
-    T('LA REFERENCIA PRINCIPAL',tx,y,tw,13,1);T(corto(r?.facet||'',80)||'Qué manda en el diseño',tx,y+26,tw,30);T(corto(r?.paraQue||r?.porque||'Escribe aquí por qué esta imagen manda en el diseño.',260),tx,y+70,tw,18,1);
+    T('LA REFERENCIA PRINCIPAL',tx,y,tw,13,1);T(corto(bdSecDe(p,r)||'',80)||'Qué manda en el diseño',tx,y+26,tw,30);T(corto(r?.paraQue||r?.porque||'Escribe aquí por qué esta imagen manda en el diseño.',260),tx,y+70,tw,18,1);
     if(r?.fuente)T(corto(r.fuente,110),tx,y+Math.round(w*a)-18,tw,11,1);y+=Math.round(w*a)+60}
-  grupos.forEach((g,gi)=>{const list=g.imgs.filter(i=>i!==heroe);if(!list.length)return;
-    T(String(gi+1).padStart(2,'0')+'  ·  '+g.k.toUpperCase(),0,y,W0,24);y+=40;const lado=g.t?LADO:0,Wr=W0-lado,y0=y;if(g.t)T('PARA QUÉ SIRVE\n'+g.t,0,y,LADO-40,14,1);
+  let num=0;
+  grupos.forEach(g=>{const sin=g.k===BD_SIN,list=g.imgs.filter(i=>i!==heroe).sort((a,b)=>(a.ord??1e15)-(b.ord??1e15));if(sin&&!list.length)return;const y00=y;
+    T((sin?'··':String(++num).padStart(2,'0'))+'  ·  '+g.k.toUpperCase(),0,y,W0,24);y+=40;
+    const txt=sin?'Aún no tienen sección. Arrastra cada imagen a la sección que le toca, o usa «Clasificar» abajo del tablero.':(B.secT?.[g.k]||g.t||''),lado=txt?LADO:0,Wr=W0-lado,y0=y;if(txt)T((sin?'':'PARA QUÉ SIRVE\n')+txt,0,y,LADO-40,14,1);
+    if(!list.length){T('Arrastra aquí las imágenes de esta sección.',lado,y,Wr,13,1);y+=50}
     let row=[];const flush=ultima=>{if(!row.length)return;const sum=row.reduce((a,i)=>a+1/asp(i),0),gaps=(row.length-1)*G;let h=(Wr-gaps)/sum;if(ultima&&h>H*1.15)h=H;h=Math.min(h,H*1.6);let x=lado,cap=false;
-      row.forEach(i=>{const w=Math.round(h/asp(i));i.w=w;i.x=Math.round(x);i.y=y;x+=w+G;const c=!g.t&&(pq(i)||'⚠ ¿Para qué sirve? Escríbelo');T(corto(c,70),i.x,y+Math.round(h)+5,w,11,1);cap=true});y+=Math.round(h)+(cap?40:0)+G;row=[]};
-    list.forEach(i=>{row.push(i);const sum=row.reduce((a,j)=>a+H/asp(j),0)+(row.length-1)*G;if(sum>=Wr)flush(false)});flush(true);y=Math.max(y,y0+(g.t?alto(g.t,LADO-40,14)+30:0))+30});
+      row.forEach(i=>{const w=Math.round(h/asp(i));i.w=w;i.x=Math.round(x);i.y=y;x+=w+G;if(!txt){const c=pq(i)||'⚠ ¿Para qué sirve? Escríbelo';T(corto(c,70),i.x,y+Math.round(h)+5,w,11,1);cap=true}});y+=Math.round(h)+(cap?40:0)+G;row=[]};
+    list.forEach(i=>{row.push(i);const sum=row.reduce((a,j)=>a+H/asp(j),0)+(row.length-1)*G;if(sum>=Wr)flush(false)});flush(true);y=Math.max(y,y0+(txt?alto(txt,LADO-40,14)+30:0))+30;
+    B.bandas.push({n:g.k,y0:y00-10,y1:y-8})});
   notas.forEach((t,k)=>{t.x=W0+60;t.y=170+k*130});B.layout='pro'}
+/* panel: secciones del tablero (ordenar, renombrar, crear, borrar) y clasificar lo que falta */
+function bdSecOpts(p,sel){const B=p.board||{},nom=[...(B.orden||[])];return nom.map(n=>`<option value="${esc(n)}" ${sel===n?'selected':''}>${esc(n)}</option>`).join('')+`<option value="__sin" ${!sel?'selected':''}>${BD_SIN}</option><option value="__nueva">＋ Nueva sección…</option>`}
+function bdSecGestion(p){const B=p.board||{},orden=B.orden||[],cuenta={};bdItems(p).filter(i=>i.t==='img').forEach(i=>{const k=bdSecDe(p,bdRef(p,i))||BD_SIN;cuenta[k]=(cuenta[k]||0)+1});const nS=cuenta[BD_SIN]||0;
+  return `<div class="box"><h3>Secciones</h3><p class="hint" style="margin:0">Cada sección es una necesidad del diseño. <b>Arrastra una imagen a otra sección</b> y se acomoda sola.</p>
+    <div class="bd-secs">${orden.map((n,i)=>`<div class="bd-sec"><button class="btn ghost sm" data-act="bd-sec-ir" data-n="${esc(n)}" title="Ir a esta sección" aria-label="Ir a ${esc(n)}">📍</button><input type="text" data-bsecn="${esc(n)}" value="${esc(n)}" aria-label="Nombre de la sección"><span class="lbl">${cuenta[n]||0}</span><button class="btn ghost sm" data-act="bd-sec-mv" data-n="${esc(n)}" data-d="-1" ${i?'':'disabled'} aria-label="Subir">▲</button><button class="btn ghost sm" data-act="bd-sec-mv" data-n="${esc(n)}" data-d="1" ${i<orden.length-1?'':'disabled'} aria-label="Bajar">▼</button><button class="btn ghost sm" data-act="bd-sec-del" data-n="${esc(n)}" title="Borrar la sección (sus imágenes pasan a Por clasificar)" aria-label="Borrar">🗑</button></div>`).join('')}
+      ${nS?`<div class="bd-sec"><button class="btn ghost sm" data-act="bd-sec-ir" data-n="${BD_SIN}" aria-label="Ir a Por clasificar">📍</button><b style="flex:1">${BD_SIN}</b><span class="lbl">${nS}</span></div>`:''}</div>
+    <div class="prow"><input type="text" id="bd-sec-nueva" placeholder="Nueva sección (ej. Texturas de piel)" data-enter="bd-sec-add" style="flex:1 1 160px"><button class="btn sm" data-act="bd-sec-add">＋</button></div>
+    ${nS?`<div class="prow"><button class="btn sm pri" data-act="bd-clas-on">Clasificar las ${nS} que faltan, una por una</button><button class="btn sm" data-act="bd-auto-clas" title="Les pongo la sección según lo que dicen (fuego, armadura, monstruo…)">Clasificar por tema</button></div>`:'<p class="muted" style="margin:0">Todo está en su sección ✓</p>'}</div>`}
+function bdClasHTML(p){const B=p.board||{},saltadas=S.bdSalta||[],L=bdItems(p).filter(i=>i.t==='img'&&!bdSecDe(p,bdRef(p,i))),sig=L.find(i=>!saltadas.includes(i.id));
+  if(!sig)return `<div class="box"><h3>Clasificar</h3><p class="muted">${L.length?'Quedan '+L.length+' que saltaste. ':''}No hay más por clasificar ✓</p><div class="prow"><button class="btn pri" data-act="bd-clas-off">Listo</button>${L.length?'<button class="btn sm" data-act="bd-clas-rep">Repasar las que salté</button>':''}</div></div>`;
+  const r=bdRef(p,sig);
+  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Clasificar · quedan ${L.length}</h3><button class="btn ghost sm" data-act="bd-clas-off">Cerrar</button></div>
+    <img ${imgAttrs(r)} alt="" referrerpolicy="no-referrer" style="width:100%;max-height:260px;object-fit:contain;border-radius:10px;background:var(--surface)">
+    ${r.fuente?`<small class="muted">${esc(corto(r.fuente,90))}</small>`:''}
+    <label class="esc-r"><span class="lbl">¿Para qué te sirve?</span><textarea id="bdp-${r.id}" data-ref="${r.id}" data-rk="porque" style="min-height:50px" placeholder="Una línea: ej. textura de la piel">${esc(r.porque||'')}</textarea></label>
+    <span class="lbl">¿A qué sección va?</span><div class="chips">${(B.orden||[]).map(n=>`<button class="ch xs" data-act="bd-clas-set" data-n="${esc(n)}">${esc(n)}</button>`).join('')||'<span class="muted">Crea la primera sección abajo.</span>'}</div>
+    <div class="prow"><input type="text" id="bd-clas-nueva" placeholder="Nueva sección…" data-enter="bd-clas-nueva" style="flex:1 1 140px"><button class="btn sm" data-act="bd-clas-nueva">Crear y mover</button></div>
+    <div class="prow"><button class="btn sm" data-act="bd-clas-skip">Saltar</button><button class="btn sm ghost danger" data-act="bd-clas-del">Quitar del tablero</button></div></div>`}
 function bdOrdenar(p,m){if(!p.board)return;if(m==='pro'){bdPro(p);S.bdView=null;return}p.board.layout='libre';const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
   if(m==='capa'){const cols=LAYERS.map(l=>[l,imgs.filter(i=>bdRef(p,i)?.capa===l.k)]).filter(c=>c[1].length);let x=0;
     cols.forEach(([l,list])=>{p.board.items.push({id:uid(),t:'txt',text:capaNombre(p,l.k),x,y:0,w:W,fs:22,auto:true,z:bdZmax(p)+1});let y=52;list.forEach(i=>{i.w=W;i.x=x;i.y=y;y+=bdAsp(i.id)*W+G});x+=W+44});
@@ -9189,7 +9217,7 @@ function bdOrdenar(p,m){if(!p.board)return;if(m==='pro'){bdPro(p);S.bdView=null;
 function bdBounds(p){const it=bdItems(p);if(!it.length)return null;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   it.forEach(i=>{const e=document.querySelector('.bd-it[data-id="'+i.id+'"]'),w=i.w||240,h=e?e.offsetHeight:w*.75;x0=Math.min(x0,i.x);y0=Math.min(y0,i.y);x1=Math.max(x1,i.x+w);y1=Math.max(y1,i.y+h)});return {x:x0-60,y:y0-60,w:x1-x0+120,h:y1-y0+120}}
 function bdApply(){const w=$('#bd-world'),v=S.bdView;if(w&&v){w.style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`;const z=$('#bd-zp');if(z)z.textContent=Math.round(v.k*100)+'%'}}
-function bdFit(){const p=S.P[S.cur],wr=$('#bd-wrap'),b=p&&bdBounds(p);if(!wr||!b)return;const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.05,Math.min(W/b.w,H/b.h)));S.bdView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
+function bdFit(){const p=S.P[S.cur],wr=$('#bd-wrap'),b=p&&bdBounds(p);if(!wr||!b)return;if(p.board?.layout==='pro'&&!S.bdTodo){const k=Math.min(1,Math.max(.12,(wr.clientWidth-20)/1300));S.bdView={k,x:10,y:10};return}const W=wr.clientWidth,H=wr.clientHeight,k=Math.min(1.2,Math.max(.05,Math.min(W/b.w,H/b.h)));S.bdView={k,x:(W-b.w*k)/2-b.x*k,y:(H-b.h*k)/2-b.y*k}}
 let bdFitT=null;
 function bdInit(){if(!enTablero())return;const wr=$('#bd-wrap');if(!wr)return;
   if(!S.bdView){/* esperar a que carguen las imágenes para medir bien */bdFit();bdApply();clearTimeout(bdFitT);bdFitT=setTimeout(()=>{if(enTablero()&&!S.bdTocado){bdFit();bdApply()}},700)}else bdApply()}
@@ -9197,8 +9225,8 @@ function bdItemHTML(p,i){const sel=S.bdSel===i.id,st=`left:${i.x}px;top:${i.y}px
   if(i.t==='txt')return `<div class="bd-it bd-t ${sel?'sel':''}${i.cap?' bd-cap':''}" data-id="${i.id}" style="${st};font-size:${i.fs||18}px"><div class="bd-tx">${esc(i.text||'').replace(/\n/g,'<br>')||'<span style="opacity:.4">Texto</span>'}</div>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`;
   if(i.t==='pal'){const pal=(p.mood?.paleta||[]).filter(Boolean);return `<div class="bd-it bd-pal ${sel?'sel':''}" data-id="${i.id}" style="${st}"><div class="bd-sw">${pal.map(h=>`<i style="background:${esc(h)}"></i>`).join('')}</div><small>Paleta · ${pal.length} colores</small>${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
   const r=bdRef(p,i);return `<div class="bd-it ${sel?'sel':''}" data-id="${i.id}" style="${st}"><img ${imgAttrs(r)} alt="${esc(r.porque||(i.pz?'Boceto':'Referencia'))}" draggable="false" referrerpolicy="no-referrer">${sel?'<i class="bd-h" aria-label="Cambiar tamaño"></i>':''}</div>`}
-function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
-  if(!s)return `<div class="box"><h3>Tu tablero</h3><p class="hint" style="margin:0">Arrastra una imagen para moverla; arrastra el fondo para desplazarte; rueda del ratón para acercar. Toca una imagen para escalarla (esquina), cambiarle el porqué o quitarla. Supr borra lo seleccionado.</p>
+function bdPanelHTML(p){if(S.bdClas)return bdClasHTML(p);const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
+  if(!s)return (p.board?.layout==='pro'?bdSecGestion(p):'')+`<div class="box"><h3>Tu tablero</h3><p class="hint" style="margin:0">Arrastra una imagen para moverla; arrastra el fondo para desplazarte; rueda del ratón para acercar. Toca una imagen para escalarla (esquina), cambiarle el porqué o quitarla. Supr borra lo seleccionado.</p>
     <p class="hint" style="margin:0"><b>PureRef:</b> «ZIP para PureRef» trae tu tablero como una sola imagen y cada referencia por separado. Descomprime y arrastra la carpeta (o board.png) a PureRef, o usa «Copiar imagen» y pega con Ctrl+V. El archivo propio de PureRef (.pur) es un formato cerrado: no se puede generar desde aquí.</p>
     <p class="muted" style="margin:0">${items.filter(i=>i.t==='img').length} imágenes · ${items.filter(i=>i.t==='txt'&&!i.auto).length} notas</p></div>`;
   if(s.t==='txt')return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Nota</h3><button class="btn ghost sm" data-act="bd-sel" data-id="">Cerrar</button></div>
@@ -9209,6 +9237,7 @@ function bdPanelHTML(p){const items=bdItems(p),s=items.find(i=>i.id===S.bdSel);
   const r=bdRef(p,s);return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Referencia</h3><button class="btn ghost sm" data-act="bd-sel" data-id="">Cerrar</button></div>
     <label class="esc-r"><span class="lbl">¿Para qué sirve? (su porqué)</span><textarea id="bdp-${r.id}" data-ref="${r.id}" data-rk="porque" style="min-height:60px" placeholder="¿Qué tomo exactamente de ella?">${esc(r.porque||'')}</textarea></label>
     <label class="esc-r"><span class="lbl">Ancho · ${Math.round(s.w||240)}px</span><input type="range" data-bdw="${s.id}" min="60" max="1200" step="10" value="${Math.round(s.w||240)}"></label>
+    ${p.board?.layout==='pro'?`<label class="esc-r"><span class="lbl">Sección</span><select data-bsec="${s.id}">${bdSecOpts(p,bdSecDe(p,r))}</select></label>`:''}
     ${refMetaHTML(r)}<div class="prow">${r.link?`<a class="btn ghost sm" href="${esc(r.link)}" target="_blank" rel="noopener">Fuente ↗</a>`:''}<button class="btn sm" data-act="bd-front" data-id="${s.id}">Al frente</button><button class="btn sm" data-act="bd-back" data-id="${s.id}">Al fondo</button><button class="btn sm danger" data-act="bd-del" data-id="${s.id}">Quitar del tablero</button></div>
     <p class="hint" style="margin:0">Quitarla del tablero no la borra del moodboard.</p></div>`}
 function vBoard(p){bdAutoLlena(p);const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0)),ids=new Set(items.filter(i=>i.t==='img').map(i=>i.ref)),refs=(p.refs||[]).filter(r=>refSrc(r)),faltan=refs.filter(r=>!ids.has(r.id));
@@ -9216,7 +9245,7 @@ function vBoard(p){bdAutoLlena(p);const items=bdItems(p).slice().sort((a,b)=>(a.
   const pk=S.bdPick,fil=S.bdPickCapa||'',lista=faltan.filter(r=>!fil||r.capa===fil);
   return `<p class="intro"><b>Tablero de referencias.</b> Pon tus referencias donde quieras, escálalas, agrega notas y descarga el tablero para PureRef. Se guarda en el proyecto.</p>
   <div class="bd-bar"><button class="btn sm pri" data-act="bd-pick">＋ Del moodboard${faltan.length?` (${faltan.length})`:''}</button><label class="btn sm" for="bd-file">Subir imágenes</label><input type="file" id="bd-file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
-    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><label class="chk" title="Cada referencia nueva del proyecto aparece sola en el tablero"><input type="checkbox" data-bdauto ${p.board?.auto===false?'':'checked'}><span>Llenar solo</span></label><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm pri" data-act="bd-ord" data-m="pro" title="Título, paleta, referencia principal y una sección por necesidad, cada imagen con su para qué">Ordenar como moodboard profesional</button><button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
+    <button class="btn sm" data-act="bd-txt">＋ Texto</button><button class="btn sm" data-act="v3d-abrir" data-m="maniqui">＋ Referencia 3D</button><label class="chk" title="Cada referencia nueva del proyecto aparece sola en el tablero"><input type="checkbox" data-bdauto ${p.board?.auto===false?'':'checked'}><span>Llenar solo</span></label><span class="bd-sep"></span><span class="lbl">Ordenar</span><button class="btn sm pri" data-act="bd-ord" data-m="pro" title="Título, paleta, referencia principal y una sección por necesidad, cada imagen con su para qué">Ordenar como moodboard profesional</button>${bdNSin(p)?`<button class="btn sm" data-act="bd-clas-on">Clasificar (${bdNSin(p)})</button>`:''}<button class="btn sm" data-act="bd-ord" data-m="capa" title="Una columna por capa, con título">Por capa</button><button class="btn sm" data-act="bd-ord" data-m="grid">Cuadrícula</button><button class="btn sm" data-act="bd-ord" data-m="mosaico">Mosaico</button>
     <span class="bd-sep"></span><span class="lbl">Descargar</span><button class="btn sm" data-act="bd-png" ${S.bdBusy?'disabled':''}>PNG</button><button class="btn sm" data-act="bd-zip" ${S.bdBusy?'disabled':''} title="Tablero como imagen + cada referencia por separado, para PureRef">ZIP para PureRef</button><button class="btn sm" data-act="bd-copiar" ${S.bdBusy?'disabled':''} title="Copia el tablero como imagen; pégalo en PureRef con Ctrl+V">Copiar imagen</button><span class="status" id="bd-status">${esc(S.bdBusy||'')}</span></div>
   ${pk?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Añadir del moodboard</h3><span class="prow"><select data-bdpickcapa><option value="">Todas las capas</option>${LAYERS.map(l=>`<option value="${l.k}" ${fil===l.k?'selected':''}>${esc(capaNombre(p,l.k))}</option>`).join('')}</select><button class="btn sm pri" data-act="bd-addtodas" ${lista.length?'':'disabled'}>Añadir ${lista.length||'0'}</button><button class="btn ghost sm" data-act="bd-pick">Cerrar</button></span></div>
     ${lista.length?`<div class="rm-mini" style="gap:6px">${lista.slice(0,80).map(r=>`<img ${imgAttrs(r)} alt="" data-act="bd-addone" data-id="${r.id}" title="${esc(etiquetaDe(r)||'Añadir')}" style="width:64px;height:64px">`).join('')}</div><p class="hint" style="margin:0">Toca una imagen para añadirla, o «Añadir» para traer todas las de la lista.</p>`:'<p class="muted" style="margin:0">Ya están todas en el tablero.</p>'}</div>`:''}
@@ -9235,12 +9264,18 @@ window.addEventListener('pointermove',e=>{const d=BD.drag;if(!d)return;const v=S
   else if(d.mode==='move'&&m){m.x=d.x0+dx/v.k;m.y=d.y0+dy/v.k;d.el.style.left=m.x+'px';d.el.style.top=m.y+'px'}
   else if(d.mode==='size'&&m){m.w=Math.max(40,Math.round(d.w0+dx/v.k));d.el.style.width=m.w+'px'}});
 window.addEventListener('pointerup',e=>{const d=BD.drag;if(!d)return;BD.drag=null;const p=S.P[S.cur];if(!p)return;
+  if(d.mode==='move'&&d.moved&&p.board?.layout==='pro'){const m=p.board.items.find(x=>x.id===d.id);if(m&&m.t==='img'){const r=bdRef(p,m),h=d.el?.offsetHeight||(m.w||240)*.75,cy=m.y+h/2,b=(p.board.bandas||[]).find(q=>cy>=q.y0&&cy<=q.y1);
+    if(b&&r){bdItems(p).filter(i=>i.t==='img'&&i!==m&&(bdSecDe(p,bdRef(p,i))||BD_SIN)===b.n).forEach(i=>{i.ord=Math.floor((i.y-b.y0)/260)*100000+Math.round(i.x)});r.seccion=b.n===BD_SIN?'__sin':b.n;m.ord=Math.max(0,Math.floor((cy-b.y0)/260))*100000+Math.round(m.x)}
+    bdPro(p);marcar();renderMain();return}}
   if(d.mode!=='pan'&&d.moved){marcar();const pn=$('#bd-panel');if(pn&&S.bdSel===d.id)pn.innerHTML=bdPanelHTML(p);return}
   if(!d.moved){if(d.mode==='pan'&&e.target.closest?.('#bd-wrap'))bdSelect(null);else if(d.id)bdSelect(d.id)}});
 document.addEventListener('wheel',e=>{const wr=e.target.closest?.('#bd-wrap');if(!wr)return;e.preventDefault();const r=wr.getBoundingClientRect(),v=S.bdView||(S.bdView={x:0,y:0,k:1}),k2=Math.max(.04,Math.min(3,v.k*Math.exp(-e.deltaY*.0015))),mx=e.clientX-r.left,my=e.clientY-r.top;S.bdTocado=true;
   v.x=mx-(mx-v.x)*(k2/v.k);v.y=my-(my-v.y)*(k2/v.k);v.k=k2;bdApply()},{passive:false});
 document.addEventListener('keydown',e=>{if(!enTablero()||!S.bdSel)return;if(!/^(Delete|Supr)$/.test(e.key))return;const t=e.target;if(t?.matches?.('input,textarea,select'))return;
   const p=S.P[S.cur],it0=p.board.items.find(i=>i.id===S.bdSel),k0=it0?.pz?'pz:'+it0.pz:it0?.t==='pal'?'pal':it0?.ref;if(k0)(p.board.quitados=p.board.quitados||[]).push(k0);p.board.items=p.board.items.filter(i=>i.id!==S.bdSel);S.bdSel=null;marcar();renderMain()});
+document.addEventListener('change',e=>{const t=e.target,p=S.P[S.cur];if(!p||!p.board)return;
+  if(t.dataset?.bsec){const it=p.board.items.find(x=>x.id===t.dataset.bsec),r=it&&bdRef(p,it);if(!r)return;let v=t.value;if(v==='__nueva'){v=(prompt('Nombre de la nueva sección')||'').trim();if(!v){renderMain();return}}r.seccion=v;if(v!=='__sin'){const B=p.board;B.orden=B.orden||[];if(!B.orden.includes(v))B.orden.push(v)}bdPro(p);marcar();renderMain();return}
+  if(t.dataset?.bsecn!==undefined){const B=p.board,old=t.dataset.bsecn,nu=t.value.trim();if(!nu||nu===old)return;(p.refs||[]).forEach(r=>{if(bdSecDe(p,r)===old)r.seccion=nu});B.orden=(B.orden||[]).map(x=>x===old?nu:x);if(B.secT&&B.secT[old]!==undefined){B.secT[nu]=B.secT[old];delete B.secT[old]}bdPro(p);marcar();renderMain()}});
 /* descargas: el tablero se dibuja con las mismas posiciones y tamaños que ves */
 async function bdCanvas(p,maxLado=7000){const items=bdItems(p).slice().sort((a,b)=>(a.z||0)-(b.z||0));if(!items.length)return null;
   const BM={};for(const i of items)if(i.t==='img'){try{BM[i.id]=await createImageBitmap(await blobDeRef(bdRef(p,i)))}catch{}}
@@ -11365,6 +11400,18 @@ async function accion(a,el){
     case 'bd-addtodas':{const ids=new Set(bdItems(p).filter(i=>i.t==='img').map(i=>i.ref)),fil=S.bdPick?(S.bdPickCapa||''):'',L=(p.refs||[]).filter(r=>refSrc(r)&&!ids.has(r.id)&&(!fil||r.capa===fil));if(!L.length)return;
       bdAdd(p,L.map(r=>({t:'img',ref:r.id,w:240,x:0,y:0})));marcar();S.bdPick=false;renderMain();bdOrdenarCuando(p,ds.ord||'mosaico');toast(L.length+' referencias en el tablero');break}
     case 'bd-txt':{bdAdd(p,[{t:'txt',text:'Nota',w:260,fs:20}]);const n=p.board.items.at(-1);S.bdSel=n.id;marcar();renderMain();break}
+    case 'bd-sec-add':{const n=($('#bd-sec-nueva')?.value||'').trim();if(!n)break;const B=p.board=p.board||{items:[]};B.orden=B.orden||[];if(!B.orden.includes(n))B.orden.push(n);bdPro(p);marcar();renderMain();break}
+    case 'bd-sec-mv':{const B=p.board,i=B.orden.indexOf(ds.n),j=i+(+ds.d);if(i<0||j<0||j>=B.orden.length)break;[B.orden[i],B.orden[j]]=[B.orden[j],B.orden[i]];bdPro(p);marcar();renderMain();break}
+    case 'bd-sec-del':{const B=p.board;if(!confirm('¿Borrar la sección «'+ds.n+'»? Sus imágenes pasan a Por clasificar.'))break;(p.refs||[]).forEach(r=>{if(bdSecDe(p,r)===ds.n)r.seccion='__sin'});B.orden=B.orden.filter(x=>x!==ds.n);if(B.secT)delete B.secT[ds.n];bdPro(p);marcar();renderMain();break}
+    case 'bd-sec-ir':{const b=(p.board?.bandas||[]).find(x=>x.n===ds.n),wr=$('#bd-wrap');if(!b||!wr)break;const k=Math.min(1,Math.max(.12,(wr.clientWidth-20)/1300));S.bdView={k,x:10,y:10-b.y0*k};S.bdTocado=true;bdApply();break}
+    case 'bd-auto-clas':{let n=0;for(const r of p.refs||[]){if(bdSecDe(p,r))continue;const t=temaAuto(r);if(t){r.seccion=t;n++}}toast(n+' clasificadas por tema');bdPro(p);marcar();renderMain();break}
+    case 'bd-clas-on':{S.bdClas=true;S.bdSalta=[];S.bdSel=null;renderMain();break}
+    case 'bd-clas-off':{S.bdClas=false;renderMain();break}
+    case 'bd-clas-rep':{S.bdSalta=[];renderMain();break}
+    case 'bd-clas-set':case 'bd-clas-nueva':case 'bd-clas-skip':case 'bd-clas-del':{const L=bdItems(p).filter(i=>i.t==='img'&&!bdSecDe(p,bdRef(p,i))),sig=L.find(i=>!(S.bdSalta||[]).includes(i.id)),r=sig&&bdRef(p,sig);if(!sig||!r)break;
+      if(a==='bd-clas-skip'){(S.bdSalta=S.bdSalta||[]).push(sig.id);renderMain();break}
+      if(a==='bd-clas-del'){(p.board.quitados=p.board.quitados||[]).push(r.id);p.board.items=p.board.items.filter(i=>i.id!==sig.id);bdPro(p);marcar();renderMain();break}
+      const n=a==='bd-clas-set'?ds.n:($('#bd-clas-nueva')?.value||'').trim();if(!n)break;r.seccion=n;const B=p.board;B.orden=B.orden||[];if(!B.orden.includes(n))B.orden.push(n);bdPro(p);marcar();renderMain();break}
     case 'bd-ord':if(!bdItems(p).length)return;bdOrdenarCuando(p,ds.m);break;
     case 'bd-front':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=bdZmax(p)+1;marcar();renderMain()}break}
     case 'bd-back':{const i=p.board?.items.find(x=>x.id===ds.id);if(i){i.z=Math.min(...p.board.items.map(x=>x.z||0))-1;marcar();renderMain()}break}
