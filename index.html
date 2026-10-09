@@ -514,7 +514,7 @@ textarea,input[type=text],.field select,.prow select,.prow input{background:var(
 .fct{border:1px solid var(--line2);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}.fct header{display:flex;align-items:center;gap:10px}.fct header>div{flex:1;display:flex;flex-direction:column;line-height:1.25}.fct header small{color:var(--muted);font-size:11.5px}.fct-n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#111;font:700 13px var(--mono,monospace);display:grid;place-items:center;flex:none}
 .fct-t{margin:0;font-size:13px;line-height:1.5}.fct-t b{color:var(--accent)}.fct-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.fct-c{position:relative;margin:0;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface2);-webkit-user-select:none;user-select:none}.fct-c img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;pointer-events:none}.fct-c.sel{outline:3px solid var(--accent);outline-offset:-3px}.fct-c.ya{opacity:.55;cursor:default}
 .fct-c figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(8,9,12,.88));display:flex;flex-direction:column;gap:3px;line-height:1.25}.fct-c figcaption small{color:#d6d9df;font-size:10.5px}.fct-c .rb-chk{position:absolute;top:6px;left:6px}.fct-c .rb-z{position:absolute;top:6px;right:6px}.fct-c .rb-ya{position:absolute;top:6px;left:6px}
-.fnd-bar{position:sticky;bottom:78px;z-index:6}
+.fnd-bar{position:sticky;bottom:78px;z-index:6}.fct-ln{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}.fct-ln a{color:var(--muted);text-decoration:none}.fct-ln a:hover{color:var(--accent)}.fct-art{border-style:dashed}
 .bd-cap .bd-tx{font-family:var(--body);font-weight:400;opacity:.78}
 .rb-feed{column-width:170px;column-gap:8px}.rb-f{break-inside:avoid;position:relative;margin:0 0 8px;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface2);-webkit-user-select:none;user-select:none}
 .rb-f img{width:100%;display:block;pointer-events:none}.rb-f.sel{outline:3px solid var(--accent);outline-offset:-3px}.rb-f.ya{opacity:.55;cursor:default}
@@ -1057,7 +1057,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1bz4c3').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1c6ap6').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3095,7 +3095,7 @@ document.addEventListener('change',e=>{const d=e.target.dataset?.crh;if(!d)retur
 document.addEventListener('toggle',e=>{if(e.target.classList?.contains('cr-gal'))S.crAb=e.target.open?e.target.dataset.id:null},true);
 
 function vRefsMas(p){const bi=bocetosIniciales(p);return `
-  ${autoLlenadoHTML(p)}
+  <p class="hint" style="margin:0">Para traer referencias nuevas usa <b>Conseguir</b> (arriba, en Referencias): ahí cada imagen llega con su para qué y cae al tablero ordenada.</p>
   ${bi?`<div class="box"><h3>Por dónde empezar (bocetos)</h3><p class="hint">Generado con lo que ya escribiste en pilares, antítesis y mood.</p><ol class="startlist">${bi.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
   ${refsBalanceHTML(p)}
   <details><summary class="lbl" style="cursor:pointer;padding:4px 0">▸ Buscar algo específico por objetivo (manual)</summary>${generadorHTML(p)}</details>
@@ -3346,7 +3346,7 @@ const FND_NOMB=[
   {n:'Ideas locas que sirven',t:'Cruces inesperados: cabello de medusa, raíces enredadas como cuerpo, anaconda gigante. Elige UNA.',q:['Chrysaora','tree roots tangled','Eunectes murinus'],s:'foto',m:1}]}];
 const fndTexto=p=>nz([p?.nombre,p?.brief?.texto,p?.brief?.historia,(p?.concepto?.nucleos||[]).join(' '),p?.concepto?.frase,Object.values(p?.keywords||{}).flat().join(' '),p?.mood?.sensacion,p?.mood?.palabras,(p?.mood?.tres||[]).join(' '),p?.que?.tema,p?.que?.que,p?.mundo?JSON.stringify(p.mundo):''].filter(Boolean).join(' '));
 const fndConceptoDe=p=>(p?.que?.que||'').trim()||(p?.concepto?.frase||'').trim()||'';
-function fndPlan(p,txt){const t=nz(txt),proy=fndTexto(p),el=FND_ELEM.filter(e=>e.re.test(t)),ti=FND_TIPO.filter(e=>e.re.test(t)),F=[],vistos=new Set(),poner=(f,e)=>{if(vistos.has(f.n))return;vistos.add(f.n);F.push({...f,de:e})};
+function fndPlanLocal(p,txt){const t=nz(txt),proy=fndTexto(p),el=FND_ELEM.filter(e=>e.re.test(t)),ti=FND_TIPO.filter(e=>e.re.test(t)),F=[],vistos=new Set(),poner=(f,e)=>{if(vistos.has(f.n))return;vistos.add(f.n);F.push({...f,de:e})};
   const nb=FND_NOMB.find(d=>d.re.test(t));if(nb){const cu=FND_DIOSC.find(c=>/kukulkan|kukulcan|maya/.test(t)?c.w==='Maya':c.n.startsWith(nb.cu))||FND_DIOSC[1],base=fndDiosFacetas(cu);nb.f.forEach(f=>poner({...f},nb.n));[base[0],base[2]].forEach(f=>poner(f,'Dios · '+cu.n));return {F:F.slice(0,8),el,ti,dios:true,cul:cu,nom:nb}}
   if(FND_DIOSRE.test(t)){const cu=FND_DIOSC.find(c=>c.re.test(t))||FND_DIOSC.find(c=>c.re.test(proy));
     if(!cu)return {F:[],el,ti,dios:true,elegir:true};
@@ -3354,13 +3354,34 @@ function fndPlan(p,txt){const t=nz(txt),proy=fndTexto(p),el=FND_ELEM.filter(e=>e
   ti.slice(0,2).forEach((e,i)=>e.f.slice(0,i?1:2).forEach(f=>poner(f,e.n)));
   el.slice(0,2).forEach((e,i)=>e.f.slice(0,i?2:4).forEach(f=>poner(f,e.n)));
   for(const c of FND_CULT)if(c.re.test(t)||c.re.test(proy)){poner(c.f,'Tu proyecto');break}
-  if(!F.length){const q=(consultaDe({q:txt}).principal||txt).trim();poner({n:'Lo más parecido a tu idea',t:'Fotos directas del tema para ver cómo es en la realidad: formas, colores y detalles que se repiten.',q:[q,q.split(/\s+/).slice(0,2).join(' ')],s:'foto'},'Tu idea');
-    poner({n:'Detalle y textura',t:'Acércate: superficies, bordes y desgaste que dan carácter.',q:[q+' close up',q+' texture',q],s:'foto'},'Tu idea');poner({n:'Cómo lo resolvieron en objetos y obras',t:'Museos: cómo otros diseñaron algo parecido, con forma y ornamento.',q:[q,q.split(/\s+/)[0]],s:'museo'},'Tu idea')}
+  if(!F.length){/* tema que la app no conoce: se parte en sus ingredientes («ciudad flotante sobre las nubes» → ciudad flotante, nubes) y se busca cada uno, más detalle, luz y museos */
+    const en=f=>(consultaDe({q:f}).principal||f).trim(),frases=txt.split(/\s+(?:de|del|con|sobre|en|y|que|sin|para|bajo|entre|hecho|hecha)\s+/i).map(x=>x.replace(/^(un|una|el|la|los|las)\s+/i,'').trim()).filter(x=>x.length>2).slice(0,3),q0=en(txt);
+    frases.forEach(f=>{const q=en(f);poner({n:'Referencia real: '+f,t:'Cómo es «'+f+'» en la realidad: forma, escala, materiales y detalles que se repiten. Así tu diseño se siente creíble y no inventado de la nada.',q:[q,q.split(/\s+/).slice(0,2).join(' ')],s:'foto'},'Tu idea')});
+    poner({n:'Detalle y textura',t:'Acércate: superficies, bordes y desgaste que dan carácter y que puedes pintar o texturizar.',q:[q0+' close up detail',q0+' texture',q0],s:'foto'},'Tu idea');
+    poner({n:'Luz y atmósfera',t:'Cómo se ve con luz dramática, niebla o contraluz: dónde caen las sombras y qué tan lejos se lee la forma.',q:[q0+' light',q0.split(/s+/)[0]+' fog light','dramatic atmospheric light','golden hour light'],s:'foto',c:'mood'},'Tu idea');
+    poner({n:'Cómo lo resolvieron en objetos y obras',t:'Museos: cómo otras épocas diseñaron algo parecido, con forma, ornamento y construcción.',q:[q0,q0.split(/\s+/)[0]],s:'museo'},'Tu idea')}
   return {F:F.slice(0,7),el,ti}}
+/* pistas de arte: concept art y poses ya resueltas por artistas (ArtStation, desde el servidor de la app) */
+function fndArte(en,fig){const A=[{n:'Cómo lo resuelven otros artistas',t:'Ver cómo otros artistas bajaron una idea parecida: siluetas, thumbnails, decisiones de diseño y acabado. Estudia lo que hacen, no lo copies.',q:[en+' concept art',en+' design'],s:'arte',c:'tecnica'}];
+  if(fig)A.push({n:'Poses y siluetas de personaje',t:'Poses ya resueltas por artistas: cómo comunican actitud con la silueta antes del detalle. Úsalas para tus thumbnails de pose.',q:[en+' character pose sheet',en+' character design sketches'],s:'arte',c:'tecnica'});return A}
+function fndPlan(p,txt){const pl=fndPlanLocal(p,txt);if(pl.elegir)return pl;const en=fndEn(txt,pl);pl.en=en;pl.F=[...pl.F,...fndArte(en,!!(pl.ti.length||pl.dios)).map(f=>({...f,de:'Artistas'}))];return pl}
+/* plan a medida con Claude: sirve para cualquier tema, no solo los que la app ya conoce */
+async function fndPlanIA(p,txt){let ctx='';try{ctx=ctxProyecto(p)}catch{}
+  const prompt='Eres director de arte senior de concept art. El artista está diseñando: «'+txt+'».'+(ctx?'\n\nContexto de su proyecto:\n'+String(ctx).slice(0,1800):'')+'\n\nArma el paquete de referencias MÍNIMO y MÁS ÚTIL (de 6 a 8 necesidades) para que lo dibuje a nivel profesional. Cada necesidad es algo concreto que debe mirar para decidir un aspecto del diseño (forma, material, textura, anatomía real, vestimenta, luz, pose…). Evita lo genérico: piensa qué haría falta mirar para ESTE diseño en concreto.\n\nDevuelve SOLO este JSON: {"en":"2 a 4 palabras en inglés que resuman el tema","facetas":[{"n":"nombre corto en español","t":"para qué sirve: la decisión de diseño que resuelve, 1 o 2 frases en español","q":["consulta específica en inglés","consulta más amplia","consulta aún más simple"],"s":"foto|museo|nat|arte|pose","m":false,"c":"concepto|mood|tecnica"}]}\n\nReglas: s="foto" son fotos reales (materiales, texturas, luz, lugares, objetos); s="museo" son objetos y obras históricas (vestimenta, armas, escultura, iconografía, joyería); s="nat" son especies reales: q son 3 nombres científicos distintos (animales o plantas que sirvan de base) y m=true; s="arte" es concept art y bocetos de otros artistas: q son búsquedas de concept art; s="pose" es la necesidad de pose (sin q) y solo si hay un ser vivo o personaje. Incluye SIEMPRE: una "pose" si aplica, al menos una "arte" (diseños ya hechos del tema o poses y siluetas), una de luz o atmósfera, y una llamada «Ideas locas: …» con un cruce inesperado con otra cosa del mundo real que dé algo original (s foto o nat). Las consultas deben funcionar en buscadores de fotos: sustantivos concretos, sin adjetivos vagos como epic o cool. Sin personas reales ni contenido adulto.';
+  const j=await S.sample.json(prompt,{modelTier:'default'}),L=(j.facetas||j.facets||[]).filter(f=>f&&f.n&&(f.s==='pose'||(Array.isArray(f.q)&&f.q.length))).slice(0,9);if(L.length<3)throw new Error('plan corto');
+  const F=L.map(f=>{const s2=['foto','museo','nat','arte','pose'].includes(f.s)?f.s:'foto',c=['concepto','mood','tecnica'].includes(f.c)?f.c:(s2==='arte'?'tecnica':'concepto');
+    if(s2==='pose')return {n:String(f.n).slice(0,60),t:String(f.t||'').slice(0,300)||'Lo primero de un personaje es el gesto: usa el maniquí 3D y tu biblioteca de fotos para encontrar la pose.',poses:1,de:'A tu medida'};
+    return {n:String(f.n).slice(0,60),t:String(f.t||'').slice(0,300),q:f.q.map(x=>String(x).slice(0,80)).slice(0,3),s:s2,m:!!f.m&&s2==='nat',c,de:'A tu medida'}});
+  const en=String(j.en||'').trim().slice(0,60)||consultaDe({q:txt}).principal||txt;
+  if(!F.some(f=>f.s==='arte'))F.push(...fndArte(en,F.some(f=>f.poses)).map(f=>({...f,de:'Artistas'})));
+  return {F:F.slice(0,10),el:[],ti:[],en,ia:true}}
 const fndEn=(txt,pl)=>pl.nom?pl.nom.en:pl.cul?pl.cul.w+' god':[...pl.el.map(e=>e.en),...pl.ti.map(e=>e.en)].join(' ')||consultaDe({q:txt}).principal||txt;
 const fndBueno=x=>!WM_BASURA.test(x.titulo||'')&&!/herbarium|specimen|vector|clip ?art|illustration of|stock vector|\bsvg\b|logo\b|screenshot|collage|montage|poster/i.test(x.titulo||'')&&!/guitar|skewer|squid|bbq|barbecue|grill|restaurant|food|cook|candle|cigarette|firefight|fire ?truck|fire ?department|performer|dancer|wedding|selfie|(girl|woman|man|boy|people|crowd|couple|child|kid|baby|model|dress|bikini)|toy|lego|cartoon|drawing|painting|cake|dinner|lunch|kitchen|stove|burger|pizza|turbine|martian|mars|satellite|radar|map/i.test(x.titulo||'')&&(!(x.w||x.h)||Math.max(x.w||0,x.h||0)>=700);
 function fndDiversos(L,max){const cnt={},out=[];for(const x of L){const k=nz(x.titulo).replace(/[\d_-]+/g,' ').split(/\s+/).slice(0,3).join(' ')+'|'+(x.autor||'');cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=1)out.push(x)}return out.concat(L.filter(x=>!out.includes(x))).slice(0,max)}
-async function fndFaceta(f){const fuentes=f.s==='museo'?FND_MUSEO:f.s==='nat'?FND_NAT:FND_FOTO();let pool=[];
+async function fndArteBusca(f){if(!window.PC_SHIM?.artistas)return [];const L=[],vistos=new Set();
+  for(const q of f.q.slice(0,2)){try{const r=await window.PC_SHIM.artistas({q});for(const x of (r.items||[]).slice(0,12)){const a=x.usuario||x.artista;if(vistos.has(a))continue;vistos.add(a);const big=x.big||x.src;L.push({...mkRef({prov:'as',id:'as-'+(x.link||x.src),titulo:x.titulo,autor:x.artista||'',fuente:'ArtStation · '+(x.artista||''),link:x.link,src:big,big,lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'},cat:'Arte'}),as:true})}}catch(e){}}
+  return L.slice(0,10)}
+async function fndFaceta(f){if(f.s==='arte')return fndArteBusca(f);const fuentes=f.s==='museo'?FND_MUSEO:f.s==='nat'?FND_NAT:FND_FOTO();let pool=[];
   try{if(f.m){const rs=await Promise.all(f.q.map(q=>buscarTodos(q,fuentes,{n:8}).then(r=>puntuaRefs(r.items.filter(fndBueno),q).slice(0,3)).catch(()=>[])));rs.forEach(l=>{if(l[0])pool.push(l[0])});rs.forEach(l=>pool.push(...l.slice(1)))}
     else{const r=await buscarTodos(f.q[0],fuentes,{n:18},f.q.slice(1));pool=fndDiversos(puntuaRefs(r.items.filter(fndBueno),f.q[0]),10)}}catch(e){pool=[]}
   const vistos=new Set();pool=pool.filter(x=>{if(vistos.has(x.clave))return false;vistos.add(x.clave);return true});
@@ -3368,30 +3389,33 @@ async function fndFaceta(f){const fuentes=f.s==='museo'?FND_MUSEO:f.s==='nat'?FN
   if(f.req){const ws=nz(f.req).split('|').map(w=>w.trim().split(' ')[0]).filter(Boolean),ok=pool.filter(x=>{const t=nz(x.titulo+' '+(x.tags||[]).join(' ')+' '+(x.autor||''));return ws.some(w=>t.includes(w))});if(ok.length>=2)pool=ok}
   return pool}
 async function fndGenera(p,txt){txt=(txt||'').trim();if(!txt){toast('Escribe qué estás diseñando');return}
-  const pl=fndPlan(p,txt),en=fndEn(txt,pl);if(pl.elegir){S.fnd={txt,en,elegir:true,F:[],sel:[],ok:0};renderMain();return}const st=S.fnd={txt,en,cargando:true,F:pl.F.map(f=>({...f,pool:[],off:0})),sel:[],art:null,ok:0};renderMain();
+  let pl=null;const conectado=!!S.sample?.conectado?.();
+  if(conectado){S.fnd={txt,en:'',fase:'plan',cargando:true,F:[],sel:[],ok:0};renderMain();try{pl=await fndPlanIA(p,txt)}catch(e){pl=null}if(S.fnd?.txt!==txt)return}
+  if(!pl)pl=fndPlan(p,txt);
+  if(pl.elegir){S.fnd={txt,en:pl.en||'',elegir:true,F:[],sel:[],ok:0};renderMain();return}
+  const en=pl.en||fndEn(txt,pl),st=S.fnd={txt,en,ia:!!pl.ia,conectado,cargando:true,F:pl.F.map(f=>({...f,pool:[],off:0})),sel:[],ok:0};renderMain();
   await Promise.all(st.F.map(async f=>{if(f.poses){st.ok++;return}f.pool=await fndFaceta(f);st.ok++;if(S.fnd===st&&S.refModo==='conseguir'&&st.ok<st.F.length)renderMain()}));
-  if(S.fnd!==st)return;for(const f of st.F){const k=f.m?1:2;f.pool.slice(0,k).forEach(x=>st.sel.push(x.clave))}st.cargando=false;
-  if(window.PC_SHIM?.artistas){window.PC_SHIM.artistas({q:en+' concept art'}).then(r=>{if(S.fnd!==st)return;st.art=(r.items||[]).slice(0,4).map(x=>({...mkRef({prov:'as',id:'as-'+(x.link||x.src),titulo:x.titulo,autor:x.artista||'',fuente:'ArtStation · '+x.artista,link:x.link,src:x.src,big:x.big,lic:{estado:'inspiracion',texto:'© de su autor: solo inspiración y estudio'},cat:'Arte'}),as:true}));renderMain()}).catch(()=>{})}
-  renderMain()}
+  if(S.fnd!==st)return;for(const f of st.F){const k=f.m?1:2;if(f.s==='arte')continue;f.pool.slice(0,k).forEach(x=>st.sel.push(x.clave))}st.cargando=false;renderMain()}
 function fndCardHTML(fi,j,x){const L=LIC_EST[x.lic?.estado||'desconocida'],sel=S.fnd.sel.includes(x.clave),ya=(S.P[S.cur]?.refs||[]).some(r=>r.src===(x.big||x.src)||r.src===x.src);
   return '<figure class="fct-c '+(sel?'sel':'')+(ya?' ya':'')+'" '+(ya?'':'data-act="fnd-tog" data-f="'+fi+'" data-j="'+j+'"')+'><img src="'+esc(x.src)+'" alt="'+esc(x.titulo)+'" loading="lazy" referrerpolicy="no-referrer" draggable="false">'+(ya?'<span class="rb-ya">En tu moodboard ✓</span>':'<span class="rb-chk">'+(sel?'✓':'')+'</span>')+'<button class="rb-z" data-act="fnd-zoom" data-f="'+fi+'" data-j="'+j+'" aria-label="Ver más grande">🔍</button>'
     +'<figcaption><span class="lic '+L[1]+'" title="'+esc(x.lic?.texto||'')+'">'+L[0]+'</span><small>'+esc(corto(x.titulo,52))+(x.autor?' · '+esc(corto(x.autor,20)):'')+' · '+esc((x.fuente||'').split(' · ')[0])+(x.w&&x.h?' · '+x.w+'×'+x.h:'')+'</small></figcaption></figure>'}
-function vConseguir(p){const st=S.fnd,ej=['Quetzalcóatl','dios maya','Tezcatlipoca','monstruo de fuego','diosa mexica','guerrera de hielo','dragón de tormenta','golem de obsidiana'],pre=st?.txt??fndConceptoDe(p);
-  let h='<div class="fnd"><p class="fnd-ctx"><b>Pocas referencias, cada una con su para qué.</b> Escribe qué estás diseñando y la app lo descompone en lo que necesitas para dibujarlo (cómo se ve el material, de dónde sale el cuerpo, cómo lo ilumina la luz…). Trae 2 imágenes buenas por cada necesidad, con la razón escrita.</p>'
-   +'<div class="prow"><input type="text" id="fnd-txt" value="'+esc(pre)+'" placeholder="¿Qué estás diseñando? Ej. monstruo de fuego" style="flex:1 1 240px"><button class="btn pri" data-act="fnd-go">Armar mis referencias</button></div>'
-   +'<div class="chips"><span class="lbl">Ejemplos</span>'+ej.map(e=>'<button class="ch xs" data-act="fnd-ej" data-v="'+esc(e)+'">'+esc(e)+'</button>').join('')+'</div>';
+const fndLinks=q=>{const e=encodeURIComponent(q);return '<span class="fct-ln"><a href="https://www.artstation.com/search?sort_by=relevance&query='+e+'" target="_blank" rel="noopener">ArtStation ↗</a><a href="https://www.pinterest.com/search/pins/?q='+e+'" target="_blank" rel="noopener">Pinterest ↗</a><a href="https://www.google.com/search?tbm=isch&q='+e+'" target="_blank" rel="noopener">Google ↗</a></span>'};
+function vConseguir(p){const st=S.fnd,ej=['Quetzalcóatl','dios maya','monstruo de fuego','una ciudad flotante','armadura de samurái cyberpunk','bosque de niebla con criaturas','pirata fantasma','mercado de un planeta desértico'],pre=st?.txt??fndConceptoDe(p),con=!!S.sample?.conectado?.();
+  let h='<div class="fnd"><p class="fnd-ctx"><b>Pocas referencias, cada una con su para qué.</b> Escribe qué estás diseñando (cualquier tema: personaje, criatura, lugar, objeto, vehículo…) y armo lo que necesitas para dibujarlo: referencias reales, objetos históricos, pose, luz, ideas locas y concept art de otros artistas.</p>'
+   +'<div class="prow"><input type="text" id="fnd-txt" value="'+esc(pre)+'" placeholder="¿Qué estás diseñando? Ej. monstruo de fuego, ciudad flotante, armadura de samurái…" style="flex:1 1 240px"><button class="btn pri" data-act="fnd-go">Armar mis referencias</button></div>'
+   +'<div class="chips"><span class="lbl">Ejemplos</span>'+ej.map(e=>'<button class="ch xs" data-act="fnd-ej" data-v="'+esc(e)+'">'+esc(e)+'</button>').join('')+'</div>'
+   +(con?'<p class="muted" style="margin:0;font-size:12px">Claude conectado: el plan se arma a la medida de tu tema.</p>':'<p class="muted" style="margin:0;font-size:12px">Sin Claude conectado uso mi biblioteca de temas (criaturas, dioses, elementos, culturas) y búsquedas directas. <button class="btn sm" data-act="fnd-conectar">Conectar Claude</button> y el plan se arma a la medida de cualquier tema.</p>');
+  {const els=typeof detectarElementos==='function'?detectarElementos(p):[],base=(p.nombre&&p.nombre!=='Proyecto sin nombre'?p.nombre:'');if(base||els.length)h+='<div class="chips"><span class="lbl">De tu proyecto</span>'+(base?'<button class="ch xs on" data-act="fnd-ej" data-v="'+esc((fndConceptoDe(p)||base)+(p.tipo?' ('+p.tipo+')':''))+'">Armar con lo que ya escribí</button>':'')+els.map(e=>'<button class="ch xs" data-act="fnd-ej" data-v="'+esc((base?base+' ':'')+e.n)+'">'+(e.ico||'')+' '+esc(e.n)+'</button>').join('')+'</div>'}
   if(st?.elegir)h+='<section class="fct"><p class="fct-t"><b>¿De qué cultura es tu dios?</b> Cada cultura se representa distinto (poses, ropa, joyería, símbolos). Elige una y armo las referencias.</p><div class="chips">'+FND_DIOSC.map(c=>'<button class="ch" data-act="fnd-ej" data-v="'+esc(st.txt+' '+c.n)+'">'+esc(c.n)+'</button>').join('')+'</div></section>';
-  if(st?.cargando)h+='<p class="muted">Buscando referencias para «'+esc(st.txt)+'»… '+st.ok+' de '+st.F.length+' listas.</p>';
-  if(st){st.F.forEach((f,fi)=>{const k=f.m?3:2,vis=f.pool.slice(f.off,f.off+k);
-      h+='<section class="fct"><header><span class="fct-n">'+(fi+1)+'</span><div><b>'+esc(f.n)+'</b><small>'+esc(f.de||'')+'</small></div>'+(f.pool.length>k?'<button class="btn sm ghost" data-act="fnd-otra" data-f="'+fi+'">Ver otras</button>':'')+'</header><p class="fct-t"><b>Para qué sirve:</b> '+esc(f.t)+'</p>';
-      if(f.poses)h+='<div class="prow"><button class="btn sm pri" data-act="fnd-3d">Abrir maniquí 3D · poses</button><button class="btn sm" data-act="v3d-bib">Mi biblioteca de fotos</button></div>';
-      else if(vis.length)h+='<div class="fct-imgs">'+vis.map((x,j)=>fndCardHTML(fi,f.off+j,x)).join('')+'</div>';
-      else h+='<p class="muted" style="margin:0">'+(st.cargando?'Buscando…':'No salió nada que valga la pena para esto. Prueba «Ver otras» o busca a mano abajo.')+'</p>';
+  if(st?.fase==='plan'&&st.cargando&&!st.F.length)h+='<p class="muted">Pensando qué necesitas para «'+esc(st.txt)+'»…</p>';
+  else if(st?.cargando)h+='<p class="muted">Buscando referencias para «'+esc(st.txt)+'»… '+st.ok+' de '+st.F.length+' listas.</p>';
+  if(st){st.F.forEach((f,fi)=>{const k=f.m?3:2,vis=f.pool.slice(f.off,f.off+(f.s==='arte'?3:k)),art=f.s==='arte';
+      h+='<section class="fct'+(art?' fct-art':'')+'"><header><span class="fct-n">'+(art?'★':fi+1)+'</span><div><b>'+esc(f.n)+'</b><small>'+esc(f.de||'')+'</small></div>'+(f.pool.length>(art?3:k)?'<button class="btn sm ghost" data-act="fnd-otra" data-f="'+fi+'">Ver otras</button>':'')+'</header><p class="fct-t"><b>Para qué sirve:</b> '+esc(f.t)+'</p>';
+      if(f.poses)h+='<div class="prow"><button class="btn sm pri" data-act="fnd-3d">Abrir maniquí 3D · poses</button><button class="btn sm" data-act="v3d-bib">Mi biblioteca de fotos</button></div>'+fndLinks((st.en||st.txt)+' pose reference');
+      else{if(vis.length)h+='<div class="fct-imgs">'+vis.map((x,j)=>fndCardHTML(fi,f.off+j,x)).join('')+'</div>';
+        else h+='<p class="muted" style="margin:0">'+(st.cargando?'Buscando…':art&&!window.PC_SHIM?.artistas?'Las imágenes de ArtStation aparecen en la app publicada. Mientras, ábrelo con estos enlaces:':'No salió nada que valga la pena para esto. Prueba «Ver otras» o los enlaces.')+'</p>';
+        h+=fndLinks(f.q?.[0]||st.txt)}
       h+='</section>'});
-    if(!st.cargando||st.F.length){const q=encodeURIComponent(st.en+' concept art');
-      h+='<section class="fct"><header><span class="fct-n">★</span><div><b>Cómo lo resuelven otros artistas</b><small>concept art de verdad</small></div></header><p class="fct-t"><b>Para qué sirve:</b> Ver cómo otros bajaron una idea parecida a boceto: siluetas, thumbnails y decisiones de diseño. Estudia, no copies.</p>'
-        +(st.art?.length?'<div class="fct-imgs">'+st.art.map((x,j)=>fndCardHTML(-1,j,x)).join('')+'</div>':'')
-        +'<div class="prow"><a class="btn sm" href="https://www.artstation.com/search?sort_by=relevance&query='+q+'" target="_blank" rel="noopener">ArtStation ↗</a><a class="btn sm" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener">Pinterest ↗</a><a class="btn sm" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener">Google ↗</a></div></section>'}
     const nsel=st.sel.length;
     h+='<div class="rb-bar fnd-bar"><b>'+nsel+' elegida'+(nsel===1?'':'s')+'</b><span class="muted">Toca una imagen para elegirla o quitarla.</span><span style="flex:1"></span><button class="btn pri" data-act="fnd-add" '+(nsel?'':'disabled')+'>Añadir al tablero ordenado</button></div>'}
   h+='<details class="box" '+(S.refB?.items?.length||S.refB?.cargando?'open':'')+'><summary style="cursor:pointer"><h3 style="display:inline">Buscar otra cosa a mano</h3> <span class="lbl">búsqueda libre en museos, fotos y naturalistas</span></summary><div style="margin-top:8px">'+refsBuscaHTML(p)+refsResultadoHTML(p)+'</div></details></div>';
@@ -3399,7 +3423,7 @@ function vConseguir(p){const st=S.fnd,ej=['Quetzalcóatl','dios maya','Tezcatlip
 function fndAgrega(p){const st=S.fnd;if(!st)return 0;const ya=new Set((p.refs||[]).map(r=>r.src));let n=0;
   const poner=(f,x,fn)=>{if(ya.has(x.big||x.src)||ya.has(x.src))return;ya.add(x.big||x.src);
     const r=refNueva({capa:f.c||'concepto',porque:f.t,paraQue:f.t,facet:f.n,facetN:fn,fuente:x.titulo+' · '+x.fuente,link:x.link,src:x.big||x.src,autor:x.autor||'',lic:x.lic?.texto||'',licEstado:x.lic?.estado||(x.as?'inspiracion':'desconocida'),licUrl:x.lic?.url||'',w:x.w||0,h:x.h||0,tags:x.tags||[],prov:x.prov||'',creditos:x.creditos||'',tipoRef:x.as?'secundaria':'primaria',clase:x.as?'Concept artist':claseDeFuente(x.fuente),concepto:st.txt});p.refs.push(r);n++;relevMarca({fuente:x.fuente,prov:x.prov},1)};
-  st.F.forEach((f,i)=>f.pool.forEach(x=>{if(st.sel.includes(x.clave))poner(f,x,i+1)}));(st.art||[]).forEach(x=>{if(st.sel.includes(x.clave))poner({n:'Cómo lo resuelven otros artistas',t:'Ver cómo otro artista bajó una idea parecida a boceto: silueta, ritmo y decisiones. Estudiar, no copiar.',c:'tecnica'},x,98)});
+  st.F.forEach((f,i)=>f.pool.forEach(x=>{if(st.sel.includes(x.clave))poner(f,x,i+1)}));
   return n}
 /* ---- referencias ligadas a un grupo de bocetos ---- */
 function rfParaHTML(p,g){if(!g||!(p.refs||[]).length)return '';const rs=p.refs.filter(r=>(r.para||[]).includes(g));
@@ -3538,9 +3562,10 @@ async function accionRg(a,el,p,ds){
     case 'rf-modo':S.refModo=ds.v;if(ds.v!=='conseguir')S.refVista=ds.v;renderMain();return true;
     case 'fnd-go':{fndGenera(p,$('#fnd-txt')?.value||'');return true}
     case 'fnd-ej':{fndGenera(p,ds.v);return true}
-    case 'fnd-tog':{const st=S.fnd,x=+ds.f<0?st?.art?.[+ds.j]:st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;const i=st.sel.indexOf(x.clave);i<0?st.sel.push(x.clave):st.sel.splice(i,1);renderMain();return true}
-    case 'fnd-zoom':{const st=S.fnd,x=+ds.f<0?st?.art?.[+ds.j]:st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;$('#overlay').innerHTML='<div class="lightbox" data-act="unzoom"><img src="'+esc(x.big||x.src)+'" alt="" referrerpolicy="no-referrer"></div>';return true}
-    case 'fnd-otra':{const f=S.fnd?.F[+ds.f];if(!f)return true;const k=f.m?3:2;f.off=f.off+k>=f.pool.length?0:f.off+k;renderMain();return true}
+    case 'fnd-tog':{const st=S.fnd,x=st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;const i=st.sel.indexOf(x.clave);i<0?st.sel.push(x.clave):st.sel.splice(i,1);renderMain();return true}
+    case 'fnd-zoom':{const st=S.fnd,x=st?.F[+ds.f]?.pool[+ds.j];if(!x)return true;$('#overlay').innerHTML='<div class="lightbox" data-act="unzoom"><img src="'+esc(x.big||x.src)+'" alt="" referrerpolicy="no-referrer"></div>';return true}
+    case 'fnd-otra':{const f=S.fnd?.F[+ds.f];if(!f)return true;const k=f.s==='arte'?3:f.m?3:2;f.off=f.off+k>=f.pool.length?0:f.off+k;renderMain();return true}
+    case 'fnd-conectar':{window.PC_SHIM?.openSettings?window.PC_SHIM.openSettings():toast('La conexión con Claude se hace en la app publicada');return true}
     case 'fnd-3d':{v3dAbrir('maniqui','poses');return true}
     case 'fnd-add':{const n=fndAgrega(p);if(!n){toast('Esas ya están en tu moodboard');return true}S.refModo='tablero';S.refVista='tablero';marcar();renderMain();toast(n+' referencia'+(n>1?'s':'')+' en el tablero, ordenadas por necesidad');return true}
     case 'rg-capa':f.capa=ds.v;renderMain();return true;
@@ -7032,10 +7057,10 @@ function pgEstilo(p){return pgNav([['mood','Mood'],['luz','Luz y color'],['lengu
   +pgSec('estilo','lenguaje','Lenguaje visual','De ideas a reglas que se pueden dibujar y revisar.',vLenguaje(p))
   +pgSec('estilo','personajes','Personajes','Cada uno con su paleta, armada con lo que escribes de él.',vPersonajes(p))
   +pgSec('estilo','mundo','Mundo','Haz que el mundo sea un personaje.',vMundo(p))}
-function pgRefs(p){return pgNav([['mesa','Referencias'],['bajar','Ref → thumbnail'],['mas','Más herramientas']])
+function pgRefs(p){return pgNav([['mesa','Referencias'],['bajar','De la referencia al boceto'],['mas','Revisar y estudiar']])
   +pgSec('refs','mesa','Referencias','Consigue pocas referencias que sirvan, cada una con su para qué, y ármalas en un moodboard ordenado.',vMesa(p))
   +pgSec('refs','bajar','De la referencia al thumbnail','Sácale una forma, una historia o una regla a cada referencia.',vBajar(p))
-  +pgSec('refs','mas','Más herramientas','Llenado automático, balance, búsqueda por objetivo, artistas, sitios y keywords.',vRefsMas(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`)}
+  +pgSec('refs','mas','Revisar y estudiar','Balance de tu investigación, por dónde empezar a bocetar, y búsquedas guardadas.',vRefsMas(p)+`<details class="box"><summary style="cursor:pointer"><h3 style="display:inline">Sitios con buenas referencias</h3></summary>${sitiosRefHTML(p)}</details>`)}
 function pgBocetos(p){return pgNav([['carpetas','Subir bocetos'],['critica','Crítica'],['medir','Medir y comparar'],['basicos','Básicos de diseño']])
   +pgSec('bocetos','carpetas','Subir bocetos','Por elemento (personaje, vegetación, rocas…), con el contexto del proyecto.',vCarpetas(p))
   +pgSec('bocetos','critica','Crítica: qué está mal y qué cambiar','El director de arte de la app te critica (y Claude, si quieres más profundidad); queda como lista de cambios, con ideas fuera de lo ordinario.',vCriticaClaude(p))
@@ -7094,7 +7119,7 @@ function refsBalanceHTML(p){const R=p.refs||[],cats={};R.forEach(r=>(r.estudio||
     <p class="hint"><b>Referencia primaria (real)</b>: anatomía, fotografía, museos, naturaleza, materiales, ingeniería → estudias <b>cómo funcionan las cosas</b>. <b>Secundaria (artística)</b>: concept artists, cine, videojuegos → estudias <b>qué decisiones visuales tomó otro artista</b>. Diseña con la primera; aprende oficio con la segunda.</p>
     <div class="bal">${REF_POR.map(c=>`<div class="bal-r ${cats[c]?'':'cero'}"><span>${c}</span><i style="width:${(cats[c]||0)/max*100}%"></i><b>${cats[c]||0}</b></div>`).join('')}</div>
     ${msgs.map(m=>`<p class="nd-box sm">${esc(m)}</p>`).join('')}
-    <p class="hint" style="margin:0">Usa «Llenar mi moodboard automático», arriba del todo, para traer varias de golpe.</p></div>`}
+    <p class="hint" style="margin:0">Para traer lo que falta usa <b>Conseguir</b>, en Referencias.</p></div>`}
 function autoLlenadoHTML(p){const els=typeof detectarElementos==='function'?detectarElementos(p):[],pj=(p.personajes||[]).filter(c=>c.nombre);
   return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Llenar mi moodboard automático</h3>
     <p class="hint">Un clic y te traigo referencias <b>reales</b> (museos, naturaleza, materiales) y de <b>concept art</b> (artistas de ArtStation) para tu tensión, tus pilares, tus personajes${els.length?' y lo que detecté en tu proyecto':''}${els.length?': <b>'+els.map(e=>e.n).join(', ')+'</b>':''}.</p>
@@ -9026,7 +9051,7 @@ function bdPro(p){const B=p.board,W0=1240,G=14,H=230,LADO=340,all=bdItems(p),img
   grupos.forEach((g,gi)=>{const list=g.imgs.filter(i=>i!==heroe);if(!list.length)return;
     T(String(gi+1).padStart(2,'0')+'  ·  '+g.k.toUpperCase(),0,y,W0,24);y+=40;const lado=g.t?LADO:0,Wr=W0-lado,y0=y;if(g.t)T('PARA QUÉ SIRVE\n'+g.t,0,y,LADO-40,14,1);
     let row=[];const flush=ultima=>{if(!row.length)return;const sum=row.reduce((a,i)=>a+1/asp(i),0),gaps=(row.length-1)*G;let h=(Wr-gaps)/sum;if(ultima&&h>H*1.15)h=H;h=Math.min(h,H*1.6);let x=lado,cap=false;
-      row.forEach(i=>{const w=Math.round(h/asp(i));i.w=w;i.x=Math.round(x);i.y=y;x+=w+G;const c=!g.t&&pq(i);if(c){T(corto(c,70),i.x,y+Math.round(h)+5,w,11,1);cap=true}});y+=Math.round(h)+(cap?40:0)+G;row=[]};
+      row.forEach(i=>{const w=Math.round(h/asp(i));i.w=w;i.x=Math.round(x);i.y=y;x+=w+G;const c=!g.t&&(pq(i)||'⚠ ¿Para qué sirve? Escríbelo');T(corto(c,70),i.x,y+Math.round(h)+5,w,11,1);cap=true});y+=Math.round(h)+(cap?40:0)+G;row=[]};
     list.forEach(i=>{row.push(i);const sum=row.reduce((a,j)=>a+H/asp(j),0)+(row.length-1)*G;if(sum>=Wr)flush(false)});flush(true);y=Math.max(y,y0+(g.t?alto(g.t,LADO-40,14)+30:0))+30});
   notas.forEach((t,k)=>{t.x=W0+60;t.y=170+k*130});B.layout='pro'}
 function bdOrdenar(p,m){if(!p.board)return;if(m==='pro'){bdPro(p);S.bdView=null;return}p.board.layout='libre';const W=240,G=16;p.board.items=p.board.items.filter(i=>!i.auto);const imgs=bdItems(p).filter(i=>i.t==='img'),txts=bdItems(p).filter(i=>i.t==='txt');
