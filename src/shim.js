@@ -249,6 +249,7 @@
     recursos:()=>llamar('pc-recursos'),
     artistas:b=>llamar('pc-artistas',b),
     fotos:b=>llamar('pc-fotos',b),
+    enlace:b=>llamar('pc-enlace',b),
     avisarAhora:()=>llamar('pc-avisos'),
     avisarMes:()=>llamar('pc-avisos',{tipo:'mensual'}),
     async use(n){await ready;return {db,assets,sample,downloads}[n]||null},
