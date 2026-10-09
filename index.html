@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1m4ral').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1mejdm').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9532,8 +9532,8 @@ function compRecomienda(pr){const txt=nz([...intTextos(pr),...visTextos(pr),...O
   return {pun,top}}
 /* ============ Volúmenes: rectángulos, círculos, casas y torres puestos EN tu perspectiva (ciudades, pueblos, edificios) ============
    Cada volumen vive en metros sobre el piso, delante de la cámara (que está a «altura de la cámara» sobre el piso). Con r=0 sus lados siguen los puntos de fuga; con otro giro se rotan. Se dibujan con la misma cámara que el horizonte y los puntos de fuga (1, 2 o 3 puntos), así que todo converge solo. */
-const COMP_VOLS=[['caja','▭ Rectángulo'],['cil','◯ Círculo'],['casa','⌂ Casa'],['cono','▲ Torre cónica'],['plano','▬ Plaza o calle']];
-const compVolDef=t=>({caja:{w:4,l:4,h:4},cil:{w:4,l:4,h:4},casa:{w:6,l:8,h:4},cono:{w:4,l:4,h:9},plano:{w:12,l:12,h:.03}})[t]||{w:4,l:4,h:4};
+const COMP_VOLS=[['arbol','🌲 Árbol'],['caja','▭ Rectángulo'],['cil','◯ Círculo'],['casa','⌂ Casa'],['cono','▲ Torre cónica'],['plano','▬ Plaza o calle']];
+const compVolDef=t=>({caja:{w:4,l:4,h:4},cil:{w:4,l:4,h:4},casa:{w:6,l:8,h:4},cono:{w:4,l:4,h:9},plano:{w:12,l:12,h:.03},arbol:{w:4,l:4,h:10}})[t]||{w:4,l:4,h:4};
 const compVolNuevo=(t,x,z)=>({id:uid(),t,x:x??0,z:z??14,...compVolDef(t),r:0});
 /* caras (polígonos [X,Y,Z] en metros) de un volumen */
 function compVolCaras(v){const K=compCam(),th=(K?K.th:Math.PI/2)+v.r*Math.PI/180,a=[Math.cos(th),Math.sin(th)],b=[-Math.sin(th),Math.cos(th)],hw=v.w/2,hl=v.l/2,h=v.h,
@@ -9542,6 +9542,7 @@ function compVolCaras(v){const K=compCam(),th=(K?K.th:Math.PI/2)+v.r*Math.PI/180
   if(v.t==='cil'||v.t==='cono'){const n=22,ring=y=>Array.from({length:n},(_,k)=>Q(Math.cos(2*Math.PI*k/n)*hw,Math.sin(2*Math.PI*k/n)*hl,y)),ba=ring(0);
     if(v.t==='cil'){const to=ring(h);for(let k=0;k<n;k++){const m=(k+1)%n;F.push([ba[k],ba[m],to[m],to[k]])}F.push(to);F.push(ba.slice().reverse())}
     else{const ap=Q(0,0,h);for(let k=0;k<n;k++){const m=(k+1)%n;F.push([ba[k],ba[m],ap])}F.push(ba.slice().reverse())}}
+  else if(v.t==='arbol'){/* pino: tronco y copa cónica */const n=14,ring=(y,k)=>Array.from({length:n},(_,i)=>Q(Math.cos(2*Math.PI*i/n)*hw*k,Math.sin(2*Math.PI*i/n)*hl*k,y)),t0=ring(0,.16),t1=ring(h*.3,.16),c0=ring(h*.26,1),ap=Q(0,0,h);for(let i=0;i<n;i++){const m=(i+1)%n;F.push([t0[i],t0[m],t1[m],t1[i]]);F.push([c0[i],c0[m],ap])}}
   else if(v.t==='casa'){const rh=Math.min(hw*.9,h*.6),A0=Q(-hw,-hl,0),A1=Q(hw,-hl,0),A2=Q(hw,hl,0),A3=Q(-hw,hl,0),B0=Q(-hw,-hl,h),B1=Q(hw,-hl,h),B2=Q(hw,hl,h),B3=Q(-hw,hl,h),R0=Q(0,-hl,h+rh),R1=Q(0,hl,h+rh);
     F.push([A0,A1,B1,R0,B0],[A3,B3,R1,B2,A2],[A1,A2,B2,B1],[A3,A0,B0,B3],[B0,R0,R1,B3],[R0,B1,B2,R1],[A3,A2,A1,A0])}
   else{const A0=Q(-hw,-hl,0),A1=Q(hw,-hl,0),A2=Q(hw,hl,0),A3=Q(-hw,hl,0),B0=Q(-hw,-hl,h),B1=Q(hw,-hl,h),B2=Q(hw,hl,h),B3=Q(-hw,hl,h);
@@ -9552,9 +9553,9 @@ function compVolCam(K){const cm=C.fig.cam||1.6,ph=K.phi||0,cs=Math.cos(ph),sn=Ma
 const compVolProy=(K,p)=>[K.cx+K.f*p[0]/p[2],(K.py??K.hy)-K.f*p[1]/p[2]];
 function compVolRecorta(P,zmin){const R=[];for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],da=a[2]-zmin,db=b[2]-zmin;if(da>=0)R.push(a);if((da>=0)!==(db>=0)){const t=da/(da-db);R.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1]),zmin])}}return R}
 /* un clic en la imagen → punto del piso en metros (o null si apunta por encima del horizonte) */
-function compVolSuelo(u,v){const K=compCam();if(!K)return null;const ph=K.phi||0,cs=Math.cos(ph),sn=Math.sin(ph),xc=(u-K.cx)/K.f,uc=((K.py??K.hy)-v)/K.f,dy=uc*cs-sn,dz=cs+uc*sn;if(dy>=-1e-4)return null;const t=-1/dy,cm=C.fig.cam||1.6;return {x:t*xc*cm,z:t*dz*cm}}
+function compVolSuelo(u,v,yp){const K=compCam();if(!K)return null;const ph=K.phi||0,cs=Math.cos(ph),sn=Math.sin(ph),cm=C.fig.cam||1.6,xc=(u-K.cx)/K.f,uc=((K.py??K.hy)-v)/K.f,dy=uc*cs-sn,dz=cs+uc*sn;if(Math.abs(dy)<1e-4)return null;const t=((yp||0)/cm-1)/dy;if(!(t>0))return null;return {x:t*xc*cm,z:t*dz*cm}}
 function compVolDibuja(g,Tx,o){const K=compCam();if(!K||!C.vols?.length)return;const cam=compVolCam(K),col=C.color,sw=C.gr,L=[-.4,.8,-.45],ln=Math.hypot(...L),acc='#ff7a3d';
-  const orden=C.vols.slice().sort((p,q)=>Math.hypot(q.x,q.z)-Math.hypot(p.x,p.z)),hit=[];
+  const orden=C.vols.slice().sort((p,q)=>((q.h<=.05)-(p.h<=.05))||(Math.hypot(q.x,q.z)-Math.hypot(p.x,p.z))),hit=[];
   g.save();g.lineJoin='round';
   for(const v of orden){const caras=compVolCaras(v),c=(()=>{const t=[0,0,0];let n=0;for(const f of caras)for(const p of f){t[0]+=p[0];t[1]+=p[1];t[2]+=p[2];n++}return t.map(x=>x/n)})(),sel=o.manijas&&v.id===C.vSel,polis=[];
     for(const f of caras){/* normal hacia afuera y descarte de las caras de atrás */
@@ -9564,7 +9565,7 @@ function compVolDibuja(g,Tx,o){const K=compCam();if(!K||!C.vols?.length)return;c
       const P3=compVolRecorta(f.map(p=>cam(p[0],p[1],p[2])),.12);if(P3.length<3)continue;
       const P2=P3.map(p=>compVolProy(K,p));polis.push(P2);
       g.beginPath();P2.forEach((q,i)=>i?g.lineTo(Tx.X(q[0]),Tx.Y(q[1])):g.moveTo(Tx.X(q[0]),Tx.Y(q[1])));g.closePath();
-      if(C.vfill!==false){const lum=v.h<=.05?.55:.38+.62*Math.max(0,(n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/ln),k=Math.round(70+170*lum);g.globalAlpha=C.vfillA??.86;g.fillStyle=`rgb(${k},${k},${Math.min(255,k+10)})`;g.fill()}
+      if(C.vfill!==false){const lum=v.h<=.05?.55:.38+.62*Math.max(0,(n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/ln),k=Math.round(70+170*lum);g.globalAlpha=C.vfillA??.86;g.fillStyle=v.t==='arbol'?`rgb(${Math.round(k*.55)},${Math.min(255,Math.round(k*.95))},${Math.round(k*.55)})`:`rgb(${k},${k},${Math.min(255,k+10)})`;g.fill()}
       g.globalAlpha=C.op;g.strokeStyle=sel?acc:col;g.lineWidth=sel?sw*1.8:sw;g.stroke()}
     if(o.manijas)hit.push({id:v.id,polis})}
   g.restore();if(o.manijas)C.vHit=hit.reverse()}
@@ -9576,14 +9577,15 @@ function compVolPreset(k){const R=(a,b)=>a+Math.random()*(b-a),Rp=a=>a[Math.floo
     add('cono',-12,34,{w:5,l:5,h:12});add('cil',12,30,{w:3,l:3,h:6})}
   else if(k==='ciudad'){for(let zi=0;zi<4;zi++)for(let xi=-3;xi<=3;xi++){if(Math.random()<.12)continue;const w=R(6,9),l=R(6,9);add('caja',xi*13,12+zi*14,{w,l,h:R(7,38)*(1-zi*.1)})}
     for(let zi=0;zi<4;zi++)add('plano',0,12+zi*14+7,{w:100,l:4})}
+  else if(k==='bosque'){for(let i=0;i<70;i++){const w=R(3,5.5);add('arbol',R(-45,45),R(8,65),{w,l:w,h:R(7,15)})}}
   else if(k==='plaza'){add('plano',0,20,{w:22,l:22});add('cono',0,20,{w:3,l:3,h:16});add('cil',0,20,{w:5,l:5,h:1.2});for(let i=0;i<8;i++){const an=i*Math.PI/4,x=Math.cos(an)*16,z=20+Math.sin(an)*16;add('caja',x,z,{w:5,l:5,h:R(5,10),r:Math.round(an*180/Math.PI)})}}
   C.vols=L;C.vSel=L[0]?.id||''}
 function compVolPanelHTML(sl,ck,chip,P){const K=compCam(),V=C.vols||[],s=V.find(v=>v.id===C.vSel);
   if(P.modo==='ninguna'||P.modo==='iso')return '';
   return `<div class="v3-g"><b>5 · Volúmenes (ciudades, pueblos, edificios)</b><p class="hint" style="margin:0">Pon rectángulos, círculos, casas y torres sobre tu perspectiva: se acomodan solos al horizonte y a los puntos de fuga. Arrástralos sobre el lienzo para moverlos por el piso.${K?'':' <b>Primero pon los puntos de fuga en lados opuestos del centro.</b>'}</p>
     <div class="chips">${COMP_VOLS.map(([k,n])=>chip('vadd',k,'＋ '+n,false)).join('')}</div>
-    <div class="chips"><span class="lbl">Armar de golpe</span>${chip('vpre','pueblo','Pueblo',false)}${chip('vpre','ciudad','Ciudad',false)}${chip('vpre','plaza','Plaza con torre',false)}${V.length?chip('vclr','1','Borrar todo',false):''}</div>
-    ${V.length?`<div class="chips"><span class="lbl">Volúmenes (${V.length})</span>${V.slice(0,40).map((v,i)=>chip('vsel',v.id,(COMP_VOLS.find(x=>x[0]===v.t)?.[1].slice(0,1)||'▭')+(i+1),v.id===C.vSel)).join('')}${V.length>40?'…':''}</div>`:''}
+    <div class="chips"><span class="lbl">Armar de golpe</span>${chip('vpre','pueblo','Pueblo',false)}${chip('vpre','ciudad','Ciudad',false)}${chip('vpre','plaza','Plaza con torre',false)}${chip('vpre','bosque','Bosque',false)}${V.length?chip('vclr','1','Borrar todo',false):''}</div>
+    ${V.length?`<div class="chips"><span class="lbl">Volúmenes (${V.length})</span>${V.slice(0,40).map((v,i)=>chip('vsel',v.id,Array.from(COMP_VOLS.find(x=>x[0]===v.t)?.[1]||'▭')[0]+(i+1),v.id===C.vSel)).join('')}${V.length>40?'…':''}</div>`:''}
     ${s?`${sl('v_z','Distancia (m)',2,120,.5,s.z)}${sl('v_x','Lateral (m)',-80,80,.5,s.x)}${sl('v_w','Ancho (m)',.5,60,.5,s.w)}${sl('v_l','Largo (m)',.5,60,.5,s.l)}${sl('v_h','Alto (m)',.03,80,s.h<2?.01:.5,s.h)}${sl('v_r','Giro (°)',-90,90,1,s.r)}${sl('v_y','Altura sobre el piso (m)',0,60,.5,s.y||0)}${sl('v_rx','Inclinar adelante / atrás (°)',-90,90,1,s.rx||0)}${sl('v_rz','Inclinar de lado (°)',-90,90,1,s.rz||0)}<div class="prow"><button class="btn sm" data-cp="vdup:1">Duplicar</button><button class="btn sm" data-cp="vdel:1">Quitar este</button></div>`:''}
     ${V.length?`${ck('vfill','Rellenar con sombreado (si no, solo líneas)',C.vfill!==false)}${sl('camh','Altura de la cámara (m)',.3,12,.1,C.fig.cam)}<div class="prow"><button class="btn sm pri" data-cp="vpsd:1">PSD en capas para pintar encima</button></div><p class="hint" style="margin:0">El PSD sale con capas: tu boceto, la composición, el horizonte y los puntos de fuga, los volúmenes y una capa vacía para pintar.</p>`:''}</div>`}
 async function compPsd(proc){const r0=C.res;if(proc&&(C.res||0)>2560)C.res=2560;try{await compPsd0(proc)}finally{C.res=r0}}
@@ -9633,11 +9635,11 @@ function compInit(){const cv=document.getElementById('cp-canvas'),box=document.g
   if(C.pend){const q=C.pend;C.pend=null;C.pid=S.P[q.pid]&&!S.P[q.pid].libre?q.pid:'';const x=(S.P[q.pid]?.[q.lista]||[]).find(z=>z.id===q.id);if(x)cargarBitmap(x).then(bm=>compCargaBitmap(bm,x.nombre||x.etapa||'pieza','propia')).catch(()=>toast('No pude abrir esa imagen'))}
   let drag=null;const pos=e=>{const r=cv.getBoundingClientRect(),Tx=C.Tx;return {sx:e.clientX-r.left,sy:e.clientY-r.top,x:(e.clientX-r.left-Tx.ox)/Tx.s,y:(e.clientY-r.top-Tx.oy)/Tx.s}};
   cv.addEventListener('pointerdown',e=>{if(!C.Tx)return;const q=pos(e),Tx=C.Tx;let h=null,best=22;for(const m of compManijas()){const d=Math.hypot(Tx.X(m.x)-q.sx,Tx.Y(m.y)-q.sy);if(d<best){best=d;h=m}}
-    if(h)drag={id:h.id};else if((()=>{const id=compVolEn(q.x,q.y);if(!id)return false;C.vSel=id;const v=C.vols.find(x=>x.id===id),g0=compVolSuelo(q.x,q.y);drag={id:'vol',vid:id,dx:g0?v.x-g0.x:0,dz:g0?v.z-g0.z:0};return true})()){}else{const M=compMarco();if(q.x>=M.x&&q.x<=M.x+M.w&&q.y>=M.y&&q.y<=M.y+M.h)drag={id:'marco',dx:q.x-M.x,dy:q.y-M.y}}
+    if(h)drag={id:h.id};else if((()=>{const id=compVolEn(q.x,q.y);if(!id)return false;C.vSel=id;const v=C.vols.find(x=>x.id===id),K=compCam(),bp=K?compVolProy(K,compVolCam(K)(v.x,v.y||0,v.z)):[q.x,q.y];drag={id:'vol',vid:id,ou:q.x-bp[0],ov:q.y-bp[1]};return true})()){}else{const M=compMarco();if(q.x>=M.x&&q.x<=M.x+M.w&&q.y>=M.y&&q.y<=M.y+M.h)drag={id:'marco',dx:q.x-M.x,dy:q.y-M.y}}
     if(drag){cv.setPointerCapture(e.pointerId);e.preventDefault()}});
   cv.addEventListener('pointermove',e=>{if(!drag||!C.Tx)return;const q=pos(e),P=C.persp,A=C.A;
     if(drag.id==='hz')P.hy=clamp(q.y/A,-1.5,2.5);else if(drag.id==='u1')P.u1=clamp(q.x,-3,4);else if(drag.id==='u2')P.u2=clamp(q.x,-3,4);else if(drag.id==='v3')P.v3=clamp(q.y/A,-4,5);
-    else if(drag.id==='fig'){C.fig.x=clamp(q.x,0,1);C.fig.y=clamp(q.y/A,P.hy+.02,1.6)}else if(drag.id==='vol'){const v=C.vols.find(x=>x.id===drag.vid),g0=compVolSuelo(q.x,q.y);if(v&&g0){v.x=clamp(g0.x+drag.dx,-200,200);v.z=clamp(g0.z+drag.dz,1,400)}}else if(drag.id==='marco'){C.fx=q.x-drag.dx;C.fy=q.y-drag.dy}
+    else if(drag.id==='fig'){C.fig.x=clamp(q.x,0,1);C.fig.y=clamp(q.y/A,P.hy+.02,1.6)}else if(drag.id==='vol'){const v=C.vols.find(x=>x.id===drag.vid),g0=v&&compVolSuelo(q.x-drag.ou,q.y-drag.ov,v.y||0);if(v&&g0){v.x=clamp(g0.x,-300,300);v.z=clamp(g0.z,1,500)}}else if(drag.id==='marco'){C.fx=q.x-drag.dx;C.fy=q.y-drag.dy}
     C.receta='';compDibuja()});
   const fin=()=>{if(drag){drag=null;compAjusta();compDibuja();compPanel()}};cv.addEventListener('pointerup',fin);cv.addEventListener('pointercancel',fin);
   cv.addEventListener('dragover',e=>e.preventDefault());cv.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f&&/^image\//.test(f.type))compCargaArchivo(f)});
