@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1l341u').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1l8boh').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -10790,9 +10790,10 @@ function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
 const V3_NEUTRA=()=>({...V3_POSES['De pie']});
 const V3_GUARDA=['modelo','propModo','guias','rend','figs','sel','props','capa','luz2','luz3','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla','perspCfg'];
 const v3dEstadoUtil=()=>{v3dFigSync();const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
-function v3dRecuerda(){try{if(S.v3d)localStorage.setItem('cdc.v3d',JSON.stringify(v3dEstadoUtil()))}catch{}}
-function v3dPersistePronto(){clearTimeout(V3.rT);V3.rT=setTimeout(v3dRecuerda,1500)}
-function v3dRestaura(){try{const o=JSON.parse(localStorage.getItem('cdc.v3d')||'null');if(!o)return null;if(o.modelo==='mio')o.modelo='maniqui';return {...v3Def(),...o,tab:'modelo'}}catch{return null}}
+/* El visor NO guarda solo: al cerrarlo se descarta lo que no guardaste (con «Mis poses», «Guardar esta luz como escena» o un export). Se borra lo que versiones anteriores recordaban. */
+function v3dRecuerda(){}
+function v3dPersistePronto(){}
+function v3dRestaura(){try{localStorage.removeItem('cdc.v3d')}catch{}return null}
 function v3dAplica(e,soloPose){const s=S.v3d;
   if(soloPose){s.pose={...e.pose};s.giro=clone(e.giro||{x:0,y:0,z:0});s.preset=e.preset||'Mía';v3dPose();v3dGiro()}
   else{const o=clone(e);if(o.modelo==='mio')o.modelo='maniqui';Object.assign(s,o);v3dModelo();v3dPose();v3dGiro();v3dLuz();v3dEscena()}
@@ -10853,7 +10854,7 @@ async function v3dAbrir(modo,tab){if(V3.open)return;S.v3d=S.v3d||v3dRestaura()||
   if(!V3.open||V3.tk!==tk)return;$('#v3d-carga')?.remove();v3dInit();if(S.v3d.persp)v3dPerspAplica();v3dPanel();v3dModelo();v3dCuerposCarga()}
 const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model','anillo','figs','matsF','matsK','propObjs','anat'];/* lo que vive solo mientras el visor está abierto */
 const v3dPerspGuardaCfg=()=>{const P=S.v3d?.persp;if(P)S.v3d.perspCfg={camH:P.camH,D:P.D,guias:P.guias,grid:P.grid,fondo:P.fondo}};
-function v3dCerrar(){v3dPerspGuardaCfg();if(S.v3d)S.v3d.persp=null;V3.perspTex=null;V3.perspBg=null;v3dRecuerda();V3.open=false;cancelAnimationFrame(V3.raf);
+function v3dCerrar(){S.v3d=null;V3.perspTex=null;V3.perspBg=null;clearTimeout(V3.rT);V3.open=false;cancelAnimationFrame(V3.raf);
   try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model&&!V3.figs)v3dDispone(V3.model);V3.anillo?.geometry?.dispose();V3.anillo?.material?.dispose();Object.values(V3.matsF||{}).forEach(m=>m.dispose());Object.values(V3.matsK||{}).forEach(m=>m.dispose());[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
   V3_RT.forEach(k=>V3[k]=null);V3.mixer=null;V3.bones=[];$('#overlay').innerHTML=''}
 async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)return;
