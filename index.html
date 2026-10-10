@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1o41jc').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1ojcot').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -10509,7 +10509,7 @@ function v3dTabPersp(s){const P=s.persp;if(!P)return '<p class="hint">Esta pesta
   return `<div class="v3-g"><b>Tu perspectiva</b><p class="hint" style="margin:0">La cámara sale de tu horizonte y tus puntos de fuga (${P.modo==='1'?'1 punto':P.modo==='3'?'3 puntos, con la cámara inclinada':'2 puntos'}) y no se mueve. Arrastra a los personajes por el piso: cambian de tamaño solos y se ven en perspectiva real. Un personaje de pie con la altura de la cámara tiene los ojos justo en el horizonte.</p>${sl('Altura de la cámara (m)','camH',.3,8,.1,P.camH)}${sl('Distancia al grupo (m)','D',3,40,.5,P.D)}<span class="lbl">Horizonte y puntos de fuga (cambian también en la herramienta)</span>${sl('Horizonte (arriba ← → abajo)','hy',-.5,1.5,.01,C.persp.hy).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${sl('PF1 (izquierda)','u1',-3,P.modo==='1'?2:.45,.01,C.persp.u1).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${P.modo==='1'?sl('Ángulo de visión','f1',.5,1.6,.01,C.persp.f1).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-'):sl('PF2 (derecha)','u2',.55,4,.01,C.persp.u2).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-')}${P.modo==='3'?sl('PF3 (arriba o abajo)','v3',-5,6,.01,C.persp.v3).replace('data-v3pp','data-v3pk').replace('id="v3pp-','id="v3pk-'):''}${chk('guias','Mostrar horizonte y puntos de fuga')}${chk('grid','Hoja de cuadrícula (1 m)')}${P.grid!==false?`<span class="lbl">Mover y girar la hoja (empieza como el piso)</span>${[['x','Izquierda ← → derecha (m)',-30,30,.1,'x'],['y','Altura (m)',-5,30,.1,'y'],['z','Al fondo ← → hacia ti (m)',-60,30,.1,'z'],['ry','Girar (°)',-180,180,1,'ry'],['rx','Inclinar adelante / atrás (°)',-90,90,1,'rx'],['rz','Inclinar de lado (°)',-90,90,1,'rz']].map(([k,l,mn,mx,st])=>sl(l,k,mn,mx,st,(P.hoja||{})[k]||0).replace('data-v3pp','data-v3ph').replace('id="v3pp-','id="v3ph-')).join('')}${chk('pegar','Los personajes se pegan a la hoja')}${chk('inclina','Inclinarlos con la hoja (pegados a una pared o rampa; si no, quedan de pie)')}<div class="prow"><button class="btn sm" data-act="v3d-hoja-0">Volver al piso</button></div>`:''}${V3.perspBg?chk('fondo','Mi boceto de fondo'):''}<div class="prow"><button class="btn sm" data-act="v3d-pp-guarda" title="Guarda esta perspectiva para abrirla y ajustarla después en la herramienta">★ Guardar esta perspectiva</button></div></div>
   <div class="v3-g"><b>Orientar al personaje seleccionado</b><div class="chips">${ori.map(([k,n])=>`<button class="ch xs" data-act="v3d-pp-yaw" data-o="${k}">${n}</button>`).join('')}</div></div>
   <div class="v3-g"><b>Armar el espacio</b><p class="hint" style="margin:0">Cajas, escalones y muros para dar escala y apoyo. Se arrastran por el piso igual que los personajes.</p><div class="chips">${[['f:caja','Caja'],['f:escalon','Escalón'],['f:plataforma','Plataforma'],['f:pared','Muro'],['f:escalera','Escalera']].map(([k,n])=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${k}">＋ ${n}</button>`).join('')}<button class="ch xs on" data-act="v3d-tab" data-k="objetos">Ciudades, pueblos, bosques y más →</button></div></div>
-  <div class="v3-g"><b>Sacar el render</b><p class="hint" style="margin:0">El render sale del tamaño de tu encuadre, listo para usarlo sobre tu boceto.</p><div class="prow"><button class="btn sm pri" data-act="v3d-pp-png" data-g="0">PNG sobre mi boceto</button><button class="btn sm" data-act="v3d-pp-png" data-g="1">PNG con guías</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-sin">Solo personajes (PNG transparente)</button><button class="btn sm" data-act="v3d-pp-psd">PSD en capas</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-vuelve">Volver a la herramienta</button><button class="btn sm ghost" data-act="v3d-pp-sale">Salir de la perspectiva</button></div></div>`}
+  ${v3dPrecisionHTML()}<div class="v3-g"><b>Sacar el render</b><p class="hint" style="margin:0">El render sale del tamaño de tu encuadre, listo para usarlo sobre tu boceto.</p><div class="prow"><button class="btn sm pri" data-act="v3d-pp-png" data-g="0">PNG sobre mi boceto</button><button class="btn sm" data-act="v3d-pp-png" data-g="1">PNG con guías</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-sin">Solo personajes (PNG transparente)</button><button class="btn sm" data-act="v3d-pp-psd">PSD en capas</button></div><div class="prow"><button class="btn sm" data-act="v3d-pp-vuelve">Volver a la herramienta</button><button class="btn sm ghost" data-act="v3d-pp-sale">Salir de la perspectiva</button></div></div>`}
 async function v3dPerspPng(guias){const P=S.v3d.persp;if(!P||!V3.renderer)return;const r=V3.renderer,cv=r.domElement,pr=r.getPixelRatio(),an0=V3.anillo?.visible;if(V3.anillo)V3.anillo.visible=false;r.setPixelRatio(Math.max(2,pr));v3dResize();r.render(V3.scene,V3.camera);
   const t=document.createElement('canvas');t.width=cv.width;t.height=cv.height;const g=t.getContext('2d');g.drawImage(cv,0,0);if(guias)v3dPerspGuiasDibuja(g,t.width,t.height,t.width/(cv.clientWidth||t.width));
   if(V3.anillo)V3.anillo.visible=!!an0;r.setPixelRatio(pr);v3dResize();await bajarBlob(slug(S.P[S.cur]?.nombre||P.nombre||'perspectiva',40)+'-personajes-perspectiva'+(guias?'-guias':'')+'.png',await aBlob(t))}
@@ -10525,7 +10525,7 @@ function v3dInit(){const {T,OrbitControls}=V3.lib,box=$('#v3d-cv');V3.T=T;V3.shK
   const r=V3.renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));r.shadowMap.enabled=true;r.shadowMap.type=T.PCFSoftShadowMap;r.localClippingEnabled=true;r.outputColorSpace=T.SRGBColorSpace;
   box.append(r.domElement);r.domElement.id='v3d-canvas';
   V3.scene=new T.Scene();V3.camera=new T.PerspectiveCamera(30,1,.05,200);V3.camera.position.set(0,1.1,4.2);
-  V3.controls=new OrbitControls(V3.camera,r.domElement);V3.controls.target.set(0,.95,0);V3.controls.addEventListener('change',()=>{V3.dirty=true});
+  V3.controls=new OrbitControls(V3.camera,r.domElement);V3.controls.rotateSpeed=V3.controls.zoomSpeed=V3.controls.panSpeed=v3dPref().cam;V3.controls.target.set(0,.95,0);V3.controls.addEventListener('change',()=>{V3.dirty=true});
   V3.key=new T.DirectionalLight(0xffffff,2);V3.key.castShadow=true;V3.key.shadow.mapSize.set(2048,2048);V3.key.shadow.bias=-.0004;setTimeout(v3dRendimiento,0);const sc=V3.key.shadow.camera;sc.left=-3;sc.right=3;sc.top=3;sc.bottom=-3;sc.near=.5;sc.far=20;
   V3.hemi=new T.HemisphereLight(0xffffff,0x8e96a8,.6);V3.rim=new T.DirectionalLight(0xffffff,0);V3.l2=new T.DirectionalLight(0xffffff,0);V3.l3=new T.DirectionalLight(0xffffff,0);
   V3.suelo=new T.Mesh(new T.PlaneGeometry(40,40),new T.ShadowMaterial({opacity:.38}));V3.suelo.rotation.x=-Math.PI/2;V3.suelo.receiveShadow=true;
@@ -10918,9 +10918,9 @@ document.addEventListener('pointerdown',e=>{if(!V3.open||e.target.id!=='v3d-canv
   if(hp&&(!h||hp.distance<h.distance)){let o=hp.object;while(o&&o.userData.pid===undefined)o=o.parent;const p=o&&(S.v3d.props||[]).find(x=>x.id===o.userData.pid);if(p&&!p.mano){if(S.v3d.propSel!==p.id){S.v3d.propSel=p.id;if(S.v3d.tab==='objetos'){S.v3d.objSec='escena';v3dPropsPos();v3dPanel()}}V3.arr={prop:p.id,x0:e.clientX,y0:e.clientY,px:p.x||0,pz:p.z||0,py:p.y||0,p0:v3dHojaCfg()?v3dPlanoHoja(ray,v3dHojaCfg()):v3dPlano(ray,p.y||0),hs:p.hs,ht:p.ht,mov:false};if(V3.controls)V3.controls.enabled=false}return}
   if(!h)return;let o=h.object;while(o&&!V3.figs.some(x=>x.model===o))o=o.parent;const i=V3.figs.findIndex(x=>x.model===o);if(i<0)return;
   if(i!==(S.v3d.sel||0))v3dFigSel(i);const f=V3.figs[i].f,Hh=v3dHojaCfg(),p0=Hh?v3dPlanoHoja(ray,Hh):v3dPlano(ray,V3.figs[i].model.position.y-(f.py||0));V3.arr={i,x0:e.clientX,y0:e.clientY,px:f.px||0,pz:f.pz||0,py:f.py||0,hs:f.hs,ht:f.ht,p0,mov:false};if(V3.controls)V3.controls.enabled=false},true);
-document.addEventListener('pointermove',e=>{const A=V3.arr;if(!A||!V3.open)return;if(A.prop){const p=(S.v3d.props||[]).find(x=>x.id===A.prop);if(!p)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;if(e.shiftKey)p.y=clamp(A.py-(e.clientY-A.y0)*.012,0,2);else{const Hh=v3dHojaCfg(),Lm=70;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);p.hs=clamp(A.hs+(a1.s-a0.s),-60,60);p.ht=clamp(A.ht+(a1.t-a0.t),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),A.py);if(p1&&A.p0){p.x=clamp(A.px+(p1.x-A.p0.x),-Lm,Lm);p.z=clamp(A.pz+(p1.z-A.p0.z),-Lm,Lm)}}}v3dPropsPos();return}
+document.addEventListener('pointermove',e=>{const A=V3.arr;if(!A||!V3.open)return;if(A.prop){const p=(S.v3d.props||[]).find(x=>x.id===A.prop);if(!p)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;if(e.shiftKey)p.y=clamp(A.py-(e.clientY-A.y0)*.012*v3dArrK(e),0,20);else{const Hh=v3dHojaCfg(),Lm=70;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);p.hs=clamp(v3dSnap(A.hs+(a1.s-a0.s)*v3dArrK(e)),-60,60);p.ht=clamp(v3dSnap(A.ht+(a1.t-a0.t)*v3dArrK(e)),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),A.py);if(p1&&A.p0){p.x=clamp(v3dSnap(A.px+(p1.x-A.p0.x)*v3dArrK(e)),-Lm,Lm);p.z=clamp(v3dSnap(A.pz+(p1.z-A.p0.z)*v3dArrK(e)),-Lm,Lm)}}}v3dPropsPos();return}
   const en=V3.figs?.[A.i];if(!en)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;const f=en.f;
-  if(e.shiftKey)f.py=clamp(A.py-(e.clientY-A.y0)*.012,-1,2.5);else{const Hh=v3dHojaCfg(),Lm=S.v3d.persp?30:3.2;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);f.hs=clamp(A.hs+(a1.s-a0.s),-60,60);f.ht=clamp(A.ht+(a1.t-a0.t),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),en.model.position.y-(f.py||0));if(p1&&A.p0){f.px=clamp(A.px+(p1.x-A.p0.x),-Lm,Lm);f.pz=clamp(A.pz+(p1.z-A.p0.z),-Lm,Lm)}}}
+  if(e.shiftKey)f.py=clamp(A.py-(e.clientY-A.y0)*.012*v3dArrK(e),-1,2.5);else{const Hh=v3dHojaCfg(),Lm=S.v3d.persp?30:3.2;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);f.hs=clamp(v3dSnap(A.hs+(a1.s-a0.s)*v3dArrK(e)),-60,60);f.ht=clamp(v3dSnap(A.ht+(a1.t-a0.t)*v3dArrK(e)),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),en.model.position.y-(f.py||0));if(p1&&A.p0){f.px=clamp(v3dSnap(A.px+(p1.x-A.p0.x)*v3dArrK(e)),-Lm,Lm);f.pz=clamp(v3dSnap(A.pz+(p1.z-A.p0.z)*v3dArrK(e)),-Lm,Lm)}}}
   v3dColoca(en.model,f);v3dAnillo();v3dPersistePronto()},true);
 const v3dSueltaArr=e=>{const A=V3.arr;if(!A)return;V3.arr=null;if(V3.controls)V3.controls.enabled=true;if(A.mov){V3.d0=null;v3dPanel()}};
 document.addEventListener('pointerup',v3dSueltaArr,true);document.addEventListener('pointercancel',v3dSueltaArr,true);
@@ -11011,7 +11011,7 @@ function v3dTabCamara(s){const ch=v3Ch;return `<div class="chips"><span class="l
     <div class="chips"><span class="lbl">Rendimiento</span><button class="ch xs ${!v3dLigero()?'on':''}" data-act="v3d-rend" data-k="normal">Normal (nítido)</button><button class="ch xs ${v3dLigero()?'on':''}" data-act="v3d-rend" data-k="ligero">Ligero (celular)</button></div>
     <div class="chips"><span class="lbl">Fondo</span>${Object.keys(V3_FONDO_N).map(k=>ch('v3d-fondo',k,V3_FONDO_N[k],s.fondo===k)).join('')}</div>
     <label class="chk"><input type="checkbox" data-v3chk="rej" ${s.rej?'checked':''}><span>Cuadrícula del piso</span></label><label class="chk"><input type="checkbox" data-v3chk="cielo" ${s.cielo?'checked':''}><span>Guías de perspectiva: horizonte, puntos de fuga y líneas hacia el cielo (siguen a la cámara)</span></label><label class="chk"><input type="checkbox" data-v3chk="sombra" ${s.sombra?'checked':''}><span>Suelo y sombra</span></label>
-    <div class="prow"><button class="btn sm" data-act="v3d-encuadra">Encuadrar</button><button class="btn sm" data-act="v3d-reset-giro">Quitar giro del modelo</button></div>`}
+    <div class="prow"><button class="btn sm" data-act="v3d-encuadra">Encuadrar</button><button class="btn sm" data-act="v3d-reset-giro">Quitar giro del modelo</button></div>${v3dPrecisionHTML()}`}
 function v3dTabGuardar(s){const ch=v3Ch;  const esMio=s.modelo==='mio';
   return `<p class="hint" style="margin:0">La imagen sale tal como la ves en pantalla.${esMio?' Como el modelo es tuyo, la referencia queda marcada con «licencia no verificada».':''}</p>
     <label class="esc-r"><span class="lbl">Capa del moodboard</span><select data-v3sel="capa">${capasDe(S.P[S.cur]).map(l=>`<option value="${l.k}" ${capaDestino({capa:s.capa})===l.k?'selected':''}>${esc(capaNombre(S.P[S.cur],l.k))}</option>`).join('')}</select></label>
@@ -11063,11 +11063,96 @@ async function v3dEscenaCarga(id){const x=(S.ajustes.escenas3d||[]).find(v=>v.id
   else{if(V3.open)v3dCerrar();S.v3d={...v3Def(),...st,tab:'modelo'};await v3dAbrir('maniqui');await esp(()=>V3.camera&&V3.figs);await new Promise(r=>setTimeout(r,500));
     if(x.cam&&V3.camera&&V3.controls){V3.camera.position.fromArray(x.cam.p);V3.controls.target.fromArray(x.cam.t);V3.controls.update();V3.dirty=true}}
   if(S.v3d)S.v3d.escenaId=id;v3dPanel();toast('Escena «'+x.nombre+'» abierta: ajusta y guarda los cambios')}
+/* ============ Llevar la escena a Blender ============
+   El navegador no puede escribir un .blend. Se arma un .zip con: la escena en .glb (personajes con su pose, objetos, suelo o hoja, cámara y luz), un script de Blender que la abre con la cámara exacta (lente y desplazamiento) y tu boceto de fondo, y un LEEME. En Blender: abres el .py en «Scripting», lo ejecutas y guardas con Ctrl+S: ya es un .blend. */
+async function v3dBlender(){const s=S.v3d,T=V3.T;if(!V3.renderer||!V3.camera||!T){toast('Abre primero la escena');return}
+  if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
+  toast('Preparando la escena para Blender…');
+  try{const g=v3dHorneado();g.children.forEach(m=>{m.name='Personaje'});
+    (V3.propObjs||[]).forEach((o,i)=>{const p=(s.props||[]).find(x=>x.id===o.userData.pid);o.updateMatrixWorld(true);const c=o.clone(true);c.name=((p&&(V3_PROP_NOM[p.k]||p.k))||'Objeto').replace(/[^\w]+/g,'_')+'_'+(i+1);g.add(c)});
+    if(s.sombra||s.persp){V3.suelo.updateMatrixWorld(true);const hoja=!!(s.persp&&s.persp.hoja&&V3.suelo.position.lengthSq()>0),su=new T.Mesh(new T.PlaneGeometry(240,240),new T.MeshStandardMaterial({color:0x7a7f88,roughness:1}));su.name=hoja?'Hoja':'Suelo';su.applyMatrix4(V3.suelo.matrixWorld);g.add(su)}
+    V3.camera.updateMatrixWorld(true);const e=V3.camera.projectionMatrix.elements,cv=V3.renderer.domElement,asp=cv.width/cv.height,cam=new T.PerspectiveCamera(2*Math.atan(1/e[5])*180/Math.PI,asp,.1,500);cam.name='Camara';cam.position.copy(V3.camera.getWorldPosition(new T.Vector3()));cam.quaternion.copy(V3.camera.getWorldQuaternion(new T.Quaternion()));g.add(cam);
+    const sol=new T.DirectionalLight(V3.key.color,V3.key.intensity);sol.name='Luz_principal';sol.position.copy(V3.key.position);sol.target.position.copy(V3.key.target.position);sol.lookAt(sol.target.position);g.add(sol);
+    const {GLTFExporter}=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/exporters/GLTFExporter.js/+esm'),buf=await new GLTFExporter().parseAsync(g,{binary:true}),
+      nom=slug(S.P[S.cur]?.nombre||'escena',30)+'-escena-3d',lens=Math.round(36*e[0]/2*100)/100,sx=Math.round(e[8]/2*10000)/10000,rx=1920,ry=Math.round(rx/asp),sy=Math.round(e[9]/2*(ry/rx)*10000)/10000,boc=!!(s.persp&&V3.perspBg&&s.persp.fondo!==false);
+    const py=`# Escena de Potenciador de Conceptos -> Blender
+# Cómo usarlo: abre Blender, pestaña «Scripting», «Open» y elige este archivo, luego «Run Script» (el .glb tiene que estar en la misma carpeta). Después guarda con Ctrl+S: ya es tu .blend.
+import bpy, os
+txt = bpy.context.space_data.text if getattr(bpy.context, 'space_data', None) and bpy.context.space_data.type == 'TEXT_EDITOR' else None
+carpeta = os.path.dirname(bpy.path.abspath(txt.filepath)) if (txt and txt.filepath) else os.path.dirname(bpy.data.filepath)
+bpy.ops.import_scene.gltf(filepath=os.path.join(carpeta, '${nom}.glb'))
+sc = bpy.context.scene
+sc.render.resolution_x = ${rx}
+sc.render.resolution_y = ${ry}
+sc.render.resolution_percentage = 100
+cam = next((o for o in bpy.data.objects if o.type == 'CAMERA'), None)
+if cam:
+    d = cam.data
+    d.sensor_fit = 'HORIZONTAL'
+    d.sensor_width = 36.0
+    d.lens = ${lens}
+    d.shift_x = ${sx}
+    d.shift_y = ${sy}
+    d.clip_start = 0.1
+    d.clip_end = 1000
+    sc.camera = cam
+${boc?`    ruta = os.path.join(carpeta, '${nom}-boceto.png')
+    if os.path.exists(ruta):
+        d.show_background_images = True
+        b = d.background_images.new()
+        b.image = bpy.data.images.load(ruta)
+        b.alpha = 0.8
+        b.display_depth = 'BACK'
+        b.frame_method = 'STRETCH'
+`:''}for o in bpy.data.objects:
+    if o.type == 'LIGHT' and o.data.type == 'SUN':
+        o.data.energy = 3.0
+try:
+    for a in bpy.context.screen.areas:
+        if a.type == 'VIEW_3D':
+            a.spaces[0].region_3d.view_perspective = 'CAMERA'
+            a.spaces[0].shading.type = 'MATERIAL'
+except Exception:
+    pass
+`;
+    const leeme=`ESCENA PARA BLENDER (Potenciador de Conceptos)
+
+Qué trae:
+- ${nom}.glb: personajes con la pose puesta (como mallas, sin esqueleto), objetos y lugares, suelo (o la hoja inclinada), cámara y luz. Medidas en metros.
+${boc?'- '+nom+'-boceto.png: tu boceto de fondo para calcar o pintar encima.\n':''}- ${nom}-blender.py: abre el .glb y deja la cámara exacta (lente, desplazamiento y resolución ${rx}x${ry}).
+
+Pasos:
+1. Descomprime todo en una carpeta.
+2. Abre Blender (cualquier versión 3.6 o más nueva).
+3. Pestaña «Scripting» > Open > elige ${nom}-blender.py > Run Script.
+4. Ctrl+S para guardarlo como .blend.
+
+También puedes arrastrar solo el .glb a Blender (File > Import > glTF), pero así la cámara no queda con el desplazamiento de tu perspectiva.
+`;
+    const z=new JSZip();z.file(nom+'.glb',buf);z.file(nom+'-blender.py',py);z.file('LEEME.txt',leeme);
+    if(boc){const bl=await new Promise(ok=>V3.perspBg.toBlob(ok,'image/png'));if(bl)z.file(nom+'-boceto.png',bl)}
+    await bajarBlob(nom+'-para-blender.zip',await z.generateAsync({type:'blob'}));toast('Listo: descomprime y sigue el LEEME')}
+  catch(er){toast('No pude armar la escena para Blender: '+(er?.message||'error'))}}
 function v3dEscenasHTML(){const L=(S.ajustes.escenas3d||[]).slice().sort((a,b)=>b.ts-a.ts),act=L.find(v=>v.id===S.v3d.escenaId);
   return `<div class="v3-g"><b>Mis escenas</b><p class="hint" style="margin:0">Guarda la escena completa: personajes y poses, objetos y lugares, luz, lente, la cámara y la hoja${S.v3d.persp?', más tu perspectiva':''}. Después la abres igual y la sigues ajustando.</p>
     ${act?`<div class="prow"><button class="btn sm pri" data-act="v3d-esc-guarda">Guardar cambios en «${esc(corto(act.nombre,22))}»</button><button class="btn sm" data-act="v3d-esc-suelta">Dejar de editarla</button></div>`:''}
     <div class="prow"><input type="text" id="v3d-en" placeholder="Nombre (ej. Pueblo al atardecer)" style="flex:1 1 140px"><button class="btn sm ${act?'':'pri'}" data-act="v3d-esc-nueva">${act?'Guardar como otra':'💾 Guardar escena'}</button></div>
-    ${L.map(v=>`<div class="prow" style="align-items:center">${v.mini?`<img src="${v.mini}" alt="" style="width:64px;height:auto;border-radius:6px">`:''}<button class="btn sm ${v.id===S.v3d.escenaId?'pri':''}" style="flex:1;text-align:left" data-act="v3d-esc-abre" data-id="${v.id}">${esc(corto(v.nombre,28))}<small class="muted"> · ${v.estado.figs?.length||1} pers. · ${(v.estado.props||[]).length} objetos${v.pers?' · perspectiva':''}</small></button><button class="btn sm ghost danger" data-act="v3d-esc-borra" data-id="${v.id}" title="Borrar">✕</button></div>`).join('')}</div>`}
+    ${L.map(v=>`<div class="prow" style="align-items:center">${v.mini?`<img src="${v.mini}" alt="" style="width:64px;height:auto;border-radius:6px">`:''}<button class="btn sm ${v.id===S.v3d.escenaId?'pri':''}" style="flex:1;text-align:left" data-act="v3d-esc-abre" data-id="${v.id}">${esc(corto(v.nombre,28))}<small class="muted"> · ${v.estado.figs?.length||1} pers. · ${(v.estado.props||[]).length} objetos${v.pers?' · perspectiva':''}</small></button><button class="btn sm ghost danger" data-act="v3d-esc-borra" data-id="${v.id}" title="Borrar">✕</button></div>`).join('')}<div class="prow"><button class="btn sm" data-act="v3d-blender" title="Un .zip con la escena en .glb, un script de Blender que deja la cámara exacta y tu boceto de fondo">🟠 Llevar esta escena a Blender</button></div><p class="hint" style="margin:0">Sale un .zip con la escena (.glb), un script que la abre en Blender con la cámara exacta y las instrucciones. Los personajes van como mallas con la pose puesta (sin esqueleto).</p></div>`}
+/* ============ Precisión del mouse: que no se mueva de más ============ */
+function v3dPref(){const a=S.ajustes=S.ajustes||{};return a.v3dPref||(a.v3dPref={sens:.6,snap:0,cam:.6})}
+const v3dArrK=e=>v3dPref().sens*((e&&(e.ctrlKey||e.metaKey))?.25:1),v3dSnap=v=>{const q=v3dPref().snap;return q?Math.round(v/q)*q:v};
+function v3dPrecisionHTML(){const P=v3dPref(),sl=(l,k,mn,mx,st,v)=>`<label class="v3-s"><span>${l} <b id="v3pf-${k}">${Math.round(v*100)/100}</b></span><input type="range" data-v3pf="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`;
+  return `<div class="v3-g"><b>Precisión del mouse</b><p class="hint" style="margin:0">Si algo se mueve de más, baja la sensibilidad. Mantén <b>Ctrl</b> mientras arrastras para ir en cámara lenta. Con las <b>flechas</b> del teclado mueves lo elegido de a 5 cm (Mayús: 50 cm, Ctrl: 1 cm).</p>${sl('Arrastrar personajes y objetos','sens',.1,1.5,.05,P.sens)}${sl('Cámara (girar, acercar, mover)','cam',.1,1.5,.05,P.cam)}
+    <div class="chips"><span class="lbl">Imán a la cuadrícula</span>${[[0,'Sin imán'],[.1,'10 cm'],[.25,'25 cm'],[.5,'50 cm'],[1,'1 m']].map(([k,n])=>`<button class="ch xs ${P.snap===k?'on':''}" data-act="v3d-snap" data-k="${k}">${n}</button>`).join('')}</div></div>`}
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.v3pf;if(!k||!t.closest?.('#v3d'))return;const P=v3dPref();P[k]=+t.value;const b=$('#v3pf-'+k);if(b)b.textContent=Math.round(+t.value*100)/100;if(k==='cam'&&V3.controls){V3.controls.rotateSpeed=V3.controls.zoomSpeed=V3.controls.panSpeed=P.cam}});
+document.addEventListener('change',e=>{if(e.target.dataset?.v3pf)marcarAj()});
+/* flechas: mueven lo elegido con precisión */
+document.addEventListener('keydown',e=>{if(!V3.open||!/^Arrow/.test(e.key)||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||''))return;const s=S.v3d;if(!s)return;
+  const st=e.shiftKey?.5:(e.ctrlKey||e.metaKey)?.01:.05,dx=e.key==='ArrowRight'?st:e.key==='ArrowLeft'?-st:0,dz=e.key==='ArrowUp'?-st:e.key==='ArrowDown'?st:0;if(!dx&&!dz)return;
+  const p=s.tab==='objetos'?(s.props||[]).find(x=>x.id===s.propSel&&!x.mano):null,en=!p?V3.figs?.[s.sel||0]:null,H=v3dHojaCfg(),d=new V3.T.Vector3(dx,0,dz);e.preventDefault();
+  if(p){if(H&&p.hs!=null){p.hs+=d.dot(H.u);p.ht+=d.dot(H.w)}else{p.x=(p.x||0)+dx;p.z=(p.z||0)+dz;p.hs=null}v3dPropsPos();v3dPanel()}
+  else if(en){const f=en.f;if(H&&f.hs!=null){f.hs+=d.dot(H.u);f.ht+=d.dot(H.w)}else{f.px=(f.px||0)+dx;f.pz=(f.pz||0)+dz;f.hs=null}v3dColoca(en.model,f);v3dAnillo();v3dPanel()}
+  V3.dirty=true},true);
 function v3dBarra(){const n=(S.ajustes.poses3d||[]).length;return v3dFigChips()+`<div class="v3-bar"><button class="btn sm" data-act="v3d-neutra" title="Vuelve el cuerpo a la pose neutra">↺ Pose neutra</button><button class="btn sm ghost" data-act="v3d-todo-neutro" title="Pose, luz, lente y fondo como al empezar">↺ Todo</button><button class="btn sm ghost" data-act="v3d-reset-escena" title="Personajes, props, luz, lente, fondo y hoja como al abrir; no tienes que cerrar el visor">↺ Escena nueva</button><button class="btn sm" data-act="v3d-tab" data-k="poses">★ Mis poses${n?` (${n})`:''}</button><button class="btn sm ${S.v3d.guias?.on?'pri':''}" data-act="v3d-guia" data-k="on" title="Líneas de ojos, nariz, boca, hombros y medio del cuerpo">▤ Guías</button><button class="btn sm ${S.v3d.escenaId?'pri':''}" data-act="v3d-esc-rapido" title="Guarda la escena completa (o actualiza la que estás editando)">💾 Guardar escena</button><button class="btn sm ${S.v3d.cielo&&!S.v3d.persp?'pri':''}" data-act="v3d-cielo" title="Horizonte, puntos de fuga y líneas de fuga hacia el cielo según donde pongas la cámara; dice si hay cuadrícula">⌖ Guías de cámara</button></div>`}
 /* ---------- exportar el 3D para Photoshop y Procreate: PNG sin fondo, PSD en capas y el modelo con la pose puesta ---------- */
 /* PNG con transparencia a partir de dos renders (fondo negro y fondo blanco): la diferencia da el alfa exacto, incluso en bordes suavizados y sombras */
@@ -11862,6 +11947,8 @@ async function accion(a,el){
     case 'v3d-esc-suelta':{S.v3d.escenaId=null;v3dPanel();break}
     case 'v3d-esc-abre':v3dEscenaCarga(ds.id);break;
     case 'v3d-esc-borra':{if(confirm('¿Borrar esta escena guardada?')){S.ajustes.escenas3d=(S.ajustes.escenas3d||[]).filter(v=>v.id!==ds.id);if(S.v3d.escenaId===ds.id)S.v3d.escenaId=null;marcarAj();v3dPanel()}break}
+    case 'v3d-blender':v3dBlender();break;
+    case 'v3d-snap':{v3dPref().snap=+ds.k;marcarAj();v3dPanel();break}
     case 'v3d-cielo':{S.v3d.cielo=!S.v3d.cielo;v3dEscena();v3dPanel();break}
     case 'v3d-prop-sel':{S.v3d.propSel=ds.id;v3dPanel();break}
     case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.q=null;if(ds.m)p.rx=p.ry=p.rz=0;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
