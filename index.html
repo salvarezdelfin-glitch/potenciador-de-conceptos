@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv1omlqw').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv5hhpte').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -9814,6 +9814,126 @@ const V3_POSES_G=[['Básicas',['De pie','Contrapposto','Caminar','Correr','Agach
  ['Sentado y agachado',['Sentado erguido','Sentado relajado','Sentado inclinado','Sentado con piernas cruzadas','Sentado leyendo','Sentado derrotado','Rodilla en tierra','Cuclillas','Recogiendo algo','Atándose el zapato','Aterrizaje de héroe']],
  ['Combate y armas (más)',['Gancho','Uppercut','Codazo','Rodillazo','Patada baja','Patada giratoria','Bloqueo bajo','Parada con espada','Corte horizontal','Corte descendente','Arquero tensando','Lanzando jabalina','Lanzando una piedra','Apuntando una pistola','Apuntando un rifle','Salto de ataque','Victoria con arma en alto','Lanzando un hechizo','Hechizo con ambas manos']],
  ['Deportes y baile',['Pateando un balón','Golpe de bate','Saque de tenis','Estirando','Baile con cadera','Baile con giro','Pose elegante']]];
+/* ============ Poses por mood o personaje: héroe, guerrero, sereno, enojado, peleando, dios imponente, villano… ============
+   Cada una se define por lo que cambia respecto a «De pie». Elige la actitud y salen poses hechas para eso; también se pueden pedir con palabras. */
+const V3_POSES_MOOD={
+ /* héroe */
+ 'Héroe mirando al horizonte':{tb:-8,hn:-10,aLs:-6,aLp:22,aLe:18,aRs:-6,aRp:22,aRe:18,lLp:14,lRp:14},
+ 'Héroe puño al cielo':{tb:-10,hn:-18,aRs:172,aRp:8,aRe:12,aLs:-6,aLp:24,aLe:30,lLp:16,lRp:16,lLk:4,lRk:4},
+ 'Héroe con las manos en la cadera':{tb:-10,hn:-12,aLs:-10,aLp:48,aLe:105,aRs:-10,aRp:48,aRe:105,lLp:20,lRp:20},
+ 'Héroe adelantando un pie':{tb:-4,hn:-8,aLs:-12,aLp:20,aLe:20,aRs:-12,aRp:20,aRe:20,lLs:22,lLp:10,lLk:20,lRs:-18,lRp:10,lRk:4},
+ 'Héroe contra el viento':{tb:18,hn:-18,aLs:-30,aLe:40,aRs:35,aRe:40,lLs:30,lLk:30,lRs:-26,lRk:14},
+ 'Héroe herido':{tb:26,hn:10,aLs:20,aLp:12,aLe:55,aRs:40,aRp:10,aRe:60,lLs:90,lLk:98,lRs:-6,lRk:105},
+ 'Héroe protegiendo':{tb:6,tt:-10,aLs:75,aLp:25,aLe:8,aRs:5,aRp:20,aRe:30,lLs:14,lLp:14,lLk:12,lRs:-16,lRp:12,lRk:10},
+ 'Héroe pie en alto':{tb:10,hn:-6,aLs:30,aLp:6,aLe:85,aRs:10,aRp:25,aRe:20,lLs:60,lLk:75,lRs:-2,lRk:4},
+ 'Héroe victoria':{tb:-12,hn:-22,aLs:160,aLp:40,aLe:10,aRs:160,aRp:40,aRe:10,lLp:18,lRp:18},
+ /* guerrero */
+ 'Guerrero listo':{tb:8,tt:12,py:-10,hn:-4,aRs:60,aRp:10,aRe:90,aLs:40,aLp:12,aLe:100,lLs:26,lLp:14,lLk:24,lRs:-22,lRp:12,lRk:22},
+ 'Guerrero rugiendo':{tb:-14,hn:-26,aLs:20,aLp:60,aLe:50,aRs:20,aRp:60,aRe:50,lLp:18,lRp:18,lLk:10,lRk:10},
+ 'Guerrero apoyado en su arma':{tb:6,hn:2,aLs:50,aLp:2,aLe:75,aRs:50,aRp:2,aRe:75,lLs:4,lLp:10,lRs:-4,lRp:10},
+ 'Guerrero con arma al hombro':{tb:2,aRs:50,aRp:6,aRe:140,aLs:6,aLp:14,aLe:20,lLp:12,lRp:12,pz:-4},
+ 'Guerrero arrodillado con el arma clavada':{tb:16,hn:8,aLs:60,aLp:2,aLe:60,aRs:60,aRp:2,aRe:60,lLs:88,lLk:95,lRs:-6,lRk:108},
+ 'Guerrero en carga':{tb:30,hn:-14,aRs:75,aRp:10,aRe:70,aLs:40,aLe:90,lLs:50,lLk:55,lRs:-48,lRk:10,py:-6},
+ 'Guerrero doble arma':{tb:6,aLs:70,aLp:50,aLe:20,aRs:70,aRp:50,aRe:20,lLs:20,lLp:18,lLk:20,lRs:-20,lRp:18,lRk:18},
+ 'Guerrero preparando el golpe':{tb:-4,tt:-30,aRs:130,aRp:35,aRe:95,aLs:90,aLp:10,aLe:90,lLs:20,lLk:20,lRs:-22,lRk:12},
+ 'Guerrero en reposo':{tb:4,hn:8,aLs:12,aLp:14,aLe:25,aRs:25,aRp:8,aRe:60,pz:-6,lLs:-4,lRs:6,lRk:8},
+ 'Centinela con lanza':{aRs:35,aRp:4,aRe:15,aLs:-2,aLp:12,aLe:8,lLp:8,lRp:8},
+ /* sereno */
+ 'Meditando':{tb:2,hn:4,aLs:20,aLp:18,aLe:80,aRs:20,aRp:18,aRe:80,lLs:90,lLp:40,lLk:130,lRs:90,lRp:40,lRk:130},
+ 'Sereno de pie':{tb:-2,hn:-6,hl:2,aLs:3,aLp:12,aLe:14,aRs:3,aRp:12,aRe:14,lLp:4,lRp:4},
+ 'Manos juntas al pecho':{tb:4,hn:12,aLs:50,aLp:-6,aLe:130,aRs:50,aRp:-6,aRe:130},
+ 'Mirando al cielo':{tb:-10,hn:-28,aLs:4,aLp:14,aLe:16,aRs:4,aRp:14,aRe:16},
+ 'Brazos abiertos en calma':{tb:-6,hn:-12,aLs:10,aLp:70,aLe:10,aRs:10,aRp:70,aRe:10,lLp:6,lRp:6},
+ 'Equilibrio en una pierna':{aLs:150,aLp:30,aLe:40,aRs:150,aRp:30,aRe:40,lRs:60,lRp:50,lRk:120},
+ /* enojado */
+ 'Furia contenida':{tb:14,hn:12,aLs:-10,aLp:14,aLe:100,aRs:-10,aRp:14,aRe:100,lLp:12,lRp:12,lLk:6,lRk:6},
+ 'Rugido con brazos abiertos':{tb:-16,hn:-30,aLs:30,aLp:75,aLe:50,aRs:30,aRp:75,aRe:50,lLp:16,lRp:16,lLk:10,lRk:10},
+ 'Señalando con rabia':{tb:14,tt:12,hn:6,hy:-12,aRs:92,aRp:6,aRe:10,aLs:-12,aLp:16,aLe:110,lLs:14,lLp:12,lLk:10,lRs:-12,lRp:10},
+ 'Golpe al suelo':{tb:36,hn:10,aRs:35,aRe:20,aLs:20,aLe:60,lLs:90,lLk:95,lRs:-4,lRk:110},
+ 'Hombros altos amenazante':{tb:16,hn:16,aLs:6,aLp:22,aLe:40,aRs:6,aRp:22,aRe:40,lLp:14,lRp:14,lLk:8,lRk:8,hl:4},
+ 'Encarando':{tb:8,hn:16,aLs:10,aLp:20,aLe:70,aRs:10,aRp:20,aRe:70,lLs:6,lLp:10,lRs:-6,lRp:10},
+ /* peleando */
+ 'Boxeo guardia':{tb:10,tt:20,py:-14,hn:14,aLs:70,aLp:12,aLe:120,aRs:60,aRp:8,aRe:128,lLs:20,lLp:16,lLk:18,lRs:-18,lRp:16,lRk:18},
+ 'Cruzado de derecha':{tb:12,tt:-34,py:18,aRs:90,aRe:8,aLs:60,aLe:120,lLs:20,lLk:18,lRs:-22,lRk:30},
+ 'Esgrima en guardia':{tb:-4,tt:30,py:-18,hn:-2,aRs:70,aRp:8,aRe:35,aLs:-10,aLp:50,aLe:100,lLs:30,lLp:10,lLk:36,lRs:-30,lRp:16,lRk:14},
+ 'Estocada de esgrima':{tb:6,tt:34,aRs:90,aRe:4,aLs:-20,aLp:60,aLe:110,lLs:70,lLk:85,lRs:-40,lRk:6},
+ 'Patada voladora':{tb:-12,aLs:60,aLp:50,aLe:50,aRs:50,aRp:50,aRe:60,lLs:90,lLk:10,lRs:-20,lRk:60},
+ 'Lucha agarre':{tb:30,aLs:80,aLp:20,aLe:50,aRs:80,aRp:20,aRe:50,lLs:30,lLp:16,lLk:40,lRs:-26,lRp:14,lRk:34},
+ 'Giro de espada':{tb:10,tt:-60,py:20,aRs:70,aRp:60,aRe:20,aLs:50,aLp:50,aLe:50,lLs:20,lLk:40,lRs:-20,lRk:30},
+ 'Lanza en carga':{tb:20,tt:10,hn:-8,aRs:80,aRp:10,aRe:60,aLs:70,aLp:6,aLe:60,lLs:50,lLk:55,lRs:-40,lRk:8},
+ 'Recibiendo un golpe':{tb:-26,tt:-18,hn:-14,aLs:60,aLp:40,aLe:40,aRs:30,aRp:30,aRe:60,lLs:-20,lLk:20,lRs:14,lRk:16,tl:10},
+ 'Golpe hacia abajo':{tb:34,aLs:100,aLe:20,aRs:100,aRe:20,lLs:30,lLk:50,lRs:-30,lRk:20},
+ /* dios, jefe, poder */
+ 'Dios imponente de pie':{tb:-6,hn:-10,aLs:-4,aLp:26,aLe:22,aRs:-4,aRp:26,aRe:22,lLp:20,lRp:20,lLk:2,lRk:2},
+ 'Brazos cruzados poderoso':{tb:-8,hn:-8,aLs:42,aLp:-6,aLe:125,aRs:42,aRp:-6,aRe:125,lLp:20,lRp:20},
+ 'Un puño en el pecho':{tb:-6,hn:-8,aRs:48,aRp:2,aRe:140,aLs:-6,aLp:28,aLe:22,lLp:16,lRp:16},
+ 'Señalando al frente':{tb:-4,hn:-6,aRs:95,aRp:8,aRe:4,aLs:-6,aLp:26,aLe:40,lLs:16,lLp:16,lLk:8,lRs:-10,lRp:14,lRk:6},
+ 'Mirada desde arriba':{tb:-8,hn:12,hl:4,aLs:-6,aLp:24,aLe:30,aRs:-6,aRp:24,aRe:30,lLp:20,lRp:20},
+ 'Arma clavada en el suelo':{tb:6,hn:2,aLs:46,aLp:4,aLe:55,aRs:46,aRp:4,aRe:55,lLp:16,lRp:16,lLs:6,lRs:-6},
+ 'Sentado en trono':{tb:-2,hn:-2,aLs:30,aLp:26,aLe:75,aRs:30,aRp:26,aRe:75,lLs:88,lLp:14,lLk:88,lRs:88,lRp:14,lRk:88},
+ 'Trono relajado':{tb:-10,hn:6,tl:6,aLs:30,aLp:26,aLe:70,aRs:50,aRp:6,aRe:130,lLs:88,lLp:14,lLk:88,lRs:70,lRp:-10,lRk:70},
+ 'Pisando al enemigo':{tb:12,hn:6,aLs:20,aLp:14,aLe:40,aRs:60,aRp:10,aRe:50,lLs:55,lLk:60,lRs:-6,lRk:6},
+ /* villano */
+ 'Villano manos a la espalda':{tb:4,hn:4,aLs:-34,aLp:8,aLe:60,aRs:-34,aRp:8,aRe:60,lLp:10,lRp:10},
+ 'Villano riendo':{tb:-14,hn:-26,aLs:20,aLp:55,aLe:40,aRs:20,aRp:55,aRe:40,lLp:14,lRp:14,tl:6},
+ 'Villano de reojo':{tb:10,tt:24,hy:42,hn:8,aLs:25,aLp:12,aLe:50,aRs:5,aRp:18,aRe:20,lLp:10,lRp:10,pz:-4},
+ 'Garras al frente':{tb:20,hn:-4,aLs:75,aLp:20,aLe:60,aRs:75,aRp:20,aRe:60,lLs:10,lLk:20,lRs:-10,lRk:20},
+ /* sigilo y misterio */
+ 'Pegado a la pared':{tt:-30,hy:40,aLs:20,aLp:12,aLe:60,aRs:60,aRp:5,aRe:60,lLs:6,lLp:8,lRs:-6,lRp:8},
+ 'Encapuchado misterioso':{tb:14,hn:20,aLs:30,aLp:-6,aLe:85,aRs:30,aRp:-6,aRe:85,lLs:2,lRs:-2},
+ 'Asesino listo':{tb:44,hn:-14,aLs:-40,aLp:6,aLe:50,aRs:60,aRp:8,aRe:60,lLs:50,lLk:90,lRs:-30,lRk:50},
+ 'Espiando por una esquina':{tb:12,tt:30,hy:-40,aLs:60,aLe:80,aRs:10,aRe:30,lLs:10,lLk:10,lRs:-8,lRk:14},
+ /* tristeza */
+ 'Derrotado de rodillas':{tb:30,hn:30,aLs:12,aLp:6,aLe:20,aRs:12,aRp:6,aRe:20,lLs:88,lLp:10,lLk:125,lRs:88,lRp:10,lRk:125},
+ 'Abrazándose':{tb:12,hn:20,aLs:60,aLp:-10,aLe:130,aRs:60,aRp:-10,aRe:135,lLk:6,lRk:6},
+ 'Cabeza baja':{tb:20,hn:34,aLs:6,aLp:8,aLe:14,aRs:6,aRp:8,aRe:14},
+ 'Cara en las manos':{tb:40,hn:30,aLs:85,aLp:-4,aLe:140,aRs:85,aRp:-4,aRe:140,lLs:90,lLk:90,lRs:90,lRk:90},
+ /* alegría */
+ 'Salto de alegría':{tb:-10,hn:-14,aLs:160,aLp:30,aLe:20,aRs:160,aRp:30,aRe:20,lLs:30,lLk:60,lRs:20,lRk:70,lLp:16,lRp:16},
+ 'Giro feliz':{tb:-6,tt:20,aLs:0,aLp:85,aLe:6,aRs:0,aRp:85,aRe:6,lLs:6,lLk:30,lRs:-6},
+ 'Aplaudiendo':{hn:-4,aLs:70,aLp:-2,aLe:90,aRs:70,aRp:-2,aRe:90},
+ /* magia */
+ 'Canalizando energía':{tb:-4,hn:-6,aLs:60,aLp:50,aLe:90,aRs:60,aRp:50,aRe:90,lLp:16,lRp:16,lLk:10,lRk:10},
+ 'Escudo mágico':{tb:-8,aRs:90,aRp:5,aRe:30,aLs:5,aLp:18,aLe:60,lLs:12,lLp:14,lLk:14,lRs:-16,lRp:14,lRk:20},
+ 'Invocar hacia abajo':{tb:14,hn:6,aLs:30,aLp:40,aLe:10,aRs:30,aRp:40,aRe:10,lLp:14,lRp:14,lLk:8,lRk:8},
+ 'Bola de energía':{tb:6,hn:14,aLs:70,aLp:-2,aLe:95,aRs:70,aRp:-2,aRe:95,lLs:6,lLp:10,lRs:-6,lRp:10},
+ 'Hechizo al cielo':{tb:-8,hn:-30,aRs:170,aRp:10,aRe:15,aLs:30,aLp:30,aLe:50},
+ /* líder */
+ 'Discurso con brazo extendido':{tb:-2,hn:-4,aRs:100,aRp:30,aRe:20,aLs:-4,aLp:20,aLe:25,lLp:14,lRp:14},
+ 'Manos atrás al frente del ejército':{tb:-4,hn:-4,aLs:-30,aLp:10,aLe:70,aRs:-30,aRp:10,aRe:70,lLp:18,lRp:18},
+ 'Ordenando avanzar':{aRs:140,aRp:10,aRe:30,aLs:-6,aLp:26,aLe:35,lLs:14,lLp:14,lLk:6,lRs:-10,lRp:12},
+ /* cazador */
+ 'Cazador vigilando':{tb:38,hn:-20,aLs:50,aLe:70,aRs:55,aRe:80,lLs:80,lLk:100,lRs:-20,lRk:70},
+ /* noble */
+ 'Noble de pie':{tb:-4,hn:-4,aLs:44,aLp:-2,aLe:80,aRs:44,aRp:-2,aRe:80,lLp:4,lRp:4},
+ 'Reina':{tb:-6,hn:-8,tl:4,pz:-4,aLs:-4,aLp:44,aLe:100,aRs:20,aRp:16,aRe:60,lLs:-10,lLk:6,lRs:6,lRk:2},
+ 'Duelista elegante':{tb:-2,tt:14,aRs:60,aRp:8,aRe:80,aLs:-30,aLp:40,aLe:90,lLs:14,lLp:6,lLk:6,lRs:-18,lRp:20,lRk:8},
+ /* bestia */
+ 'Cuatro apoyos':{tb:68,hn:-42,aLs:-60,aLp:14,aLe:8,aRs:-60,aRp:14,aRe:8,lLs:62,lLp:18,lLk:110,lRs:62,lRp:18,lRk:110},
+ 'Rugido de bestia':{tb:30,hn:-30,aLs:40,aLp:50,aLe:60,aRs:40,aRp:50,aRe:60,lLs:20,lLp:22,lLk:40,lRs:-14,lRp:22,lRk:28},
+ 'Brazos colgando de gigante':{tb:22,hn:-4,aLs:6,aLp:26,aLe:6,aRs:6,aRp:26,aRe:6,lLp:20,lRp:20,lLk:10,lRk:10,tl:3},
+ 'Salto de bestia':{tb:30,hn:-20,aLs:100,aLp:30,aLe:30,aRs:100,aRp:30,aRe:30,lLs:70,lLk:80,lRs:-30,lRk:50}};
+const V3_MOODS=[
+ {k:'heroe',n:'Héroe',d:'Pecho al frente, mirada al horizonte, postura abierta y segura.',en:'heroic superhero pose reference',re:/heroe|heroic|valient|protagonist|salvador/,p:['Héroe mirando al horizonte','Héroe puño al cielo','Héroe con las manos en la cadera','Héroe adelantando un pie','Héroe contra el viento','Héroe herido','Héroe protegiendo','Héroe pie en alto','Héroe victoria','Héroe','Aterrizaje de héroe','Victoria con arma en alto','Mirando a lo lejos']},
+ {k:'guerrero',n:'Guerrero',d:'Listo para el combate, con peso y disciplina; con o sin arma.',en:'warrior stance pose reference',re:/guerrer|batalla|guerra|soldad|combatient|espartan|samurai|vikingo|caballero/,p:['Guerrero listo','Guerrero rugiendo','Guerrero apoyado en su arma','Guerrero con arma al hombro','Guerrero arrodillado con el arma clavada','Guerrero en carga','Guerrero doble arma','Guerrero preparando el golpe','Guerrero en reposo','Centinela con lanza','Guardia','Defensa con escudo','Parada con espada','Corte horizontal','Corte descendente']},
+ {k:'sereno',n:'Sereno',d:'Calma, equilibrio y quietud: de pie, sentado o en meditación.',en:'serene calm meditation pose reference',re:/seren|calm|paz\b|zen|medit|tranquil|espiritual|contempl/,p:['Meditando','Sereno de pie','Manos juntas al pecho','Mirando al cielo','Brazos abiertos en calma','Equilibrio en una pierna','Sentado erguido','Sentado con piernas cruzadas','Rezando','Contrapposto']},
+ {k:'enojado',n:'Enojado',d:'Furia, tensión y amenaza: hombros altos, puños, gritos.',en:'angry rage aggressive pose reference',re:/enoj|furi|ira\b|rabia|colera|violen|brutal|rugid/,p:['Furia contenida','Rugido con brazos abiertos','Señalando con rabia','Golpe al suelo','Hombros altos amenazante','Encarando','Enojado','Embestida','Golpe cargado']},
+ {k:'peleando',n:'Peleando',d:'Golpes, patadas, esgrima y lucha en movimiento.',en:'fighting action pose reference',re:/pele|lucha|combate|duelo|pugil/,p:['Boxeo guardia','Cruzado de derecha','Esgrima en guardia','Estocada de esgrima','Patada voladora','Lucha agarre','Giro de espada','Lanza en carga','Recibiendo un golpe','Golpe hacia abajo','Golpe','Gancho','Uppercut','Patada frontal','Patada lateral','Patada giratoria','Salto de ataque']},
+ {k:'imponente',n:'Dios / imponente',d:'Presencia, poder y dominio: dios, rey, jefe o titán. Piernas firmes, pecho alto, mirada desde arriba.',en:'powerful commanding god king pose reference',re:/dios|diosa|deidad|divin|rey\b|reina|emperador|imponent|poderos|titan|supremo|jefe|tirano|monarca/,p:['Dios imponente de pie','Brazos cruzados poderoso','Un puño en el pecho','Señalando al frente','Mirada desde arriba','Arma clavada en el suelo','Sentado en trono','Trono relajado','Pisando al enemigo','Invocando','Brazos en jarra','Victoria con arma en alto']},
+ {k:'villano',n:'Villano',d:'Amenaza fría o burlona: encorvado, de reojo, manos a la espalda.',en:'villain menacing pose reference',re:/villan|malvad|siniestr|oscur|antagonist|perverso|traidor/,p:['Villano manos a la espalda','Villano riendo','Villano de reojo','Garras al frente','Villano encorvado','Acechar']},
+ {k:'sigilo',n:'Sigilo y misterio',d:'Agachado, pegado a la pared, encapuchado o espiando.',en:'stealth assassin crouch pose reference',re:/sigil|asesin|ladron|espia|ninja|sombra|misteri|encapuchad/,p:['Pegado a la pared','Encapuchado misterioso','Asesino listo','Caminar sigiloso','Acechar','Espiando por una esquina']},
+ {k:'triste',n:'Triste / derrota',d:'Hombros caídos, cabeza baja, de rodillas o abrazándose.',en:'sad defeated pose reference',re:/trist|derrot|melancol|dolor|luto|tragi|pena/,p:['Derrotado de rodillas','Abrazándose','Cabeza baja','Cara en las manos','Triste','Cansado','Sentado derrotado','Rendido']},
+ {k:'alegre',n:'Alegría',d:'Saltos, brazos arriba, giros y aplausos.',en:'happy joyful celebration pose reference',re:/alegr|feliz|fiest|celebr|jubilo|gozo|jovial/,p:['Salto de alegría','Giro feliz','Aplaudiendo','Alegría','Celebrando','Saludando']},
+ {k:'magia',n:'Magia y ritual',d:'Lanzar, canalizar o invocar: manos abiertas, brazos al cielo.',en:'wizard casting spell pose reference',re:/mag|hechic|brujo|conjur|arcan|chaman|ritual|sacerdot|invoc/,p:['Canalizando energía','Escudo mágico','Invocar hacia abajo','Bola de energía','Hechizo al cielo','Lanzando un hechizo','Hechizo con ambas manos','Invocando']},
+ {k:'lider',n:'Líder',d:'Mandar, arengar o dirigir: brazo extendido, manos atrás, firmeza.',en:'leader commander speech pose reference',re:/lider|comandante|general|capitan|discurso|orador/,p:['Discurso con brazo extendido','Manos atrás al frente del ejército','Ordenando avanzar','Señalando al frente','Saludo militar','Héroe mirando al horizonte']},
+ {k:'cazador',n:'Cazador / explorador',d:'Vigilar, apuntar y rastrear.',en:'hunter archer tracking pose reference',re:/cazador|arquer|explorador|rastread|ranger/,p:['Cazador vigilando','Arquero tensando','Lanzando jabalina','Apuntando un rifle','Acechar','Vigía']},
+ {k:'noble',n:'Noble y elegante',d:'Porte refinado: manos al frente, cabeza alta, gestos suaves.',en:'elegant noble aristocrat pose reference',re:/noble|elegant|aristocr|royal|corte\b|duelista|refinad/,p:['Noble de pie','Reina','Duelista elegante','Reverencia noble','Pose elegante','Manos juntas al pecho']},
+ {k:'bestia',n:'Bestia / monstruo',d:'Encorvado, pesado, en cuatro apoyos o rugiendo.',en:'beast monster creature pose reference',re:/bestia|monstruo|criatura|fiera|salvaje|demonio|ogro|troll|kaiju/,p:['Cuatro apoyos','Rugido de bestia','Brazos colgando de gigante','Salto de bestia','Acechar']}];
+(()=>{const b=V3_POSES['De pie'],nuevas=[];for(const m of V3_MOODS)for(const nombre of m.p){const d=V3_POSES_MOOD[nombre];if(d&&!V3_POSES[nombre]){V3_POSES[nombre]={...b,...d,en:m.en};nuevas.push(nombre)}}V3_POSES_G.push(['Por mood (todas)',nuevas])})();
+/* sinónimos para pedirlas con palabras (antes de «de pie», para que una acción concreta gane) */
+function v3dSinonimosMood(){const i=V3_ACC.findIndex(x=>/de pie/.test(x[0].source)),sin=[[/(dios|diosa|imponente|poderos|majestuos|deidad)/,'Dios imponente de pie'],[/(heroe|heroic)/,'Héroe mirando al horizonte'],[/(guerrer)/,'Guerrero listo'],[/(seren|medit|calma)/,'Sereno de pie'],[/(furios|enojad|rabia|\bira\b)/,'Furia contenida'],[/(villan|malvad)/,'Villano manos a la espalda'],[/(mago|maga|hechicer|hechizo)/,'Canalizando energía'],[/(triste|derrotad|abatid)/,'Cabeza baja'],[/(alegr|feliz)/,'Salto de alegría'],[/(noble|elegante|aristocr)/,'Noble de pie'],[/(bestia|monstruo|criatura)/,'Rugido de bestia'],[/(lider|comandante)/,'Ordenando avanzar']];V3_ACC.splice(i<0?V3_ACC.length:i,0,...sin)}
+function v3dMoodsHTML(s){const p=S.P[S.cur],txt=p?nz(JSON.stringify([p.nombre,p.brief,p.mood,p.que])):'',sug=new Set(V3_MOODS.filter(m=>txt&&m.re.test(txt)).map(m=>m.k)),sel=V3_MOODS.find(m=>m.k===s.moodSel);
+  return `<details class="v3-d" open><summary>Poses por mood o personaje</summary><p class="hint" style="margin:4px 0">Elige la actitud que necesitas y salen poses hechas para eso: héroe, guerrero, sereno, enojado, peleando, dios imponente… ${sug.size?'Las marcadas con ★ encajan con tu proyecto «'+esc(corto(p.nombre,24))+'».':''}</p><div class="chips">${V3_MOODS.map(m=>`<button class="ch xs ${s.moodSel===m.k?'on':''}" data-act="v3d-mood" data-k="${m.k}">${sug.has(m.k)?'★ ':''}${m.n}</button>`).join('')}</div>${sel?`<p class="hint" style="margin:4px 0"><b>${sel.n}.</b> ${esc(sel.d)}</p><div class="chips">${sel.p.filter(k=>V3_POSES[k]).map(k=>v3Ch('v3d-preset',k,k,s.preset===k)).join('')}</div>`:''}</details>`}
 /* escenas de partida: cada personaje con pose (nombre o {base,o,m}), posición x/z, giro y, y ajustes extra (ex). Lo de los contactos hay que afinarlo a mano. */
 const V3_ESCENAS=[
  {k:'pelea',n:'Pelea',d:'Uno golpea y el otro se defiende con el escudo',figs:[{p:'Golpe',x:-.5,y:90},{p:'Defensa con escudo',x:.5,y:-90}]},
@@ -9961,6 +10081,7 @@ const V3_EXTRA=[[/(patad|pateand)/,{lRs:85,lRk:15,tb:-12,aLs:-30,aLp:40,aLe:60,a
   [/brazos cruzados|cruzando los brazos|cruzado de brazos/,{aLs:35,aLp:-5,aLe:125,aRs:35,aRp:-5,aRe:125},'brazos cruzados'],[/manos en (la )?cadera|brazos en jarra|jarras/,{aLs:-10,aLp:45,aLe:105,aRs:-10,aRp:45,aRe:105},'manos en la cadera'],
   [/(brazos (arriba|en alto|levantados)|levantando los brazos|manos arriba)/,{aLs:170,aRs:170,aLp:10,aRp:10,aLe:5,aRe:5},'brazos arriba'],[/(brazos (abiertos|extendidos)|en cruz)/,{aLs:0,aLp:90,aLe:0,aRs:0,aRp:90,aRe:0},'brazos abiertos'],
   [/sentad/,{lLs:90,lRs:90,lLk:90,lRk:90,tb:5,aLs:20,aRs:20,aLe:70,aRe:70},'sentado']];
+v3dSinonimosMood();
 const v3dEspeja=P=>{const o={};for(const k of Object.keys(P)){if(/^[al][LR]/.test(k))o[k[0]+(k[1]==='L'?'R':'L')+k.slice(2)]=P[k];else o[k]=['tt','tl','py','pz','hy','hl'].includes(k)?-P[k]:P[k]}return o};
 function v3dPoseDeTexto(txt){const t=nz(String(txt||'')),cl=t.split(/[,;.]|\by\b|\bmientras\b|\bpero\b|\bcon\b/).map(c=>c.trim()).filter(Boolean),P={},notas=[];let base=null,giro=null;
   const set=(k,v)=>{P[k]=clamp(Math.round(v),V3_RANGOS[k][0],V3_RANGOS[k][1])},fuerza=c=>/\b(muy|mucho|bastante|totalmente|completamente|exagerad\w*|fuerte)\b/.test(c)?1:/\b(un poco|poco|ligeramente|levemente|algo|apenas|medio)\b/.test(c)?.45:.75,lado=c=>/izquierd/.test(c)?1:/derech/.test(c)?-1:0;
@@ -10697,6 +10818,33 @@ const V3_LUGARES=[['ciudad','🏙 Ciudad','Edificios de distinta altura con faro
 const V3_PROP_NOM=(()=>{const m={};V3_PROPS_FORMAS.forEach(([k,n])=>m[k]=n);V3_OBJ_CATS.forEach(([,,L])=>L.forEach(([k,n])=>m[k]=n));return m})();
 const v3dPropCat=k=>{for(const [c,,L] of V3_OBJ_CATS)if(L.some(x=>x[0]===k))return c;return k.startsWith('f:')?'formas':'mueb'};
 const V3_CAT_NOM={edif:'Edificios',nat:'Naturaleza',urb:'Ciudad y lugares',mueb:'Muebles y armas',formas:'Formas'};
+/* ============ Objetos de mano: armas y cosas que se agarran. Se acomodan solos a la mano (o a las dos) y siguen la pose ============
+   El origen de cada uno está en su extremo de abajo (o en su centro) y +Y va a lo largo; «g» es dónde se agarra, medido desde el origen. */
+Object.assign(V3_CONS,(()=>{const M=(T,c)=>new T.MeshStandardMaterial({color:c,roughness:.85}),mk=(T,g,c,x,y,z)=>{const m=new T.Mesh(g,M(T,c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m},G=(T,...a)=>{const g=new T.Group();a.forEach(m=>g.add(m));return g},
+    cil=(T,r,h,s=10)=>new T.CylinderGeometry(r,r,h,s),caja=(T,w,h,l)=>new T.BoxGeometry(w,h,l),mad=0x7a5a3c,met=0x9aa0a8;
+  return {
+  'f:lanza':T=>G(T,mk(T,cil(T,.022,2,8),mad,0,1,0),mk(T,new T.ConeGeometry(.05,.24,10),met,0,2.12,0)),
+  'f:baston':T=>G(T,mk(T,cil(T,.026,1.7,8),mad,0,.85,0),mk(T,new T.SphereGeometry(.055,12,10),0xc9a24a,0,1.73,0)),
+  'f:arco':T=>{const arc=new T.Mesh(new T.TorusGeometry(.55,.014,8,28,Math.PI),M(T,mad));arc.rotation.z=-Math.PI/2;arc.castShadow=true;const cuerda=mk(T,cil(T,.004,1.1,4),0xe8e2d0,.0,0,0);cuerda.position.set(-0.0,0,0);return G(T,arc,cuerda)},
+  'f:martillo':T=>G(T,mk(T,cil(T,.025,1.05,8),mad,0,.52,0),mk(T,caja(T,.32,.14,.14),met,0,1.08,0)),
+  'f:maza':T=>G(T,mk(T,cil(T,.024,.85,8),mad,0,.42,0),mk(T,new T.SphereGeometry(.1,14,12),met,0,.92,0)),
+  'f:daga':T=>G(T,mk(T,cil(T,.016,.1,8),0x5b4636,0,.05,0),mk(T,caja(T,.07,.014,.02),met,0,.11,0),mk(T,caja(T,.032,.22,.008),met,0,.23,0)),
+  'f:bandera':T=>G(T,mk(T,cil(T,.02,2.2,8),mad,0,1.1,0),mk(T,caja(T,.85,.55,.012),0xb04a3c,.43,1.92,0)),
+  'f:linterna':T=>G(T,mk(T,caja(T,.14,.2,.14),0x45484e,0,.1,0),mk(T,new T.SphereGeometry(.05,10,8),0xf4e7b2,0,.1,0),mk(T,new T.TorusGeometry(.05,.008,6,14),0x45484e,0,.26,0)),
+  'f:libro':T=>G(T,mk(T,caja(T,.19,.035,.26),0x6b3f2e,0,0,0),mk(T,caja(T,.17,.03,.24),0xe8e0cc,.005,0,0)),
+  'f:copa':T=>G(T,mk(T,cil(T,.035,.01,14),0xc9a24a,0,.005,0),mk(T,cil(T,.008,.1,8),0xc9a24a,0,.06,0),mk(T,new T.CylinderGeometry(.055,.03,.09,14),0xc9a24a,0,.15,0))}})());
+Object.assign(V3_PROPS_MANO,{'f:lanza':'R','f:baston':'R','f:arco':'L','f:martillo':'R','f:maza':'R','f:daga':'R','f:bandera':'R','f:linterna':'R','f:libro':'L','f:copa':'R'});
+const V3_AGARRE_X={'f:lanza':{g:.85,y:[0,.9,.45],x:[1,0,0],e:1},'f:baston':{g:1.05,y:[0,1,.12],x:[1,0,0],e:1},'f:arco':{g:0,y:[0,1,0],x:[0,0,1],e:1},'f:martillo':{g:.14,y:[0,.8,.6],x:[0,0,1],e:1},'f:maza':{g:.14,y:[0,.8,.6],x:[0,0,1],e:1},'f:daga':{g:.05,y:[0,.35,.94],x:[0,0,1],e:1},'f:bandera':{g:.9,y:[0,1,.08],x:[1,0,0],e:1},'f:linterna':{g:.26,y:[0,1,0],x:[1,0,0],e:1},'f:libro':{g:0,y:[0,1,0],x:[1,0,0],e:1},'f:copa':{g:.1,y:[0,1,.1],x:[1,0,0],e:1}};
+const V3_MANO_LISTA=['Espada','Hacha','Pico','Antorcha','Escudo','f:lanza','f:baston','f:arco','f:martillo','f:maza','f:daga','f:bandera','f:linterna','f:libro','f:copa'];
+Object.assign(V3_PROP_NOM,{'f:lanza':'Lanza','f:baston':'Bastón','f:arco':'Arco','f:martillo':'Martillo de guerra','f:maza':'Maza','f:daga':'Daga','f:bandera':'Bandera','f:linterna':'Linterna','f:libro':'Libro','f:copa':'Copa'});
+/* algo que se puede poner en la mano: lo de la lista, los muebles y armas, y las formas chicas */
+const v3dPuedeMano=k=>!!V3_PROPS_MANO[k]||!k.startsWith('f:')||['f:caja','f:esfera','f:cilindro'].includes(k);
+/* ambas manos: el objeto queda entre las dos manos (lanza, bastón, martillo…) y las sigue */
+function v3dPropDosManos(o,p){const T=V3.T,en=V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)],bn=en?.model.userData.bn,L=bn?.LeftHand,R=bn?.RightHand;if(!L||!R)return false;en.model.updateMatrixWorld(true);
+  const pl=L.getWorldPosition(new T.Vector3()),pr=R.getWorldPosition(new T.Vector3()),A=V3_PROPS_AGARRE[p.k]||V3_AGARRE_X[p.k]||{g:0},mid=pl.clone().add(pr).multiplyScalar(.5),mq=en.model.getWorldQuaternion(new T.Quaternion()),pref=new T.Vector3(...(A.y||[0,1,0])).normalize().applyQuaternion(mq);
+  /* si las manos están separadas a lo largo del objeto, la línea entre ellas manda; si no, la dirección de partida */
+  let H=pl.clone().sub(pr);if(H.dot(pref)<0)H.negate();let Y=pref;if(H.length()>.22){const c=H.clone().normalize();if(c.dot(pref)>Math.cos(55*RAD))Y=c}
+  o.quaternion.copy(v3dPropBase(Y,new T.Vector3(...(A.x||[1,0,0])).applyQuaternion(mq))).multiply(new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)));o.position.copy(mid).addScaledVector(Y,-(A.g||0)*(p.e||1));return true}
 /* contexto para colocar objetos sin encimarlos: en perspectiva, delante de la cámara y alineados con tus puntos de fuga */
 function v3dLugarCtx(){const S3=S.v3d,P=S3.persp,ext=S3.lugarCfg?.ext||1,R=(a,b)=>a+Math.random()*(b-a),Rp=a=>a[Math.floor(Math.random()*a.length)],out=[],ocu=(S3.props||[]).filter(q=>!q.mano).map(q=>[q.x||0,q.z||0,(V3_RAD[q.k]||1)*(q.e||1)*.8]);
   let B=0,U=[1,0],W=[0,1];if(P&&P.modo!=='1'){B=Math.round(Math.atan2(P.d1[1],P.d1[0])*180/Math.PI);U=[P.d1[0],-P.d1[1]];W=[P.d2[0],-P.d2[1]]}
@@ -10737,19 +10885,28 @@ function v3dPropObj(k){const T=V3.T;if(V3_CONS[k]){const g=V3_CONS[k](T);g.userD
 function v3dPropsMonta(){if(!V3.scene)return;(V3.propObjs||[]).forEach(o=>{V3.scene.remove(o);if(o.userData.f)o.traverse(m=>{m.geometry?.dispose?.();m.material?.dispose?.()})});V3.propObjs=[];for(const p of S.v3d?.props||[]){const o=v3dPropObj(p.k);if(!o)continue;o.userData.pid=p.id;V3.scene.add(o);V3.propObjs.push(o)}v3dPropsPos()}
 /* cómo se sostiene cada objeto: y = hacia dónde apunta, x = hacia dónde mira su lado ancho (en el marco del personaje: z hacia adelante), g = dónde está el puño sobre el objeto, e = tamaño de partida */
 const V3_PROPS_AGARRE={Espada:{g:.09,y:[0,.8,.6],x:[0,0,1],e:.8},Hacha:{g:.12,y:[0,.8,.6],x:[0,0,1],e:.9},Pico:{g:.12,y:[0,.8,.6],x:[1,0,0],e:.9},Antorcha:{g:.1,y:[0,1,.35],x:[1,0,0],e:1},Escudo:{g:0,y:[0,1,0],x:[1,0,0],e:1}};
+/* cómo se agarra un objeto: su dirección sale del antebrazo (de codo a mano) y de la gravedad, así que cambia con la pose y se ve bien desde cualquier cámara.
+   a = cuánto se alza el objeto sobre la línea del antebrazo (espada 38°, hacha 70°, bandera 85°…). Con el brazo casi vertical manda la dirección de partida del objeto. */
+const V3_ANG={Espada:38,Hacha:70,Pico:65,Antorcha:55,'f:lanza':38,'f:baston':70,'f:arco':90,'f:martillo':70,'f:maza':60,'f:daga':14,'f:bandera':85,'f:linterna':90,'f:libro':90,'f:copa':90};
+function v3dPropBase(Y,Xref){const T=V3.T;let X=Xref.clone().addScaledVector(Y,-Xref.dot(Y));if(X.length()<.2)X=new T.Vector3(1,0,0).addScaledVector(Y,-Y.x);X.normalize();const Z=new T.Vector3().crossVectors(X,Y).normalize();return new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Y,Z))}
+function v3dPropDir(F,a,pref,fwd){const T=V3.T,U=new T.Vector3(0,1,0),up=U.clone().addScaledVector(F,-U.dot(F)),l=up.length(),w=Math.max(0,Math.min(1,(l-.15)/.4));if(l<.02)up.copy(fwd);else up.normalize();
+  const r=a*Math.PI/180,Yf=F.clone().multiplyScalar(Math.cos(r)).addScaledVector(up,Math.sin(r));return Yf.multiplyScalar(w).addScaledVector(pref,1-w).normalize()}
 function v3dPropAgarre(o,p){const T=V3.T,en=V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)],bn=en?.model.userData.bn;if(!bn)return false;const L=p.mano==='L'?'Left':'Right',esc=p.k==='Escudo',b=bn[L+(esc?'ForeArm':'Hand')];if(!b)return false;
-  const A=V3_PROPS_AGARRE[p.k]||{y:[0,1,0],x:[1,0,0],g:0};en.model.updateMatrixWorld(true);
+  const A=V3_PROPS_AGARRE[p.k]||V3_AGARRE_X[p.k]||{y:[0,1,0],x:[1,0,0],g:0};en.model.updateMatrixWorld(true);
   const bq=new T.Quaternion(),bp=new T.Vector3(),s3=new T.Vector3(),mq=en.model.getWorldQuaternion(new T.Quaternion());b.matrixWorld.decompose(bp,bq,s3);
-  if(!p.q){const Y=new T.Vector3(...A.y).normalize().applyQuaternion(mq),X0=new T.Vector3(...A.x).applyQuaternion(mq),Z=new T.Vector3().crossVectors(X0,Y).normalize(),X=new T.Vector3().crossVectors(Y,Z).normalize(),qd=new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Y,Z));p.q=bq.clone().invert().multiply(qd).toArray()}
-  o.quaternion.copy(bq).multiply(new T.Quaternion().fromArray(p.q)).multiply(new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)));
-  const P=bp.clone(),sc=en.model.scale.y;
-  if(esc){const H=bn[L+'Hand'];if(H)P.lerp(H.getWorldPosition(new T.Vector3()),.5);P.add(new T.Vector3(0,0,.09*sc).applyQuaternion(mq))}
-  else{const M=bn[L+'HandMiddle1'];if(M)P.lerp(M.getWorldPosition(new T.Vector3()),.6)}
+  const eul=new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)),P=bp.clone(),sc=en.model.scale.y;
+  if(esc){/* el escudo va pegado al antebrazo */
+    if(!p.q){const Y=new T.Vector3(...A.y).normalize().applyQuaternion(mq),X0=new T.Vector3(...A.x).applyQuaternion(mq),Z=new T.Vector3().crossVectors(X0,Y).normalize(),X=new T.Vector3().crossVectors(Y,Z).normalize(),qd=new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Y,Z));p.q=bq.clone().invert().multiply(qd).toArray()}
+    o.quaternion.copy(bq).multiply(new T.Quaternion().fromArray(p.q)).multiply(eul);const H=bn[L+'Hand'];if(H)P.lerp(H.getWorldPosition(new T.Vector3()),.5);P.add(new T.Vector3(0,0,.09*sc).applyQuaternion(mq))}
+  else{const hand=bn[L+'Hand'],fore=bn[L+'ForeArm'];let F=new T.Vector3(0,0,1).applyQuaternion(mq);if(hand&&fore){F=hand.getWorldPosition(new T.Vector3()).sub(fore.getWorldPosition(new T.Vector3()));if(F.length()>.01)F.normalize();else F=new T.Vector3(0,0,1).applyQuaternion(mq)}
+    const pref=new T.Vector3(...(A.y||[0,1,0])).normalize().applyQuaternion(mq),fwd=new T.Vector3(0,0,1).applyQuaternion(mq),Y=v3dPropDir(F,V3_ANG[p.k]??50,pref,fwd);
+    o.quaternion.copy(v3dPropBase(Y,new T.Vector3(...(A.x||[1,0,0])).applyQuaternion(mq))).multiply(eul);const M=bn[L+'HandMiddle1'];if(M)P.lerp(M.getWorldPosition(new T.Vector3()),.6)}
   P.addScaledVector(new T.Vector3(0,1,0).applyQuaternion(o.quaternion),-(A.g||0)*(p.e||1));o.position.copy(P);return true}
 function v3dPropsPos(){const T=V3.T;if(!T||!V3.propObjs)return;const v=new T.Vector3(),q=new T.Quaternion(),sc=new T.Vector3();
   for(const o of V3.propObjs){const p=(S.v3d.props||[]).find(x=>x.id===o.userData.pid);if(!p)continue;{const e0=p.e||1;o.scale.set(e0*(p.sx||1),e0*(p.sy||1),e0*(p.sz||1))}if(o.userData.f){const sel=p.id===S.v3d.propSel;o.traverse(m=>{if(m.isMesh&&m.material?.emissive)m.material.emissive.setHex(sel?0x3a1e0c:0)})}
     const en=p.mano?V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)]:null;const bn=en?.model.userData.bn,b=bn?.[(p.mano==='L'?'Left':'Right')+(p.k==='Escudo'?'ForeArm':'Hand')];
-    if(b&&v3dPropAgarre(o,p)){}
+    if(p.mano==='B'){if(!v3dPropDosManos(o,p)){o.position.set(p.x||0,p.y||0,p.z||0)}}
+    else if(b&&v3dPropAgarre(o,p)){}
     else{const Hh=v3dHojaCfg();if(Hh){/* pegado a la hoja: su posición vive sobre ella y su base queda apoyada */const P=S.v3d.persp,up=new T.Vector3(0,1,0),n=P.inclina!==false?Hh.n:up;if(p.hs==null){const d=new T.Vector3((p.x||0)-Hh.O.x,-Hh.O.y,(p.z||0)-Hh.O.z);p.hs=d.dot(Hh.u);p.ht=d.dot(Hh.w)}
         const pt=Hh.O.clone().addScaledVector(Hh.u,p.hs).addScaledVector(Hh.w,p.ht);o.quaternion.copy(new T.Quaternion().setFromUnitVectors(up,n)).multiply(new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)));o.position.copy(pt).addScaledVector(n,p.y||0);p.x=pt.x;p.z=pt.z}
       else{p.hs=null;o.position.set(p.x||0,p.y||0,p.z||0);o.rotation.set((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)}}}
@@ -10765,7 +10922,7 @@ function v3dPropSienta(){const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propS
 function v3dPropsHTML(s){const L=s.props||[],n=L.length,sec=s.objSec||'lugares',p=L.find(x=>x.id===s.propSel),nom=k=>V3_PROP_NOM[k]||k,
     sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3p-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3p="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,
     sl2=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3lg-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3lg="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,
-    secs=[['lugares','Lugares'],['edif','Edificios'],['nat','Naturaleza'],['urb','Ciudad y más'],['mueb','Muebles y armas'],['formas','Formas'],['escena','En la escena'+(n?` (${n})`:'')]],
+    secs=[['lugares','Lugares'],['edif','Edificios'],['nat','Naturaleza'],['urb','Ciudad y más'],['mano','En la mano'],['mueb','Muebles y armas'],['formas','Formas'],['escena','En la escena'+(n?` (${n})`:'')]],
     add=(k,suma)=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${k}" ${suma?'data-suma="1"':''}>${esc(nom(k)===k?k:nom(k))}</button>`,cfg=s.lugarCfg||{n:1,ext:1};
   let h=`<div class="v3-g"><b>Objetos y lugares</b><div class="chips">${secs.map(([k,t])=>`<button class="ch xs ${sec===k?'on':''}" data-act="v3d-obj-sec" data-k="${k}">${t}</button>`).join('')}</div>`;
   if(sec==='lugares'){h+=`<p class="hint" style="margin:0">Arma un lugar entero de un clic. ${s.persp?'Queda delante de tu cámara y alineado con tus puntos de fuga.':'Queda alrededor del personaje; gira la cámara para verlo.'} Después quitas o mueves lo que quieras desde «En la escena».</p>
@@ -10775,6 +10932,7 @@ function v3dPropsHTML(s){const L=s.props||[],n=L.length,sec=s.objSec||'lugares',
   else if(['edif','nat','urb'].includes(sec)){const C=V3_OBJ_CATS.find(c=>c[0]===sec);h+=`<p class="hint" style="margin:0">${sec==='edif'?'Casas, torres, castillo, muralla…':sec==='nat'?'Árboles, arbustos, rocas…':'Farolas, vallas, fuente, tiendas, columnas…'} Cada clic <b>agrega</b> el objeto en un lugar libre; elige cuántos de una vez.</p>
       <div class="chips"><span class="lbl">Agregar de a</span>${[1,5,10,25].map(c=>`<button class="ch xs ${(s.objN||1)===c?'on':''}" data-act="v3d-obj-n" data-k="${c}">${c}</button>`).join('')}</div>
       <div class="chips">${C[2].map(([k,t])=>add(k,1)).join('')}</div>`}
+  else if(sec==='mano'){h+=`<p class="hint" style="margin:0">Armas y cosas que se agarran: se ponen en la mano del personaje elegido (la derecha; el escudo y el arco en la izquierda) y <b>se vuelven a acomodar solas cuando cambias la pose</b>. En «En la escena» puedes pasarlas a la otra mano o a las dos (lanza, bastón, martillo).</p>${v3dPropModoHTML(s,L)}<div class="chips">${V3_MANO_LISTA.map(k=>add(k,0)).join('')}</div>`}
   else if(sec==='mueb'){h+=`<p class="hint" style="margin:0">Muebles y armas. Arrástralos con el mouse. Las armas se pueden poner en la mano del personaje seleccionado.</p>${v3dPropModoHTML(s,L)}<div class="chips">${V3_PROPS_N.map(k=>add(k,0)).join('')}</div>`}
   else if(sec==='formas'){h+=`<p class="hint" style="margin:0">Formas simples para dar escala y apoyo.</p>${v3dPropModoHTML(s,L)}<div class="chips">${V3_PROPS_FORMAS.map(([k])=>add(k,0)).join('')}</div>`}
   else{/* en la escena */
@@ -10785,7 +10943,7 @@ function v3dPropsHTML(s){const L=s.props||[],n=L.length,sec=s.objSec||'lugares',
       const mis=p?L.filter(x=>x.k===p.k):[],pos=p?mis.findIndex(x=>x.id===p.id):-1;
       if(p)h+=`<div class="prow" style="align-items:center"><button class="btn sm" data-act="v3d-prop-nav" data-d="-1">◀</button><b style="flex:1;text-align:center">${esc(nom(p.k))} · ${pos+1} de ${mis.length}</b><button class="btn sm" data-act="v3d-prop-nav" data-d="1">▶</button></div><p class="hint" style="margin:0">También puedes tocar un objeto en la escena para elegirlo. Tecla Supr: lo quita.</p>`}}
   if(sec==='escena'&&p){const sue=!p.mano;h+=`${sue?sl('Izquierda ↔ derecha','x',-70,70,.1,p.x||0)+sl('Adelante ↔ atrás','z',-80,40,.1,p.z||0)+sl('Altura','y',0,20,.1,p.y||0):''}${sl('Girar','ry',-180,180,1,p.ry||0,'°')}${p.mano?sl('Inclinar','rx',-180,180,1,p.rx||0,'°')+sl('Ladear','rz',-180,180,1,p.rz||0,'°')+'<p class="hint" style="margin:0">Se acomoda según la pose que tiene el personaje al ponérsela. Si cambias mucho la pose, usa «Reacomodar».</p>':''}${sl('Tamaño','e',.2,6,.05,p.e||1,'×')}${sue&&p.k.startsWith('f:')?sl('Ancho','sx',.3,4,.05,p.sx||1,'×')+sl('Alto','sy',.3,4,.05,p.sy||1,'×')+sl('Largo','sz',.3,4,.05,p.sz||1,'×'):''}
-      ${V3_PROPS_MANO[p.k]?`<div class="chips"><span class="lbl">Dónde está</span><button class="ch xs ${!p.mano?'on':''}" data-act="v3d-prop-mano" data-m="">Suelto</button><button class="ch xs ${p.mano==='L'?'on':''}" data-act="v3d-prop-mano" data-m="L">En la mano izquierda</button><button class="ch xs ${p.mano==='R'?'on':''}" data-act="v3d-prop-mano" data-m="R">En la mano derecha</button></div>`:''}
+      ${v3dPuedeMano(p.k)?`<div class="chips"><span class="lbl">Dónde está</span><button class="ch xs ${!p.mano?'on':''}" data-act="v3d-prop-mano" data-m="">Suelto</button><button class="ch xs ${p.mano==='B'?'on':''}" data-act="v3d-prop-mano" data-m="B">En ambas manos</button><button class="ch xs ${p.mano==='L'?'on':''}" data-act="v3d-prop-mano" data-m="L">En la mano izquierda</button><button class="ch xs ${p.mano==='R'?'on':''}" data-act="v3d-prop-mano" data-m="R">En la mano derecha</button></div>`:''}
       <div class="prow">${V3_PROPS_SILLAS.includes(p.k)?'<button class="btn sm pri" data-act="v3d-prop-sienta">Sentar al personaje aquí</button>':''}${p.mano?'<button class="btn sm" data-act="v3d-prop-reor">Reacomodar en la mano</button>':''}<button class="btn sm" data-act="v3d-prop-dup">Duplicar</button><button class="btn sm ghost danger" data-act="v3d-prop-quita">Quitar este</button></div>`}
   return h+'</div>'}
 function v3dPropModoHTML(s,L){return `<div class="chips"><span class="lbl">Al elegir otro objeto</span><button class="ch xs ${s.propModo!=='suma'?'on':''}" data-act="v3d-prop-modo" data-k="reemplaza" title="El objeto elegido cambia por el nuevo">Cambia el elegido</button><button class="ch xs ${s.propModo==='suma'?'on':''}" data-act="v3d-prop-modo" data-k="suma" title="Se queda y se agrega otro">Agrega otro</button></div>`}
@@ -10981,6 +11139,7 @@ function v3dTabModelo(s){const ch=v3Ch;return `<div class="chips">${ch('v3d-mode
     ${(V3.mio&&s.modelo==='mio')||s.modelo==='maniqui'?`<label class="chk"><input type="checkbox" data-v3chk="arcilla" ${s.arcilla?'checked':''}><span>Ver como arcilla gris <small class="muted">(estudia forma y luz sin texturas)</small></span></label>`:''}`}
 function v3dTabPose(s){const ch=v3Ch;
     if(s.modelo==='maniqui')return `<label class="chk"><input type="checkbox" data-v3chk="hnd" ${s.hnd?'checked':''}><span><b>Arrastrar las articulaciones en la escena</b> <small class="muted">(puntos de color en manos, codos, pies, rodillas, cabeza y torso; los deslizantes de abajo siguen funcionando)</small></span></label><details class="v3-d" open><summary>Ponlo en una pose</summary><p class="hint" style="margin:4px 0"><b>Descríbela:</b> escribe qué hace y cómo, con tus palabras.</p><textarea id="v3d-desc" data-v3txt="desc" placeholder="Ej. corriendo, con la cabeza un poco torcida mirando hacia atrás" style="min-height:56px">${esc(s.desc||'')}</textarea><div class="prow"><button class="btn sm pri" data-act="v3d-pose-texto">Poner la pose</button></div><span class="muted" id="v3d-desc-msg" style="font-size:12px"></span><div class="chips">${V3_EJEMPLOS.map((e,i)=>`<button class="ch xs" data-act="v3d-ejemplo" data-i="${i}">${esc(e)}</button>`).join('')}</div><p class="hint" style="margin:8px 0 4px"><b>Desde un boceto:</b> sube tu dibujo rápido de la pose (figura de palitos, contorno o gesto, líneas oscuras sobre papel claro). La app busca sola la pose y te enseña las mejores para que elijas la que más se parece; no tienes que marcar puntos.</p><div class="prow"><label class="btn sm pri" for="v3d-bz-file">Subir boceto de la pose</label><input type="file" id="v3d-bz-file" accept="image/*" hidden>${BZ.kp?'<button class="btn sm" data-act="v3d-bz-ajusta">Ajustar los puntos</button>':''}${compImagenes('').length?`<select data-v3bzproj aria-label="Usar un boceto de mis proyectos"><option value="">…o uno de mis proyectos</option>${compImagenes('').slice(0,80).map((x,i)=>`<option value="${i}">${esc(x.t)}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-bz-msg" style="font-size:12px"></span><p class="hint" style="margin:8px 0 4px"><b>Con Claude:</b> copia la petición, pégamela en el chat con tu imagen de la pose, y pega aquí lo que te responda.</p><button class="btn sm pri" data-act="v3d-pose-copiar">Copiar la petición para Claude</button><p class="hint" style="margin:6px 0 2px"><b>Desde una foto:</b> sube la foto y el cuerpo copia la pose; si hay varias personas (hasta 4), las acomoda todas en la escena. Se procesa en tu navegador.</p><div class="prow"><label class="btn sm" for="v3d-foto">Subir foto de la pose</label><input type="file" id="v3d-foto" accept="image/*" hidden>${(S.P[S.cur]?.refs||[]).filter(r=>refSrc(r)).length?`<select data-v3fotoref><option value="">…o una de tu moodboard</option>${S.P[S.cur].refs.filter(r=>refSrc(r)).slice(0,60).map(r=>`<option value="${r.id}">${esc(corto((r.fuente||'Referencia').split(' · ')[0],36))}</option>`).join('')}</select>`:''}</div><span class="muted" id="v3d-foto-msg" style="font-size:12px"></span>${V3.refUrl?`<div class="v3-g"><b>Foto sobre el maniquí</b><label class="v3-s"><span>Transparencia de la foto <b id="v3v-refOp">${Math.round((s.refOp??.45)*100)}%</b></span><input type="range" data-v3ref="1" min="0.1" max="1" step="0.05" value="${s.refOp??.45}"></label><div class="prow"><button class="btn sm ghost" data-act="v3d-ref-quita">Quitar la foto</button></div><p class="hint" style="margin:0">Mueve y acerca la cámara hasta que el maniquí quede del mismo tamaño que la persona y ajusta brazos, piernas y torso con los controles hasta que coincidan.</p></div>`:''}<textarea id="v3d-pose-txt" placeholder="Pega aquí la pose que te dio Claude (el bloque JSON)" style="min-height:64px"></textarea><div class="prow"><button class="btn sm" data-act="v3d-pose-aplicar">Aplicar pose</button><span class="muted" id="v3d-pose-msg" style="font-size:12px"></span></div></details>
+      ${v3dMoodsHTML(s)}
       <input type="text" id="v3d-posebusca" placeholder="Buscar una pose (ej. sentado, patada, brazos, espada…)" style="width:100%" aria-label="Buscar una pose">
       ${(()=>{const G=V3_POSES_G.map(([n,l])=>[n,l.slice()]),usados=new Set(G.flatMap(g=>g[1]));Object.keys(V3_POSES).forEach(k=>{if(!usados.has(k))G[G.length-1][1].push(k)});return G.map(([n,l],gi)=>gi<3?`<div class="chips"><span class="lbl">${n}</span>${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div>`:`<details class="v3-d" ${l.includes(s.preset)?'open':''}><summary>${n} (${l.length})</summary><div class="chips">${l.map(k=>ch('v3d-preset',k,k,s.preset===k)).join('')}</div></details>`).join('')})()}
       <details class="v3-d" open><summary>Torso y cabeza</summary>${v3Sp('Inclinar adelante','tb',s.pose.tb)}${v3Sp('Girar torso','tt',s.pose.tt)}${v3Sp('Ladear torso','tl',s.pose.tl)}${v3Sp('Cadera: giro','py',s.pose.py)}${v3Sp('Cadera: ladeo','pz',s.pose.pz)}${v3Sp('Cabeza: asentir','hn',s.pose.hn)}${v3Sp('Cabeza: girar','hy',s.pose.hy)}${v3Sp('Cabeza: ladear','hl',s.pose.hl)}</details>
@@ -11960,6 +12119,7 @@ async function accion(a,el){
     case 'v3d-blender':v3dBlender();break;
     case 'v3d-obj-poses':v3dObjPoses();break;
     case 'v3d-snap':{v3dPref().snap=+ds.k;marcarAj();v3dPanel();break}
+    case 'v3d-mood':{S.v3d.moodSel=S.v3d.moodSel===ds.k?null:ds.k;v3dPanel();break}
     case 'v3d-cielo':{S.v3d.cielo=!S.v3d.cielo;v3dEscena();v3dPanel();break}
     case 'v3d-prop-sel':{S.v3d.propSel=ds.id;v3dPanel();break}
     case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.q=null;if(ds.m)p.rx=p.ry=p.rz=0;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
