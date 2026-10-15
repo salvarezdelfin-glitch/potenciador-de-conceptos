@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv9ze004').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mv9zozyw').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -11305,7 +11305,7 @@ const V3_ACT={
 const V3_ACT_PAR=['tb','tt','tl','py','pz','hn','hy','hl','aLs','aLp','aLr','aLe','aRs','aRp','aRr','aRe','lLs','lLp','lLk','lRs','lRp','lRk'];
 /* arma la pose final a partir de la pose de partida y de todo lo que el usuario haya activado */
 function v3dActCalc(A){const B=A.base,P={...B},ad=(k,v)=>{P[k]=(P[k]||0)+v},roll=v=>{ad('pz',v);ad('lLp',-v*1.05);ad('lRp',v*1.05)},E=V3_ACT[A.k],i=A.i??1;
-  if(E){for(const k in E.add)ad(k,E.add[k]*i);for(const k in E.set)P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)}
+  if(E){for(const k in E.add)ad(k,E.add[k]*i);if(!A.sinBrazos)for(const k in E.set)P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)}
   /* peso en una pierna (+ = sobre la izquierda del personaje): la cadera se eleva del lado cargado, los hombros contrarrestan, la pierna libre se afloja */
   const p=A.peso||0;if(p){roll(p*10);ad('tl',-p*8);ad('hl',-p*3);const lib=p>0?'R':'L',car=p>0?'L':'R',q=Math.abs(p);P['l'+car+'k']=Math.min(P['l'+car+'k']||0,6*(1-q));ad('l'+lib+'k',16*q);ad('l'+lib+'s',8*q);ad('l'+lib+'p',8*q)}
   /* línea de acción: C = todo el torso se curva hacia un lado; S = la cadera va a un lado y los hombros al otro */
@@ -11318,13 +11318,13 @@ function v3dActCalc(A){const B=A.base,P={...B},ad=(k,v)=>{P[k]=(P[k]||0)+v},roll
 const v3dActIgual=(a,b)=>V3_ACT_PAR.every(k=>Math.abs((a[k]||0)-(b[k]||0))<.51);
 /* aplica el acting actual a la pose; si la pose cambió a mano desde la última vez, la nueva pose pasa a ser la de partida */
 function v3dActAplica(cambios){const s=S.v3d,f=s.figs?.[s.sel||0];if(!f)return;let A=s.act;
-  if(!A||!A.out||!v3dActIgual(A.out,s.pose)){const prev=A;A={k:null,i:1,peso:0,lt:null,la:0,asim:0,push:1,base:clone(s.pose),dedos:clone(f.dedos||null),out:null};if(prev&&!cambios)A={...A,k:prev.k,i:prev.i}}
-  s.act=A;Object.assign(A,cambios||{});
-  if(cambios&&cambios.k&&V3_ACT[cambios.k]){const E=V3_ACT[cambios.k];A.peso=E.peso;A.lt=E.lt;A.la=E.la;A.asim=E.asim;A.push=A.push||1;f.dedos={L:V3_MANOS[E.dedos[0]].slice(),R:V3_MANOS[E.dedos[1]].slice()}}
+  if(!A||!A.out||!v3dActIgual(A.out,s.pose)){const prev=A;A={k:null,i:1.25,peso:0,lt:null,la:0,asim:0,push:1.15,base:clone(s.pose),dedos:clone(f.dedos||null),out:null};if(prev&&!cambios)A={...A,k:prev.k,i:prev.i}}
+  s.act=A;Object.assign(A,cambios||{});A.sinBrazos=(s.props||[]).some(x=>x.mano);
+  if(cambios&&cambios.k&&V3_ACT[cambios.k]){const E=V3_ACT[cambios.k];A.peso=E.peso;A.lt=E.lt;A.la=E.la;A.asim=E.asim;A.push=A.push||1;if(!A.sinBrazos)f.dedos={L:V3_MANOS[E.dedos[0]].slice(),R:V3_MANOS[E.dedos[1]].slice()}}
   const P=v3dActCalc(A);A.out=clone(P);s.pose={...s.pose,...P};
   const en=V3.figs?.[s.sel||0];if(en)v3dColoca(en.model,f);v3dPose();v3dAnillo?.();V3.dirty=true;v3dPersistePronto()}
 function v3dActQuita(){const s=S.v3d,A=s.act,f=s.figs?.[s.sel||0];if(!A?.base)return;s.pose={...s.pose,...A.base};if(A.dedos&&f)f.dedos=A.dedos;s.act=null;const en=V3.figs?.[s.sel||0];if(en&&f)v3dColoca(en.model,f);v3dPose();V3.dirty=true;v3dPanel()}
-function v3dActHTML(s){const A=s.act&&s.act.out&&v3dActIgual(s.act.out,s.pose)?s.act:{k:null,i:1,peso:0,lt:null,la:0,asim:0,push:1},sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3a-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3a="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,G=s.guias||{};
+function v3dActHTML(s){const A=s.act&&s.act.out&&v3dActIgual(s.act.out,s.pose)?s.act:{k:null,i:1.25,peso:0,lt:null,la:0,asim:0,push:1.15},sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3a-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3a="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,G=s.guias||{};
   return `<details class="v3-d" open><summary>Actuar la pose (acting)</summary><p class="hint" style="margin:4px 0">Una pose correcta no actúa. Elige <b>qué siente o qué hace</b> el personaje y la pose cambia: peso cargado en una pierna, línea de acción en C o S, cabeza, brazos y manos con intención. Parte de la pose que tengas y puedes afinar cada cosa; «Quitar acting» vuelve a ella.</p>
   <div class="chips">${Object.entries(V3_ACT).map(([k,e])=>`<button class="ch xs ${A.k===k?'on':''}" data-act="v3d-act" data-k="${k}" title="${esc(e.d)}">${e.n}</button>`).join('')}</div>
   ${A.k?`<p class="hint" style="margin:2px 0"><b>${V3_ACT[A.k].n}.</b> ${esc(V3_ACT[A.k].d)}</p>`:''}
@@ -11484,7 +11484,7 @@ const v3dPuedeMano=k=>!!V3_PROPS_MANO[k]||!k.startsWith('f:')||['f:caja','f:esfe
 function v3dPropDosManos(o,p){const T=V3.T,en=V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)],bn=en?.model.userData.bn,L=bn?.LeftHand,R=bn?.RightHand;if(!L||!R)return false;en.model.updateMatrixWorld(true);
   const pl=L.getWorldPosition(new T.Vector3()),pr=R.getWorldPosition(new T.Vector3()),A=V3_PROPS_AGARRE[p.k]||V3_AGARRE_X[p.k]||{g:0},mid=pl.clone().add(pr).multiplyScalar(.5),mq=en.model.getWorldQuaternion(new T.Quaternion()),pref=new T.Vector3(...(A.y||[0,1,0])).normalize().applyQuaternion(mq);
   /* si las manos están separadas a lo largo del objeto, la línea entre ellas manda; si no, la dirección de partida */
-  let H=pl.clone().sub(pr);if(H.dot(pref)<0)H.negate();let Y=pref;if(H.length()>.22){const c=H.clone().normalize();if(c.dot(pref)>Math.cos(55*RAD))Y=c}
+  let H=pl.clone().sub(pr);if(H.dot(pref)<0)H.negate();let Y=pref;if(H.length()>.22){const c=H.clone().normalize();if(c.dot(pref)>Math.cos(55*RAD))Y=c}{const Yd=v3dPropDirFija(p.dir,mq);if(Yd)Y=Yd}
   o.quaternion.copy(v3dPropBase(Y,new T.Vector3(...(A.x||[1,0,0])).applyQuaternion(mq))).multiply(new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)));o.position.copy(mid).addScaledVector(Y,-(A.g||0)*(p.e||1));return true}
 /* contexto para colocar objetos sin encimarlos: en perspectiva, delante de la cámara y alineados con tus puntos de fuga */
 function v3dLugarCtx(){const S3=S.v3d,P=S3.persp,ext=S3.lugarCfg?.ext||1,R=(a,b)=>a+Math.random()*(b-a),Rp=a=>a[Math.floor(Math.random()*a.length)],out=[],ocu=(S3.props||[]).filter(q=>!q.mano).map(q=>[q.x||0,q.z||0,(V3_RAD[q.k]||1)*(q.e||1)*.8]);
@@ -11525,7 +11525,7 @@ function v3dPropObj(k){const T=V3.T;if(V3_CONS[k]){const g=V3_CONS[k](T);g.userD
   const src=V3.propsS?.[k];if(!src)return null;const c=src.clone(true);c.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});const G=new T.Group();G.add(c);c.position.set(0,0,0);c.rotation.set(0,0,0);c.scale.set(1,1,1);return G}
 function v3dPropsMonta(){if(!V3.scene)return;(V3.propObjs||[]).forEach(o=>{V3.scene.remove(o);if(o.userData.f)o.traverse(m=>{m.geometry?.dispose?.();m.material?.dispose?.()})});V3.propObjs=[];for(const p of S.v3d?.props||[]){const o=v3dPropObj(p.k);if(!o)continue;o.userData.pid=p.id;V3.scene.add(o);V3.propObjs.push(o)}v3dPropsPos()}
 /* cómo se sostiene cada objeto: y = hacia dónde apunta, x = hacia dónde mira su lado ancho (en el marco del personaje: z hacia adelante), g = dónde está el puño sobre el objeto, e = tamaño de partida */
-const V3_PROPS_AGARRE={Espada:{g:.09,y:[0,.8,.6],x:[0,0,1],e:.8},Hacha:{g:.12,y:[0,.8,.6],x:[0,0,1],e:.9},Pico:{g:.12,y:[0,.8,.6],x:[1,0,0],e:.9},Antorcha:{g:.1,y:[0,1,.35],x:[1,0,0],e:1},Escudo:{g:0,y:[0,1,0],x:[1,0,0],e:1}};
+const V3_PROPS_AGARRE={Espada:{g:.09,y:[0,.8,.6],x:[0,0,1],e:.8},Hacha:{g:.12,y:[0,.8,.6],x:[0,0,1],e:.9},Pico:{g:.12,y:[0,.8,.6],x:[1,0,0],e:.9},Antorcha:{g:.1,y:[0,1,.35],x:[1,0,0],e:1},Escudo:{g:.31,y:[0,1,0],x:[1,0,0],e:.85}};
 /* cómo se agarra un objeto: su dirección sale del antebrazo (de codo a mano) y de la gravedad, así que cambia con la pose y se ve bien desde cualquier cámara.
    a = cuánto se alza el objeto sobre la línea del antebrazo (espada 38°, hacha 70°, bandera 85°…). Con el brazo casi vertical manda la dirección de partida del objeto. */
 const V3_ANG={Espada:38,Hacha:70,Pico:65,Antorcha:55,'f:lanza':38,'f:baston':70,'f:arco':90,'f:martillo':70,'f:maza':60,'f:daga':14,'f:bandera':85,'f:linterna':90,'f:libro':90,'f:copa':90};
@@ -11536,13 +11536,45 @@ function v3dPropAgarre(o,p){const T=V3.T,en=V3.figs?.[Math.min(p.fig||0,V3.figs.
   const A=V3_PROPS_AGARRE[p.k]||V3_AGARRE_X[p.k]||{y:[0,1,0],x:[1,0,0],g:0};en.model.updateMatrixWorld(true);
   const bq=new T.Quaternion(),bp=new T.Vector3(),s3=new T.Vector3(),mq=en.model.getWorldQuaternion(new T.Quaternion());b.matrixWorld.decompose(bp,bq,s3);
   const eul=new T.Quaternion().setFromEuler(new T.Euler((p.rx||0)*RAD,(p.ry||0)*RAD,(p.rz||0)*RAD)),P=bp.clone(),sc=en.model.scale.y;
-  if(esc){/* el escudo va pegado al antebrazo */
-    if(!p.q){const Y=new T.Vector3(...A.y).normalize().applyQuaternion(mq),X0=new T.Vector3(...A.x).applyQuaternion(mq),Z=new T.Vector3().crossVectors(X0,Y).normalize(),X=new T.Vector3().crossVectors(Y,Z).normalize(),qd=new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Y,Z));p.q=bq.clone().invert().multiply(qd).toArray()}
-    o.quaternion.copy(bq).multiply(new T.Quaternion().fromArray(p.q)).multiply(eul);const H=bn[L+'Hand'];if(H)P.lerp(H.getWorldPosition(new T.Vector3()),.5);P.add(new T.Vector3(0,0,.09*sc).applyQuaternion(mq))}
+  if(esc){/* el escudo va sobre el antebrazo, con la cara hacia fuera del cuerpo y derecho, sea cual sea la pose */
+    const hand=bn[L+'Hand'],pe=b.getWorldPosition(new T.Vector3()),ph=(hand||b).getWorldPosition(new T.Vector3()),F=ph.clone().sub(pe);if(F.length()<.01)F.set(0,-1,0);F.normalize();
+    const mid=pe.clone().lerp(ph,.55),ch=(bn.Spine2||bn.Spine||bn.Hips).getWorldPosition(new T.Vector3()),N=mid.clone().sub(ch);N.addScaledVector(F,-N.dot(F));if(N.length()<.04)N.set(L==='Left'?1:-1,0,0).applyQuaternion(mq);N.normalize();N.y*=.3;N.normalize();/* el escudo se mantiene casi vertical aunque el antebrazo apunte arriba o abajo */
+    const Up=new T.Vector3(0,1,0);Up.addScaledVector(N,-Up.dot(N));if(Up.length()<.2)Up.copy(F).negate();Up.normalize();const X=new T.Vector3().crossVectors(Up,N).normalize();
+    o.quaternion.copy(new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(X,Up,N))).multiply(eul);P.copy(mid).addScaledVector(N,.07*sc+.09*(p.e||1))}
   else{const hand=bn[L+'Hand'],fore=bn[L+'ForeArm'];let F=new T.Vector3(0,0,1).applyQuaternion(mq);if(hand&&fore){F=hand.getWorldPosition(new T.Vector3()).sub(fore.getWorldPosition(new T.Vector3()));if(F.length()>.01)F.normalize();else F=new T.Vector3(0,0,1).applyQuaternion(mq)}
-    const pref=new T.Vector3(...(A.y||[0,1,0])).normalize().applyQuaternion(mq),fwd=new T.Vector3(0,0,1).applyQuaternion(mq),Y=v3dPropDir(F,V3_ANG[p.k]??50,pref,fwd);
+    const pref=new T.Vector3(...(A.y||[0,1,0])).normalize().applyQuaternion(mq),fwd=new T.Vector3(0,0,1).applyQuaternion(mq),Y=v3dPropDirFija(p.dir,mq)||v3dPropDir(F,V3_ANG[p.k]??50,pref,fwd);
     o.quaternion.copy(v3dPropBase(Y,new T.Vector3(...(A.x||[1,0,0])).applyQuaternion(mq))).multiply(eul);const M=bn[L+'HandMiddle1'];if(M)P.lerp(M.getWorldPosition(new T.Vector3()),.6)}
   P.addScaledVector(new T.Vector3(0,1,0).applyQuaternion(o.quaternion),-(A.g||0)*(p.e||1));o.position.copy(P);return true}
+/* ============ Objetos con sentido: cada objeto trae las poses en que de verdad se usa ============
+   Una espada en una pose de pie no dice nada. Al poner un objeto en la mano, el personaje adopta una pose para usarlo (parar, cortar, estocar, cubrirse, apoyarse) y ves las demás opciones. [pose, mano]: R = mano derecha, L = izquierda, B = las dos. */
+const V3_USO={
+ Espada:[['Parada con espada','R'],['Guerrero listo','R'],['Guardia','R'],['Corte horizontal','R'],['Estocada','R'],['Esgrima en guardia','R'],['Giro de espada','R'],['Corte descendente','B'],['Guerrero con arma al hombro','R'],['Victoria con arma en alto','R'],['Guerrero arrodillado con el arma clavada','B','d'],['Arma clavada en el suelo','B','d']],
+ Hacha:[['Guerrero preparando el golpe','R'],['Golpe','R'],['Golpe cargado','B'],['Corte descendente','B'],['Golpe hacia abajo','B'],['Guerrero con arma al hombro','R'],['Victoria con arma en alto','R']],
+ Pico:[['Guerrero apoyado en su arma','B','v'],['Golpe hacia abajo','B'],['Golpe cargado','B'],['Guerrero con arma al hombro','R']],
+ Antorcha:[['Sosteniendo una antorcha','R'],['Guerrero en reposo','R']],
+ Escudo:[['Defensa con escudo','L'],['Guardia','L'],['Guerrero listo','L'],['Parada con espada','L'],['Bloqueo alto','L']],
+ 'f:lanza':[['Centinela con lanza','R','v'],['Lanza en carga','B','f'],['Guardia','R'],['Guerrero apoyado en su arma','B','v']],
+ 'f:baston':[['Guerrero apoyado en su arma','B','v'],['Centinela con lanza','R','v']],
+ 'f:martillo':[['Golpe hacia abajo','B'],['Golpe cargado','B'],['Guerrero con arma al hombro','R']],
+ 'f:maza':[['Golpe','R'],['Guerrero preparando el golpe','R'],['Corte horizontal','R']],
+ 'f:daga':[['Esgrima en guardia','R'],['Estocada','R'],['Guardia','R']],
+ 'f:bandera':[['Victoria con arma en alto','R'],['Centinela con lanza','R','v']],
+ 'f:linterna':[['Sosteniendo una antorcha','R']],
+ 'f:arco':[['Guardia','L']]};
+function v3dPropDirFija(d,mq){if(!d)return null;const T=V3.T,f=new T.Vector3(0,0,1).applyQuaternion(mq);if(d==='v')return new T.Vector3(0,1,0).addScaledVector(f,.05).normalize();if(d==='d')return new T.Vector3(0,-1,0).addScaledVector(f,.05).normalize();if(d==='f')return f.multiplyScalar(.98).add(new T.Vector3(0,.18,0)).normalize();return null}
+const V3_USO_ACT={Espada:'determinacion',Hacha:'ira','f:maza':'ira','f:martillo':'ira',Pico:'cansancio',Escudo:'alerta','f:lanza':'orgullo','f:baston':'orgullo','f:bandera':'triunfo',Antorcha:'duda','f:linterna':'duda','f:daga':'alerta','f:arco':'alerta'};
+/* los dedos se cierran sobre el objeto en la mano que lo sostiene */
+function v3dUsoManos(p){const f=S.v3d.figs?.[S.v3d.sel||0];if(!f||!p.mano)return;f.dedos=f.dedos||{L:V3_MANOS['Relajada'].slice(),R:V3_MANOS['Relajada'].slice()};const g=V3_MANOS['Agarrar'].slice();if(p.mano==='L'||p.mano==='B')f.dedos.L=g.slice();if(p.mano==='R'||p.mano==='B')f.dedos.R=g.slice()}
+function v3dUsoPara(k){return (V3_USO[k]||[]).filter(([n])=>V3_POSES[n])}
+function v3dUsoAplica(p,idx,auto){const s=S.v3d,L=v3dUsoPara(p.k),e=L[idx];if(!e)return;if(!s.poseAntes||!auto)s.poseAntes=s.poseAntes||{pose:clone(s.pose),preset:s.preset};
+  s.act=null;s.pose={...V3_POSES[e[0]]};s.preset=e[0];p.mano=e[1];p.q=null;p.rx=p.ry=p.rz=0;p.fig=s.sel||0;p.uso=idx;p.dir=e[2]||null;v3dPose();{const em=V3_USO_ACT[p.k];if(em)v3dActAplica({k:em,i:1.35,push:1.25})}v3dUsoManos(p);v3dFigsRecoloca();v3dPropsPos();V3.dirty=true}
+/* al poner un objeto en la mano, la pose se ajusta a él (si no la tienes ya en una pose que lo usa) */
+function v3dUsoAuto(p){if(!p.mano)return;const L=v3dUsoPara(p.k);if(!L.length)return;const s=S.v3d,otros=(s.props||[]).filter(x=>x.id!==p.id&&x.mano),escudo=otros.some(x=>x.k==='Escudo')||p.k==='Escudo';let i=0;
+  if(L.some(([n])=>n===s.preset)&&!escudo){const j=L.findIndex(([n])=>n===s.preset);p.mano=L[j][1];p.uso=j;p.dir=L[j][2]||null;return}
+  if(escudo&&otros.length||escudo&&p.k!=='Escudo'){/* escudo con arma: la pose de defensa, escudo a la izquierda y arma a la derecha */const n='Defensa con escudo';if(V3_POSES[n]){const s0=S.v3d;s0.poseAntes=s0.poseAntes||{pose:clone(s0.pose),preset:s0.preset};s0.act=null;s0.pose={...V3_POSES[n]};s0.preset=n;if(p.k!=='Escudo')p.mano='R';v3dPose();v3dActAplica({k:'alerta',i:1.35,push:1.25});for(const x of s0.props||[])v3dUsoManos(x);v3dFigsRecoloca();return}}
+  v3dUsoAplica(p,i,true)}
+function v3dUsoHTML(p){const L=v3dUsoPara(p.k);if(!p.mano||!L.length)return '';
+  return `<div class="v3-g" style="margin-top:6px"><b>Poses para usar ${esc(V3_PROP_NOM[p.k]||p.k)}</b><p class="hint" style="margin:0">Poses donde el personaje de verdad lo usa. El objeto sigue sus manos y la perspectiva.</p><div class="chips"><span class="lbl">Actitud</span>${['determinacion','ira','orgullo','alerta','miedo','duda','cansancio','triunfo'].map(k=>`<button class="ch xs ${S.v3d.act?.k===k?'on':''}" data-act="v3d-act" data-k="${k}">${V3_ACT[k].n.split(' ')[0]}</button>`).join('')}</div><div class="chips">${L.map(([n,m],i)=>`<button class="ch xs ${S.v3d.preset===n?'on':''}" data-act="v3d-uso" data-i="${i}">${n}${m==='B'?' · 2 manos':''}</button>`).join('')}${S.v3d.poseAntes?'<button class="ch xs" data-act="v3d-uso-vuelve">↶ Volver a mi pose anterior</button>':''}</div></div>`}
 function v3dPropsPos(){const T=V3.T;if(!T||!V3.propObjs)return;const v=new T.Vector3(),q=new T.Quaternion(),sc=new T.Vector3();
   for(const o of V3.propObjs){const p=(S.v3d.props||[]).find(x=>x.id===o.userData.pid);if(!p)continue;{const e0=p.e||1;o.scale.set(e0*(p.sx||1),e0*(p.sy||1),e0*(p.sz||1))}if(o.userData.f){const sel=p.id===S.v3d.propSel;o.traverse(m=>{if(m.isMesh&&m.material?.emissive)m.material.emissive.setHex(sel?0x3a1e0c:0)})}
     const en=p.mano?V3.figs?.[Math.min(p.fig||0,V3.figs.length-1)]:null;const bn=en?.model.userData.bn,b=bn?.[(p.mano==='L'?'Left':'Right')+(p.k==='Escudo'?'ForeArm':'Hand')];
@@ -11556,7 +11588,7 @@ function v3dPropsPos(){const T=V3.T;if(!T||!V3.propObjs)return;const v=new T.Vec
 function v3dPropsLimpia(id){const S3=S.v3d,ids=new Set(id?[id]:(S3.props||[]).map(x=>x.id));S3.props=(S3.props||[]).filter(x=>!ids.has(x.id));if(ids.has(S3.propSel))S3.propSel=S3.props.slice(-1)[0]?.id||null;for(const f of S3.figs||[])if(ids.has(f.sentadoEn)){f.sentadoEn=null;f.asiento=null}}
 function v3dPropsQuitaSi(fn){const S3=S.v3d,ids=new Set((S3.props||[]).filter(fn).map(x=>x.id));ids.forEach(id=>v3dPropsLimpia(id));v3dPropsMonta();v3dFigsRecoloca();v3dPanel();return ids.size}
 async function v3dPropAgrega(k,suma){const S3=S.v3d;S3.props=S3.props||[];if(suma&&V3_RAD[k]){const c=v3dLugarCtx(),N=S3.objN||1;for(let i=0;i<N;i++)c.pon(k,c.varia(k),'');if(!c.out.length){toast('No encontré lugar libre: quita algo o aumenta la extensión del lugar');return}S3.props.push(...c.out);S3.propSel=c.out[c.out.length-1].id;v3dPropsMonta();v3dFigsRecoloca();v3dPanel();return}let lugar=null;{const o=S3.props.find(x=>x.id===S3.propSel);if(o&&S3.propModo!=='suma'){lugar={x:o.x,z:o.z,ry:o.ry,tenia:o.mano};v3dPropsLimpia(o.id);S3.propSel=null}}if(!k.startsWith('f:'))await v3dPropsCarga();const f=S3.figs?.[S3.sel||0],fx=f?(f.px||0)+.9:.9,mano=V3_PROPS_MANO[k]||'';
-  const p={id:uid(),k,x:clamp(fx,-3,3),z:0,y:0,ry:0,e:V3_PROPS_AGARRE[k]?.e||1,mano,fig:S3.sel||0};if(lugar&&!p.mano&&!lugar.tenia){p.x=lugar.x;p.z=lugar.z;p.ry=lugar.ry||0}S3.props.push(p);S3.propSel=p.id;v3dPropsMonta();v3dFigsRecoloca();v3dPanel()}
+  const p={id:uid(),k,x:clamp(fx,-3,3),z:0,y:0,ry:0,e:V3_PROPS_AGARRE[k]?.e||1,mano,fig:S3.sel||0};if(lugar&&!p.mano&&!lugar.tenia){p.x=lugar.x;p.z=lugar.z;p.ry=lugar.ry||0}S3.props.push(p);S3.propSel=p.id;v3dUsoAuto(p);v3dPropsMonta();v3dFigsRecoloca();v3dPanel()}
 function v3dFigsRecoloca(){for(const e of V3.figs||[])if(e.model&&e.f)v3dColoca(e.model,e.f);V3.dirty=true}
 function v3dPropSienta(){const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propSel),f=S3.figs?.[S3.sel||0];if(!p||!f)return;f.pose={...V3_POSES['Sentado erguido']};S3.pose={...f.pose};S3.preset='Sentado erguido';f.px=p.x||0;f.pz=(p.z||0)+.04;f.py=0;f.giro={x:0,y:p.ry||0,z:0};S3.giro={...f.giro};v3dCargaSel();v3dPose();f.sentadoEn=p.id;v3dAsienta(S3.sel||0,p.id);v3dPanel()}
 /* panel de objetos: lugares enteros, edificios, naturaleza, ciudad, muebles, formas y la lista de lo que hay en la escena (para quitar o editar) */
@@ -11585,6 +11617,7 @@ function v3dPropsHTML(s){const L=s.props||[],n=L.length,sec=s.objSec||'lugares',
       if(p)h+=`<div class="prow" style="align-items:center"><button class="btn sm" data-act="v3d-prop-nav" data-d="-1">◀</button><b style="flex:1;text-align:center">${esc(nom(p.k))} · ${pos+1} de ${mis.length}</b><button class="btn sm" data-act="v3d-prop-nav" data-d="1">▶</button></div><p class="hint" style="margin:0">También puedes tocar un objeto en la escena para elegirlo. Tecla Supr: lo quita.</p>`}}
   if(sec==='escena'&&p){const sue=!p.mano;h+=`${sue?sl('Izquierda ↔ derecha','x',-70,70,.1,p.x||0)+sl('Adelante ↔ atrás','z',-80,40,.1,p.z||0)+sl('Altura','y',0,20,.1,p.y||0):''}${sl('Girar','ry',-180,180,1,p.ry||0,'°')}${p.mano?sl('Inclinar','rx',-180,180,1,p.rx||0,'°')+sl('Ladear','rz',-180,180,1,p.rz||0,'°')+'<p class="hint" style="margin:0">Se acomoda según la pose que tiene el personaje al ponérsela. Si cambias mucho la pose, usa «Reacomodar».</p>':''}${sl('Tamaño','e',.2,6,.05,p.e||1,'×')}${sue&&p.k.startsWith('f:')?sl('Ancho','sx',.3,4,.05,p.sx||1,'×')+sl('Alto','sy',.3,4,.05,p.sy||1,'×')+sl('Largo','sz',.3,4,.05,p.sz||1,'×'):''}
       ${v3dPuedeMano(p.k)?`<div class="chips"><span class="lbl">Dónde está</span><button class="ch xs ${!p.mano?'on':''}" data-act="v3d-prop-mano" data-m="">Suelto</button><button class="ch xs ${p.mano==='B'?'on':''}" data-act="v3d-prop-mano" data-m="B">En ambas manos</button><button class="ch xs ${p.mano==='L'?'on':''}" data-act="v3d-prop-mano" data-m="L">En la mano izquierda</button><button class="ch xs ${p.mano==='R'?'on':''}" data-act="v3d-prop-mano" data-m="R">En la mano derecha</button></div>`:''}
+      ${v3dUsoHTML(p)}
       <div class="prow">${V3_PROPS_SILLAS.includes(p.k)?'<button class="btn sm pri" data-act="v3d-prop-sienta">Sentar al personaje aquí</button>':''}${p.mano?'<button class="btn sm" data-act="v3d-prop-reor">Reacomodar en la mano</button>':''}<button class="btn sm" data-act="v3d-prop-dup">Duplicar</button><button class="btn sm ghost danger" data-act="v3d-prop-quita">Quitar este</button></div>`}
   return h+'</div>'}
 function v3dPropModoHTML(s,L){return `<div class="chips"><span class="lbl">Al elegir otro objeto</span><button class="ch xs ${s.propModo!=='suma'?'on':''}" data-act="v3d-prop-modo" data-k="reemplaza" title="El objeto elegido cambia por el nuevo">Cambia el elegido</button><button class="ch xs ${s.propModo==='suma'?'on':''}" data-act="v3d-prop-modo" data-k="suma" title="Se queda y se agrega otro">Agrega otro</button></div>`}
@@ -12767,7 +12800,9 @@ async function accion(a,el){
     case 'v3d-mood':{S.v3d.moodSel=S.v3d.moodSel===ds.k?null:ds.k;v3dPanel();break}
     case 'v3d-cielo':{S.v3d.cielo=!S.v3d.cielo;v3dEscena();v3dPanel();break}
     case 'v3d-prop-sel':{S.v3d.propSel=ds.id;v3dPanel();break}
-    case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.q=null;if(ds.m)p.rx=p.ry=p.rz=0;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
+    case 'v3d-uso':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){v3dUsoAplica(p,+ds.i,false);v3dFigsRecoloca();v3dPanel()}break}
+    case 'v3d-uso-vuelve':{const A=S.v3d.poseAntes;if(A){S.v3d.pose=A.pose;S.v3d.preset=A.preset;S.v3d.poseAntes=null;v3dPose();v3dPropsPos();v3dPanel()}break}
+    case 'v3d-prop-mano':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.mano=ds.m;p.q=null;p.dir=null;if(ds.m)p.rx=p.ry=p.rz=0;p.fig=S.v3d.sel||0;if(!ds.m){const f=S.v3d.figs?.[p.fig];p.x=(f?.px||0)+.7;p.z=f?.pz||0;p.y=0;p.rx=0;p.rz=0}v3dPropsPos();v3dPanel()}break}
     case 'v3d-prop-sienta':v3dPropSienta();break;
     case 'v3d-prop-quita':{v3dPropsLimpia(S.v3d.propSel);v3dPropsMonta();v3dFigsRecoloca();v3dPanel();break}
     case 'v3d-prop-todos':{v3dPropsLimpia();v3dPropsMonta();v3dFigsRecoloca();v3dPanel();toast('Objetos quitados');break}
