@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mva8hmzk').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mva8t59k').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -10482,7 +10482,7 @@ const V3_ESCENAS=[
  {k:'persigue',n:'Persecución',d:'Uno corre y el otro lo persigue',figs:[{p:'Correr',x:.5,y:90},{p:'Correr',x:-.9,y:90}]},
  {k:'ante',n:'Ante el otro',d:'Uno de pie, imponente; el otro arrodillado',figs:[{p:'Contrapposto',x:-.5,y:90,ex:{aLs:-10,aLp:45,aLe:105,aRs:-10,aRp:45,aRe:105}},{p:'Arrodillado',x:.5,y:-90}]},
  {k:'v',n:'Formación en V',d:'Tres guerreros avanzando',figs:[{p:'Guardia',x:0,z:.4,y:0},{p:'Guardia',x:-.75,z:-.35,y:0},{p:{base:'Guardia',m:true},x:.75,z:-.35,y:0}]},
- {k:'circulo',n:'Círculo de defensa',d:'Cuatro de espaldas, mirando hacia afuera',figs:[{p:'Defensa con escudo',x:.45,z:.45,y:45},{p:'Defensa con escudo',x:-.45,z:.45,y:-45},{p:'Defensa con escudo',x:.45,z:-.45,y:135},{p:'Defensa con escudo',x:-.45,z:-.45,y:-135}]},
+ {k:'circulo',n:'Círculo de defensa',d:'Cuatro de espaldas, mirando hacia afuera',figs:[{p:'Defensa con escudo',x:.85,z:.85,y:45},{p:'Defensa con escudo',x:-.85,z:.85,y:-45},{p:'Defensa con escudo',x:.85,z:-.85,y:135},{p:'Defensa con escudo',x:-.85,z:-.85,y:-135}]},
  {k:'grupo',n:'Grupo caminando',d:'Cuatro caminando en la misma dirección',figs:[{p:'Caminar',x:-1.05,y:12},{p:{base:'Caminar',m:true},x:-.35,y:6},{p:'Caminar',x:.35,y:-6},{p:{base:'Caminar',m:true},x:1.05,y:-12}]}];
 /* ---- más escenas de partida, por tipo (y = hacia dónde mira: 90 derecha, -90 izquierda, 0 a cámara) ---- */
 {const R=(n,p,r,o,x)=>Array.from({length:n},(_,i)=>{const a=(o||0)+i*2*Math.PI/n;return {p:typeof p==='function'?p(i):p,x:+(Math.sin(a)*r).toFixed(2),z:+(Math.cos(a)*r).toFixed(2),y:Math.round(Math.atan2(-Math.sin(a),-Math.cos(a))*180/Math.PI),...(x||{})}});
@@ -10520,24 +10520,23 @@ const V3_ESCENAS=[
  E('Pareja','rezo','Rezando juntos','Dos personas rezando',[{p:'Rezando',x:-.5,y:0},{p:'Rezando',x:.5,y:0}]),
  E('Pareja','celebra','Celebración','Dos celebrando',[{p:'Celebrando',x:-.5,y:20},{p:'Alegría',x:.5,y:-20}]),
  E('Acción','empuja','Empujando una carga','Dos empujan una caja',[{p:'Empujando',x:-.9,y:90},{p:'Empujando',x:-.3,y:90}],[{k:'Caja de madera',x:.35,z:0}]),
- E('Acción','cuerda','Jalar la cuerda','Dos jalan en sentidos opuestos',[{p:'Jalando una cuerda',x:-.9,y:90},{p:'Jalando una cuerda',x:.9,y:-90}]),
- E('Acción','rescate','Cargar al herido','Uno carga, otro cae',[{p:'Cargando algo pesado',x:-.3,y:90},{p:'Derribado',x:.9,y:-90}]),
+ E('Acción','rescate','Ayudar a caminar al herido','Uno sostiene al otro, que apenas se mantiene en pie',[{p:'Caminar',x:-.3,y:5},{p:'Caminar cansado',x:.3,y:-5}]),
  E('Acción','ayuda','Ayudar a subir','Uno ayuda desde abajo, el otro sube',[{p:'Subiendo un escalón',x:.3,y:90},{p:'Rodilla en tierra',x:-.4,y:90}],[{k:'f:escalon',x:.5,z:0}]),
  E('Acción','futbol','Balón','Una patada al balón y otro que corre',[{p:'Pateando un balón',x:-.4,y:90},{p:'Correr',x:.9,y:90}]),
  E('Acción','carrera','Carrera de cuatro','Cuatro corriendo en carriles',[{p:'Sprint',x:.4,z:-1.2,y:90},{p:'Sprint',x:.1,z:-.4,y:90},{p:'Sprint',x:-.2,z:.4,y:90},{p:'Sprint',x:-.5,z:1.2,y:90}]),
  E('Acción','salto3','Salto en grupo','Tres saltando',[{p:'Salto',x:-.9,y:0},{p:'Salto',x:0,y:0},{p:'Salto',x:.9,y:0}]),
  E('Grupo','heroes','Equipo de héroes','Héroe al frente, mago, arquero y guerrero',[{p:'Héroe',x:0,z:.4,y:0},{p:'Lanzando un hechizo',x:-.9,z:-.1,y:25},{p:'Arquero tensando',x:.9,z:-.1,y:-25},{p:'Guardia',x:0,z:-.8,y:0}]),
  E('Grupo','villano','Villano y secuaces','El jefe al fondo, secuaces acechando',[{p:'Villano encorvado',x:0,z:-.7,y:0},{p:'Acechar',x:-.9,z:.2,y:20},{p:'Acechar',x:.9,z:.2,y:-20}]),
- E('Grupo','arqueros','Línea de arqueros','Cuatro arqueros en fila',[{p:'Arquero tensando',x:.3,z:-1.2,y:90},{p:'Arquero tensando',x:.1,z:-.4,y:90},{p:'Arquero tensando',x:-.1,z:.4,y:90},{p:'Arquero tensando',x:-.3,z:1.2,y:90}]),
+ E('Grupo','arqueros','Línea de arqueros','Cuatro arqueros en fila',[{p:'Arquero tensando',x:-1.5,z:.25,y:55},{p:'Arquero tensando',x:-.5,z:-.1,y:55},{p:'Arquero tensando',x:.5,z:.1,y:55},{p:'Arquero tensando',x:1.5,z:-.2,y:55}]),
  E('Grupo','muro','Muro de escudos','Cuatro escudos al frente',[{p:'Defensa con escudo',x:-1.2,y:0},{p:'Defensa con escudo',x:-.4,y:0},{p:'Defensa con escudo',x:.4,y:0},{p:'Defensa con escudo',x:1.2,y:0}],[0,1,2,3].map(i=>({k:'Escudo',fig:i}))),
  E('Grupo','tres1','Tres contra uno','Tres atacan a uno que se defiende',[{p:'Guardia',x:0,z:0,y:0},...R(3,'Estocada',1.2,.5)],[1,2,3].map(i=>esp(i))),
  E('Grupo','fogata','Alrededor de la fogata','Cuatro sentados alrededor del fuego',R(4,'Sentado relajado',1,.4,{s:'Banco'}),[{k:'Antorcha',x:0,z:0}]),
  E('Grupo','redonda','Mesa redonda','Cuatro sentados alrededor de una mesa',R(4,'Sentado erguido',1.15,.4,{s:'Silla'}),[{k:'Mesa',x:0,z:0}]),
  E('Grupo','corrillo','Corrillo conversando','Tres de pie en círculo',R(3,'Contrapposto',.8,.3)),
- E('Grupo','marcha','Marcha en fila','Cuatro caminando en fila',[{p:'Caminar',x:0,z:-1.2,y:90},{p:{base:'Caminar',m:true},x:0,z:-.4,y:90},{p:'Caminar',x:0,z:.4,y:90},{p:{base:'Caminar',m:true},x:0,z:1.2,y:90}]),
+ E('Grupo','marcha','Marcha en fila','Cuatro caminando en fila india',[{p:'Caminar',x:-1.5,z:.05,y:90},{p:{base:'Caminar',m:true},x:-.5,z:-.05,y:90},{p:'Caminar',x:.5,z:.05,y:90},{p:{base:'Caminar',m:true},x:1.5,z:-.05,y:90}]),
  E('Grupo','baile4','Baile en círculo','Cuatro bailando',R(4,i=>i%2?'Baile con cadera':'Baile con giro',.9,.4)),
  E('Grupo','fiesta','Celebración en grupo','Cuatro celebrando',R(4,'Celebrando',.9,.2)),
- E('Grupo','herido','Rodean al herido','Dos arrodillados junto al caído',[{p:'Derribado',x:0,z:0,y:90},{p:'Rodilla en tierra',x:0,z:.8,y:180},{p:'Rodilla en tierra',x:0,z:-.8,y:0}]),
+ E('Grupo','herido','Rodean al herido','Dos arrodillados junto al caído',[{p:'Derribado',x:0,z:0,y:0},{p:'Rodilla en tierra',x:-1.05,z:.1,y:90},{p:'Rodilla en tierra',x:1.05,z:.1,y:-90}]),
  E('Grupo','rezo4','Oración en círculo','Cuatro rezando',R(4,'Rezando',.8,.4))
  );
  const C={pelea:'Combate',bloqueo:'Combate',espalda:'Combate',protege:'Combate',ante:'Combate',persigue:'Acción',mano:'Pareja',abrazo:'Pareja',conversa:'Pareja',v:'Grupo',circulo:'Grupo',grupo:'Grupo'};V3_ESCENAS.forEach(e=>{if(!e.c)e.c=C[e.k]||'Otras'})}
@@ -11340,8 +11339,7 @@ const V3_ESC_X={
  rezo:{m:'plantilla',act:['tristeza','tristeza']},
  celebra:{m:'cara',sep:1.1,act:['triunfo','triunfo']},
  empuja:{m:'plantilla',act:['determinacion','cansancio']},
- cuerda:{m:'cara',sep:2,act:['determinacion','determinacion']},
- rescate:{m:'plantilla',act:['determinacion','cansancio']},
+ rescate:{m:'misma',sep:.55,act:['determinacion','dolor'],c:[{a:0,h:'L',b:1,p:'cintura',o:[-.1,0,-.04]},{a:1,h:'R',b:0,p:'hombroR',o:[0,.06,0]}]},
  ayuda:{m:'plantilla',act:['determinacion','cansancio']},
  futbol:{m:'plantilla',act:['triunfo','determinacion']},
  carrera:{m:'plantilla',act:['determinacion','determinacion','determinacion','determinacion']},
@@ -11370,7 +11368,7 @@ function v3dEscenaPlan(sc0){const X=V3_ESC_X[sc0.k]||{},sc={...sc0,figs:sc0.figs
     if(X.m==='cara'){a.y=yaw(a,b)+(X.rot?.[0]||0);b.y=yaw(b,a)+(X.rot?.[1]||0)}else if(X.m==='espalda'){a.y=yaw(b,a);b.y=yaw(a,b)}else if(X.m==='misma'){const y=Math.round((a.y+b.y)/2);a.y=y;b.y=y}}
   sc.props=sc.props.map(q=>{const o={...q};if(o.fig==null&&V3_PROPS_MANO[o.k])o.mano='';if(o.fig!=null&&X.dir?.[o.fig]&&o.k==='Espada')o.dir=X.dir[o.fig];return o});
   const dedos=[];
-  sc.figs.forEach((d,i)=>{const nom=typeof d.p==='string'?d.p:d.p?.base||'',pose=v3dPoseDe(d.p);Object.assign(pose,d.ex||{});const e=X.act?.[i],A=e==='tierno'?{...V3_ESC_TIERNO}:{k:e&&V3_ACT[e]?e:null,i:1.1,peso:0,lt:null,la:0,asim:0,push:1.2};
+  sc.figs.forEach((d,i)=>{const nom=typeof d.p==='string'?d.p:d.p?.base||'',pose=v3dPoseDe(d.p);Object.assign(pose,d.ex||{});const e=X.act?.[i],A=e==='tierno'?{...V3_ESC_TIERNO}:{k:e&&V3_ACT[e]?e:null,i:1,peso:0,lt:null,la:0,asim:0,push:1.1};
     if(A.k){const E=V3_ACT[A.k];A.peso=E.peso;A.lt=E.lt;A.la=E.la;A.asim=E.asim}
     A.peso*=(i%2?-1:1)*(1+.1*i);A.base=pose;A.armMode=V3_ESC_NO.test(nom)?'no':V3_ESC_BRAZOS.test(nom)?'set':'suave';A.flow=.7;
     const P=v3dActCalc(A);for(const q in P)if(V3_RANGOS[q])P[q]=clamp(P[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);d.ex=P;
@@ -11867,10 +11865,10 @@ function v3dVida(on){const s=S.v3d;s.vida=!!on;cancelAnimationFrame(V3.vidaRaf);
     if(V3.propObjs?.length)v3dPropsPos();V3.dirty=true;V3.vidaRaf=requestAnimationFrame(paso)};V3.vidaRaf=requestAnimationFrame(paso)}
 const V3_ACT_PAR=['tb','tt','tl','py','pz','hn','hy','hl','aLs','aLp','aLr','aLe','aRs','aRp','aRr','aRe','lLs','lLp','lLk','lRs','lRp','lRk'];
 /* arma la pose final a partir de la pose de partida y de todo lo que el usuario haya activado */
-function v3dActCalc(A){const B=A.base,P={...B},ad=(k,v)=>{P[k]=(P[k]||0)+v},roll=v=>{ad('pz',v);ad('lLp',-v*1.05);ad('lRp',v*1.05)},E=V3_ACT[A.k],i=A.i??1;
-  if(E){for(const k in E.add)ad(k,E.add[k]*i);const am=A.armMode||(A.sinBrazos?'no':'set'),fa=am==='set'?1:am==='suave'?.3:0;if(fa)for(const k in E.set)P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)*fa}
+function v3dActCalc(A){const B=A.base,P={...B},pie=Math.abs(B.lLs||0)<25&&Math.abs(B.lRs||0)<25&&(B.lLk||0)<40&&(B.lRk||0)<40,ad=(k,v)=>{P[k]=(P[k]||0)+v},roll=v=>{ad('pz',v);ad('lLp',-v*1.05);ad('lRp',v*1.05)},E=V3_ACT[A.k],i=A.i??1;
+  if(E){for(const k in E.add)ad(k,E.add[k]*i);const am=A.armMode||(A.sinBrazos?'no':'set'),fa=am==='set'?1:am==='suave'?.3:0;if(fa)for(const k in E.set){if(/^l[LR]/.test(k)&&!pie)continue;P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)*fa}}
   /* peso en una pierna (+ = sobre la izquierda del personaje): la cadera se eleva del lado cargado, los hombros contrarrestan, la pierna libre se afloja */
-  const p=A.peso||0;if(p){roll(p*10);ad('tl',-p*8);ad('hl',-p*3);const lib=p>0?'R':'L',car=p>0?'L':'R',q=Math.abs(p);P['l'+car+'k']=Math.min(P['l'+car+'k']||0,6*(1-q));ad('l'+lib+'k',16*q);ad('l'+lib+'s',8*q);ad('l'+lib+'p',8*q)}
+  const p=A.peso||0;if(p){roll(p*10);ad('tl',-p*8);ad('hl',-p*3);const lib=p>0?'R':'L',car=p>0?'L':'R',q=Math.abs(p);if(pie){P['l'+car+'k']=Math.min(P['l'+car+'k']||0,6*(1-q));ad('l'+lib+'k',16*q);ad('l'+lib+'s',8*q);ad('l'+lib+'p',8*q)}}
   /* línea de acción: C = todo el torso se curva hacia un lado; S = la cadera va a un lado y los hombros al otro */
   const a=A.la||0;if(a&&A.lt){if(A.lt==='C'){ad('tl',a*22);ad('hl',a*9);roll(-a*5);ad('tb',Math.abs(a)*4)}else{roll(a*12);ad('tl',-a*14);ad('hl',a*14);ad('tt',a*10)}}
   /* asimetría: lo que estaba simétrico se separa (un brazo adelante y otro atrás, una rodilla más doblada) */
@@ -11879,6 +11877,9 @@ function v3dActCalc(A){const B=A.base,P={...B},ad=(k,v)=>{P[k]=(P[k]||0)+v},roll
   {const fl=A.flow??.6;if(fl){ad('hy',(P.tt||0)*.45*fl);ad('tl',-(P.pz||0)*.5*fl);ad('hl',-(P.tl||0)*.35*fl);ad('py',-(P.tt||0)*.25*fl)}}
   /* exagerar: aleja cada ángulo de la pose neutra */
   const f=A.push||1,N=V3_POSES['De pie']||{};if(f!==1)for(const k of V3_ACT_PAR){if(A.sinBrazos&&/^a[LR]/.test(k))continue;const n=N[k]||0;P[k]=n+((P[k]||0)-n)*f}
+  /* topes: la inclinación lateral no debe pasar de lo creíble aunque se sumen peso, línea de acción, exageración y fluidez */
+  {const CL={tl:13,pz:11,hl:15,py:14,tt:30};for(const k in CL)P[k]=clamp(P[k]||0,-CL[k],CL[k])}
+  {const B0=A.base||{},RL={tb:14,hn:20,hy:30};for(const k in RL)P[k]=clamp(P[k]||0,(B0[k]||0)-RL[k],(B0[k]||0)+RL[k])}
   for(const k of V3_ACT_PAR)if(V3_RANGOS[k])P[k]=Math.round(clamp(P[k]||0,V3_RANGOS[k][0],V3_RANGOS[k][1])*10)/10;return P}
 const v3dActIgual=(a,b)=>V3_ACT_PAR.every(k=>Math.abs((a[k]||0)-(b[k]||0))<.51);
 /* aplica el acting actual a la pose; si la pose cambió a mano desde la última vez, la nueva pose pasa a ser la de partida */
