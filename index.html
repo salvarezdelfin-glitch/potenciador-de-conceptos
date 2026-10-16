@@ -1060,7 +1060,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mva7kr47').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mva86g2y').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -11259,11 +11259,152 @@ const V3_VISTAS=[['Frontal',0],['¾ izq.',-35],['¾ der.',35],['Lateral izq.',-9
 const V3_CAMS=[['Frontal',0],['¾ izq.',-35],['¾ der.',35],['Lateral izq.',-90],['Lateral der.',90],['De espaldas',180]];
 function v3dVistaFig(a){S.v3d.giro.y=a;v3dGiro();v3dPanel()}
 function v3dCamAz(a){const c=V3.controls,cam=V3.camera;if(!c||!cam)return;const t=c.target,dx=cam.position.x-t.x,dz=cam.position.z-t.z,r=Math.hypot(dx,dz)||4;cam.position.set(t.x+r*Math.sin(a*RAD),cam.position.y,t.z+r*Math.cos(a*RAD));c.update();V3.dirty=true}
-function v3dEscenaFig(k){const sc=V3_ESCENAS.find(x=>x.k===k),S3=S.v3d;if(!sc)return;v3dFigSync();const old=S3.figs||[],cu=Object.keys(V3_CUERPOS);
+function v3dEscenaFig0(k,scX){const sc=scX||V3_ESCENAS.find(x=>x.k===k),S3=S.v3d;if(!sc)return;v3dFigSync();const old=S3.figs||[],cu=Object.keys(V3_CUERPOS);
   S3.figs=sc.figs.map((d,i)=>{const pose=v3dPoseDe(d.p);Object.assign(pose,d.ex||{});for(const q in pose)if(V3_RANGOS[q])pose[q]=clamp(pose[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);
     return {id:uid(),cuerpo:old[i]?.cuerpo||cu[i%cu.length],pose,giro:{x:0,y:d.y||0,z:0},preset:typeof d.p==='string'?d.p:(d.p?.base||'Escena'),px:d.x||0,pz:(d.z||0)+(d.s||d.sz?.04:0),esc:d.e||1,nom:old[i]?.nom||''}});
-  {const pr=[];sc.figs.forEach((d,i)=>{if(d.s)pr.push({id:uid(),k:d.s,x:d.x||0,z:d.z||0,y:0,ry:d.y||0,e:1,mano:'',fig:i})});const base=pr.length;sc.figs.forEach((d,i)=>{if(d.s)S3.figs[i].sentadoEn=pr.find(x=>x.fig===i&&x.k===d.s)?.id});for(const q of sc.props||[])pr.push({id:uid(),k:q.k,x:q.x||0,z:q.z||0,y:0,ry:q.ry||0,e:V3_PROPS_AGARRE[q.k]?.e||1,mano:V3_PROPS_MANO[q.k]||'',fig:Math.min(q.fig||0,sc.figs.length-1)});sc.figs.forEach((d,i)=>{if(d.sz&&pr[base])S3.figs[i].sentadoEn=pr[base].id});S3.props=pr;S3.propSel=pr.length?pr[pr.length-1].id:null}
+  {const pr=[];sc.figs.forEach((d,i)=>{if(d.s)pr.push({id:uid(),k:d.s,x:d.x||0,z:d.z||0,y:0,ry:d.y||0,e:1,mano:'',fig:i})});const base=pr.length;sc.figs.forEach((d,i)=>{if(d.s)S3.figs[i].sentadoEn=pr.find(x=>x.fig===i&&x.k===d.s)?.id});for(const q of sc.props||[])pr.push({id:uid(),k:q.k,x:q.x||0,z:q.z||0,y:0,ry:q.ry||0,e:V3_PROPS_AGARRE[q.k]?.e||1,mano:q.mano!==undefined?q.mano:(V3_PROPS_MANO[q.k]||''),fig:Math.min(q.fig||0,sc.figs.length-1),dir:q.dir});sc.figs.forEach((d,i)=>{if(d.sz&&pr[base])S3.figs[i].sentadoEn=pr[base].id});S3.props=pr;S3.propSel=pr.length?pr[pr.length-1].id:null}
   S3.sel=0;v3dCargaSel();v3dModelo();v3dPanel();toast('Escena «'+sc.n+'»'+(sc.props?.length||sc.figs.some(d=>d.s)?' con sus objetos':'')+': ajusta cada pose y su posición')}
+/* ============ Colisiones: los personajes y los objetos no se atraviesan ============
+   Cada cuerpo se aproxima con cápsulas (torso, cabeza, brazos, piernas). Al mover un personaje, un objeto o al armar una escena, lo que se traslapa se separa en el piso (nadie queda dentro de nadie). Los sentados en su asiento y los objetos que se sostienen en la mano no cuentan. */
+const V3_COL_SEG=[['Hips','Spine2',.15,'torso'],['Spine2','Neck',.15,'torso'],['Neck','Head',.06,'cabeza'],['Head','HeadTop_End',.1,'cabeza'],['LeftArm','LeftForeArm',.05,'brazo'],['LeftForeArm','LeftHand',.045,'brazo'],['RightArm','RightForeArm',.05,'brazo'],['RightForeArm','RightHand',.045,'brazo'],['LeftUpLeg','LeftLeg',.085,'pierna'],['LeftLeg','LeftFoot',.06,'pierna'],['RightUpLeg','RightLeg',.085,'pierna'],['RightLeg','RightFoot',.06,'pierna'],['LeftFoot','LeftToeBase',.05,'pie'],['RightFoot','RightToeBase',.05,'pie']];
+function v3dCapsulas(i){const T=V3.T,e=V3.figs?.[i],f=S.v3d.figs?.[i],bn=e?.model?.userData?.bn;if(!bn)return [];e.model.updateMatrixWorld(true);const k=(f.esc||1),w=f.cx?.peso||1,out=[];
+  for(const [a,b,r,tag] of V3_COL_SEG){if(!bn[a]||!bn[b])continue;out.push({a:bn[a].getWorldPosition(new T.Vector3()),b:bn[b].getWorldPosition(new T.Vector3()),r:r*k*(tag==='torso'||tag==='cabeza'?Math.max(1,w*(f.cx?.pec||1)*.9):1),tag})}return out}
+/* puntos más cercanos entre dos segmentos (Ericson) */
+function v3dSegSeg(p1,q1,p2,q2){const T=V3.T,d1=q1.clone().sub(p1),d2=q2.clone().sub(p2),r=p1.clone().sub(p2),a=d1.dot(d1),e=d2.dot(d2),f=d2.dot(r);let s,t;const EPS=1e-8;
+  if(a<=EPS&&e<=EPS){s=t=0}else if(a<=EPS){s=0;t=clamp(f/e,0,1)}else{const c=d1.dot(r);if(e<=EPS){t=0;s=clamp(-c/a,0,1)}else{const b=d1.dot(d2),den=a*e-b*b;s=den>EPS?clamp((b*f-c*e)/den,0,1):0;t=(b*s+f)/e;if(t<0){t=0;s=clamp(-c/a,0,1)}else if(t>1){t=1;s=clamp((b-c)/a,0,1)}}}
+  const c1=p1.clone().addScaledVector(d1,s),c2=p2.clone().addScaledVector(d2,t);return {c1,c2,d:c1.distanceTo(c2)}}
+function v3dPeorPar(i,j,tol,sinBrazos){const A=v3dCapsulas(i),B=v3dCapsulas(j);let w=null;for(const x of A)for(const y of B){if(sinBrazos&&(x.tag==='brazo'||y.tag==='brazo'))continue;const g=v3dSegSeg(x.a,x.b,y.a,y.b),pen=x.r+y.r-tol-g.d;if(pen>0&&(!w||pen>w.pen))w=Object.assign(g,{pen})}return w}
+const v3dSentado=i=>!!S.v3d.figs?.[i]?.sentadoEn;
+/* cajas de objetos que sí estorban: sueltos, con volumen, y que no son el asiento de nadie */
+function v3dCajasEstorban(i){const T=V3.T,S3=S.v3d,out=[];(V3.propObjs||[]).forEach(o=>{const p=(S3.props||[]).find(x=>x.id===o.userData.pid);if(!p||p.mano)return;if(S3.figs.some(f=>f.sentadoEn===p.id))return;o.updateMatrixWorld(true);const b=new T.Box3().setFromObject(o);if(!isFinite(b.min.x)||b.max.y-b.min.y<.3)return;out.push({b,p})});return out}
+/* empuja al personaje i fuera de otros personajes y de objetos. mut: también se mueven los demás (escenas) */
+function v3dColisionDrag(i,mut,sinBrazos){const S3=S.v3d,F=S3.figs,E=V3.figs;if(!F?.[i]||!E?.[i]?.model||v3dSentado(i))return;const T=V3.T,tol=.03;
+  for(let it=0;it<24;it++){let moved=false;
+    for(let j=0;j<F.length;j++){if(j===i||v3dSentado(j))continue;const w=v3dPeorPar(i,j,tol,sinBrazos);if(!w)continue;let dx=w.c1.x-w.c2.x,dz=w.c1.z-w.c2.z,L=Math.hypot(dx,dz);if(L<1e-4){dx=(F[i].px||0)-(F[j].px||0);dz=(F[i].pz||0)-(F[j].pz||0);L=Math.hypot(dx,dz)||1;if(L<1e-4){dx=1;dz=0;L=1}}dx/=L;dz/=L;const m=w.pen+.004,k=mut?.5:1;
+      F[i].px=clamp(+((F[i].px||0)+dx*m*k).toFixed(4),-3.2,3.2);F[i].pz=clamp(+((F[i].pz||0)+dz*m*k).toFixed(4),-3.2,3.2);v3dColoca(E[i].model,F[i]);if(mut){F[j].px=clamp(+((F[j].px||0)-dx*m*k).toFixed(4),-3.2,3.2);F[j].pz=clamp(+((F[j].pz||0)-dz*m*k).toFixed(4),-3.2,3.2);v3dColoca(E[j].model,F[j])}moved=true}
+    const cajas=v3dCajasEstorban(i);if(cajas.length){const caps=v3dCapsulas(i);for(const {b} of cajas){let best=null;for(const c of caps){const y0=Math.min(c.a.y,c.b.y)-c.r,y1=Math.max(c.a.y,c.b.y)+c.r;if(y1<b.min.y+.05||y0>b.max.y-.02)continue;for(let s=0;s<=4;s++){const p=c.a.clone().lerp(c.b,s/4),qx=clamp(p.x,b.min.x,b.max.x),qz=clamp(p.z,b.min.z,b.max.z),dx=p.x-qx,dz=p.z-qz,d=Math.hypot(dx,dz);if(d<c.r-tol){const inside=d<1e-5;if(!best||c.r-d>best.pen)best={pen:c.r-d,dx,dz,inside,p}}}}
+        if(best){let dx=best.dx,dz=best.dz;if(best.inside){const cx=(b.min.x+b.max.x)/2,cz=(b.min.z+b.max.z)/2;dx=best.p.x-cx;dz=best.p.z-cz;const hx=(b.max.x-b.min.x)/2,hz=(b.max.z-b.min.z)/2;if(Math.abs(dx)/hx>Math.abs(dz)/hz){dz=0;dx=Math.sign(dx||1)*(hx-Math.abs(dx)+.1)}else{dx=0;dz=Math.sign(dz||1)*(hz-Math.abs(dz)+.1)}}const L=Math.hypot(dx,dz)||1,m=best.inside?L:best.pen+.004;F[i].px=clamp(+((F[i].px||0)+dx/L*m).toFixed(4),-3.2,3.2);F[i].pz=clamp(+((F[i].pz||0)+dz/L*m).toFixed(4),-3.2,3.2);v3dColoca(E[i].model,F[i]);moved=true;break}}}
+    if(!moved)break}
+  V3.dirty=true}
+function v3dColisionTodas(sinBrazos){const F=S.v3d.figs||[];for(let r=0;r<3;r++)for(let i=0;i<F.length;i++)v3dColisionDrag(i,true,sinBrazos);for(let i=0;i<F.length;i++){if(V3.figs?.[i]?.model)v3dColoca(V3.figs[i].model,F[i])}if(V3.propObjs?.length)v3dPropsPos()}
+/* arrastrando un objeto suelto: se aparta de los personajes (círculo del cuerpo contra la caja del objeto) y de otros objetos grandes */
+function v3dColisionObjeto(p){const T=V3.T,S3=S.v3d,o=V3.propObjs?.find(x=>x.userData.pid===p.id);if(!o||p.mano||S3.figs.some(f=>f.sentadoEn===p.id))return;
+  for(let it=0;it<10;it++){o.updateMatrixWorld(true);const b=new T.Box3().setFromObject(o);if(!isFinite(b.min.x)||b.max.y-b.min.y<.3)return;let moved=false;
+    for(let i=0;i<(S3.figs||[]).length;i++){if(v3dSentado(i))continue;const caps=v3dCapsulas(i);for(const c of caps){const y0=Math.min(c.a.y,c.b.y)-c.r,y1=Math.max(c.a.y,c.b.y)+c.r;if(y1<b.min.y+.05||y0>b.max.y-.02)continue;let hit=null;for(let s=0;s<=4;s++){const q=c.a.clone().lerp(c.b,s/4),qx=clamp(q.x,b.min.x,b.max.x),qz=clamp(q.z,b.min.z,b.max.z),dx=qx-q.x,dz=qz-q.z,d=Math.hypot(dx,dz);if(d<c.r-.03){hit={dx,dz,d,pen:c.r-d,q};break}}
+        if(hit){let dx=hit.dx,dz=hit.dz,L=hit.d;if(L<1e-5){dx=(b.min.x+b.max.x)/2-hit.q.x;dz=(b.min.z+b.max.z)/2-hit.q.z;L=Math.hypot(dx,dz)||1}p.x=clamp(+((p.x||0)+dx/L*(hit.pen+.01)).toFixed(4),-70,70);p.z=clamp(+((p.z||0)+dz/L*(hit.pen+.01)).toFixed(4),-70,70);o.position.x=p.x;o.position.z=p.z;moved=true;break}}if(moved)break}
+    if(!moved)return}}
+/*ESCENAS*/
+/* ============ Escenas de partida con acting y contactos ============
+   Cada escena trae: cómo se miran (m), a qué distancia (sep), el acting de cada personaje (estado de ánimo, peso, línea de acción, exageración) y los contactos (puño al rostro, punta de la espada al cuello, manos que se unen, abrazo…). Los contactos se resuelven con los modelos ya puestos: se coloca al otro personaje al alcance y se llevan las manos al punto exacto con el solver de brazos. */
+const V3_ESC_BRAZOS=/^(De pie|Contrapposto|Triste|Escuchando atento|Mirando a lo lejos|Brazos cruzados|Enojado|Reverencia noble|Villano encorvado|Héroe|Pose elegante|Tímido|Asustado|Cansado|Peso en una pierna|Pensativo|Sorprendido|Mirando por encima del hombro)$/;
+const V3_ESC_TIERNO={k:null,i:1,peso:.3,lt:'S',la:.3,asim:.2,push:1.1};
+/* m: cara (se miran), espalda, misma (miran al mismo lado), plantilla (se respeta la de la escena) · sep: distancia entre ellos · act: acting por personaje · c: contactos */
+const V3_ESC_X={
+ pelea:{m:'cara',act:['ira','alerta'],props:[{k:'Escudo',fig:1}],c:[{a:0,h:'*',b:1,p:'manoL',o:[0,0,.16],mv:1}]},
+ bloqueo:{m:'cara',act:['ira','alerta'],c:[{a:0,h:'*',b:1,p:'cabeza',o:[0,.2,.42],mv:1}]},
+ duelo:{dir:{0:[0,.05,1],1:[-.25,.85,.5]},m:'cara',act:['determinacion','alerta'],c:[{a:0,h:'R',w:'tip',b:1,p:'pecho',o:[-.2,0,.5],mv:1},{a:1,h:'R',wt:.4,toTip:0}]},
+ choque:{dir:{0:[0,.9,.45],1:[-.85,.25,.3]},m:'cara',act:['ira','determinacion'],c:[{a:0,h:'R',b:1,p:'cabeza',o:[-.05,.3,.5],mv:1},{a:1,h:'R',wt:.5,toTip:0,at:.6}]},
+ patadal:{m:'cara',rot:[90,0],min:.6,act:['ira','alerta'],c:[{a:0,h:'*F',b:1,p:'pecho',o:[0,.05,.1],mv:1}]},
+ gancho:{m:'cara',act:['ira','sorpresa'],c:[{a:0,h:'*',b:1,p:'cara',o:[.22,0,.12],mv:1}]},
+ uppercut:{m:'cara',act:['ira','miedo'],c:[{a:0,h:'*',b:1,p:'barbilla',o:[0,0,.12],mv:1}]},
+ rodillazo:{m:'cara',act:['ira','miedo'],c:[{a:0,h:'*K',b:1,p:'pecho',o:[0,-.12,.1],mv:1}]},
+ codazo:{m:'cara',act:['ira','alerta'],c:[{a:0,h:'*E',b:1,p:'cara',o:[0,0,.1],mv:1}]},
+ boxeo:{m:'cara',act:['determinacion','alerta'],c:[{a:0,h:'*',b:1,p:'cara',o:[0,-.05,.2],mv:1}]},
+ barrido:{m:'cara',act:['determinacion','sorpresa'],c:[{a:0,h:'*F',b:1,p:'pie',o:[0,.06,.12],mv:1}]},
+ giratoria:{m:'cara',act:['triunfo','sorpresa'],c:[{a:0,h:'*F',b:1,p:'cara',o:[.12,0,.15],mv:1}]},
+ mago:{m:'cara',sep:2,act:['determinacion','miedo']},
+ arquero:{m:'cara',sep:2.5,act:['determinacion','miedo']},
+ jabalina:{m:'cara',sep:2.5,act:['determinacion','sorpresa']},
+ pistola:{m:'cara',sep:2,act:['desprecio','miedo']},
+ cuello:{dir:{0:[0,.05,1]},m:'cara',act:['desprecio','miedo'],c:[{a:0,h:'R',w:'tip',b:1,p:'cuello',o:[0,-.02,.05],mv:1}]},
+ piedad:{dir:{0:[0,.95,.3]},m:'cara',sep:1.1,act:['ira','miedo']},
+ embosca:{m:'misma',sep:1.1,act:['alerta','determinacion']},
+ caido:{m:'cara',sep:.95,act:['tristeza','determinacion']},
+ victoria:{dir:{0:[0,1,.1]},m:'cara',sep:1,act:['triunfo','tristeza']},
+ espalda:{m:'espalda',sep:.42,act:['alerta','alerta']},
+ protege:{m:'plantilla',act:['determinacion','miedo']},
+ persigue:{m:'misma',sep:1.3,act:['determinacion','miedo']},
+ ante:{m:'cara',sep:1,act:['orgullo','tristeza']},
+ mano:{m:'misma',sep:.62,act:['tierno','tierno'],c:[{une:[0,'L',1,'R']}]},
+ abrazo:{m:'cara',sep:.3,act:['tierno','tierno'],c:[{a:0,h:'L',b:1,p:'espalda',o:[.13,.04,.0]},{a:0,h:'R',b:1,p:'espalda',o:[-.13,.04,.0]},{a:1,h:'L',b:0,p:'espalda',o:[.13,.04,.0]},{a:1,h:'R',b:0,p:'espalda',o:[-.13,.04,.0]}]},
+ conversa:{m:'plantilla',act:['seguridad','duda']},
+ saludo:{m:'cara',sep:1.5,act:['seguridad','seguridad']},
+ reverencia:{m:'cara',sep:1.3,act:['orgullo','orgullo']},
+ consuelo:{m:'cara',sep:.95,act:['tristeza','tristeza']},
+ baile:{m:'cara',sep:.5,act:['seguridad','seguridad'],c:[{a:0,h:'R',b:1,p:'cintura',o:[-.12,0,-.1]},{une:[0,'L',1,'R']},{a:1,h:'L',b:0,p:'hombroR',o:[0,.05,0]}]},
+ discusion:{m:'cara',sep:1,act:['ira','desprecio']},
+ mirar:{m:'misma',sep:.9,act:['sorpresa','duda']},
+ platica:{m:'plantilla',act:['seguridad','duda']},
+ mesa2:{m:'plantilla',act:['seguridad','duda']},
+ lectura:{m:'plantilla',act:['duda','cansancio']},
+ rezo:{m:'plantilla',act:['tristeza','tristeza']},
+ celebra:{m:'cara',sep:1.1,act:['triunfo','triunfo']},
+ empuja:{m:'plantilla',act:['determinacion','cansancio']},
+ cuerda:{m:'cara',sep:2,act:['determinacion','determinacion']},
+ rescate:{m:'plantilla',act:['determinacion','cansancio']},
+ ayuda:{m:'plantilla',act:['determinacion','cansancio']},
+ futbol:{m:'plantilla',act:['triunfo','determinacion']},
+ carrera:{m:'plantilla',act:['determinacion','determinacion','determinacion','determinacion']},
+ salto3:{m:'plantilla',act:['triunfo','triunfo','triunfo']},
+ heroes:{m:'plantilla',act:['orgullo','determinacion','determinacion','alerta']},
+ villano:{m:'plantilla',act:['desprecio','alerta','alerta']},
+ arqueros:{m:'plantilla',act:['determinacion','determinacion','determinacion','determinacion']},
+ muro:{m:'plantilla',act:['alerta','alerta','alerta','alerta']},
+ tres1:{m:'plantilla',act:['alerta','ira','ira','ira']},
+ fogata:{m:'plantilla',act:['seguridad','duda','cansancio','seguridad']},
+ redonda:{m:'plantilla',act:['seguridad','duda','orgullo','seguridad']},
+ corrillo:{m:'plantilla',act:['duda','sorpresa','seguridad']},
+ marcha:{m:'plantilla',act:['determinacion','determinacion','determinacion','determinacion']},
+ baile4:{m:'plantilla',act:['seguridad','seguridad','seguridad','seguridad']},
+ fiesta:{m:'plantilla',act:['triunfo','triunfo','triunfo','triunfo']},
+ herido:{m:'plantilla',act:['cansancio','tristeza','tristeza']},
+ rezo4:{m:'plantilla',act:['tristeza','tristeza','tristeza','tristeza']},
+ v:{m:'plantilla',act:['determinacion','determinacion','determinacion']},
+ circulo:{m:'plantilla',act:['alerta','alerta','alerta','alerta']},
+ grupo:{m:'plantilla',act:['tierno','tierno','tierno','tierno']}};
+/* plan: posiciones, miradas, acting y manos de cada personaje (todo lo que no necesita el modelo ya cargado) */
+function v3dEscenaPlan(sc0){const X=V3_ESC_X[sc0.k]||{},sc={...sc0,figs:sc0.figs.map(d=>({...d})),props:[...(sc0.props||[]),...(X.props||[])]},n=sc.figs.length,RAD_=Math.PI/180;
+  if(n===2&&X.m&&X.m!=='plantilla'){const a=sc.figs[0],b=sc.figs[1],cx=((a.x||0)+(b.x||0))/2,cz=((a.z||0)+(b.z||0))/2;let dx=(b.x||0)-(a.x||0),dz=(b.z||0)-(a.z||0);const L=Math.hypot(dx,dz)||1;dx=L<1e-6?1:dx/L;dz=L<1e-6?0:dz/L;const sep=X.sep??Math.max(.9,L);
+    a.x=+(cx-dx*sep/2).toFixed(3);a.z=+(cz-dz*sep/2).toFixed(3);b.x=+(cx+dx*sep/2).toFixed(3);b.z=+(cz+dz*sep/2).toFixed(3);
+    const yaw=(f,g)=>Math.round(Math.atan2((g.x-f.x),(g.z-f.z))/RAD_);
+    if(X.m==='cara'){a.y=yaw(a,b)+(X.rot?.[0]||0);b.y=yaw(b,a)+(X.rot?.[1]||0)}else if(X.m==='espalda'){a.y=yaw(b,a);b.y=yaw(a,b)}else if(X.m==='misma'){const y=Math.round((a.y+b.y)/2);a.y=y;b.y=y}}
+  sc.props=sc.props.map(q=>{const o={...q};if(o.fig==null&&V3_PROPS_MANO[o.k])o.mano='';if(o.fig!=null&&X.dir?.[o.fig]&&o.k==='Espada')o.dir=X.dir[o.fig];return o});
+  const dedos=[];
+  sc.figs.forEach((d,i)=>{const nom=typeof d.p==='string'?d.p:d.p?.base||'',pose=v3dPoseDe(d.p);Object.assign(pose,d.ex||{});const e=X.act?.[i],A=e==='tierno'?{...V3_ESC_TIERNO}:{k:e&&V3_ACT[e]?e:null,i:1.1,peso:0,lt:null,la:0,asim:0,push:1.2};
+    if(A.k){const E=V3_ACT[A.k];A.peso=E.peso;A.lt=E.lt;A.la=E.la;A.asim=E.asim}
+    A.peso*=(i%2?-1:1)*(1+.1*i);A.base=pose;A.armMode=V3_ESC_NO.test(nom)?'no':V3_ESC_BRAZOS.test(nom)?'set':'suave';A.flow=.7;
+    const P=v3dActCalc(A);for(const q in P)if(V3_RANGOS[q])P[q]=clamp(P[q],V3_RANGOS[q][0],V3_RANGOS[q][1]);d.ex=P;
+    const E=A.k&&V3_ACT[A.k];dedos[i]=/Golpe|Gancho|Uppercut|Codazo|Guardia|Rodillazo/.test(nom)?{L:V3_MANOS['Puño'].slice(),R:V3_MANOS['Puño'].slice()}:(E&&!A.sinBrazos?{L:V3_MANOS[E.dedos[0]].slice(),R:V3_MANOS[E.dedos[1]].slice()}:null)});
+  return {sc,X,dedos,id:uid()}}
+function v3dEscenaFig(k){const sc0=V3_ESCENAS.find(x=>x.k===k);if(!sc0)return;const plan=v3dEscenaPlan(sc0);v3dEscenaFig0(k,plan.sc);const S3=S.v3d;plan.dedos.forEach((d,i)=>{if(d&&S3.figs[i])S3.figs[i].dedos=d});S3.escId=plan.id;v3dCargaSel();v3dEscenaEspera(plan,0)}
+function v3dEscenaEspera(plan,n){const S3=S.v3d;if(!S3||S3.escId!==plan.id||n>50)return;const E=V3.figs;const ok=E&&E.length===S3.figs.length&&E.every(e=>e.model?.userData?.bn?.Hips)&&((V3.propObjs?.length||0)>=(S3.props||[]).length);if(!ok){setTimeout(()=>v3dEscenaEspera(plan,n+1),150);return}try{v3dEscenaContactos(plan)}catch(er){console.error(er)}}
+/* brazo: lleva la muñeca (l = 'L' o 'R') de la figura i al punto Tw del mundo */
+function v3dIKMundo(i,l,Tw){const T=V3.T,m=V3.figs[i].model,P=S.v3d.figs[i].pose,bn=m.userData.bn;v3dColoca(m,S.v3d.figs[i]);v3dPoseA(m,P);m.updateMatrixWorld(true);
+  const C=bn.Spine2.getWorldPosition(new T.Vector3()),U=bn.Neck.getWorldPosition(new T.Vector3()).sub(C).normalize(),Rv=bn.LeftArm.getWorldPosition(new T.Vector3()).sub(bn.RightArm.getWorldPosition(new T.Vector3())),w=Rv.length();Rv.normalize();const Fw=new T.Vector3().crossVectors(Rv,U).normalize(),side=l==='L'?1:-1,d=Tw.clone().sub(C);
+  P.ik={[l]:[d.dot(Rv)/(side*w),d.dot(U)/w,d.dot(Fw)/w]};v3dBrazosObjetivo(m,P);delete P.ik;v3dPoseA(m,P);m.updateMatrixWorld(true);return bn[(l==='L'?'Left':'Right')+'Hand'].getWorldPosition(new T.Vector3())}
+function v3dEscenaContactos(plan){const X=plan.X;if(!X.c?.length){v3dColisionTodas(false);v3dCargaSel();V3.dirty=true;try{v3dPanel()}catch(er){}return}const T=V3.T,S3=S.v3d,F=S3.figs,E=V3.figs,RAD_=Math.PI/180;
+  const fr=i=>{const y=(F[i].giro?.y||0)*RAD_;return {fw:new T.Vector3(Math.sin(y),0,Math.cos(y)),rr:new T.Vector3(-Math.cos(y),0,Math.sin(y)),s:F[i].esc||1}};
+  const asienta=i=>{const m=E[i].model;v3dColoca(m,F[i]);m.updateMatrixWorld(true)};
+  const wp=(i,b)=>E[i].model.userData.bn[b].getWorldPosition(new T.Vector3());
+  const PARTE={pecho:'Spine2',cuello:'Neck',cabeza:'Head',cintura:'Hips',cara:'Head',barbilla:'Head',espalda:'Spine2',pie:'LeftFoot',manoL:'LeftHand',manoR:'RightHand',hombroL:'LeftArm',hombroR:'RightArm'},EXTRA={cara:[0,.02,.1],barbilla:[0,-.07,.09],espalda:[0,0,-.12],pecho:[0,0,.09],cintura:[0,0,.05]};
+  const objetivo=(b,p,o)=>{const q=fr(b),e=EXTRA[p]||[0,0,0],v=wp(b,PARTE[p]||'Spine2');v.addScaledVector(q.rr,(e[0]+(o?.[0]||0))*q.s);v.y+=(e[1]+(o?.[1]||0))*q.s;v.addScaledVector(q.fw,(e[2]+(o?.[2]||0))*q.s);return v};
+  const mueve=(i,d)=>{F[i].px=clamp(+((F[i].px||0)+d.x).toFixed(3),-3.2,3.2);F[i].pz=clamp(+((F[i].pz||0)+d.z).toFixed(3),-3.2,3.2);asienta(i)};
+  const lado=(a,h)=>{if(h!=='*')return h;const P=F[a].pose;return (P.aLs||0)>=(P.aRs||0)?'L':'R'};
+  const pie=(a,h)=>{if(h!=='*F'&&h!=='*K')return h;const P=F[a].pose;return (P.lLs||0)>=(P.lRs||0)?'L':'R'};
+  const arma=a=>{const p=(S3.props||[]).find(x=>x.fig===a&&x.mano==='R'&&['Espada','Hacha','Pico','Antorcha'].includes(x.k));return p?V3.propObjs.find(o=>o.userData.pid===p.id):null};
+  const punta=(a)=>{const o=arma(a);if(!o)return null;v3dPropsPos();o.updateMatrixWorld(true);const h=wp(a,'RightHand');let best=null,bd=-1;const v=new T.Vector3();o.traverse(ms=>{if(!ms.isMesh)return;const ps=ms.geometry.attributes.position;for(let q=0;q<ps.count;q+=3){v.fromBufferAttribute(ps,q).applyMatrix4(ms.matrixWorld);const d=v.distanceToSquared(h);if(d>bd){bd=d;best=v.clone()}}});return best};
+  for(const c of X.c){
+    if(c.une){const [a,ha,b,hb]=c.une;for(let it=0;it<2;it++){const H1=wp(a,ha==='L'?'LeftHand':'RightHand'),H2=wp(b,hb==='L'?'LeftHand':'RightHand'),M=H1.clone().add(H2).multiplyScalar(.5);v3dIKMundo(a,ha,M);v3dIKMundo(b,hb,M)}continue}
+    const a=c.a,b=c.b;let h=c.h;
+    if(c.toTip!=null){/* la espada de a cruza la punta de la espada de toTip */const tp0=punta(c.toTip),o=arma(a);if(!tp0||!o)continue;const tp=wp(c.toTip,'RightHand').lerp(tp0,c.at??1);for(let it=0;it<3;it++){const hand=wp(a,'RightHand'),tip=punta(a);if(!tip)break;const pt=hand.clone().lerp(tip,c.wt||.5),off=pt.clone().sub(hand);v3dIKMundo(a,'R',tp.clone().sub(off));v3dPropsPos()}continue}
+    if(/F$|K$|E$/.test(h)){/* pie, rodilla, codo: se acerca el cuerpo hasta que llegan al punto */const L=pie(a,h.startsWith('*')?h:'*F'),code=h.slice(-1),bone=(L==='L'?'Left':'Right')+(code==='F'?'Foot':code==='K'?'Leg':'ForeArm');const T0=objetivo(b,c.p,c.o);for(let it=0;it<2;it++){const cur=wp(a,bone),d=T0.clone().sub(cur);d.y=0;if(c.mv)mueve(b,d.clone().multiplyScalar(-1));else mueve(a,d)}continue}
+    h=lado(a,h);const hb=h==='L'?'LeftHand':'RightHand';
+    /* primero el brazo se estira hacia el blanco desde una distancia de combate; solo si no llega se acerca al otro */
+    if(c.mv){const A0=F[a],B0=F[b];let dx=(B0.px||0)-(A0.px||0),dz=(B0.pz||0)-(A0.pz||0);const L=Math.hypot(dx,dz)||1;dx/=L;dz/=L;const D0=c.d??.95;mueve(b,{x:(A0.px||0)+dx*D0-(B0.px||0),z:(A0.pz||0)+dz*D0-(B0.pz||0)})}
+    let eff=new T.Vector3();{const q0=c.w?punta(a):null;if(q0)eff=q0.clone().sub(wp(a,hb))}
+    for(let it=0;it<5;it++){const Tt=objetivo(b,c.p,c.o),goal=Tt.clone().sub(eff),r=v3dIKMundo(a,h,goal);if(c.w){const tp=punta(a);if(tp)eff=tp.clone().sub(r)}v3dPropsPos();const err=r.distanceTo(Tt.clone().sub(eff));if(err<.035)break;const d=Tt.clone().sub(eff).sub(r);d.y=0;if(d.length()>.02){if(c.mv)mueve(b,d.clone().multiplyScalar(-1));else mueve(a,d.multiplyScalar(.7))}}}
+  {const mn=X.min??(X.c.some(c=>c.mv)?.55:0);if(mn&&F.length===2){const A0=F[0],B0=F[1];let dx=(B0.px||0)-(A0.px||0),dz=(B0.pz||0)-(A0.pz||0);const L=Math.hypot(dx,dz)||1;if(L<mn){dx/=L;dz/=L;mueve(1,{x:dx*(mn-L),z:dz*(mn-L)})}}}
+  for(let i=0;i<F.length;i++)asienta(i);v3dColisionTodas(X.c.some(c=>c.une||c.p==='espalda'||c.p==='cintura'));v3dPropsPos();v3dAnillo?.();v3dCargaSel();V3.dirty=true;try{v3dPanel()}catch(er){}}
 function v3dPick(e){if(!V3.figs||V3.figs.length<2||!V3.renderer)return;const T=V3.T,r=V3.renderer.domElement.getBoundingClientRect(),ray=new T.Raycaster();ray.setFromCamera(new T.Vector2((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1),V3.camera);
   const h=ray.intersectObjects(V3.figs.map(x=>x.model),true)[0];if(!h)return;let o=h.object;while(o&&!V3.figs.some(x=>x.model===o))o=o.parent;const i=V3.figs.findIndex(x=>x.model===o);if(i>=0&&i!==(S.v3d.sel||0))v3dFigSel(i)}
 function v3dFigChips(){const S3=S.v3d,L=S3.figs||[];if(L.length<2||S3.modelo!=='maniqui')return '';
@@ -11548,7 +11689,7 @@ function v3dGzCambia(){const T=V3.T,S3=S.v3d,G=V3.gz,f=S3.figs?.[S3.sel||0],e=V3
   if(!esc){const Lm=S3.persp?30:3.2;f.px=clamp(v3dR4(G.f0.px+(pr.position.x-G.p0.x)),-Lm,Lm);f.pz=clamp(v3dR4(G.f0.pz+(pr.position.z-G.p0.z)),-Lm,Lm);f.py=clamp(v3dR4(G.f0.py+(pr.position.y-G.p0.y)),-1,2.5);
     const eu=new T.Euler().setFromQuaternion(pr.quaternion,'XYZ'),g={x:Math.round(eu.x/RAD*10)/10,y:Math.round(eu.y/RAD*10)/10,z:Math.round(eu.z/RAD*10)/10};S3.giro={...g};f.giro={...g}}
   else{const s=Math.cbrt(Math.abs(pr.scale.x*pr.scale.y*pr.scale.z))||1;f.esc=clamp(v3dR4(G.f0.esc*s),.3,3)}
-  v3dColoca(e.model,f);v3dAnillo();V3.dirty=true}
+  v3dColoca(e.model,f);if(!esc)v3dColisionDrag(S3.sel||0);v3dAnillo();V3.dirty=true}
 /* clic en una pieza: la selecciona para el gizmo; clic en el cuerpo: vuelve a mover al personaje */
 function v3dPiezaPick(e){const S3=S.v3d,f=S3.figs?.[S3.sel||0];if(!f)return false;const ray=v3dRayo(e),fh=ray.intersectObjects(V3.figs.map(x=>x.model),true)[0];
   if(f.piezas?.length&&V3.pz?.size){const ms=[];V3.pz.forEach(q=>{ms.push(q.m);if(q.tw.visible)ms.push(q.tw)});const h=ray.intersectObjects(ms,false)[0];if(h&&(!fh||h.distance<fh.distance+.02)){const id=h.object.userData.pzId;if(S3.gzSel!==id){S3.gzSel=id;V3.dirty=true;try{v3dPanel()}catch(er){}}V3.d0=null;return true}}
@@ -11654,16 +11795,46 @@ const V3_ACT={
  determinacion:{n:'Determinación',d:'Base ancha, cuerpo cargado hacia delante, puños listos.',add:{tb:8,hn:8},set:{aLs:20,aLp:18,aLe:70,aRs:20,aRp:18,aRe:70,lLs:18,lRs:-10,lLk:20,lRk:6,lLp:14,lRp:14},peso:0,lt:'C',la:.2,asim:.15,dedos:['Puño','Puño']},
  seguridad:{n:'Seguridad / coqueteo',d:'Cadera hacia un lado, una mano en la cadera, cabeza ladeada.',add:{tb:-4,hn:-4,hl:12,hy:-8},set:{aLs:-8,aLp:46,aLe:100,aRs:-4,aRp:20,aRe:30},peso:.7,lt:'S',la:.7,asim:.3,dedos:['Relajada','Relajada']},
  alerta:{n:'Alerta / tensión',d:'Rodillas flexionadas, listo para moverse en cualquier dirección.',add:{tb:7,hn:-3},set:{aLs:30,aLp:14,aLe:95,aRs:30,aRp:14,aRe:95,lLs:12,lRs:-8,lLk:22,lRk:20,lLp:10,lRp:10},peso:0,lt:null,la:0,asim:.25,dedos:['Garra','Garra']}};
+
+/* ---- más actings ---- */
+Object.assign(V3_ACT,{
+ alegria:{n:'Alegría',d:'Cuerpo abierto y ligero, brazos arriba, cabeza alta, una pierna que rebota.',add:{tb:-8,hn:-8,hl:5},set:{aLs:55,aLp:40,aLe:40,aRs:65,aRp:35,aRe:30,lLk:10,lRk:18},peso:.2,lt:'S',la:.5,asim:.3,dedos:['Abierta','Abierta']},
+ furia:{n:'Furia explosiva',d:'Todo el cuerpo cargado hacia delante, base ancha, puños y mandíbula apretados.',add:{tb:14,hn:10},set:{aLs:50,aLp:20,aLe:90,aRs:30,aRp:30,aRe:100,lLs:22,lRs:-12,lLk:28,lRk:14},peso:0,lt:'C',la:.3,asim:.25,dedos:['Puño','Puño']},
+ curiosidad:{n:'Curiosidad',d:'Se inclina hacia lo que mira, cabeza ladeada, una mano a medio levantar.',add:{hl:14,hn:4,tb:8,hy:10},set:{aLs:15,aLp:10,aLe:40,aRs:55,aRp:10,aRe:110},peso:.4,lt:'S',la:.4,asim:.3,dedos:['Relajada','Pinza']},
+ timidez:{n:'Timidez',d:'Se hace pequeño: hombros cerrados, manos juntas, mira hacia abajo y de lado.',add:{tb:10,hn:16,hl:8,hy:18},set:{aLs:20,aLp:-12,aLe:70,aRs:25,aRp:-14,aRe:75,lLp:6,lRp:6},peso:.4,lt:'C',la:.5,asim:.15,dedos:['Relajada','Relajada']},
+ pereza:{n:'Pereza',d:'Se deja caer: peso entero en una cadera, brazos colgando, cabeza floja.',add:{tb:12,hn:6,tl:4},set:{aLs:4,aLp:6,aLe:10,aRs:2,aRp:6,aRe:12,lLk:8},peso:.8,lt:'C',la:.5,asim:.2,dedos:['Relajada','Relajada']},
+ valentia:{n:'Valentía',d:'Pecho al frente, barbilla firme, base estable y puños a media altura.',add:{tb:-6,hn:-8},set:{aLs:10,aLp:22,aLe:30,aRs:10,aRp:22,aRe:30,lLs:14,lRs:-8,lLp:14,lRp:14},peso:.2,lt:'S',la:.3,asim:.2,dedos:['Puño','Puño']},
+ picardia:{n:'Picardía',d:'Cadera de lado, una mano en la cintura, mirada de reojo y media sonrisa del cuerpo.',add:{hl:14,hy:-12},set:{aLs:30,aLp:30,aLe:100,aRs:-6,aRp:22,aRe:20},peso:.6,lt:'S',la:.6,asim:.4,dedos:['Relajada','Relajada']},
+ dolor:{n:'Dolor',d:'Se dobla sobre el golpe, una mano al lugar herido, rodillas que ceden.',add:{tb:22,hn:14,tl:6},set:{aLs:35,aLp:-10,aLe:130,aRs:10,aRp:10,aRe:20,lLk:18,lRk:24},peso:-.3,lt:'C',la:-.6,asim:.3,dedos:['Garra','Relajada']},
+ asco:{n:'Asco',d:'Se echa hacia atrás y gira la cara, manos que apartan.',add:{tb:-8,hn:10,hy:-24,hl:-8},set:{aLs:45,aLp:20,aLe:100,aRs:35,aRp:25,aRe:90},peso:-.4,lt:'S',la:-.4,asim:.3,dedos:['Abierta','Abierta']},
+ concentracion:{n:'Concentración',d:'Cabeza adelantada y quieta, brazos recogidos, todo el cuerpo apunta a una sola cosa.',add:{tb:8,hn:12},set:{aLs:30,aLp:-5,aLe:95,aRs:35,aRp:-5,aRe:100},peso:0,lt:null,la:0,asim:.1,dedos:['Pinza','Relajada']},
+ nervios:{n:'Nervios',d:'Peso cambiando de pie, manos que no saben dónde ir, cabeza que mira por todos lados.',add:{hn:8,hl:6,hy:12,tb:4},set:{aLs:30,aLp:-10,aLe:105,aRs:30,aRp:-10,aRe:110,lLk:14,lRk:12,lLp:8,lRp:8},peso:.3,lt:'C',la:.3,asim:.45,dedos:['Pinza','Relajada']},
+ burla:{n:'Burla',d:'Barbilla arriba, cabeza ladeada, brazos de «¿y qué?» y peso exagerado a un lado.',add:{tb:-10,hn:-14,hl:10,hy:14},set:{aLs:-6,aLp:40,aLe:90,aRs:60,aRp:30,aRe:70},peso:.7,lt:'S',la:.7,asim:.35,dedos:['Relajada','Abierta']},
+ ternura:{n:'Ternura',d:'Cuerpo suave que se inclina hacia el otro, hombros caídos, manos abiertas y bajas.',add:{hl:12,tb:3,hn:4},set:{aLs:30,aLp:10,aLe:90,aRs:30,aRp:10,aRe:90},peso:.4,lt:'C',la:.4,asim:.15,dedos:['Relajada','Relajada']},
+ heroico:{n:'Heroico',d:'Base ancha, pecho abierto, mirada al horizonte, capa imaginaria al viento.',add:{tb:-12,hn:-8},set:{aLs:6,aLp:30,aLe:25,aRs:8,aRp:30,aRe:25,lLs:20,lRs:-12,lLk:14,lRk:6,lLp:16,lRp:16},peso:.3,lt:'S',la:.5,asim:.25,dedos:['Puño','Puño']}});
+/* qué acting le queda a cada pose de la biblioteca (para que ninguna salga «muerta») */
+const V3_ACT_POSE=[[/herido|Recibiendo un golpe|Derribado/,'dolor'],[/Triste|Derrotado|Cara en las manos|Cabeza baja|Rogando|Rendido/,'tristeza'],[/Asustado|Pegado a la pared|Espiando|Esquiva/,'miedo'],[/Sorprendido|Mirando por encima/,'sorpresa'],[/Tímido|Abrazándose/,'timidez'],[/Cansado|Atándose/,'cansancio'],[/Pensativo|Sentado leyendo|Escuchando atento|Sosteniendo un bastón/,'concentracion'],[/Enojado|rabia|Furia|Golpe al suelo|Rugido|rugiendo|Embestida/,'furia'],[/Villano|Pisando|Mirada desde arriba|Brazos cruzados$/,'desprecio'],[/Dios imponente|Reina|Noble|Trono|poderoso|Un puño en el pecho|Hombros altos/,'orgullo'],[/puño al cielo|Victoria|Héroe victoria|Aterrizaje/,'triunfo'],[/Héroe|Guerrero|Escudo|Defensa|Centinela/,'heroico'],[/Alegría|Celebrando|Salto de alegría|Giro feliz|Aplaudiendo|Baile/,'alegria'],[/Saludando|Pose elegante|Peso en una pierna|bolsillos|Contrapposto|jarra|Duelista|Pose/,'seguridad'],[/Acechar|sigiloso|Asesino|Encapuchado|Cazador|Vigía|Guardia|Esgrima|Boxeo/,'alerta'],[/Golpe|Patada|Gancho|Uppercut|Codazo|Rodillazo|Estocada|Corte|Lanzando|Arquero|Apuntando|Salto de ataque|Giro de espada|Cruzado|Lanza en carga/,'determinacion'],[/Manos juntas|Abrazo|Ofrenda/,'ternura']];
+function v3dActParaPose(nombre){for(const [re,k] of V3_ACT_POSE)if(re.test(nombre))return {k,i:.9,push:1.12};return {k:null,i:1,peso:.25,lt:'S',la:.25,asim:.15,push:1.08}}
+const V3_ESC_NO=/Golpe|Gancho|Uppercut|Codazo|Rodillazo|Patada|Estocada|Corte|Parada|Defensa|Bloqueo|Guardia|Arquero|Lanzando|Apuntando|Esgrima|Empuj|Jalando|Cargando|Pateando|Escalando|Subiendo|Sentado|Rezando|Baile|Saludando|Rodilla|Sprint|Correr|Salto|Embestida|Cuatro|Agach|Arrodill/;
+/* transición suave entre la pose que había y la nueva (ease in-out) */
+function v3dPoseTween(P1,ms){const s=S.v3d;if(!s)return;const P0={...s.pose},t0=performance.now();cancelAnimationFrame(V3.twRaf);const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const paso=ahora=>{const t=Math.min(1,(ahora-t0)/(ms||380)),k=ez(t);for(const q of V3_ACT_PAR)s.pose[q]=Math.round(((P0[q]||0)+((P1[q]||0)-(P0[q]||0))*k)*10)/10;v3dPose();if(t<1)V3.twRaf=requestAnimationFrame(paso);else{Object.assign(s.pose,P1);v3dPose();V3.dirty=true;try{v3dPanel()}catch(er){}}};V3.twRaf=requestAnimationFrame(paso)}
+/* poner una pose de la biblioteca: con acting automático (si está activo) y con transición fluida */
+function v3dPonPose(nombre){const s=S.v3d,P=V3_POSES[nombre];if(!P)return;const antes={...s.pose};cancelAnimationFrame(V3.twRaf);s.act=null;s.pose={...P};s.preset=nombre;v3dPose();v3dPosePost();
+  if(s.actAuto!==false)v3dActAplica({...v3dActParaPose(nombre),sinAnim:true});
+  const fin={...s.pose};for(const q of V3_ACT_PAR)s.pose[q]=antes[q]||0;v3dPoseTween(fin,400)}
 const V3_ACT_PAR=['tb','tt','tl','py','pz','hn','hy','hl','aLs','aLp','aLr','aLe','aRs','aRp','aRr','aRe','lLs','lLp','lLk','lRs','lRp','lRk'];
 /* arma la pose final a partir de la pose de partida y de todo lo que el usuario haya activado */
 function v3dActCalc(A){const B=A.base,P={...B},ad=(k,v)=>{P[k]=(P[k]||0)+v},roll=v=>{ad('pz',v);ad('lLp',-v*1.05);ad('lRp',v*1.05)},E=V3_ACT[A.k],i=A.i??1;
-  if(E){for(const k in E.add)ad(k,E.add[k]*i);if(!A.sinBrazos)for(const k in E.set)P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)}
+  if(E){for(const k in E.add)ad(k,E.add[k]*i);const am=A.armMode||(A.sinBrazos?'no':'set'),fa=am==='set'?1:am==='suave'?.3:0;if(fa)for(const k in E.set)P[k]=(P[k]||0)+(E.set[k]-(P[k]||0))*Math.min(1,i)*fa}
   /* peso en una pierna (+ = sobre la izquierda del personaje): la cadera se eleva del lado cargado, los hombros contrarrestan, la pierna libre se afloja */
   const p=A.peso||0;if(p){roll(p*10);ad('tl',-p*8);ad('hl',-p*3);const lib=p>0?'R':'L',car=p>0?'L':'R',q=Math.abs(p);P['l'+car+'k']=Math.min(P['l'+car+'k']||0,6*(1-q));ad('l'+lib+'k',16*q);ad('l'+lib+'s',8*q);ad('l'+lib+'p',8*q)}
   /* línea de acción: C = todo el torso se curva hacia un lado; S = la cadera va a un lado y los hombros al otro */
   const a=A.la||0;if(a&&A.lt){if(A.lt==='C'){ad('tl',a*22);ad('hl',a*9);roll(-a*5);ad('tb',Math.abs(a)*4)}else{roll(a*12);ad('tl',-a*14);ad('hl',a*14);ad('tt',a*10)}}
   /* asimetría: lo que estaba simétrico se separa (un brazo adelante y otro atrás, una rodilla más doblada) */
   const s=A.asim||0;if(s){for(const [l,r,g] of [['aLs','aRs',1],['aLe','aRe',1],['lLs','lRs',.8],['lLk','lRk',.8]]){if(Math.abs((P[l]||0)-(P[r]||0))<14){ad(l,s*12*g);ad(r,-s*12*g)}}ad('py',s*5);ad('hy',s*8);ad('tt',-s*5)}
+  /* fluidez: la cabeza se adelanta al giro del cuerpo, los hombros contrarrestan la cadera y la cabeza compensa la inclinación (acción superpuesta) */
+  {const fl=A.flow??.6;if(fl){ad('hy',(P.tt||0)*.45*fl);ad('tl',-(P.pz||0)*.5*fl);ad('hl',-(P.tl||0)*.35*fl);ad('py',-(P.tt||0)*.25*fl)}}
   /* exagerar: aleja cada ángulo de la pose neutra */
   const f=A.push||1,N=V3_POSES['De pie']||{};if(f!==1)for(const k of V3_ACT_PAR){if(A.sinBrazos&&/^a[LR]/.test(k))continue;const n=N[k]||0;P[k]=n+((P[k]||0)-n)*f}
   for(const k of V3_ACT_PAR)if(V3_RANGOS[k])P[k]=Math.round(clamp(P[k]||0,V3_RANGOS[k][0],V3_RANGOS[k][1])*10)/10;return P}
@@ -11671,10 +11842,10 @@ const v3dActIgual=(a,b)=>V3_ACT_PAR.every(k=>Math.abs((a[k]||0)-(b[k]||0))<.51);
 /* aplica el acting actual a la pose; si la pose cambió a mano desde la última vez, la nueva pose pasa a ser la de partida */
 function v3dActAplica(cambios){const s=S.v3d,f=s.figs?.[s.sel||0];if(!f)return;let A=s.act;
   if(!A||!A.out||!v3dActIgual(A.out,s.pose)){const prev=A;A={k:null,i:1.25,peso:0,lt:null,la:0,asim:0,push:1.15,base:clone(s.pose),dedos:clone(f.dedos||null),out:null};if(prev&&!cambios)A={...A,k:prev.k,i:prev.i}}
-  s.act=A;Object.assign(A,cambios||{});A.sinBrazos=(s.props||[]).some(x=>x.mano);
+  s.act=A;Object.assign(A,cambios||{});A.sinBrazos=(s.props||[]).some(x=>x.mano);A.armMode=A.sinBrazos?'no':(V3_ESC_NO.test(s.preset||'')?'no':(!s.preset||V3_ESC_BRAZOS.test(s.preset))?'set':'suave');if(A.flow==null)A.flow=.6;
   if(cambios&&cambios.k&&V3_ACT[cambios.k]){const E=V3_ACT[cambios.k];A.peso=E.peso;A.lt=E.lt;A.la=E.la;A.asim=E.asim;A.push=A.push||1;if(!A.sinBrazos)f.dedos={L:V3_MANOS[E.dedos[0]].slice(),R:V3_MANOS[E.dedos[1]].slice()}}
-  const P=v3dActCalc(A);A.out=clone(P);s.pose={...s.pose,...P};
-  const en=V3.figs?.[s.sel||0];if(en)v3dColoca(en.model,f);v3dPose();v3dAnillo?.();V3.dirty=true;v3dPersistePronto()}
+  const P=v3dActCalc(A);A.out=clone(P);const prev={...s.pose},anim=cambios&&cambios.k&&!cambios.sinAnim;s.pose={...s.pose,...P};
+  const en=V3.figs?.[s.sel||0];if(en)v3dColoca(en.model,f);if(anim){const fin={...s.pose};for(const q of V3_ACT_PAR)s.pose[q]=prev[q]||0;v3dPoseTween(fin,380)}else v3dPose();v3dAnillo?.();V3.dirty=true;v3dPersistePronto()}
 function v3dActQuita(){const s=S.v3d,A=s.act,f=s.figs?.[s.sel||0];if(!A?.base)return;s.pose={...s.pose,...A.base};if(A.dedos&&f)f.dedos=A.dedos;s.act=null;const en=V3.figs?.[s.sel||0];if(en&&f)v3dColoca(en.model,f);v3dPose();V3.dirty=true;v3dPanel()}
 function v3dActHTML(s){const A=s.act&&s.act.out&&v3dActIgual(s.act.out,s.pose)?s.act:{k:null,i:1.25,peso:0,lt:null,la:0,asim:0,push:1.15},sl=(l,k,mn,mx,st,v,u)=>`<label class="v3-s"><span>${l} <b id="v3a-${k}">${Math.round(v*100)/100}${u||''}</b></span><input type="range" data-v3a="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`,G=s.guias||{};
   return `<details class="v3-d" open><summary>Actuar la pose (acting)</summary><p class="hint" style="margin:4px 0">Una pose correcta no actúa. Elige <b>qué siente o qué hace</b> el personaje y la pose cambia: peso cargado en una pierna, línea de acción en C o S, cabeza, brazos y manos con intención. Parte de la pose que tengas y puedes afinar cada cosa; «Quitar acting» vuelve a ella.</p>
@@ -11683,6 +11854,7 @@ function v3dActHTML(s){const A=s.act&&s.act.out&&v3dActIgual(s.act.out,s.pose)?s
   ${sl('Intensidad de la actitud','i',0,1.6,.05,A.i??1,'×')}${sl('Peso en una pierna (− derecha · + izquierda)','peso',-1,1,.05,A.peso||0,'')}
   <div class="chips"><span class="lbl">Línea de acción</span>${[[null,'Ninguna'],['C','Curva en C'],['S','Curva en S']].map(([k,n])=>`<button class="ch xs ${(A.lt||null)===k?'on':''}" data-act="v3d-act-linea" data-k="${k||''}">${n}</button>`).join('')}</div>
   ${sl('Qué tan marcada (− ↔ + cambia de lado)','la',-1,1,.05,A.la||0,'')}${sl('Asimetría (romper la simetría)','asim',0,1,.05,A.asim||0,'')}${sl('Exagerar la pose (push)','push',1,1.8,.05,A.push||1,'×')}
+  <label class="chk"><input type="checkbox" data-act="v3d-act-auto" ${s.actAuto!==false?'checked':''}><span><b>Acting automático en cada pose</b> <small class="muted">(al elegir una pose le pone la actitud que le va, con transición suave)</small></span></label>
   <div class="prow"><button class="btn xs ${G.on&&G.accion?'on':''}" data-act="v3d-act-guia">${G.on&&G.accion?'Ocultar':'Ver'} la línea de acción</button><button class="btn xs" data-act="v3d-act-quita">Quitar el acting</button></div></details>`}
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.v3a;if(!k||!t.closest?.('#v3d'))return;const lb=$('#v3a-'+k);if(lb)lb.textContent=Math.round(+t.value*100)/100+(k==='i'||k==='push'?'×':'');v3dActAplica({[k]:+t.value})});
 /* la línea de acción: una curva suave desde la cabeza por la columna hasta el pie que carga el peso */
@@ -12285,7 +12457,7 @@ document.addEventListener('change',e=>{if(e.target.id==='bs-en'){S.bs=S.bs||{};S
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='cdr-q'){(S.cdr=S.cdr||{}).q=t.value;const l=$('#cdr-lista');if(l)l.innerHTML=cdrListaHTML();return}if(t.id==='v3d-posebusca'){const q=nz(t.value.trim()),pn=$('#v3d-panel');pn.querySelectorAll('[data-act="v3d-preset"]').forEach(b=>{b.style.display=!q||nz(b.textContent).includes(q)?'':'none'});pn.querySelectorAll('details.v3-d').forEach(d=>{if(d.querySelector('[data-act="v3d-preset"]')){if(q)d.open=true}});return}if(t.dataset?.v3l){const [a,b]=t.dataset.v3l.split('.'),X=S.v3d[a]=S.v3d[a]||{on:false,color:'#ffffff',int:1.2,dir:90,alt:30};X[b]=t.type==='checkbox'?t.checked:t.value;v3dLuz();if(t.type==='checkbox')v3dPanel();return}if(t.dataset?.v3ref){const v=+t.value;S.v3d.refOp=v;const im=$('#v3d-ref');if(im)im.style.opacity=v;const lb=$('#v3v-refOp');if(lb)lb.textContent=Math.round(v*100)+'%';return}const k=t.dataset?.v3f;if(!k||!t.closest?.('#v3d'))return;const S3=S.v3d,f=S3.figs?.[S3.sel||0];if(!f)return;
   if(k==='nom'){f.nom=t.value;return}
   {const q=k.split('.');if(q.length===1)f[k]=+t.value;else{let c=f;for(let i=0;i<q.length-1;i++){c=c[q[i]]=c[q[i]]||(/^\d+$/.test(q[i+1])?[]:{})}c[q[q.length-1]]=+t.value}}const lb=$('#v3f-'+k.replace(/\./g,'-'));if(lb)lb.textContent=(Math.round(+t.value*100)/100)+(k==='esc'||k.startsWith('cx.')?'×':/^(pies|cuello\.(arco|curva|onda|plano|caida|adelante|lado)|cola\.(curvaH|curvaV|onda|ondaV|fase))/.test(k)?'°':/^cola\.(largo|grosor|alto|alt)$/.test(k)?' m':'');
-  const en=V3.figs?.[S3.sel||0];if(en){v3dColoca(en.model,f);v3dAnillo()}V3.dirty=true;v3dPersistePronto()});
+  const en=V3.figs?.[S3.sel||0];if(en){v3dColoca(en.model,f);if(k==='px'||k==='pz')v3dColisionDrag(S3.sel||0);v3dAnillo()}V3.dirty=true;v3dPersistePronto()});
 /* ---- arrastrar las articulaciones del maniquí directamente en la escena (los deslizantes siguen igual) ---- */
 const V3_HND=[['wL','muñeca izquierda','LeftHand',['aLs','aLp','aLe'],'#4fa3ff'],['wR','muñeca derecha','RightHand',['aRs','aRp','aRe'],'#ff6a3d'],['eL','codo izquierdo','LeftForeArm',['aLs','aLp'],'#4fa3ff'],['eR','codo derecho','RightForeArm',['aRs','aRp'],'#ff6a3d'],
   ['fL','pie izquierdo','LeftFoot',['lLs','lLp','lLk'],'#4fa3ff'],['fR','pie derecho','RightFoot',['lRs','lRp','lRk'],'#ff6a3d'],['kL','rodilla izquierda','LeftLeg',['lLs','lLp'],'#4fa3ff'],['kR','rodilla derecha','RightLeg',['lRs','lRp'],'#ff6a3d'],
@@ -12308,10 +12480,10 @@ document.addEventListener('pointerdown',e=>{if(!V3.open||e.target.id!=='v3d-canv
   if(hp&&(!h||hp.distance<h.distance)){let o=hp.object;while(o&&o.userData.pid===undefined)o=o.parent;const p=o&&(S.v3d.props||[]).find(x=>x.id===o.userData.pid);if(p&&!p.mano){if(S.v3d.propSel!==p.id){S.v3d.propSel=p.id;if(S.v3d.tab==='objetos'){S.v3d.objSec='escena';v3dPropsPos();v3dPanel()}}V3.arr={prop:p.id,x0:e.clientX,y0:e.clientY,px:p.x||0,pz:p.z||0,py:p.y||0,p0:v3dHojaCfg()?v3dPlanoHoja(ray,v3dHojaCfg()):v3dPlano(ray,p.y||0),hs:p.hs,ht:p.ht,mov:false};if(V3.controls)V3.controls.enabled=false}return}
   if(!h)return;let o=h.object;while(o&&!V3.figs.some(x=>x.model===o))o=o.parent;const i=V3.figs.findIndex(x=>x.model===o);if(i<0)return;
   if(i!==(S.v3d.sel||0))v3dFigSel(i);const f=V3.figs[i].f,Hh=v3dHojaCfg(),p0=Hh?v3dPlanoHoja(ray,Hh):v3dPlano(ray,V3.figs[i].model.position.y-(f.py||0));V3.arr={i,x0:e.clientX,y0:e.clientY,px:f.px||0,pz:f.pz||0,py:f.py||0,hs:f.hs,ht:f.ht,p0,mov:false};if(V3.controls)V3.controls.enabled=false},true);
-document.addEventListener('pointermove',e=>{const A=V3.arr;if(!A||!V3.open)return;if(A.prop){const p=(S.v3d.props||[]).find(x=>x.id===A.prop);if(!p)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;if(e.shiftKey)p.y=clamp(A.py-(e.clientY-A.y0)*.012*v3dArrK(e),0,20);else{const Hh=v3dHojaCfg(),Lm=70;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);p.hs=clamp(v3dSnap(A.hs+(a1.s-a0.s)*v3dArrK(e)),-60,60);p.ht=clamp(v3dSnap(A.ht+(a1.t-a0.t)*v3dArrK(e)),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),A.py);if(p1&&A.p0){p.x=clamp(v3dSnap(A.px+(p1.x-A.p0.x)*v3dArrK(e)),-Lm,Lm);p.z=clamp(v3dSnap(A.pz+(p1.z-A.p0.z)*v3dArrK(e)),-Lm,Lm)}}}v3dPropsPos();return}
+document.addEventListener('pointermove',e=>{const A=V3.arr;if(!A||!V3.open)return;if(A.prop){const p=(S.v3d.props||[]).find(x=>x.id===A.prop);if(!p)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;if(e.shiftKey)p.y=clamp(A.py-(e.clientY-A.y0)*.012*v3dArrK(e),0,20);else{const Hh=v3dHojaCfg(),Lm=70;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);p.hs=clamp(v3dSnap(A.hs+(a1.s-a0.s)*v3dArrK(e)),-60,60);p.ht=clamp(v3dSnap(A.ht+(a1.t-a0.t)*v3dArrK(e)),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),A.py);if(p1&&A.p0){p.x=clamp(v3dSnap(A.px+(p1.x-A.p0.x)*v3dArrK(e)),-Lm,Lm);p.z=clamp(v3dSnap(A.pz+(p1.z-A.p0.z)*v3dArrK(e)),-Lm,Lm)}}}v3dPropsPos();v3dColisionObjeto(p);v3dPropsPos();return}
   const en=V3.figs?.[A.i];if(!en)return;if(!A.mov&&Math.hypot(e.clientX-A.x0,e.clientY-A.y0)<5)return;A.mov=true;const f=en.f;
   if(e.shiftKey)f.py=clamp(A.py-(e.clientY-A.y0)*.012*v3dArrK(e),-1,2.5);else{const Hh=v3dHojaCfg(),Lm=S.v3d.persp?30:3.2;if(Hh){const p1=v3dPlanoHoja(v3dRayo(e),Hh);if(p1&&A.p0&&A.hs!=null){const a0=v3dHojaST(A.p0,Hh),a1=v3dHojaST(p1,Hh);f.hs=clamp(v3dSnap(A.hs+(a1.s-a0.s)*v3dArrK(e)),-60,60);f.ht=clamp(v3dSnap(A.ht+(a1.t-a0.t)*v3dArrK(e)),-60,60)}}else{const p1=v3dPlano(v3dRayo(e),en.model.position.y-(f.py||0));if(p1&&A.p0){f.px=clamp(v3dSnap(A.px+(p1.x-A.p0.x)*v3dArrK(e)),-Lm,Lm);f.pz=clamp(v3dSnap(A.pz+(p1.z-A.p0.z)*v3dArrK(e)),-Lm,Lm)}}}
-  v3dColoca(en.model,f);v3dAnillo();v3dPersistePronto()},true);
+  v3dColoca(en.model,f);v3dColisionDrag(A.i);v3dAnillo();v3dPersistePronto()},true);
 const v3dSueltaArr=e=>{const A=V3.arr;if(!A)return;V3.arr=null;if(V3.controls)V3.controls.enabled=true;if(A.mov){V3.d0=null;v3dPanel()}};
 document.addEventListener('pointerup',v3dSueltaArr,true);document.addEventListener('pointercancel',v3dSueltaArr,true);
 document.addEventListener('pointerup',e=>{if(!V3.open||e.target.id!=='v3d-canvas'||!V3.d0)return;const d=Math.hypot(e.clientX-V3.d0[0],e.clientY-V3.d0[1]);V3.d0=null;if(d<5)v3dPick(e)},true);
@@ -13571,7 +13743,8 @@ async function accion(a,el){
     case 'v3d-act-linea':{const A=S.v3d.act;v3dActAplica({lt:ds.k||null,la:ds.k?(A?.la||.5):0});v3dPanel();break}
     case 'v3d-act-quita':v3dActQuita();break;
     case 'v3d-act-guia':{const G=S.v3d.guias=S.v3d.guias||{};if(G.on&&G.accion)G.accion=false;else{G.on=true;G.accion=true}V3.dirty=true;v3dPanel();break}
-    case 'v3d-preset':{const P=V3_POSES[ds.k];if(!P)return;S.v3d.act=null;S.v3d.pose={...P};S.v3d.preset=ds.k;v3dPose();v3dPosePost();v3dPanel();break}
+    case 'v3d-preset':{if(!V3_POSES[ds.k])return;v3dPonPose(ds.k);break}
+    case 'v3d-act-auto':S.v3d.actAuto=S.v3d.actAuto===false;v3dPanel();break;
     case 'v3d-luzp':{if(!V3_LUCES[ds.k])return;Object.assign(S.v3d.luz,luz3dPre(ds.k));S.v3d.luzN=V3_LUCES[ds.k].n;v3dLuz();v3dPanel();break}
     case 'v3d-escena':{const E=ds.k==='proyecto'?p?.escena:ESC_PRE[ds.k];if(!E)return;Object.assign(S.v3d.luz,escALuz3d(E));S.v3d.luzN=ds.k==='proyecto'?escNombre(p,E):E.n;v3dLuz();v3dPanel();break}
     case 'v3d-guardar-luz':{const L=S.v3d.luz;p.escenas=p.escenas||[];p.escenas.push(luz3dAEsc(L,'Luz 3D '+(p.escenas.length+1)));marcar();toast('Guardada en «Mis escenas» (pestaña Mood)');break}
