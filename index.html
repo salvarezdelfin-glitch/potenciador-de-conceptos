@@ -787,6 +787,125 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 .fmtck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}.fmtck li{padding:6px 10px;border-radius:0 6px 6px 0;border-left:3px solid var(--ink3);background:var(--bg)}.fmtck li.ok{border-color:var(--ok)}.fmtck li.warn{border-color:var(--c-tecnica)}.fmtck li.no{border-color:var(--warn)}.rc select{font-size:12px;padding:2px;max-width:100%}
 @media (prefers-reduced-motion:no-preference){.box,.col{transition:border-color .15s}}
 </style>
+<style id="tema2">
+/* ================= Estudio v2 · capa visual de toda la app =================
+   Misma identidad (oscuro de estudio + naranja), con más profundidad, radios y espaciado consistentes, superficies de cristal, controles con tacto (hover, presión, enfoque) y deslizantes propios. Solo estilos: no cambia nada de la lógica ni de dónde está cada cosa. */
+:root{
+  --bg:#08090c;--rail:#0d0f14;--surface:#13161c;--surface2:#1a1e26;--surface3:#242933;
+  --ink:#eef0f4;--ink2:#aab1bd;--ink3:#737b88;--line:#222630;--line2:#303642;
+  --accent:#ff6a3d;--accent2:#ff8a5c;--accent-ink:#150a05;--accent-soft:rgba(255,106,61,.13);
+  --r-s:8px;--r-m:12px;--r-l:18px;--r-pill:999px;
+  --sh-1:0 1px 0 rgba(255,255,255,.04) inset,0 1px 2px rgba(0,0,0,.35);
+  --sh-2:0 1px 0 rgba(255,255,255,.05) inset,0 10px 28px rgba(0,0,0,.34);
+  --sh-3:0 1px 0 rgba(255,255,255,.06) inset,0 22px 56px rgba(0,0,0,.5);
+  --ring:0 0 0 3px rgba(255,106,61,.28);
+  --glow:0 8px 24px rgba(255,106,61,.24);
+  --t:.16s cubic-bezier(.2,.7,.2,1);
+}
+html{scrollbar-color:var(--surface3) transparent}
+body{background:radial-gradient(1200px 520px at 78% -8%,rgba(255,106,61,.05),transparent 60%),var(--bg);text-rendering:optimizeLegibility;letter-spacing:.002em}
+*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:10px;border:2px solid transparent;background-clip:content-box}*::-webkit-scrollbar-thumb:hover{background:var(--ink3);background-clip:content-box;border:2px solid transparent}*::-webkit-scrollbar-track{background:transparent}
+::selection{background:rgba(255,106,61,.85)}
+
+/* ---- tipografía ---- */
+h1,h2,h3,.ptitle,.brand{text-wrap:balance}
+.ptitle{letter-spacing:-.015em}
+.box h3,.phead h2{letter-spacing:.012em;text-transform:uppercase;font-size:17px}
+.lbl,.hint,.muted{font-feature-settings:"tnum" 1}
+.muted,.hint{color:var(--ink3)}
+
+/* ---- superficies ---- */
+.box{background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0) 46%),var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:18px;box-shadow:var(--sh-2);transition:border-color var(--t),box-shadow var(--t)}
+.box:hover{border-color:var(--line2)}
+.banner{border-radius:var(--r-m)}
+.sheet,.cdc-m{border-radius:var(--r-l)}
+.cdc-m{box-shadow:var(--sh-3)}
+.list>li{border-radius:var(--r-s)}
+details.v3-d,.v3-pg,.bs-f,.crec-i,.borr{border-radius:var(--r-m)}
+
+/* ---- botones ---- */
+.btn{border-radius:10px;padding:8px 14px;background:var(--surface2);border:1px solid var(--line2);font-weight:500;letter-spacing:.005em;box-shadow:var(--sh-1);transition:background var(--t),border-color var(--t),transform var(--t),box-shadow var(--t),filter var(--t)}
+.btn:hover{background:var(--surface3);border-color:var(--ink3);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.975);box-shadow:none}
+.btn.pri{background:linear-gradient(180deg,var(--accent2),var(--accent));border-color:rgba(255,160,120,.55);color:var(--accent-ink);font-weight:600;box-shadow:0 1px 0 rgba(255,255,255,.38) inset,var(--glow)}
+.btn.pri:hover{filter:brightness(1.07);background:linear-gradient(180deg,var(--accent2),var(--accent));border-color:rgba(255,190,160,.7)}
+.btn.ghost{background:transparent;border-color:transparent;box-shadow:none}
+.btn.ghost:hover{background:var(--surface2);transform:none}
+.btn.sm{padding:5px 11px;font-size:12.5px;border-radius:9px}
+.btn.xs{padding:3px 9px;font-size:12px;border-radius:8px}
+.btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn[disabled]{opacity:.45;transform:none;filter:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---- chips y etiquetas ---- */
+.ch,.chip{border-radius:var(--r-pill);transition:background var(--t),border-color var(--t),color var(--t),transform var(--t),box-shadow var(--t)}
+.ch{background:var(--surface);border:1px solid var(--line2);padding:5px 12px}
+.ch:hover{background:var(--surface2);border-color:var(--ink3);color:var(--ink)}
+.ch:active{transform:scale(.96)}
+.ch.on{background:linear-gradient(180deg,var(--accent2),var(--accent));border-color:rgba(255,170,130,.6);color:var(--accent-ink);box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 4px 14px rgba(255,106,61,.22)}
+.ch.xs{padding:3px 9px}
+.chip{background:var(--surface2);border:1px solid var(--line)}
+
+/* ---- campos ---- */
+textarea,input[type=text],input[type=search],input[type=number],input[type=email],input[type=password],input[type=url],.field select,.prow select,.prow input,select{border-radius:10px;background:var(--bg);border:1px solid var(--line2);transition:border-color var(--t),box-shadow var(--t),background var(--t)}
+textarea:hover,input[type=text]:hover,select:hover{border-color:var(--ink3)}
+textarea:focus,input[type=text]:focus,input[type=search]:focus,input[type=number]:focus,input[type=email]:focus,input[type=password]:focus,input[type=url]:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.field label{letter-spacing:.01em}
+
+/* ---- deslizantes ---- */
+input[type=range]{-webkit-appearance:none;appearance:none;height:22px;background:transparent;cursor:pointer;touch-action:pan-y}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,rgba(255,106,61,.55),var(--surface3) 0)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-6px;border-radius:50%;background:linear-gradient(180deg,#fff,#dfe3ea);border:2px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.5);transition:transform var(--t),box-shadow var(--t)}
+input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.12)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.2);box-shadow:var(--ring),0 2px 8px rgba(0,0,0,.5)}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:var(--surface3)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:rgba(255,106,61,.7)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
+
+/* ---- pestañas ---- */
+.tabs{border-bottom-color:var(--line);gap:4px}
+.tab{border-radius:10px 10px 0 0;transition:background var(--t),color var(--t);padding:10px 14px}
+.tab:hover{background:var(--surface);color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);border-bottom-color:var(--accent);box-shadow:0 2px 0 var(--accent)}
+
+/* ---- barra lateral y navegación ---- */
+.side{background:linear-gradient(180deg,#0f1218,var(--rail));border-right-color:var(--line)}
+.pitem{border-radius:10px;transition:background var(--t),color var(--t),transform var(--t)}
+.pitem:hover{background:var(--surface2)}
+.pitem[aria-current="true"]{background:linear-gradient(90deg,var(--accent-soft),var(--surface2) 70%);box-shadow:inset 3px 0 0 var(--accent)}
+.bottombar{background:rgba(14,16,21,.78);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 44px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06) inset}
+.bottombar button{border-radius:24px;transition:background var(--t),color var(--t),transform var(--t)}
+.bottombar button:active{transform:scale(.94)}
+
+/* ---- visor 3D ---- */
+.v3d{background:radial-gradient(900px 520px at 50% 0,#15181f,#0b0c0f 70%)}
+.v3d-top{background:linear-gradient(180deg,rgba(8,9,12,.7),transparent)}
+.v3d-panel{background:rgba(17,19,25,.8);-webkit-backdrop-filter:blur(22px) saturate(1.35);backdrop-filter:blur(22px) saturate(1.35);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-l);box-shadow:var(--sh-3);padding:14px;gap:10px}
+.v3d-tabs{background:rgba(12,14,18,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.07);gap:6px}
+.v3d-tabs button{border-radius:20px;padding:9px 15px;transition:background var(--t),color var(--t),transform var(--t)}
+.v3d-tabs button:hover{background:var(--surface2);color:var(--ink)}
+.v3d-tabs button:active{transform:scale(.95)}
+.v3d-tabs button.on{background:linear-gradient(180deg,var(--surface3),var(--surface2));color:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 0 0 1px rgba(255,106,61,.35)}
+.v3-g{border-top-color:var(--line);padding-top:10px}
+.v3-g>b,.v3-g>.lbl:first-child{font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.v3-d{background:rgba(255,255,255,.02);border-color:var(--line);padding:8px 11px;transition:border-color var(--t),background var(--t)}
+.v3-d[open]{background:rgba(255,255,255,.035);border-color:var(--line2)}
+.v3-d summary{padding:2px 0;transition:color var(--t)}
+.v3-d summary:hover{color:var(--accent)}
+.v3-s{gap:3px}
+.v3-s b{font-family:var(--mono);font-weight:500;color:var(--ink);font-size:12px}
+.v3-pg{background:rgba(255,255,255,.03);border-color:var(--line)}
+.v3-c{transition:transform var(--t),box-shadow var(--t)}.v3-c:hover{transform:scale(1.12)}
+#v3d-gzb .ch:not(.on){background:rgba(14,16,21,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+
+/* ---- login ---- */
+.pcx-card{border-radius:var(--r-l);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 40%),var(--surface);border:1px solid var(--line2);box-shadow:var(--sh-3),0 0 80px rgba(255,106,61,.08)}
+
+/* ---- movimiento reducido ---- */
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+</style>
 </head>
 <body>
 <div class="app">
@@ -1060,7 +1179,7 @@ details>summary{cursor:pointer}details>summary::-webkit-details-marker{color:var
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mva8t59k').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvbbf986').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -7826,7 +7945,7 @@ function ideasHTML(p){const I=S.ideas=S.ideas||{tema:'halloween',lista:null};if(
   return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Ideas locas para ilustrar</h3><span class="lbl">Un personaje en una situación inesperada, con su porqué</span></div>
   <div class="chips">${IDEA_TEMAS.map(([k,n])=>`<button class="ch xs ${I.tema===k?'on':''}" data-act="idea-tema" data-k="${k}">${n}</button>`).join('')}</div>
   <div class="prow"><button class="btn pri sm" data-act="idea-gen">🎲 Dame 6 ideas nuevas</button><button class="btn sm" data-act="idea-mezcla">🌀 Una mezcla loca al azar</button></div>
-  <div style="display:grid;gap:10px;margin-top:10px">${I.lista.map((x,i)=>`<div class="box" style="margin:0;padding:12px"><b style="font-family:var(--display);font-size:17px">${esc(x.s)}</b> ${esc(x.a)}<br><span>📍 ${esc(x.l)}</span><br><span>↪ <i>${esc(x.g)}</i></span><br><span class="muted">Sentimiento: ${esc(x.e)}</span><br><span class="muted"><b>Por qué funciona:</b> ${esc(x.why)}</span>
+  <div style="display:grid;gap:10px;margin-top:10px">${I.lista.map((x,i)=>`<div class="box" style="margin:0;padding:14px"><div style="line-height:1.6"><b style="font-family:var(--display);font-size:19px;letter-spacing:.01em">${esc(x.s)}</b> ${esc(x.a)}<br><span>📍 ${esc(x.l)}</span><br><span>↪ <i>${esc(x.g)}</i></span><br><span class="muted">Sentimiento: ${esc(x.e)}</span><br><span class="muted"><b>Por qué funciona:</b> ${esc(x.why)}</span></div>
    <div class="prow" style="margin-top:6px;gap:6px"><button class="btn sm pri" data-act="idea-usa" data-i="${i}">Usar como brief</button>${x.cr?`<button class="btn sm" data-act="idea-3d" data-i="${i}">Verlo en el maniquí 3D</button>`:''}<button class="btn sm ghost" data-act="idea-re" data-i="${i}" data-sl="a">Otra acción</button><button class="btn sm ghost" data-act="idea-re" data-i="${i}" data-sl="l">Otro lugar</button><button class="btn sm ghost" data-act="idea-re" data-i="${i}" data-sl="g">Otro giro</button></div></div>`).join('')}</div></div>`}
 function ideaAccion(act,ds){const I=S.ideas=S.ideas||{tema:'halloween',lista:null},x=I.lista?.[+ds.i];
   switch(act){
@@ -11206,7 +11325,7 @@ function v3dLuz(){v3dPersistePronto();const L=S.v3d.luz,T=V3.T,az=L.dir*RAD,[dx,
   V3.rim.intensity=L.rim||0;V3.rim.color.set(L.rimc||L.color);V3.rim.position.set(-Math.cos(az)*4,3,Math.sin(az)*4);V3.rim.target.position.set(0,.9,0);V3.dirty=true}
 function v3dEscena(){v3dPersistePronto();const S3=S.v3d;V3.scene.background=S3.persp&&V3.perspTex&&S3.persp.fondo!==false?V3.perspTex:v3dFondoObj(S3.fondo);V3.rej.visible=!!S3.rej&&!S3.persp;V3.suelo.visible=!!S3.sombra;V3.key.castShadow=!!S3.sombra;
   V3.camera.fov=2*Math.atan(12/S3.lente)*180/Math.PI;V3.camera.updateProjectionMatrix();if(S3.persp)v3dPerspCam();V3.dirty=true}
-function v3dSuelo(){const m=V3.model;if(!m||V3.noSuelo)return;if(S.v3d?.modelo==='animal'){v3dAnSuelo(m);return}m.position.y=0;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m);if(isFinite(b.min.y))m.position.y=-b.min.y;V3.dirty=true}
+function v3dSuelo(){const m=V3.model;if(!m||V3.noSuelo)return;if(S.v3d?.modelo==='animal'){v3dAnSuelo(m);return}v3dSueloDe(m);V3.dirty=true}
 /* ============ Varios personajes en la escena (hasta 4): cada uno con su cuerpo, pose, posición, giro y tamaño ============
    S.v3d.pose / giro / cuerpo / preset son siempre los del personaje seleccionado (S.v3d.figs[S.v3d.sel]); así todos los controles de pose siguen igual. */
 const V3_TINTES=['','#7fa6d6','#d6967f','#8fd68a'],V3_MAX_FIGS=4;
@@ -11214,7 +11333,13 @@ const v3dPoseDe=d=>{const b=typeof d==='string'?{...V3_POSES[d]}:{...V3_POSES[d?
 function v3dFigSync(){const S3=S.v3d;if(!S3||S3.modelo!=='maniqui'||!S3.figs?.length)return;const f=S3.figs[Math.min(S3.sel||0,S3.figs.length-1)];f.pose=clone(S3.pose);f.giro=clone(S3.giro||{x:0,y:0,z:0});f.cuerpo=S3.cuerpo||f.cuerpo;f.preset=S3.preset}
 function v3dFigsInit(){const S3=S.v3d;if(!S3.figs?.length){S3.figs=[{id:uid(),cuerpo:S3.cuerpo||'michelle',pose:clone(S3.pose),giro:clone(S3.giro||{x:0,y:0,z:0}),preset:S3.preset,px:0,pz:0,esc:1,nom:''}];S3.sel=0}else{if(!(S3.sel>=0&&S3.sel<S3.figs.length))S3.sel=0;v3dFigSync()}}
 function v3dCargaSel(){const S3=S.v3d,f=S3.figs[S3.sel||0];S3.cuerpo=f.cuerpo;S3.pose=clone(f.pose);S3.giro=clone(f.giro||{x:0,y:0,z:0});S3.preset=f.preset||'Mía'}
-function v3dSueloDe(m){m.position.y=0;m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new V3.T.Box3().setFromObject(m);if(isFinite(b.min.y))m.position.y=-b.min.y}
+/* el piso se calcula con una muestra de ~1500 vértices (los más separados de cada hueso) en vez de los 16 000: 10 veces más rápido y con menos de 1 cm de diferencia */
+function v3dMuestra(o){const g=o.geometry,p=g.attributes.position,si=g.attributes.skinIndex,sw=g.attributes.skinWeight,nb=o.skeleton.bones.length,cand=Array.from({length:nb},()=>[]);for(let i=0;i<p.count;i++){let bi=si.getX(i),bw=sw.getX(i);if(sw.getY(i)>bw){bi=si.getY(i);bw=sw.getY(i)}if(sw.getZ(i)>bw){bi=si.getZ(i);bw=sw.getZ(i)}if(sw.getW(i)>bw){bi=si.getW(i);bw=sw.getW(i)}cand[bi].push(i)}
+  const out=[];for(const c of cand){if(!c.length)continue;if(c.length<=24){out.push(...c);continue}const pick=[c[0]],d=new Float32Array(c.length).fill(1e9);for(let k=1;k<24;k++){const l=pick[k-1],lx=p.getX(l),ly=p.getY(l),lz=p.getZ(l);let best=0,bd=-1;for(let j=0;j<c.length;j++){const q=c[j],dd=(p.getX(q)-lx)**2+(p.getY(q)-ly)**2+(p.getZ(q)-lz)**2;if(dd<d[j])d[j]=dd;if(d[j]>bd){bd=d[j];best=j}}pick.push(c[best])}out.push(...pick)}return Int32Array.from(out)}
+function v3dSueloDe(m){m.position.y=0;m.updateMatrixWorld(true);const mn=v3dMinY(m);if(isFinite(mn))m.position.y=-mn}
+function v3dMinY(m){const T=V3.T;m.updateMatrixWorld(true);let mn=Infinity;const v=m.userData._v||(m.userData._v=new T.Vector3());
+  m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();const S=o.userData.muestra||(o.userData.muestra=v3dMuestra(o)),pa=o.geometry.attributes.position;for(let k=0;k<S.length;k++){v.fromBufferAttribute(pa,S[k]);o.applyBoneTransform(S[k],v);v.applyMatrix4(o.matrixWorld);if(v.y<mn)mn=v.y}}else if(o.isMesh&&o.geometry){o.geometry.boundingBox||o.geometry.computeBoundingBox();const b=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);if(b.min.y<mn)mn=b.min.y}});
+  return isFinite(mn)?mn:0}
 /* ---- sentarse de verdad: el cuerpo baja hasta que la pelvis toca el asiento (medido en la malla del objeto) y las rodillas se ajustan para que los pies lleguen al piso ---- */
 function v3dAsientoOk(f){if(f.asiento==null)return false;const p=(S.v3d.props||[]).find(x=>x.id===f.sentadoEn);if(!p||Math.hypot((f.px||0)-(p.x||0),(f.pz||0)-(p.z||0))>.55||((f.pose?.lLs||0)<50&&(f.pose?.lRs||0)<50)){f.asiento=null;return false}return true}
 function v3dAsientoY(p,f){const T=V3.T,o=V3.propObjs?.find(x=>x.userData.pid===p.id);if(!o)return null;o.updateMatrixWorld(true);const y=(f.giro?.y||0)*RAD,rc=new T.Raycaster(new T.Vector3((f.px||0)+Math.sin(y)*.05,3,(f.pz||0)+Math.cos(y)*.05),new T.Vector3(0,-1,0)),h=rc.intersectObject(o,true)[0];return h?h.point.y:null}
@@ -11230,7 +11355,7 @@ const v3dPlanoHoja=(ray,H)=>{const p=new V3.T.Vector3();return ray.ray.intersect
 const v3dHojaST=(p,H)=>{const d=p.clone().sub(H.O);return {s:d.dot(H.u),t:d.dot(H.w)}};
 function v3dColocaHoja(m,f,H){const T=V3.T,P=S.v3d.persp,qe=new T.Quaternion().setFromEuler(m.rotation),up=new T.Vector3(0,1,0),n=P.inclina!==false?H.n:up,qb=new T.Quaternion().setFromUnitVectors(up,n);
   if(f.hs==null){const d=new T.Vector3((f.px||0)-H.O.x,-H.O.y,(f.pz||0)-H.O.z);f.hs=d.dot(H.u);f.ht=d.dot(H.w)}
-  m.quaternion.copy(qe);m.position.set(0,0,0);m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});const b=new T.Box3().setFromObject(m),my=isFinite(b.min.y)?b.min.y:0,
+  m.quaternion.copy(qe);m.position.set(0,0,0);m.updateMatrixWorld(true);const my=v3dMinY(m),
     p=H.O.clone().addScaledVector(H.u,f.hs).addScaledVector(H.w,f.ht);
   m.quaternion.copy(qb).multiply(qe);m.position.copy(p).addScaledVector(n,-my+(f.py||0));f.px=p.x;f.pz=p.z;m.updateMatrixWorld(true)}
 /* lleva la hoja también al suelo que recibe las sombras y vuelve a pegar a los personajes */
