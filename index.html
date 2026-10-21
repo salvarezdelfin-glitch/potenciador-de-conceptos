@@ -905,6 +905,11 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 /* ---- movimiento reducido ---- */
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* ---- programa de mejora ---- */
+.pg-rutas{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.pg-ruta{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:7px 12px;cursor:pointer;color:var(--ink);display:flex;gap:8px;align-items:center}.pg-ruta:hover{border-color:var(--ink3)}.pg-ruta.on{border-color:var(--accent);background:var(--accent-soft)}.pg-ruta.act::after{content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--accent)}.pg-ruta span{font-size:11.5px;color:var(--ink3)}.pg-ruta i{position:absolute;left:0;bottom:0;height:3px;background:var(--accent);opacity:.8}
+.pg-todas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.pg-tr{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.pg-tr.act{border-color:var(--accent)}
+.pg-rutas-c{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:14px}.pg-ruta-c{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.pg-ruta-c.on{border-color:var(--accent)}
+.pg-nivel{border-top:1px solid var(--line);padding:8px 0}.pg-nivel.ok{opacity:.8}.pg-sem.dom{opacity:.65;border-style:dashed}.pg-pt.dom{background:var(--surface2);border:1px dashed var(--ink3)}
+
 .pg-resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}.pg-resumen>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}.pg-resumen b{font-family:var(--display);font-size:34px;line-height:1}.pg-resumen small{font-size:15px;color:var(--ink3)}
 .pg-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 14px;flex-wrap:wrap}.pg-tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--ink2);padding:9px 14px;cursor:pointer;font-weight:500}.pg-tab:hover{color:var(--ink)}.pg-tab.on{color:var(--ink);border-bottom-color:var(--accent)}
 .pg-dots{display:flex;gap:4px}.pg-dot{width:12px;height:12px;border-radius:4px;background:var(--surface3)}.pg-dot.on{background:var(--accent)}
@@ -1193,7 +1198,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvigwzo3').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvih96to').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -2375,11 +2380,12 @@ function racha(){
   return n;
 }
 
+
 /* ============ PROGRAMA DE MEJORA: 12 semanas para Environment & Keyframe ============
    Cada semana: una habilidad, por qué importa, un objetivo medible, un calentamiento, 5 sesiones de 30 min (calentamiento 5 · estudio 8 · ejercicio 12 · revisión 5) y una pieza de la semana con rúbrica.
    La luz y la perspectiva (tus puntos débiles) ocupan 5 de las 12 semanas. */
 const PROG_W=(w,t,skill,por,obj,cal,ses,pz)=>({w,t,skill,por,obj,cal,ses:ses.map(s=>({t:s[0],est:s[1],ej:s[2],crit:s[3].split('|'),err:s[4]})),pz:{t:pz[0],d:pz[1],rub:pz[2].split('|')}});
-const PROGRAMA=[
+const RT_ENV=[
 PROG_W(1,'Ver en valores','valores','Si los valores no leen, ningún color ni detalle te salva. Es la base de la luz, la profundidad y el foco.','Reducir cualquier escena a 3 valores y que se lea a 2 cm de tamaño.','6 cuadritos de gris, de blanco a negro. Rellénalos de memoria y compáralos con una escala real.',[
  ['Tres valores en una foto','Elige 3 fotos de paisaje o arquitectura. Entrecierra los ojos y marca lo más oscuro, lo medio y lo más claro.','Reduce una de esas fotos a 3 valores planos en un rectángulo de 10×6 cm.','Se lee el lugar sin color|Máximo 3 valores|Lo más claro está en el foco','Usar 5 grises «por si acaso»: se pierde la jerarquía.'],
  ['Agrupar masas','Toma un keyframe de un artista que sigues y delinea sus 3 masas de valor más grandes.','4 thumbnails de 5×3 cm del mismo entorno cambiando solo cuál masa es la oscura.','4 distribuciones realmente distintas|Cada una tiene una masa dominante|Sabes cuál elegirías y por qué','Repartir los valores parejo: sin masa dominante no hay foco.'],
@@ -2465,52 +2471,472 @@ PROG_W(12,'Pieza de portafolio','composicion','Aquí juntas todo: brief, thumbna
  ['Pulido y revisión','Mira la pieza en miniatura, en blanco y negro y al revés.','Pulido final de foco y bordes; anota 3 mejoras para la próxima.','Se lee en miniatura|Foco y bordes limpios|Anotaste 3 mejoras','Pulir todo parejo.']],
  ['Pieza de portafolio completa','Una pieza de entorno o keyframe completa, con thumbnails, blockout, valores y color guardados para mostrar el proceso. Varias sesiones.','Se lee en miniatura|Luz y perspectiva sólidas|Hay diseño propio|El proceso está documentado'])
 ];
-const PROG_SKILLS=[...new Set(PROGRAMA.map(w=>w.skill))];
 
-/* ---------- estado y progreso del programa ---------- */
-const PG=()=>S.ajustes.prog||(S.ajustes.prog={ses:{},pz:{},rev:{}});
+/* ---- Ruta: Anatomía y proporciones (10 semanas) ---- */
+const RT_ANAT=[
+PROG_W(1,'Gesto y línea de acción','gesto','Antes de la anatomía está el movimiento. Un gesto vivo con tres líneas vale más que una figura rígida y perfecta.','Capturar la acción de una pose con una línea de acción y 3 masas en 1 minuto.','10 garabatos de gesto de 30 segundos cada uno, sin levantar el lápiz.',[
+ ['Línea de acción','Mira 10 fotos de poses y traza una sola curva que resuma la dirección del cuerpo.','20 gestos de 1 minuto: primero la línea de acción, luego cabeza, tórax y pelvis como masas.','La línea expresa el movimiento|Tórax y pelvis se inclinan en sentido opuesto|No hay detalle','Empezar por la cabeza y perder el gesto.'],
+ ['Tres masas','Divide 5 poses en cabeza, tórax y pelvis y mira cómo se relacionan.','15 gestos de 2 minutos con tres masas bien colocadas.','Las 3 masas se leen|Se ve el peso|Hay ritmo entre masas','Hacer las masas del mismo tamaño y paralelas.'],
+ ['Peso y equilibrio','Marca en fotos dónde cae el peso y dónde está el pie de apoyo.','10 poses de pie con la línea de gravedad dibujada desde el cuello.','La figura se sostiene|El pie de apoyo está bajo el peso|Hay un lado relajado','Figuras que se caerían.'],
+ ['Gesto con actitud','Elige 5 poses que cuenten una emoción (miedo, orgullo, cansancio).','10 gestos de 2 minutos donde se lea la emoción sin cara.','Se lee la emoción|La línea de acción apoya|Silueta clara','Poses neutras que no dicen nada.'],
+ ['Gesto de memoria','Observa una pose 30 segundos y tápala.','10 gestos de memoria y luego compara con la referencia.','Capturaste lo esencial|Anotas qué olvidaste|Vas mejorando entre el 1.º y el 10.º','Mirar la referencia a cada rato.']],
+ ['Hoja de 30 gestos','Una hoja con 30 gestos de 1 minuto, 10 de cada tipo: pie, sentado, en acción. 45 min.','Hay línea de acción en cada uno|Hay variedad de poses|Se ve el peso|Los últimos 10 son mejores que los primeros']),
+PROG_W(2,'Proporciones de la figura','proporciones','Las proporciones te dan una base para construir cualquier cuerpo y luego romperlas con intención.','Dibujar una figura de 8 cabezas con puntos de referencia correctos y luego variar proporciones a propósito.','Una columna de 8 cabezas: marca barbilla, pezones, ombligo, ingle, rodillas y pies.',[
+ ['La figura de 8 cabezas','Mide en 3 fotos cuántas cabezas mide cada figura y dónde caen los puntos clave.','5 figuras de 8 cabezas de pie, de frente y de perfil, con marcas.','Los puntos clave caen donde deben|Hombros y caderas con el ancho correcto|Figura de frente y de perfil coherentes','Hacer las piernas cortas sin darte cuenta.'],
+ ['Hombre y mujer','Compara hombro, cintura y cadera en 5 fotos de cada sexo.','Figura masculina y femenina con las diferencias de caja torácica y pelvis.','Hombros vs caderas se distinguen|Se mantiene la altura|Silueta clara','Diferenciar solo con el pecho.'],
+ ['Niños y edades','Mide cuántas cabezas tiene un niño, un adolescente y un adulto mayor.','Una fila de 5 edades con su proporción y postura.','Cada edad se distingue|La cabeza es más grande en los niños|La postura cambia','Hacer niños como adultos pequeños.'],
+ ['Variar a propósito','Observa personajes estilizados (héroe, bruto, ágil) y mide sus proporciones.','5 figuras con proporciones exageradas: 6, 7, 9 y 10 cabezas, y una con piernas largas.','Cada exageración es intencional|Se mantiene la construcción|Cada figura transmite algo','Exagerar sin conservar el volumen.'],
+ ['Proporciones de memoria','Estudia la figura de 8 cabezas 5 minutos y tápala.','10 figuras de memoria con los puntos clave y compáralas con tu hoja.','Puntos clave correctos|Anotaste desviaciones|Mejoras de la primera a la décima','Corregir sin anotar el patrón de error.']],
+ ['Lineup de proporciones','Una fila de 6 figuras de proporciones distintas bajo una misma línea de pies, para comparar. 50 min.','Línea de pies común|Cada proporción es reconocible|Se ve construcción|Los hombros y caderas son coherentes']),
+PROG_W(3,'Torso y pelvis','anatomia','Tórax y pelvis son los dos bloques que explican casi toda la pose. Si están bien, el resto sigue.','Construir torso y pelvis como cajas o formas simples en cualquier giro e inclinación.','Dibuja un tórax (huevo) y una pelvis (caja) en 4 giros distintos en 5 minutos.',[
+ ['Caja torácica','Mira un esqueleto de referencia: costillas, esternón, columna.','10 tórax en forma de huevo en distintas inclinaciones.','Se ve el volumen|El eje de la columna es coherente|Se ve la inclinación','Dibujarlo plano como un óvalo.'],
+ ['Pelvis y cadera','Observa la pelvis de frente, de lado y por detrás.','10 pelvis como caja en distintos giros.','Hay planos|Se ven las crestas|Coincide con el tórax','Pelvis que no se une a las piernas.'],
+ ['Torso en movimiento','Mira cómo el tórax gira respecto a la pelvis en una pose.','10 torsos con giro y flexión: tórax, pelvis y columna conectados.','La columna es una curva|El giro se entiende|Las dos cajas se separan claramente','Girar solo el tórax sin la pelvis.'],
+ ['Contrapposto','Estudia 5 poses clásicas con un lado relajado.','5 figuras en contrapposto con línea de hombros y línea de caderas en direcciones opuestas.','Hombros y caderas inclinados opuestos|El peso está en una pierna|La línea de acción es una S','Hombros y caderas paralelos.'],
+ ['Torso desde referencia','Elige una foto de torso y marca las cajas.','Dibuja el torso completo con forma de la caja, ombligo y cintura.','Se ve la construcción|Proporción correcta|El torso tiene peso','Detallar músculos antes de construir.']],
+ ['Estudio de torso y pelvis','5 figuras de torso a cadera en poses distintas, con cajas visibles y luego su forma terminada. 50 min.','Cajas visibles|Giro creíble|Proporciones correctas|Gesto vivo']),
+PROG_W(4,'Piernas y pies','anatomia','Las piernas sostienen la figura: si fallan los pies y las rodillas, todo se ve flotando.','Dibujar piernas con volumen y pies con contacto firme en el suelo.','Dibuja 5 piernas con tres masas: muslo, pantorrilla y pie.',[
+ ['Muslo y pantorrilla','Mira piernas de frente y de lado: el muslo es grande, la pantorrilla tiene su máximo arriba.','10 piernas con formas de cilindro y ritmo de curvas alternadas.','Ritmo de curvas|Rodilla bien ubicada|Volumen en los cilindros','Piernas rectas como tubos.'],
+ ['Rodilla y articulación','Observa cómo se ve la rodilla doblada desde 3 ángulos.','10 rodillas dobladas con formas de bloque y rótula.','Se ve la articulación|La pierna cambia de dirección|El grosor es coherente','Doblar la pierna como una manguera.'],
+ ['El pie','Mira el pie de lado y desde arriba: bóveda, talón y dedos.','10 pies como cuña con los dedos como bloque.','Se ve el arco|Dedos agrupados|El talón tiene volumen','Dibujar los dedos separados como salchichas.'],
+ ['Contacto con el suelo','Observa dónde pisa el pie y dónde está la sombra.','Piernas con pies apoyados en suelos distintos con sombra de contacto.','El pie se ve apoyado|La sombra ancla|La inclinación cambia con el terreno','Pies flotando.'],
+ ['Piernas en acción','Mira 5 fotos de correr, saltar y patear.','10 piernas en movimiento con línea de acción de cadera a pie.','Se ve el movimiento|El peso es creíble|La pierna se acorta con el escorzo','Piernas del mismo largo en un escorzo.']],
+ ['Estudio de piernas y pies','Seis estudios de piernas y pies en pose y acción, con sombra de contacto. 45 min.','Volumen claro|Ritmo de curvas|Pies firmes|Escorzos creíbles']),
+PROG_W(5,'Brazos y manos','anatomia','Las manos cuentan la acción y el carácter; son difíciles y por eso diferencian a un artista.','Dibujar brazos con ritmo y manos con una construcción en bloques desde varios ángulos.','Dibuja 5 manos como una caja con 5 cilindros, en 5 minutos.',[
+ ['Brazo y hombro','Observa la unión del brazo con el hombro y la clavícula.','10 brazos con hombro, brazo y antebrazo en distintas poses.','Se ve la articulación|El antebrazo se tuerce|Largo coherente con el cuerpo','Brazos pegados al torso sin hombro.'],
+ ['Mano en bloques','Mira tu mano: palma como caja, dedos como cilindros con 3 segmentos.','15 manos abiertas desde distintos ángulos con la caja de la palma.','La palma tiene volumen|Los dedos tienen 3 segmentos|Proporción de la palma y los dedos','Dedos largos como fideos.'],
+ ['Mano agarrando','Observa cómo se curva la mano sobre un objeto.','10 manos agarrando taza, palo, espada y lápiz.','Los dedos envuelven el objeto|El pulgar se opone|El objeto tiene escala','Manos que no tocan el objeto.'],
+ ['Manos con actitud','Mira 5 gestos: señalar, puño, súplica, pistola, bendición.','10 manos con gestos expresivos y su silueta clara.','El gesto es legible|La silueta es clara|Hay variedad','Poner las manos escondidas por miedo.'],
+ ['Manos de memoria','Estudia una mano 3 minutos y tápala.','8 manos de memoria y luego compáralas con la referencia.','Estructura correcta|Anotaste errores|Mejora de la 1.ª a la 8.ª','Detallar uñas y arrugas antes de la estructura.']],
+ ['Hoja de manos y brazos','Una hoja con 12 manos y 6 brazos en acciones distintas. 50 min.','Construcción visible|Gestos legibles|Proporción coherente|Hay variedad de ángulos']),
+PROG_W(6,'Cabeza y cuello','anatomia','La cabeza concentra la expresión y la identidad. Construirla bien te permite diseñar rostros desde cualquier ángulo.','Construir una cabeza con cráneo, planos y proporciones de rostro desde varios ángulos.','Dibuja 5 esferas con la cruz de la cara en distintos giros.',[
+ ['Cráneo y planos','Mira un cráneo y los planos de la cara: frente, laterales, mandíbula.','10 cabezas con esfera, mandíbula y cruz de la cara.','La cruz sigue el giro|Mandíbula en su lugar|Cabeza con volumen','Dibujar la cara plana sobre un círculo.'],
+ ['Proporciones del rostro','Mide en 3 fotos: ojos a media altura, nariz y boca a tercios.','8 rostros de frente con las marcas de proporción.','Ojos a la mitad|Tercios correctos|Simetría natural','Poner los ojos muy arriba.'],
+ ['Ojos, nariz y boca','Observa su forma como bloques y planos.','10 estudios de ojos, nariz y boca desde 3 ángulos.','Cada rasgo tiene volumen|Se ven los planos|Se integra al rostro','Dibujar símbolos en vez de formas.'],
+ ['Cuello y hombros','Mira cómo el cuello entra en el torso y los trapecios suben.','10 cabezas con cuello y hombros en giro.','El cuello es un cilindro|Se une al torso|Hombros y cabeza alineados','Cuello como palito.'],
+ ['Cabeza desde cualquier ángulo','Observa una foto con picado y contrapicado.','10 cabezas en picado, contrapicado y tres cuartos.','La cruz se curva|Las orejas ubican el giro|Proporciones consistentes','Cambiar las proporciones al girar.']],
+ ['Hoja de cabezas','Una hoja con 12 cabezas en ángulos y expresiones distintas. 50 min.','Construcción visible|Ángulos variados|Proporción consistente|Se ve personalidad']),
+PROG_W(7,'Músculo y forma','anatomia','Conocer los grupos musculares principales te deja dar volumen y tensión creíbles sin copiar.','Identificar y dibujar los grupos musculares grandes y cómo se tensan en acción.','Dibuja un torso con 6 grandes formas: pectorales, abdomen, dorsales, deltoides, glúteos y muslos.',[
+ ['Grupos del torso','Mira una lámina de músculos: pectorales, dorsales, serrato, abdomen.','5 torsos de frente y de espalda con los grupos grandes.','Grupos reconocibles|Formas grandes|Sin detalle menor','Dibujar músculos individuales sin entender los grupos.'],
+ ['Brazo y hombro','Observa deltoides, bíceps, tríceps, antebrazo.','8 brazos con músculos en reposo y en flexión.','Cambia la forma al flexionar|El deltoides abraza el hombro|Antebrazo con dos masas','Brazos del mismo grosor sin cambio.'],
+ ['Pierna','Mira cuádriceps, isquiotibiales, glúteo y gemelos.','8 piernas con los grupos y su cambio al apoyar peso.','Muslo con masas|Pantorrilla con forma|Cambia con el apoyo','Piernas lisas.'],
+ ['Tensión y relajación','Mira fotos de esfuerzo y de reposo y compara.','6 figuras: una relajada y una en esfuerzo con el mismo cuerpo.','Se nota la diferencia|La tensión es creíble|Hay forma en ambas','Tensión en todos los músculos.'],
+ ['Superficie y luz','Observa cómo la luz modela el músculo.','Un torso con luz dura para que se lean las masas.','Se lee el volumen|Sombra propia coherente|Las masas grandes dominan','Sombrear detalle sin las masas.']],
+ ['Estudio de figura con músculo','Una figura completa con grupos musculares claros, luz y gesto. 60 min.','Gesto vivo|Grupos principales|Luz coherente|Proporciones correctas']),
+PROG_W(8,'Poses dinámicas y escorzo','gesto','Las poses de acción y el escorzo son lo que da dinamismo a un personaje. Se resuelven con volumen y perspectiva.','Dibujar poses dinámicas con escorzo creíble en brazos, piernas y torso.','5 cilindros en escorzo: uno de frente, uno de lado y tres con ángulo.',[
+ ['Escorzo básico','Mira un brazo o una pierna apuntando hacia ti.','10 brazos y piernas en escorzo con cilindros superpuestos.','Superposición clara|Las secciones se acortan|Hay volumen','Dibujar el escorzo plano.'],
+ ['Pose de acción','Observa 5 fotos de saltos, golpes, carreras.','10 poses de acción con línea de acción fuerte.','Línea de acción clara|Se ve la fuerza|Silueta legible','Poses simétricas y estáticas.'],
+ ['Torsión y torsión opuesta','Mira cómo gira la columna en un lanzamiento.','8 poses con torsión de tórax contra pelvis.','Se ve la torsión|Peso creíble|Brazos y piernas acompañan','Torsión que rompe la figura.'],
+ ['Perspectiva en la figura','Observa una figura desde abajo y desde arriba.','8 figuras en picado y contrapicado con proporciones deformadas.','El horizonte es coherente|Proporciones se deforman por perspectiva|Hay volumen','Figura en perspectiva sin cambiar proporciones.'],
+ ['Poses con carácter','Escoge 3 personajes y piensa en su postura típica.','6 poses que cuenten el carácter de un personaje.','Se lee el carácter|Línea de acción|Silueta clara','Poses genéricas.']],
+ ['Hoja de poses dinámicas','Una hoja con 10 poses dinámicas y 4 escorzos grandes. 60 min.','Línea de acción|Escorzos creíbles|Silueta clara|Variedad']),
+PROG_W(9,'Anatomía comparada y criaturas','anatomia','Entender cómo se relacionan las anatomías humana y animal te permite inventar criaturas creíbles.','Dibujar esqueleto y masas de al menos 3 animales y combinarlos en una criatura coherente.','Dibuja un cuadrúpedo con 3 masas: pecho, pelvis y cabeza.',[
+ ['Cuadrúpedos','Compara el esqueleto de un perro, un caballo y un humano en cuatro patas.','5 cuadrúpedos con tórax, pelvis y patas con articulaciones correctas.','Se ven las articulaciones|El peso se reparte|El cuello conecta','Patas traseras con articulaciones al revés.'],
+ ['Felinos y reptiles','Mira un jaguar y un lagarto en movimiento.','5 estudios de felino y 5 de reptil con espina y extremidades.','Espina flexible|Patas bien ubicadas|Cabeza proporcionada','Poner patas rectas.'],
+ ['Aves y alas','Observa el ala de un ave: brazo, antebrazo, mano.','6 alas abiertas y cerradas con sus huesos.','Los huesos se corresponden con el brazo|Las plumas siguen la estructura|Se ve el volumen','Alas pegadas como sombrilla.'],
+ ['Anatomía comparada','Compara pata humana, de perro y de caballo.','3 patas lado a lado: cómo se relacionan sus huesos.','Se entiende la correspondencia|Articulaciones marcadas|Proporciones distintas','Dibujarlas desconectadas.'],
+ ['Una criatura creíble','Elige 2 animales reales y lista sus rasgos.','Criatura combinando 2 animales: esqueleto y masas.','Es creíble|Respeta articulaciones|Silueta original','Mezclar sin lógica anatómica.']],
+ ['Criatura con anatomía creíble','Una criatura original con esqueleto, masas y 3 poses, a partir de 2 animales. 75 min.','Anatomía creíble|Silueta original|Poses coherentes|Esqueleto visible']),
+PROG_W(10,'Figura vestida y de memoria','anatomia','Aquí juntas todo: construyes una figura desde cero, la vistes y la dibujas sin referencia.','Dibujar una figura completa de memoria con anatomía, proporciones, ropa y pose viva.','Dibuja una figura de memoria en 3 minutos y revisa los puntos clave.',[
+ ['Figura de memoria','Repasa tu hoja de proporciones.','5 figuras de memoria con pose, y luego compáralas con referencias.','Proporciones correctas|Pose viva|Anotas errores','Corregir sin anotar.'],
+ ['Pliegues de tela','Observa cómo caen y se tensan los pliegues en codos, rodillas y cintura.','10 estudios de pliegues sobre brazos y piernas.','Los pliegues siguen la forma|Hay puntos de tensión|La tela tiene peso','Pliegues decorativos sin lógica.'],
+ ['Vestir la figura','Elige 5 prendas y mira cómo cubren el cuerpo.','4 figuras vestidas con el cuerpo visible debajo.','Se siente el cuerpo|La ropa tiene grosor|Los pliegues son coherentes','Ropa pegada como pintura.'],
+ ['Construcción desde cero','Elige una pose y planea 3 cajas, líneas y proporciones.','Una figura inventada con construcción visible y vestuario.','Construcción clara|Proporciones coherentes|Pose creíble','Saltar a los detalles.'],
+ ['Revisión de anatomía','Revisa tus hojas de las 9 semanas.','Corrige una figura vieja con lo que aprendiste.','Mejora visible|Anotas 3 aprendizajes|Corrección en otro color','Rehacer todo sin mirar el antes.']],
+ ['Figura de memoria final','Una figura completa de memoria con gesto, anatomía, ropa y luz, comparada con una pieza de la semana 1. 90 min.','Gesto vivo|Proporciones correctas|Anatomía creíble|Mejora visible frente a la semana 1'])
+];
+
+/* ---- Ruta: Diseño de personajes (10 semanas) ---- */
+const RT_PERS=[
+PROG_W(1,'Silueta y lectura','silueta','Si el personaje no se reconoce en negro, ni el color ni el detalle lo salvan. La silueta es la primera lectura.','Producir siluetas distintas y reconocibles que se lean a 2 cm.','10 manchas negras de personaje en 30 segundos cada una.',[
+ ['Siluetas rápidas','Mira 10 personajes conocidos reducidos a negro: ¿cuáles se reconocen?','20 siluetas de personaje de 1 minuto, sin detalle interior.','Cada una es distinta|Se lee la postura|Hay formas grandes, medianas y pequeñas','Siluetas que son la misma con pequeños cambios.'],
+ ['Lectura a 2 cm','Reduce tus siluetas a 2 cm y mira cuáles siguen leyéndose.','Elige 5 siluetas y mejóralas para que lean a 2 cm.','Se leen a 2 cm|Hay un elemento icónico|Brazos y piernas no se pierden','Detalles internos que no se ven.'],
+ ['Elemento icónico','Busca en 5 personajes el rasgo que los identifica.','8 siluetas con un elemento icónico distinto (capa, cuernos, arma, cabello).','El rasgo se ve en negro|Es distinto en cada una|Se justifica por el personaje','Exagerar sin intención.'],
+ ['Siluetas por rol','Piensa en héroe, villano, trickster, mentor y bruto.','5 siluetas, una por rol, que comuniquen su rol sin color.','Cada rol se distingue|Las formas apoyan al rol|Variedad de tamaño','Todos con la misma proporción.'],
+ ['Elegir y refinar','Revisa tus siluetas de la semana.','Lleva tu mejor silueta a un diseño lineal simple, sin perder la lectura.','La silueta se mantiene|Se agregan detalles que ayudan|Se lee a 2 cm','Perder la silueta al detallar.']],
+ ['Lineup de siluetas','Una fila de 8 personajes de un mismo mundo, distintos entre sí, solo en negro. 45 min.','Cada uno es reconocible|Hay variedad|Se lee a 2 cm|El mundo se siente coherente']),
+PROG_W(2,'Lenguaje de formas y arquetipos','diseno','Las formas comunican personalidad antes que cualquier detalle: el círculo acoge, el cuadrado impone, el triángulo amenaza.','Diseñar el mismo personaje con 3 lenguajes de forma y explicar qué comunica cada uno.','Dibuja un círculo, un cuadrado y un triángulo y escribe 3 palabras de cada uno.',[
+ ['Círculo, cuadrado, triángulo','Mira 6 personajes y marca su forma dominante.','El mismo personaje en forma redonda, cuadrada y triangular.','Cada versión es clara|Se nota la personalidad|La silueta cambia','Mezclar las formas en todas.'],
+ ['Arquetipos','Haz una lista de 6 arquetipos (héroe, villano, mentor, bufón...).','6 personajes con la forma que mejor encaje a cada arquetipo.','La forma apoya el arquetipo|Son distintos|Hay una idea','Estereotipos sin variación.'],
+ ['Jerarquía de formas','Divide un personaje en forma grande, mediana y pequeña (70/20/10).','Un diseño con las 3 escalas de forma bien separadas.','Se lee la forma principal|Las medianas apoyan|Los detalles pequeños no compiten','Todo del mismo tamaño.'],
+ ['Contraste de formas','Mira cómo el contraste entre formas da interés.','Un personaje con un contraste claro (cuadrado contra círculo).','El contraste se nota|Hay unidad|Hay foco','Contraste en todos lados.'],
+ ['Personalidad en una frase','Escribe 3 adjetivos de un personaje.','Un personaje diseñado a partir de 3 adjetivos con forma dominante.','Las formas reflejan los adjetivos|Hay un rasgo sorpresa|Silueta clara','Diseñar sin definir la personalidad.']],
+ ['Un personaje, tres lenguajes','Un personaje en tres versiones de lenguaje de forma, con notas de qué comunica cada una. 60 min.','Tres lecturas distintas|Notas claras|Silueta legible|Se elige una con un motivo']),
+PROG_W(3,'Proporciones estilizadas','proporciones','Cambiar proporciones a propósito define el estilo del personaje y su personalidad.','Diseñar personajes con proporciones estilizadas conservando construcción y volumen.','Dibuja un cuerpo de 5, 7 y 9 cabezas en una fila.',[
+ ['Cabeza y cuerpo','Mide cuántas cabezas tienen 5 personajes estilizados.','6 personajes con proporciones de 4 a 10 cabezas.','Se nota la diferencia|Se mantiene construcción|Cada una tiene un carácter','Perder el volumen.'],
+ ['Exagerar con intención','Elige una parte para exagerar: manos, hombros, piernas.','4 personajes con una exageración por personaje.','La exageración es clara|El resto se ajusta|Silueta distintiva','Exagerar todo.'],
+ ['Tamaño relativo','Dibuja un grupo y define quién es grande y quién pequeño.','Un grupo de 4 personajes con alturas y proporciones distintas.','Las diferencias son claras|Se entienden roles|Silueta de grupo variada','Todos de la misma altura.'],
+ ['Cuerpos y tipos','Piensa en delgado, fornido, redondo, anguloso, ágil.','6 tipos de cuerpo con construcción visible.','Cada tipo es distinto|Construcción coherente|Poses acordes','Variar solo el rostro.'],
+ ['Estilo coherente','Mira cómo un estilo mantiene sus reglas.','3 personajes del mismo mundo con reglas de proporción compartidas.','Parecen del mismo mundo|Variedad dentro del estilo|Reglas visibles','Estilos mezclados sin reglas.']],
+ ['Lineup de proporciones','Una fila de 6 personajes con proporciones estilizadas coherentes con un estilo propio. 60 min.','Estilo coherente|Variedad de cuerpos|Siluetas distintas|Construcción visible']),
+PROG_W(4,'Rostro y expresión','expresion','La cara y el rostro cuentan la emoción y el carácter; la expresión es lo que da vida al personaje.','Dibujar una hoja de expresiones claras con el mismo personaje.','Dibuja 6 caritas con emociones básicas en 3 minutos.',[
+ ['Emociones básicas','Mira un espejo o fotos de alegría, tristeza, enojo, miedo, asco, sorpresa.','6 expresiones de un mismo personaje con cejas, ojos y boca.','Se lee cada emoción|El personaje se reconoce|Las cejas ayudan','Solo cambiar la boca.'],
+ ['Cejas y ojos','Observa cómo cejas y párpados cambian la emoción.','10 miradas con las mismas formas y distinta ceja.','Cada mirada cuenta algo|Cejas expresivas|El ojo mantiene su forma','Ojos iguales en todas.'],
+ ['Boca y mejillas','Observa cómo la boca mueve mejillas y mentón.','10 bocas con cambios de mejilla y mentón.','Hay volumen|La mejilla se mueve|Los dientes se integran','Dibujar la boca como una línea.'],
+ ['Expresión con silueta','Combina la expresión con una pose.','6 personajes con emoción en cara y cuerpo.','Cara y cuerpo coinciden|Silueta clara|La emoción se lee de lejos','Cara contenta con cuerpo triste.'],
+ ['Expresión sutil','Mira rostros con emoción contenida.','6 expresiones sutiles: duda, orgullo, sospecha, cansancio, ternura, burla.','Se distinguen|Son sutiles|Siguen siendo claras','Todas exageradas.']],
+ ['Hoja de expresiones','Una hoja con 12 expresiones del mismo personaje, de frente y tres cuartos. 60 min.','Construcción consistente|Emociones claras|Variedad|El personaje se reconoce']),
+PROG_W(5,'Vestuario y capas','vestuario','La ropa cuenta cultura, oficio, clima y estatus. Es una de las mejores maneras de contar quién es.','Diseñar un vestuario con capas, función y cultura que cuente al personaje.','Dibuja 5 prendas básicas: camisa, capa, cinturón, botas, guantes.',[
+ ['Capas y función','Mira cómo se visten 5 oficios: guerrero, viajero, sacerdote, artesano, cazador.','5 figuras con 3 capas de ropa cada una.','Se ven las capas|Cada prenda tiene función|La silueta cambia','Una sola capa plana.'],
+ ['Cultura y referencia','Reúne 8 referencias de una cultura y marca prendas, cortes y materiales.','Diseña una prenda inspirada en esa cultura sin copiarla.','Se reconoce la cultura|Es una prenda nueva|Hay función','Copiar un traje conocido.'],
+ ['Materiales','Observa cuero, tela, metal y piel: brillo, caída y arrugas.','Un personaje con 4 materiales distintos.','Los materiales se distinguen|Brillo adecuado|Pliegues propios','Todos los materiales iguales.'],
+ ['Historia en la ropa','Piensa qué desgaste y reparaciones cuentan.','Un personaje con 5 detalles de uso (parches, manchas, remiendos).','Cada detalle cuenta algo|No saturan|Se lee el desgaste','Detalles decorativos sin sentido.'],
+ ['Silueta del vestuario','Mira cómo el vestuario cambia la silueta.','3 versiones del mismo personaje con 3 vestuarios con silueta distinta.','Siluetas distintas|Mismo personaje|Función clara','Cambiar solo el color.']],
+ ['Personaje con vestuario completo','Un personaje con vestuario de capas, cultura y desgaste, con notas de materiales. 75 min.','Capas visibles|Cultura reconocible|Materiales distintos|Desgaste con historia']),
+PROG_W(6,'Props y accesorios','diseno','Los objetos que carga un personaje cuentan su historia, su oficio y su forma de pelear.','Diseñar props icónicos que refuercen la personalidad y la silueta del personaje.','Dibuja 5 objetos cotidianos y piensa para qué los usaría un personaje.',[
+ ['Objeto con historia','Elige un objeto y escribe 3 cosas de su historia.','Un prop con 5 detalles que cuenten su uso.','Se lee la historia|Funciona como objeto|Silueta propia','Decorar sin función.'],
+ ['Armas y herramientas','Observa cómo se sostienen y su peso.','6 armas o herramientas diseñadas con forma y peso creíbles.','Se entiende cómo se usan|Tienen peso|Siluetas variadas','Objetos imposibles de sostener.'],
+ ['Prop e identidad','Mira cómo un prop define a un personaje.','3 personajes distintos con un prop icónico cada uno.','El prop los define|Silueta mejorada|Coherente con su mundo','Prop genérico.'],
+ ['Accesorios y detalles','Observa joyería, cinturones, bolsas, máscaras.','Un personaje con 5 accesorios coherentes.','Cada accesorio tiene sentido|Jerarquía clara|La silueta lee','Saturar de accesorios.'],
+ ['Variaciones','Mira cómo cambia un objeto en 3 estilos.','3 variaciones de un mismo prop con distinto lenguaje de forma.','Se distinguen|Misma función|Una se siente mejor','Variaciones casi idénticas.']],
+ ['Hoja de props','Una hoja de 8 props de un personaje con vistas y notas de función. 60 min.','Vistas claras|Función entendible|Siluetas variadas|Coherencia con el personaje']),
+PROG_W(7,'Color del personaje','color','El color define el mood, el rol y la lectura del personaje. Una paleta pensada lo hace memorable.','Elegir una paleta limitada para un personaje con un color dominante y un acento.','Escoge 5 colores para un personaje y píntalos como manchas.',[
+ ['Color dominante y acento','Mira 5 personajes y marca su color dominante y su acento.','Un personaje con color dominante, secundario y acento.','Hay un dominante|El acento atrae el ojo|Se mantiene la lectura de valores','Usar 8 colores sin jerarquía.'],
+ ['Color y personalidad','Piensa qué comunican cálido, frío, saturado y apagado.','3 versiones de color del mismo personaje con moods distintos.','Cada paleta cuenta algo|Los valores se mantienen|Siluetas legibles','Cambiar el color sin pensar.'],
+ ['Color y rol','Mira héroes, villanos y aliados y sus paletas.','Un grupo de 4 personajes con paletas coherentes pero distintas.','Se distingue cada uno|Hay unidad de mundo|Acentos diferentes','Todos con la misma paleta.'],
+ ['Color sobre valores','Parte de un diseño en valores y píntalo.','Colorea tu personaje manteniendo sus valores.','Valores intactos|Paleta limitada|El foco tiene el acento','Perder los valores.'],
+ ['Variantes','Mira variaciones de color de un mismo personaje.','3 variantes de color de un personaje con una razón narrativa.','Se reconoce el personaje|Cada variante cuenta algo|Paleta limitada','Variantes sin razón.']],
+ ['Personaje con paleta pensada','Un personaje a color con paleta de 5, un acento y una variante. 75 min.','Dominante y acento claros|Valores respetados|Silueta clara|La paleta cuenta algo']),
+PROG_W(8,'Turnaround y consistencia','personajes','Un personaje que se ve igual desde todos los ángulos es un personaje listo para producción.','Dibujar un turnaround de frente, perfil, tres cuartos y espalda con consistencia.','Dibuja líneas guía horizontales para hombros, cintura, rodillas y pies.',[
+ ['Frente y perfil','Dibuja líneas guía y una figura simple de frente y de perfil.','Un personaje de frente y de perfil con las mismas líneas guía.','Las alturas coinciden|Se reconoce el personaje|Proporciones coherentes','Cambiar la altura entre vistas.'],
+ ['Tres cuartos y espalda','Gira el personaje 45 y 180 grados.','Un personaje de tres cuartos y espalda con los mismos puntos.','Los puntos coinciden|El diseño se mantiene|La espalda tiene diseño','Olvidar la espalda.'],
+ ['Detalles consistentes','Marca los detalles que deben repetirse.','Turnaround con detalles de ropa y accesorios consistentes.','Los detalles coinciden|El volumen es coherente|No se pierden elementos','Detalles distintos por vista.'],
+ ['Construcción sobre cajas','Construye el personaje con cajas simples.','Un turnaround con cajas visibles y luego forma final.','Construcción visible|Consistencia|Proporciones correctas','Dibujar cada vista aparte.'],
+ ['Revisión de consistencia','Compara tus vistas superponiendo.','Corrige tus vistas hasta que coincidan.','Las vistas coinciden|Anotas qué corregiste|Mejora entre la primera y la última','Corregir sin comparar.']],
+ ['Turnaround completo','Un personaje en 4 vistas con líneas guía, detalles consistentes y notas. 90 min.','Alturas coinciden|Detalles consistentes|Silueta clara en las 4 vistas|Diseño listo para producción']),
+PROG_W(9,'Poses y personalidad','gesto','Las poses cuentan la personalidad y hacen vivir al personaje fuera de la hoja de modelo.','Dibujar un personaje en 6 poses que cuenten su carácter con silueta clara.','Dibuja 5 poses de 1 minuto de tu personaje.',[
+ ['Pose característica','Piensa cómo se para y se mueve tu personaje.','3 poses típicas con línea de acción y silueta clara.','Se reconoce el personaje|Línea de acción|Silueta clara','Poses genéricas.'],
+ ['Poses de acción','Mira cómo actúa en peligro o en calma.','4 poses de acción con escorzo.','Dinamismo|Escorzo creíble|Silueta clara','Poses rígidas.'],
+ ['Poses con emoción','Piensa en alegría, miedo, orgullo, vergüenza.','4 poses que cuentan emoción sin cara.','Se lee la emoción|Silueta|Coherente con el personaje','Emoción solo en la cara.'],
+ ['Interacción','Mira cómo interactúan dos personajes.','2 personajes en una escena con poses que cuenten su relación.','Se entiende la relación|Siluetas separadas|Hay jerarquía','Dos figuras sin relación.'],
+ ['Ciclo de personalidad','Piensa en 3 momentos: antes, durante, después.','3 poses del mismo personaje en 3 momentos.','Cuentan una secuencia|Silueta clara|Consistencia de diseño','Tres poses sin conexión.']],
+ ['Hoja de poses del personaje','Una hoja con 8 poses que cuenten el carácter de un personaje. 70 min.','El personaje se reconoce|Poses variadas|Línea de acción|Se cuenta su personalidad']),
+PROG_W(10,'Hoja de personaje final','personajes','Aquí juntas todo en una hoja de personaje lista para mostrar: silueta, forma, vestuario, color, expresiones y poses.','Terminar una hoja de personaje completa con proceso y notas.','Revisa tus diseños de las 9 semanas y anota 3 aprendizajes.',[
+ ['Concepto y referencias','Escribe 3 líneas del personaje y reúne 10 referencias.','Un brief y un moodboard pequeño.','Brief claro|Referencias con propósito|Una frase de intención','Referencias sin criterio.'],
+ ['Siluetas y formas','Repasa tus semanas 1 y 2.','20 siluetas y elige 3 con lenguaje de forma claro.','Siluetas distintas|Lenguaje de forma claro|Elegiste con razones','No explorar suficiente.'],
+ ['Diseño y vestuario','Repasa tus semanas 3, 5 y 6.','Diseño lineal con vestuario y props.','Proporciones elegidas|Vestuario con historia|Props icónicos','Perder la silueta.'],
+ ['Color y expresiones','Repasa tus semanas 4 y 7.','Paleta, color y 4 expresiones.','Paleta limitada|Expresiones claras|Consistencia','Cambiar el diseño al colorear.'],
+ ['Hoja final','Repasa tu turnaround y tus poses.','Arma la hoja con turnaround, expresiones, poses y paleta.','Hoja ordenada|Consistencia|Notas claras','Hoja saturada sin orden.']],
+ ['Hoja de personaje completa','Una hoja con turnaround, expresiones, poses, paleta y props de un personaje original. Varias sesiones.','Silueta reconocible|Consistencia|Diseño con historia|Hoja ordenada y legible'])
+];
+
+/* ---- Ruta: Teoría y fundamentos (8 semanas) ---- */
+const RT_TEORIA=[
+PROG_W(1,'Elementos y principios del diseño','teoria','Línea, forma, valor, color y textura son tu vocabulario; contraste, ritmo, jerarquía y unidad son tu gramática. Sin esto, decides a ciegas.','Reconocer y nombrar los elementos y principios en cualquier imagen y usarlos a propósito.','Elige una imagen y escribe 3 elementos que domina y 1 principio que usa.',[
+ ['Los cinco elementos','Lee o repasa qué son línea, forma, valor, color y textura. Resume cada uno en una frase propia.','Toma 5 imágenes y anota cuál elemento domina en cada una.','Frases propias, no copiadas|Identificaste el dominante en cada imagen|Justificaste con algo visible','Copiar definiciones sin entenderlas.'],
+ ['Contraste y jerarquía','Mira 5 imágenes y señala qué se ve primero, segundo y tercero y por qué.','Una composición pequeña donde un solo contraste manda.','Un contraste claro|Jerarquía de 3 niveles|Se lee en miniatura','Muchos contrastes de igual peso.'],
+ ['Ritmo y repetición','Busca repeticiones y variaciones en 5 obras.','Un diseño abstracto con ritmo: repetición con variación.','Hay repetición|Hay variación|Hay un respiro','Repetir sin variación: se vuelve patrón.'],
+ ['Unidad y variedad','Mira por qué una imagen se siente coherente y a la vez interesante.','Dos versiones del mismo diseño: una unificada y otra variada, y elige.','Elegiste con criterio|Unidad clara|Variedad controlada','Variedad sin unidad.'],
+ ['Explícalo con ejemplos','Escribe en 5 líneas cómo se aplican los principios en una obra tuya.','Analiza una pieza tuya y propón 2 cambios según los principios.','Análisis específico|Dos cambios concretos|Aplicas lo aprendido','Análisis genérico.']],
+ ['Análisis de una pieza','Un análisis escrito y dibujado de una obra que admiras, con diagramas de elementos y principios. 40 min.','Diagramas claros|Elementos nombrados|Principios con evidencia|Una conclusión útil para tu trabajo']),
+PROG_W(2,'Teoría del color','color','El color tiene reglas: matiz, valor, saturación y temperatura. Entenderlas te permite elegir en vez de adivinar.','Explicar y usar matiz, valor, saturación y temperatura, y armar armonías de color.','Dibuja una rueda de color con 12 matices y marca primarios y complementarios.',[
+ ['Matiz, valor y saturación','Repasa las 3 dimensiones del color y mira una imagen reducida a cada una.','Pinta 3 tiras: del mismo matiz cambiando valor, saturación y temperatura.','Se distinguen las 3 dimensiones|Escala suave|Rotuladas','Confundir valor con saturación.'],
+ ['Armonías','Repasa análoga, complementaria, triádica, split y monocromática.','6 miniaturas del mismo dibujo, cada una con una armonía.','Cada armonía se reconoce|El foco se mantiene|Eliges la mejor y explicas por qué','Usar la armonía pero sin dominante.'],
+ ['Temperatura','Mira cómo cálido y frío se contrastan en luz y sombra.','La misma escena con luz cálida y sombras frías, y al revés.','Temperatura clara|Valores intactos|Mood distinto','Temperatura igual en todo.'],
+ ['Contraste simultáneo','Mira cómo un color cambia según el que tiene al lado.','Un mismo gris sobre 4 fondos de color distintos.','El gris parece distinto|Anotas el efecto|Lo conectas con una decisión','Pensar que el color es absoluto.'],
+ ['Color y emoción','Mira cómo la paleta cambia la emoción de una escena.','Un mismo boceto en 3 paletas con emociones distintas.','Cada paleta cuenta algo|Valores iguales|Eliges una con un motivo','Elegir por gusto sin razón.']],
+ ['Mi guía de color','Una hoja con tus 6 armonías, temperatura y 3 paletas con notas para consultar luego. 45 min.','Armonías claras|Notas propias|Paletas aplicadas|Útil para tu próximo trabajo']),
+PROG_W(3,'Teoría de la composición','composicion','La composición guía el ojo. Hay principios que se pueden estudiar, probar y romper con intención.','Explicar y aplicar tercios, equilibrio, líneas guía, jerarquía y tensión visual.','Dibuja 4 rectángulos y coloca un punto de interés en 4 lugares distintos.',[
+ ['Tercios, centro y equilibrio','Mira 5 imágenes y dibuja su retícula de tercios y su peso visual.','4 thumbnails: foco centrado, en tercios, desbalanceado y balanceado con contrapeso.','Cada uno se entiende|El equilibrio se percibe|Anotas qué comunica cada uno','Poner todo siempre en el centro.'],
+ ['Líneas guía y camino del ojo','Marca el recorrido del ojo en 5 imágenes.','3 thumbnails con líneas guía hacia el foco.','Las líneas llevan al foco|Hay un camino claro|No sacan el ojo','Líneas que sacan el ojo.'],
+ ['Gestalt y agrupación','Repasa proximidad, semejanza, cierre y continuidad.','Un diseño abstracto que use agrupación para formar una figura.','Se agrupan formas|Se lee una figura|Explicas el principio','Agrupar sin criterio.'],
+ ['Espacio negativo','Mira cómo el espacio vacío da forma y respiro.','2 versiones de un mismo tema: una saturada y otra con espacio negativo.','El vacío tiene propósito|El foco mejora|Anotas la diferencia','Dejar vacíos que no sirven.'],
+ ['Romper la regla','Elige una regla y pregunta cuándo conviene romperla.','Una composición que rompa una regla con intención.','Sabes qué regla rompes|Funciona|Lo explicas','Romper reglas por descuido.']],
+ ['Análisis de composición','Analiza 3 imágenes con diagramas y rehaz una con una composición distinta. 50 min.','Diagramas claros|Principios nombrados|Rehecho con intención|Una conclusión aplicable']),
+PROG_W(4,'Forma y construcción 3D en 2D','teoria','Todo objeto se construye con formas simples. Entenderlas te sirve para diseñar y dibujar sin referencia.','Dibujar formas básicas y sus intersecciones con volumen y perspectiva.','Dibuja 5 cubos, 5 esferas y 5 cilindros en 5 minutos.',[
+ ['Formas básicas','Observa en objetos cotidianos esferas, cubos, cilindros y conos.','10 objetos reducidos a formas básicas.','Las formas básicas se leen|Volumen claro|Coherentes en perspectiva','Dibujar formas planas.'],
+ ['Intersecciones','Mira cómo se cruzan dos formas.','10 combinaciones de cubo+cilindro y esfera+cubo con intersecciones.','Intersecciones lógicas|Volumen claro|Líneas de contorno de sección','Formas que se atraviesan sin lógica.'],
+ ['Líneas de contorno de sección','Observa cómo las líneas envolventes muestran la forma.','Cubos, esferas y cilindros con líneas de sección.','Las líneas envuelven la forma|Aclaran el volumen|Perspectiva coherente','Líneas sin relación con la forma.'],
+ ['Formas orgánicas','Observa cómo se combinan formas simples para hacer árboles, rocas, cuerpos.','8 formas orgánicas construidas con básicas.','Volumen|Se entiende la construcción|Interés en la silueta','Formas blandas sin estructura.'],
+ ['Construir de memoria','Estudia un objeto 3 minutos y tápalo.','5 objetos de memoria construidos con formas básicas.','Construcción correcta|Anotas diferencias|Mejora entre el 1.º y el 5.º','Memorizar contornos en vez de construcción.']],
+ ['Hoja de construcción','Una hoja de 10 objetos cotidianos reducidos a formas, con intersecciones y líneas de sección. 50 min.','Formas básicas claras|Intersecciones lógicas|Volumen|Se lee la perspectiva']),
+PROG_W(5,'Perspectiva y espacio (teoría)','perspectiva','Entender por qué funciona la perspectiva te deja resolver cualquier encuadre y no depender de reglas memorizadas.','Explicar horizonte, puntos de fuga, escala y lente, y aplicarlos en una escena.','Dibuja un horizonte y 2 puntos de fuga y 10 cajas.',[
+ ['Cómo funciona','Escribe con tus palabras por qué las líneas paralelas convergen.','Un diagrama explicativo con horizonte, punto de fuga y rayos visuales.','Explicación propia|Diagrama claro|Ejemplo dibujado','Memorizar sin entender.'],
+ ['Altura de ojos','Mira cómo cambia la imagen si bajas o subes la cámara.','La misma escena con ojo al nivel de piso, de pie y desde un balcón.','El horizonte cambia|La emoción cambia|Elementos coherentes','Cambiar la cámara sin cambiar el horizonte.'],
+ ['Lente y distorsión','Compara gran angular, normal y tele.','Una escena en 3 lentes con sus cambios.','Distorsión coherente|Profundidad distinta|Elegiste una con razones','Mezclar perspectivas.'],
+ ['Elipses y círculos en perspectiva','Mira cómo un círculo se ve como elipse.','10 círculos y cilindros en perspectiva con eje mayor y menor.','Elipses bien formadas|Eje perpendicular|Coherente con el horizonte','Elipses puntiagudas.'],
+ ['Perspectiva atmosférica','Mira cómo la distancia cambia valor y color.','5 planos que sumen perspectiva lineal y atmosférica.','Profundidad clara|Valores por plano|Perspectiva lineal coherente','Solo lineal sin atmósfera.']],
+ ['Mi guía de perspectiva','Una hoja con diagramas propios de horizonte, puntos de fuga, lentes y elipses. 45 min.','Explicaciones propias|Diagramas correctos|Ejemplos dibujados|Útil para consultar']),
+PROG_W(6,'Estudios de maestros','teoria','Estudiar a otros artistas con método es aprender sus decisiones sin copiarlos.','Analizar una obra: composición, valores, color, diseño; y reproducir sus decisiones.','Elige una pieza de un artista que admires y guárdala como referencia.',[
+ ['Composición del maestro','Dibuja la estructura de una obra: líneas, masas y foco.','Un diagrama de composición de 2 obras.','Foco señalado|Masas claras|Líneas guía','Copiar el detalle en vez de la estructura.'],
+ ['Valores del maestro','Reduce una obra a 3 valores.','Un estudio de valores de una obra en 15 minutos.','Valores correctos|Masa dominante|Se parece en lectura','Copiar los contornos.'],
+ ['Color del maestro','Extrae la paleta de una obra y su temperatura.','Un estudio de color de 15 minutos con paleta de 5.','Paleta fiel|Temperatura correcta|Valores respetados','Colores aproximados sin proporción.'],
+ ['Diseño del maestro','Analiza su lenguaje de formas y su manejo de la silueta.','Notas y esquema de 3 decisiones de diseño.','Decisiones nombradas|Con evidencia|Aplicables','Describir sin analizar.'],
+ ['Aplicar lo aprendido','Elige una decisión del maestro que quieras probar.','Un thumbnail propio que use esa decisión.','Se nota la decisión|Es un diseño propio|Explicas qué aprendiste','Copiar la obra.']],
+ ['Estudio completo de un maestro','Una hoja con composición, valores, color y diseño de una obra, y un thumbnail propio que use una decisión. 60 min.','4 análisis claros|Estudio fiel|Aplicación propia|Conclusiones útiles']),
+PROG_W(7,'Lectura de imagen y narrativa visual','teoria','Una imagen se lee en capas: impacto, foco, detalle y significado. Diseñar esas capas es diseñar la lectura.','Planear la lectura de una imagen en capas y comprobar que se lee en el orden que quieres.','Mira una imagen 2 segundos y anota qué viste primero.',[
+ ['Las 3 lecturas','Mira 5 imágenes: ¿qué ves en 1 segundo, en 5 y en 30?','Diagrama de lectura de 3 niveles en una imagen.','3 niveles claros|Orden de lectura|Justificado','Todo se lee al mismo tiempo.'],
+ ['Prueba de 2 segundos','Pide a alguien que mire tu imagen 2 segundos.','Prueba tu thumbnail y anota qué se vio primero.','La prueba se hizo|Comparas con lo planeado|Ajustas','No contrastar con otra persona.'],
+ ['Mood y símbolos','Mira cómo color, forma y luz comunican emoción.','Un boceto con una emoción planeada con 3 recursos.','Emoción clara|Tres recursos|Coherente','Emoción poco definida.'],
+ ['Contar con objetos','Mira cómo un objeto cambia el significado.','Dos versiones de una escena con un objeto distinto que cambie la historia.','El objeto cambia el sentido|Misma composición|Claro','Objetos decorativos.'],
+ ['Revisar y ajustar','Revisa tus piezas de la semana.','Corrige una pieza según tu prueba de lectura.','La lectura mejora|Anotas el cambio|Se ve en 2 segundos','Corregir sin probar de nuevo.']],
+ ['Una imagen que se lee en capas','Una imagen con foco, lectura intermedia y detalle, comprobada con la prueba de 2 segundos. 60 min.','Foco claro|3 capas|Prueba hecha|Emoción legible']),
+PROG_W(8,'Mi sistema de estudio','teoria','Aprender es mejor con un sistema: qué estudiar, cómo registrar y cómo medir. Cierra la ruta con tu propio método.','Armar tu propio método de estudio con metas, referencias y revisión.','Escribe 3 cosas que aprendiste en esta ruta.',[
+ ['Qué quiero dominar','Escribe tus 3 metas de aprendizaje de los próximos 3 meses.','Una lista de 3 metas medibles.','Metas medibles|Con plazo|Conectadas con tu rol','Metas vagas.'],
+ ['Mi biblioteca de referencias','Revisa cómo organizas tus referencias.','Organiza 20 referencias en 4 carpetas con su porqué.','Carpetas útiles|Cada una con porqué|Fáciles de encontrar','Guardar sin criterio.'],
+ ['Mi rutina','Piensa cuándo y cuánto puedes estudiar.','Un plan semanal con 5 sesiones de 30 minutos.','Realista|Con horarios|Conectado con tus rutas','Plan imposible.'],
+ ['Cómo medir','Elige 3 indicadores de mejora.','Una hoja con tus indicadores y cómo medirlos.','Indicadores concretos|Medibles|Revisión semanal','Medir solo por sensación.'],
+ ['Revisión de la ruta','Revisa tus 7 semanas.','Escribe qué cambió en tu forma de ver y de dibujar.','Ejemplos concretos|Aprendizajes nombrados|Siguiente paso','Revisión genérica.']],
+ ['Mi plan de estudio','Un documento de una página con metas, rutina, indicadores y referencias de los próximos 3 meses. 45 min.','Metas medibles|Rutina realista|Indicadores|Referencias organizadas'])
+];
+
+/* ---- Ruta: Color (8 semanas) ---- */
+const RT_COLOR=[
+PROG_W(1,'Valor antes que color','valores','Si el valor está bien, casi cualquier color funciona. Si está mal, ningún color lo arregla.','Pintar una imagen en escala de grises que funcione, para luego colorearla sin perder la lectura.','6 cuadros de gris de blanco a negro, rellenos de memoria.',[
+ ['Imagen en valores','Mira 3 pinturas en blanco y negro y marca su masa dominante.','Un paisaje en 5 valores en 10 minutos.','Se lee el lugar|Masa dominante|5 valores','Muchos grises parecidos.'],
+ ['Color sobre gris','Mira cómo una capa de color cambia o conserva los valores.','Colorea tu paisaje con una capa Color y mira el resultado en blanco y negro.','Los valores se mantienen|El color es intencional|Se lee en gris','Colores que cambian el valor.'],
+ ['Colores del mismo valor','Mira cómo un rojo y un verde pueden tener el mismo valor.','5 manchas de colores distintos con el mismo valor.','Mismo valor|Se verifica en gris|Se nota la diferencia de matiz','Creer que dos colores distintos tienen valor distinto.'],
+ ['Valor y foco','Piensa dónde va el valor más contrastado.','Un thumbnail con el foco en el mayor contraste de valor.','Foco claro|Contraste de valor|Color secundario','Foco por color pero sin valor.'],
+ ['Revisión en gris','Pasa tus trabajos recientes a blanco y negro.','Corrige uno donde los valores se pierdan.','Corrección visible|Valores claros|Anotas el problema','No revisar en gris.']],
+ ['Pintura con valores sólidos','Una pintura pequeña en color cuyos valores funcionen en blanco y negro. 60 min.','Funciona en gris|Foco claro|Masa dominante|Color sirve al valor']),
+PROG_W(2,'Matiz, saturación y temperatura','color','Con 3 controles (matiz, saturación y temperatura) puedes dirigir cualquier imagen.','Controlar la saturación y la temperatura para dar foco y mood.','3 tiras: matiz, saturación, temperatura.',[
+ ['Rueda y mezcla','Repasa la rueda de color y mezcla complementarios.','Mezcla 5 pares de complementarios para obtener grises de color.','Grises cálidos y fríos|Mezclas controladas|Rotuladas','Mezclar sin orden.'],
+ ['Saturación y foco','Mira cómo la saturación alta atrae el ojo.','Un thumbnail con el foco más saturado y el fondo apagado.','Foco saturado|Fondo apagado|Armonía','Todo saturado.'],
+ ['Temperatura','Marca zonas cálidas y frías en fotos.','Una escena con luz cálida y sombra fría y otra al revés.','Temperatura clara|Valores correctos|Mood distinto','Temperatura confusa.'],
+ ['Grises de color','Mira cómo los grises no son neutros.','5 grises: cálidos, fríos, verdosos, rojizos, azulados.','Se distinguen|Armonizan con la escena|Sin negro puro','Usar negro y gris puro.'],
+ ['Escala de saturación','Mira cómo cambia un objeto con luz y sombra.','Una esfera con luz saturada y sombra menos saturada.','La saturación cambia|Valores correctos|Forma clara','Sombras tan saturadas como la luz.']],
+ ['Estudio con foco por saturación','Un estudio pequeño donde el foco se logre por saturación y temperatura. 60 min.','Foco por saturación|Temperatura controlada|Valores correctos|Armonía']),
+PROG_W(3,'Paletas y armonías','color','Una paleta pensada da unidad y sentido. Elegirla es una decisión de diseño, no de gusto.','Armar paletas limitadas con armonías claras y aplicarlas en una imagen.','Pinta 5 manchas para una paleta y proporcionalas 60/30/10.',[
+ ['Paleta de 5','Extrae una paleta de 5 de una foto.','Pinta un paisaje con esa paleta.','Máximo 5|Hay dominante|Se lee','Usar más de 5.'],
+ ['Análoga y monocromática','Mira ejemplos de paletas análogas.','2 paisajes: uno análogo y otro monocromático.','Cada uno es claro|Valores variados|Acento sutil','Perder contraste.'],
+ ['Complementaria y split','Mira ejemplos de paletas complementarias.','2 escenas: una complementaria y otra con split.','Se distinguen|Acento complementario|Proporción 60/30/10','Mitad y mitad.'],
+ ['Triádica y variantes','Mira una paleta triádica.','Una escena con paleta triádica controlando saturación.','Equilibrio|No es infantil|Dominante clara','Tres colores saturados al mismo nivel.'],
+ ['Paleta propia','Elige un mood y construye una paleta.','Una paleta de 5 con notas de por qué.','Mood claro|Proporciones|Notas','Paleta sin intención.']],
+ ['Mi paleta aplicada','Una imagen con una paleta propia de 5 colores y notas de proporción. 60 min.','Paleta limitada|Dominante y acento|Valores respetados|Mood claro']),
+PROG_W(4,'Color de la luz y de la sombra','color','La luz tiñe lo que ilumina y la sombra toma el color del ambiente. Eso es lo que hace que un color se sienta iluminado.','Pintar objetos donde luz, sombra y rebote tengan color coherente.','Esfera con luz cálida, sombra fría y rebote naranja.',[
+ ['Luz cálida y sombra fría','Observa objetos al sol y en sombra.','Esfera, cubo y cilindro con luz cálida y sombra fría.','Luz y sombra con temperatura distinta|Valores correctos|Rebote suave','Sombras grises.'],
+ ['Luz fría y sombra cálida','Observa la luz de luna o nublado.','Los mismos objetos con luz fría y sombra cálida.','Temperatura invertida|Se siente otro mood|Valores correctos','Cambiar solo el color sin pensar.'],
+ ['Color local y luz','Mira cómo el color propio de un objeto cambia con la luz.','Un objeto rojo bajo 3 luces distintas.','El rojo cambia|Sigue siendo rojo|Sombra con color','Rojo igual en todas.'],
+ ['Rebote de color','Observa cómo el suelo tiñe un objeto.','Un objeto sobre un suelo de color con su rebote.','Rebote visible|No más claro que la luz|Coherente','Rebote exagerado.'],
+ ['Luz de ambiente','Piensa en el cielo como una luz grande.','Un paisaje con luz del sol y luz del cielo.','Dos luces distintas|Sombras azules|Coherente','Todo con la misma luz.']],
+ ['Estudio de luz con color','Un objeto real pintado con color de luz, sombra y rebote. 60 min.','Luz y sombra con color|Rebote|Valores correctos|Se siente la fuente de luz']),
+PROG_W(5,'Color y emoción','color','El mismo dibujo cuenta otra historia con otra paleta. Elegir el color es elegir la emoción.','Usar paleta, temperatura y saturación para comunicar una emoción específica.','5 paletas rápidas para: calma, miedo, alegría, tristeza, tensión.',[
+ ['Paletas de emoción','Mira 5 escenas y anota qué emoción da cada paleta.','Un mismo boceto en 3 paletas con emociones distintas.','Cada paleta cuenta otra cosa|Valores iguales|Anotas por qué','Elegir por gusto.'],
+ ['Calma y tensión','Observa la saturación y el contraste en escenas calmadas y tensas.','Dos versiones de una escena: una calma y otra tensa.','Se distingue|Cambia el contraste|Cambia la temperatura','Cambiar solo el matiz.'],
+ ['Hora y emoción','Piensa en amanecer, mediodía, atardecer y noche.','4 miniaturas de la misma escena con hora y emoción.','Cada hora se lee|Emoción distinta|Valores coherentes','Solo oscurecer.'],
+ ['Color simbólico','Piensa en el significado cultural del color.','Un personaje con color que cuente su rol.','El color cuenta algo|Sin cliché|Coherente','Cliché obvio.'],
+ ['Elegir con criterio','Escribe 3 razones para tu paleta.','Elige la mejor de tus paletas y justifica.','3 razones|Coherente con el tema|Se ve en la imagen','Justificar solo con gusto.']],
+ ['Una escena, tres emociones','La misma escena en 3 paletas con emociones distintas y notas de por qué. 70 min.','Emociones distintas|Valores intactos|Notas claras|Se lee la emoción']),
+PROG_W(6,'Color en entornos','color','En un entorno el color cuenta hora, clima y distancia. Es el color que más vende un lugar.','Pintar un entorno con paleta, atmósfera y hora coherentes.','5 planos de montañas con color cada vez más claro y azul.',[
+ ['Color atmosférico','Mira cómo el color cambia con la distancia.','5 planos con color atmosférico.','Más azul y claro atrás|Menos contraste|Separación clara','Mismo color en todos los planos.'],
+ ['Hora del día','Observa luz y sombra en 4 horas.','4 miniaturas de la misma escena en 4 horas.','Dirección de luz distinta|Temperatura distinta|Contraste distinto','Cambiar solo el color general.'],
+ ['Color de materiales','Observa piedra, agua, follaje.','Un estudio de 3 materiales bajo la misma luz.','Materiales distintos|Reflejos|Color local con luz','Todo mate.'],
+ ['Acento en el entorno','Piensa dónde colocar el color más fuerte.','Un entorno con un acento de color en el foco.','Acento claro|Resto apagado|Armonía','Acentos en todas partes.'],
+ ['Color de memoria','Estudia una foto y pinta de memoria.','Un paisaje de memoria con paleta de 5.','Paleta fiel|Atmósfera|Hora clara','Pintar la foto.']],
+ ['Entorno a color','Un entorno completo con paleta, atmósfera y hora definida. 80 min.','Paleta limitada|Atmósfera|Hora legible|Acento en el foco']),
+PROG_W(7,'Color en personajes y diseño','color','En un personaje el color define el rol y la lectura. El acento correcto lo hace inolvidable.','Aplicar paleta, jerarquía y acento a un personaje o diseño.','Elige un personaje y define dominante, secundario y acento.',[
+ ['Jerarquía de color','Mira 5 personajes y marca su dominante y acento.','Un personaje con paleta de 3 niveles.','Jerarquía clara|Acento en el foco|Silueta lee','Todos del mismo peso.'],
+ ['Color por rol','Piensa en la paleta del héroe y del villano.','Dos personajes con paletas que expliquen su rol.','Se distinguen|Coherente|Sin cliché','Paletas iguales.'],
+ ['Variantes de color','Mira cómo varían los equipos o facciones.','Un personaje en 3 variantes de color.','Se reconoce|Cada variante cuenta algo|Paleta limitada','Variantes arbitrarias.'],
+ ['Color y materiales','Mira cómo se pinta cuero, tela y metal.','Un personaje con 3 materiales pintados.','Materiales distintos|Brillo|Valores correctos','Todo mate.'],
+ ['Color de un grupo','Piensa en un grupo con unidad.','Un grupo de 4 personajes con paletas coherentes.','Unidad|Variedad|Acentos distintos','Grupo sin unidad.']],
+ ['Personaje con color pensado','Un personaje a color con jerarquía, materiales y una variante. 70 min.','Jerarquía de color|Materiales|Silueta lee|Variante coherente']),
+PROG_W(8,'Estudios de color y síntesis','color','Cierra la ruta con estudios de maestros y una pieza que junte valor, paleta, luz y emoción.','Hacer un estudio de color de un maestro y una pieza propia que aplique lo aprendido.','Elige una obra y extrae su paleta.',[
+ ['Estudio de maestro','Analiza paleta, valores y temperatura de una obra.','Un estudio de color de 20 minutos.','Paleta fiel|Valores correctos|Temperatura','Copiar sin analizar.'],
+ ['Otro maestro','Elige un artista con paleta distinta.','Otro estudio de 20 minutos.','Se distingue del anterior|Notas|Aprendizajes','Mismos hábitos.'],
+ ['Comparar','Compara tus dos estudios.','Una hoja con 3 diferencias de uso de color.','Diferencias claras|Con ejemplos|Aplicables','Comparación vaga.'],
+ ['Aplicar','Elige una decisión de color para tu pieza.','Un thumbnail propio con esa decisión.','Se nota la decisión|Propio|Funciona','Copiar la obra.'],
+ ['Revisión','Revisa tu progreso de color.','Compara tu primera pintura con la última.','Mejora visible|Anotas|Siguiente paso','No comparar.']],
+ ['Pieza de color final','Una pieza propia con valores sólidos, paleta limitada, luz con color y emoción clara. 90 min.','Funciona en gris|Paleta limitada|Luz con color|Emoción clara'])
+];
+
+/* ---- Ruta: Composición y narrativa visual (8 semanas) ---- */
+const RT_COMP=[
+PROG_W(1,'Thumbnails y masas','composicion','Una buena imagen se decide en thumbnails pequeños, no en el pulido. Aquí aprendes a explorar rápido y elegir.','Producir 12 thumbnails de masas en 15 minutos y elegir con criterio.','6 recuadros de 5×3 cm con una masa oscura distinta en cada uno.',[
+ ['Masas en 3 valores','Mira 5 imágenes y dibuja sus 3 masas más grandes.','12 thumbnails de 5×3 cm del mismo tema con 3 valores.','12 distintos|Cada uno con masa dominante|Marcas tus 3 favoritos','Repetir la misma composición.'],
+ ['Variar el encuadre','Mira cómo cambia el mismo tema en 4 encuadres.','El mismo tema en 8 encuadres distintos.','Encuadres distintos|Foco claro|Se lee en miniatura','Cambiar solo el zoom.'],
+ ['Formato y proporción','Compara horizontal, vertical, cuadrado y panorámico.','El mismo tema en 4 formatos.','El formato ayuda al tema|Foco claro|Eliges con razón','Usar siempre el mismo formato.'],
+ ['Elegir con criterio','Escribe 3 razones para elegir uno de tus thumbnails.','Elige uno y escríbele 3 razones y 1 mejora.','Razones concretas|Una mejora|Se lee a 2 cm','Elegir por gusto.'],
+ ['Del thumbnail al boceto','Mira cómo se amplía un thumbnail sin perder fuerza.','Amplía tu thumbnail a 14×8 cm manteniendo las masas.','Las masas se mantienen|Foco claro|Sin detalle innecesario','Perder las masas al ampliar.']],
+ ['De 12 a 1','12 thumbnails, elección razonada y boceto ampliado en valores. 60 min.','12 distintos|Elección razonada|Masas intactas|Se lee a 2 cm']),
+PROG_W(2,'Equilibrio y peso visual','composicion','Una imagen puede estar balanceada o tensa a propósito. Saber el peso visual te deja decidir.','Controlar el equilibrio con peso, tamaño, valor y color, y usar los tercios o romperlos con razón.','4 recuadros con un punto de interés en 4 lugares distintos.',[
+ ['Peso visual','Marca el peso de las masas en 5 imágenes.','4 thumbnails: balanceado simétrico, balanceado asimétrico, desbalanceado y tenso.','Se percibe el peso|Cada uno cuenta algo|Anotas el efecto','Pensar que todo debe ser simétrico.'],
+ ['Regla de tercios','Dibuja la retícula sobre 5 imágenes.','6 thumbnails con foco en los 4 cruces y 2 sin retícula.','Foco bien ubicado|Respiro|Elegís con razón','Poner todo en una esquina.'],
+ ['Centrar con intención','Mira composiciones centradas y por qué funcionan.','2 thumbnails centrados con intención.','La simetría tiene propósito|Foco claro|Detalle de ruptura','Centrar sin motivo.'],
+ ['Contrapeso','Mira cómo un elemento pequeño contrapesa uno grande.','Un thumbnail con un foco grande y un contrapeso pequeño.','Equilibrio logrado|El foco manda|El contrapeso apoya','Contrapeso que roba atención.'],
+ ['Romper la regla','Elige una regla y rómpela a propósito.','Una composición que rompa una regla y funcione.','Sabes qué rompes|Funciona|Lo explicas','Romper por descuido.']],
+ ['Estudio de equilibrio','Cuatro composiciones del mismo tema con equilibrios distintos y notas. 60 min.','Equilibrios distintos|Notas claras|Foco claro|Un criterio de elección']),
+PROG_W(3,'Líneas guía y ritmo','composicion','Las líneas y el ritmo llevan el ojo por la imagen y la hacen sentir viva.','Dirigir el ojo con líneas guía, ritmo y repetición.','Dibuja 5 flechas de recorrido del ojo sobre una imagen.',[
+ ['Líneas guía','Marca las líneas guía en 5 imágenes.','4 thumbnails con líneas guía hacia el foco.','Las líneas llevan al foco|No se salen|Natural','Líneas que salen de la imagen.'],
+ ['Diagonales y curvas','Mira cómo las diagonales dan energía y las curvas fluyen.','3 thumbnails: diagonal, curva en S y triángulo.','Energía distinta|Foco claro|Coherente','Todo con la misma línea.'],
+ ['Ritmo y repetición','Busca repeticiones en 5 imágenes.','Un thumbnail con repetición y variación.','Repetición clara|Variación|Un respiro','Repetir sin variar.'],
+ ['Líneas de la figura','Mira cómo los brazos y miradas dirigen el ojo.','Un thumbnail donde la mirada y el gesto lleven al foco.','Mirada guía|Gesto apoya|Sin competir','Mirar fuera de la imagen sin motivo.'],
+ ['Camino del ojo','Dibuja el recorrido del ojo en tu thumbnail.','Corrige para que el recorrido sea en 3 saltos.','Recorrido claro|3 saltos|Termina en el foco','Recorrido que se pierde.']],
+ ['Composición con ritmo','Una composición con líneas guía, ritmo y camino del ojo claros. 60 min.','Líneas guía|Ritmo|Camino claro|Foco claro']),
+PROG_W(4,'Punto focal y jerarquía','composicion','Si todo importa igual, nada importa. La jerarquía decide qué se ve primero y qué después.','Establecer un foco primario y secundarios claros usando contraste, detalle y color.','Mira una imagen 2 segundos y anota qué viste primero.',[
+ ['Foco primario','Marca el foco en 5 imágenes y qué lo hace destacar.','4 thumbnails con foco por valor, por color, por detalle y por tamaño.','Cada foco funciona|Distintos recursos|Se lee en miniatura','Usar un solo recurso.'],
+ ['Jerarquía 1-2-3','Marca el orden de lectura en 5 imágenes.','Un thumbnail con orden de lectura claro.','Orden claro|El 2.º apoya|El 3.º no compite','Dos focos del mismo peso.'],
+ ['Bajar lo que no importa','Mira cómo se bajan contraste y detalle en zonas secundarias.','Un thumbnail con zonas secundarias suaves.','El foco se destaca|Secundarios suaves|Equilibrado','Detalle por todos lados.'],
+ ['Enmarcar el foco','Mira cómo marcos naturales enfocan.','Un thumbnail con un marco natural alrededor del foco.','El marco enfoca|Natural|Sin competir','Marco más llamativo que el foco.'],
+ ['Prueba de lectura','Muestra tu imagen 2 segundos a alguien.','Corrige según lo que vieron primero.','Prueba hecha|Ajuste|Foco claro','No probar.']],
+ ['Imagen con jerarquía clara','Una imagen con foco primario y secundarios probados. 60 min.','Foco claro|Jerarquía 1-2-3|Prueba hecha|Se lee a 2 cm']),
+PROG_W(5,'Encuadre y cámara','composicion','El encuadre es la primera decisión de cine: qué se ve, desde dónde y a qué distancia.','Elegir plano, ángulo y lente para contar lo que quieres.','Dibuja un mismo sujeto en plano general, medio y primer plano.',[
+ ['Tipos de plano','Mira 5 fotogramas: general, medio, americano, primer plano, detalle.','El mismo sujeto en 5 planos.','Cada plano cambia la historia|Foco claro|Se entiende','Cambiar solo el zoom.'],
+ ['Ángulo de cámara','Compara picado, normal y contrapicado.','El mismo sujeto desde 3 ángulos.','Cada ángulo da otro mensaje|Perspectiva coherente|Foco claro','Ángulos sin intención.'],
+ ['Lente y profundidad','Mira gran angular y tele.','La misma escena con 2 lentes.','Profundidad distinta|Elegiste uno|Coherente','Mezclar lentes.'],
+ ['Regla de los 180 grados y dirección','Mira cómo se mantiene la dirección de la mirada y del movimiento.','Una secuencia de 3 imágenes con dirección coherente.','Dirección coherente|Se entiende la secuencia|Foco claro','Cambiar de lado sin razón.'],
+ ['Encuadre con intención','Elige una emoción y piensa en el encuadre.','3 encuadres de la misma escena para 3 emociones.','Cada emoción se lee|Foco claro|Anotas razones','Encuadre genérico.']],
+ ['Estudio de encuadres','Una escena en 6 encuadres con notas de intención. 60 min.','Planos distintos|Ángulos con intención|Notas claras|Foco claro']),
+PROG_W(6,'Espacio negativo y silueta','composicion','El espacio vacío y la silueta hacen que una imagen respire y se lea.','Usar espacio negativo y silueta para dar claridad.','Dibuja 5 siluetas con mucho espacio alrededor.',[
+ ['Espacio negativo','Mira cómo el vacío da forma a los objetos.','Un thumbnail donde el vacío forme una figura.','El vacío tiene forma|Lectura clara|Equilibrio','Vacío sin propósito.'],
+ ['Siluetas en la imagen','Mira cómo las siluetas se leen en el fondo.','Una escena con siluetas claras en 3 planos.','Siluetas claras|Separación|Lectura','Siluetas que se tocan.'],
+ ['Tangentes y solapes','Mira cómo las tangentes aplanan la imagen.','Corrige un thumbnail con tangentes.','Sin tangentes problemáticas|Solapes claros|Mejor lectura','No revisar los bordes.'],
+ ['Gestalt','Mira cierre, proximidad y continuidad.','Un diseño que use cierre y continuidad.','Se agrupan formas|Lectura|Intención','Agrupar sin criterio.'],
+ ['Limpiar la imagen','Mira qué sobra en tus piezas.','Quita 30% de detalle de una pieza y compara.','Mejora la lectura|Foco claro|Respiro','Quitar el foco.']],
+ ['Imagen que respira','Una imagen con espacio negativo y silueta claros. 60 min.','Espacio con propósito|Silueta clara|Sin tangentes|Respiro']),
+PROG_W(7,'Narrativa en una imagen','storytelling','Una imagen puede contar un momento: quién, dónde, qué pasa y qué viene después.','Comunicar un momento con acción, gesto, entorno y detalles.','Escribe 3 líneas: quién, dónde y qué pasa.',[
+ ['El momento','Mira 5 imágenes y escribe qué momento muestran.','3 thumbnails de momentos distintos de una historia.','Cada uno cuenta un momento|Acción clara|Foco claro','Elegir momentos sin acción.'],
+ ['Gesto y emoción','Observa cómo el gesto cuenta la emoción.','Un thumbnail con 2 personajes y su relación.','La relación se lee|Gestos claros|Silueta','Dos figuras sin relación.'],
+ ['Entorno que cuenta','Mira cómo el lugar cuenta qué pasa.','Un thumbnail donde el entorno aporte a la historia.','El entorno cuenta|Hay detalles|Foco claro','Entorno decorativo.'],
+ ['Detalle narrativo','Piensa en un objeto que cambie el significado.','Dos versiones con un objeto distinto.','El objeto cambia la historia|Misma composición|Claro','Objeto sin función.'],
+ ['Antes y después','Piensa en el momento anterior y posterior.','Un thumbnail que sugiera lo anterior y lo siguiente.','Se sugiere|Foco claro|Coherente','Contar todo en la imagen.']],
+ ['Imagen narrativa','Una imagen con un momento claro, gesto, entorno y detalle narrativo. 70 min.','Momento claro|Gesto legible|Entorno que cuenta|Detalle narrativo']),
+PROG_W(8,'Pieza completa','composicion','Juntas todo en una pieza: thumbnails, equilibrio, líneas, jerarquía, encuadre y narrativa.','Terminar una pieza con proceso de composición documentado.','Revisa tus thumbnails y anota 3 aprendizajes.',[
+ ['Concepto y thumbnails','Escribe la idea en una frase.','12 thumbnails y elige uno.','12 distintos|Elección razonada|Idea clara','No explorar.'],
+ ['Equilibrio y líneas','Repasa semanas 2 y 3.','Corrige el thumbnail con líneas y peso.','Peso claro|Líneas guía|Camino del ojo','Dejar las masas sin ajustar.'],
+ ['Jerarquía y encuadre','Repasa semanas 4 y 5.','Prueba el foco y el encuadre.','Foco claro|Encuadre con intención|Prueba hecha','No probar.'],
+ ['Narrativa y limpieza','Repasa semanas 6 y 7.','Añade el detalle narrativo y quita lo que sobra.','Detalle claro|Respiro|Lectura','Saturar de detalle.'],
+ ['Pulido y revisión','Mira en miniatura y al revés.','Pule foco y bordes y anota 3 mejoras.','Se lee en miniatura|Foco y bordes limpios|3 mejoras','Pulir todo parejo.']],
+ ['Pieza de composición completa','Una pieza con thumbnails, boceto, valores y notas de las decisiones de composición. Varias sesiones.','Composición clara|Foco y jerarquía|Narrativa|Proceso documentado'])
+];
+/* ---- Ruta: 3D con Blender y ZBrush (8 semanas) ---- */
+const RT_3D=[
+PROG_W(1,'Blender: blockout de entornos','bl_blockout','El blockout te deja decidir escala, cámara y composición en minutos, antes de pintar o modelar detalle.','Armar un entorno simple con cubos y cilindros y probar 3 cámaras en 25 minutos.','Abre Blender, crea un cubo, un cilindro y un plano, y muévelos con G, R y S.',[
+ ['Interfaz y atajos','Repasa vistas, G R S, X, Shift+A y el modo objeto.','Arma 10 formas simples y muévelas con atajos.','Navegas sin buscar|Atajos G R S|Duplicas con Shift+D','Usar solo el mouse.'],
+ ['Escala humana','Pon un cubo de 1.8 m como referencia.','Un blockout de una puerta, un cuarto y una calle a escala.','La escala se lee|La figura de referencia|Proporciones coherentes','Objetos sin escala.'],
+ ['Array y repetición','Aprende el modificador Array.','Un pasillo o una columnata con Array.','Repetición limpia|Espaciado regular|Variaciones','Copiar a mano.'],
+ ['Blockout de un entorno','Elige una referencia simple.','Un entorno con cubos y cilindros en 25 minutos.','Se lee el lugar|Escala humana|Formas grandes primero','Detallar demasiado.'],
+ ['Probar cámaras','Mira cómo cambia el entorno con la cámara.','Captura 3 cámaras y elige la mejor.','3 encuadres distintos|Elegiste con razón|Foco claro','Una sola cámara.']],
+ ['Blockout de un entorno','Un entorno blockout con 3 cámaras y la mejor elegida. 60 min.','Escala humana|Se lee el lugar|3 cámaras|Encuadre con foco']),
+PROG_W(2,'Blender: cámara y lente','bl_luz','La cámara decide cómo se siente un espacio. El lente cambia la escala y la profundidad.','Elegir lente, altura y ángulo de cámara a propósito en el mismo blockout.','Dibuja 3 encuadres de tu blockout en papel antes de tocar la cámara.',[
+ ['Lente y escala','Prueba 18, 35 y 85 mm.','Captura el mismo blockout con 3 lentes.','Cambia la profundidad|Cambia la escala|Elegiste uno','Cambiar el lente sin mover la cámara.'],
+ ['Altura de cámara','Prueba ojo de piso, de pie y de dron.','3 alturas de cámara en tu blockout.','Cambia la emoción|Horizonte coherente|Foco claro','Cámaras sin intención.'],
+ ['Composición con cámara','Aplica tercios y líneas guía.','Encuadra con líneas guía hacia un foco.','Líneas guía|Foco claro|Equilibrio','Encuadrar al azar.'],
+ ['Profundidad de campo','Activa el desenfoque.','2 versiones: todo nítido y con desenfoque.','Foco más claro|Profundidad|Sutil','Desenfoque exagerado.'],
+ ['Tres mejores encuadres','Revisa tus capturas.','Elige y exporta 3 encuadres con notas.','Encuadres distintos|Notas|Foco claro','Elegir sin comparar.']],
+ ['Estudio de cámara','Un blockout con 3 encuadres elegidos y notas de lente, altura y foco. 60 min.','Lentes distintos|Alturas con intención|Foco claro|Notas claras']),
+PROG_W(3,'Blender: luz y mundo','bl_luz','La luz 3D se aprende igual que en pintura: dirección, dureza, color y atmósfera.','Iluminar un blockout con sol, cielo y fuego, y probar niebla.','Pon una luz de sol y mira cómo cambia con su ángulo.',[
+ ['Sol y dirección','Prueba una luz de sol en 4 ángulos.','4 capturas con sol bajo, medio, alto y contraluz.','Cambia el mood|Sombras coherentes|Foco claro','Mover la luz sin mirar el efecto.'],
+ ['HDRI y cielo','Prueba un HDRI de cielo nublado y de atardecer.','Dos capturas con HDRI distinto.','Luz suave y dura|Color coherente|Se nota la diferencia','Elegir el HDRI sin criterio.'],
+ ['Luz de fuego y artificial','Prueba una luz de área naranja.','Una escena nocturna con luz cálida.','La fuente se entiende|Sombras|Contraste','Luz sin fuente.'],
+ ['Niebla volumétrica','Activa Volume Scatter en el mundo.','Una captura con niebla que separe planos.','Planos separados|Densidad correcta|Luz visible','Niebla que lo tapa todo.'],
+ ['Elegir la luz','Compara tus capturas.','Elige la mejor y justifica.','Justificada|Mood claro|Foco claro','Elegir por gusto.']],
+ ['Estudio de luz 3D','El mismo blockout con 3 climas de luz y niebla, con notas. 60 min.','Tres moods|Fuente clara|Niebla útil|Notas claras']),
+PROG_W(4,'Blender: kitbash y escala','bl_blockout','El kitbash te permite armar entornos creíbles rápido reutilizando piezas simples.','Armar un entorno con 10 piezas reutilizadas y escaladas con ritmo.','Modela 5 piezas simples: muro, columna, escalón, arco, techo.',[
+ ['Kit de piezas','Define 8 piezas modulares.','Crea tu kit de 8 piezas.','Piezas modulares|Escala consistente|Variaciones','Piezas que no encajan.'],
+ ['Ensamblar con ritmo','Mira cómo se repite con variación.','Ensambla una calle con tu kit.','Ritmo|Variación|Escala','Repetir idéntico.'],
+ ['Variación de escala','Mira cómo la variación evita la monotonía.','Variaciones de altura y tamaño.','Variedad|Coherencia|Silueta','Variaciones al azar.'],
+ ['Silueta del entorno','Reduce tu entorno a negro.','Corrige el skyline.','Silueta interesante|Variedad|Foco','Silueta pareja.'],
+ ['Captura y análisis','Revisa tu entorno.','Captura 2 cámaras y analiza.','Encuadres|Análisis|Mejoras','Sin análisis.']],
+ ['Entorno kitbash','Un entorno armado con kit de 8 piezas, con silueta clara y 2 cámaras. 75 min.','Kit coherente|Ritmo y variación|Silueta|2 cámaras']),
+PROG_W(5,'Blender: render y paintover','bl_paint','El paintover une la velocidad del 3D con tu decisión artística: el 3D resuelve perspectiva y luz, tú el diseño.','Hacer un render con pases y pintar encima decisiones propias.','Renderiza tu blockout y exporta el pase de niebla.',[
+ ['Render y pases','Activa el pase de Mist y Z.','Renderiza un blockout con pase de niebla.','Render limpio|Pase de niebla|Resolución adecuada','Renderizar a baja calidad.'],
+ ['Máscaras y colores planos','Usa Cryptomatte o colores planos.','Crea máscaras por objeto.','Máscaras útiles|Se separan objetos|Orden','Máscaras sin nombre.'],
+ ['Paintover en valores','Decide la luz antes de pintar.','Un paintover de 20 minutos solo en valores.','Respetas la perspectiva|Luz coherente|Decisiones propias','Calcar el render.'],
+ ['Paintover en color','Repasa tu paleta.','Colorea sobre tus valores.','Valores intactos|Paleta limitada|Atmósfera','Perder los valores.'],
+ ['Diseño propio','Elige 3 zonas para diseñar encima.','Rediseña 3 zonas del render.','Diseño propio|Coherencia|Silueta','Dejar el render sin tocar.']],
+ ['Render y paintover','Un entorno renderizado y pintado encima con diseño propio. 90 min.','Perspectiva del 3D|Luz coherente|Diseño propio|Foco claro']),
+PROG_W(6,'ZBrush: forma y silueta','zb_forma','Esculpir te enseña volumen y silueta en 3D. La clave es trabajar de masas grandes a pequeñas.','Esculpir formas con silueta clara usando pocas herramientas.','Abre ZBrush y esculpe una esfera con Move y ClayBuildup 5 minutos.',[
+ ['Masas grandes','Usa DynaMesh de baja resolución.','5 cabezas de criatura en 10 minutos cada una.','Masas claras|Silueta distinta|Sin detalle','Detallar demasiado pronto.'],
+ ['Silueta en negro','Usa Flat Color para ver solo la silueta.','3 siluetas de personaje con ZSpheres en 15 minutos.','Silueta clara|Variedad|Se lee de lejos','Juzgar con textura.'],
+ ['Lenguaje de formas 3D','Mira curvas y ángulos.','La misma forma con lenguaje curvo y angular.','Se distinguen|Misma función|Silueta','Mezclar sin intención.'],
+ ['Planos y volumen','Aprende a definir planos.','Esculpe un busto con planos grandes.','Planos claros|Volumen|Proporciones','Suavizar todo.'],
+ ['Capturas y análisis','Revisa tu escultura.','Captura de 3 ángulos y análisis.','3 ángulos|Silueta|Anotas mejoras','No revisar desde varios ángulos.']],
+ ['Escultura de criatura','Una escultura de criatura con silueta clara y 3 capturas. 90 min.','Silueta clara|Planos|3 ángulos|Proporciones']),
+PROG_W(7,'ZBrush: anatomía y criaturas','zb_anatomia','La anatomía en 3D se entiende rotándola; es la mejor manera de comprobar tu construcción.','Esculpir anatomía básica de un animal y una criatura combinada.','Esculpe un cráneo simple en 10 minutos.',[
+ ['Cráneo','Estudia un cráneo de animal.','Un cráneo esculpido en 30 minutos.','Estructura correcta|Planos|Proporciones','Cráneo sin estructura.'],
+ ['Cuadrúpedo en masas','Mira el esqueleto de un felino.','Un felino en masas grandes.','Masas|Articulaciones|Pose','Detallar antes de las masas.'],
+ ['Pata y articulaciones','Compara pata humana y felina.','Una pata esculpida en bloques.','Articulaciones|Forma|Proporción','Pata como tubo.'],
+ ['Busto de criatura','Elige 2 animales.','Un busto combinando 2 animales.','Creíble|Masas|Silueta original','Mezcla sin lógica.'],
+ ['Revisión de anatomía','Gira tu escultura.','Corrige 3 problemas anatómicos.','Mejora visible|Anotas|3 ángulos','No corregir.']],
+ ['Criatura con anatomía creíble','Una criatura esculpida con 3 vistas y notas de anatomía. 90 min.','Anatomía creíble|Silueta original|3 vistas|Notas claras']),
+PROG_W(8,'ZBrush: hard surface y ensamble','zb_hard','Los props de superficie dura (armas, armaduras, máquinas) piden precisión y planos limpios.','Modelar y ensamblar un prop de superficie dura limpio.','Crea una forma con ZModeler y aplica un bisel.',[
+ ['ZModeler','Aprende Extrude y Bevel.','Un prop simple en 20 minutos.','Planos limpios|Bisel|Proporciones','Superficies deformes.'],
+ ['Planos de fractura','Usa Trim y Clip.','Una hoja de obsidiana con planos.','Planos|Filo|Silueta','Suavizar los planos.'],
+ ['Ornamento y detalle','Elige un motivo de ornamento.','3 piezas de ornamento.','Coherente|Escala|Detalle controlado','Ornamento sin jerarquía.'],
+ ['Ensamblar piezas','Une las 3 piezas en un prop.','Un prop ensamblado coherente.','Coherencia|Jerarquía|Silueta','Piezas sin relación.'],
+ ['Presentación','Captura en 3 vistas.','3 capturas con luz limpia.','Luz clara|3 vistas|Foco','Capturar sin luz.']],
+ ['Prop de superficie dura','Un prop terminado con 3 vistas y notas de diseño. 90 min.','Planos limpios|Silueta clara|Ensamble coherente|3 vistas'])
+];
+
+/* ============ Rutas, nivel y estado ============ */
+const PG_LABEL={gesto:'Gesto y pose',proporciones:'Proporciones',personajes:'Diseño de personajes',expresion:'Expresión y rostro',vestuario:'Vestuario y materiales',teoria:'Teoría del arte'};
+const pgSk=k=>SKILLS[k]||(typeof SKILLS_3D!=='undefined'&&SKILLS_3D[k])||PG_LABEL[k]||k;
+const PROGRAMAS={
+  env:{n:'Entornos y keyframe',corto:'Entornos',sem:RT_ENV,d:'Valores, luz, perspectiva, escala, composición, color y atmósfera hasta una pieza de portafolio. Es la ruta de tu meta.',pre:'Conviene tener lo básico de dibujo: líneas, cajas y valores.',para:'Environment & Keyframe Concept Artist'},
+  anat:{n:'Anatomía y proporciones',corto:'Anatomía',sem:RT_ANAT,d:'Del gesto a la figura vestida de memoria: proporciones, torso, piernas, manos, cabeza, músculo, escorzo y criaturas.',pre:'Ninguno. Si ya dibujas figura, marca tu nivel y empiezas más adelante.',para:'Personajes, keyframes y criaturas'},
+  pers:{n:'Diseño de personajes',corto:'Personajes',sem:RT_PERS,d:'Silueta, lenguaje de formas, proporciones estilizadas, expresión, vestuario, props, color, turnaround y hoja final.',pre:'Mejor después de las semanas 1 a 4 de Anatomía (gesto, proporciones, torso).',para:'Character Design y keyframes con personaje'},
+  teoria:{n:'Teoría y fundamentos',corto:'Teoría',sem:RT_TEORIA,d:'Elementos y principios, teoría del color, de composición, construcción, perspectiva, estudios de maestros y lectura de imagen.',pre:'Ninguno. Se estudia leyendo, analizando y explicando con tus palabras.',para:'Tomar decisiones con criterio y no por intuición'},
+  color:{n:'Color',corto:'Color',sem:RT_COLOR,d:'Valor, matiz, saturación, temperatura, paletas, luz con color, emoción, entornos, personajes y estudios de maestros.',pre:'Conviene dominar valores primero (semana 1 de Entornos).',para:'Pintar con intención'},
+  comp:{n:'Composición y narrativa',corto:'Composición',sem:RT_COMP,d:'Thumbnails, equilibrio, líneas guía, jerarquía, encuadre, espacio negativo y narrativa en una imagen.',pre:'Ninguno.',para:'Keyframes e ilustración'},
+  tres:{n:'3D: Blender y ZBrush',corto:'3D',sem:RT_3D,d:'Blockout, cámara, luz, kitbash y paintover en Blender; forma, anatomía y hard surface en ZBrush.',pre:'Conviene tener perspectiva básica (semanas 3 y 5 de Entornos).',para:'Pipeline 3D para concept art'}};
+const PG_ORDEN=['env','anat','pers','teoria','color','comp','tres'];
+function pgRaiz(){const r=S.ajustes.prog=S.ajustes.prog||{};if(r.ses&&!r.tr){r.tr={env:{ses:r.ses,pz:r.pz||{},rev:r.rev||{},pin:r.pin,sesPin:r.sesPin,ultima:r.ultima}};delete r.ses;delete r.pz;delete r.rev;delete r.pin;delete r.sesPin;delete r.ultima}
+  r.tr=r.tr||{};r.ruta=PROGRAMAS[r.ruta]?r.ruta:'env';r.activas=(r.activas||[r.ruta]).filter(k=>PROGRAMAS[k]);if(!r.activas.length)r.activas=['env'];r.ritmo=r.ritmo||5;return r}
+const pgRuta=()=>pgRaiz().ruta;
+const pgW=()=>PROGRAMAS[pgRuta()].sem;
+const pgSkills=()=>[...new Set(pgW().map(w=>w.skill))];
+const pgTr=k=>{const r=pgRaiz();const t=r.tr[k]=r.tr[k]||{};t.ses=t.ses||{};t.pz=t.pz||{};t.rev=t.rev||{};t.diag=t.diag||{};t.dom=t.dom||{};t.rep=t.rep||{};return t};
+const PG=()=>pgTr(pgRuta());
 const pgModo=()=>S.ajustes.diarioModo||'prog';
 const pgKey=(w,i)=>w+'-'+i;
-const pgHechas=w=>PROGRAMA[w-1].ses.filter((_,i)=>PG().ses[pgKey(w,i)]?.hecho).length;
-const pgTotal=()=>Object.values(PG().ses).filter(x=>x.hecho).length;
-function pgSemActual(){const P=PG();if(P.pin)return P.pin;for(const W of PROGRAMA)if(pgHechas(W.w)<4)return W.w;return 12}
-function pgSesHoy(){const P=PG(),w=pgSemActual(),W=PROGRAMA[w-1];let i=P.sesPin&&P.sesPin.w===w?P.sesPin.i:W.ses.findIndex((_,k)=>!P.ses[pgKey(w,k)]?.hecho);if(i<0)i=0;return {w,i,W,s:W.ses[i]}}
-const pgDots=w=>PROGRAMA[w-1].ses.map((_,i)=>`<span class="pg-dot ${PG().ses[pgKey(w,i)]?.hecho?'on':''}"></span>`).join('');
+const pgHechasR=(k,w)=>PROGRAMAS[k].sem[w-1].ses.filter((_,i)=>pgTr(k).ses[pgKey(w,i)]?.hecho).length;
+const pgHechas=w=>pgHechasR(pgRuta(),w);
+const pgTotalR=k=>Object.values(pgTr(k).ses).filter(x=>x.hecho).length;
+const pgTotal=()=>pgTotalR(pgRuta());
+const pgGlobal=()=>PG_ORDEN.reduce((s,k)=>s+pgTotalR(k),0);
+/* nivel: una semana se salta si la dominas (marcada a mano o con 3 de 4 «puedo hacerlo») */
+function pgDomR(k,w){const t=pgTr(k),st=t.dom[w];if(st==='m')return true;if(st==='no')return false;return (t.diag[w]||[]).filter(Boolean).length>=3&&pgHechasR(k,w)<4}
+const pgDom=w=>pgDomR(pgRuta(),w);
+const pgEfectivas=k=>PROGRAMAS[k].sem.filter(W=>!pgDomR(k,W.w)||pgHechasR(k,W.w)>=1);
+function pgSemActualR(k){const t=pgTr(k);if(t.pin)return t.pin;for(const W of PROGRAMAS[k].sem){if(pgDomR(k,W.w))continue;if(pgHechasR(k,W.w)<4)return W.w}return PROGRAMAS[k].sem.length}
+const pgSemActual=()=>pgSemActualR(pgRuta());
+function pgPctR(k){const ef=PROGRAMAS[k].sem.filter(W=>!pgDomR(k,W.w)||pgHechasR(k,W.w)>0),tot=ef.length*5;return tot?Math.min(100,Math.round(ef.reduce((s,W)=>s+Math.min(5,pgHechasR(k,W.w)),0)/tot*100)):100}
+function pgSesHoy(){const P=PG(),w=pgSemActual(),W=pgW()[w-1];let i=P.sesPin&&P.sesPin.w===w?P.sesPin.i:W.ses.findIndex((_,k)=>!P.ses[pgKey(w,k)]?.hecho);if(i<0)i=0;return {w,i,W,s:W.ses[i]}}
+const pgDots=w=>pgW()[w-1].ses.map((_,i)=>`<span class="pg-dot ${PG().ses[pgKey(w,i)]?.hecho?'on':''}"></span>`).join('');
 const pgMitad=(a,b)=>a!=null&&b!=null?(a+b)/2:(a??b);
-/* habilidad: promedio de tus críticas (0–10) y de tu autoevaluación en las sesiones de esa habilidad (1–5 → 0–10) */
-function pgHabilidad(k){const {prom}=debilidades(),aut=[];for(const W of PROGRAMA)if(W.skill===k)W.ses.forEach((_,i)=>{const x=PG().ses[pgKey(W.w,i)];if(x?.hecho&&x.auto)aut.push(x.auto)});const a=aut.length?aut.reduce((s,v)=>s+v,0)/aut.length*2:null,c=prom[k]??null;return {crit:c,auto:a,n:aut.length,mix:pgMitad(c,a)}}
+function pgHabilidad(k){const {prom}=debilidades(),aut=[];for(const W of pgW())if(W.skill===k)W.ses.forEach((_,i)=>{const x=PG().ses[pgKey(W.w,i)];if(x?.hecho&&x.auto)aut.push(x.auto)});const a=aut.length?aut.reduce((s,v)=>s+v,0)/aut.length*2:null,c=prom[k]??null;return {crit:c,auto:a,n:aut.length,mix:pgMitad(c,a)}}
 function pgSemanaIso(ts){const d=new Date(ts);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return hoyKey(d)}
-/* ---------- vista principal ---------- */
+/* qué ruta toca hoy: reparte las sesiones entre tus rutas activas, sin dejar ninguna atrás */
+function pgRutaSugerida(){const r=pgRaiz(),act=r.activas.filter(k=>pgPctR(k)<100);if(!act.length)return r.ruta;const cnt=act.map(k=>pgTotalR(k)/Math.max(1,pgEfectivas(k).length*5)),m=Math.min(...cnt);return act[cnt.indexOf(m)]}
+/* repaso espaciado: una semana completada hace 10 días o más se repasa con su sesión más floja */
+function pgRepasoPendiente(){const P=PG();for(const W of pgW()){if(pgHechas(W.w)<4||P.rep[W.w])continue;const ts=Math.max(...W.ses.map((_,i)=>P.ses[pgKey(W.w,i)]?.ts||0));if(ts&&Date.now()-ts>=10*864e5){let mi=0,mv=9;W.ses.forEach((_,i)=>{const a=P.ses[pgKey(W.w,i)]?.auto??3;if(a<mv){mv=a;mi=i}});return {w:W.w,i:mi,W}}}return null}
+/* ============ Vista principal ============ */
 function vDiario(){
-  const modo=pgModo(),chips=`<div class="prow"><span class="lbl">Modo</span>${[['prog','Programa de 12 semanas'],['libre','Libre · según mis críticas o 3D']].map(([k,n])=>`<button class="ch ${(modo==='prog'?'prog':'libre')===k?'on':''}" data-act="pg-modo" data-v="${k}">${n}</button>`).join('')}</div>`;
+  const modo=pgModo(),chips=`<div class="prow"><span class="lbl">Modo</span>${[['prog','Programa por rutas'],['libre','Libre · según mis críticas o 3D']].map(([k,n])=>`<button class="ch ${(modo==='prog'?'prog':'libre')===k?'on':''}" data-act="pg-modo" data-v="${k}">${n}</button>`).join('')}</div>`;
   if(modo!=='prog')return chips+vDiarioLibre();
-  const tab=S.diTab||'hoy',w=pgSemActual(),W=PROGRAMA[w-1],P=PG(),total=pgTotal();
+  const R=pgRaiz(),tab=S.diTab||'hoy',w=pgSemActual(),W=pgW()[w-1],ruta=PROGRAMAS[R.ruta],N=pgW().length,saltadas=pgW().filter(X=>pgDom(X.w)&&pgHechas(X.w)<1).length,ef=pgEfectivas(R.ruta).length;
+  const rutas=PG_ORDEN.map(k=>`<button class="pg-ruta ${k===R.ruta?'on':''} ${R.activas.includes(k)?'act':''}" data-act="pg-ruta" data-v="${k}"><b>${esc(PROGRAMAS[k].corto)}</b><i style="width:${pgPctR(k)}%"></i><span>${pgPctR(k)}%</span></button>`).join('');
+  const sug=pgRutaSugerida();
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Programa de mejora</h1>
-  <p class="intro">12 semanas para ser <strong>${esc(metaTexto())}</strong>. Cada semana trabaja una habilidad con 5 sesiones de 30 minutos y una pieza de la semana. La luz y la perspectiva, tus puntos débiles, ocupan 5 de las 12 semanas. No hay calendario rígido: si faltas un día, sigues en la sesión donde ibas.</p>
+  <p class="intro">Rutas de estudio con orden lógico: cada semana construye sobre la anterior y <strong>empiezas en tu nivel</strong>, no desde cero. Marca lo que ya dominas en <b>Mi plan y nivel</b> y la ruta salta esas semanas. Puedes llevar varias rutas a la vez; el programa reparte tus sesiones.</p>
   ${chips}
-  <div class="pg-resumen"><div><span class="lbl">Semana</span><b>${w}<small> / 12</small></b><span>${esc(W.t)}</span></div><div><span class="lbl">Esta semana</span><b>${pgHechas(w)}<small> / 5</small></b><span class="pg-dots">${pgDots(w)}</span></div><div><span class="lbl">Sesiones hechas</span><b>${total}<small> / 60</small></b><span>${Math.round(total*30/60*10)/10} h de práctica</span></div><div><span class="lbl">Racha</span><b>🔥 ${racha()}</b><span>días seguidos</span></div></div>
-  <div class="pg-tabs">${[['hoy','Hoy'],['prog','Programa'],['prog2','Progreso'],['bib','Biblioteca']].map(([k,n])=>`<button class="pg-tab ${tab===k?'on':''}" data-act="pg-tab" data-v="${k}">${n}</button>`).join('')}</div>
-  ${tab==='prog'?pgMapa():tab==='prog2'?pgProgreso():tab==='bib'?pgBib():pgHoy()}`}
-/* ---------- HOY: la sesión de 30 minutos en cuatro bloques ---------- */
+  <div class="pg-rutas">${rutas}</div>
+  ${R.activas.length>1&&sug!==R.ruta&&tab==='hoy'?`<div class="box" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>Hoy te toca ${esc(PROGRAMAS[sug].n)}</b> para que tus rutas avancen parejo. <button class="btn sm pri" data-act="pg-ruta" data-v="${sug}">Ir a esa ruta</button></p></div>`:''}
+  <div class="pg-resumen"><div><span class="lbl">${esc(ruta.corto)} · semana</span><b>${w}<small> / ${N}</small></b><span>${esc(W.t)}${saltadas?` · ${saltadas} saltada${saltadas===1?'':'s'} por nivel`:''}</span></div><div><span class="lbl">Esta semana</span><b>${pgHechas(w)}<small> / 5</small></b><span class="pg-dots">${pgDots(w)}</span></div><div><span class="lbl">Sesiones de la ruta</span><b>${pgTotal()}<small> / ${ef*5}</small></b><span>${Math.round(pgGlobal()*30/60*10)/10} h de práctica en total</span></div><div><span class="lbl">Racha</span><b>🔥 ${racha()}</b><span>días seguidos</span></div></div>
+  <div class="pg-tabs">${[['hoy','Hoy'],['prog','Programa'],['prog2','Progreso'],['bib','Biblioteca'],['plan','Mi plan y nivel']].map(([k,n])=>`<button class="pg-tab ${tab===k?'on':''}" data-act="pg-tab" data-v="${k}">${n}</button>`).join('')}</div>
+  ${tab==='prog'?pgMapa():tab==='prog2'?pgProgreso():tab==='bib'?pgBib():tab==='plan'?pgPlan():pgHoy()}`}
+/* ============ HOY ============ */
 function pgHoy(){
-  const P=PG(),{w,i,W,s}=pgSesHoy(),key=pgKey(w,i),r=P.ses[key]||{},{prom}=debilidades(),ult=P.ultima,hoyHecho=ult&&hoyKey(new Date(ult.ts))===hoyKey();
+  const P=PG(),R=pgRaiz(),{w,i,W,s}=pgSesHoy(),key=pgKey(w,i),r=P.ses[key]||{},ult=P.ultima,hoyHecho=ult&&hoyKey(new Date(ult.ts))===hoyKey(),rep=pgRepasoPendiente(),diagHecho=Object.keys(P.diag).length>0||Object.keys(P.dom).length>0||P.nivelOk;
   const t=S.timer,rest=t?(t.fin?Math.max(0,t.fin-Date.now()):t.resta??1800e3):1800e3,pasado=(1800e3-rest)/60e3,ahora=!t?-1:pasado<5?0:pasado<13?1:pasado<25?2:3;
   const bl=[['Calentamiento',5,W.cal],['Estudio',8,s.est],['Ejercicio',12,s.ej],['Revisión',5,'Mira tu resultado en miniatura y al revés. Marca solo los criterios que de verdad cumpliste y apunta qué corregirías.']];
   const dias=S.ajustes.rutina?.dias||{},cal=[];for(let k=34;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const q=hoyKey(d);cal.push(`<span class="dia ${dias[q]?.hecho?'on':''} ${k===0?'hoy':''}" title="${q}"></span>`)}
-  const sk=pgHabilidad(W.skill),flojo=sk.mix!=null&&sk.mix<5.5;
-  const ulSes=ult&&PROGRAMA[ult.w-1]?.ses[ult.i];
-  const nv=pgHechas(w)>=4&&!P.pz[w]?.img;
-  const fb=S.anD&&S.anD.k==='pg:'+key?S.anD:null;
+  const sk=pgHabilidad(W.skill),flojo=sk.mix!=null&&sk.mix<5.5,ulSes=ult&&pgW()[ult.w-1]?.ses[ult.i],nv=pgHechas(w)>=4&&!P.pz[w]?.img,fb=S.anD&&S.anD.k==='pg:'+R.ruta+key?S.anD:null,skF=SKILLS[W.skill]?W.skill:null;
+  const prev=w>1?pgW()[w-2]:null;
   return `
+  ${!diagHecho?`<div class="box" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>Antes de empezar, ubica tu nivel (3 minutos).</b> Así el programa salta lo que ya dominas y arranca donde de verdad te toca. <button class="btn sm pri" data-act="pg-tab" data-v="plan">Ubicar mi nivel</button> <button class="btn ghost sm" data-act="pg-nivel-ok">Empezar desde el principio</button></p></div>`:''}
   ${hoyHecho&&ulSes?`<div class="box orienta-ok"><p style="margin:0"><b>Hoy ya hiciste:</b> ${esc(ulSes.t)} (semana ${ult.w}, sesión ${ult.i+1}). Buen trabajo. Lo que sigue es la siguiente sesión; puedes adelantarla o dejarla para mañana. <button class="btn ghost sm" data-act="pg-deshacer">Deshacer</button></p></div>`:''}
+  ${rep&&!hoyHecho?`<div class="box" style="border-left:3px solid var(--c-tecnica)"><p style="margin:0"><b>Repaso:</b> ya pasaron más de 10 días desde la semana ${rep.w} (${esc(rep.W.t)}). Repite «${esc(rep.W.ses[rep.i].t)}» para fijarla. <button class="btn sm" data-act="pg-repaso">Hacer el repaso</button></p></div>`:''}
   ${nv?`<div class="box" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>Ya completaste las sesiones de la semana ${w}.</b> Haz tu pieza de la semana para cerrarla bien. <button class="btn sm pri" data-act="pg-tab" data-v="prog">Ir a la pieza</button></p></div>`:''}
   <div class="pg-sesion">
-    <div class="pg-ses-h"><span class="lbl">Semana ${w} · ${esc(W.t)} · sesión ${i+1} de 5</span><h2>${esc(s.t)}</h2><p class="muted" style="margin:0">Objetivo de la semana: ${esc(W.obj)}</p>${flojo?`<p class="pg-aviso">Tus críticas y tu autoevaluación muestran que <b>${esc(SKILLS[W.skill])}</b> todavía está en desarrollo. Si hoy sale difícil, repite esta sesión mañana: es normal.</p>`:''}</div>
+    <div class="pg-ses-h"><span class="lbl">${esc(PROGRAMAS[R.ruta].corto)} · semana ${w} · ${esc(W.t)} · sesión ${i+1} de 5</span><h2>${esc(s.t)}</h2><p class="muted" style="margin:0">Objetivo de la semana: ${esc(W.obj)}</p>${prev&&i===0?`<p class="muted" style="margin:4px 0 0">Viene de: <b>${esc(prev.t)}</b> (${esc(pgSk(prev.skill))}).</p>`:''}${flojo?`<p class="pg-aviso">Tus críticas y tu autoevaluación muestran que <b>${esc(pgSk(W.skill))}</b> todavía está en desarrollo. Si hoy sale difícil, repite esta sesión mañana: es normal.</p>`:''}</div>
     <div class="pg-bloques">${bl.map((b,n)=>`<div class="pg-bl ${ahora===n?'now':''}"><div class="pg-bl-h"><b>${n+1}. ${b[0]}</b><span>${b[1]} min</span></div><p>${esc(b[2])}</p>${n===3?`<div class="pg-crits">${s.crit.map((c,k)=>`<button class="ch ${r.crit?.[k]?'on':''}" data-act="pg-crit" data-n="${k}">${r.crit?.[k]?'✓ ':''}${esc(c)}</button>`).join('')}</div><p class="muted" style="margin:6px 0 0"><b>Error común:</b> ${esc(s.err)}</p>`:''}</div>`).join('')}</div>
   </div>
   <div class="grid2">
     <div class="box"><span class="lbl">¿Cómo te salió?</span><div class="pg-auto">${[[1,'Me costó mucho'],[2,'Flojo'],[3,'Regular'],[4,'Bien'],[5,'Muy bien']].map(([n,l])=>`<button class="ch ${r.auto===n?'on':''}" data-act="pg-auto" data-v="${n}" title="${l}">${n}</button>`).join('')}<span class="muted">${r.auto?['','Me costó mucho','Flojo','Regular','Bien','Muy bien'][r.auto]:'Sé honesto: sirve para ajustar tu programa'}</span></div>
+      ${r.auto&&r.auto>=5&&r.crit?.filter(Boolean).length===s.crit.length&&pgHechas(w)>=1?`<p class="pg-aviso" style="margin:6px 0">Te salió muy bien y cumpliste todos los criterios. Si esta semana te resulta fácil, puedes <button class="btn ghost sm" data-act="pg-dom" data-w="${w}" data-v="m" style="color:var(--accent)">saltar el resto de la semana</button>.</p>`:''}
       <div class="field"><label for="pg-nota">¿Qué aprendiste?</label><textarea id="pg-nota" placeholder="Una frase para tu yo de mañana">${esc(r.nota||'')}</textarea></div>
       <div class="prow">${r.hecho?'<span class="nivel" style="color:var(--ok);border-color:var(--ok)">Sesión hecha ✓</span><button class="btn sm ghost" data-act="pg-deshacer">Deshacer</button>':'<button class="btn pri" data-act="pg-hecho">Marcar como hecha</button><button class="btn ghost" data-act="pg-tab" data-v="prog">Cambiar de sesión</button>'}
         <label class="btn sm" for="pg-img">${r.img?'✓ Resultado subido':'Subir resultado'}</label><input type="file" id="pg-img" accept="image/png,image/jpeg,image/webp" hidden></div>
@@ -2518,62 +2944,87 @@ function pgHoy(){
     <div class="box">${timerHTML(30,'Sesión · 30 min')}<p class="muted" style="margin:6px 0 0">${t?['Ahora: calentamiento (5 min)','Ahora: estudio (8 min)','Ahora: ejercicio (12 min)','Ahora: revisión (5 min)'][ahora]:'Calentamiento 5 · estudio 8 · ejercicio 12 · revisión 5.'}</p>
       <span class="lbl" style="margin-top:10px;display:block">Últimos 35 días</span><div class="cal">${cal.join('')}</div></div>
   </div>
-  ${r.img?`<div class="box"><h3>Feedback de tu ejercicio · ${esc(SKILLS[W.skill])}</h3>${fb?analisisHTML(fb.a,fb.cr,{id:'pg',skill:W.skill,guardar:fb.guardado?'<span class="ok-box sm">✓ Guardado</span>':'<button class="btn sm" data-act="pg-fb-guardar">Guardar feedback en la sesión</button>'}):`<div class="prow"><button class="btn sm pri" data-act="pg-analizar">Feedback de mi ejercicio</button><span class="muted">Mide tu resultado según ${esc(SKILLS[W.skill])}.</span></div>`}${r.fb&&!fb?`<div class="an-sec no"><h4>Feedback guardado</h4><ul>${[...r.fb.problemas,...r.fb.funciona].slice(0,4).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}</div>`:`<p class="muted">Sube tu resultado y te doy feedback medido, enfocado en ${esc(SKILLS[W.skill])}.</p>`}`}
-/* ---------- PROGRAMA: mapa de las 12 semanas y detalle de la semana ---------- */
+  ${r.img?`<div class="box"><h3>Feedback de tu ejercicio · ${esc(pgSk(W.skill))}</h3>${fb?analisisHTML(fb.a,fb.cr,{id:'pg',skill:skF,guardar:fb.guardado?'<span class="ok-box sm">✓ Guardado</span>':'<button class="btn sm" data-act="pg-fb-guardar">Guardar feedback en la sesión</button>'}):`<div class="prow"><button class="btn sm pri" data-act="pg-analizar">Feedback de mi ejercicio</button><span class="muted">Mide valores, silueta, foco y color de tu imagen${skF?' enfocado en '+esc(pgSk(W.skill)):''}.</span></div>`}${r.fb&&!fb?`<div class="an-sec no"><h4>Feedback guardado</h4><ul>${[...r.fb.problemas,...r.fb.funciona].slice(0,4).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}</div>`:`<p class="muted">Sube tu resultado y te doy feedback medido de tu imagen.</p>`}`}
+/* ============ PROGRAMA: mapa de la ruta y detalle de la semana ============ */
 function pgMapa(){
-  const P=PG(),act=pgSemActual(),sel=S.pgSel||act,W=PROGRAMA[sel-1],pz=P.pz[sel]||{},rev=P.rev[sel]||{},hs=pgHechas(sel);
-  const tarj=PROGRAMA.map(X=>{const h=pgHechas(X.w),est=h>=4?'Completa':h>0||X.w===act?'En curso':'Pendiente';return `<button class="pg-sem ${X.w===sel?'sel':''} ${X.w===act?'act':''} ${h>=4?'ok':''}" data-act="pg-sel" data-w="${X.w}"><span class="pg-n">${X.w}</span><b>${esc(X.t)}</b><span class="muted">${esc(SKILLS[X.skill])}</span><span class="pg-dots">${pgDots(X.w)}</span><em>${est}</em></button>`}).join('');
+  const P=PG(),R=pgRaiz(),act=pgSemActual(),sel=Math.min(S.pgSel||act,pgW().length),W=pgW()[sel-1],pz=P.pz[sel]||{},rev=P.rev[sel]||{},hs=pgHechas(sel),dom=pgDom(sel),ant=sel>1?pgW()[sel-2]:null;
+  const tarj=pgW().map(X=>{const h=pgHechas(X.w),d=pgDom(X.w)&&h<1,est=d?'Dominada · se salta':h>=4?'Completa':h>0||X.w===act?'En curso':'Pendiente';return `<button class="pg-sem ${X.w===sel?'sel':''} ${X.w===act?'act':''} ${h>=4?'ok':''} ${d?'dom':''}" data-act="pg-sel" data-w="${X.w}"><span class="pg-n">${X.w}</span><b>${esc(X.t)}</b><span class="muted">${esc(pgSk(X.skill))}</span><span class="pg-dots">${pgDots(X.w)}</span><em>${est}</em></button>`}).join('');
   const rub=W.pz.rub,rubOk=(pz.rub||[]).filter(Boolean).length;
-  return `<div class="pg-mapa">${tarj}</div>
-  <div class="box pg-det"><div class="prow" style="justify-content:space-between;align-items:flex-start"><div><span class="lbl">Semana ${sel} · ${esc(SKILLS[W.skill])}</span><h2 style="margin:2px 0 6px">${esc(W.t)}</h2></div>${sel!==act?`<button class="btn sm" data-act="pg-seguir">Volver a mi semana (${act})</button>`:''}</div>
+  return `<p class="hint" style="margin:0 0 8px">${esc(PROGRAMAS[R.ruta].d)}</p><div class="pg-mapa">${tarj}</div>
+  <div class="box pg-det"><div class="prow" style="justify-content:space-between;align-items:flex-start"><div><span class="lbl">Semana ${sel} · ${esc(pgSk(W.skill))}</span><h2 style="margin:2px 0 6px">${esc(W.t)}</h2></div><div class="prow">${sel!==act?`<button class="btn sm" data-act="pg-seguir">Volver a mi semana (${act})</button>`:''}<button class="btn sm ${dom?'on':''}" data-act="pg-dom" data-w="${sel}" data-v="${dom?'no':'m'}">${dom?'✓ Dominada: estudiarla igual':'Ya domino esto: saltar semana'}</button></div></div>
+    ${ant?`<p class="muted" style="margin:0 0 6px"><b>Prerrequisito:</b> semana ${ant.w} · ${esc(ant.t)}${pgDom(ant.w)||pgHechas(ant.w)>=4?' ✓':' (pendiente)'}</p>`:''}
     <p style="margin:0 0 6px"><b>Por qué importa:</b> ${esc(W.por)}</p><p style="margin:0 0 6px"><b>Objetivo medible:</b> ${esc(W.obj)}</p><p style="margin:0 0 10px" class="muted"><b>Calentamiento de la semana:</b> ${esc(W.cal)}</p>
     <div class="pg-lista">${W.ses.map((s,i)=>{const x=P.ses[pgKey(sel,i)]||{};return `<div class="pg-fila ${x.hecho?'ok':''}"><span class="pg-chk">${x.hecho?'✓':i+1}</span><div style="flex:1"><b>${esc(s.t)}</b><details><summary>Ver la sesión</summary><p style="margin:4px 0"><b>Estudio:</b> ${esc(s.est)}</p><p style="margin:4px 0"><b>Ejercicio:</b> ${esc(s.ej)}</p><p style="margin:4px 0"><b>Criterios:</b> ${s.crit.map(esc).join(' · ')}</p></details></div>${x.auto?`<span class="muted" title="Tu autoevaluación">${'●'.repeat(x.auto)}${'○'.repeat(5-x.auto)}</span>`:''}<button class="btn sm ${x.hecho?'':'pri'}" data-act="pg-hoy" data-w="${sel}" data-i="${i}">${x.hecho?'Repetir':'Hacer hoy'}</button></div>`}).join('')}</div></div>
-  <div class="box pg-pieza"><span class="lbl">Pieza de la semana ${sel}</span><h3 style="margin:2px 0 4px">${esc(W.pz.t)}</h3><p style="margin:0 0 8px">${esc(W.pz.d)}</p>
+  <div class="box pg-pieza"><span class="lbl">Pieza de la semana ${sel}${hs<2&&!dom?' · también sirve como prueba de nivel':''}</span><h3 style="margin:2px 0 4px">${esc(W.pz.t)}</h3><p style="margin:0 0 8px">${esc(W.pz.d)}</p>
     <span class="lbl">Rúbrica (marca solo lo que de verdad cumple)</span><div class="pg-crits">${rub.map((c,n)=>`<button class="ch ${pz.rub?.[n]?'on':''}" data-act="pg-rub" data-w="${sel}" data-n="${n}">${pz.rub?.[n]?'✓ ':''}${esc(c)}</button>`).join('')}</div>
+    ${rubOk>=3&&hs<4&&!dom?`<p class="pg-aviso" style="margin:8px 0 0">Cumples ${rubOk} de ${rub.length} criterios: ya dominas esta semana. <button class="btn sm pri" data-act="pg-dom" data-w="${sel}" data-v="m">Saltarla y seguir</button></p>`:''}
     <div class="pg-auto" style="margin-top:8px"><span class="lbl">¿Qué tan satisfecho estás?</span>${[1,2,3,4,5].map(n=>`<button class="ch ${pz.auto===n?'on':''}" data-act="pg-pz-auto" data-w="${sel}" data-v="${n}">${n}</button>`).join('')}</div>
-    <div class="prow" style="margin-top:8px"><label class="btn sm ${pz.img?'':'pri'}" for="pg-pz-img" data-w="${sel}">${pz.img?'Cambiar imagen':'Subir mi pieza'}</label><input type="file" id="pg-pz-img" data-w="${sel}" accept="image/png,image/jpeg,image/webp" hidden>${pz.img?`<button class="btn ghost sm" data-act="pg-pz-quitar" data-w="${sel}">Quitar</button>`:''}<span class="muted">${rubOk}/${rub.length} criterios</span></div>
+    <div class="prow" style="margin-top:8px"><label class="btn sm ${pz.img?'':'pri'}" for="pg-pz-img">${pz.img?'Cambiar imagen':'Subir mi pieza'}</label><input type="file" id="pg-pz-img" data-w="${sel}" accept="image/png,image/jpeg,image/webp" hidden>${pz.img?`<button class="btn ghost sm" data-act="pg-pz-quitar" data-w="${sel}">Quitar</button>`:''}<span class="muted">${rubOk}/${rub.length} criterios</span></div>
     ${pz.img?`<img ${imgAttrs(pz.img)} alt="Pieza semana ${sel}" style="max-height:260px;width:auto;border-radius:8px;margin-top:8px" data-act="zoom">`:''}</div>
   <div class="box"><span class="lbl">Revisión de la semana ${sel}</span>${hs<4&&!rev.ts?`<p class="muted" style="margin:4px 0 0">Se abre cuando completes 4 de las 5 sesiones (llevas ${hs}).</p>`:`${[['mejora','¿Qué mejoró esta semana? (con una prueba concreta)'],['dificil','¿Qué sigue difícil?'],['ajuste','¿Qué vas a hacer distinto la próxima semana?']].map(([k,l],n)=>`<div class="field"><label for="pg-rev-${n}">${l}</label><textarea id="pg-rev-${n}" style="min-height:44px">${esc(rev[k]||'')}</textarea></div>`).join('')}<div class="prow"><button class="btn sm pri" data-act="pg-rev-save" data-w="${sel}">Guardar revisión</button>${rev.ts?'<span class="ok-box sm">✓ Guardada</span>':''}</div>`}</div>`}
-/* ---------- PROGRESO: lo que de verdad mejoró ---------- */
+/* ============ PROGRESO ============ */
 function pgProgreso(){
-  const P=PG(),act=pgSemActual(),dias=Object.values(S.ajustes.rutina?.dias||{}).filter(x=>x.hecho).length;
-  const hab=PROG_SKILLS.map(k=>({k,...pgHabilidad(k)})),conDatos=hab.filter(h=>h.mix!=null).sort((a,b)=>a.mix-b.mix),foco=conDatos[0];
+  const P=PG(),R=pgRaiz(),act=pgSemActual(),dias=Object.values(S.ajustes.rutina?.dias||{}).filter(x=>x.hecho).length;
+  const hab=pgSkills().map(k=>({k,...pgHabilidad(k)})),conDatos=hab.filter(h=>h.mix!=null).sort((a,b)=>a.mix-b.mix),foco=conDatos[0];
   const barra=(v,c)=>v==null?'<span class="muted" style="font-size:12px">sin datos</span>':`<div class="bar" style="width:auto"><i style="width:${Math.round(v/10*100)}%;background:${c}"></i></div>`;
-  const semanas={};for(const x of Object.values(P.ses))if(x.hecho&&x.ts){const k=pgSemanaIso(x.ts);semanas[k]=(semanas[k]||0)+1}
-  const bars=[];for(let n=7;n>=0;n--){const d=new Date();d.setDate(d.getDate()-n*7);const k=pgSemanaIso(d.getTime()),v=semanas[k]||0;bars.push(`<div class="pg-sb" title="${v} sesiones"><i style="height:${Math.round(Math.min(v,5)/5*100)}%"></i><span>${n===0?'esta':'−'+n}</span></div>`)}
-  const piezas=PROGRAMA.filter(X=>P.pz[X.w]?.img);
-  return `<div class="box"><h3>Tus habilidades</h3><p class="hint">Dos medidas: lo que dicen tus críticas medidas (0 a 10) y tu autoevaluación en las sesiones de cada habilidad. Se llenan solas conforme practicas y pides crítica.</p>
-    <div class="scores">${hab.map(h=>`<div class="score" style="grid-template-columns:120px 1fr 1fr 64px"><span>${esc(SKILLS[h.k])}</span><div><span class="muted" style="font-size:11px">Críticas</span>${barra(h.crit,'var(--c-tecnica)')}</div><div><span class="muted" style="font-size:11px">Autoevaluación</span>${barra(h.auto,'var(--accent)')}</div><span class="muted" style="font-size:12px">${h.n} ses.</span></div>`).join('')}</div>
-    ${foco&&conDatos.length>=2?`<div class="box orienta-ok" style="margin-top:10px"><p style="margin:0"><b>Dónde enfocarte:</b> ${esc(SKILLS[foco.k])} es lo más bajo por ahora. Repite sus sesiones en la Biblioteca o súbele más peso en la próxima semana.</p></div>`:''}</div>
-  <div class="grid2"><div class="box"><h3>Constancia</h3><p class="hint">Sesiones por semana (meta: 4 o 5). Una semana floja no rompe nada: lo que importa es seguir.</p><div class="pg-sbs">${bars.join('')}</div><p class="muted" style="margin:6px 0 0">${dias} días de estudio en total · racha de ${racha()}.</p></div>
-  <div class="box"><h3>Camino recorrido</h3><p style="margin:0 0 6px">Vas en la <b>semana ${act} de 12</b>: ${esc(PROGRAMA[act-1].t)}.</p><div class="pg-linea">${PROGRAMA.map(X=>`<span class="pg-pt ${pgHechas(X.w)>=4?'ok':X.w===act?'act':''}" title="${esc(X.t)}">${X.w}</span>`).join('')}</div></div></div>
-  <div class="box"><h3>Tus piezas de la semana</h3>${piezas.length?`<div class="pg-gal">${piezas.map(X=>{const z=P.pz[X.w];return `<figure><img ${imgAttrs(z.img)} alt="Semana ${X.w}" data-act="zoom"><figcaption><b>Sem. ${X.w}</b> · ${esc(X.pz.t)}<br><span class="muted">${(z.rub||[]).filter(Boolean).length}/${X.pz.rub.length} criterios${z.auto?' · satisfacción '+z.auto+'/5':''}</span></figcaption></figure>`}).join('')}</div><p class="hint">Compara la primera con la última: ahí está tu mejora real.</p>`:'<p class="muted" style="margin:0">Todavía no subes ninguna pieza de la semana. Se hacen en la pestaña Programa.</p>'}</div>`}
-/* ---------- BIBLIOTECA: todas las sesiones, por habilidad ---------- */
+  const semanas={};for(const k of PG_ORDEN)for(const x of Object.values(pgTr(k).ses))if(x.hecho&&x.ts){const q=pgSemanaIso(x.ts);semanas[q]=(semanas[q]||0)+1}
+  const bars=[];for(let n=7;n>=0;n--){const d=new Date();d.setDate(d.getDate()-n*7);const q=pgSemanaIso(d.getTime()),v=semanas[q]||0;bars.push(`<div class="pg-sb" title="${v} sesiones"><i style="height:${Math.round(Math.min(v,7)/7*100)}%"></i><span>${n===0?'esta':'−'+n}</span></div>`)}
+  const piezas=pgW().filter(X=>P.pz[X.w]?.img);
+  const rest=PG_ORDEN.reduce((s,k)=>s+Math.max(0,pgEfectivas(k).length*5-pgTotalR(k)),0),act2=R.activas.reduce((s,k)=>s+Math.max(0,pgEfectivas(k).length*5-pgTotalR(k)),0);
+  return `<div class="box"><h3>Todas tus rutas</h3><div class="pg-todas">${PG_ORDEN.map(k=>`<div class="pg-tr ${R.activas.includes(k)?'act':''}"><b>${esc(PROGRAMAS[k].n)}</b><div class="bar" style="width:auto"><i style="width:${pgPctR(k)}%;background:var(--accent)"></i></div><span class="muted">${pgPctR(k)}% · semana ${pgSemActualR(k)} de ${PROGRAMAS[k].sem.length}${R.activas.includes(k)?' · activa':''}</span></div>`).join('')}</div>
+    <p class="muted" style="margin:8px 0 0">Con tus rutas activas te faltan unas ${act2} sesiones: a ${R.ritmo} por semana, alrededor de ${Math.ceil(act2/R.ritmo)} semanas.</p></div>
+  <div class="box"><h3>Habilidades de ${esc(PROGRAMAS[R.ruta].corto)}</h3><p class="hint">Dos medidas: lo que dicen tus críticas medidas (0 a 10) y tu autoevaluación en las sesiones de cada habilidad. Se llenan solas conforme practicas y pides crítica.</p>
+    <div class="scores">${hab.map(h=>`<div class="score" style="grid-template-columns:120px 1fr 1fr 64px"><span>${esc(pgSk(h.k))}</span><div><span class="muted" style="font-size:11px">Críticas</span>${barra(h.crit,'var(--c-tecnica)')}</div><div><span class="muted" style="font-size:11px">Autoevaluación</span>${barra(h.auto,'var(--accent)')}</div><span class="muted" style="font-size:12px">${h.n} ses.</span></div>`).join('')}</div>
+    ${foco&&conDatos.length>=2?`<div class="box orienta-ok" style="margin-top:10px"><p style="margin:0"><b>Dónde enfocarte:</b> ${esc(pgSk(foco.k))} es lo más bajo por ahora. Repite sus sesiones en la Biblioteca o súbele más peso en la próxima semana.</p></div>`:''}</div>
+  <div class="grid2"><div class="box"><h3>Constancia</h3><p class="hint">Sesiones por semana (todas las rutas). Una semana floja no rompe nada: lo que importa es seguir.</p><div class="pg-sbs">${bars.join('')}</div><p class="muted" style="margin:6px 0 0">${dias} días de estudio en total · racha de ${racha()}.</p></div>
+  <div class="box"><h3>Camino de ${esc(PROGRAMAS[R.ruta].corto)}</h3><p style="margin:0 0 6px">Vas en la <b>semana ${act} de ${pgW().length}</b>: ${esc(pgW()[act-1].t)}.</p><div class="pg-linea">${pgW().map(X=>`<span class="pg-pt ${pgHechas(X.w)>=4?'ok':pgDom(X.w)&&pgHechas(X.w)<1?'dom':X.w===act?'act':''}" title="${esc(X.t)}">${X.w}</span>`).join('')}</div></div></div>
+  <div class="box"><h3>Tus piezas de la semana</h3>${piezas.length?`<div class="pg-gal">${piezas.map(X=>{const z=P.pz[X.w];return `<figure><img ${imgAttrs(z.img)} alt="Semana ${X.w}" data-act="zoom"><figcaption><b>Sem. ${X.w}</b> · ${esc(X.pz.t)}<br><span class="muted">${(z.rub||[]).filter(Boolean).length}/${X.pz.rub.length} criterios${z.auto?' · satisfacción '+z.auto+'/5':''}</span></figcaption></figure>`}).join('')}</div><p class="hint">Compara la primera con la última: ahí está tu mejora real.</p>`:'<p class="muted" style="margin:0">Todavía no subes ninguna pieza de esta ruta. Se hacen en la pestaña Programa.</p>'}</div>`}
+/* ============ BIBLIOTECA ============ */
 function pgBib(){
-  const f=S.pgFiltro||'todas',P=PG();
-  const lista=PROGRAMA.filter(W=>f==='todas'||W.skill===f);
-  return `<div class="prow" style="flex-wrap:wrap"><span class="lbl">Habilidad</span><button class="ch ${f==='todas'?'on':''}" data-act="pg-filtro" data-v="todas">Todas</button>${PROG_SKILLS.map(k=>`<button class="ch ${f===k?'on':''}" data-act="pg-filtro" data-v="${k}">${esc(SKILLS[k])}</button>`).join('')}</div>
-  ${lista.map(W=>`<div class="box"><span class="lbl">Semana ${W.w} · ${esc(SKILLS[W.skill])}</span><h3 style="margin:2px 0 6px">${esc(W.t)}</h3>${W.ses.map((s,i)=>{const x=P.ses[pgKey(W.w,i)]||{};return `<div class="pg-fila ${x.hecho?'ok':''}"><span class="pg-chk">${x.hecho?'✓':i+1}</span><div style="flex:1"><b>${esc(s.t)}</b><details><summary>Ver la sesión</summary><p style="margin:4px 0"><b>Estudio:</b> ${esc(s.est)}</p><p style="margin:4px 0"><b>Ejercicio:</b> ${esc(s.ej)}</p><p style="margin:4px 0"><b>Criterios:</b> ${s.crit.map(esc).join(' · ')}</p><p style="margin:4px 0" class="muted"><b>Error común:</b> ${esc(s.err)}</p></details></div><button class="btn sm" data-act="pg-hoy" data-w="${W.w}" data-i="${i}">Hacer hoy</button></div>`}).join('')}</div>`).join('')}
-  ${f!=='todas'&&EJERCICIOS[f]?`<div class="box"><h3>Más ejercicios de ${esc(SKILLS[f])}</h3><ul style="margin:0;padding-left:20px">${EJERCICIOS[f].map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul></div>`:''}`}
-/* ---------- acciones ---------- */
+  const f=S.pgFiltro||'todas',P=PG(),lista=pgW().filter(W=>f==='todas'||W.skill===f);
+  return `<div class="prow" style="flex-wrap:wrap"><span class="lbl">Habilidad</span><button class="ch ${f==='todas'?'on':''}" data-act="pg-filtro" data-v="todas">Todas</button>${pgSkills().map(k=>`<button class="ch ${f===k?'on':''}" data-act="pg-filtro" data-v="${k}">${esc(pgSk(k))}</button>`).join('')}</div>
+  ${lista.map(W=>`<div class="box"><span class="lbl">Semana ${W.w} · ${esc(pgSk(W.skill))}</span><h3 style="margin:2px 0 6px">${esc(W.t)}</h3>${W.ses.map((s,i)=>{const x=P.ses[pgKey(W.w,i)]||{};return `<div class="pg-fila ${x.hecho?'ok':''}"><span class="pg-chk">${x.hecho?'✓':i+1}</span><div style="flex:1"><b>${esc(s.t)}</b><details><summary>Ver la sesión</summary><p style="margin:4px 0"><b>Estudio:</b> ${esc(s.est)}</p><p style="margin:4px 0"><b>Ejercicio:</b> ${esc(s.ej)}</p><p style="margin:4px 0"><b>Criterios:</b> ${s.crit.map(esc).join(' · ')}</p><p style="margin:4px 0" class="muted"><b>Error común:</b> ${esc(s.err)}</p></details></div><button class="btn sm" data-act="pg-hoy" data-w="${W.w}" data-i="${i}">Hacer hoy</button></div>`}).join('')}</div>`).join('')}
+  ${f!=='todas'&&typeof EJERCICIOS!=='undefined'&&EJERCICIOS[f]?`<div class="box"><h3>Más ejercicios de ${esc(pgSk(f))}</h3><ul style="margin:0;padding-left:20px">${EJERCICIOS[f].map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul></div>`:''}`}
+/* ============ MI PLAN Y NIVEL ============ */
+function pgPlan(){
+  const R=pgRaiz(),meta=metaTexto();
+  const tarj=PG_ORDEN.map(k=>{const X=PROGRAMAS[k],on=R.activas.includes(k),rec=k==='env'||k==='anat';return `<div class="pg-ruta-c ${on?'on':''}"><div class="prow" style="justify-content:space-between;align-items:flex-start"><b>${esc(X.n)}</b>${rec?'<span class="nivel" style="color:var(--accent);border-color:var(--accent)">Recomendada</span>':''}</div><p style="margin:4px 0">${esc(X.d)}</p><p class="muted" style="margin:0 0 6px"><b>Antes:</b> ${esc(X.pre)}<br><b>Sirve para:</b> ${esc(X.para)} · ${X.sem.length} semanas</p><div class="prow"><button class="btn sm ${on?'pri':''}" data-act="pg-act" data-v="${k}">${on?'✓ En mi plan':'Agregar a mi plan'}</button><button class="btn sm ghost" data-act="pg-ver" data-v="${k}">Ver ruta</button></div></div>`}).join('');
+  const niv=R.activas.map(k=>{const X=PROGRAMAS[k],P=pgTr(k),{prom}=debilidades();return `<div class="box"><div class="prow" style="justify-content:space-between;flex-wrap:wrap"><h3 style="margin:0">Tu nivel en ${esc(X.n)}</h3><span class="muted">Empiezas en la semana <b>${pgSemActualR(k)}</b> de ${X.sem.length}</span></div>
+    <p class="hint">Para cada semana, marca lo que <b>puedes hacer hoy con seguridad y sin referencia</b>. Con 3 de 4 marcados se considera dominada y se salta. Sé honesto: si dudas, déjalo sin marcar, porque repasar cuesta poco y saltarse algo cuesta más después.</p>
+    <div class="prow" style="flex-wrap:wrap"><span class="lbl">Atajo: empezar en la semana</span>${X.sem.map(W=>`<button class="ch xs" data-act="pg-desde" data-r="${k}" data-w="${W.w}">${W.w}</button>`).join('')}<button class="ch xs" data-act="pg-desde" data-r="${k}" data-w="1">Desde cero</button></div>
+    ${X.sem.map(W=>{const d=P.diag[W.w]||[],n=d.filter(Boolean).length,dom=pgDomR(k,W.w),h=pgHechasR(k,W.w),pk=prom[W.skill];return `<div class="pg-nivel ${dom?'ok':''}"><div class="prow" style="justify-content:space-between;flex-wrap:wrap"><b>${W.w}. ${esc(W.t)}</b><span class="muted">${h>=4?'Completada':dom?'Dominada · se salta':n?n+' de 4':''}${pk!=null?` · tus críticas: ${pk>=7.5?'fuerte':pk>=5.5?'sólido':'en desarrollo'}`:''}</span></div><div class="pg-crits">${W.pz.rub.map((c,j)=>`<button class="ch xs ${d[j]?'on':''}" data-act="pg-can" data-r="${k}" data-w="${W.w}" data-n="${j}">${d[j]?'✓ ':''}Puedo: ${esc(c.toLowerCase())}</button>`).join('')}</div></div>`}).join('')}</div>`}).join('');
+  return `<div class="box"><h3>Mi plan</h3><p style="margin:0 0 8px">Tu meta: <b>${esc(meta)}</b>. Para eso la ruta principal es <b>Entornos y keyframe</b>, y la secundaria más útil es <b>Anatomía y proporciones</b>, porque el keyframe lleva personajes. Color y composición ya van dentro de Entornos; agrega sus rutas completas cuando quieras profundizar. Teoría ayuda a decidir con criterio. 3D complementa tu pipeline.</p>
+    <div class="prow" style="flex-wrap:wrap"><span class="lbl">Sesiones por semana</span>${[3,4,5,6,7].map(n=>`<button class="ch ${R.ritmo===n?'on':''}" data-act="pg-ritmo" data-v="${n}">${n}</button>`).join('')}<span class="muted">Cada sesión son 30 minutos. Con varias rutas activas, el programa te dice cuál toca hoy para que avancen parejo.</span></div></div>
+  <div class="pg-rutas-c">${tarj}</div>
+  ${niv}`}
+/* ============ acciones ============ */
 async function pgAccion(a,ds,el){
-  const P=PG(),r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},ses=()=>{const h=pgSesHoy();return {...h,key:pgKey(h.w,h.i)}},X=k=>P.ses[k]=P.ses[k]||{};
+  const R=pgRaiz(),P=PG(),r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},ses=()=>{const h=pgSesHoy();return {...h,key:pgKey(h.w,h.i)}},X=k=>P.ses[k]=P.ses[k]||{};
   switch(a){
     case 'pg-modo':S.ajustes.diarioModo=ds.v==='prog'?'prog':'libre';break;
     case 'pg-tab':S.diTab=ds.v;break;
+    case 'pg-ruta':R.ruta=ds.v;S.pgSel=null;S.pgFiltro='todas';break;
+    case 'pg-ver':R.ruta=ds.v;S.pgSel=null;S.pgFiltro='todas';S.diTab='prog';break;
+    case 'pg-act':{const i=R.activas.indexOf(ds.v);if(i>=0){if(R.activas.length>1)R.activas.splice(i,1)}else R.activas.push(ds.v);break}
+    case 'pg-ritmo':R.ritmo=+ds.v;break;
+    case 'pg-nivel-ok':P.nivelOk=true;break;
+    case 'pg-can':{const t=pgTr(ds.r),d=t.diag[+ds.w]=t.diag[+ds.w]||[];d[+ds.n]=!d[+ds.n];delete t.dom[+ds.w];P.nivelOk=true;pgTr(ds.r).nivelOk=true;break}
+    case 'pg-desde':{const t=pgTr(ds.r);for(const W of PROGRAMAS[ds.r].sem){if(W.w<+ds.w){if(pgHechasR(ds.r,W.w)<4)t.dom[W.w]='m'}else delete t.dom[W.w]}t.nivelOk=true;t.pin=null;t.sesPin=null;if(ds.r===R.ruta)S.pgSel=null;toast(+ds.w>1?`Empiezas en la semana ${ds.w}`:'Empiezas desde la semana 1');break}
+    case 'pg-dom':{const w=+ds.w;P.dom[w]=ds.v==='m'?'m':'no';P.nivelOk=true;if(ds.v==='m'){P.pin=null;P.sesPin=null;S.pgSel=null;toast('Semana saltada: ya la dominas')}break}
     case 'pg-sel':S.pgSel=+ds.w;break;
     case 'pg-hoy':P.pin=+ds.w;P.sesPin={w:+ds.w,i:+ds.i};S.diTab='hoy';S.pgSel=+ds.w;break;
+    case 'pg-repaso':{const rp=pgRepasoPendiente();if(rp){P.pin=rp.w;P.sesPin={w:rp.w,i:rp.i};P.repW=rp.w}break}
     case 'pg-seguir':P.pin=null;P.sesPin=null;S.pgSel=null;S.diTab='hoy';break;
     case 'pg-filtro':S.pgFiltro=ds.v;break;
     case 'pg-crit':{const x=X(ses().key);x.crit=x.crit||[];x.crit[+ds.n]=!x.crit[+ds.n];x.nota=$('#pg-nota')?.value||x.nota;break}
     case 'pg-auto':{const x=X(ses().key);x.auto=+ds.v;x.nota=$('#pg-nota')?.value||x.nota;break}
-    case 'pg-hecho':{const h=ses(),x=X(h.key);x.nota=$('#pg-nota')?.value||x.nota||'';x.hecho=true;x.ts=Date.now();x.w=h.w;x.i=h.i;
-      r.dias[hoyKey()]={skill:h.W.skill,texto:h.s.t+': '+h.s.ej,i:h.i,nota:x.nota,hecho:true,ts:x.ts,prog:{w:h.w,i:h.i}};P.ultima={w:h.w,i:h.i,ts:x.ts};P.sesPin=null;
+    case 'pg-hecho':{const h=ses(),x=X(h.key),yaCompleta=pgHechas(h.w)>=4;x.nota=$('#pg-nota')?.value||x.nota||'';x.hecho=true;x.ts=Date.now();x.w=h.w;x.i=h.i;P.nivelOk=true;if(yaCompleta||P.repW===h.w){P.rep[h.w]=Date.now();P.repW=null}
+      r.dias[hoyKey()]={skill:h.W.skill,texto:h.s.t+': '+h.s.ej,i:h.i,nota:x.nota,hecho:true,ts:x.ts,prog:{r:R.ruta,w:h.w,i:h.i}};P.ultima={w:h.w,i:h.i,ts:x.ts};P.sesPin=null;if(P.pin&&pgHechas(h.w)>=4)P.pin=null;
       toast(`Sesión hecha. Racha: ${racha()} día${racha()===1?'':'s'}`);break}
     case 'pg-deshacer':{const h=ses(),x=P.ses[h.key];if(x?.hecho){x.hecho=false}else if(P.ultima){const y=P.ses[pgKey(P.ultima.w,P.ultima.i)];if(y)y.hecho=false;P.sesPin={w:P.ultima.w,i:P.ultima.i}}
       if(r.dias[hoyKey()])r.dias[hoyKey()].hecho=false;P.ultima=null;break}
-    case 'pg-analizar':{const h=ses(),x=P.ses[h.key];if(!x?.img)return;el.disabled=true;el.textContent='Analizando…';
-      try{const an=await analizarImagen(x.img),cr=criticaImagen(an,null,{etapa:h.W.skill==='color'?'Color':'Valores',skill:h.W.skill,nota:x.nota||''});S.anD={k:'pg:'+h.key,a:an,cr};registrarMetrica(an,'diario','')}catch{toast('No pude leer la imagen')}break}
+    case 'pg-analizar':{const h=ses(),x=P.ses[h.key];if(!x?.img)return;el.disabled=true;el.textContent='Analizando…';const sk=SKILLS[h.W.skill]?h.W.skill:null;
+      try{const an=await analizarImagen(x.img),cr=criticaImagen(an,null,{etapa:h.W.skill==='color'?'Color':'Valores',skill:sk,nota:x.nota||''});S.anD={k:'pg:'+R.ruta+h.key,a:an,cr};registrarMetrica(an,'diario','')}catch{toast('No pude leer la imagen')}break}
     case 'pg-fb-guardar':{const h=ses(),x=P.ses[h.key];if(!x||!S.anD)return;x.fb={ts:Date.now(),funciona:S.anD.cr.funciona,problemas:S.anD.cr.problemas,experimentos:S.anD.cr.experimentos};S.anD.guardado=true;break}
     case 'pg-rub':{const x=P.pz[+ds.w]=P.pz[+ds.w]||{};x.rub=x.rub||[];x.rub[+ds.n]=!x.rub[+ds.n];break}
     case 'pg-pz-auto':{const x=P.pz[+ds.w]=P.pz[+ds.w]||{};x.auto=+ds.v;break}
@@ -13966,7 +14417,7 @@ async function accion(a,el){
     case 't-go':{const t=S.timer;S.timer={fin:Date.now()+(t?t.resta:(+ds.min||30)*60e3)};if(S.timer.fin<=Date.now())S.timer={fin:Date.now()+(+ds.min||30)*60e3};renderMain();break}
     case 't-pausa':S.timer={resta:Math.max(0,S.timer.fin-Date.now())};renderMain();break;
     case 't-reset':S.timer=null;renderMain();break;
-    case 'pg-modo':case 'pg-tab':case 'pg-sel':case 'pg-hoy':case 'pg-seguir':case 'pg-filtro':case 'pg-crit':case 'pg-auto':case 'pg-hecho':case 'pg-deshacer':case 'pg-analizar':case 'pg-fb-guardar':case 'pg-rub':case 'pg-pz-auto':case 'pg-pz-quitar':case 'pg-rev-save':{await pgAccion(a,ds,el);break}
+    case 'pg-ruta':case 'pg-ver':case 'pg-act':case 'pg-ritmo':case 'pg-nivel-ok':case 'pg-can':case 'pg-desde':case 'pg-dom':case 'pg-repaso':case 'pg-modo':case 'pg-tab':case 'pg-sel':case 'pg-hoy':case 'pg-seguir':case 'pg-filtro':case 'pg-crit':case 'pg-auto':case 'pg-hecho':case 'pg-deshacer':case 'pg-analizar':case 'pg-fb-guardar':case 'pg-rub':case 'pg-pz-auto':case 'pg-pz-quitar':case 'pg-rev-save':{await pgAccion(a,ds,el);break}
     case 'd-hecho':case 'd-deshacer':case 'd-otro':case 'd-usar-crit':case 'd-usar-ai':{
       const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey(),cur=ejercicioDeHoy(),nota=$('#d-nota')?.value||'';
       if(a==='d-hecho')r.dias[k]={...cur,nota,hecho:true,ts:Date.now()};
