@@ -905,6 +905,15 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 /* ---- movimiento reducido ---- */
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* ---- programa de mejora ---- */
+.pq{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 14px;font-size:12.5px;color:var(--ink2)}.pq-f{border:1px solid;border-radius:999px;padding:1px 9px;font-weight:600;font-size:11.5px;white-space:nowrap}.pq b{color:var(--ink)}.pq .btn{margin-left:auto}
+.cm-frentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:14px}.cm-f{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px}.cm-m{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-top:4px}.cm-m b{color:var(--ink);font-family:var(--mono)}.cm-hito{padding:8px 0;border-top:1px solid var(--line)}.cm-hito:first-of-type{border-top:0}.cm-mas .ptitle{display:none}
+
+.gi-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}.gi-sl{background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:9px 11px;display:flex;flex-direction:column;gap:4px}.gi-sl b{font-size:15px;line-height:1.25}.gi-sl.lock{border-color:var(--accent);background:var(--accent-soft)}.gi-idea h3{font-family:var(--display);text-transform:uppercase;letter-spacing:.01em}
+.est-niv{display:grid;grid-template-columns:130px 1fr;gap:8px;align-items:start;padding:6px 0;border-top:1px solid var(--line)}.est-pills{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.est-pill{text-align:left;background:var(--surface);border:1px solid var(--line2);border-radius:9px;padding:6px 8px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:2px}.est-pill span{font-weight:700}.est-pill small{font-size:11px;color:var(--ink3);line-height:1.25}.est-pill.on{border-color:var(--accent);background:var(--accent-soft)}.est-pill:hover{border-color:var(--ink3)}
+.est-plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.est-plan-c{background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}.est-plan-c.ok{border-color:var(--ok)}.est-prev{display:flex;flex-direction:column;gap:4px;margin:8px 0}.est-prev img{max-height:140px;width:auto;border-radius:8px;cursor:zoom-in}
+.est-fila{display:grid;grid-template-columns:130px 82px 1fr 120px;gap:8px;align-items:center;padding:5px 0;border-top:1px solid var(--line)}
+@media(max-width:700px){.est-niv{grid-template-columns:1fr}.est-pills{grid-template-columns:repeat(2,1fr)}.est-fila{grid-template-columns:1fr 1fr}}
+
 .pg-rutas{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.pg-ruta{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:7px 12px;cursor:pointer;color:var(--ink);display:flex;gap:8px;align-items:center}.pg-ruta:hover{border-color:var(--ink3)}.pg-ruta.on{border-color:var(--accent);background:var(--accent-soft)}.pg-ruta.act::after{content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--accent)}.pg-ruta span{font-size:11.5px;color:var(--ink3)}.pg-ruta i{position:absolute;left:0;bottom:0;height:3px;background:var(--accent);opacity:.8}
 .pg-todas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.pg-tr{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.pg-tr.act{border-color:var(--accent)}
 .pg-rutas-c{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:14px}.pg-ruta-c{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.pg-ruta-c.on{border-color:var(--accent)}
@@ -1198,7 +1207,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvih96to').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvijtbx6').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1351,7 +1360,7 @@ const AJUSTES_BASE={principios:[],referentes:[],gusto:''};
 const S={db:null,assets:null,sample:null,downloads:null,modo:'cargando',
   P:{},ajustes:clone(AJUSTES_BASE),cur:null,vista:'inicio',tab:'brief',
   dirty:false,ajDirty:false,ai:{},aiBusy:{},provo:0,confirmDel:false,destinoCapa:'concepto',
-  navModo:(()=>{try{return localStorage.getItem('cdc.navmodo')||'crear'}catch{return 'crear'}})()};
+  navModo:(()=>{try{return localStorage.getItem('cdc.navmodo')||'mejorar'}catch{return 'mejorar'}})()};
 let saveT=null,ajT=null;
 
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
@@ -1508,66 +1517,66 @@ function tabCompleta(p,t){const it=salud(p).items.filter(i=>tabResuelve(i[2])[0]
 function render(){renderSide();renderMain()}
 function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
-  const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
+  const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" title="${esc(PQ[v]?PQ[v][1]:'')}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
   const side=$('#side');side.classList.toggle('open',!!S.menu);
-  const modo=S.navModo||'crear';
+  const modo=({crecer:'mejorar',negocio:'trabajo',perfil:'mas',crear:S.navModo==='crear'?'crear':'mejorar'}[S.navModo]||S.navModo||'mejorar');
   const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
-    return `<div class="prow" style="padding:0 10px 6px;flex-wrap:wrap;gap:4px">${m('crear','Crear')}${m('crecer','Crecer')}${m('negocio','Carrera')}${m('perfil','Perfil')}${m('todo','Todo')}</div>`})();
-  const grupoCrear=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crear</span>
-      <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
+    return `<div class="prow" style="padding:0 10px 2px;flex-wrap:wrap;gap:4px">${m('mejorar','1 Mejorar')}${m('crear','2 Crear')}${m('trabajo','3 Trabajo')}${m('dinero','4 Dinero')}${m('mas','Más')}${m('todo','Todo')}</div><p class="hint" style="padding:0 10px 6px;margin:0;font-size:11.5px">Cada paso te acerca a tu meta.</p>`})();
+  const grupo=(t,sub,html)=>`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 0">${t}</span><span class="hint" style="padding:0 10px 4px;margin:0;font-size:11px">${sub}</span>${html}</div>`;
+  const grupoMejorar=grupo('Mejorar mi técnica','Para que tu portafolio mejore',`
+      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
+      ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}
+      ${nav('maestros','frame','Estudio de maestros')}
+      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
+      ${nav('progreso','chart','Mi progreso')}
+      ${nav('ruta','map','Cursos y ruta')}`);
+  const grupoCrear=grupo('Crear piezas','Lo que vas a mostrar y vender',`
+      <button class="pitem" data-act="herr" title="Luz y color, referencias, tablero y 3D para usar sin proyecto" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
+      ${nav('generador','spark','Generador de ideas')}
+      ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
       ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
       ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
-      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}
-    </div>`;
-  const grupoCrecer=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
-      ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
-      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
-      ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
-      ${nav('retos','target','Retos de estudio')}
-      ${nav('ruta','map','Cursos y ruta')}
-      ${nav('software','spark','Programas y medios')}
-      ${nav('maestros','frame','Estudio de maestros')}
-      ${nav('semana','target','Mi semana')}
-      ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}
-      ${nav('potenciar','target','Potenciar mi punto débil')}
-      ${nav('recursos','grid','Recursos y pinceles')}
-      ${nav('progreso','chart','Mi progreso')}
-    </div>`;
-  const grupoNegocio=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Carrera</span>
+      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}`);
+  const grupoTrabajo=grupo('Que te contraten','Portafolio, vacantes y envíos',`
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
-      ${nav('ventas','spark','Ideas para vender')}
       ${nav('cv','doc','Mi CV')}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('reclutador','eye','Revisión de reclutador')}
-      ${nav('formatos','frame','Formatos y entrega')}
-      ${nav('adaptar','target','Adaptar a vacante')}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
+      ${nav('reclutador','eye','Revisión de reclutador')}
+      ${nav('adaptar','target','Adaptar a vacante')}
       ${nav('mensajes','mail','Mensajes en inglés')}
+      ${nav('formatos','frame','Formatos y entrega')}`);
+  const grupoDinero=grupo('Ingresos','Vender y cobrar tu trabajo',`
+      ${nav('ventas','spark','Ideas para vender')}
       ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
       ${nav('trabajos','frame','Trabajos')}
       ${nav('cotizador','coin','Cotizador freelance')}
       ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('contratos','doc','Contratos')}
-    </div>`;
-  const grupoPerfil=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Perfil</span>
-      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
+      ${nav('contratos','doc','Contratos')}`);
+  const grupoMas=grupo('Más','Tu sistema y herramientas que se solapan',`
       ${nav('metas','target','Mis metas')}
       ${nav('estilo','eye','Mi estilo')}
       ${nav('principios','book','Mis principios')}
-    </div>`;
+      ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
+      ${nav('retos','target','Retos de estudio')}
+      ${nav('semana','target','Mi semana')}
+      ${nav('potenciar','target','Potenciar mi punto débil')}
+      ${nav('recursos','grid','Recursos y pinceles')}
+      ${nav('software','spark','Programas y medios')}`);
   side.innerHTML=`
     <div class="brand"><img src="icon.svg" alt="" class="brand-ic">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div class="plist">
-      ${nav('inicio','home','Inicio')}
+      ${nav('inicio','home','Mi camino')}
       ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
     </div>
     ${modos}
+    ${modo==='mejorar'||modo==='todo'?grupoMejorar:''}
     ${modo==='crear'||modo==='todo'?grupoCrear:''}
-    ${modo==='crecer'||modo==='todo'?grupoCrecer:''}
-    ${modo==='negocio'||modo==='todo'?grupoNegocio:''}
-    ${modo==='perfil'||modo==='todo'?grupoPerfil:''}
+    ${modo==='trabajo'||modo==='todo'?grupoTrabajo:''}
+    ${modo==='dinero'||modo==='todo'?grupoDinero:''}
+    ${modo==='mas'||modo==='todo'?grupoMas:''}
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
       <div class="plist" id="plist-proy">${listaProyectos()}</div>
@@ -1598,44 +1607,45 @@ function renderMain(){renderMainInner();pgAncla();S.assets?.hydrate?.();if(S.vis
 function renderMainInner(){
   const m=$('#main');
   if(S.vista==='inicio'){m.innerHTML=vInicio();return}
-  if(S.vista==='papelera'){m.innerHTML=vPapelera();return}
-  if(S.vista==='estilo'){m.innerHTML=vEstilo();return}
-  if(S.vista==='desatorar'){m.innerHTML=vDesatorar();return}
-  if(S.vista==='diario'){m.innerHTML=vDiario();return}
-  if(S.vista==='retos'){m.innerHTML=vRetos();return}
-  if(S.vista==='nivel'){m.innerHTML=vNivel();return}
-  if(S.vista==='vacantes'){m.innerHTML=vVacantes();return}
-  if(S.vista==='adaptar'){m.innerHTML=vAdaptar();return}
-  if(S.vista==='avisos'){m.innerHTML=vAvisos();return}
-  if(S.vista==='nombres'){m.innerHTML=vNombres();return}
-  if(S.vista==='galeria'){m.innerHTML=vGaleria();return}
-  if(S.vista==='redes'){m.innerHTML=vRedes();return}
-  if(S.vista==='cobros'){m.innerHTML=vCobros();return}
-  if(S.vista==='ruta'){m.innerHTML=vRuta();return}
-  if(S.vista==='software'){m.innerHTML=vSoftware();return}
-  if(S.vista==='estudios'){m.innerHTML=vEstudios();return}
-  if(S.vista==='ventas'){m.innerHTML=vVentas();return}
-  if(S.vista==='maestros'){m.innerHTML=vMaestros();return}
-  if(S.vista==='semana'){m.innerHTML=vSemana();return}
-  if(S.vista==='contratos'){m.innerHTML=vContratos();return}
-  if(S.vista==='postulaciones'){m.innerHTML=vPostulaciones();return}
-  if(S.vista==='pruebas'){m.innerHTML=vPruebas();return}
-  if(S.vista==='mensajes'){m.innerHTML=vMensajes();return}
-  if(S.vista==='biblioteca'){m.innerHTML=vBiblioteca();return}
-  if(S.vista==='calendario'){m.innerHTML=vCalendario();return}
-  if(S.vista==='cv'){m.innerHTML=vCV();return}
-  if(S.vista==='portafolio'){m.innerHTML=vPortafolio();return}
-  if(S.vista==='cotizador'){m.innerHTML=vCotizador();return}
-  if(S.vista==='trabajos'){m.innerHTML=vTrabajos();return}
-  if(S.vista==='artistas'){m.innerHTML=vArtistas();return}
-  if(S.vista==='principios'){m.innerHTML=vPrincipios();return}
-  if(S.vista==='progreso'){m.innerHTML=vProgreso();return}
-  if(S.vista==='reclutador'){m.innerHTML=vReclutador();return}
-  if(S.vista==='formatos'){m.innerHTML=vFormatos();return}
-  if(S.vista==='recursos'){m.innerHTML=vRecursos();return}
-  if(S.vista==='potenciar'){m.innerHTML=vPotenciar();return}
-  if(S.vista==='metas'){m.innerHTML=vMetas();return}
-  if(S.vista==='taller'){m.innerHTML=vTaller();return}
+  if(S.vista==='papelera'){m.innerHTML=pqHTML('papelera')+vPapelera();return}
+  if(S.vista==='estilo'){m.innerHTML=pqHTML('estilo')+vEstilo();return}
+  if(S.vista==='desatorar'){m.innerHTML=pqHTML('desatorar')+vDesatorar();return}
+  if(S.vista==='diario'){m.innerHTML=pqHTML('diario')+vDiario();return}
+  if(S.vista==='retos'){m.innerHTML=pqHTML('retos')+vRetos();return}
+  if(S.vista==='nivel'){m.innerHTML=pqHTML('nivel')+vNivel();return}
+  if(S.vista==='vacantes'){m.innerHTML=pqHTML('vacantes')+vVacantes();return}
+  if(S.vista==='adaptar'){m.innerHTML=pqHTML('adaptar')+vAdaptar();return}
+  if(S.vista==='avisos'){m.innerHTML=pqHTML('avisos')+vAvisos();return}
+  if(S.vista==='nombres'){m.innerHTML=pqHTML('nombres')+vNombres();return}
+  if(S.vista==='galeria'){m.innerHTML=pqHTML('galeria')+vGaleria();return}
+  if(S.vista==='redes'){m.innerHTML=pqHTML('redes')+vRedes();return}
+  if(S.vista==='cobros'){m.innerHTML=pqHTML('cobros')+vCobros();return}
+  if(S.vista==='ruta'){m.innerHTML=pqHTML('ruta')+vRuta();return}
+  if(S.vista==='software'){m.innerHTML=pqHTML('software')+vSoftware();return}
+  if(S.vista==='estudios'){m.innerHTML=pqHTML('estudios')+vEstudios();return}
+  if(S.vista==='generador'){m.innerHTML=pqHTML('generador')+`<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Generador de ideas</h1><p class="intro">Cuando no sabes qué dibujar o qué vender, gira la ruleta: mezcla palabras de tu mundo con giros, estilos y productos, y te devuelve una idea completa. Con una fecha cerca (Halloween, Día de Muertos, San Valentín, Navidad…) las ideas se vuelven productos para esa temporada.</p>`+vGenerador();return}
+  if(S.vista==='ventas'){m.innerHTML=pqHTML('ventas')+vVentas();return}
+  if(S.vista==='maestros'){m.innerHTML=pqHTML('maestros')+vMaestros();return}
+  if(S.vista==='semana'){m.innerHTML=pqHTML('semana')+vSemana();return}
+  if(S.vista==='contratos'){m.innerHTML=pqHTML('contratos')+vContratos();return}
+  if(S.vista==='postulaciones'){m.innerHTML=pqHTML('postulaciones')+vPostulaciones();return}
+  if(S.vista==='pruebas'){m.innerHTML=pqHTML('pruebas')+vPruebas();return}
+  if(S.vista==='mensajes'){m.innerHTML=pqHTML('mensajes')+vMensajes();return}
+  if(S.vista==='biblioteca'){m.innerHTML=pqHTML('biblioteca')+vBiblioteca();return}
+  if(S.vista==='calendario'){m.innerHTML=pqHTML('calendario')+vCalendario();return}
+  if(S.vista==='cv'){m.innerHTML=pqHTML('cv')+vCV();return}
+  if(S.vista==='portafolio'){m.innerHTML=pqHTML('portafolio')+vPortafolio();return}
+  if(S.vista==='cotizador'){m.innerHTML=pqHTML('cotizador')+vCotizador();return}
+  if(S.vista==='trabajos'){m.innerHTML=pqHTML('trabajos')+vTrabajos();return}
+  if(S.vista==='artistas'){m.innerHTML=pqHTML('artistas')+vArtistas();return}
+  if(S.vista==='principios'){m.innerHTML=pqHTML('principios')+vPrincipios();return}
+  if(S.vista==='progreso'){m.innerHTML=pqHTML('progreso')+vProgreso();return}
+  if(S.vista==='reclutador'){m.innerHTML=pqHTML('reclutador')+vReclutador();return}
+  if(S.vista==='formatos'){m.innerHTML=pqHTML('formatos')+vFormatos();return}
+  if(S.vista==='recursos'){m.innerHTML=pqHTML('recursos')+vRecursos();return}
+  if(S.vista==='potenciar'){m.innerHTML=pqHTML('potenciar')+vPotenciar();return}
+  if(S.vista==='metas'){m.innerHTML=pqHTML('metas')+vMetas();return}
+  if(S.vista==='taller'){m.innerHTML=pqHTML('taller')+vTaller();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
   if(p.libre){m.innerHTML=herrHTML(p);return}
@@ -1920,7 +1930,80 @@ function vPrincipios(){
 
 const hoyN=()=>Math.floor(Date.now()/864e5);
 const asLink=n=>`https://www.google.com/search?q=${encodeURIComponent((n||'')+' artstation')}`;
-function vInicio(){
+function vInicio(){return vCamino()+`<details class="box cm-mas"><summary class="lbl" style="cursor:pointer">Más: último proyecto, próximos e inspiración</summary>${vInicioViejo()}</details>`}
+
+/* ============ MI CAMINO: el para qué de toda la app ============
+   La app existe para una meta tuya (la de «Mis metas»). Todo lo que hay se agrupa en cuatro frentes y cada pantalla dice para qué sirve y qué sale de ella:
+   MEJORAR (tu técnica) → CREAR (piezas) → TRABAJO (que te vean y te contraten) → DINERO (que vivas de esto). */
+const FRENTES={mejorar:['Mejorar','var(--c-tecnica)'],crear:['Crear','var(--accent)'],trabajo:['Trabajo','var(--ok)'],dinero:['Dinero','var(--warn)'],sistema:['Tu sistema','var(--ink3)']};
+const PQ={
+ diario:['mejorar','Subir tu nivel de forma ordenada: cada semana trabaja una habilidad y empiezas donde estás, no desde cero.','Sesiones hechas, una pieza por semana y un perfil real de tus habilidades.'],
+ estudios:['mejorar','Entrenar la mano con objetos pequeños, sin esperar a tener una pieza grande.','Un nivel por enfoque y estudios que puedes comparar antes y después.'],
+ maestros:['mejorar','Aprender las decisiones de artistas que admiras sin copiarlos.','Notas que aplicas en tu siguiente pieza.'],
+ nivel:['mejorar','Saber en qué punto estás frente a tu meta y qué te falta.','Un diagnóstico para elegir en qué enfocarte.'],
+ progreso:['mejorar','Comprobar con datos si estás mejorando.','Tendencias de tus críticas, estudios y piezas.'],
+ ruta:['mejorar','Elegir cursos para tu punto débil en vez de comprar por impulso.','Una lista corta de cursos con orden y motivo.'],
+ software:['mejorar','Decidir qué programa y qué medio usar para lo que necesitas hacer.','Qué herramienta usar y para qué.'],
+ recursos:['mejorar','Tener a la mano pinceles y recursos que sí vas a usar.','Recursos ordenados por lo que haces.'],
+ taller:['mejorar','Tareas puntuales de práctica con meta de bocetos. Se solapa con el Programa de mejora: úsalo solo si quieres una tarea suelta.','Bocetos hechos contra una meta clara.'],
+ retos:['mejorar','Retos cortos para salir de la rutina. Se solapa con el Programa: úsalo cuando necesites variar.','Una pieza rápida y un brief para practicar.'],
+ semana:['mejorar','Planear tu semana de estudio. Se solapa con el Programa de mejora: úsalo si prefieres planear a mano.','Un plan de la semana.'],
+ potenciar:['mejorar','Trabajar a fondo una sola debilidad. Se solapa con el Programa: la ruta correspondiente ya lo hace por semanas.','Un ejercicio dirigido a tu punto débil.'],
+ galeria:['crear','Guardar tus ilustraciones terminadas en un solo lugar para elegir qué mostrar y qué vender.','Material listo para portafolio, redes y tienda.'],
+ biblioteca:['crear','Reunir referencias con un porqué, para no depender de buscar cada vez.','Referencias ordenadas por tema que sí usas.'],
+ artistas:['crear','Seguir a artistas para estudiar su trabajo y ver hacia dónde va el medio.','Una lista corta de artistas con qué aprender de cada uno.'],
+ nombres:['crear','Ponerle nombre y título a tus proyectos y piezas.','Nombres para proyectos, piezas y productos.'],
+ desatorar:['crear','Terminar lo que empiezas: detecta piezas sin cerrar y te ayuda a decidir si terminar o soltar.','Menos piezas a medias y más piezas terminadas.'],
+ generador:['crear','Cuando no sabes qué dibujar o qué vender, la ruleta de palabras te da una idea completa.','Ideas con primer paso de 10 minutos, y productos si hay fecha cerca.'],
+ portafolio:['trabajo','Elegir las piezas que te van a conseguir trabajo y preparar cómo mostrarlas.','Un portafolio enfocado en la puesta que quieres.'],
+ cv:['trabajo','Tener un CV claro y enfocado en tu meta.','Un CV listo para enviar.'],
+ vacantes:['trabajo','Encontrar vacantes que encajan con tu nivel y tu meta.','Vacantes guardadas en Postulaciones.'],
+ reclutador:['trabajo','Ver tu portafolio como lo verían quienes contratan, antes de enviarlo.','Una lista de lo que corregir.'],
+ formatos:['trabajo','Entregar archivos en el formato que piden los estudios.','Formatos y tamaños correctos.'],
+ adaptar:['trabajo','Ajustar tu portafolio y tu mensaje a una vacante concreta.','Un envío a medida de cada vacante.'],
+ postulaciones:['trabajo','Llevar el control de a dónde enviaste y cuándo dar seguimiento.','Postulaciones con fecha de seguimiento.'],
+ pruebas:['trabajo','Controlar las pruebas de arte con su fecha límite.','Pruebas entregadas a tiempo.'],
+ mensajes:['trabajo','Escribir mensajes en inglés a estudios y reclutadores.','Mensajes listos para enviar.'],
+ ventas:['dinero','Convertir lo que dibujas en productos sencillos que se venden, según las fechas del año.','Piezas a la venta con precio y ficha de publicación.'],
+ redes:['dinero','Planear qué publicar y cuándo para que te vean y te compren.','Un calendario de publicaciones.'],
+ trabajos:['dinero','Llevar tus trabajos por encargo de principio a fin.','Trabajos con estado y entrega.'],
+ cotizador:['dinero','Saber cuánto cobrar para que valga la pena.','Un precio con tu tiempo, costos y margen.'],
+ cobros:['dinero','No perder dinero: ver qué te deben y qué ya cobraste.','Cobros pendientes y pagados.'],
+ contratos:['dinero','Tener contratos claros antes de empezar un trabajo.','Un contrato listo para firmar.'],
+ metas:['sistema','Decir con claridad qué quieres lograr y para cuándo: toda la app usa esto como referencia.','Tu meta, tu plazo y tus objetivos medibles.'],
+ estilo:['sistema','Entender qué ya es tu sello y hacia dónde empujarlo sin perder empleabilidad.','Un análisis de tu estilo.'],
+ principios:['sistema','Tener reglas propias para decidir y para desatorarte.','Principios que lees antes de empezar.'],
+ calendario:['sistema','Ver fechas límite, seguimientos y fechas para vender en un solo lugar.','Un calendario con lo que viene.'],
+ papelera:['sistema','Recuperar lo que borraste.','Elementos recuperables.'],
+ avisos:['sistema','Recibir avisos por correo de lo importante.','Recordatorios que sí lees.']};
+const pqHTML=v=>{const q=PQ[v];if(!q)return '';const f=FRENTES[q[0]];return `<div class="pq"><span class="pq-f" style="color:${f[1]};border-color:${f[1]}">${f[0]}</span><span><b>Para qué:</b> ${esc(q[1])}</span><span class="pq-s"><b>Sale de aquí:</b> ${esc(q[2])}</span><button class="btn ghost xs" data-act="vista" data-v="inicio">Mi camino</button></div>`};
+/* ---- datos reales de tu avance ---- */
+const cmCfg=()=>{const C=S.ajustes.camino=S.ajustes.camino||{},N=(k,d)=>+C[k]>0?+C[k]:d;return {piezas:N('piezas',6),post:N('post',10),ventas:N('ventas',5)}};
+function cmSesSemana(){const h=Date.now();let n=0;for(const k of PG_ORDEN)for(const x of Object.values(pgTr(k).ses))if(x.hecho&&h-x.ts<7*864e5)n++;return n}
+function cmDatos(){const h=Date.now(),c=cmCfg(),ps=ordenados().filter(([,p])=>p.decision!=='Discarded'&&p.estado!=='Archivado'),post=lista('postulaciones'),env=post.filter(x=>x.estado!=='Por aplicar'),env30=env.filter(x=>h-new Date(x.fecha||0).getTime()<30*864e5),pz=vtPz(),cob=lista('cobros').filter(x=>x.estado!=='Cancelado'),pend=cob.reduce((n,x)=>n+Math.max(0,(+x.total||0)-cobroPagado(x)),0),lis=candidatas().filter(x=>x.pf.estado==='aprobada').length,
+   tocados=ps.filter(([,p])=>h-(p.actualizado||0)<7*864e5).length,sig=vtLista().find(x=>GI_FECHA[x.f.k]&&(x.p.enCurso||x.p.dias<=60));
+  return {c,ses:cmSesSemana(),ritmo:pgRaiz().ritmo,est:estSemana().d7,estMeta:S.ajustes.estMeta||3,racha:racha(),lis,term:terminadas(),proy:ps.length,tocados,post:post.length,env:env.length,env30:env30.length,pubs:pz.filter(x=>x.est==='Publicada').length,pzV:pz.length,pend,sig,env_pct:pgPctR('env'),nivel:(S.ajustes.niveles||[]).length>0}}
+const cmBar=(v,m,c)=>`<div class="bar" style="width:auto"><i style="width:${Math.round(Math.min(1,m?v/m:0)*100)}%;background:${c}"></i></div>`;
+function vCamino(){
+  const D=cmDatos(),m=S.ajustes.metas||{},rol=metaTexto(),paso=siguientePaso(),ult=ordenados()[0],hoyHecha=S.ajustes.prog&&Object.values(pgTr(pgRuta()).ses).some(x=>x.hecho&&hoyKey(new Date(x.ts))===hoyKey()),sh=pgSesHoy?pgSesHoy():null,ruta=PROGRAMAS[pgRuta()];
+  const hoy=!hoyHecha&&sh?{t:'Tu sesión de hoy · 30 minutos',tit:sh.s.t,txt:`${ruta.corto}, semana ${sh.w}: ${sh.W.t}. ${sh.W.obj}`,para:'Cada sesión suma a tu nivel; 5 por semana cambian tu portafolio en meses.',btn:['Hacer mi sesión','diario']}:null;
+  const hitos=[['Terminar la ruta de Entornos',D.env_pct,100,D.env_pct+'%','Es la base técnica de tu meta.','diario'],['Piezas de portafolio listas',D.lis,D.c.piezas,D.lis+' de '+D.c.piezas,'Es lo que ven quienes te contratan.','portafolio'],['Postulaciones enviadas',D.env,D.c.post,D.env+' de '+D.c.post,'Sin envíos no hay respuestas.','postulaciones'],['Piezas publicadas para vender',D.pubs,D.c.ventas,D.pubs+' de '+D.c.ventas,'Ingreso mientras llegas al trabajo ideal.','ventas']];
+  const frente=(k,tit,para,body,acc)=>`<div class="cm-f" style="border-top:3px solid ${FRENTES[k][1]}"><span class="lbl" style="color:${FRENTES[k][1]}">${tit}</span><p class="muted" style="margin:2px 0 8px">${para}</p>${body}<div class="prow" style="margin-top:8px;flex-wrap:wrap">${acc}</div></div>`;
+  return `
+  <div class="prow" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,44px);margin:0">Mi camino</h1><span class="muted" style="font-size:13px;text-transform:capitalize">${esc(new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}))}</span></div>
+  <div class="box cm-meta"><span class="lbl">Tu meta</span><h2 style="margin:2px 0 4px;font-family:var(--display);text-transform:uppercase">${esc(rol)}</h2><p class="muted" style="margin:0">${m.plazo?esc(m.plazo)+' · ':''}${m.enfoque?esc(m.enfoque)+' · ':''}${m.porque?'Para qué: '+esc(corto(m.porque,160)):'<button class="btn ghost sm" data-act="vista" data-v="metas">Escribe por qué quieres esto</button>'}</p>
+    <p style="margin:8px 0 0"><b>Cómo se llega:</b> <span style="color:var(--c-tecnica)">1. Mejorar tu técnica</span> → <span style="color:var(--accent)">2. Crear piezas de portafolio</span> → <span style="color:var(--ok)">3. Que te vean y te contraten</span> → <span style="color:var(--warn)">4. Ingresos que sostienen todo.</span> Cada parte de la app pertenece a uno de estos pasos.</p></div>
+  ${hoy?`<div class="box" style="border-left:3px solid var(--accent)"><span class="lbl">${hoy.t}</span><h3 style="margin:2px 0">${esc(hoy.tit)}</h3><p style="margin:0 0 4px">${esc(hoy.txt)}</p><p class="muted" style="margin:0 0 8px"><b>Para qué:</b> ${esc(hoy.para)}</p><button class="btn pri" data-act="vista" data-v="${hoy.btn[1]}">${hoy.btn[0]}</button></div>`:siguientePasoHTML(paso,ult)}
+  <div class="cm-frentes">
+   ${frente('mejorar','1 · Mejorar mi técnica','Tu portafolio no puede ser mejor que tu mano.',`<div class="cm-m"><span>Sesiones esta semana</span><b>${D.ses} / ${D.ritmo}</b></div>${cmBar(D.ses,D.ritmo,'var(--c-tecnica)')}<div class="cm-m"><span>Estudios sencillos</span><b>${D.est} / ${D.estMeta}</b></div>${cmBar(D.est,D.estMeta,'var(--c-tecnica)')}<div class="cm-m"><span>Racha</span><b>🔥 ${D.racha}</b></div>`,`<button class="btn sm pri" data-act="vista" data-v="diario">Programa de mejora</button><button class="btn sm" data-act="vista" data-v="estudios">Estudio sencillo</button>`)}
+   ${frente('crear','2 · Crear piezas de portafolio','Lo que muestras es lo que te contratan.',`<div class="cm-m"><span>Piezas listas para el portafolio</span><b>${D.lis} / ${D.c.piezas}</b></div>${cmBar(D.lis,D.c.piezas,'var(--accent)')}<div class="cm-m"><span>Piezas terminadas en total</span><b>${D.term}</b></div><div class="cm-m"><span>Proyectos que tocaste esta semana</span><b>${D.tocados} / ${D.proy}</b></div>`,`${ult?`<button class="btn sm pri" data-act="abrir-tab" data-id="${esc(ult[0])}" data-tab="cerebro">Seguir ${esc(corto(ult[1].nombre,22))}</button>`:`<button class="btn sm pri" data-act="nuevo">＋ Nuevo proyecto</button>`}<button class="btn sm" data-act="vista" data-v="generador">Generador de ideas</button>`)}
+   ${frente('trabajo','3 · Que te vean y te contraten','Sin envíos no hay respuestas.',`<div class="cm-m"><span>Postulaciones enviadas</span><b>${D.env} / ${D.c.post}</b></div>${cmBar(D.env,D.c.post,'var(--ok)')}<div class="cm-m"><span>Enviadas en 30 días</span><b>${D.env30}</b></div><div class="cm-m"><span>Por aplicar</span><b>${D.post-D.env}</b></div>`,`<button class="btn sm pri" data-act="vista" data-v="vacantes">Buscar vacantes</button><button class="btn sm" data-act="vista" data-v="postulaciones">Mis postulaciones</button><button class="btn sm" data-act="vista" data-v="portafolio">Portafolio</button>`)}
+   ${frente('dinero','4 · Ingresos','Que dibujar también pague mientras llega el trabajo ideal.',`<div class="cm-m"><span>Piezas publicadas para vender</span><b>${D.pubs} / ${D.c.ventas}</b></div>${cmBar(D.pubs,D.c.ventas,'var(--warn)')}<div class="cm-m"><span>En preparación</span><b>${D.pzV-D.pubs}</b></div><div class="cm-m"><span>Te deben</span><b>${D.pend?mxn(D.pend):'—'}</b></div>${D.sig?`<p class="muted" style="margin:6px 0 0">${D.sig.f.ico} <b>${esc(D.sig.f.n.split(' (')[0])}</b> ${D.sig.p.enCurso?'es ahora':'en '+D.sig.p.dias+' días'}: buen momento para preparar algo.</p>`:''}`,`<button class="btn sm pri" data-act="vista" data-v="generador">Idea para vender</button><button class="btn sm" data-act="vista" data-v="ventas">Ideas para vender</button><button class="btn sm" data-act="vista" data-v="cotizador">Cotizador</button>`)}
+  </div>
+  <div class="box"><h3>Hitos hacia tu meta</h3><p class="hint" style="margin:0 0 6px">Cuatro cosas que, juntas, te acercan a «${esc(corto(rol,50))}». Se calculan con lo que ya hiciste en la app.</p>${hitos.map(([t,v,mx,txt,por,go])=>`<div class="cm-hito"><div class="prow" style="justify-content:space-between;flex-wrap:wrap"><b>${esc(t)}</b><span class="muted">${esc(txt)}</span></div>${cmBar(v,mx,v>=mx?'var(--ok)':'var(--accent)')}<div class="prow" style="justify-content:space-between"><span class="muted" style="font-size:12.5px">${esc(por)}</span><button class="btn ghost sm" data-act="vista" data-v="${go}">Ir</button></div></div>`).join('')}
+   <details style="margin-top:8px"><summary class="muted" style="cursor:pointer">Ajustar mis cifras objetivo</summary><div class="grid2" style="margin-top:6px"><div class="field"><label for="cm-p">Piezas de portafolio listas</label><input type="number" id="cm-p" data-aj="camino.piezas" value="${D.c.piezas}" min="1"></div><div class="field"><label for="cm-e">Postulaciones enviadas</label><input type="number" id="cm-e" data-aj="camino.post" value="${D.c.post}" min="1"></div><div class="field"><label for="cm-v">Piezas publicadas para vender</label><input type="number" id="cm-v" data-aj="camino.ventas" value="${D.c.ventas}" min="1"></div></div></details></div>`}
+
+function vInicioViejo(){
   const ps=ordenados().filter(([,p])=>p.decision!=='Discarded'),a=S.ajustes;
   const ult=ps[0],s=ult?salud(ult[1]):null,sig=s?.items.find(i=>!i[1]);
   const regla=a.principios.length?a.principios[hoyN()%a.principios.length]:'';
@@ -1934,9 +2017,6 @@ function vInicio(){
     <span class="muted" style="font-size:13px;text-transform:capitalize">${esc(hoyTxt)}</span>
   </div>
   ${U().soy?`<p style="margin:2px 0 0;font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2)">${esc(U().soy.replace(/^\s*(yo\s+)?soy\s+/i,''))}</p>`:''}
-  ${siguientePasoHTML(paso,ult)}
-  ${ventasBannerHTML()}
-  ${semBannerHTML()}
   ${(()=>{const h=portafolioGapHTML();return h.includes('Hueco detectado')?h:''})()}
   <div class="grid2">
     ${ult&&!mismo?(()=>{const P=ult[1];return `<div class="box"><span class="lbl">Último proyecto · ${esc((ETAPAS_P.find(e=>e[0]===(P.etapa||'idea'))||ETAPAS_P[0])[1])}</span><h3>${esc(P.nombre)}</h3>
@@ -4836,14 +4916,18 @@ document.addEventListener('change',e=>{const t=e.target;
     marcarAj();renderMain();if(subio)toast(`¡Subiste a ${SW_NIV[+l]} en ${sw.n}!`)}
   else if(t.dataset?.sweval){const [k,i]=t.dataset.sweval.split('|'),x=S.ajustes.swEval?.[k]?.ej?.[+i];if(x){x.hecho=t.checked;marcarAj();renderMain()}}});
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset?.swq)return;S.swQ=t.value;const q=nz(t.value),L=swPorK(S.swK||'blender').trucos.filter(([a,d])=>!q||nz(a+' '+d).includes(q)),b=$('#sw-tr');if(b)b.innerHTML=swTrucosLista(L)});
-/* ============ Estudios sencillos: sillas, tazas, rocas, manos… practicar cosas pequeñas es lo que más rápido mejora tu mano, sin esperar a una pieza grande ============ */
-const EST_CATS={muebles:['Muebles',['una silla de madera','una mesa baja','un banco de piedra','una cama sencilla','un estante con objetos','un baúl o cofre','una lámpara de aceite','una escalera de mano']],
-  casa:['Objetos de casa',['una taza','una botella','unos zapatos','una mochila','un manojo de llaves','unas tijeras','una tetera','un candado']],
-  herr:['Herramientas y armas',['un martillo','un hacha','un cuchillo','un arco','un escudo','un farol','un rollo de cuerda','una olla de barro']],
-  nat:['Naturaleza',['una hoja grande','un tronco cortado','una roca','una raíz','una concha','una flor','un hongo','una fruta abierta']],
-  arq:['Arquitectura pequeña',['una puerta','una ventana','un arco de piedra','una columna','una escalera de piedra','un muro de piedra','un techo','un pozo']],
-  mat:['Materiales',['tela doblada','metal oxidado','madera vieja','cuero gastado','vidrio','piedra mojada','una vela derretida','papel arrugado']],
-  fig:['Figura y gesto',['una mano en 3 posiciones','un pie','una cabeza desde 3 ángulos','un gesto de 30 segundos','alguien sentado en una silla','alguien cargando algo','una espalda y un hombro','un perfil']]};
+/* ============ Estudios sencillos: sillas, tazas, rocas, manos… practicar cosas pequeñas es lo que más rápido mejora tu mano, sin esperar a una pieza grande ============
+   Versión con lógica: cada enfoque tiene un NIVEL (1 a 4) que parte de donde estás, la dificultad del objeto sube cuando te sale bien y baja cuando te cuesta,
+   el estudio de «lo que más te toca» sale de tus resultados (no al azar), y puedes repetir un objeto para comparar antes y después. */
+const EST_CATS={muebles:['Muebles',[['una caja de madera',1],['un banco de piedra',1],['una silla de madera',2],['una mesa baja',2],['una cama sencilla',2],['un baúl o cofre',2],['una lámpara de aceite',2],['una escalera de mano',3],['un estante con objetos',3],['una mecedora',3],['un trono tallado',4],['un librero con libros distintos',4]]],
+  casa:['Objetos de casa',[['una taza',1],['una botella',1],['unos zapatos',2],['una mochila',2],['unas tijeras',2],['una tetera',2],['un candado',2],['un manojo de llaves',3],['una cafetera',3],['una radio vieja',3],['una bicicleta',4],['una máquina de coser',4]]],
+  herr:['Herramientas y armas',[['un martillo',1],['un cuchillo',1],['un hacha',2],['un arco',2],['un escudo',2],['un farol',2],['una olla de barro',2],['un rollo de cuerda',3],['una espada con su vaina',3],['un yelmo',3],['una armadura completa',4],['una balanza antigua',4]]],
+  nat:['Naturaleza',[['una hoja grande',1],['una roca',1],['un tronco cortado',2],['una raíz',2],['una concha',2],['una flor',2],['un hongo',2],['una fruta abierta',3],['una piña',3],['un cráneo de animal',4],['un árbol seco',4],['una cascada pequeña',4]]],
+  arq:['Arquitectura pequeña',[['una puerta',1],['una ventana',1],['un arco de piedra',2],['una columna',2],['un muro de piedra',2],['un techo',2],['una escalera de piedra',3],['un pozo',3],['un puente de piedra',3],['un templo pequeño',4],['una calle con casas',4]]],
+  mat:['Materiales',[['tela doblada',2],['metal oxidado',2],['madera vieja',2],['papel arrugado',2],['cuero gastado',3],['piedra mojada',3],['una vela derretida',3],['vidrio con luz',4],['agua en un vaso',4],['oro y joyas',4]]],
+  fig:['Figura y gesto',[['un gesto de 30 segundos',1],['una mano en 3 posiciones',2],['un pie',2],['un perfil',2],['una cabeza desde 3 ángulos',3],['alguien sentado en una silla',3],['una espalda y un hombro',3],['alguien cargando algo',4],['un niño corriendo',4]]],
+  anim:['Animales',[['un pez',1],['una mariposa',1],['un pájaro posado',2],['un gato dormido',2],['una serpiente enrollada',2],['un insecto grande',2],['una pata de felino',3],['un ave con alas abiertas',4],['un caballo en reposo',4],['un jaguar en tres poses',4]]],
+  comida:['Comida y cocina',[['una manzana',1],['un limón cortado',1],['un pan de muerto',2],['un elote',2],['un molcajete',3],['una canasta de frutas',3],['una olla de tamales',3],['una mesa con ofrenda',4]]]};
 const EST_ENF=[['silueta','Silueta','Dibújalo en negro sólido: ¿se reconoce a 5 cm?',['Pinta solo la silueta en negro','Redúcelo a 5 cm y míralo desde lejos','Cambia una forma y comprueba que aún se lee'],['¿Se reconoce sin detalle?','¿Es distinto de otro objeto parecido?']],
   ['forma','Forma y perspectiva','Cajas, cilindros y elipses bien puestos en el espacio.',['Descomponlo en cajas y cilindros','Dibuja las líneas de fuga y las elipses','Gíralo mentalmente a otro ángulo'],['¿Las líneas convergen bien?','¿Las elipses tienen el mismo eje?']],
   ['valores','Valores','Tres grises: claro, medio y oscuro, bien repartidos.',['Define 3 valores antes de empezar','Pinta primero las masas grandes de oscuro','Revisa en blanco y negro'],['¿Se lee con solo 3 grises?','¿La parte más clara está donde quieres la atención?']],
@@ -4852,55 +4936,107 @@ const EST_ENF=[['silueta','Silueta','Dibújalo en negro sólido: ¿se reconoce a
   ['composicion','Composición','Cómo lo pones en el cuadro para que se vea bien.',['Haz 3 thumbnails con encuadres distintos','Elige uno con foco claro','Redíbujalo en grande'],['¿El ojo llega primero al centro de interés?','¿Hay espacio para respirar?']],
   ['diseno','Diseño y variaciones','Tres versiones del mismo objeto, cada una distinta de verdad.',['Dibuja 3 versiones muy distintas','Inventa una función o historia para cada una','Elige la más original y pulirla'],['¿Las 3 versiones se distinguen en silueta?','¿Alguna cuenta una historia?']],
   ['color','Color','Una paleta corta (3 o 4 colores) con intención.',['Elige 3 colores y un neutro','Pinta primero los valores en gris','Aplica el color encima con Multiplicar o Superponer'],['¿La paleta se ve armónica?','¿Hay un solo acento?']]];
-const EST_COND=['Sin borrar nada.','Con un solo pincel.','Solo con 3 valores.','Desde una foto real (búscala primero).','De memoria; después compáralo con una foto y corrige.','En 3 ángulos distintos.','Con línea continua, sin levantar el lápiz.','Primero 3 thumbnails de 2 minutos.','Con la mano no dominante, solo para soltarte.','Con una fuente de luz que no sea la obvia.'];
-const EST_MAP={valores:'valores',silueta:'silueta',composicion:'composicion',color:'color',perspectiva:'forma',anatomia:'forma',diseno:'diseno',materiales:'material'};
+/* los 4 niveles: qué se pide, tiempos y condiciones; el último criterio de revisión cambia con el nivel */
+const EST_NIV=[{n:'Básico',min:[10,15,15],pide:'Un solo objeto, centrado, con formas simples. Que se lea.',crit:'¿Se entiende el objeto con su forma principal?',cond:['Sin borrar nada.','Con un solo pincel o lápiz.','Solo con 3 valores.','Con línea continua, sin levantar el lápiz.','Mirando una foto real, sin inventar.']},
+  {n:'Medio',min:[20,20,30],pide:'El objeto con su sombra en el suelo y un fondo simple.',crit:'¿El objeto está apoyado en el suelo, con su sombra?',cond:['En 3 ángulos distintos.','Con una sola fuente de luz clara.','Primero 3 thumbnails de 2 minutos.','Desde una foto real (búscala primero).','Con el fondo en un solo valor.']},
+  {n:'Avanzado',min:[30,45],pide:'Objeto con contexto: dos materiales, luz intencional y un detalle de historia.',crit:'¿Hay un detalle que cuente algo del objeto?',cond:['Con una fuente de luz que no sea la obvia.','De memoria; después compáralo con una foto y corrige.','Con dos materiales distintos en la misma pieza.','Rediseñado para otra época o cultura.','Con un solo pincel pero tres temperaturas de color.']},
+  {n:'Maestro',min:[45,60],pide:'Una mini-escena de 3 objetos con jerarquía, luz y atmósfera.',crit:'¿Hay un foco claro entre los 3 objetos y una atmósfera?',cond:['Con 3 objetos de materiales distintos y un solo foco.','De memoria, y luego a partir de una referencia para comparar.','Con luz de fuego o de luna y color limitado.','Con una historia: ¿quién lo usó y qué pasó?']}];
+/* qué sabe hacer alguien en cada nivel (para ubicarte; sé honesto: mejor un nivel abajo que uno arriba) */
+const EST_CAN={silueta:['Reconozco formas simples en negro','Hago siluetas legibles de objetos con partes','Diseño siluetas distintas y las comparo a 2 cm','Las hago de memoria y cuentan una historia'],
+  forma:['Dibujo cajas y cilindros rectos','Dibujo objetos con 2 puntos de fuga y elipses','Construyo objetos complejos desde cualquier ángulo','Los giro de memoria con perspectiva correcta'],
+  valores:['Distingo claro y oscuro','Pinto con 3 valores con una masa dominante','Controlo los valores con foco y atmósfera','Los resuelvo de memoria y con luz intencional'],
+  material:['Distingo mate de brillante','Sugiero madera, metal y tela con pocas marcas','Pinto 2 materiales con su luz propia','Pinto cualquier material con economía'],
+  luz:['Sé de dónde viene la luz','Pinto luz, sombra y sombra proyectada','Pinto rebotes y luz de ambiente','Pinto luz compleja de memoria'],
+  composicion:['Centro el objeto','Uso tercios y respiro','Planeo la lectura con thumbnails y foco','Diseño la composición con una historia'],
+  diseno:['Copio objetos reales','Hago 3 versiones distintas','Diseño con función y cultura','Mi diseño tiene estilo propio y historia'],
+  color:['Uso colores sueltos','Uso paleta de 3 o 4 colores','Controlo temperatura y acento','Pinto color de luz y sombra con intención'],
+  visualizar:['Dibujo lo que veo','Dibujo de memoria con apoyo','Construyo desde la imaginación con referencia','Dibujo de memoria desde otros ángulos']};
+const EST_COND=['Sin borrar nada.','Con un solo pincel.','Solo con 3 valores.','Desde una foto real (búscala primero).','De memoria; después compáralo con una foto y corrige.','En 3 ángulos distintos.'];
+const EST_MAP={valores:'valores',silueta:'silueta',composicion:'composicion',color:'color',perspectiva:'forma',anatomia:'forma',diseno:'diseno',materiales:'material',claves:'luz'};
 const estLista=()=>S.ajustes.estudios=S.ajustes.estudios||[];
+const estNivObj=()=>S.ajustes.estNiv=S.ajustes.estNiv||{};
+const estNivel=e=>estNivObj()[e]?.n||0;
+const estUbicado=()=>Object.keys(estNivObj()).length>0;
+const estPunto=x=>x.score!=null?x.score:({1:.2,2:.5,3:.85}[x.rate]??.5);
 function estSemana(){const L=estLista(),h=Date.now(),d7=L.filter(x=>h-x.ts<7*864e5).length,d30=L.filter(x=>h-x.ts<30*864e5).length,dias=new Set(L.map(x=>hoyKey(new Date(x.ts))));let r=0;for(let i=0;i<60;i++){const k=hoyKey(new Date(h-i*864e5));if(dias.has(k))r++;else if(i>0)break;else continue}return {d7,d30,racha:r,total:L.length}}
-function estGenera(){const p=S.P[S.ajustes.estProy&&S.P[S.ajustes.estProy]?S.ajustes.estProy:ordenados()[0]?.[0]],f=S.estF||{cat:'',enf:'',min:0,mundo:false},pick=a=>a[Math.floor(Math.random()*a.length)];
-  const cats=Object.keys(EST_CATS),cat=f.cat&&EST_CATS[f.cat]?f.cat:pick(cats);let enf=f.enf?EST_ENF.find(x=>x[0]===f.enf):null;
-  if(!enf){const deb=debilidades().orden[0],m=EST_MAP[deb];enf=(Math.random()<.5&&m&&EST_ENF.find(x=>x[0]===m))||pick(EST_ENF)}
-  const min=f.min||pick([10,20,20,30]),obj=pick(EST_CATS[cat][1]);
+/* resultados por enfoque: promedio de los últimos 4, días desde el último y puntos recientes */
+function estStats(){const h=Date.now(),L=estLista().slice().sort((a,b)=>a.ts-b.ts),out={},deb=debilidades().orden.slice(0,2).map(k=>EST_MAP[k]).filter(Boolean);
+  for(const e of EST_ENF){const l=L.filter(x=>x.enf===e[0]),u=l.slice(-4),avg=u.length?u.reduce((s,x)=>s+estPunto(x),0)/u.length:null,ult=l.at(-1);out[e[0]]={n:l.length,avg,dias:ult?Math.floor((h-ult.ts)/864e5):null,pts:l.slice(-6).map(estPunto),deb:deb.includes(e[0])}}
+  return out}
+/* qué enfoque toca: lo que peor te sale, lo que llevas más tiempo sin practicar y tu punto débil de las críticas; con un poco de azar para no repetir */
+function estRank(){const st=estStats(),sem=estLista().filter(x=>Date.now()-x.ts<7*864e5).map(x=>x.enf);
+  return EST_ENF.map(e=>{const s=st[e[0]],flojo=s.avg==null?.4:(1-s.avg),viejo=s.dias==null?1:Math.min(s.dias,21)/21,deb=s.deb?.7:0,rep=sem.filter(x=>x===e[0]).length*.4,pt=flojo*1.6+viejo+deb-rep+Math.random()*.25;
+    const motivo=s.avg!=null&&s.avg<.5?`Tus últimos estudios de ${e[1].toLowerCase()} te costaron: toca reforzarlo.`:s.dias==null?`Todavía no practicas ${e[1].toLowerCase()}: ya toca probarlo.`:s.dias>=14?`Llevas ${s.dias} días sin practicar ${e[1].toLowerCase()}.`:s.deb?`Es de tus puntos débiles según tus críticas.`:`Para mantener variedad y no perder lo que ya te sale.`;
+    return {e,pt,motivo}}).sort((a,b)=>b.pt-a.pt)}
+function estGenera(opt){const p=S.P[S.ajustes.estProy&&S.P[S.ajustes.estProy]?S.ajustes.estProy:ordenados()[0]?.[0]],f=S.estF||{cat:'',enf:'',min:0,mundo:false,niv:0},pick=a=>a[Math.floor(Math.random()*a.length)];
+  const enfK=(opt&&opt.enf)||f.enf;let enf,motivo;if(enfK){enf=EST_ENF.find(x=>x[0]===enfK);motivo=opt&&opt.motivo||'Lo elegiste tú.'}else{const r=estRank()[0];enf=r.e;motivo=r.motivo}
+  const base=f.niv||estNivel(enf[0])||1,lvl=Math.max(1,Math.min(4,(opt&&opt.niv)||base)),cats=Object.keys(EST_CATS),cat=f.cat&&EST_CATS[f.cat]?f.cat:pick(cats);
+  let pool=EST_CATS[cat][1].filter(o=>o[1]===lvl);if(!pool.length)pool=EST_CATS[cat][1].filter(o=>Math.abs(o[1]-lvl)<=1);if(!pool.length)pool=EST_CATS[cat][1];
+  const recientes=new Set(estLista().slice(-6).map(x=>x.obj)),nuevos=pool.filter(o=>!recientes.has(o[0])),obj=pick(nuevos.length?nuevos:pool)[0],N=EST_NIV[lvl-1],min=f.min||pick(N.min);
+  const prev=estLista().slice().sort((a,b)=>b.ts-a.ts).find(x=>x.obj===obj&&x.enf===enf[0]);
   let mundo='';if(f.mundo&&p){const mat=(p.materiales||[]).slice(0,2).join(' y '),cul=(sujetosDe(p).cult||[])[0];mundo=`Hazlo del mundo de «${p.nombre}»${mat?': de '+mat.toLowerCase():''}${cul?', con raíz '+cul:''}.`}
-  return {id:uid(),cat,obj,enf:enf[0],min,cond:pick(EST_COND),mundo,medio:f.medio||''}}
-function estTitulo(a){return `${EST_CATS[a.cat][0]} · ${a.obj}`}
-function vEstudios(){const W=estSemana(),f=S.estF=S.estF||{cat:'',enf:'',min:0,mundo:false},a=S.estAct,e=a?EST_ENF.find(x=>x[0]===a.enf):null,L=estLista().slice().sort((x,y)=>y.ts-x.ts),meta=S.ajustes.estMeta||3,reto=S.ajustes.estReto;
-  const chip=(k,v,n,on)=>`<button class="ch xs ${on?'on':''}" data-act="est-f" data-k="${k}" data-v="${v}">${n}</button>`;
+  return {id:uid(),cat,obj,enf:enf[0],min,niv:lvl,cond:pick(N.cond),mundo,medio:f.medio||'',motivo,prev:prev?prev.id:null}}
+function estTitulo(a){return `${EST_CATS[a.cat]?.[0]||''} · ${a.obj}`}
+const estBarra=(v,c)=>`<div class="bar" style="width:auto"><i style="width:${Math.round((v??0)*100)}%;background:${c||'var(--accent)'}"></i></div>`;
+function estPlanSemana(){const L=estLista().filter(x=>Date.now()-x.ts<7*864e5),hechos=new Set(L.map(x=>x.enf)),r=estRank(),slots=[['Tu punto débil',r[0]],['Refuerzo',r[1]],['Libre: lo que quieras',null]];return {slots,hechos}}
+function vEstudios(){const W=estSemana(),f=S.estF=S.estF||{cat:'',enf:'',min:0,mundo:false,niv:0},a=S.estAct,e=a?EST_ENF.find(x=>x[0]===a.enf):null,L=estLista().slice().sort((x,y)=>y.ts-x.ts),meta=S.ajustes.estMeta||3,reto=S.ajustes.estReto,st=estStats(),ub=estUbicado(),plan=estPlanSemana();
+  const chip=(k,v,n,on)=>`<button class="ch xs ${on?'on':''}" data-act="est-f" data-k="${k}" data-v="${v}">${n}</button>`,N=a?EST_NIV[(a.niv||1)-1]:null,prev=a?.prev?L.find(x=>x.id===a.prev):null;
+  const ubicar=`<div class="box" style="${ub?'':'border-top:3px solid var(--accent)'}"><details ${ub?'':'open'}><summary><b>${ub?'Mi nivel por enfoque':'Ubica tu nivel (2 minutos)'}</b> <span class="muted">${ub?'· toca para ajustarlo':'· así los estudios parten de donde estás, no desde cero'}</span></summary>
+    <p class="hint" style="margin:6px 0">Para cada enfoque elige la frase que mejor te describe hoy. Si dudas entre dos, elige la más baja: subirás rápido. Después el nivel sube solo cuando te salen bien 3 estudios seguidos.</p>
+    <div class="prow" style="flex-wrap:wrap"><span class="lbl">Atajos</span><button class="btn sm" data-act="est-preset" data-v="1">Estoy empezando</button><button class="btn sm" data-act="est-preset" data-v="2">Nivel intermedio</button><button class="btn sm" data-act="est-preset" data-v="3">Nivel avanzado</button><button class="btn sm" data-act="est-preset" data-v="crit">Usar mis críticas</button></div>
+    ${EST_ENF.map(x=>{const n=estNivel(x[0]);return `<div class="est-niv"><b>${esc(x[1])}</b><div class="est-pills">${[1,2,3,4].map(v=>`<button class="est-pill ${n===v?'on':''}" data-act="est-niv" data-k="${x[0]}" data-v="${v}" title="${esc(EST_CAN[x[0]]?.[v-1]||'')}"><span>${v}</span><small>${esc(EST_CAN[x[0]]?.[v-1]||'')}</small></button>`).join('')}</div></div>`}).join('')}</details></div>`;
   return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Estudios sencillos</h1>
-  <p class="intro">No necesitas una pieza grande para mejorar. Estudiar una silla, una taza o una roca durante 20 minutos entrena justo lo que te falta (forma, valores, luz, material) y se nota rápido. Aquí te doy un estudio a la vez, con lo que debes revisar al terminar.</p>
+  <p class="intro">No necesitas una pieza grande para mejorar. Estudiar una silla, una taza o una roca durante 20 minutos entrena justo lo que te falta. Aquí cada estudio parte de <b>tu nivel</b> en ese enfoque, sale de lo que peor te va (no al azar) y sube de dificultad cuando te sale bien. Al terminar revisas con criterios y se ajusta tu nivel.</p>
   <div class="stats"><div class="stat"><b>${W.d7}/${meta}</b><span>estudios esta semana</span></div><div class="stat"><b>${W.d30}</b><span>en 30 días</span></div><div class="stat"><b>${W.racha}</b><span>días seguidos</span></div><div class="stat"><b>${W.total}</b><span>en total</span></div></div>
-  <div class="box"><h3>Elige qué quieres practicar</h3>
+  ${ubicar}
+  <div class="box"><h3>Tu semana</h3><p class="hint" style="margin:0 0 6px">Tres estudios por semana bastan: uno a tu punto débil, uno de refuerzo y uno libre.</p><div class="est-plan">${plan.slots.map(([t,r],i)=>{const hecho=r&&plan.hechos.has(r.e[0])||(!r&&W.d7>=3);return `<div class="est-plan-c ${hecho?'ok':''}"><span class="lbl">${hecho?'✓ ':''}${esc(t)}</span>${r?`<b>${esc(r.e[1])}</b><span class="muted" style="font-size:12px">${esc(r.motivo)}</span><button class="btn sm ${hecho?'':'pri'}" data-act="est-dame" data-enf="${r.e[0]}">${hecho?'Otro':'Hacer este'}</button>`:`<b>Lo que quieras</b><span class="muted" style="font-size:12px">Algo que te dé gusto dibujar, sin presión.</span><button class="btn sm" data-act="est-dame" data-libre="1">Sorpréndeme</button>`}</div>`}).join('')}</div></div>
+  <div class="box"><h3>O elige qué quieres practicar</h3>
     <div class="chips"><span class="lbl">Tema</span>${chip('cat','','Cualquiera',!f.cat)}${Object.entries(EST_CATS).map(([k,v])=>chip('cat',k,v[0],f.cat===k)).join('')}</div>
     <div class="chips"><span class="lbl">Enfoque</span>${chip('enf','','El que más te toca',!f.enf)}${EST_ENF.map(x=>chip('enf',x[0],x[1],f.enf===x[0])).join('')}</div>
+    <div class="chips"><span class="lbl">Nivel</span>${chip('niv',0,'El mío',!f.niv)}${EST_NIV.map((x,i)=>chip('niv',i+1,(i+1)+' · '+x.n,f.niv===i+1)).join('')}</div>
     <div class="chips"><span class="lbl">Medio</span>${chip('medio','','Cualquiera',!f.medio)}${[['digital','Digital'],['grafito','Grafito y lápiz'],['acuarela','Acuarela'],['oleo','Óleo'],['acrilico','Acrílico'],['tinta','Tinta']].map(([k,n])=>chip('medio',k,n,f.medio===k)).join('')}</div>
-    <div class="chips"><span class="lbl">Tiempo</span>${chip('min',0,'Cualquiera',!f.min)}${[10,20,30,45].map(m=>chip('min',m,m+' min',f.min===m)).join('')}</div>
+    <div class="chips"><span class="lbl">Tiempo</span>${chip('min',0,'El del nivel',!f.min)}${[10,20,30,45].map(m=>chip('min',m,m+' min',f.min===m)).join('')}</div>
     <label class="chk"><input type="checkbox" data-estmundo="1" ${f.mundo?'checked':''}><span>Con el mundo de mi proyecto <small>(materiales y cultura de tu proyecto más reciente)</small></span></label>
-    <div class="prow"><button class="btn pri" data-act="est-dame">${a?'Otro estudio':'Dame un estudio'}</button><button class="btn sm" data-act="est-reto" title="7 estudios distintos, uno por día">Reto de 7 estudios</button></div></div>
-  ${a?`<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Tu estudio de hoy · ${a.min} min</span><h3 style="margin:2px 0">${esc(cap(a.obj))}</h3><p style="margin:0"><b>Enfoque: ${esc(e[1])}.</b> ${esc(e[2])}</p>
+    <div class="prow"><button class="btn pri" data-act="est-dame">${a?'Otro estudio':'Dame un estudio'}</button><button class="btn sm" data-act="est-reto" title="7 estudios balanceados, subiendo de dificultad">Plan de 7 días</button></div></div>
+  ${a?`<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Tu estudio · ${a.min} min · nivel ${a.niv} (${esc(N.n)})</span><h3 style="margin:2px 0">${esc(cap(a.obj))}</h3>
+      <p class="hint" style="margin:0 0 4px"><b>Por qué este:</b> ${esc(a.motivo||'')}</p>
+      <p style="margin:0"><b>Enfoque: ${esc(e[1])}.</b> ${esc(e[2])}</p><p style="margin:2px 0"><b>Qué se pide en este nivel:</b> ${esc(N.pide)}</p>
       <p class="hint" style="margin:0">${esc(a.cond)} ${esc(a.mundo)}</p>
       ${a.medio&&EST_MEDIO[a.medio]?`<p class="hint" style="margin:0"><b>${esc(EST_MEDIO[a.medio].n)}:</b> ${esc(EST_MEDIO[a.medio].tips.join(' · '))}</p>`:''}
       <ol class="reglas">${e[3].map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ol>
-      <div><span class="lbl">Al terminar, revisa</span><ul class="why-l">${e[4].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+      ${prev?`<div class="est-prev"><span class="lbl">Ya lo estudiaste el ${esc(fecha(prev.ts))}: intenta superarlo</span>${prev.asset||prev.src?`<img ${imgAttrs(prev.mini?{asset:prev.mini}:prev)} alt="Tu estudio anterior" data-act="zoom">`:''}${prev.nota?`<small class="muted">Anotaste: ${esc(corto(prev.nota,90))}</small>`:''}</div>`:''}
       <div class="prow"><button class="btn" data-act="est-ref">Buscar fotos de referencia</button><button class="btn" data-act="sw-timer" data-min="${a.min}">Empezar reloj ${a.min} min</button></div>${S.timer||S.swT?timerHTML(a.min,'Reloj del estudio'):''}
-      <div class="box"><h3>Terminé</h3><div class="prow"><label class="btn pri" for="est-file">Subir mi estudio</label><input type="file" id="est-file" accept="image/*" hidden><span class="muted">${S.estFile?esc(S.estFile.name):'(opcional, pero te deja ver tu progreso)'}</span></div>
+      <div class="box"><h3>Terminé: revisa con criterio</h3><p class="hint" style="margin:0 0 4px">Marca solo lo que de verdad cumples. Con esto se ajusta tu nivel.</p>
+        <div class="pg-crits">${[...e[4],N.crit].map((c,i)=>`<button class="ch ${(S.estChk||[])[i]?'on':''}" data-act="est-chk" data-n="${i}">${(S.estChk||[])[i]?'✓ ':''}${esc(c)}</button>`).join('')}</div>
+        <div class="prow"><label class="btn pri" for="est-file">Subir mi estudio</label><input type="file" id="est-file" accept="image/*" hidden><span class="muted">${S.estFile?esc(S.estFile.name):'(opcional, pero te deja ver tu progreso)'}</span></div>
         <div class="chips"><span class="lbl">¿Cómo te fue?</span>${[[1,'Me costó'],[2,'Normal'],[3,'Me salió bien']].map(([v,n])=>`<button class="ch xs ${S.estRate===v?'on':''}" data-act="est-rate" data-v="${v}">${n}</button>`).join('')}</div>
         <input type="text" id="est-nota" placeholder="Una cosa que aprendiste o que quieres corregir la próxima" value="${esc(S.estNota||'')}" data-estnota="1">
         <div class="prow"><button class="btn pri" data-act="est-guarda">Guardar estudio</button></div></div></div>`:''}
-  ${reto?.length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Reto de 7 estudios · ${reto.filter(x=>x.hecho).length}/7</h3><button class="btn ghost sm" data-act="est-reto-fin">Terminar reto</button></div>${reto.map((x,i)=>`<label class="des-p ${x.hecho?'ok':''}"><input type="checkbox" data-estreto="${i}" ${x.hecho?'checked':''}><span><b>Día ${i+1}: ${esc(estTitulo(x))} · ${x.min} min</b><small>Enfoque ${esc(EST_ENF.find(y=>y[0]===x.enf)[1])}. ${esc(x.cond)}</small></span><button class="btn sm" data-act="est-usa" data-i="${i}">Hacer este</button></label>`).join('')}</div>`:''}
-  ${L.length?`<div class="box"><h3>Tus estudios <span class="lbl">${L.length}</span></h3><div class="rcurs">${L.slice(0,24).map(x=>`<div class="rcur">${x.asset||x.src?`<img ${imgAttrs(x.mini?{asset:x.mini}:x)} alt="" loading="lazy" data-act="zoom">`:`<div class="rcur-ph">${esc(cap(x.obj))}</div>`}<div class="rcur-b"><b>${esc(corto(cap(x.obj),34))}</b><span class="muted">${esc(EST_ENF.find(y=>y[0]===x.enf)?.[1]||'')} · ${fecha(x.ts)}${x.rate?' · '+['','Me costó','Normal','Salió bien'][x.rate]:''}</span>${x.nota?`<small class="muted">${esc(corto(x.nota,70))}</small>`:''}<button class="btn ghost sm danger" data-act="est-del" data-id="${x.id}">✕</button></div></div>`).join('')}</div></div>`:''}`}
+  ${reto?.length?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Plan de 7 días · ${reto.filter(x=>x.hecho).length}/7</h3><button class="btn ghost sm" data-act="est-reto-fin">Terminar plan</button></div>${reto.map((x,i)=>`<label class="des-p ${x.hecho?'ok':''}"><input type="checkbox" data-estreto="${i}" ${x.hecho?'checked':''}><span><b>Día ${i+1}: ${esc(estTitulo(x))} · ${x.min} min</b><small>Enfoque ${esc(EST_ENF.find(y=>y[0]===x.enf)[1])} · nivel ${x.niv}. ${esc(x.cond)}</small></span><button class="btn sm" data-act="est-usa" data-i="${i}">Hacer este</button></label>`).join('')}</div>`:''}
+  <div class="box"><h3>Tu progreso por enfoque</h3><p class="hint" style="margin:0 0 6px">Cada barra es el promedio de tus últimos 4 estudios. Con 3 seguidos arriba de 75% subes de nivel.</p>
+    ${EST_ENF.map(x=>{const s=st[x[0]],n=estNivel(x[0]);return `<div class="est-fila"><b>${esc(x[1])}</b><span class="nivel">Nivel ${n||'—'}</span>${s.avg==null?'<span class="muted" style="font-size:12.5px">sin estudios todavía</span>':estBarra(s.avg,s.avg>=.75?'var(--ok)':s.avg>=.5?'var(--c-tecnica)':'var(--warn)')}<span class="muted" style="font-size:12px">${s.n} est.${s.dias!=null?' · hace '+s.dias+' d':''}</span></div>`}).join('')}</div>
+  ${L.length?`<div class="box"><h3>Tus estudios <span class="lbl">${L.length}</span></h3><div class="rcurs">${L.slice(0,24).map(x=>`<div class="rcur">${x.asset||x.src?`<img ${imgAttrs(x.mini?{asset:x.mini}:x)} alt="" loading="lazy" data-act="zoom">`:`<div class="rcur-ph">${esc(cap(x.obj))}</div>`}<div class="rcur-b"><b>${esc(corto(cap(x.obj),34))}</b><span class="muted">${esc(EST_ENF.find(y=>y[0]===x.enf)?.[1]||'')}${x.niv?' · nivel '+x.niv:''} · ${fecha(x.ts)}${x.score!=null?' · '+Math.round(x.score*100)+'%':x.rate?' · '+['','Me costó','Normal','Salió bien'][x.rate]:''}</span>${x.nota?`<small class="muted">${esc(corto(x.nota,70))}</small>`:''}<div class="prow"><button class="btn ghost sm" data-act="est-repite" data-id="${x.id}" title="Repetirlo para comparar">↻ Repetir</button><button class="btn ghost sm danger" data-act="est-del" data-id="${x.id}">✕</button></div></div></div>`).join('')}</div></div>`:''}`}
 async function accionEst(a,el,p,ds){
   switch(a){
-    case 'est-f':{const f=S.estF=S.estF||{cat:'',enf:'',min:0,mundo:false};f[ds.k]=ds.k==='min'?+ds.v:ds.v;renderMain();return true}
-    case 'est-dame':S.estAct=estGenera();S.estFile=null;S.estRate=0;S.estNota='';S.timer=null;S.swT=false;renderMain();return true;
-    case 'est-reto':{const L=[],cats=Object.keys(EST_CATS);for(let i=0;i<7;i++){S.estF={...(S.estF||{}),cat:cats[i%cats.length],enf:''};L.push({...estGenera(),hecho:false})}S.ajustes.estReto=L;marcarAj();renderMain();toast('Reto armado: un estudio por día');return true}
+    case 'est-f':{const f=S.estF=S.estF||{cat:'',enf:'',min:0,mundo:false,niv:0};f[ds.k]=(ds.k==='min'||ds.k==='niv')?+ds.v:ds.v;renderMain();return true}
+    case 'est-dame':{const o={};if(ds.enf){o.enf=ds.enf;o.motivo=estRank().find(r=>r.e[0]===ds.enf)?.motivo}if(ds.libre){const k=Object.keys(EST_CATS),S0=S.estF;S.estF={...(S0||{}),cat:'',enf:''};o.enf=EST_ENF[Math.floor(Math.random()*EST_ENF.length)][0];o.motivo='Libre: algo que te dé gusto.';S.estAct=estGenera(o);S.estF=S0}else S.estAct=estGenera(o);S.estFile=null;S.estRate=0;S.estNota='';S.estChk=[];S.timer=null;S.swT=false;renderMain();return true}
+    case 'est-reto':{const L=[],r=estRank().slice(0,4).map(x=>x.e[0]),cats=Object.keys(EST_CATS).sort(()=>Math.random()-.5),S0=S.estF;for(let i=0;i<7;i++){const enf=i===2?EST_ENF[Math.floor(Math.random()*EST_ENF.length)][0]:r[i%r.length],base=estNivel(enf)||1,niv=Math.min(4,i>=4?base+1:base);S.estF={...(S0||{}),cat:cats[i%cats.length],enf:''};L.push({...estGenera({enf,niv,motivo:i===2?'Libre':'Parte de tu plan de la semana'}),hecho:false})}S.estF=S0;S.ajustes.estReto=L;marcarAj();renderMain();toast('Plan de 7 días: sube de dificultad a mitad de semana');return true}
     case 'est-reto-fin':S.ajustes.estReto=null;marcarAj();renderMain();return true;
-    case 'est-usa':{const x=(S.ajustes.estReto||[])[+ds.i];if(!x)return true;S.estAct={...x};S.estFile=null;S.estRate=0;S.estNota='';S.timer=null;S.swT=false;renderMain();window.scrollTo({top:0,behavior:'smooth'});return true}
+    case 'est-usa':{const x=(S.ajustes.estReto||[])[+ds.i];if(!x)return true;S.estAct={...x};S.estFile=null;S.estRate=0;S.estNota='';S.estChk=[];S.timer=null;S.swT=false;renderMain();window.scrollTo({top:0,behavior:'smooth'});return true}
+    case 'est-repite':{const x=estLista().find(v=>v.id===ds.id);if(!x)return true;S.estAct={id:uid(),cat:x.cat,obj:x.obj,enf:x.enf,min:x.min||20,niv:x.niv||estNivel(x.enf)||1,cond:'Intenta superar tu estudio anterior con lo que aprendiste.',mundo:'',medio:x.medio||'',motivo:'Repetirlo es la mejor forma de ver cuánto mejoraste.',prev:x.id};S.estFile=null;S.estRate=0;S.estNota='';S.estChk=[];S.timer=null;S.swT=false;renderMain();window.scrollTo({top:0,behavior:'smooth'});return true}
     case 'est-rate':S.estRate=+ds.v;renderMain();return true;
+    case 'est-chk':{S.estChk=S.estChk||[];S.estChk[+ds.n]=!S.estChk[+ds.n];renderMain();return true}
+    case 'est-niv':{estNivObj()[ds.k]={n:+ds.v,pts:[],ts:Date.now()};marcarAj();renderMain();return true}
+    case 'est-preset':{const N=estNivObj(),deb=debilidades().prom;for(const e of EST_ENF){let v=+ds.v;if(ds.v==='crit'){const sk=Object.keys(EST_MAP).find(k=>EST_MAP[k]===e[0]&&deb[k]!=null),pv=sk?deb[sk]:null;v=pv==null?1:pv>=7.5?3:pv>=5.5?2:1}N[e[0]]={n:v||1,pts:[],ts:Date.now()}}marcarAj();renderMain();toast('Nivel ubicado: ajusta lo que no te describa');return true}
     case 'est-ref':{const a=S.estAct;if(!a)return true;const q=toks(a.obj).map(tr).join(' ')||a.obj;S.refB={...(S.refB||{}),q,exacta:q,mision:'',capa:'concepto',prop:''};S.rgBusca=true;herrAbre('refs');setTimeout(buscarRefs,300);return true}
-    case 'est-guarda':{const a=S.estAct;if(!a)return true;const x={id:uid(),ts:Date.now(),cat:a.cat,obj:a.obj,enf:a.enf,min:a.min,medio:a.medio||'',rate:S.estRate||0,nota:(S.estNota||'').trim()};
+    case 'est-guarda':{const a=S.estAct;if(!a)return true;const e=EST_ENF.find(v=>v[0]===a.enf),m=e[4].length+1,ch=(S.estChk||[]).slice(0,m).filter(Boolean).length,frac=ch/m,score=S.estRate?frac*.6+((S.estRate-1)/2)*.4:frac;
+      const x={id:uid(),ts:Date.now(),cat:a.cat,obj:a.obj,enf:a.enf,min:a.min,niv:a.niv||1,medio:a.medio||'',rate:S.estRate||0,chk:ch,score:Math.round(score*100)/100,prev:a.prev||null,nota:(S.estNota||'').trim()};
       try{if(S.estFile){bloquear();try{Object.assign(x,await guardarImagen(S.estFile,{mini:true}))}finally{desbloquear()}}}catch{toast('No se pudo subir la imagen; se guarda sin ella')}
       estLista().push(x);const r=(S.ajustes.estReto||[]).find(v=>v.obj===a.obj&&v.cat===a.cat&&!v.hecho);if(r)r.hecho=true;
+      const N=estNivObj(),o=N[a.enf]=N[a.enf]||{n:Math.max(1,a.niv||1),pts:[]};o.pts=[...(o.pts||[]),score].slice(-3);o.ts=Date.now();let msg='Estudio guardado. Eso es lo que te hace mejorar.';
+      if(o.pts.length>=3&&o.pts.every(v=>v>=.75)&&o.n<4){o.n++;o.pts=[];msg=`¡Subes a nivel ${o.n} en ${e[1].toLowerCase()}! Los siguientes serán más exigentes.`}else if(o.pts.length>=3&&o.pts.every(v=>v<=.35)&&o.n>1){o.n--;o.pts=[];msg=`Bajas a nivel ${o.n} en ${e[1].toLowerCase()}: afianza lo básico y vuelve a subir.`}
       const dias=S.ajustes.rutina=S.ajustes.rutina||{dias:{}};dias.dias=dias.dias||{};const k=hoyKey();dias.dias[k]={...(dias.dias[k]||{}),hecho:true,estudio:true};
-      marcarAj();S.estAct=null;S.estFile=null;S.estRate=0;S.estNota='';renderMain();toast('Estudio guardado. Eso es lo que te hace mejorar.');return true}
+      marcarAj();S.estAct=null;S.estFile=null;S.estRate=0;S.estNota='';S.estChk=[];renderMain();toast(msg);return true}
     case 'est-del':{S.ajustes.estudios=estLista().filter(x=>x.id!==ds.id);marcarAj();renderMain();return true}}
   return false}
 document.addEventListener('change',e=>{const t=e.target;
@@ -4927,6 +5063,163 @@ const VT_FECHAS=[
  {k:'padres',n:'Día del Padre',f:y=>nthDia(y,5,0,3),sem:4,ico:'🧔',txt:'Regalos y retratos; menos saturado que el de las madres.',ideas:['Retrato de papá estilizado como guerrero o aventurero','Print con un tema de su pasatiempo','Tarjeta con humor'],venta:['Retratos por encargo','Tarjetas'],tags:['dia del padre','fathers day']},
  {k:'gato',n:'Día del Gato',m:8,d:8,sem:2,ico:'🐈',txt:'Los gatos y las mascotas venden todo el año.',ideas:['Gatos como criaturas de tu mundo (jaguar doméstico)','Pack de stickers de gatos','Retratos de gatos por encargo'],venta:['Stickers','Retratos por encargo'],tags:['dia del gato','cat art']},
  {k:'independencia',n:'Fiestas patrias (México)',m:9,d:16,sem:4,ico:'🇲🇽',txt:'Temas mexicanos: lo tuyo, con tu mirada.',ideas:['Ilustración con símbolos mexicanos reinterpretados','Pack de stickers de la fiesta (sin estereotipos gastados)','Print «México fantástico» con tu mundo'],venta:['Print','Stickers'],tags:['mexico','viva mexico']}];
+
+/* ============ GENERADOR DE IDEAS POR PALABRAS ============
+   Una ruleta de palabras (sujeto, segundo elemento, giro, estilo, paleta y producto) que puedes girar entera o por casilla y bloquear lo que te gusta. De ahí arma una idea con título, concepto, producto, por qué se vende, gancho de publicación, primer paso de 10 minutos y variaciones.
+   Si hay una fecha cerca (Halloween, Día de Muertos, San Valentín, Navidad…), usa ideas pensadas para esa fecha y te dice cuándo publicar. */
+const gW=a=>a.map(s=>s[0]==='*'?{n:s.slice(1),f:1}:{n:s});
+const GI={
+ animal:gW(['jaguar','quetzal','colibrí','xoloitzcuintle','ajolote','*serpiente emplumada','murciélago','búho','*lechuza','*mariposa monarca','sapo','pulpo','*medusa','zorro','lobo','venado','armadillo','tlacuache','coyote','águila','cuervo','gato','conejo','*tortuga','*libélula','*araña','escarabajo','guacamaya','*iguana','manatí','mono araña','*mantis religiosa','pez payaso','*ballena','*rana de ojos rojos','*nutria']),
+ criatura:gW(['dragón','golem','*hada','*bruja','fantasma','esqueleto','gárgola','*sirena','centauro','minotauro','vampiro','momia','yeti','kraken','alebrije','nahual','chaneque','*calavera','*sombra con ojos','*planta carnívora gigante','*criatura de la niebla','espíritu del bosque','robot oxidado','*medusa de luz','*serpiente de obsidiana']),
+ persona:gW(['guerrero','*guerrera','*chamana','*cocinera','pescador','músico','astronauta','detective','caballero','mago','cartero','jardinero','panadero','luchador','mariachi','taquero','*bibliotecaria','explorador','*viajera','herrero','*pintora','*niña con linterna','abuelito sabio','*abuelita jaguar','cazador de criaturas','*curandera','*cartógrafa','*vigía del faro']),
+ objeto:gW(['*taza','*llave','*linterna','*brújula','reloj','farol','*maleta','paraguas','zapato','*guitarra','tambor','libro','espejo','*máscara','*corona','*espada','*vasija','*piñata','molcajete','rebozo','sombrero','*bicicleta','tren','barco','globo aerostático','tocadiscos','*máquina de escribir','*cámara','*nave','*botella','*vela','*campana','*lámpara de aceite','*caja de música','*tetera','*olla de barro']),
+ planta:gW(['*flor de cempasúchil','nopal','maguey','*mazorca de maíz','*calabaza','*orquídea','*jacaranda','*bugambilia','hongo','*raíz gigante','*hoja de monstera','*flor de obsidiana','*semilla de cacao','*rama de laurel','*enredadera','*flor de loto','*selva en miniatura','*rosa de papel']),
+ lugar:['un templo en ruinas','la selva de noche','un volcán dormido','un mercado lleno de linternas','una azotea con luces de neón','una pirámide al amanecer','un cenote con luz entre las rocas','un desierto con cactus enormes','una biblioteca que flota','un faro en una tormenta','un tren nocturno','un laboratorio secreto','una cocina de abuela','una panadería a las 4 de la mañana','un circo abandonado','una feria con la rueda detenida','un observatorio de estrellas','una cueva de cristales','una laguna con niebla','una calle empedrada bajo la lluvia','un panteón con velas','un jardín flotante','un invernadero tragado por la selva','una cantina de criaturas'],
+ giro:['de obsidiana','de papel picado','de jade y oro','de agua y luz','en versión cute','en versión terrorífica pero elegante','en miniatura, dentro de una taza','a escala de montaña','con cuatro brazos','con alas de mariposa','con la cabeza de otro animal','bajo el agua','en el futuro','de hace quinientos años','como carta de lotería','como carta de tarot','como timbre postal','como etiqueta de producto vintage','como moneda antigua','como constelación','como talismán de protección','como mapa de un mundo','como pieza de ajedrez','como juguete de madera','como vitral de catedral','bordado en tela','en luz de neón','como lámina botánica antigua','como sello de lacre','durmiendo, con sueños que se escapan','con una máscara puesta','con una linterna en la oscuridad'],
+ estilo:['libro infantil con un toque oscuro','grabado antiguo en línea fina','neón sobre fondo negro','art nouveau con marco ornamental','papel picado','lámina botánica','ukiyo-e con paleta mexicana','cómic retro de los 60','pixel art','acuarela suave','vitral','tarot clásico','bordado a mano','linóleo en dos tintas','cartel de lucha libre','arte popular mexicano','low poly','plano técnico (blueprint)','siluetas planas con un acento','tinta blanco y negro con sombra de puntos'],
+ pal:['cempasúchil, morado y negro','turquesa y coral','jade y oro','noche azul con un acento naranja','pasteles suaves','rojo, crema y negro','rosa y cian neón','tierra y verde selva','sepia monocromo','blanco, negro y un solo color de acento','azul de Talavera y blanco','magenta, naranja y fondo oscuro','verde musgo y ámbar','lila, plata y azul hielo'],
+ mat:['obsidiana','jade','oro viejo','cerámica de Talavera','papel','madera tallada','cuero','vidrio soplado','hueso','barro','tela bordada','concha nácar','plumas','metal oxidado','cristal de cuarzo','hielo','ceniza','cera de vela'],
+ prof:['panadero','mecánico','DJ','chef','juez','doctora','cartero','bibliotecaria','taxista','luchador','astronauta','detective','barista','jardinero','guardián de museo','tatuador','arquitecto','payaso triste'],
+ eje:['emociones','estaciones','elementos','días de la semana','sentidos','fases de la luna','sabores','meses','colores','climas'],
+ emo:['ternura','misterio','nostalgia','picardía','calma','asombro','soledad','euforia','melancolía','orgullo']};
+/* productos: qué se vende, precio de partida (orientativo, en MXN) y por qué funciona */
+const GI_PROD={
+ stickers:{n:'Pack de 6 a 10 stickers',precio:'$80 a $150 el pack',por:'Compra por impulso y coleccionable: la gente compra el pack para tener todos. Es lo más fácil de empezar.',paso:'Haz 8 siluetas del sujeto en 10 minutos y elige las 6 que mejor se lean a 3 cm.'},
+ print:{n:'Print A4 o A3 para enmarcar',precio:'$180 a $450 según tamaño',por:'Decoración: se vende por tema y por cómo combina con un cuarto. Una buena paleta pesa más que el detalle.',paso:'Haz 3 thumbnails de composición (5×3 cm) y elige el que tenga un foco más claro.'},
+ tarjetas:{n:'Set de tarjetas o postales',precio:'$60 a $120 el set',por:'Se compran para regalar; la fecha empuja la venta y el pack de varias sube el ticket.',paso:'Haz 4 variaciones pequeñas con la misma estructura y una frase corta para cada una.'},
+ retrato:{n:'Retrato o personaje por encargo',precio:'$400 a $1,500',por:'Personalizado: la gente paga más por algo hecho para ella. Lo importante es una oferta clara y fechas de entrega.',paso:'Haz una muestra con tu mascota o la de un amigo y úsala como ejemplo en tu publicación.'},
+ digital:{n:'Producto digital (wallpapers, plantilla o pack)',precio:'$50 a $150',por:'Margen alto y cero costo de producción: lo vendes las veces que quieras. Funciona bien con el estilo reconocible.',paso:'Haz la versión base y 3 variantes de color; exporta con 3 tamaños de pantalla.'},
+ zine:{n:'Mini zine o libro de colorear',precio:'$80 a $160',por:'Se siente un objeto «de autor»; sirve para contar un mundo en pocas páginas.',paso:'Haz el guion de 8 páginas en una hoja y un thumbnail por página.'},
+ marcapaginas:{n:'Marcapáginas coleccionables',precio:'$40 a $90 la pieza',por:'Barato, ligero de enviar y se compra en serie; muy bueno en ferias.',paso:'Define una serie de 4 con una sola retícula y haz el primero en blanco y negro.'},
+ taza:{n:'Diseño para taza, tote o playera',precio:'por impresión bajo demanda; tú ganas por unidad',por:'Se compra por la frase y la identidad; las plataformas imprimen y envían por ti.',paso:'Haz el diseño en una sola tinta con fondo transparente y pruébalo en un mockup.'},
+ pin:{n:'Pin, parche o llavero (diseño)',precio:'$90 a $180',por:'Coleccionable y fácil de llevar; los diseños con silueta fuerte funcionan mejor.',paso:'Reduce el diseño a 3 colores y 1 contorno; si se lee a 3 cm, sirve.'}};
+const GI_PRODS_VENDER=['stickers','print','tarjetas','retrato','digital','zine','marcapaginas','taza','pin'];
+/* ---- ideas pensadas para cada fecha. {A}=un jaguar · {a}=el jaguar · {n}=jaguar · {N}=Jaguar · {B}/{b}/{nb}/{NB} lo mismo con el segundo sujeto · {mat} material · {pal} paleta ---- */
+const GI_FECHA={
+ halloween:{suj:gW(['*bruja','murciélago','*araña','gato negro','esqueleto','fantasma','vampiro','momia','*calabaza con cara','espantapájaros','cuervo','*lechuza','jaguar de noche']),sim:['luna llena','calabaza tallada','vela','telaraña','caldero','niebla','dulces'],pal:['naranja, negro y crema','morado, verde ácido y negro','azul noche con un acento naranja'],hook:['Ya es temporada de {n}: ','Esta noche sale {a}: ','Para tu Halloween: '],
+  tpl:[['{N} de medianoche','{A} que solo sale en luna llena, con ojos que brillan en la oscuridad. Una ilustración con fondo oscuro y un solo color de luz.','stickers'],['La casa embrujada más acogedora','Una casa embrujada donde vive {a} y deja una vela en cada ventana: da miedo pero te dan ganas de entrar. Print de paleta cálida.','print'],['{N} con disfraz de {nb}','{A} con disfraz de {nb}: cada quien se cree el disfraz del otro. Tierno, compartible y perfecto para stickers.','stickers'],['Dulce o truco: {N}','Tarjetas de «dulce o truco» con {a} en 4 poses (pidiendo, escondido, asustado, comiendo) para repartir entre vecinos.','tarjetas'],['{N} y la luna','Póster de {a} frente a una luna enorme, a 3 tintas: negro, naranja y crema.','print'],['Cuenta regresiva de 31 días','Un calendario de octubre con una criatura nueva cada día (una pieza al día) y se vende como pack digital al final.','digital'],['{N} de {mat}','{A} de {mat}, en versión cute y un poco siniestra: la mezcla que más se comparte en redes.','stickers'],['Tu mascota, monstruo','Retratos por encargo de tu mascota o de ti como {n} de Halloween. Abre preventa en septiembre.','retrato']]},
+ muertos:{suj:gW(['*calavera','xoloitzcuintle','*mariposa monarca','colibrí','alebrije','*catrina','*vela','jaguar guardián','búho','*flor de cempasúchil','*garza','perro guía de almas']),sim:['cempasúchil','velas','papel picado','pan de muerto','ofrenda','mariposas monarca','copal','fotografías'],pal:['cempasúchil, morado y negro','naranja, rosa mexicano y turquesa','blanco hueso sobre fondo oscuro'],hook:['Para tu ofrenda: ','Este año, {a} guía a los que se fueron: ','Para recordar con cariño: '],
+  tpl:[['{N} guía de almas','{A} guiando almas por un puente de pétalos de cempasúchil: se vende como print y como set de postales.','print'],['Ofrenda en miniatura','Una ofrenda pequeña con {a} como guardián, velas y papel picado: ilustración vertical pensada para enmarcar en la sala.','print'],['Calaverita de {N}','La calavera de azúcar con los rasgos de {a}: pack de stickers con 6 calaveritas distintas.','stickers'],['{N} de papel picado','{A} en papel picado, con calados finos y línea limpia: fácil de imprimir y de vender como wallpaper.','digital'],['Alebrije {N}-{NB}','Un alebrije que mezcla {a} con {b}: patrones y color por zonas (cada zona cuenta un recuerdo).','print'],['Recuerdo para tu ofrenda','Retrato estilizado por encargo de un ser querido (o su mascota) para poner en la ofrenda, con respeto y con permiso de la familia.','retrato'],['Marcapáginas de ofrenda','Serie de 4 marcapáginas con velas, mariposas, flores y calavera: barato, ligero y muy regalable.','marcapaginas'],['Los que se adelantaron','Una ilustración homenaje a las mascotas que ya no están: {a} cruzando un puente de cempasúchil; se vende mucho en estas fechas.','tarjetas']]},
+ posadas:{suj:gW(['*estrella','*piñata','*esfera','*vela','reno','*campana','oso','muñeco de nieve','*poinsettia','farol','*bufanda','*luz de nochebuena','*chaneque con gorro']),sim:['luces','nieve','listón','ponche','regalos','pino','farolitos'],pal:['rojo, verde pino y crema','azul invierno, plata y dorado','verde jade y rojo cochinilla'],hook:['Para tus regalos de diciembre: ','Ya llegó {a} a la posada: ','Una tarjeta distinta: '],
+  tpl:[['{N} en la posada','{A} en una posada con piñata y farolitos: ilustración festiva en versión tarjeta de Navidad.','tarjetas'],['Esfera de {N}','Diseño circular con {a} para esfera navideña o adorno: se imprime en acrílico o papel.','pin'],['Calendario de adviento','24 stickers pequeños, uno por día, con {a} cambiando de actitud: se vende como paquete numerado.','stickers'],['Noche de paz con niebla','Un paisaje silencioso con {a} bajo luces cálidas y nieve o niebla: print para la sala.','print'],['Tarjeta que sí se guarda','Tarjeta de Navidad con {a} y frase corta al estilo de tu mundo; vende por set de 6.','tarjetas'],['Retrato de mascota con gorro','Retratos por encargo de mascotas con gorro, bufanda o corona: cierra pedidos antes del 15 de diciembre.','retrato']]},
+ valentin:{suj:gW(['*pareja de aves','dos jaguares','*llave y *cerradura','*pareja de gatos','*rosa de obsidiana','*carta de amor','*mariposa','dos manos','corazón anatómico','*nutria','pulpo con muchos brazos']),sim:['corazones','cartas','rosas','listones','ramo','dulces'],pal:['rosa, rojo y crema','magenta, negro y dorado','coral, turquesa y blanco'],hook:['Para regalar este 14: ','Tu pareja es {a}: ','Un detalle distinto: '],
+  tpl:[['{N} enamorado','{A} con un corazón entre las manos: tarjeta y sticker en versión cute, sin cursilería.','tarjetas'],['Corazón de {mat}','Un corazón de {mat} con detalles de tu estilo y {a} escondido en un rincón: pieza de pared que se siente joya.','print'],['Pareja {N} y {NB}','{A} y {b} como pareja: duo ilustrado para tarjeta y para mostrar en redes.','stickers'],['Carta de lotería: El amor','Una carta tipo lotería con {a} y el nombre «El amor»: se vende como carta suelta y como mazo.','print'],['Retrato de ustedes dos','Retrato de pareja estilizado por encargo, como regalo personalizado, con entrega antes del 14.','retrato'],['Amistad también cuenta','Stickers de «te elijo» con {a} para regalar a tus amigos y no solo a tu pareja.','stickers']]},
+ madres:{suj:gW(['*mamá jaguar con su cría','*abuelita','*mamá pájaro','*flor de cempasúchil','*mano de mamá','*mamá osa','*mamá ballena','*garza','*chamana sabia','*cocinera']),sim:['flores','tazas','cartas','delantal','manos'],pal:['rosa, verde salvia y crema','coral y turquesa','dorado y vino'],hook:['Para mamá: ','El regalo que no se tira: '],
+  tpl:[['{N} con su cría','Ilustración de {a} cuidando a su cría con paleta cálida: tarjeta y print pequeño.','tarjetas'],['Retrato de mamá','Retrato estilizado de mamá por encargo, con flores de tu mundo: tu servicio estrella para mayo.','retrato'],['Gracias por todo','Tarjeta con {a} y una frase corta; se vende en pack de 3 para madres, abuelas y tías.','tarjetas'],['Su flor favorita','Print botánico con la flor preferida de mamá y detalles de {a}; se puede personalizar el nombre.','print']]},
+ padres:{suj:gW(['*papá oso','guerrero','pescador','*caja de herramientas','*bicicleta','*guitarra','*cámara','abuelo sabio','caballero','luchador']),sim:['herramientas','pasatiempo','café','mapa'],pal:['azul marino y mostaza','verde bosque y crema','gris, negro y naranja'],hook:['Para papá: ','Un regalo que se nota: '],
+  tpl:[['Papá héroe','Retrato de papá como guerrero o aventurero con su pasatiempo: personalizable por encargo.','retrato'],['{N} de guardia','{A} que cuida a su familia: ilustración con fuerza y ternura para tarjeta o print.','tarjetas'],['Su pasatiempo en grande','Print con el pasatiempo de papá (pesca, guitarra, mecánica) en tu estilo.','print'],['Taza del mejor','Diseño para taza con {a} y una frase con humor.','taza']]},
+ mujer:{suj:gW(['*guerrera','*chamana','*cazadora','*sabia','*cartógrafa','*luchadora','*científica','*músico','*curandera']),sim:['flores','plumas','mano alzada'],pal:['morado, verde y blanco','magenta y dorado'],hook:['Para ellas: '],
+  tpl:[['{N} poderosa','{A} con postura firme y silueta fuerte: print con paleta propia.','print'],['Serie de 5 retratos','5 mujeres de oficios distintos con vestuario y rasgos diversos: se vende como set y como serie.','print'],['Frase y flor','Frase corta con una ilustración botánica; stickers y tarjeta.','stickers']]},
+ reyes:{suj:gW(['*rosca','rey mago','*estrella guía','camello','*corona','muñequito','chocolate caliente']),sim:['rosca','fruta cristalizada','corona'],pal:['dorado, rojo y azul profundo'],hook:['Para tu rosca: '],
+  tpl:[['¿Quién se sacó el muñeco?','Stickers de «me tocó el muñeco» con {a} y su cara de susto; humor para compartir.','stickers'],['La rosca más fantástica','Ilustración de una rosca con {a} escondido: print festivo para la cocina.','print'],['Reyes de tu mundo','Tres reyes magos con diseños propios: serie de 3 postales.','tarjetas']]},
+ nino:{suj:gW(['jaguar bebé','*cría de quetzal','*tortuga bebé','dragón cute','amigo imaginario','*nutria','conejo','*oruga','ajolote bebé']),sim:['juguetes','globos','arcoíris'],pal:['pasteles suaves','amarillo, turquesa y rosa'],hook:['Para los pequeños: '],
+  tpl:[['{N} bebé','Versión cute de {a} para stickers y tarjetas de cumpleaños.','stickers'],['Libro para colorear','Libro de 8 páginas con {a} y su mundo: producto digital que se imprime en casa.','zine'],['Cuarto de los peques','Print de {a} para decorar un cuarto infantil, con paleta suave.','print']]},
+ independencia:{suj:gW(['*águila y *nopal','mariachi fantástico','*pirámide con luces','*lotería','jaguar mexicano','xoloitzcuintle','*guacamaya']),sim:['papel picado','listones','fiesta','banderines'],pal:['verde, blanco y rojo reinterpretados','turquesa, rosa mexicano y oro'],hook:['Para tus fiestas patrias: '],
+  tpl:[['México fantástico','{A} con símbolos mexicanos reinterpretados: print con tu mirada (sin estereotipos gastados).','print'],['La lotería de tu mundo','Una carta de lotería con {a}: cartas sueltas y mazo de 12.','print'],['Stickers de fiesta','Pack de stickers con {a}, papel picado y banderines.','stickers']]},
+ inktober:{suj:gW(['*máscara','*raíz','*criatura de la niebla','*llave','*lámpara','*mano de piedra','*ruinas','jaguar','*serpiente']),sim:['tinta','pluma','puntillismo'],pal:['blanco y negro'],hook:['Día {n} de Inktober: '],
+  tpl:[['{N} en tinta','{A} en tinta blanco y negro con sombra de puntos: la pieza del día y base de tu print del mes.','print'],['Mi mes en una lámina','Lámina con tus 6 mejores piezas del mes como pack de prints o PDF.','digital'],['Sticker de tinta','El mejor de tus dibujos en tinta reducido a una silueta clara para sticker.','stickers']]},
+ tierra:{suj:gW(['*selva','árbol enorme','*raíz gigante','*cascada','colibrí','*montaña','*mariposa monarca','*semilla','hongo']),sim:['hojas','raíces','agua'],pal:['verde musgo y ámbar','azul río y verde jade'],hook:['Para cuidar lo nuestro: '],
+  tpl:[['La naturaleza reclama','Una selva que recupera un templo en ruinas: print con atmósfera y niebla.','print'],['Marcapáginas verdes','Serie de 4 marcapáginas con plantas y animales de tu mundo.','marcapaginas'],['{N} de la selva','{A} dentro de un bosque en miniatura: ilustración circular para pin y sticker.','pin']]},
+ gato:{suj:gW(['gato guardián','gato mago','gato dormido','*gata con capa','gatos apilados','gato de templo']),sim:['bigotes','lana','siesta'],pal:['pasteles suaves','negro, naranja y crema'],hook:['Para los que viven con un gato: '],
+  tpl:[['Gato de tu mundo','Gato con detalles de tu cultura (pintura facial, joyería) como print y sticker.','stickers'],['Tu gato, guardián','Retrato por encargo de tu gato como guardián de un templo: pieza personalizada.','retrato'],['Siesta eterna','Gato dormido en una pose absurda: print de humor para decoración.','print']]},
+ blackfriday:{suj:gW(['*paquete','*caja','*oferta']),sim:['paquete','descuento'],pal:['negro y amarillo','negro y tu color de marca'],hook:['Este fin de semana: '],
+  tpl:[['Super bundle','Un paquete de tus 3 prints más vendidos con precio especial: se prepara una semana antes.','digital'],['Pack de stickers y wallpapers','Sticker + wallpaper de {a} en un mismo paquete: producto digital de entrada.','digital'],['Preventa de tu próximo set','Anuncia un set nuevo con descuento de lanzamiento solo para quien compre esta semana.','stickers']]},
+ candelaria:{suj:gW(['*vela','*tamal','*niño Dios con *corona','*mazorca','*calabaza','atole']),sim:['tamales','velas','maíz'],pal:['amarillo maíz, rojo y azul'],hook:['Para los tamales de la Candelaria: '],
+  tpl:[['Tamal con carácter','Un tamal ilustrado con personalidad y ojos: stickers de comida cute con identidad mexicana.','stickers'],['Quién se lo sacó','Humor de «me tocó pagar los tamales» con {a}.','stickers']]},
+ equinoccio:{suj:gW(['*serpiente de luz','*pirámide','*escalinata','*sombra serpiente','sol','jaguar']),sim:['sombra','escalones','luz'],pal:['dorado, turquesa y negro','amarillo sol y verde jade'],hook:['Hoy baja la serpiente: '],
+  tpl:[['La serpiente que baja','La famosa sombra de serpiente bajando por una pirámide, en tu versión y con tu mundo: print de entorno con luz.','print'],['Sol y escalera','Una escalinata al amanecer con {a} como guardián: pieza grande para pared.','print']]},
+ orgullo:{suj:gW(['*arcoíris','*pareja de aves','*mariposa','guerrero con *capa de colores','*luz']),sim:['colores','listón','abrazo'],pal:['arcoíris suave','colores vivos sobre fondo oscuro'],hook:['Con orgullo: '],
+  tpl:[['Amor sin etiquetas','Pareja de criaturas con la paleta de la bandera: stickers y tarjetas que se compran para regalar.','stickers'],['Guerrero con capa','{A} con una capa de colores: print de fuerza y ternura.','print']]},
+ clases:{suj:gW(['*mochila','*libreta','lápiz','*regla','*lupa','búho','*calculadora','*llave maestra']),sim:['útiles','libretas','horario'],pal:['azul, amarillo y blanco','verde menta y coral'],hook:['Regreso a clases: '],
+  tpl:[['Útiles con carácter','Stickers para libretas y estuches con {a}: lo que más se compra en agosto y septiembre.','stickers'],['Horario ilustrado','Plantilla de horario semanal con {a}: producto digital para imprimir.','digital'],['Marcapáginas de estudio','Serie de 6 marcapáginas con frases de ánimo y {a}.','marcapaginas']]},
+ maestro:{suj:gW(['búho','*lechuza','*maestra sabia','*libro','*manzana','*pizarra']),sim:['pizarrón','gises','libros'],pal:['verde pizarrón, madera y crema'],hook:['Para tu maestra o maestro: '],
+  tpl:[['Gracias, maestra','Tarjeta de agradecimiento con {a}: pack de 5 para el salón.','tarjetas'],['Taza del mejor profe','Diseño con {a} y una frase para taza: regalo fácil.','taza']]},
+ viernes13:{suj:gW(['gato negro','*escalera','*espejo roto','*sombra','cuervo','*llave oxidada','*araña']),sim:['supersticiones','luna','sombra'],pal:['negro, rojo y crema','gris, morado y blanco'],hook:['Viernes 13: '],
+  tpl:[['Mala suerte, buen sticker','Pack de stickers de supersticiones ilustradas: {a}, espejo roto, escalera, sal derramada.','stickers'],['Talismán contra la mala suerte','{A} como talismán protector en versión amuleto: print o pin.','pin']]}
+};
+/* fechas nuevas para la ruleta (se suman a las de «Ideas para vender») */
+(()=>{const F13=y=>{const h=new Date();h.setHours(0,0,0,0);let ult=null;for(let m=0;m<12;m++){const d=new Date(y,m,13);if(d.getDay()===5){if(y!==h.getFullYear()||d>=h)return d;ult=d}}return ult||new Date(y,0,13)};
+ const add=[{k:'candelaria',n:'Día de la Candelaria',m:2,d:2,sem:2,ico:'🌽',txt:'Tamales y humor mexicano.',ideas:[],venta:['Stickers'],tags:['candelaria','tamales']},
+  {k:'equinoccio',n:'Equinoccio de primavera (serpiente de Chichén Itzá)',m:3,d:20,sem:3,ico:'🐍',txt:'La sombra de la serpiente baja por la pirámide: tema que te pertenece.',ideas:[],venta:['Print'],tags:['equinoccio','chichen itza']},
+  {k:'maestro',n:'Día del Maestro (México)',m:5,d:15,sem:2,ico:'🍎',txt:'Tarjetas y tazas para regalar.',ideas:[],venta:['Tarjetas'],tags:['dia del maestro']},
+  {k:'orgullo',n:'Mes del Orgullo',m:6,d:28,sem:4,ico:'🌈',txt:'Mucho gusto por stickers, tarjetas y pareja de criaturas.',ideas:[],venta:['Stickers','Tarjetas'],tags:['pride']},
+  {k:'clases',n:'Regreso a clases',m:8,d:25,sem:3,ico:'🎒',txt:'Stickers para útiles y papelería; la temporada empieza en agosto.',ideas:[],venta:['Stickers','Marcapáginas'],tags:['back to school','regreso a clases']},
+  {k:'viernes13',n:'Viernes 13',f:F13,sem:2,ico:'🐈‍⬛',txt:'Supersticiones ilustradas: gatos negros, espejos rotos, amuletos.',ideas:[],venta:['Stickers','Pin'],tags:['friday the 13th','viernes 13']}];
+ for(const f of add)if(!VT_FECHAS.some(x=>x.k===f.k))VT_FECHAS.push(f)})();
+/* ---- plantillas sin fecha ---- */
+const GI_LIBRE=[
+ ['{N} × {NB}','{A} y {b} en una sola criatura: la silueta de uno y la anatomía del otro. Primero decide qué hereda de cada uno y dibuja 6 siluetas antes de elegir.','print'],
+ ['{N} {prof}','{A} trabajando de {prof}: lo que usa en su oficio (herramientas, uniforme, cansancio) cuenta quién es. Humor visual que se comparte solo.','stickers'],
+ ['{N}, serie de {eje}','Serie de 6 piezas con {a}, una por cada uno de estos {eje}, con la misma composición y {pal}. Se vende como set y cada una por separado.','print'],
+ ['Un mundo dentro de {NB}','Una ciudad entera dentro de {b}, y {a} la recorre. Mucho detalle pequeño: ideal para zine o print grande.','zine'],
+ ['{N} {giro}','{A} {giro}. La idea cabe en una frase y funciona como sticker o print.','stickers'],
+ ['{N} en {lugar}','{A} en {lugar}, con sensación de {emo}. Decide la hora del día y deja que la luz cuente la historia.','print'],
+ ['La {N}','Una carta de lotería con {a}: número, marco ornamental y nombre en letras de época. Se vende suelta y como mazo de 12.','print'],
+ ['{N} a tu medida','Servicio personalizado: tu mascota o tú como {n}, en estilo {estilo}. Precio fijo, 2 rondas de revisión y entrega en 2 semanas.','retrato'],
+ ['Hoja de {N}','Una hoja con 12 versiones de {a}, cada una con una emoción distinta ({emo} y otras): sticker sheet y práctica de expresiones a la vez.','stickers'],
+ ['{N} con frase','{A} con una frase corta y con humor para taza o tote. Prueba 3 frases y deja que alguien elija.','taza'],
+ ['Wallpaper {N}','Fondo de pantalla con {a} en 3 colores ({pal}); el pack se vende como producto digital.','digital'],
+ ['{N} y {NB}, amigos improbables','{A} y {b} como amigos inseparables: dos siluetas que contrastan, una mini historia y varias poses para stickers.','stickers'],
+ ['Arcano de {N}','Carta de tarot con {a} de protagonista: decide qué significa (el protector, el viajero, la tormenta) y arma 4 cartas para una mini baraja.','print'],
+ ['{N}, edición limitada','Print numerado de 20 piezas con {a} en {pal}: la escasez ayuda a vender y justifica un precio más alto.','print'],
+ ['El objeto de {N}','{A} y el objeto que más quiere: {b}. Un objeto que cuenta quién es; ideal para pin, sticker o print pequeño.','pin'],
+ ['{N} en estilo {estilo}','{A} en estilo {estilo}, con {pal}. Una sola idea muy clara que se lee en miniatura.','print']];
+/* ---- estado y motor ---- */
+const GIS=()=>{const g=S.gi=S.gi||{modo:'vender',fecha:'auto',slots:null,lock:{},idea:null,lote:null};g.lock=g.lock||{};return g};
+const gPick=a=>a[Math.floor(Math.random()*a.length)],gCap=s=>s?s[0].toUpperCase()+s.slice(1):s,gTon=w=>w.f&&/^(hada|águila|alma|agua|arma|ave|hacha)/i.test(w.n),gUn=w=>(w.f&&!gTon(w)?'una ':'un ')+w.n,gEl=w=>(w.f&&!gTon(w)?'la ':'el ')+w.n;
+function gPropias(){const p=(S.ajustes.giPropias||[]).filter(Boolean);return p.map(s=>({n:s,f:/(a|ión)$/i.test(s)&&!/^(el|un)\s/i.test(s)?0:0}))}
+function gFechaActiva(){const g=GIS();if(g.fecha==='libre')return null;if(g.fecha&&g.fecha!=='auto'){const f=VT_FECHAS.find(x=>x.k===g.fecha);return f?{f,p:vtProx(f)}:null}const PESO={halloween:5,muertos:5,posadas:5,madres:5,valentin:4,blackfriday:4,padres:3,reyes:3,nino:3,independencia:3,clases:3,mujer:2,inktober:2},L=vtLista().filter(x=>(x.p.enCurso||x.p.dias<=60)&&GI_FECHA[x.f.k]).sort((a,b)=>((PESO[b.f.k]||2)*10-b.p.dias/2)-((PESO[a.f.k]||2)*10-a.p.dias/2));return L[0]||null}
+function gSlotPick(sl,fa){const kit=fa&&GI_FECHA[fa.f.k];
+  if(sl==='A'){const pr=gPropias();if(pr.length&&Math.random()<.3)return gPick(pr);if(kit&&Math.random()<.6)return gPick(kit.suj);const c=gPick(['animal','animal','criatura','persona','objeto','planta']);return gPick(GI[c])}
+  if(sl==='B'){return gPick(GI[gPick(['animal','objeto','planta','objeto','criatura'])])}
+  if(sl==='lugar')return gPick(GI.lugar);if(sl==='giro')return gPick(GI.giro);if(sl==='estilo')return gPick(GI.estilo);
+  if(sl==='pal')return kit&&Math.random()<.6?gPick(kit.pal):gPick(GI.pal);if(sl==='prod')return gPick(GI_PRODS_VENDER);return null}
+const GI_SLOTS=[['A','Sujeto'],['B','Segundo elemento'],['giro','Giro'],['estilo','Estilo'],['pal','Paleta'],['prod','Producto']];
+function gGira(sl){const g=GIS(),fa=gFechaActiva();if(!g.slots)g.slots={};for(const [k] of GI_SLOTS){if(sl&&sl!==k)continue;if(!sl&&g.lock[k]&&g.slots[k]!=null)continue;g.slots[k]=gSlotPick(k,fa)}}
+function gTexto(v){return v&&typeof v==='object'?v.n:v||''}
+function gSubst(t,S_,fa){const A=S_.A,B=S_.B;t=t.replace(/^\{N\}/,'{N0}').replace(/^\{NB\}/,'{NB0}');const r={'{N0}':gCap(A.n),'{NB0}':gCap(B.n),'{A}':gUn(A),'{a}':gEl(A),'{n}':A.n,'{N}':A.n,'{B}':gUn(B),'{b}':gEl(B),'{nb}':B.n,'{NB}':B.n,'{mat}':S_.mat,'{pal}':S_.pal,'{estilo}':S_.estilo,'{giro}':S_.giro,'{lugar}':S_.lugar,'{prof}':S_.prof,'{eje}':S_.eje,'{emo}':S_.emo};
+  let o=t;for(const k in r)o=o.split(k).join(r[k]);o=o.replace(/\bde el\b/g,'del').replace(/\ba el\b/g,'al');return gCap(o)}
+function gIdea(){const g=GIS();if(!g.slots)gGira();const S_={...g.slots,lugar:gPick(GI.lugar),prof:gPick(GI.prof),eje:gPick(GI.eje),emo:gPick(GI.emo),mat:gPick(GI.mat)},fa=gFechaActiva(),kit=fa&&GI_FECHA[fa.f.k];let tpl;
+  if(kit&&Math.random()<.85)tpl=gPick(kit.tpl);else tpl=gPick(GI_LIBRE);
+  let prod=tpl[2];if(g.modo==='vender'&&g.lock.prod&&S_.prod)prod=S_.prod;if(!GI_PROD[prod])prod='print';
+  const titulo=gSubst(tpl[0],S_,fa),idea=gSubst(tpl[1],S_,fa),P=GI_PROD[prod];
+  const tags=[...(fa?fa.f.tags:[]),S_.A.n,S_.B.n,'ilustración','arte digital','regalo','mexicano','fantasía','original'].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,13);
+  const hook=fa&&kit?gSubst(gPick(kit.hook)+idea.split(/[.:]/)[0].toLowerCase(),S_,fa):gSubst(gPick(['{A} que nadie esperaba: ','Hoy dibujé {a} así: ','¿Lo comprarías? ']),S_,fa)+(g.modo==='vender'?'':'');
+  const quita=gPick(['estilo','pal','giro']),vars=[`Cámbiale el estilo a «${gPick(GI.estilo)}»`,`Hazlo ${gPick(GI.giro)}`,`Prueba la paleta «${gPick(GI.pal)}»`];
+  let pub='';if(fa){const f=fa.f,p=fa.p,lim=f.sem*7;pub=p.enCurso?`${f.ico} ${f.n} es ahora: publica ya lo que alcances.`:p.dias<=lim?`${f.ico} Faltan ${p.dias} días para ${f.n}: ya es momento de publicar algo pequeño.`:`${f.ico} Faltan ${p.dias} días para ${f.n}: publícalo hacia el ${vtFechaTxt(f,{fecha:new Date(p.fecha.getTime()-lim*864e5),fin:p.fin}).split(' al ')[0]}.`}
+  return {id:uid(),titulo,idea,prod,producto:P.n,precio:P.precio,por:P.por,paso:P.paso,hook,tags,vars,pub,fecha:fa?fa.f.k:'',ts:Date.now()}}
+function gLote(n=8){const g=GIS(),sl=g.slots,out=[];const guardaSlots=sl?{...sl}:null;for(let i=0;i<n;i++){gGira();out.push(gIdea())}g.slots=guardaSlots||g.slots;return out}
+/* ---- pantalla ---- */
+function gIdeaHTML(x,i,lote){const f=x.fecha&&VT_FECHAS.find(v=>v.k===x.fecha),g=GIS(),guard=(S.ajustes.ventasIdeas||[]).some(v=>v.t===x.titulo+': '+x.idea);
+  return `<div class="box gi-idea" style="margin:0"><div class="prow" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap"><h3 style="margin:0;font-size:22px">${f?f.ico+' ':''}${esc(x.titulo)}</h3>${g.modo==='vender'?`<span class="tagp free">${esc(x.producto)}</span>`:''}</div>
+   <p style="margin:6px 0">${esc(x.idea)}</p>
+   ${g.modo==='vender'?`<p class="muted" style="margin:0 0 4px"><b>Precio de partida:</b> ${esc(x.precio)} · <b>Por qué se vende:</b> ${esc(x.por)}</p>${x.pub?`<p style="margin:0 0 4px"><b>Cuándo:</b> ${esc(x.pub)}</p>`:''}<p class="muted" style="margin:0 0 4px"><b>Gancho para publicar:</b> «${esc(x.hook)}…»</p>`:''}
+   <p class="muted" style="margin:0 0 4px"><b>Primer paso (10 min):</b> ${esc(x.paso)}</p>
+   <details><summary class="muted" style="cursor:pointer">Variaciones y etiquetas</summary><ul style="margin:4px 0;padding-left:20px">${x.vars.map(v=>`<li>${esc(v)}</li>`).join('')}</ul><p class="muted" style="margin:0"><b>Etiquetas:</b> ${esc(x.tags.join(', '))}</p></details>
+   <div class="prow" style="margin-top:8px"><button class="btn sm pri" data-gi="hacer" data-i="${i}" data-l="${lote?1:0}">Hacer →</button><button class="btn sm" data-gi="guarda" data-i="${i}" data-l="${lote?1:0}">${guard?'★ Guardada':'☆ Guardar'}</button><button class="btn sm" data-gi="copia" data-i="${i}" data-l="${lote?1:0}">Copiar</button>${lote?'':`<button class="btn sm" data-gi="otra">Otra idea con estas palabras</button>`}</div></div>`}
+function vGenerador(compacto){
+  const g=GIS();if(!g.slots)gGira();const fa=gFechaActiva(),prox=vtLista().filter(x=>GI_FECHA[x.f.k]).slice(0,6),I=g.idea||(g.idea=gIdea()),pr=S.ajustes.giPropias||[];
+  const sl=(k,n)=>{const v=g.slots[k],ocultar=(k==='prod'&&g.modo!=='vender');if(ocultar)return '';return `<div class="gi-sl ${g.lock[k]?'lock':''}"><span class="lbl">${n}</span><b>${esc(k==='prod'?GI_PROD[v]?.n||v:gTexto(v))}</b><div class="prow"><button class="btn xs" data-gi="gira" data-k="${k}" title="Cambiar solo esta">🎲</button><button class="btn xs ${g.lock[k]?'pri':''}" data-gi="lock" data-k="${k}" title="Bloquear">${g.lock[k]?'🔒':'🔓'}</button></div></div>`};
+  return `<div class="box gi-box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between;flex-wrap:wrap"><h3 style="margin:0">Generador de ideas por palabras</h3><div class="prow"><button class="ch xs ${g.modo==='vender'?'on':''}" data-gi="modo" data-v="vender">Para vender</button><button class="ch xs ${g.modo==='dibujar'?'on':''}" data-gi="modo" data-v="dibujar">Para dibujar</button></div></div>
+   <p class="hint" style="margin:4px 0 8px">Gira la ruleta, bloquea las palabras que te gusten y vuelve a girar. De ahí sale una idea completa${g.modo==='vender'?' con producto, precio de partida, por qué se vende y gancho para publicar':' con su primer paso de 10 minutos'}.</p>
+   <div class="chips"><span class="lbl">Fecha</span><button class="ch xs ${g.fecha==='auto'?'on':''}" data-gi="fecha" data-v="auto">Automática${fa&&g.fecha==='auto'?': '+esc(fa.f.n):''}</button><button class="ch xs ${g.fecha==='libre'?'on':''}" data-gi="fecha" data-v="libre">Sin fecha</button>${prox.map(x=>`<button class="ch xs ${g.fecha===x.f.k?'on':''}" data-gi="fecha" data-v="${x.f.k}">${x.f.ico} ${esc(x.f.n.split(' (')[0])} <small>${x.p.enCurso?'ahora':x.p.dias+' d'}</small></button>`).join('')}</div>
+   ${fa?`<p class="muted" style="margin:4px 0 0">${fa.f.ico} <b>${esc(fa.f.n)}</b> ${fa.p.enCurso?'ocurre ahora':'es en '+fa.p.dias+' días'}. Las ideas usan símbolos, paletas y productos de esa fecha.</p>`:''}
+   <div class="gi-slots">${GI_SLOTS.map(([k,n])=>sl(k,n)).join('')}</div>
+   <div class="prow" style="margin:8px 0;flex-wrap:wrap"><button class="btn pri" data-gi="todo">🎲 Girar todo y dame una idea</button><button class="btn" data-gi="lote">10 ideas de golpe</button><div class="prow"><input type="text" id="gi-propia" placeholder="Agrega tus palabras (un personaje, un lugar…)" style="width:230px" data-gi-in="1"><button class="btn sm" data-gi="agrega">+ Agregar</button></div></div>
+   ${pr.length?`<div class="chips"><span class="lbl">Mis palabras</span>${pr.map((w,i)=>`<span class="ch xs">${esc(w)} <b data-gi="quita" data-i="${i}" style="cursor:pointer">×</b></span>`).join('')}</div>`:''}</div>
+   ${gIdeaHTML(I,0,false)}
+   ${g.lote?`<div class="box"><div class="prow" style="justify-content:space-between"><h3>Lluvia de ideas</h3><button class="btn ghost sm" data-gi="cierra-lote">Cerrar</button></div><div style="display:grid;gap:10px">${g.lote.map((x,i)=>gIdeaHTML(x,i,true)).join('')}</div></div>`:''}`}
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-gi]');if(!t)return;const a=t.dataset.gi,g=GIS(),X=()=>t.dataset.l==='1'?g.lote?.[+t.dataset.i]:g.idea;
+  const nuevaPz=(x)=>{vtPz().unshift({id:uid(),k:x.fecha,t:x.titulo+': '+x.idea,est:'Idea',pasos:{},nota:'Producto: '+x.producto+'. '+x.por,precio:'',ts:Date.now()});marcarAj();toast('Agregada a «Mis piezas para vender»');S.vista='ventas';render()};
+  if(a==='modo'){g.modo=t.dataset.v;g.idea=gIdea()}else if(a==='fecha'){g.fecha=t.dataset.v;gGira();g.idea=gIdea()}else if(a==='gira'){gGira(t.dataset.k);g.idea=gIdea()}else if(a==='lock'){g.lock[t.dataset.k]=!g.lock[t.dataset.k]}
+  else if(a==='todo'){gGira();g.idea=gIdea()}else if(a==='otra'){g.idea=gIdea()}else if(a==='lote'){g.lote=gLote(10)}else if(a==='cierra-lote'){g.lote=null}
+  else if(a==='agrega'){const v=$('#gi-propia')?.value.trim();if(v){(S.ajustes.giPropias=S.ajustes.giPropias||[]).push(v);marcarAj();gGira('A');g.idea=gIdea()}}
+  else if(a==='quita'){(S.ajustes.giPropias||[]).splice(+t.dataset.i,1);marcarAj()}
+  else if(a==='guarda'){const x=X();if(x){const L=S.ajustes.ventasIdeas=S.ajustes.ventasIdeas||[],tt=x.titulo+': '+x.idea,i=L.findIndex(v=>v.t===tt);if(i>=0)L.splice(i,1);else L.push({id:uid(),k:x.fecha||'libre',t:tt,est:'Idea'});marcarAj()}}
+  else if(a==='copia'){const x=X();if(x)copiarTexto(`${x.titulo}\n${x.idea}\nProducto: ${x.producto} (${x.precio})\nPrimer paso: ${x.paso}\nEtiquetas: ${x.tags.join(', ')}`,'Idea copiada')}
+  else if(a==='hacer'){const x=X();if(x){nuevaPz(x);return}}
+  renderMain()});
+
 const VT_SIEMPRE=[['Pack de 10 stickers de tus criaturas','Recortados, fondo transparente, 2000 px por lado. Es lo más fácil de empezar a vender.'],['Print A3 de tu mejor keyframe','300 dpi (3508×4961 px) y una versión A4 más barata.'],['Retratos y personajes por encargo','OCs, personajes de rol (D&D), mascotas. Precio claro, 2 rondas de revisión.'],['Wallpapers de celular','Tres colores de un mismo diseño; vendes un pack.'],['Marcapáginas y tarjetas coleccionables','Una serie de 6 con tus criaturas.'],['Set de pinceles o texturas propias','Lo que ya usas, ordenado y probado.'],['PDF de breakdown o tutorial corto','Cómo hiciste una pieza, paso a paso.'],['Libro de colorear digital','8 a 12 páginas con tu mundo.']];
 const VT_PASOS=[['Idea y 3 thumbnails','Elige una sola idea y haz 3 miniaturas; escoge la que se lea mejor.'],['Línea o valores','Línea limpia o 3 valores. Que se lea en un celular.'],['Color y acabado','Paleta corta (3 o 4 colores) y un detalle de acabado.'],['Exportar y mockups','PNG de 300 dpi; stickers con fondo transparente; un mockup (pared, taza o celular).'],['Ficha de venta','Título claro, 13 etiquetas, descripción, precio y qué incluye.'],['Publicar y avisar','Súbelo con anticipación y anúncialo en tus redes con un proceso corto.']];
 const VT_DONDE=[['Etsy','Prints, digitales y stickers; la gente busca por fecha.'],['Redbubble, Society6 o TeePublic','Impresión bajo demanda: subes el diseño y ellos imprimen y envían.'],['Gumroad o Ko-fi','Productos digitales (pinceles, PDF, wallpapers) y propinas.'],['Instagram y Behance','Encargos y retratos: tu portafolio es tu tienda.'],['ArtStation Marketplace','Pinceles, tutoriales y texturas para otros artistas.']];
@@ -4982,6 +5275,7 @@ function vVentas(){const L=vtLista(),vis=S.vtTodas?L:L.slice(0,4),guard=S.ajuste
       <div class="chips"><span class="lbl">Se vende como</span>${f.venta.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>`};
   return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Ideas para vender</h1>
   <p class="intro">Ilustraciones sencillas, sin un proyecto grande, para vender: stickers, prints, tarjetas, retratos por encargo. <b>Viven aparte de tus proyectos y de tu portafolio</b>: nada de aquí se mezcla con tus proyectos grandes. Toca «↻ Nuevas ideas» para ver otras combinaciones.${mat?` Con tu proyecto más reciente puedes usar ${esc(mat)} y tus criaturas como sello propio.`:''}</p>
+  ${vGenerador()}
   ${inkHTML()}
   ${prGenHTML()}
   ${vtPiezasHTML()}
