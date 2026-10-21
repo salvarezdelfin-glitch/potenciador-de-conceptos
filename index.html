@@ -904,6 +904,20 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 
 /* ---- movimiento reducido ---- */
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* ---- programa de mejora ---- */
+.pg-resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}.pg-resumen>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}.pg-resumen b{font-family:var(--display);font-size:34px;line-height:1}.pg-resumen small{font-size:15px;color:var(--ink3)}
+.pg-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 14px;flex-wrap:wrap}.pg-tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--ink2);padding:9px 14px;cursor:pointer;font-weight:500}.pg-tab:hover{color:var(--ink)}.pg-tab.on{color:var(--ink);border-bottom-color:var(--accent)}
+.pg-dots{display:flex;gap:4px}.pg-dot{width:12px;height:12px;border-radius:4px;background:var(--surface3)}.pg-dot.on{background:var(--accent)}
+.pg-sesion{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}.pg-ses-h h2{margin:4px 0 6px;font-family:var(--display);font-size:clamp(22px,3.2vw,32px);text-transform:uppercase;letter-spacing:.01em}.pg-aviso{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--accent-soft)}
+.pg-bloques{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:12px}.pg-bl{background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:10px 12px}.pg-bl.now{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}.pg-bl-h{display:flex;justify-content:space-between;color:var(--ink2);font-size:12.5px;margin-bottom:4px}.pg-bl p{margin:0;line-height:1.45}
+.pg-crits{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.pg-auto{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.pg-mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px}.pg-sem{position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:3px;color:var(--ink)}.pg-sem:hover{border-color:var(--line2)}.pg-sem.sel{border-color:var(--accent)}.pg-sem.act{background:linear-gradient(180deg,var(--accent-soft),var(--surface))}.pg-sem.ok .pg-n{background:var(--ok);color:#06180d}.pg-sem em{font-style:normal;font-size:11.5px;color:var(--ink3)}
+.pg-n{width:24px;height:24px;border-radius:7px;background:var(--surface3);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.pg-fila{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}.pg-fila:first-child{border-top:0}.pg-chk{width:26px;height:26px;border-radius:50%;background:var(--surface3);display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:none;margin-top:1px}.pg-fila.ok .pg-chk{background:var(--ok);color:#06180d;font-weight:700}.pg-fila summary{cursor:pointer;color:var(--accent);font-size:12.5px;margin-top:2px}
+.pg-sbs{display:flex;gap:8px;align-items:flex-end;height:90px}.pg-sb{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:11px;color:var(--ink3)}.pg-sb i{width:100%;min-height:3px;background:var(--accent);border-radius:4px 4px 0 0;display:block}
+.pg-linea{display:flex;flex-wrap:wrap;gap:5px}.pg-pt{width:30px;height:30px;border-radius:50%;background:var(--surface3);display:inline-flex;align-items:center;justify-content:center;font-size:12px}.pg-pt.ok{background:var(--ok);color:#06180d}.pg-pt.act{outline:2px solid var(--accent)}
+.pg-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}.pg-gal figure{margin:0}.pg-gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;cursor:zoom-in}.pg-gal figcaption{font-size:12px;margin-top:4px}
+
 
 </style>
 </head>
@@ -1179,7 +1193,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvig9zel').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvigwzo3').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1503,7 +1517,7 @@ function renderSide(){
     </div>`;
   const grupoCrecer=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Crecer</span>
       ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
-      ${nav('diario','flame','Estudio diario',racha()?`<span class="s">🔥${racha()}</span>`:'')}
+      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
       ${nav('taller','brief','Tareas del taller',(S.ajustes.tareas||[]).length?`<span class="s">${S.ajustes.tareas.length}</span>`:'')}
       ${nav('retos','target','Retos de estudio')}
       ${nav('ruta','map','Cursos y ruta')}
@@ -2347,6 +2361,7 @@ function perfilHabilidadesHTML(){
 function ejercicioDeHoy(){
   const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},hoy=r.dias[hoyKey()];
   if(hoy)return hoy;
+  if(pgModo()==='prog'){const h=pgSesHoy();return {skill:h.W.skill,texto:h.s.t+': '+h.s.ej,i:h.i,prog:{w:h.w,i:h.i}}}
   const {orden}=debilidades(),d=hoyN(),i=d%3;
   if(S.ajustes.diarioEnfoque==='env'){const ENV=['escala','atmosfera','claves','profundidad','blockout','composicion','valores'],skill=ENV[d%ENV.length];return {skill,texto:EJERCICIOS[skill][i],i}}
   if(S.ajustes.diarioEnfoque==='3d'){const K=Object.keys(SKILLS_3D),skill=K[d%K.length];return {skill,texto:EJERCICIOS[skill][i],i}}
@@ -2359,7 +2374,215 @@ function racha(){
   while(dias[hoyKey(d)]?.hecho){n++;d.setDate(d.getDate()-1)}
   return n;
 }
+
+/* ============ PROGRAMA DE MEJORA: 12 semanas para Environment & Keyframe ============
+   Cada semana: una habilidad, por qué importa, un objetivo medible, un calentamiento, 5 sesiones de 30 min (calentamiento 5 · estudio 8 · ejercicio 12 · revisión 5) y una pieza de la semana con rúbrica.
+   La luz y la perspectiva (tus puntos débiles) ocupan 5 de las 12 semanas. */
+const PROG_W=(w,t,skill,por,obj,cal,ses,pz)=>({w,t,skill,por,obj,cal,ses:ses.map(s=>({t:s[0],est:s[1],ej:s[2],crit:s[3].split('|'),err:s[4]})),pz:{t:pz[0],d:pz[1],rub:pz[2].split('|')}});
+const PROGRAMA=[
+PROG_W(1,'Ver en valores','valores','Si los valores no leen, ningún color ni detalle te salva. Es la base de la luz, la profundidad y el foco.','Reducir cualquier escena a 3 valores y que se lea a 2 cm de tamaño.','6 cuadritos de gris, de blanco a negro. Rellénalos de memoria y compáralos con una escala real.',[
+ ['Tres valores en una foto','Elige 3 fotos de paisaje o arquitectura. Entrecierra los ojos y marca lo más oscuro, lo medio y lo más claro.','Reduce una de esas fotos a 3 valores planos en un rectángulo de 10×6 cm.','Se lee el lugar sin color|Máximo 3 valores|Lo más claro está en el foco','Usar 5 grises «por si acaso»: se pierde la jerarquía.'],
+ ['Agrupar masas','Toma un keyframe de un artista que sigues y delinea sus 3 masas de valor más grandes.','4 thumbnails de 5×3 cm del mismo entorno cambiando solo cuál masa es la oscura.','4 distribuciones realmente distintas|Cada una tiene una masa dominante|Sabes cuál elegirías y por qué','Repartir los valores parejo: sin masa dominante no hay foco.'],
+ ['Contraste y foco','Mira 5 imágenes y marca dónde está el mayor contraste. ¿Coincide con el foco?','Un thumbnail con foco claro sobre fondo oscuro y otro con foco oscuro sobre fondo claro.','El mayor contraste está en el foco|El resto baja de contraste|Se lee a 1 cm','Poner contraste fuerte en las esquinas: roba la atención.'],
+ ['Tres planos','Divide una foto en primer plano, plano medio y fondo, y asigna un rango de valores a cada uno.','Entorno con 3 planos en 3 valores: cada plano en su propio rango.','Los 3 planos se separan|No se mezclan los rangos|Se entiende la profundidad','Fondo tan oscuro como el primer plano: se aplasta la profundidad.'],
+ ['Prueba de lectura','Revisa tus thumbnails de la semana en miniatura y en blanco y negro.','Lleva tu mejor thumbnail a valores pulidos de 14×8 cm, con 5 valores como máximo.','Se lee a 2 cm|Hay un foco claro|Los bordes no compiten','Pulir antes de resolver las masas.']],
+ ['Entorno en valores','Un entorno original (templo, calle o selva) en valores, 20×12 cm, sin color. 60 a 90 min.','Se lee a 2 cm|Un foco claro|Tres planos separados|Hay un casi blanco y un casi negro']),
+PROG_W(2,'La forma bajo la luz','claves','Es tu punto débil. Entender cómo la luz modela una forma simple te deja pintar cualquier objeto o edificio.','Pintar esfera, cubo y cilindro con luz dura y suave, nombrando terminador, sombra propia, proyectada y rebote.','Una esfera con la luz desde 4 direcciones distintas en 5 minutos.',[
+ ['Anatomía de la luz','Ilumina una fruta o taza con una lámpara de lado. Marca luz, tono medio, terminador, núcleo de sombra, rebote y sombra proyectada.','Pinta una esfera en valores con esas 6 zonas.','Se ven las 6 zonas|El núcleo es más oscuro que el rebote|La sombra proyectada ancla la esfera','Aclarar el núcleo de sombra: la forma se vuelve plana.'],
+ ['Cubo y cilindro','Observa una caja y un vaso con la misma luz. ¿Qué cara recibe más luz y cuál menos?','Cubo y cilindro con luz dura desde arriba-izquierda; cada cara con su valor.','3 caras del cubo, 3 valores|El cilindro degrada suave|Sombras proyectadas coherentes','Dos caras del cubo con el mismo valor.'],
+ ['Luz dura y luz suave','Compara una foto con sol directo contra una con cielo nublado: ¿cómo cambia el borde de la sombra?','Las mismas 3 formas con luz dura y con luz suave, lado a lado.','Luz suave: bordes difusos y poco contraste|Luz dura: bordes nítidos|Mismo punto de vista','Sombras de borde duro bajo luz suave.'],
+ ['Del objeto al edificio','Mira un edificio al sol y descompónlo en esferas, cubos y cilindros.','Un templo simple hecho de cajas y cilindros con una sola luz y su sombra en el piso.','Una sola dirección de luz|Cada plano con su valor|La sombra respeta el piso','Cambiar la dirección de la luz entre objetos.'],
+ ['Un objeto real','Elige un objeto de tu cuarto y ponle una lámpara.','Pinta el objeto observando, sin inventar.','Se reconoce el material|Las zonas de luz están donde van|La sombra proyectada tiene la forma correcta','Pintar lo que sabes en vez de lo que ves.']],
+ ['Estudio de luz con tres formas','Esfera, cubo y cilindro sobre un plano, con luz dura y sus 6 zonas rotuladas con flechas. 45 min.','Las 6 zonas están claras|Una sola dirección de luz|Las sombras proyectadas son coherentes|Se distingue el material']),
+PROG_W(3,'Perspectiva I: horizonte y puntos de fuga','perspectiva','Es tu otro punto débil. Con horizonte y puntos de fuga estables todo lo demás se construye encima.','Dibujar cajas en 1 y 2 puntos con el horizonte consistente y convertirlas en un edificio.','Traza un horizonte y 2 puntos de fuga lejos de la hoja; 6 líneas guía hacia cada uno.',[
+ ['Horizonte y altura de ojos','En 5 fotos encuentra la línea del horizonte: está a la altura de tus ojos. ¿Qué queda arriba y qué abajo?','6 cajas en 1 punto de fuga: arriba, abajo y a la altura del horizonte.','Todas convergen al mismo punto|Las cajas sobre el horizonte se ven por abajo|Líneas seguras y rectas','Poner el punto de fuga muy cerca: deforma todo.'],
+ ['Dos puntos de fuga','Observa la esquina de un edificio: cada fachada se va a un punto distinto.','10 cajas en 2 puntos, rotadas y a distintas alturas, con los puntos fuera de la hoja.','Verticales verticales|Convergencia consistente|Cajas rotadas de formas distintas','Verticales inclinadas sin querer.'],
+ ['Escalar con perspectiva','Mide la altura de una persona en una foto y compárala con puertas y ventanas.','Una calle en 2 puntos con 5 figuras de la misma altura: su cabeza siempre en el horizonte.','Cabezas en el horizonte|Figuras lejanas más pequeñas pero proporcionales|Puertas a escala','Figuras de distinto tamaño sin razón.'],
+ ['De cajas a edificios','Descompón un edificio real en cajas, cilindros y prismas.','Convierte tus cajas en un edificio con ventanas y techo respetando los puntos de fuga.','Las ventanas convergen|El techo tiene la inclinación correcta|Se ve el grosor de los muros','Detallar antes de construir la caja base.'],
+ ['Perspectiva a ojo','Mira una calle real (o foto) y marca el horizonte y las 3 guías principales.','Dibuja la escena sin regla; luego verifica con guías y corrige en otro color.','Horizonte bien colocado|Dos guías principales correctas|Anotas dónde fallaste','Corregir sin anotar el error: no aprendes.']],
+ ['Calle en 2 puntos con figuras','Una calle de una ciudad inventada en 2 puntos de fuga, con 5 figuras de escala y construcción visible. 60 min.','Horizonte consistente|Cabezas en el horizonte|Los edificios son cajas bien construidas|Se entiende la profundidad']),
+PROG_W(4,'Claves de luz y fuentes','claves','La misma escena cambia por completo con la luz. Elegir la clave es elegir el mood.','Cambiar el mood de un mismo entorno solo moviendo la luz y los valores.','3 miniaturas de una esfera: clave alta, media y baja.',[
+ ['Clave alta, media y baja','Busca 3 fotos de cada clave y mira dónde se concentran los valores.','El mismo entorno en 3 thumbnails: clave alta, media y baja.','Cada clave se distingue a primera vista|El foco sigue claro|Los valores respetan la clave','Una «clave media» que en realidad no decide nada.'],
+ ['Una fuente dominante','Observa escenas con una sola luz (fuego, luna, ventana). ¿Dónde caen luz y sombra?','Una escena con una fuente dominante: 70% sombra, la luz se gana.','La fuente se entiende|Las sombras apuntan en sentido opuesto|La luz guía al foco','Varias luces del mismo peso: se pierde la lectura.'],
+ ['Contraluz y siluetas','Mira fotos a contraluz: bordes brillantes, formas oscuras, niebla.','4 variaciones de 5 min de figura oscura contra fondo brillante.','Se lee la silueta|Hay borde de luz|El fondo no compite','Rellenar las sombras con detalle: mata el contraluz.'],
+ ['Luz motivada','Busca de dónde sale la luz en 5 imágenes (ventana, lámpara, grieta).','Una escena donde la luz se justifica por un elemento visible.','Se ve la fuente o su efecto|La luz tiene color coherente|Hay luz y sombra con forma','Luz que viene de ninguna parte.'],
+ ['La luz guía el ojo','Toma un keyframe y marca el camino que sigue tu ojo según la luz.','Thumbnail donde la luz dibuja el camino hacia el foco.','El ojo llega al foco en 2 saltos|La luz recorta formas clave|El resto queda en penumbra','Iluminar todo parejo.']],
+ ['Un entorno, tres climas de luz','El mismo entorno en 3 thumbnails pulidos: clave alta, baja y contraluz. 60 min.','El mood cambia en cada uno|La fuente de luz es clara|Los valores respetan la clave|El foco se mantiene']),
+PROG_W(5,'Perspectiva II: espacios y cámara','perspectiva','Cuando dominas la cámara decides qué se ve grande, qué se ve lejos y qué se siente. Aquí empieza el 3D como apoyo.','Construir un espacio con 3 puntos y con blockout 3D, eligiendo lente y ángulo a propósito.','Dibuja un cubo desde arriba, a nivel y desde abajo en 5 min.',[
+ ['Picado y contrapicado','Compara 3 imágenes: desde arriba, a nivel y desde abajo. ¿Qué sientes de cada una?','Un edificio en 3 puntos de fuga, una vez en picado y otra en contrapicado.','Las verticales convergen con intención|El ángulo cuenta algo|Mismo edificio, distinta emoción','Exagerar al punto de que no se entiende.'],
+ ['Interior en perspectiva','Mira un cuarto en foto y marca piso, techo y muros; encuentra los puntos de fuga.','Un interior (taller, nave) en 2 puntos con muebles como cajas.','Piso con baldosas que convergen|Muebles apoyados en el piso|Escala humana creíble','Muebles que flotan.'],
+ ['Lente y cámara','Compara la misma escena con gran angular y con tele: ¿qué pasa con la profundidad?','2 thumbnails de la misma escena: lente 18 mm y lente 85 mm.','El gran angular exagera la profundidad|El tele la comprime|Elegiste uno y sabes por qué','Mezclar perspectivas incompatibles.'],
+ ['Blockout 3D','En Blender, arma un entorno con cubos y cilindros (25 min máx.). Prueba 3 cámaras.','Captura 3 encuadres del blockout y elige el mejor.','Se lee la escala|3 cámaras distintas|El encuadre elegido tiene foco','Modelar detalle en vez de masa.'],
+ ['Paintover del blockout','Mira tu blockout y decide la luz antes de pintar.','Paintover rápido sobre el blockout, solo en valores.','Respetas la perspectiva del 3D|La luz es coherente|Resuelves 2 zonas con diseño propio','Calcar sin decidir nada.']],
+ ['Entorno sobre blockout propio','Un entorno terminado en valores sobre tu propio blockout 3D. 75 min.','Perspectiva sólida|Cámara elegida a propósito|Luz coherente|Hay diseño propio sobre el 3D']),
+PROG_W(6,'Escala y profundidad','profundidad','Un entorno épico se vence o se gana en la escala. La profundidad hace que el espectador entre en la imagen.','Hacer que un lugar se sienta enorme o íntimo usando solo pistas de escala y planos.','5 óvalos superpuestos: pequeño al frente, grande atrás; ahora al revés. ¿Cuál se lee más profundo?',[
+ ['Superposición y tamaño','Mira 5 imágenes y señala qué pistas dan profundidad.','Thumbnail donde la profundidad se lea solo por superposición y tamaño.','Se entiende sin perspectiva lineal|Tres capas|Sin contradicciones','Fondo y frente con el mismo detalle.'],
+ ['Pistas de escala','Elige un entorno épico y lista sus pistas de escala (figura, puerta, escalón).','Estructura monumental usando solo 3 pistas de escala.','La escala se siente|Pistas humanas visibles|Nada compite con la estructura','Poner figuras enormes que rompen la escala.'],
+ ['Primer plano que enmarca','Busca imágenes con hojas, rocas o columnas que enmarcan.','Entorno con un primer plano oscuro que enmarca y un fondo que respira.','El primer plano guía al foco|Hay aire en el fondo|Los planos se separan','Primer plano con detalle brillante que roba el foco.'],
+ ['Estructura monumental','Piensa en una pirámide, una torre o un árbol gigante: ¿cuál es su escala humana?','Una estructura monumental con figura diminuta, en 3 thumbnails.','Se siente gigante|Hay un camino hacia ella|La luz la separa del fondo','Dibujar todo con el mismo tamaño de detalle.'],
+ ['Escala íntima vs épica','Compara un callejón con una explanada: ¿qué cambia en la composición?','El mismo lugar en dos escalas: íntima y épica.','Cambia el encuadre|Cambia la figura|Cambia la luz','Cambiar solo el tamaño de la figura.']],
+ ['Keyframe de escala épica en valores','Un keyframe con escala épica en valores: estructura enorme, figura chica, 3 planos. 75 min.','Se siente la escala|3 planos claros|Luz que separa la estructura|Foco en la figura o en la estructura, no en ambos']),
+PROG_W(7,'Composición y lectura','composicion','Una composición fuerte hace que una idea simple se vea profesional. Se decide en thumbnails, no en el pulido.','Producir 12 thumbnails en 15 minutos y elegir el más fuerte con criterio.','Dibuja 6 recuadros pequeños y en cada uno ponle una masa oscura distinta.',[
+ ['Thumbnails rápidos','Mira 5 keyframes y dibuja su estructura en 1 minuto cada uno.','12 thumbnails de 5×3 cm del mismo entorno en 15 minutos.','12 diferentes de verdad|Cada uno con masa dominante|Marcas tus 3 favoritos','Repetir la misma composición con cambios mínimos.'],
+ ['Líneas guía y ritmo','Marca las líneas que llevan el ojo en 5 imágenes.','Thumbnail con líneas guía hacia el foco y un ritmo repetido.','Las líneas apuntan al foco|Hay ritmo (repetición y variación)|Hay un respiro','Líneas que sacan el ojo de la imagen.'],
+ ['Punto focal y jerarquía','Marca en 5 imágenes qué se ve primero, segundo y tercero.','Dos thumbnails con jerarquía 1-2-3 clara.','Se sabe qué se ve primero|El segundo apoya|El tercero no compite','Dos focos del mismo peso.'],
+ ['Silueta del entorno','Mira el skyline de 5 lugares reducidos a negro.','5 siluetas de entorno (skyline o bosque) únicas y reconocibles.','Cada silueta es distinta|Hay variedad de altura y ritmo|Se reconoce el tipo de lugar','Siluetas parejas sin picos ni vacíos.'],
+ ['Encuadres de película','Toma 3 fotogramas de una película y dibuja su estructura.','Rehaz una escena tuya con 3 encuadres de película.','Encuadre intencional|Regla de tercios o rompiéndola con razón|Se cuenta algo distinto','Centrar todo por costumbre.']],
+ ['De 12 thumbnails a una pieza','Elige el mejor de 12 thumbnails y llévalo a valores pulidos. 75 min.','Elegiste con criterio escrito|Foco claro|Ritmo de masas|Se lee a 2 cm']),
+PROG_W(8,'Color y luz','color','El color bien usado sirve a la luz y al mood; usado al azar compite con el foco.','Elegir una paleta de 5 colores con temperatura intencional y aplicarla sobre valores ya resueltos.','5 manchas de color: 2 cálidas, 2 frías y 1 neutra. Júntalas en una escena en miniatura.',[
+ ['Paleta de 5 colores','Extrae una paleta de 5 colores de una foto y mira su proporción.','Paleta limitada de 5 colores aplicada a un paisaje de 10×6 cm.','Máximo 5 colores|Hay un color dominante|Se mantiene la lectura de valores','Usar 12 colores sin jerarquía.'],
+ ['Temperatura','Marca zonas cálidas y frías en 5 imágenes: ¿dónde está el contraste de temperatura?','La misma escena una vez cálida con sombras frías y otra al revés.','La temperatura se nota|Luz y sombra con temperatura opuesta|El foco conserva la saturación','Todo con la misma temperatura.'],
+ ['Color de la luz y de la sombra','Observa cómo el cielo tiñe las sombras y el sol tiñe las luces.','Esfera y cubo con luz amarilla y sombra azul, y luego luz azul y sombra naranja.','Luz y sombra con color distinto|Los valores siguen leyendo|Se siente la hora','Sombras negras o grises sin color.'],
+ ['Color sobre valores','Toma un thumbnail de valores de la semana 1 o 7.','Colorea ese thumbnail con una capa Color/Overlay sin cambiar los valores.','Los valores se respetan|Paleta limitada|El foco tiene el mayor contraste de color','Perder los valores al colorear.'],
+ ['Paleta de una foto a tu entorno','Elige una foto de atardecer, selva o desierto y extrae su paleta.','Aplica esa paleta a un entorno inventado.','Se reconoce el mood de la foto|Pero el diseño es tuyo|Paleta de 5 o menos','Copiar la foto en vez de la paleta.']],
+ ['Entorno en color sobre tus valores','Un entorno en color sobre valores resueltos (de semana 1, 4 o 7). 75 min.','Valores intactos|Paleta de 5 colores|Temperatura intencional|Foco con color propio']),
+PROG_W(9,'Atmósfera y hora del día','atmosfera','La atmósfera separa los planos y vende la hora, el clima y el mood. Es lo que hace sentir que el lugar existe.','Usar perspectiva atmosférica, niebla y hora del día para dar profundidad y mood.','5 planos de montañas en valores: cada uno más claro y con menos contraste que el anterior.',[
+ ['Perspectiva atmosférica','Mira fotos de paisajes: ¿cómo cambia el valor, el contraste y la saturación con la distancia?','5 planos de montañas o árboles, cada uno más claro, azul y suave.','Cada plano se separa|Menos contraste atrás|Más azul atrás','Mismo contraste en todos los planos.'],
+ ['Niebla y luz volumétrica','Observa rayos de luz y niebla en 5 imágenes: ¿dónde son más visibles?','Escena con niebla y rayos de luz que pasan entre estructuras.','Se ven los rayos|La niebla separa planos|La luz tiene dirección clara','Rayos paralelos a todos lados.'],
+ ['La misma escena en 4 horas','Mira cómo cambian color, dirección y dureza de la luz de la mañana a la noche.','4 thumbnails de color: amanecer, mediodía, atardecer y noche.','Cambia la dirección de la luz|Cambia la temperatura|Cambia el contraste','Solo cambiar el color general.'],
+ ['Luz y materiales','Observa piedra, agua y follaje bajo la misma luz.','Estudio pequeño con piedra, agua y hojas bajo una luz de atardecer.','La piedra es mate|El agua refleja el cielo|El follaje deja pasar luz','Todos los materiales con el mismo brillo.'],
+ ['Clima y mood','Mira lluvia, tormenta y bruma en fotos; ¿qué pasa con la luz y el contraste?','Mismo lugar con bruma ligera, lluvia y tormenta.','Cada clima tiene contraste distinto|Hay un detalle de clima|La luz cuenta lo mismo','Poner lluvia sin cambiar la luz.']],
+ ['Entorno con atmósfera y hora definida','Un entorno con hora y clima claros y 4 planos separados por atmósfera. 75 min.','Hora legible|Clima legible|4 planos separados|Luz coherente con la hora']),
+PROG_W(10,'Diseño de entorno y narrativa','diseno','Un entorno memorable tiene lenguaje de formas, cultura y una historia que se lee sin personajes.','Diseñar una estructura con shape language propio y detalles que cuenten qué pasó ahí.','Dibuja 3 formas (círculo, cuadrado, triángulo) y escribe qué emoción da cada una.',[
+ ['Lenguaje de formas','Observa la arquitectura de 3 culturas y define su forma dominante.','La misma estructura en círculo, cuadrado y triángulo; escribe qué comunica cada una.','Formas claras|Escribes qué comunica cada una|Hay jerarquía de formas','Mezclar formas sin intención.'],
+ ['Cultura y época','Reúne 8 referencias de una cultura (por ejemplo mesoamericana) y lista 5 rasgos: taludes, escalinatas, proporciones, materiales, ornamento.','Diseña un edificio nuevo con 5 rasgos de esa cultura sin copiar uno real.','Se reconoce la cultura|El diseño es nuevo|Proporciones y materiales coherentes','Copiar un edificio famoso.'],
+ ['Props que cuentan','Elige una escena y piensa qué objetos revelan quién vive ahí.','Entorno con 5 detalles narrativos (desgaste, objetos, marcas).','Cada detalle cuenta algo|No saturan|Hay jerarquía narrativa','Detalles decorativos que no dicen nada.'],
+ ['Un lugar y su historia','Escribe 3 líneas de la historia de un lugar.','Dos thumbnails: el lugar en su apogeo y años después.','Se entiende el paso del tiempo|Misma composición base|La luz cambia de mood','Cambiar el lugar por completo.'],
+ ['Variaciones','Mira 3 variaciones de un diseño y qué cambia entre ellas.','3 diseños de la misma estructura con 3 siluetas distintas.','Las siluetas se distinguen|Misma función|Una se siente la mejor y sabes por qué','Variaciones que son la misma con otro color.']],
+ ['Estructura icónica con historia','Una estructura icónica de un mundo inventado, con 5 detalles narrativos y shape language propio. 80 min.','Silueta reconocible|Lenguaje de formas claro|Detalles narrativos legibles|Luz y valores sirven al diseño']),
+PROG_W(11,'Keyframe: personaje en su mundo','storytelling','El keyframe vende un momento: emoción, acción y lugar, con una lectura clara en un vistazo.','Resolver un keyframe con un momento claro, jerarquía personaje-entorno y luz narrativa.','Dibuja 5 caritas de emociones en 3 minutos.',[
+ ['Momento y mood','Elige una escena de película o juego y escribe en una frase qué momento captura.','3 momentos distintos de una misma historia en thumbnails.','Cada uno cuenta un momento|Cambia el mood|Hay uno claramente mejor','Elegir un momento sin acción ni emoción.'],
+ ['Personaje y entorno','Mira 5 keyframes: ¿quién es el foco, el personaje o el entorno?','Thumbnails con la figura grande, mediana y diminuta; elige cuál cuenta mejor.','La jerarquía se entiende|La figura se separa del fondo|El entorno apoya la emoción','Figura perdida en el fondo.'],
+ ['Encuadre cinematográfico','Estudia 3 encuadres: plano general, americano y primer plano.','El mismo momento en 3 encuadres distintos.','Cada encuadre cambia la emoción|Elegiste uno con razón|Hay profundidad','Siempre el mismo plano.'],
+ ['Luz narrativa','Mira cómo la luz cuenta emoción: calidez, peligro, esperanza.','Keyframe en valores con luz que refuerza la emoción.','La luz apoya la emoción|El foco está iluminado|Hay mood claro','Luz bonita que no dice nada.'],
+ ['Thumbnails de keyframe','Revisa tus thumbnails de la semana.','6 thumbnails de keyframe y elige uno con tres razones escritas.','Elegiste con razones|Se lee en 2 segundos|Tiene emoción','Elegir sin comparar.']],
+ ['Keyframe en valores y color rápido','Un keyframe completo en valores y color rápido: momento claro, luz narrativa y escala. 90 min.','Se lee en 2 segundos|La emoción se entiende|Luz narrativa|Jerarquía personaje-entorno']),
+PROG_W(12,'Pieza de portafolio','composicion','Aquí juntas todo: brief, thumbnails, blockout, valores, luz, color y atmósfera en una pieza que puedas mostrar.','Terminar una pieza completa con proceso documentado y una crítica.','Revisa tu mejor trabajo de las 11 semanas y anota 3 aprendizajes.',[
+ ['Brief y referencias','Escribe un brief de 3 líneas y reúne 10 referencias con su porqué.','Un moodboard pequeño y una frase de intención.','Brief claro|Referencias con propósito|Una frase de intención','Referencias sin criterio.'],
+ ['Thumbnails y blockout','Repasa tus semanas 7 y 5.','12 thumbnails, elige uno y haz un blockout rápido.','12 distintos|Elegiste con razones|El blockout resuelve cámara y escala','Saltarse el blockout.'],
+ ['Valores y luz','Repasa tus semanas 1, 2 y 4.','Valores pulidos con luz definida sobre tu blockout.','Se lee a 2 cm|Luz coherente|Foco claro','Pasar a color sin resolver valores.'],
+ ['Color y atmósfera','Repasa tus semanas 8 y 9.','Color y atmósfera sobre tus valores.','Paleta limitada|Atmósfera separa planos|Mood claro','Perder el valor al colorear.'],
+ ['Pulido y revisión','Mira la pieza en miniatura, en blanco y negro y al revés.','Pulido final de foco y bordes; anota 3 mejoras para la próxima.','Se lee en miniatura|Foco y bordes limpios|Anotaste 3 mejoras','Pulir todo parejo.']],
+ ['Pieza de portafolio completa','Una pieza de entorno o keyframe completa, con thumbnails, blockout, valores y color guardados para mostrar el proceso. Varias sesiones.','Se lee en miniatura|Luz y perspectiva sólidas|Hay diseño propio|El proceso está documentado'])
+];
+const PROG_SKILLS=[...new Set(PROGRAMA.map(w=>w.skill))];
+
+/* ---------- estado y progreso del programa ---------- */
+const PG=()=>S.ajustes.prog||(S.ajustes.prog={ses:{},pz:{},rev:{}});
+const pgModo=()=>S.ajustes.diarioModo||'prog';
+const pgKey=(w,i)=>w+'-'+i;
+const pgHechas=w=>PROGRAMA[w-1].ses.filter((_,i)=>PG().ses[pgKey(w,i)]?.hecho).length;
+const pgTotal=()=>Object.values(PG().ses).filter(x=>x.hecho).length;
+function pgSemActual(){const P=PG();if(P.pin)return P.pin;for(const W of PROGRAMA)if(pgHechas(W.w)<4)return W.w;return 12}
+function pgSesHoy(){const P=PG(),w=pgSemActual(),W=PROGRAMA[w-1];let i=P.sesPin&&P.sesPin.w===w?P.sesPin.i:W.ses.findIndex((_,k)=>!P.ses[pgKey(w,k)]?.hecho);if(i<0)i=0;return {w,i,W,s:W.ses[i]}}
+const pgDots=w=>PROGRAMA[w-1].ses.map((_,i)=>`<span class="pg-dot ${PG().ses[pgKey(w,i)]?.hecho?'on':''}"></span>`).join('');
+const pgMitad=(a,b)=>a!=null&&b!=null?(a+b)/2:(a??b);
+/* habilidad: promedio de tus críticas (0–10) y de tu autoevaluación en las sesiones de esa habilidad (1–5 → 0–10) */
+function pgHabilidad(k){const {prom}=debilidades(),aut=[];for(const W of PROGRAMA)if(W.skill===k)W.ses.forEach((_,i)=>{const x=PG().ses[pgKey(W.w,i)];if(x?.hecho&&x.auto)aut.push(x.auto)});const a=aut.length?aut.reduce((s,v)=>s+v,0)/aut.length*2:null,c=prom[k]??null;return {crit:c,auto:a,n:aut.length,mix:pgMitad(c,a)}}
+function pgSemanaIso(ts){const d=new Date(ts);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return hoyKey(d)}
+/* ---------- vista principal ---------- */
 function vDiario(){
+  const modo=pgModo(),chips=`<div class="prow"><span class="lbl">Modo</span>${[['prog','Programa de 12 semanas'],['libre','Libre · según mis críticas o 3D']].map(([k,n])=>`<button class="ch ${(modo==='prog'?'prog':'libre')===k?'on':''}" data-act="pg-modo" data-v="${k}">${n}</button>`).join('')}</div>`;
+  if(modo!=='prog')return chips+vDiarioLibre();
+  const tab=S.diTab||'hoy',w=pgSemActual(),W=PROGRAMA[w-1],P=PG(),total=pgTotal();
+  return `
+  <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Programa de mejora</h1>
+  <p class="intro">12 semanas para ser <strong>${esc(metaTexto())}</strong>. Cada semana trabaja una habilidad con 5 sesiones de 30 minutos y una pieza de la semana. La luz y la perspectiva, tus puntos débiles, ocupan 5 de las 12 semanas. No hay calendario rígido: si faltas un día, sigues en la sesión donde ibas.</p>
+  ${chips}
+  <div class="pg-resumen"><div><span class="lbl">Semana</span><b>${w}<small> / 12</small></b><span>${esc(W.t)}</span></div><div><span class="lbl">Esta semana</span><b>${pgHechas(w)}<small> / 5</small></b><span class="pg-dots">${pgDots(w)}</span></div><div><span class="lbl">Sesiones hechas</span><b>${total}<small> / 60</small></b><span>${Math.round(total*30/60*10)/10} h de práctica</span></div><div><span class="lbl">Racha</span><b>🔥 ${racha()}</b><span>días seguidos</span></div></div>
+  <div class="pg-tabs">${[['hoy','Hoy'],['prog','Programa'],['prog2','Progreso'],['bib','Biblioteca']].map(([k,n])=>`<button class="pg-tab ${tab===k?'on':''}" data-act="pg-tab" data-v="${k}">${n}</button>`).join('')}</div>
+  ${tab==='prog'?pgMapa():tab==='prog2'?pgProgreso():tab==='bib'?pgBib():pgHoy()}`}
+/* ---------- HOY: la sesión de 30 minutos en cuatro bloques ---------- */
+function pgHoy(){
+  const P=PG(),{w,i,W,s}=pgSesHoy(),key=pgKey(w,i),r=P.ses[key]||{},{prom}=debilidades(),ult=P.ultima,hoyHecho=ult&&hoyKey(new Date(ult.ts))===hoyKey();
+  const t=S.timer,rest=t?(t.fin?Math.max(0,t.fin-Date.now()):t.resta??1800e3):1800e3,pasado=(1800e3-rest)/60e3,ahora=!t?-1:pasado<5?0:pasado<13?1:pasado<25?2:3;
+  const bl=[['Calentamiento',5,W.cal],['Estudio',8,s.est],['Ejercicio',12,s.ej],['Revisión',5,'Mira tu resultado en miniatura y al revés. Marca solo los criterios que de verdad cumpliste y apunta qué corregirías.']];
+  const dias=S.ajustes.rutina?.dias||{},cal=[];for(let k=34;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const q=hoyKey(d);cal.push(`<span class="dia ${dias[q]?.hecho?'on':''} ${k===0?'hoy':''}" title="${q}"></span>`)}
+  const sk=pgHabilidad(W.skill),flojo=sk.mix!=null&&sk.mix<5.5;
+  const ulSes=ult&&PROGRAMA[ult.w-1]?.ses[ult.i];
+  const nv=pgHechas(w)>=4&&!P.pz[w]?.img;
+  const fb=S.anD&&S.anD.k==='pg:'+key?S.anD:null;
+  return `
+  ${hoyHecho&&ulSes?`<div class="box orienta-ok"><p style="margin:0"><b>Hoy ya hiciste:</b> ${esc(ulSes.t)} (semana ${ult.w}, sesión ${ult.i+1}). Buen trabajo. Lo que sigue es la siguiente sesión; puedes adelantarla o dejarla para mañana. <button class="btn ghost sm" data-act="pg-deshacer">Deshacer</button></p></div>`:''}
+  ${nv?`<div class="box" style="border-left:3px solid var(--accent)"><p style="margin:0"><b>Ya completaste las sesiones de la semana ${w}.</b> Haz tu pieza de la semana para cerrarla bien. <button class="btn sm pri" data-act="pg-tab" data-v="prog">Ir a la pieza</button></p></div>`:''}
+  <div class="pg-sesion">
+    <div class="pg-ses-h"><span class="lbl">Semana ${w} · ${esc(W.t)} · sesión ${i+1} de 5</span><h2>${esc(s.t)}</h2><p class="muted" style="margin:0">Objetivo de la semana: ${esc(W.obj)}</p>${flojo?`<p class="pg-aviso">Tus críticas y tu autoevaluación muestran que <b>${esc(SKILLS[W.skill])}</b> todavía está en desarrollo. Si hoy sale difícil, repite esta sesión mañana: es normal.</p>`:''}</div>
+    <div class="pg-bloques">${bl.map((b,n)=>`<div class="pg-bl ${ahora===n?'now':''}"><div class="pg-bl-h"><b>${n+1}. ${b[0]}</b><span>${b[1]} min</span></div><p>${esc(b[2])}</p>${n===3?`<div class="pg-crits">${s.crit.map((c,k)=>`<button class="ch ${r.crit?.[k]?'on':''}" data-act="pg-crit" data-n="${k}">${r.crit?.[k]?'✓ ':''}${esc(c)}</button>`).join('')}</div><p class="muted" style="margin:6px 0 0"><b>Error común:</b> ${esc(s.err)}</p>`:''}</div>`).join('')}</div>
+  </div>
+  <div class="grid2">
+    <div class="box"><span class="lbl">¿Cómo te salió?</span><div class="pg-auto">${[[1,'Me costó mucho'],[2,'Flojo'],[3,'Regular'],[4,'Bien'],[5,'Muy bien']].map(([n,l])=>`<button class="ch ${r.auto===n?'on':''}" data-act="pg-auto" data-v="${n}" title="${l}">${n}</button>`).join('')}<span class="muted">${r.auto?['','Me costó mucho','Flojo','Regular','Bien','Muy bien'][r.auto]:'Sé honesto: sirve para ajustar tu programa'}</span></div>
+      <div class="field"><label for="pg-nota">¿Qué aprendiste?</label><textarea id="pg-nota" placeholder="Una frase para tu yo de mañana">${esc(r.nota||'')}</textarea></div>
+      <div class="prow">${r.hecho?'<span class="nivel" style="color:var(--ok);border-color:var(--ok)">Sesión hecha ✓</span><button class="btn sm ghost" data-act="pg-deshacer">Deshacer</button>':'<button class="btn pri" data-act="pg-hecho">Marcar como hecha</button><button class="btn ghost" data-act="pg-tab" data-v="prog">Cambiar de sesión</button>'}
+        <label class="btn sm" for="pg-img">${r.img?'✓ Resultado subido':'Subir resultado'}</label><input type="file" id="pg-img" accept="image/png,image/jpeg,image/webp" hidden></div>
+      ${r.img?`<img ${imgAttrs(r.img)} alt="Resultado" style="max-height:220px;width:auto;border-radius:8px;margin-top:8px" data-act="zoom">`:''}</div>
+    <div class="box">${timerHTML(30,'Sesión · 30 min')}<p class="muted" style="margin:6px 0 0">${t?['Ahora: calentamiento (5 min)','Ahora: estudio (8 min)','Ahora: ejercicio (12 min)','Ahora: revisión (5 min)'][ahora]:'Calentamiento 5 · estudio 8 · ejercicio 12 · revisión 5.'}</p>
+      <span class="lbl" style="margin-top:10px;display:block">Últimos 35 días</span><div class="cal">${cal.join('')}</div></div>
+  </div>
+  ${r.img?`<div class="box"><h3>Feedback de tu ejercicio · ${esc(SKILLS[W.skill])}</h3>${fb?analisisHTML(fb.a,fb.cr,{id:'pg',skill:W.skill,guardar:fb.guardado?'<span class="ok-box sm">✓ Guardado</span>':'<button class="btn sm" data-act="pg-fb-guardar">Guardar feedback en la sesión</button>'}):`<div class="prow"><button class="btn sm pri" data-act="pg-analizar">Feedback de mi ejercicio</button><span class="muted">Mide tu resultado según ${esc(SKILLS[W.skill])}.</span></div>`}${r.fb&&!fb?`<div class="an-sec no"><h4>Feedback guardado</h4><ul>${[...r.fb.problemas,...r.fb.funciona].slice(0,4).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}</div>`:`<p class="muted">Sube tu resultado y te doy feedback medido, enfocado en ${esc(SKILLS[W.skill])}.</p>`}`}
+/* ---------- PROGRAMA: mapa de las 12 semanas y detalle de la semana ---------- */
+function pgMapa(){
+  const P=PG(),act=pgSemActual(),sel=S.pgSel||act,W=PROGRAMA[sel-1],pz=P.pz[sel]||{},rev=P.rev[sel]||{},hs=pgHechas(sel);
+  const tarj=PROGRAMA.map(X=>{const h=pgHechas(X.w),est=h>=4?'Completa':h>0||X.w===act?'En curso':'Pendiente';return `<button class="pg-sem ${X.w===sel?'sel':''} ${X.w===act?'act':''} ${h>=4?'ok':''}" data-act="pg-sel" data-w="${X.w}"><span class="pg-n">${X.w}</span><b>${esc(X.t)}</b><span class="muted">${esc(SKILLS[X.skill])}</span><span class="pg-dots">${pgDots(X.w)}</span><em>${est}</em></button>`}).join('');
+  const rub=W.pz.rub,rubOk=(pz.rub||[]).filter(Boolean).length;
+  return `<div class="pg-mapa">${tarj}</div>
+  <div class="box pg-det"><div class="prow" style="justify-content:space-between;align-items:flex-start"><div><span class="lbl">Semana ${sel} · ${esc(SKILLS[W.skill])}</span><h2 style="margin:2px 0 6px">${esc(W.t)}</h2></div>${sel!==act?`<button class="btn sm" data-act="pg-seguir">Volver a mi semana (${act})</button>`:''}</div>
+    <p style="margin:0 0 6px"><b>Por qué importa:</b> ${esc(W.por)}</p><p style="margin:0 0 6px"><b>Objetivo medible:</b> ${esc(W.obj)}</p><p style="margin:0 0 10px" class="muted"><b>Calentamiento de la semana:</b> ${esc(W.cal)}</p>
+    <div class="pg-lista">${W.ses.map((s,i)=>{const x=P.ses[pgKey(sel,i)]||{};return `<div class="pg-fila ${x.hecho?'ok':''}"><span class="pg-chk">${x.hecho?'✓':i+1}</span><div style="flex:1"><b>${esc(s.t)}</b><details><summary>Ver la sesión</summary><p style="margin:4px 0"><b>Estudio:</b> ${esc(s.est)}</p><p style="margin:4px 0"><b>Ejercicio:</b> ${esc(s.ej)}</p><p style="margin:4px 0"><b>Criterios:</b> ${s.crit.map(esc).join(' · ')}</p></details></div>${x.auto?`<span class="muted" title="Tu autoevaluación">${'●'.repeat(x.auto)}${'○'.repeat(5-x.auto)}</span>`:''}<button class="btn sm ${x.hecho?'':'pri'}" data-act="pg-hoy" data-w="${sel}" data-i="${i}">${x.hecho?'Repetir':'Hacer hoy'}</button></div>`}).join('')}</div></div>
+  <div class="box pg-pieza"><span class="lbl">Pieza de la semana ${sel}</span><h3 style="margin:2px 0 4px">${esc(W.pz.t)}</h3><p style="margin:0 0 8px">${esc(W.pz.d)}</p>
+    <span class="lbl">Rúbrica (marca solo lo que de verdad cumple)</span><div class="pg-crits">${rub.map((c,n)=>`<button class="ch ${pz.rub?.[n]?'on':''}" data-act="pg-rub" data-w="${sel}" data-n="${n}">${pz.rub?.[n]?'✓ ':''}${esc(c)}</button>`).join('')}</div>
+    <div class="pg-auto" style="margin-top:8px"><span class="lbl">¿Qué tan satisfecho estás?</span>${[1,2,3,4,5].map(n=>`<button class="ch ${pz.auto===n?'on':''}" data-act="pg-pz-auto" data-w="${sel}" data-v="${n}">${n}</button>`).join('')}</div>
+    <div class="prow" style="margin-top:8px"><label class="btn sm ${pz.img?'':'pri'}" for="pg-pz-img" data-w="${sel}">${pz.img?'Cambiar imagen':'Subir mi pieza'}</label><input type="file" id="pg-pz-img" data-w="${sel}" accept="image/png,image/jpeg,image/webp" hidden>${pz.img?`<button class="btn ghost sm" data-act="pg-pz-quitar" data-w="${sel}">Quitar</button>`:''}<span class="muted">${rubOk}/${rub.length} criterios</span></div>
+    ${pz.img?`<img ${imgAttrs(pz.img)} alt="Pieza semana ${sel}" style="max-height:260px;width:auto;border-radius:8px;margin-top:8px" data-act="zoom">`:''}</div>
+  <div class="box"><span class="lbl">Revisión de la semana ${sel}</span>${hs<4&&!rev.ts?`<p class="muted" style="margin:4px 0 0">Se abre cuando completes 4 de las 5 sesiones (llevas ${hs}).</p>`:`${[['mejora','¿Qué mejoró esta semana? (con una prueba concreta)'],['dificil','¿Qué sigue difícil?'],['ajuste','¿Qué vas a hacer distinto la próxima semana?']].map(([k,l],n)=>`<div class="field"><label for="pg-rev-${n}">${l}</label><textarea id="pg-rev-${n}" style="min-height:44px">${esc(rev[k]||'')}</textarea></div>`).join('')}<div class="prow"><button class="btn sm pri" data-act="pg-rev-save" data-w="${sel}">Guardar revisión</button>${rev.ts?'<span class="ok-box sm">✓ Guardada</span>':''}</div>`}</div>`}
+/* ---------- PROGRESO: lo que de verdad mejoró ---------- */
+function pgProgreso(){
+  const P=PG(),act=pgSemActual(),dias=Object.values(S.ajustes.rutina?.dias||{}).filter(x=>x.hecho).length;
+  const hab=PROG_SKILLS.map(k=>({k,...pgHabilidad(k)})),conDatos=hab.filter(h=>h.mix!=null).sort((a,b)=>a.mix-b.mix),foco=conDatos[0];
+  const barra=(v,c)=>v==null?'<span class="muted" style="font-size:12px">sin datos</span>':`<div class="bar" style="width:auto"><i style="width:${Math.round(v/10*100)}%;background:${c}"></i></div>`;
+  const semanas={};for(const x of Object.values(P.ses))if(x.hecho&&x.ts){const k=pgSemanaIso(x.ts);semanas[k]=(semanas[k]||0)+1}
+  const bars=[];for(let n=7;n>=0;n--){const d=new Date();d.setDate(d.getDate()-n*7);const k=pgSemanaIso(d.getTime()),v=semanas[k]||0;bars.push(`<div class="pg-sb" title="${v} sesiones"><i style="height:${Math.round(Math.min(v,5)/5*100)}%"></i><span>${n===0?'esta':'−'+n}</span></div>`)}
+  const piezas=PROGRAMA.filter(X=>P.pz[X.w]?.img);
+  return `<div class="box"><h3>Tus habilidades</h3><p class="hint">Dos medidas: lo que dicen tus críticas medidas (0 a 10) y tu autoevaluación en las sesiones de cada habilidad. Se llenan solas conforme practicas y pides crítica.</p>
+    <div class="scores">${hab.map(h=>`<div class="score" style="grid-template-columns:120px 1fr 1fr 64px"><span>${esc(SKILLS[h.k])}</span><div><span class="muted" style="font-size:11px">Críticas</span>${barra(h.crit,'var(--c-tecnica)')}</div><div><span class="muted" style="font-size:11px">Autoevaluación</span>${barra(h.auto,'var(--accent)')}</div><span class="muted" style="font-size:12px">${h.n} ses.</span></div>`).join('')}</div>
+    ${foco&&conDatos.length>=2?`<div class="box orienta-ok" style="margin-top:10px"><p style="margin:0"><b>Dónde enfocarte:</b> ${esc(SKILLS[foco.k])} es lo más bajo por ahora. Repite sus sesiones en la Biblioteca o súbele más peso en la próxima semana.</p></div>`:''}</div>
+  <div class="grid2"><div class="box"><h3>Constancia</h3><p class="hint">Sesiones por semana (meta: 4 o 5). Una semana floja no rompe nada: lo que importa es seguir.</p><div class="pg-sbs">${bars.join('')}</div><p class="muted" style="margin:6px 0 0">${dias} días de estudio en total · racha de ${racha()}.</p></div>
+  <div class="box"><h3>Camino recorrido</h3><p style="margin:0 0 6px">Vas en la <b>semana ${act} de 12</b>: ${esc(PROGRAMA[act-1].t)}.</p><div class="pg-linea">${PROGRAMA.map(X=>`<span class="pg-pt ${pgHechas(X.w)>=4?'ok':X.w===act?'act':''}" title="${esc(X.t)}">${X.w}</span>`).join('')}</div></div></div>
+  <div class="box"><h3>Tus piezas de la semana</h3>${piezas.length?`<div class="pg-gal">${piezas.map(X=>{const z=P.pz[X.w];return `<figure><img ${imgAttrs(z.img)} alt="Semana ${X.w}" data-act="zoom"><figcaption><b>Sem. ${X.w}</b> · ${esc(X.pz.t)}<br><span class="muted">${(z.rub||[]).filter(Boolean).length}/${X.pz.rub.length} criterios${z.auto?' · satisfacción '+z.auto+'/5':''}</span></figcaption></figure>`}).join('')}</div><p class="hint">Compara la primera con la última: ahí está tu mejora real.</p>`:'<p class="muted" style="margin:0">Todavía no subes ninguna pieza de la semana. Se hacen en la pestaña Programa.</p>'}</div>`}
+/* ---------- BIBLIOTECA: todas las sesiones, por habilidad ---------- */
+function pgBib(){
+  const f=S.pgFiltro||'todas',P=PG();
+  const lista=PROGRAMA.filter(W=>f==='todas'||W.skill===f);
+  return `<div class="prow" style="flex-wrap:wrap"><span class="lbl">Habilidad</span><button class="ch ${f==='todas'?'on':''}" data-act="pg-filtro" data-v="todas">Todas</button>${PROG_SKILLS.map(k=>`<button class="ch ${f===k?'on':''}" data-act="pg-filtro" data-v="${k}">${esc(SKILLS[k])}</button>`).join('')}</div>
+  ${lista.map(W=>`<div class="box"><span class="lbl">Semana ${W.w} · ${esc(SKILLS[W.skill])}</span><h3 style="margin:2px 0 6px">${esc(W.t)}</h3>${W.ses.map((s,i)=>{const x=P.ses[pgKey(W.w,i)]||{};return `<div class="pg-fila ${x.hecho?'ok':''}"><span class="pg-chk">${x.hecho?'✓':i+1}</span><div style="flex:1"><b>${esc(s.t)}</b><details><summary>Ver la sesión</summary><p style="margin:4px 0"><b>Estudio:</b> ${esc(s.est)}</p><p style="margin:4px 0"><b>Ejercicio:</b> ${esc(s.ej)}</p><p style="margin:4px 0"><b>Criterios:</b> ${s.crit.map(esc).join(' · ')}</p><p style="margin:4px 0" class="muted"><b>Error común:</b> ${esc(s.err)}</p></details></div><button class="btn sm" data-act="pg-hoy" data-w="${W.w}" data-i="${i}">Hacer hoy</button></div>`}).join('')}</div>`).join('')}
+  ${f!=='todas'&&EJERCICIOS[f]?`<div class="box"><h3>Más ejercicios de ${esc(SKILLS[f])}</h3><ul style="margin:0;padding-left:20px">${EJERCICIOS[f].map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul></div>`:''}`}
+/* ---------- acciones ---------- */
+async function pgAccion(a,ds,el){
+  const P=PG(),r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},ses=()=>{const h=pgSesHoy();return {...h,key:pgKey(h.w,h.i)}},X=k=>P.ses[k]=P.ses[k]||{};
+  switch(a){
+    case 'pg-modo':S.ajustes.diarioModo=ds.v==='prog'?'prog':'libre';break;
+    case 'pg-tab':S.diTab=ds.v;break;
+    case 'pg-sel':S.pgSel=+ds.w;break;
+    case 'pg-hoy':P.pin=+ds.w;P.sesPin={w:+ds.w,i:+ds.i};S.diTab='hoy';S.pgSel=+ds.w;break;
+    case 'pg-seguir':P.pin=null;P.sesPin=null;S.pgSel=null;S.diTab='hoy';break;
+    case 'pg-filtro':S.pgFiltro=ds.v;break;
+    case 'pg-crit':{const x=X(ses().key);x.crit=x.crit||[];x.crit[+ds.n]=!x.crit[+ds.n];x.nota=$('#pg-nota')?.value||x.nota;break}
+    case 'pg-auto':{const x=X(ses().key);x.auto=+ds.v;x.nota=$('#pg-nota')?.value||x.nota;break}
+    case 'pg-hecho':{const h=ses(),x=X(h.key);x.nota=$('#pg-nota')?.value||x.nota||'';x.hecho=true;x.ts=Date.now();x.w=h.w;x.i=h.i;
+      r.dias[hoyKey()]={skill:h.W.skill,texto:h.s.t+': '+h.s.ej,i:h.i,nota:x.nota,hecho:true,ts:x.ts,prog:{w:h.w,i:h.i}};P.ultima={w:h.w,i:h.i,ts:x.ts};P.sesPin=null;
+      toast(`Sesión hecha. Racha: ${racha()} día${racha()===1?'':'s'}`);break}
+    case 'pg-deshacer':{const h=ses(),x=P.ses[h.key];if(x?.hecho){x.hecho=false}else if(P.ultima){const y=P.ses[pgKey(P.ultima.w,P.ultima.i)];if(y)y.hecho=false;P.sesPin={w:P.ultima.w,i:P.ultima.i}}
+      if(r.dias[hoyKey()])r.dias[hoyKey()].hecho=false;P.ultima=null;break}
+    case 'pg-analizar':{const h=ses(),x=P.ses[h.key];if(!x?.img)return;el.disabled=true;el.textContent='Analizando…';
+      try{const an=await analizarImagen(x.img),cr=criticaImagen(an,null,{etapa:h.W.skill==='color'?'Color':'Valores',skill:h.W.skill,nota:x.nota||''});S.anD={k:'pg:'+h.key,a:an,cr};registrarMetrica(an,'diario','')}catch{toast('No pude leer la imagen')}break}
+    case 'pg-fb-guardar':{const h=ses(),x=P.ses[h.key];if(!x||!S.anD)return;x.fb={ts:Date.now(),funciona:S.anD.cr.funciona,problemas:S.anD.cr.problemas,experimentos:S.anD.cr.experimentos};S.anD.guardado=true;break}
+    case 'pg-rub':{const x=P.pz[+ds.w]=P.pz[+ds.w]||{};x.rub=x.rub||[];x.rub[+ds.n]=!x.rub[+ds.n];break}
+    case 'pg-pz-auto':{const x=P.pz[+ds.w]=P.pz[+ds.w]||{};x.auto=+ds.v;break}
+    case 'pg-pz-quitar':{if(P.pz[+ds.w])delete P.pz[+ds.w].img;break}
+    case 'pg-rev-save':{const w=+ds.w;P.rev[w]={mejora:$('#pg-rev-0')?.value||'',dificil:$('#pg-rev-1')?.value||'',ajuste:$('#pg-rev-2')?.value||'',ts:Date.now()};toast('Revisión guardada');break}
+  }
+  marcarAj();renderSide();renderMain()}
+
+function vDiarioLibre(){
   const e=ejercicioDeHoy(),dias=S.ajustes.rutina?.dias||{},hoy=dias[hoyKey()],{prom}=debilidades();
   const ult=Object.values(S.P).flatMap(p=>p.piezas||[]).filter(x=>x.feedback?.ejercicio).sort((a,b)=>(b.fbFecha||0)-(a.fbFecha||0))[0];
   const cal=[];for(let i=34;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=hoyKey(d);cal.push(`<span class="dia ${dias[k]?.hecho?'on':''} ${i===0?'hoy':''}" title="${k}${dias[k]?.hecho?' · '+esc(SKILLS[dias[k].skill]||''):''}"></span>`)}
@@ -13628,6 +13851,8 @@ document.addEventListener('change',e=>{
   if(e.target.id==='f-pieza'){subirPieza(e.target.files);e.target.value=''}
   if(e.target.id==='f-estilo'){subirEstilo(e.target.files);e.target.value=''}
   if(e.target.dataset?.aj?.startsWith('cot.')&&S.vista==='cotizador'&&S.cotTab==='tarifas')renderMain();
+  if(e.target.id==='pg-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const h=pgSesHoy(),x=PG().ses[pgKey(h.w,h.i)]=PG().ses[pgKey(h.w,h.i)]||{};x.img=img;delete x.fb;S.anD=null;marcarAj();renderMain();setTimeout(()=>$('[data-act="pg-analizar"]')?.click(),50)}).catch(()=>toast('No se pudo subir'));return}
+  if(e.target.id==='pg-pz-img'){const f=e.target.files[0],w=+e.target.dataset.w;e.target.value='';if(f)guardarImagen(f).then(img=>{const x=PG().pz[w]=PG().pz[w]||{};x.img=img;x.ts=Date.now();marcarAj();renderMain();toast('Pieza guardada')}).catch(()=>toast('No se pudo subir'));return}
   if(e.target.id==='d-img'){const f=e.target.files[0];e.target.value='';if(f)guardarImagen(f).then(img=>{const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey();r.dias[k]={...ejercicioDeHoy(),...(r.dias[k]||{}),img};delete r.dias[k].fb;S.anD=null;marcarAj();renderMain();setTimeout(()=>$('[data-act="d-analizar"]')?.click(),50)}).catch(()=>toast('No se pudo subir'))}
   if(e.target.dataset?.carp){subirCarpeta(e.target.files,e.target.dataset.carp);e.target.value=''}
   if(e.target.id==='gal-file'){subirGaleria(e.target.files);e.target.value=''}
@@ -13741,6 +13966,7 @@ async function accion(a,el){
     case 't-go':{const t=S.timer;S.timer={fin:Date.now()+(t?t.resta:(+ds.min||30)*60e3)};if(S.timer.fin<=Date.now())S.timer={fin:Date.now()+(+ds.min||30)*60e3};renderMain();break}
     case 't-pausa':S.timer={resta:Math.max(0,S.timer.fin-Date.now())};renderMain();break;
     case 't-reset':S.timer=null;renderMain();break;
+    case 'pg-modo':case 'pg-tab':case 'pg-sel':case 'pg-hoy':case 'pg-seguir':case 'pg-filtro':case 'pg-crit':case 'pg-auto':case 'pg-hecho':case 'pg-deshacer':case 'pg-analizar':case 'pg-fb-guardar':case 'pg-rub':case 'pg-pz-auto':case 'pg-pz-quitar':case 'pg-rev-save':{await pgAccion(a,ds,el);break}
     case 'd-hecho':case 'd-deshacer':case 'd-otro':case 'd-usar-crit':case 'd-usar-ai':{
       const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}},k=hoyKey(),cur=ejercicioDeHoy(),nota=$('#d-nota')?.value||'';
       if(a==='d-hecho')r.dias[k]={...cur,nota,hecho:true,ts:Date.now()};
