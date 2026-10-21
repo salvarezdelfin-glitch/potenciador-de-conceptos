@@ -1,0 +1,91 @@
+/* ================= Modelador de escenarios: la herramienta aparte =================
+   Esta parte arma la ventana, el visor 3D y los paneles. El motor (lugares, cuartos, piezas, edición y líneas) está en motor.js. */
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const $=s=>document.querySelector(s),RAD=Math.PI/180,uid=()=>Math.random().toString(36).slice(2,10),clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const toast=t=>{let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';document.body.append(e)}e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)};
+const V3={T:THREE,dirty:true,figs:[]};
+const S={v3d:{tab:'lugar',esc:{},luz:{dir:150,alt:40,color:'#ffffff',int:2.2,amb:.7,ambc:'#8e96a8'},lente:35,sombra:true,figs:[],sel:0,nombre:'Mi escenario'}};
+const v3dLigero=()=>/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+/*__MOTOR__*/
+/* ---------- visor ---------- */
+function v3dLuz(){const L=S.v3d.luz,T=THREE,az=L.dir*RAD,el=L.alt*RAD,dx=Math.cos(el)*Math.sin(az),dy=Math.sin(el),dz=Math.cos(el)*Math.cos(az),c0=V3.luzC||[0,0],d0=V3.luzD||70,y0=V3.luzY||0;
+  V3.key.position.set(c0[0]+dx*d0,dy*d0+y0,c0[1]+dz*d0);V3.key.target.position.set(c0[0],y0,c0[1]);V3.key.color.set(L.color);V3.key.intensity=L.int;V3.hemi.intensity=L.amb;V3.hemi.color.set(L.color).lerp(new T.Color('#ffffff'),.5);V3.hemi.groundColor.set(L.ambc);V3.dirty=true}
+function v3dEscena(){const S3=S.v3d;V3.scene.background=S3.esc?.on&&V3.escSky?V3.escSky:new THREE.Color(0xf4f4f2);if(V3.camera.isPerspectiveCamera){V3.camera.fov=2*Math.atan(12/S3.lente)*180/Math.PI;V3.camera.updateProjectionMatrix()}V3.dirty=true}
+function v3dSombraAjusta(){const K=V3.key;if(!K)return;const sc=K.shadow.camera,h=V3.escPlan?.col?.mapR&&V3.escPlan.col.mapR<100?14:28;sc.left=-h;sc.right=h;sc.top=h;sc.bottom=-h;sc.near=.5;sc.far=300;sc.updateProjectionMatrix();V3.luzD=70;v3dLuz()}
+const v3dFigsRecoloca=()=>{V3.dirty=true},v3dEncuadra=()=>escEncuadra();
+let _ps=0;function v3dPersistePronto(){clearTimeout(_ps);_ps=setTimeout(guardaLocal,700)}
+function estado(){const E=S.v3d.esc,c=V3.camera,t=V3.controls.target;return {v:1,nombre:S.v3d.nombre,esc:E,luz:S.v3d.luz,lente:S.v3d.lente,cam:{p:[c.position.x,c.position.y,c.position.z],t:[t.x,t.y,t.z],ortho:!!c.isOrthographicCamera}}}
+function guardaLocal(){try{localStorage.setItem('escenarios.v1',JSON.stringify(estado()))}catch(er){console.error('guardaLocal',er)}}
+function v3dPanel(){appRender()}
+function init(){const box=$('#viewport'),r=V3.renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;r.outputColorSpace=THREE.SRGBColorSpace;box.append(r.domElement);r.domElement.id='v3d-canvas';
+  V3.scene=new THREE.Scene();V3.persp=V3.camera=new THREE.PerspectiveCamera(35,1,.2,3000);V3.camera.position.set(0,1.65,7);
+  V3.controls=new OrbitControls(V3.camera,r.domElement);V3.controls.target.set(0,1.4,0);V3.controls.addEventListener('change',camCambio);
+  V3.key=new THREE.DirectionalLight(0xffffff,2);V3.key.castShadow=true;V3.key.shadow.mapSize.set(v3dLigero()?1024:2048,v3dLigero()?1024:2048);V3.key.shadow.bias=-.0004;V3.key.shadow.normalBias=.03;V3.hemi=new THREE.HemisphereLight(0xffffff,0x8e96a8,.7);V3.scene.add(V3.key,V3.key.target,V3.hemi);
+  V3.ro=new ResizeObserver(()=>v3dResize());V3.ro.observe(box);v3dResize();
+  const loop=()=>{if(V3.dirty){V3.dirty=false;V3.controls.update();V3.renderer.render(V3.scene,V3.camera)}requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+let _ck='';function camCambio(){const p=V3.camera.position,t=V3.controls.target,k=[p.x,p.y,p.z,t.x,t.y,t.z,V3.camera.zoom].map(v=>Math.round(v*1000)).join(',');if(k===_ck)return;_ck=k;V3.dirty=true;movimientoCam()}
+function movimientoCam(){const t=V3.controls.target,c=V3.luzC||[1e9,1e9];if(Math.hypot(t.x-c[0],t.z-c[1])>4){V3.luzC=[t.x,t.z];V3.luzY=V3.escH?V3.escH(t.x,t.z):0;V3.shKey=null;v3dLuz()}v3dPersistePronto()}
+function v3dResize(){const box=$('#viewport');if(!box||!V3.renderer)return;const w=box.clientWidth||600,h=box.clientHeight||400;V3.w=w;V3.h=h;V3.renderer.setSize(w,h);const c=V3.camera;if(c.isPerspectiveCamera){c.aspect=w/h}else{const hh=V3.orthoH||5;c.left=-hh*w/h;c.right=hh*w/h;c.top=hh;c.bottom=-hh}c.updateProjectionMatrix();V3.dirty=true}
+function setOrtho(on){const old=V3.camera,c=V3.controls;if(on===!!old.isOrthographicCamera)return;let cam;const dist=old.position.distanceTo(c.target);
+  if(on){V3.orthoH=Math.max(1.2,dist*Math.tan((V3.persp.fov||35)*RAD/2));const asp=(V3.w||800)/(V3.h||600);cam=new THREE.OrthographicCamera(-V3.orthoH*asp,V3.orthoH*asp,V3.orthoH,-V3.orthoH,-600,1600);cam.position.copy(old.position)}else{cam=V3.persp;cam.position.copy(old.position)}
+  const t=c.target.clone();c.dispose();V3.camera=cam;V3.controls=new OrbitControls(cam,V3.renderer.domElement);V3.controls.target.copy(t);V3.controls.addEventListener('change',camCambio);cam.lookAt(t);cam.updateProjectionMatrix();V3.controls.update();S.v3d.ortho=on;V3.dirty=true;appRender()}
+function isometrica(){if(!V3.camera.isOrthographicCamera)setOrtho(true);const t=V3.controls.target,d=Math.max(20,V3.camera.position.distanceTo(t));V3.camera.position.set(t.x+d*.62,t.y+d*.58,t.z+d*.62);V3.controls.update();V3.dirty=true}
+/* ---------- paneles ---------- */
+const TABS=[['dist','Distribución'],['acab','Acabado'],['bib','Biblioteca'],['gacha','Gacha'],['param','Parámetros'],['render','Renderizar']];
+function escCentroEstilo(){}
+function escCentroAbre(){const E=S.v3d.esc;E.cOpen=true;E.edOn=true}
+function escCentroCierra(){const E=S.v3d.esc;E.cTab='gacha';appRender()}
+function escCentroGuarda(){}
+function escCentroRender(){appRender()}
+function escGachaHTML(E){const ch=(l)=>`<button class="ch xs ${E.lugar===l[0]&&E.on?'on':''}" data-esc="lugar" data-k="${l[0]}" title="${l[3]}">${l[1]}</button>`;
+  return `<p class="hint" style="margin:0 0 4px">Cada botón arma un escenario nuevo con piezas sueltas que luego puedes editar. «Cuarto vacío» y «Terreno abierto» son para construir desde cero.</p>`+ESC_CATS.map(([cat,nom])=>`<div class="escc-sec">${nom}</div><div class="chips">${ESC_LUGARES.filter(l=>l[2]===cat).map(ch).join('')}</div>`).join('')+
+  `<div class="escc-sec">Otra versión</div><div class="chips"><button class="btn xs pri" data-esc="dado" ${E.on?'':'disabled'}>🎲 Gacha: otra versión</button></div><div class="escc-num" style="grid-template-columns:auto 1fr"><span>Semilla</span><input type="number" data-seed value="${E.seed??''}" placeholder="aleatoria"></div>
+  <label class="v3-s"><span>Cantidad de vegetación y objetos <b>${E.dens||1}×</b></span><input type="range" data-escv="dens" min=".25" max="1.6" step=".05" value="${E.dens||1}"></label>`}
+function escRenderHTML(E){const lin=E.vista==='lineal'||E.vista==='lineas',asp=V3.camera?.isOrthographicCamera;
+  return `<div class="escc-sec" style="margin-top:0">Vista</div>${escVistaMHTML(E)}${lin?`<div class="chips" style="margin-top:6px"><label class="chk"><input type="checkbox" data-trans ${E.transp?'checked':''}> Líneas sobre fondo transparente (solo en dibujo lineal)</label></div>`:''}
+  <div class="escc-sec">Cámara</div><div class="chips"><button class="ch xs ${asp?'':'on'}" data-app="persp">Perspectiva</button><button class="ch xs ${asp?'on':''}" data-app="orto">Ortográfica</button><button class="ch xs" data-app="iso">Isométrica</button></div>
+  <label class="v3-s"><span>Lente (mm) <b>${S.v3d.lente}</b></span><input type="range" data-lente min="14" max="120" step="1" value="${S.v3d.lente}"></label>
+  <div class="escc-sec">Exportar imagen</div><div class="chips"><button class="btn xs pri" data-app="png" data-k="1">PNG</button><button class="btn xs pri" data-app="png" data-k="2">PNG 2×</button><button class="btn xs pri" data-app="png" data-k="4">PNG 4×</button></div>
+  <p class="hint">En <b>Dibujo lineal</b> sale blanco con líneas negras (o líneas transparentes). Las cajas de selección no salen en la imagen.</p>
+  <div class="escc-sec">Escena</div><div class="chips"><button class="btn xs" data-app="guardar">Guardar archivo (.json)</button><button class="btn xs" data-app="abrir">Abrir archivo</button><button class="btn xs" data-app="nuevo">Nuevo cuarto vacío</button></div>`}
+function appRender(){const S3=S.v3d,E=S3.esc;if(!$('#right'))return;E.cOpen=true;E.edOn=true;const mob=matchMedia('(max-width:900px)').matches;if(!E.cTab||(E.cTab==='lista'&&!mob))E.cTab=E.on?'dist':'gacha';const tab=E.cTab;
+  const lSt=$('#escc-out')?.scrollTop||0,rSt=$('#escc-rs')?.scrollTop||0,B=(a,k,t,x,tt)=>`<button class="btn xs ${x||''}" data-esced="${a}" ${k!=null?`data-k="${k}"`:''} ${tt?`title="${tt}"`:''}>${t}</button>`,T=(k,t)=>`<button class="ch xs ${tab===k?'on':''}" data-esced="tab" data-k="${k}">${t}</button>`;
+  if(E.on)escNombres(E);
+  const out=E.on?`<div class="escc-h">Escena <span class="hint" style="margin:0 0 0 auto">${(E.ed||[]).length} piezas</span></div><div style="padding:6px 8px"><input type="search" data-ecsrch placeholder="Buscar pieza…" value="${(V3.escBusca||'').replace(/"/g,'')}" style="width:100%"></div><div class="escc-s" id="escc-out" style="padding-top:0">${escOutlinerHTML(E)}</div>
+    <div style="border-top:1px solid var(--line);padding:6px 8px"><b style="font-size:11px">Selecciones memorizadas</b><div class="chips" style="margin-top:4px">${(E.mem||[]).map((m,i)=>`<span class="ch xs" style="display:inline-flex;gap:6px"><span data-esced="memsel" data-k="${i}">${m.n}</span><b data-esced="memdel" data-k="${i}" style="cursor:pointer">×</b></span>`).join('')||'<span class="hint" style="margin:0">Ninguna</span>'}</div>${B('mem',null,'Memorizar la selección actual')}</div>`:'<div class="escc-s"><p class="hint">Elige un lugar en la pestaña Gacha.</p></div>';
+  $('#left').innerHTML=mob?'':out;
+  const body=!E.on&&tab!=='gacha'?escGachaHTML(E):tab==='lista'?out:tab==='acab'?escAcabadoHTML(E):tab==='bib'?escBibHTML(E):tab==='gacha'?escGachaHTML(E):tab==='param'?escCuartoHTML(E,S3).replace(/<div class="chips"><button class="btn xs pri" data-esc="dado">[\s\S]*?<\/div>/,'').replace(/<div class="escc-sec">Vista<\/div>[\s\S]*?<div class="escc-sec">Hora y clima<\/div>/,'<div class="escc-sec">Hora y clima</div>'):tab==='render'?escRenderHTML(E):escDistHTML(E);
+  $('#right').innerHTML=`<div class="escc-tabs">${mob?T('lista','Lista'):''}${TABS.map(([k,t])=>T(k,t)).join('')}</div><div class="escc-s" id="escc-rs">${body}</div>`;
+  const tools=[['mover','Mover (G)','✥'],['girar','Girar (R)','⟳'],['escalar','Escalar (S)','⤢']];$('#tools').innerHTML=tools.map(([k,t,i])=>`<button class="tl ${(E.tool||'mover')===k?'on':''}" data-esced="tool" data-k="${k}" title="${t}">${i}</button>`).join('')+`<i></i><button class="tl" data-esced="all" title="Seleccionar todo (A)">▦</button><button class="tl" data-esced="frame" title="Encuadrar (F)">⌖</button><i></i><button class="tl ${V3.camera?.isOrthographicCamera?'on':''}" data-app="${V3.camera?.isOrthographicCamera?'persp':'orto'}" title="Perspectiva / ortográfica">◫</button><button class="tl" data-app="iso" title="Vista isométrica">◇</button><button class="tl" data-esced="vistac" title="Cambiar vista: ${(ESC_MODOS.find(m=>m[0]===(E.vista||'color'))||[])[1]}">✎</button>`;
+  $('#bar').innerHTML=E.on?`${B('dup',null,'Duplicar')}${B('del',null,'Eliminar')}${B('dupd',null,'Duplicar con desplazamiento')}${B('piso',null,'Poner en el suelo')}${B('group',null,'Agrupar')}${B('hide',null,'Ocultar (H)')}${B('iso',null,E.iso?'✓ Aislada':'Aislar selección',E.iso?'pri':'')}${B('frame',null,'Encuadrar selección (F)')}${B('mem',null,'Memorizar selección')}${B('aleat',null,'Aleatorizar')}${B('showall',null,'Mostrar todo')}`:'';
+  $('#nombre').value=S3.nombre||'';$('#vistaTag').textContent=(ESC_MODOS.find(m=>m[0]===(E.vista||'color'))||[])[1]||'';
+  const o=$('#escc-out'),r=$('#escc-rs');if(o)o.scrollTop=lSt;if(r)r.scrollTop=rSt;if(tab==='bib'&&V3.escThQ?.length&&!V3.escThRun)escThProceso()}
+addEventListener('resize',()=>{clearTimeout(appRender.t);appRender.t=setTimeout(appRender,150)});
+/* ---------- acciones propias de la herramienta ---------- */
+function descarga(blob,nom){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nom;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+const nom=()=>(S.v3d.nombre||'escenario').replace(/[^\wáéíóúñü -]+/gi,'').trim().replace(/\s+/g,'-')||'escenario';
+async function exportaPNG(k){const r=V3.renderer,pr=r.getPixelRatio(),E=S.v3d.esc;let sc=+k||1;sc=Math.min(sc,Math.floor(8000/Math.max(V3.w,V3.h)*pr)/pr);const ocultos=[];for(const o of V3.escSels||[]){if(o.visible){o.visible=false;ocultos.push(o)}}
+  r.setPixelRatio(Math.max(1,sc*(sc>=1?1:1)));v3dResize();V3.controls.update();r.render(V3.scene,V3.camera);const blob=await new Promise(ok=>r.domElement.toBlob(ok,'image/png'));ocultos.forEach(o=>o.visible=true);r.setPixelRatio(pr);v3dResize();if(!blob){toast('No se pudo crear la imagen');return}descarga(blob,nom()+'-'+(E.vista==='lineal'?'lineart':E.vista||'color')+(k>1?'-'+k+'x':'')+'.png');toast('Imagen guardada')}
+function guardaArchivo(){guardaLocal();descarga(new Blob([JSON.stringify(estado())],{type:'application/json'}),nom()+'.escenario.json');toast('Escena guardada')}
+function cargaEstado(o){if(!o?.esc){toast('Ese archivo no es una escena');return}const S3=S.v3d;S3.nombre=o.nombre||'Mi escenario';S3.esc=o.esc;S3.luz=o.luz||S3.luz;S3.lente=o.lente||35;V3.escHist=[];V3.escRedo=[];if(o.cam?.ortho)setOrtho(true);else if(V3.camera.isOrthographicCamera)setOrtho(false);
+  if(S3.esc.on){escMonta();if(o.cam){V3.camera.position.set(...o.cam.p);V3.controls.target.set(...o.cam.t);V3.controls.update()}}v3dEscena();appRender();V3.dirty=true}
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-app]');if(!t)return;const a=t.dataset.app;if(a==='png')exportaPNG(t.dataset.k);else if(a==='guardar')guardaArchivo();else if(a==='abrir')$('#archivo').click();else if(a==='nuevo'){S.v3d.esc={cTab:'dist',vistaIni:'general'};escGenera('vacio')}else if(a==='orto')setOrtho(true);else if(a==='persp')setOrtho(false);else if(a==='iso')isometrica()});
+$('#archivo').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{cargaEstado(JSON.parse(await f.text()))}catch(er){toast('No pude leer ese archivo')}});
+$('#nombre').addEventListener('input',e=>{S.v3d.nombre=e.target.value;v3dPersistePronto()});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.trans!==undefined){S.v3d.esc.transp=t.checked;V3.dirty=true;v3dPersistePronto()}else if(t.dataset?.seed!==undefined&&S.v3d.esc.on){const v=t.value===''?null:Math.floor(+t.value);escGenera(S.v3d.esc.lugar,v??Math.floor(Math.random()*1e9),true)}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset?.lente!==undefined){S.v3d.lente=+t.value;const b=t.closest('label')?.querySelector('b');if(b)b.textContent=t.value;v3dEscena();v3dPersistePronto()}});
+$('#bUndo').onclick=()=>escEdUndo();$('#bRedo').onclick=()=>escEdRedo();$('#bGuardar').onclick=guardaArchivo;$('#bAbrir').onclick=()=>$('#archivo').click();$('#bPng').onclick=()=>exportaPNG(2);
+document.querySelector('#top input[data-ecsrch]').addEventListener('input',e=>{V3.escBusca=e.target.value;escOutlinerRender()});
+/* ---------- extras: cuarto vacío y terreno abierto ---------- */
+ESC_ROOMDEF.vacio={n:'Cuarto vacío',d:'Solo paredes, piso y una luz: amuéblalo tú desde la biblioteca.',est:'moderno',dim:[6,5,2.8],hu:{b:[{p:0,w:1.8,y:.9,h:1.3}],l:[{p:1.2,w:1,y:0,h:2.1,t:'p'}]},mue:()=>{}};
+ESC_GEN.vacio=c=>escInt(c,ESC_ROOMDEF.vacio);ESC_LUGARES.push(['vacio','Cuarto vacío','int',ESC_ROOMDEF.vacio.d]);
+ESC_GEN.plano=c=>{c.pal0('verde');c.suelo=0xa6aa98;c.terreno({amp:0,flat:3000});c.hora='mediodia';c.CL=1;c.vistaIni='general'};ESC_LUGARES.push(['plano','Terreno abierto','nat','Suelo plano y vacío: pon tú los edificios, árboles y piezas.']);
+escDef('maniqui','Figura de escala (1.75 m)',.5,0xb9b4ac,null,b=>{b.nograd=true;const c=0xb9b4ac;b.cyl(.09,.07,.85,c,-.1,0,0,8);b.cyl(.09,.07,.85,c,.1,0,0,8);b.box(.34,.2,.2,c,0,.85,0);b.box(.36,.5,.22,c,0,1.02,0);b.cyl(.05,.05,.1,c,0,1.5,0,8);b.sph(.11,c,0,1.7,0,null,1);b.cyl(.04,.035,.6,c,-.24,.92,0,6);b.cyl(.04,.035,.6,c,.24,.92,0,6)});
+ESC_CAT_ED[0][1].push('maniqui');
+/* ---------- arranque ---------- */
+init();v3dLuz();v3dEscena();v3dSombraAjusta();
+document.body.insertAdjacentHTML('beforeend','<div id="esc-centro" hidden></div>');
+let guardado=null;try{guardado=JSON.parse(localStorage.getItem('escenarios.v1')||'null')}catch(er){}
+if(guardado?.esc?.on&&ESC_GEN[guardado.esc.lugar]){cargaEstado(guardado)}else{S.v3d.esc={cTab:'gacha',vistaIni:'general'};appRender();escGenera('vacio')}
+window.V3=V3;window.S=S;

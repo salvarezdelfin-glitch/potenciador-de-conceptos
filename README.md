@@ -5,3 +5,8 @@ Sistema privado de conceptualización para concept art e ilustración: Concepto,
 - App: https://salvarezdelfin-glitch.github.io/potenciador-de-conceptos/
 - El código es público; los datos no. Viven en Supabase con acceso solo para la cuenta autorizada (RLS + bucket privado).
 - `index.html` se genera con `node build.js` desde la fuente de la app y `src/shim.js`.
+
+## Modelador de escenarios (herramienta aparte)
+- https://salvarezdelfin-glitch.github.io/potenciador-de-conceptos/escenarios/
+- Fuente en `escenarios/src/` (plantilla, shell y motor); se arma con `node escenarios/build.js` → `escenarios/index.html`.
+- No usa login ni datos privados: guarda en el navegador (localStorage) y exporta/abre archivos `.escenario.json`.
