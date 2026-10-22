@@ -1214,7 +1214,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk38zrq').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk3iav2').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1553,8 +1553,7 @@ function renderSide(){
       ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
       ${nav('reclutador','eye','Revisión de reclutador')}
       ${nav('adaptar','target','Adaptar a vacante')}
-      ${nav('mensajes','mail','Mensajes en inglés')}
-      ${nav('formatos','frame','Formatos y entrega')}`);
+      ${nav('mensajes','mail','Mensajes en inglés')}`);
   const grupoDinero=grupo('Ingresos','Vender y cobrar tu trabajo',`
       ${nav('ventas','spark','Ideas para vender')}
       ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
@@ -1564,10 +1563,7 @@ function renderSide(){
       ${nav('contratos','doc','Contratos')}`);
   const grupoMas=grupo('Más','Tu sistema y apoyos',`
       ${nav('metas','target','Mis metas')}
-      ${nav('estilo','eye','Mi estilo')}
-      ${nav('principios','book','Mis principios')}
-      ${nav('recursos','grid','Recursos y pinceles')}
-      ${nav('software','spark','Programas y medios')}`);
+      ${nav('estilo','eye','Mi estilo')}`);
   side.innerHTML=`
     <div class="brand"><img src="icon.svg" alt="" class="brand-ic">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div class="plist">
@@ -1624,7 +1620,6 @@ function renderMainInner(){
   if(S.vista==='redes'){m.innerHTML=pqHTML('redes')+vRedes();return}
   if(S.vista==='cobros'){m.innerHTML=pqHTML('cobros')+vCobros();return}
   if(S.vista==='ruta'){m.innerHTML=pqHTML('ruta')+vRuta();return}
-  if(S.vista==='software'){m.innerHTML=pqHTML('software')+vSoftware();return}
   if(S.vista==='estudios'){m.innerHTML=pqHTML('estudios')+vEstudios();return}
   if(S.vista==='generador'){m.innerHTML=pqHTML('generador')+`<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Generador de ideas</h1><p class="intro">Cuando no sabes qué dibujar o qué vender, gira la ruleta: mezcla palabras de tu mundo con giros, estilos y productos, y te devuelve una idea completa. Con una fecha cerca (Halloween, Día de Muertos, San Valentín, Navidad…) las ideas se vuelven productos para esa temporada.</p>`+vGenerador();return}
   if(S.vista==='ventas'){m.innerHTML=pqHTML('ventas')+vVentas();return}
@@ -1640,11 +1635,8 @@ function renderMainInner(){
   if(S.vista==='cotizador'){m.innerHTML=pqHTML('cotizador')+vCotizador();return}
   if(S.vista==='trabajos'){m.innerHTML=pqHTML('trabajos')+vTrabajos();return}
   if(S.vista==='artistas'){m.innerHTML=pqHTML('artistas')+vArtistas();return}
-  if(S.vista==='principios'){m.innerHTML=pqHTML('principios')+vPrincipios();return}
   if(S.vista==='progreso'){m.innerHTML=pqHTML('progreso')+vProgreso();return}
   if(S.vista==='reclutador'){m.innerHTML=pqHTML('reclutador')+vReclutador();return}
-  if(S.vista==='formatos'){m.innerHTML=pqHTML('formatos')+vFormatos();return}
-  if(S.vista==='recursos'){m.innerHTML=pqHTML('recursos')+vRecursos();return}
   if(S.vista==='metas'){m.innerHTML=pqHTML('metas')+vMetas();return}
   const p=S.P[S.cur];
   if(!p){m.innerHTML=`<div class="box"><h3>Empieza un proyecto</h3><p class="hint">Cada encargo sigue el mismo método: brief → concepto → mundo → keywords → mood, técnica y AD → referencias con porqué → revisión.</p><div><button class="btn pri" data-act="nuevo">＋ Nuevo proyecto</button></div></div>`;return}
@@ -1943,8 +1935,6 @@ const PQ={
  nivel:['mejorar','Saber en qué punto estás frente a tu meta y qué te falta.','Un diagnóstico para elegir en qué enfocarte.'],
  progreso:['mejorar','Comprobar con datos si estás mejorando.','Tendencias de tus críticas, estudios y piezas.'],
  ruta:['mejorar','Elegir cursos para tu punto débil en vez de comprar por impulso.','Una lista corta de cursos con orden y motivo.'],
- software:['mejorar','Decidir qué programa y qué medio usar para lo que necesitas hacer.','Qué herramienta usar y para qué.'],
- recursos:['mejorar','Tener a la mano pinceles y recursos que sí vas a usar.','Recursos ordenados por lo que haces.'],
  galeria:['crear','Guardar tus ilustraciones terminadas en un solo lugar para elegir qué mostrar y qué vender.','Material listo para portafolio, redes y tienda.'],
  biblioteca:['crear','Reunir referencias con un porqué, para no depender de buscar cada vez.','Referencias ordenadas por tema que sí usas.'],
  artistas:['crear','Seguir a artistas para estudiar su trabajo y ver hacia dónde va el medio.','Una lista corta de artistas con qué aprender de cada uno.'],
@@ -1955,7 +1945,6 @@ const PQ={
  cv:['trabajo','Tener un CV claro y enfocado en tu meta.','Un CV listo para enviar.'],
  vacantes:['trabajo','Encontrar vacantes que encajan con tu nivel y tu meta.','Vacantes guardadas en Postulaciones.'],
  reclutador:['trabajo','Ver tu portafolio como lo verían quienes contratan, antes de enviarlo.','Una lista de lo que corregir.'],
- formatos:['trabajo','Entregar archivos en el formato que piden los estudios.','Formatos y tamaños correctos.'],
  adaptar:['trabajo','Ajustar tu portafolio y tu mensaje a una vacante concreta.','Un envío a medida de cada vacante.'],
  postulaciones:['trabajo','Llevar el control de a dónde enviaste y cuándo dar seguimiento.','Postulaciones con fecha de seguimiento.'],
  pruebas:['trabajo','Controlar las pruebas de arte con su fecha límite.','Pruebas entregadas a tiempo.'],
@@ -1968,7 +1957,6 @@ const PQ={
  contratos:['dinero','Tener contratos claros antes de empezar un trabajo.','Un contrato listo para firmar.'],
  metas:['sistema','Decir con claridad qué quieres lograr y para cuándo: toda la app usa esto como referencia.','Tu meta, tu plazo y tus objetivos medibles.'],
  estilo:['sistema','Entender qué ya es tu sello y hacia dónde empujarlo sin perder empleabilidad.','Un análisis de tu estilo.'],
- principios:['sistema','Tener reglas propias para decidir y para desatorarte.','Principios que lees antes de empezar.'],
  calendario:['sistema','Ver fechas límite, seguimientos y fechas para vender en un solo lugar.','Un calendario con lo que viene.'],
  papelera:['sistema','Recuperar lo que borraste.','Elementos recuperables.'],
  avisos:['sistema','Recibir avisos por correo de lo importante.','Recordatorios que sí lees.']};
@@ -14704,7 +14692,7 @@ async function accion(a,el){
     case 'herr-reset-no':S.confirmHerr=false;renderMain();break;
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
-    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='recursos')cargarRecursos(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
+    case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
     case 'tab':{if(ds.tab==='board'){S.refVista='tablero';S.refModo='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
