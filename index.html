@@ -1218,7 +1218,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk44rfe').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk4axgv').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1524,7 +1524,7 @@ function salud(p){
 function tabCompleta(p,t){const it=salud(p).items.filter(i=>tabResuelve(i[2])[0]===t);return it.length&&it.every(i=>i[1])}
 
 /* ============ Render ============ */
-function render(){renderSide();renderMain()}
+function render(){renderSide();renderMain();finPublicar()}
 function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" title="${esc(PQ[v]?PQ[v][1]:'')}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
@@ -5754,6 +5754,24 @@ function vRedes(){
 /* ============ Cobros y clientes ============ */
 function cobroPagado(c){return (c.pagos||[]).reduce((n,p)=>n+(+p.monto||0),0)}
 function aMxn(monto,mon){return (+monto||0)*(cotBase().tc[mon||'MXN']||1)}
+/* Conexión con Finanzas (Sebas Fit): las dos apps viven en el mismo sitio de GitHub Pages, así que comparten
+   localStorage. Aquí solo se deja un resumen de números (cotizaciones y cobros); Finanzas lo lee y lo guarda
+   en su bóveda cifrada. No sale nada del dispositivo desde aquí. */
+let finUlt='';
+function finResumen(cots){
+  const cb=lista('cobros').map(c=>({id:c.id,folio:c.folio||'',cliente:c.cliente||'',proyecto:c.proyecto||'',total:+c.total||0,mon:c.mon||'MXN',mxn:Math.round(aMxn(c.total,c.mon)),estado:c.estado||'Activo',pagado:Math.round(aMxn(cobroPagado(c),c.mon)),pagos:(c.pagos||[]).map(p=>({fecha:p.fecha||'',monto:+p.monto||0,mxn:Math.round(aMxn(p.monto,c.mon))}))}));
+  const qs=(cots||[]).map(q=>({folio:q.folio,ts:q.ts||0,cliente:q.cliente||'',proyecto:q.proyecto||'',total:+q.total||0,mon:q.mon||'MXN',mxn:Math.round(aMxn(q.total,q.mon)),estado:q.estado||'Enviada',contrato:!!q.contrato}));
+  return {v:1,cobros:cb,cotizaciones:qs};
+}
+function finPublicar(){
+  try{
+    if(!S.ajustes)return;
+    if(S.db&&!S.cotHist&&!S._finCots&&!S._finCotsPide){S._finCotsPide=true;S.db.collection('cotizaciones').get().then(s=>{S._finCots=s.docs.map(x=>x.data());finPublicar()}).catch(()=>{})}
+    const r=finResumen(S.cotHist?.lista||S._finCots||[]),txt=JSON.stringify(r);
+    if(txt===finUlt)return;finUlt=txt;r.ts=new Date().toISOString();
+    localStorage.setItem('pc_fin_resumen',JSON.stringify(r));
+  }catch{}
+}
 function vCobros(){
   const L=lista('cobros'),mes=hoyKey().slice(0,7);
   const ingresosMes=L.reduce((n,c)=>n+(c.pagos||[]).filter(p=>(p.fecha||'').startsWith(mes)).reduce((m,p)=>m+aMxn(p.monto,c.mon),0),0);
@@ -12165,7 +12183,7 @@ function v3dColoca(m,f){const g=f.giro||{x:0,y:0,z:0};m.rotation.set(g.x*RAD,g.y
 function v3dAnillo(){const T=V3.T;if(!T||!V3.scene)return;const S3=S.v3d,n=V3.figs?.length||0;
   if(!V3.anillo){V3.anillo=new T.Mesh(new T.RingGeometry(.34,.4,56),new T.MeshBasicMaterial({color:0xff6a3d,transparent:true,opacity:.9,side:T.DoubleSide,depthWrite:false}));V3.anillo.rotation.x=-Math.PI/2;V3.anillo.renderOrder=2;V3.scene.add(V3.anillo)}
   const e=V3.figs?.[S3.sel||0];V3.anillo.visible=n>1&&!!e;if(e){V3.anillo.position.set(e.f.px||0,.012,e.f.pz||0);V3.anillo.scale.setScalar(e.f.esc||1)}V3.dirty=true}
-function v3dMatFig(i){const s=S.v3d,f=s.figs?.[i],k=f?.mat;if(k&&V3_MATS[k]){V3.matsK=V3.matsK||{};const m=V3.matsK[k]||(V3.matsK[k]=V3.mat.clone());m.color.set(V3_MATS[k].c);m.roughness=V3_MATS[k].r;return v3dOp(m)}return (i&&(s.material||'arcilla')==='arcilla')?v3dMatTinte(i):V3.mat}
+function v3dMatFig(i){const s=S.v3d,f=s.figs?.[i],k=f?.mat;if(f?.col){V3.matsC=V3.matsC||{};const m=V3.matsC[i]||(V3.matsC[i]=V3.mat.clone());m.color.set(f.col);m.roughness=.7;return v3dOp(m)}if(k&&V3_MATS[k]){V3.matsK=V3.matsK||{};const m=V3.matsK[k]||(V3.matsK[k]=V3.mat.clone());m.color.set(V3_MATS[k].c);m.roughness=V3_MATS[k].r;return v3dOp(m)}return (i&&(s.material||'arcilla')==='arcilla')?v3dMatTinte(i):V3.mat}
 function v3dMatTinte(i){const T=V3.T;V3.matsF=V3.matsF||{};const m=V3.matsF[i]||(V3.matsF[i]=V3.mat.clone());m.color.copy(V3.mat.color).lerp(new T.Color(V3_TINTES[i]||'#ffffff'),.3);m.roughness=V3.mat.roughness;return v3dOp(m)}
 function v3dMontaFigs(){const S3=S.v3d;v3dFigsInit();if(S3.figs.some(f=>!V3_CACHE[f.cuerpo])){v3dListoVista();return}
   V3.noSuelo=false;V3.mixer=null;V3.bones=[];
@@ -13517,7 +13535,7 @@ function v3dGiro(){v3dPersistePronto();v3dFigSync();const m=V3.model;if(!m)retur
 function v3dEncuadra(){if(S.v3d?.persp)return;const ms=V3.figs?V3.figs.map(x=>x.model):(V3.model?[V3.model]:[]);if(!ms.length)return;const b=new V3.T.Box3();
   ms.forEach(m=>{m.updateMatrixWorld(true);m.traverse(o=>{if(o.isSkinnedMesh){o.skeleton.update();o.boundingBox=null}});b.union(new V3.T.Box3().setFromObject(m))});
   const c=b.getCenter(new V3.T.Vector3()),sz=b.getSize(new V3.T.Vector3()),fov=V3.camera.fov*Math.PI/180,d=Math.max(sz.y,sz.x*.9,sz.z*.9)/(2*Math.tan(fov/2))*1.45+sz.z/2;V3.controls.target.copy(c);V3.camera.position.set(c.x,c.y+sz.y*.08,c.z+d);V3.controls.update();V3.dirty=true}
-function v3dMaterial(){const M=V3_MATS[S.v3d.material]||V3_MATS.arcilla;V3.mat.color.set(M.c);V3.mat.roughness=M.r;v3dOp(V3.mat);if(V3.matsF)for(const i in V3.matsF)v3dMatTinte(+i);if(V3.matsK)for(const k in V3.matsK)v3dOp(V3.matsK[k]);V3.dirty=true}
+function v3dMaterial(){const M=V3_MATS[S.v3d.material]||V3_MATS.arcilla;V3.mat.color.set(S.v3d.colGen||M.c);V3.mat.roughness=M.r;v3dOp(V3.mat);if(V3.matsF)for(const i in V3.matsF)v3dMatTinte(+i);if(V3.matsK)for(const k in V3.matsK)v3dOp(V3.matsK[k]);V3.dirty=true}
 function v3dArcilla(){const s=S.v3d;if(!['mio','maniqui'].includes(s.modelo)||!V3.model)return;(V3.figs||[{model:V3.model}]).forEach((e,i)=>e.model.traverse(o=>{if(o.isMesh){if(!o.userData.mat0)o.userData.mat0=o.material;o.material=s.arcilla?v3dMatFig(i):o.userData.mat0}}));V3.dirty=true}
 function v3dDispone(root){const ms=new Set();root.traverse(o=>{o.geometry?.dispose?.();for(const m of [o.material,o.userData?.mat0].flat())if(m&&m!==V3.mat)ms.add(m)});ms.forEach(m=>{for(const k in m)if(m[k]?.isTexture)m[k].dispose();m.dispose?.()})}
 /* ============ Maniquí de animal (cuatro patas) ============
@@ -13930,7 +13948,17 @@ const v3dTabCuerpo=s=>s.modelo==='animal'?v3dTabAnimalCuerpo(s):s.modelo==='mani
 const v3dTabObjetos=s=>v3dPropsHTML(s);
 const V3_TABS={escena:s=>v3dSec('esc-luz','Luz',v3dTabLuz(s),true)+v3dSec('esc-cam','Cámara, lente y fondo',v3dTabCamara(s),true),persp:v3dTabPersp,modelo:v3dTabModelo,pose:v3dTabPose,cuerpo:v3dTabCuerpo,objetos:v3dTabObjetos,luz:v3dTabLuz,camara:v3dTabCamara,poses:s=>v3dEscenasHTML()+v3dTabPoses(s),guardar:s=>v3dEscenasHTML()+v3dTabGuardar(s)};
 function v3dNovedades(){let v=false;try{v=localStorage.getItem('cdc.v3dnov4')==='1'}catch{}if(v)return '';return `<div class="v3-nov"><b>Novedades del visor</b><ul><li><b>Modelo:</b> hasta 4 personajes, escenas y escenas con palabras.</li><li><b>Pose:</b> 100+ poses con buscador, desde foto o boceto, y arrastrar articulaciones.</li><li><b>Cuerpo:</b> <b>guías de proporción</b> (ojos, nariz, boca, medio del cuerpo, 8 cabezas), complexión, piel, manos y pies, esqueleto y volúmenes.</li><li><b>Objetos:</b> muebles, armas y formas (también en la pestaña Modelo).</li><li><b>Escenas:</b> 62 escenas de partida por tipo.</li><li><b>Luz:</b> 3 luces. <b>Cámara:</b> fondos y modo ligero para celular. <b>Poses:</b> tu biblioteca de fotos, que ahora se guarda en tu cuenta.</li></ul><button class="btn sm pri" data-act="v3d-nov">Entendido</button></div>`}
-function v3dPanelHTML(){const s=S.v3d;return v3dNovedades()+v3dPasoHTML(s)+v3dBarra()+(V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
+/* pintar el modelo con la paleta: el color de tu paleta (del proyecto o de una pieza) se aplica al personaje elegido, o al modelo si es uno solo, en la pose que tienes */
+function v3dPalPintar(p,s){const f=s?.palFuente||'proy',x=f!=='proy'?p?.paletasPieza?.[f]:null;return (x?x.pal.map(z=>z.hex):(p?.mood?.paleta||[])).filter(Boolean).slice(0,8)}
+function v3dPintaHTML(s,p){const pal=v3dPalPintar(p,s),f=s.modelo==='maniqui'?s.figs?.[s.sel||0]:null,act=((f?f.col:s.colGen)||'').toLowerCase(),PP=p?.paletasPieza||{},fu=s.palFuente||'proy',multi=s.modelo==='maniqui'&&(s.figs?.length||0)>1;
+  const cab=`<summary>🎨 Pintar el modelo con tu paleta</summary>`;
+  if(!pal.length)return `<details class="v3-d v3-sec" data-sec="pinta" ${v3dSecAbierta('pinta',true)?'open':''}>${cab}<p class="hint" style="margin:4px 0">Primero arma tu paleta en «Luz y color» del proyecto; aquí podrás pintar el modelo con ella.</p></details>`;
+  return `<details class="v3-d v3-sec" data-sec="pinta" ${v3dSecAbierta('pinta',true)?'open':''}>${cab}<p class="hint" style="margin:4px 0">Toca un color y ${f?'el personaje elegido':'el modelo'} se pinta con él, en la pose y con la luz que tienes. Así ves cómo se lee tu paleta sobre el cuerpo.</p>
+    <div class="chips"><span class="lbl">Paleta de</span>${[['proy','Todo el proyecto'],...Object.entries(PAL_TIPOS)].map(([k,n])=>`<button class="ch xs ${fu===k?'on':''}" data-act="v3d-pinta-fuente" data-k="${k}">${n}${k!=='proy'&&!PP[k]?' (crear)':''}</button>`).join('')}</div>
+    <span class="v3-sw">${pal.map(h=>`<button class="v3-c ${act===h.toLowerCase()?'on':''}" style="background:${esc(h)}" data-act="v3d-pinta" data-c="${esc(h)}" title="${esc(h)}" aria-label="Pintar con ${esc(h)}"></button>`).join('')}</span>
+    <div class="prow">${multi?'<button class="btn xs" data-act="v3d-pinta-todo" title="Cada personaje recibe un color distinto de la paleta">Repartir la paleta entre los personajes</button>':''}<button class="btn ghost xs" data-act="v3d-pinta-quita">Quitar el color</button></div></details>`}
+function v3dPintaRefresca(){const s=S.v3d;s.arcilla=true;if(s.modelo!=='maniqui'||!s.figs?.length)v3dMaterial();v3dArcilla();v3dPanel();V3.dirty=true}
+function v3dPanelHTML(){const s=S.v3d;return v3dNovedades()+v3dPasoHTML(s)+v3dBarra()+v3dPintaHTML(s,S.P[S.cur])+(V3_TABS[s.tab]||v3dTabGuardar)(s,S.P[S.cur])}
 function v3dPorque(){const s=S.v3d,n=s.modelo==='maniqui'?(s.figs?.length>1?`Escena 3D con ${s.figs.length} personajes${s.figs.some(f=>f.nom)?' ('+s.figs.map(f=>f.nom).filter(Boolean).join(', ')+')':''}`:`Pose 3D: ${s.preset}`):s.modelo==='loomis'?'Cabeza de Loomis con luz':s.modelo==='animal'?`Maniquí de animal: ${V3_AN_SP[s.animal?.sp]?.n||''}${s.animal?.preset?' · '+s.animal.preset:''}`:s.modelo==='formas'?`Estudio de luz sobre ${s.forma}`:'Estudio 3D de '+(s.mioNombre||'modelo');return `${n} · luz ${s.luzN||'a mano'}`}
 function v3dPanel(){const s=S.v3d;$('#v3d-panel').innerHTML=v3dPanelHTML();$('#v3d-tabs').innerHTML=[...(s.persp?[['persp','Perspectiva']]:[]),['modelo','1 · Modelo'],['cuerpo','2 · Cuerpo'],['pose','3 · Pose'],['objetos','4 · Objetos'],['escena','5 · Luz y cámara'],['guardar','6 · Guardar'],['poses','★ Poses']].map(([k,n])=>`<button class="${v3dPasoKey(s)===k?'on':''}" data-act="v3d-tab" data-k="${k}">${n}</button>`).join('')}
 async function v3dAbrir(modo,tab){if(V3.open)return;v3dPoseLibMejora();S.v3d=S.v3d||v3dRestaura()||v3Def();if(modo)S.v3d.modelo=modo;if(tab)S.v3d.tab=tab;
@@ -13938,10 +13966,10 @@ async function v3dAbrir(modo,tab){if(V3.open)return;v3dPoseLibMejora();S.v3d=S.v
   V3.open=true;const tk=V3.tk=(V3.tk||0)+1;
   try{await v3dLib()}catch(e){V3.open=false;ov.innerHTML='';toast('No pude cargar el motor 3D. Revisa tu conexión e inténtalo de nuevo.');return}
   if(!V3.open||V3.tk!==tk)return;$('#v3d-carga')?.remove();v3dInit();if(S.v3d.persp)v3dPerspAplica();v3dPanel();v3dModelo();v3dCuerposCarga()}
-const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model','anillo','figs','matsF','matsK','propObjs','anat','colas','extras'];/* lo que vive solo mientras el visor está abierto */
+const V3_RT=['renderer','scene','camera','controls','key','hemi','rim','suelo','rej','mat','ro','raf','model','anillo','figs','matsF','matsK','matsC','propObjs','anat','colas','extras'];/* lo que vive solo mientras el visor está abierto */
 const v3dPerspGuardaCfg=()=>{const P=S.v3d?.persp;if(P)S.v3d.perspCfg={camH:P.camH,D:P.D,guias:P.guias,grid:P.grid,fondo:P.fondo}};
 function v3dCerrar(){S.v3d=null;V3.perspTex=null;V3.perspBg=null;clearTimeout(V3.rT);V3.open=false;cancelAnimationFrame(V3.raf);
-  try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model&&!V3.figs)v3dDispone(V3.model);V3.anillo?.geometry?.dispose();V3.anillo?.material?.dispose();Object.values(V3.matsF||{}).forEach(m=>m.dispose());Object.values(V3.matsK||{}).forEach(m=>m.dispose());[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
+  try{V3.ro?.disconnect();V3.controls?.dispose();if(V3.model&&!V3.figs)v3dDispone(V3.model);V3.anillo?.geometry?.dispose();V3.anillo?.material?.dispose();Object.values(V3.matsF||{}).forEach(m=>m.dispose());Object.values(V3.matsK||{}).forEach(m=>m.dispose());Object.values(V3.matsC||{}).forEach(m=>m.dispose());[V3.suelo,V3.rej].forEach(o=>{o?.geometry?.dispose();o?.material?.dispose()});V3.mat?.dispose();V3.renderer?.dispose();V3.renderer?.forceContextLoss?.()}catch{}
   V3_RT.forEach(k=>V3[k]=null);V3.mixer=null;V3.bones=[];$('#overlay').innerHTML=''}
 async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)return;
   const r=V3.renderer,cv=r.domElement,pr=r.getPixelRatio(),an0=V3.anillo?.visible;if(V3.anillo)V3.anillo.visible=false;r.setPixelRatio(Math.max(2,pr));v3dResize();r.render(V3.scene,V3.camera);let srcC=cv;const conG=s.guias?.on&&s.guias.png!==false,conC=s.cielo&&!s.persp;if(conG||conC){srcC=document.createElement('canvas');srcC.width=cv.width;srcC.height=cv.height;const g2=srcC.getContext('2d'),kk=srcC.width/(cv.clientWidth||srcC.width);g2.drawImage(cv,0,0);if(conG)v3dGuiasDibuja(g2,srcC.width,srcC.height,kk);if(conC)v3dCieloDibuja(g2,srcC.width,srcC.height,kk)}const blob=await new Promise(ok=>srcC.toBlob(ok,'image/png'));if(V3.anillo)V3.anillo.visible=!!an0;r.setPixelRatio(pr);v3dResize();
@@ -14676,6 +14704,10 @@ async function accion(a,el){
     case 'v3d-bib':bibAbre();break;
     case 'v3d-ref-quita':v3dRefQuita();break;
     case 'v3d-fig':v3dFigSel(+ds.k);break;
+    case 'v3d-pinta':{const s=S.v3d,f=s.modelo==='maniqui'?s.figs?.[s.sel||0]:null;if(f)f.col=ds.c;else s.colGen=ds.c;v3dPintaRefresca();toast('Pintado con '+ds.c);break}
+    case 'v3d-pinta-quita':{const s=S.v3d,f=s.modelo==='maniqui'?s.figs?.[s.sel||0]:null;if(f)delete f.col;else delete s.colGen;v3dPintaRefresca();break}
+    case 'v3d-pinta-todo':{const s=S.v3d,pal=v3dPalPintar(S.P[S.cur],s);if(pal.length)(s.figs||[]).forEach((f,i)=>f.col=pal[i%pal.length]);v3dPintaRefresca();toast('Paleta repartida entre los personajes');break}
+    case 'v3d-pinta-fuente':{const s=S.v3d,k=ds.k,pp=S.P[S.cur];if(pp&&k!=='proy'&&!pp.paletasPieza?.[k]){const P0=paletaFunc(pp,k)[0];pp.paletasPieza=pp.paletasPieza||{};pp.paletasPieza[k]={n:P0.n,pal:P0.pal,escK:P0.escK};marcar()}s.palFuente=k;v3dPanel();break}
     case 'v3d-piel':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f){if(ds.k)f.mat=ds.k;else delete f.mat;v3dArcilla();v3dPanel()}break}
     case 'v3d-pz-add':case 'v3d-pz-sel':case 'v3d-pz-del':case 'v3d-pz-dup':case 'v3d-pz-hueso':case 'v3d-pz-col':case 'v3d-pz-sim':case 'v3d-pz-estilo':case 'v3d-pz-centra':case 'v3d-gz-modo':v3dPzAccion(a,ds);break;
     case 'v3d-prop-add':v3dPropAgrega(ds.k,ds.suma==='1');break;
@@ -14875,7 +14907,7 @@ async function accion(a,el){
       let n=1;try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};n=1+s.docs.reduce((m,x)=>Math.max(m,+(String(x.id).split('-')[1])||0),0)}catch{}
       const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,mercado:c.m,tarifa:c.tarifa,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto};
       try{if(S.db)await S.db.collection('cotizaciones').doc(folio).set(q)}catch{toast('No se pudo guardar en el historial')}
-      S.cotHist=null;await guardarArchivo(`cotizacion-${folio}.html`,cotHTMLDoc(q));renderMain();break}
+      S.cotHist=null;S._finCots=null;S._finCotsPide=false;await guardarArchivo(`cotizacion-${folio}.html`,cotHTMLDoc(q));renderMain();finPublicar();break}
     case 'cot-abrir':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(q)await guardarArchivo(`cotizacion-${q.folio}.html`,cotHTMLDoc(q));break}
     case 'cot-del':{if(S.confirmCot!==ds.f){S.confirmCot=ds.f;renderMain();return}S.confirmCot=null;try{await S.db?.collection('cotizaciones').doc(ds.f).delete()}catch{}S.cotHist.lista=S.cotHist.lista.filter(x=>x.folio!==ds.f);renderMain();break}
     case 'etapa':p.prod=p.prod||{};p.prod.etapa=+ds.i;marcar();renderMain();break;
