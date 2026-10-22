@@ -63,6 +63,7 @@ function appRender(){const S3=S.v3d,E=S3.esc;if(!$('#right'))return;E.cOpen=true
   const o=$('#escc-out'),r=$('#escc-rs');if(o)o.scrollTop=lSt;if(r)r.scrollTop=rSt;if(tab==='bib'&&V3.escThQ?.length&&!V3.escThRun)escThProceso()}
 addEventListener('resize',()=>{clearTimeout(appRender.t);appRender.t=setTimeout(appRender,150)});
 /* ---------- acciones propias de la herramienta ---------- */
+const _appRender0=appRender;appRender=function(){_appRender0();escLineartBtn()};
 function descarga(blob,nom){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nom;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 const nom=()=>(S.v3d.nombre||'escenario').replace(/[^\wáéíóúñü -]+/gi,'').trim().replace(/\s+/g,'-')||'escenario';
 async function exportaPNG(k){const r=V3.renderer,pr=r.getPixelRatio(),E=S.v3d.esc;let sc=+k||1;sc=Math.min(sc,Math.floor(8000/Math.max(V3.w,V3.h)*pr)/pr);const ocultos=[];for(const o of V3.escSels||[]){if(o.visible){o.visible=false;ocultos.push(o)}}
@@ -117,8 +118,10 @@ function escIdeaCard(i,esAlt){const d=ESC_IDEAS[i];let el=$('#idea');if(!el){el=
    <p class="idea-f">${esAlt?d.alt.x:d.f}</p><p class="hint" style="margin:0 0 4px">${lug} · ${hn} · ${cn}</p>
    <details open><summary>Qué debe mostrar la pieza</summary><ul>${d.m.map(x=>`<li>${x}</li>`).join('')}</ul></details>
    <details><summary>Cómo armarla para el portafolio</summary><ol>${ESC_IDEA_PIEZAS.map(x=>`<li>${x}</li>`).join('')}</ol></details>
-   <div class="chips" style="margin-top:6px"><button class="btn xs pri" data-idea="otra">💡 Otra idea</button><button class="btn xs" data-idea="alt" data-i="${i}">${esAlt?'Volver a la original':'Ver la versión alterna'}</button><button class="btn xs" data-idea="png">Exportar PNG</button></div>`;el.dataset.i=i;el.style.display='block'}
-document.addEventListener('click',e=>{const t=e.target.closest?.('[data-idea],#bIdea');if(!t)return;const a=t.id==='bIdea'?'otra':t.dataset.idea;if(a==='otra')escIdeaAplica(escIdeaSiguiente());else if(a==='alt')escIdeaAlterna(+t.dataset.i);else if(a==='png')exportaPNG(1);else if(a==='x'){const el=$('#idea');if(el)el.style.display='none'}});
+   <div class="chips" style="margin-top:6px"><button class="btn xs pri" data-idea="otra">💡 Otra idea</button><button class="btn xs" data-idea="alt" data-i="${i}">${esAlt?'Volver a la original':'Ver la versión alterna'}</button><button class="btn xs" data-idea="line">✏ Ver el lineart</button><button class="btn xs" data-idea="png">Exportar PNG</button></div>`;el.dataset.i=i;el.style.display='block';escLineartBtn()}
+function escLineartBtn(){const E=S.v3d.esc,on=E?.vista==='lineal';for(const b of document.querySelectorAll('#bLineart,[data-idea="line"]')){b.classList.toggle('pri',on);b.textContent=on?'🎨 Ver en color':'✏ Ver el lineart'}const top=$('#bLineart');if(top)top.textContent=on?'🎨 Color':'✏ Lineart'}
+function escLineartToggle(){const E=S.v3d.esc;if(!E?.on){toast('Primero crea un escenario');return}if(E.vista==='lineal'){E.vista=E.vistaAnt&&E.vistaAnt!=='lineal'?E.vistaAnt:'color'}else{E.vistaAnt=E.vista||'color';E.vista='lineal'}V3.dirty=true;v3dPersistePronto();v3dPanel()}
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-idea],#bIdea,#bLineart');if(!t)return;if(t.id==='bLineart'||t.dataset.idea==='line'){escLineartToggle();return}const a=t.id==='bIdea'?'otra':t.dataset.idea;if(a==='otra')escIdeaAplica(escIdeaSiguiente());else if(a==='alt')escIdeaAlterna(+t.dataset.i);else if(a==='png')exportaPNG(1);else if(a==='x'){const el=$('#idea');if(el)el.style.display='none'}});
 escDef('maniqui','Figura de escala (1.75 m)',.5,0xb9b4ac,null,b=>{b.nograd=true;const c=0xb9b4ac;b.cyl(.09,.07,.85,c,-.1,0,0,8);b.cyl(.09,.07,.85,c,.1,0,0,8);b.box(.34,.2,.2,c,0,.85,0);b.box(.36,.5,.22,c,0,1.02,0);b.cyl(.05,.05,.1,c,0,1.5,0,8);b.sph(.11,c,0,1.7,0,null,1);b.cyl(.04,.035,.6,c,-.24,.92,0,6);b.cyl(.04,.035,.6,c,.24,.92,0,6)});
 ESC_CAT_ED[0][1].push('maniqui');
 /* ---------- arranque ---------- */

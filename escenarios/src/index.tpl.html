@@ -12,8 +12,8 @@
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:13px/1.35 'IBM Plex Sans',system-ui,-apple-system,Segoe UI,sans-serif;-webkit-text-size-adjust:100%;overflow:hidden}
 button,input,select{font:inherit;color:inherit}
 #app{display:grid;height:100%;grid-template-columns:252px minmax(0,1fr) 344px;grid-template-rows:50px minmax(0,1fr) auto;grid-template-areas:"top top top" "left center right" "bar bar bar"}
-#top{grid-area:top;display:flex;align-items:center;gap:8px;padding:0 10px;background:var(--rail);border-bottom:1px solid var(--line)}
-#top .brand{font-weight:700;letter-spacing:.01em;display:flex;align-items:center;gap:8px;white-space:nowrap}#top .brand svg{width:22px;height:22px}
+#top{grid-area:top;overflow-x:auto;scrollbar-width:none;display:flex;align-items:center;gap:8px;padding:0 10px;background:var(--rail);border-bottom:1px solid var(--line)}
+#top>*{flex:none}#top .brand{font-weight:700;letter-spacing:.01em;display:flex;align-items:center;gap:8px;white-space:nowrap}#top .brand svg{width:22px;height:22px}
 #top input{background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:6px 9px;color:var(--ink);min-width:0}#nombre{width:190px}#top input[type=search]{width:190px;margin-left:auto}
 #left{grid-area:left;background:var(--rail);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden}
 #right{grid-area:right;background:var(--rail);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden}
@@ -48,7 +48,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}.v3-s{display:flex;flex-
     <input id="nombre" type="text" placeholder="Nombre de la escena" aria-label="Nombre de la escena">
     <button class="btn xs" id="bUndo" title="Deshacer (Ctrl+Z)">↶</button><button class="btn xs" id="bRedo" title="Rehacer (Ctrl+Shift+Z)">↷</button>
     <input type="search" data-ecsrch placeholder="Buscar en la escena…">
-    <button class="btn xs pri" id="bIdea" title="Un lugar, una hora y un clima con la idea y lo que debe mostrar la pieza">💡 Idea de portafolio</button><button class="btn xs" id="bAbrir">Abrir</button><button class="btn xs" id="bGuardar">Guardar</button><button class="btn xs pri" id="bPng">Exportar PNG</button>
+    <button class="btn xs" id="bLineart" title="Ver la escena como dibujo lineal (blanco con líneas negras) y volver al color">✏ Lineart</button><button class="btn xs pri" id="bIdea" title="Un lugar, una hora y un clima con la idea y lo que debe mostrar la pieza">💡 Idea de portafolio</button><button class="btn xs" id="bAbrir">Abrir</button><button class="btn xs" id="bGuardar">Guardar</button><button class="btn xs pri" id="bPng">Exportar PNG</button>
     <input type="file" id="archivo" accept=".json,application/json" hidden>
   </header>
   <aside id="left"></aside>
