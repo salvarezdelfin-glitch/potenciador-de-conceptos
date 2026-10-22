@@ -34,6 +34,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}.v3-s{display:flex;flex-
 .escc-num{display:grid;grid-template-columns:62px 1fr 1fr 1fr;gap:4px;align-items:center;margin:4px 0}.escc-num input{width:100%;min-width:0}.escc-sec{margin:12px 0 4px;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
 .escc-sw{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.escc-sw i{width:22px;height:22px;border-radius:6px;border:1px solid var(--line2);cursor:pointer;display:block}
 .escc-tabs{display:flex;gap:3px;padding:7px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+#idea{display:none;position:absolute;left:54px;bottom:34px;width:min(430px,calc(100% - 70px));max-height:62%;overflow:auto;z-index:4;background:rgba(14,16,21,.95);border:1px solid var(--line2);border-radius:14px;padding:10px 12px}#idea .idea-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}#idea .idea-h b{flex:1}#idea .idea-tag{background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 8px;font-size:11px;white-space:nowrap}#idea .idea-f{margin:2px 0 4px;font-size:13.5px}#idea summary{cursor:pointer;color:var(--ink2);margin:4px 0}#idea ul,#idea ol{margin:2px 0 4px;padding-left:18px;color:var(--ink2)}@media(max-width:900px){#idea{left:8px;width:calc(100% - 16px);bottom:8px;max-height:70%}}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);background:#1d2129;border:1px solid var(--line2);padding:8px 14px;border-radius:10px;opacity:0;transition:.2s;pointer-events:none;z-index:50}#toast.on{opacity:1;transform:translateX(-50%)}
 *::-webkit-scrollbar{width:9px;height:9px}*::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:9px;border:2px solid transparent;background-clip:content-box}
 @media(max-width:900px){#app{grid-template-columns:1fr;grid-template-rows:50px 50vh minmax(0,1fr) auto;grid-template-areas:"top" "center" "right" "bar"}#left{display:none}#right{border-left:0;border-top:1px solid var(--line)}#top input[type=search]{display:none}#nombre{width:120px}#top .brand span{display:none}#hint{display:none}#bar{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start}}
@@ -47,7 +48,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}.v3-s{display:flex;flex-
     <input id="nombre" type="text" placeholder="Nombre de la escena" aria-label="Nombre de la escena">
     <button class="btn xs" id="bUndo" title="Deshacer (Ctrl+Z)">↶</button><button class="btn xs" id="bRedo" title="Rehacer (Ctrl+Shift+Z)">↷</button>
     <input type="search" data-ecsrch placeholder="Buscar en la escena…">
-    <button class="btn xs" id="bAbrir">Abrir</button><button class="btn xs" id="bGuardar">Guardar</button><button class="btn xs pri" id="bPng">Exportar PNG</button>
+    <button class="btn xs pri" id="bIdea" title="Un lugar, una hora y un clima con la idea y lo que debe mostrar la pieza">💡 Idea de portafolio</button><button class="btn xs" id="bAbrir">Abrir</button><button class="btn xs" id="bGuardar">Guardar</button><button class="btn xs pri" id="bPng">Exportar PNG</button>
     <input type="file" id="archivo" accept=".json,application/json" hidden>
   </header>
   <aside id="left"></aside>
