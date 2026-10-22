@@ -905,6 +905,13 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 /* ---- movimiento reducido ---- */
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* ---- programa de mejora ---- */
+.e3-dials{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 8px}.e3-dials>div{display:flex;flex-direction:column;align-items:center;gap:3px}.e3-dials canvas{width:96px;height:96px;border-radius:50%;border:1px solid var(--line2);background:#101318;cursor:crosshair;touch-action:none}.e3-dials span{font-size:11.5px;color:var(--ink2)}.e3-dtxt{align-items:flex-start!important;flex:1;min-width:200px}.e3-lab{position:absolute;transform:translate(-50%,-135%);background:rgba(14,16,21,.85);border:1px solid;border-radius:8px;padding:2px 8px;font-size:11.5px;pointer-events:none;white-space:nowrap}
+.e3-af{display:flex;gap:10px;align-items:center;padding:5px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink2)}.e3-af b{color:var(--ink);font-family:var(--mono)}.e3-afc{display:flex;flex:none}.e3-afc i{width:26px;height:26px;display:block}.e3-afc i:first-child{border-radius:7px 0 0 7px}.e3-afc i:last-child{border-radius:0 7px 7px 0}
+.lc-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}.lc-izq{position:sticky;top:8px}@media(max-width:900px){.lc-grid{grid-template-columns:1fr}.lc-izq{position:static}}
+#e3-slot{height:340px;border-radius:12px;overflow:hidden;background:#181a20;margin:8px 0;position:relative}#e3-slot canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
+.e3-sw{width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);cursor:pointer;padding:0}.e3-sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--accent)}
+.e3-zonas{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px}.e3-z{background:var(--surface);border:1px solid var(--line2);border-radius:11px;overflow:hidden;cursor:pointer;text-align:left;padding:0;color:var(--ink)}.e3-z:hover{border-color:var(--ink3)}.e3-z i{display:block;height:42px}.e3-z span{display:block;padding:5px 8px 1px;font-size:12px;font-weight:600}.e3-z small{display:block;padding:0 8px 6px;font:11px var(--mono);color:var(--ink2)}.e3-tips{padding-left:18px;margin:8px 0}.e3-tips li{margin:4px 0}
+
 .pq{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 14px;font-size:12.5px;color:var(--ink2)}.pq-f{border:1px solid;border-radius:999px;padding:1px 9px;font-weight:600;font-size:11.5px;white-space:nowrap}.pq b{color:var(--ink)}.pq .btn{margin-left:auto}
 .cm-frentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:14px}.cm-f{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px}.cm-m{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-top:4px}.cm-m b{color:var(--ink);font-family:var(--mono)}.cm-hito{padding:8px 0;border-top:1px solid var(--line)}.cm-hito:first-of-type{border-top:0}.cm-mas .ptitle{display:none}
 
@@ -1207,7 +1214,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvijz2e1').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk2u2vc').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -8683,14 +8690,19 @@ function herrHTML(p){S.tab=HERR_TABS.some(t=>t[0]===S.tab)?S.tab:'luzcolor';
   return `${conflictoHTML(S.cur)}<div class="phead"><div style="flex:1 1 380px;min-width:0"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,46px);margin:0">Herramientas</h1><p class="muted" style="margin:4px 0 0">Luz y color, referencias, moodboard, tablero y 3D, sin necesidad de un proyecto. Lo que hagas aquí se guarda aparte, y también aparece en tu Biblioteca.</p></div></div>
   <nav class="tabs" role="tablist">${HERR_TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join('')}</nav>
   <section class="panel">${({luzcolor:vLuzColor,refs:vRefsHerr,herr3d:vHerr3d,relite:vRelite,comp:vComp,forma:vForma}[S.tab])(p)}</section>`}
-function vLuzColor(p){const m=p.mood,t=tresMood(p),conMood=t.some(Boolean)||m.luz||m.color,
-    paso=(n,tit,sub,html)=>`<div class="herr-paso"><span class="herr-n">${n}</span><div><h3 style="margin:0">${tit}</h3><p class="hint" style="margin:2px 0 0">${sub}</p></div></div>${html}`;
-  return `<p class="intro">Elige tus colores, ilumínalos con una escena de luz y mira qué paletas funcionan. No necesitas un proyecto.</p>
-  ${paso(1,'Tus colores','Agrega los que ya tienes, usa una propuesta o sácalos de una imagen.',`<div class="prow" style="margin:8px 0"><button class="btn sm" data-act="herr-img">Sacar colores de una imagen</button><button class="btn ghost sm ${S.confirmHerr?'danger':''}" data-act="herr-reset">${S.confirmHerr?'¿Volver a los colores y la luz iniciales? Toca otra vez':'Empezar de cero'}</button>${S.confirmHerr?'<button class="btn ghost sm" data-act="herr-reset-no">Cancelar</button>':''}</div>${moodPaletaHTML(p)}`)}
-  ${paso(2,'Tu luz','Cada color iluminado por tu escena: la esfera y la rampa de luz → sombra → rebote.',escHTML(p))}
-  ${paso(3,'Paletas que funcionan','Tres propuestas según el tipo de pieza y tu luz.',`<details class="box" ${conMood?'open':''}><summary><h3 style="display:inline">Si quieres que respondan a una sensación</h3> <span class="lbl">opcional</span></summary>
+function vLuzColor(p){const m=p.mood,t=tresMood(p),conMood=t.some(Boolean)||m.luz||m.color;
+  return `<p class="intro">Todo en una sola pantalla: elige tus colores, mueve la luz y mira el resultado en 3D al instante, con los colores medidos y qué corregir. No necesitas un proyecto.</p>
+  <div class="lc-grid">
+    <div class="lc-izq">${e3HTML(p)||'<div class="box"><h3>Verlo en 3D</h3><p class="muted">Agrega al menos un color a tu paleta (a la derecha) y aquí lo verás iluminado sobre una cabeza y formas.</p></div>'}</div>
+    <div class="lc-der">
+      <div class="box"><h3>Tus colores</h3><p class="hint" style="margin:0">Agrega los que ya tienes, usa una propuesta o sácalos de una imagen.</p><div class="prow" style="margin:8px 0"><button class="btn sm" data-act="herr-img">Sacar colores de una imagen</button><button class="btn ghost sm ${S.confirmHerr?'danger':''}" data-act="herr-reset">${S.confirmHerr?'¿Volver a los colores y la luz iniciales? Toca otra vez':'Empezar de cero'}</button>${S.confirmHerr?'<button class="btn ghost sm" data-act="herr-reset-no">Cancelar</button>':''}</div>${moodPaletaHTML(p)}</div>
+      <div class="box" id="esc-box"><h3>La luz</h3>${escCtlHTML(p)}</div>
+    </div>
+  </div>
+  <div class="box"><h3>Tus colores bajo esta luz</h3><p class="hint" style="margin:0 0 6px">Cada color con su rampa de luz → sombra → rebote.</p>${escResHTML(p)}</div>
+  <div class="box"><h3 style="margin:0 0 6px">Paletas que funcionan</h3><p class="hint" style="margin:0 0 6px">Tres propuestas según el tipo de pieza y tu luz.</p><details class="box" ${conMood?'open':''}><summary><h3 style="display:inline">Si quieres que respondan a una sensación</h3> <span class="lbl">opcional</span></summary>
     <div class="tres" style="margin-top:8px">${[0,1,2].map(i=>`<input type="text" id="x-mood-tres-${i}" data-b="mood.tres.${i}" value="${esc(t[i]||'')}" placeholder="${['solemne','húmedo','inevitable'][i]}">`).join('')}</div>
-    <div class="grid2"><div class="field"><label for="x-mood-luz">Cómo está iluminado</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div><div class="field"><label for="x-mood-color">Color y relación cromática</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,50)}</div></div></details>${mapaLuzHTML(p)}`)}`}
+    <div class="grid2"><div class="field"><label for="x-mood-luz">Cómo está iluminado</label>${tx('mood.luz',m.luz,'Una sola fuente: fuego bajo desde abajo; el resto se pierde',null,50)}</div><div class="field"><label for="x-mood-color">Color y relación cromática</label>${tx('mood.color',m.color,'Carmesí contra negro obsidiana; oro como acento',null,50)}</div></div></details>${mapaLuzHTML(p)}</div>`}
 function vHerr3d(){const c=(t,m,n,d,k)=>`<button class="ht-c ${k||'ht-3'}" data-act="v3d-abrir" data-m="${m}"${t?` data-t="${t}"`:''}><b>${n}</b><span>${d}</span></button>`;
   return `<p class="intro"><b>Referencia 3D.</b> Maniquíes posables con hasta 4 personajes, objetos, anatomía y luz que tú controlas. Todo se procesa en tu navegador. Abre cualquiera de estas puertas: dentro del visor también están todas, en las pestañas de abajo.</p>
   <div class="ht-row">${c('','maniqui','Personajes y escenas','Hasta 4 maniquíes, 12 escenas de partida, escenas descritas con palabras y poses de 100+ botones.','ht-p')}${c('pose','maniqui','Poses','102 poses con buscador, pose desde foto o boceto, y arrastrar las articulaciones.','ht-p')}${c('cuerpo','maniqui','Cuerpo, manos y anatomía','Complexión, 7 tonos de piel, manos y pies posables, esqueleto y músculos.','ht-3')}${c('objetos','maniqui','Objetos','Silla, sofá, cama, armas, escudo, escalera y más: arrastra, gira y pon en la mano.','ht-3')}${c('luz','maniqui','Luces y fondos','Hasta 3 luces con color y esquemas de iluminación; fondos con degradado.','ht-3')}${c('poses','maniqui','Biblioteca de fotos','Tus fotos de referencia con la pose leída: buscar parecidas y práctica de gesto.','ht-3')}${c('','loomis','Cabeza de Loomis','Los 4 pasos del método, con luz.','ht-3')}${c('','formas','Formas básicas','Esfera, cubo, cilindro y más, para ver cómo cae la sombra.','ht-3')}${c('','mio','Mis modelos','Carga un .glb, .obj o .fbx; si trae esqueleto, lo posas.','ht-3')}</div>
@@ -10260,15 +10272,17 @@ const escMul=(a,b,k=1)=>a.map((v,i)=>v*b[i]*k),escSum=(...c)=>c[0].map((_,i)=>c.
 /* escDe solo LEE (no crea escena: así «tener escena» significa que la elegiste); escMut es para cambiarla */
 function escDe(p){return p.escena||{k:'neutro',...ESC_PRE.neutro,int:1}}
 function escMut(p){if(!p.escena)p.escena={k:'neutro',...ESC_PRE.neutro,int:1};delete p.escena.n;return p.escena}
-function escLuces(E){return {L:escRgb(E.luz).map(v=>v*(E.int||1)*1.1),A:escRgb(E.amb),B:escRgb(E.reb)}}
+const escL2=E=>({c:E.luz2||'#6f9bff',a:E.ang2??(((E.ang||0)+180)%360),e:E.el2??20,i:E.int2??0});
+function escLuces(E){const l2=escL2(E);return {L:escRgb(E.luz).map(v=>v*(E.int||1)*1.1),A:escRgb(E.amb),B:escRgb(E.reb),K2:escRgb(l2.c).map(v=>v*l2.i*1.1)}}
 function escRampa(loc,E){const L=escRgb(loc),{L:K,A,B}=escLuces(E),sat=(c,s)=>{const m=(c[0]+c[1]+c[2])/3;return c.map(v=>m+(v-m)*s)};
   const filas=[escSum(K.map(v=>v*.85),[.12,.12,.12]),escSum(escMul(L,K),escMul(L,A,.3)),escSum(escMul(L,K,.5),escMul(L,A,.55)),sat(escSum(escMul(L,K,.15),escMul(L,A,.8)),1.15),escMul(L,A,.6),escSum(escMul(L,A,.4),escMul(L,B,.5)),escMul(L,A,.3)];
+  if(escL2(E).i>0){const K2=escLuces(E).K2;[[1,.5],[2,.45],[3,.25],[5,.4]].forEach(([ix,k])=>{filas[ix]=escSum(filas[ix],escMul(L,K2,k))})}
   return filas.map((c,i)=>({n:ESC_ROLES[i],hex:escHex(c)}))}
 function escBola(cv,loc,E){const N=cv.width,g=cv.getContext('2d'),img=g.createImageData(N,N),L=escRgb(loc),{L:K,A,B}=escLuces(E);
-  const [lx,ly,lz]=luzDir(E.ang,E.el),ss=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};
+  const [lx,ly,lz]=luzDir(E.ang,E.el),[l2x,l2y,l2z]=luzDir(escL2(E).a,escL2(E).e),K2=escLuces(E).K2,ss=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};
   for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=(i+.5-N/2)/(N/2*.92),y=-(j+.5-N/2)/(N/2*.92),r2=x*x+y*y,o=(j*N+i)*4;if(r2>=1.04)continue;
-    const z=Math.sqrt(Math.max(0,1-r2)),ndl=x*lx+y*ly+z*lz,lit=ss(-.02,.3,ndl)*Math.pow(Math.max(0,ndl),.8),amb=.55+.25*y,bk=Math.max(0,-ndl)*Math.max(0,.5-y*.5)*.7,rz=2*ndl*z-lz,sp=ndl>0?Math.pow(Math.max(0,rz),32):0;
-    for(let c=0;c<3;c++){const v=L[c]*K[c]*lit+L[c]*A[c]*amb*(1-lit*.5)+L[c]*B[c]*bk*.55+K[c]*sp*.55;img.data[o+c]=escSrgb(v)}
+    const z=Math.sqrt(Math.max(0,1-r2)),ndl=x*lx+y*ly+z*lz,lit=ss(-.02,.3,ndl)*Math.pow(Math.max(0,ndl),.8),nd2=x*l2x+y*l2y+z*l2z,lit2=ss(-.02,.3,nd2)*Math.pow(Math.max(0,nd2),.8),amb=.55+.25*y,bk=Math.max(0,-ndl)*Math.max(0,.5-y*.5)*.7,rz=2*ndl*z-lz,sp=ndl>0?Math.pow(Math.max(0,rz),32):0;
+    for(let c=0;c<3;c++){const v=L[c]*K[c]*lit+L[c]*A[c]*amb*(1-lit*.5)+L[c]*B[c]*bk*.55+K[c]*sp*.55+L[c]*K2[c]*lit2*.85;img.data[o+c]=escSrgb(v)}
     img.data[o+3]=Math.round(255*Math.max(0,Math.min(1,(1.02-Math.sqrt(r2))*N*.25)))}
   g.putImageData(img,0,0)}
 /* la escena de un personaje: la suya (preset o guardada) o, si no eligió, la del proyecto */
@@ -10286,7 +10300,7 @@ function escDibuja(root){const p=S.P[S.cur];if(!p||S.vista!=='proyecto')return;
   (root&&root.querySelectorAll?root:document).querySelectorAll('.esc-bola').forEach(cv=>{if(cv.dataset.esce){const [luz,amb,reb,ang,el,int]=cv.dataset.esce.split('|');escBola(cv,cv.dataset.hex,{luz,amb,reb,ang:+ang,el:+el,int:+int});return}
     if(cv.dataset.esck!==undefined){if(cv.dataset.hex)escBola(cv,cv.dataset.hex,p.escena||{...(ESC_PRE[cv.dataset.esck]||ESC_PRE.neutro),int:1});return}
     if(cv.dataset.pj){const c=(p.personajes||[]).find(x=>x.id===cv.dataset.pj);if(c&&cv.dataset.hex)escBola(cv,cv.dataset.hex,escDePj(p,c));return}
-    const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))})}
+    const hex=cv.dataset.hex||(p.mood.paleta||[])[+cv.dataset.i];if(hex)escBola(cv,hex,escDe(p))});e3Sync(p);if(E3.R&&E3.slot?.isConnected)e3Aplica()}
 /* mientras arrastras el selector de color o un deslizante, dibujar todas las esferas cuesta ~½ segundo: se guarda al momento, las esferas de la paleta se redibujan al pausar un instante y el resto (personajes y revisión) un poco después */
 let escT1=0,escT2=0;
 function escDiferido(p){clearTimeout(escT1);clearTimeout(escT2);escT1=setTimeout(()=>{const o=$('#esc-out');if(o){o.innerHTML=escOutHTML(p);escDibuja(o)}},120);escT2=setTimeout(()=>escRefresca(p),420)}
@@ -10458,14 +10472,133 @@ function escDibujaBloque(x,items,E,x0,y0,tam,dry){const sw=26,cw=tam+10;
   if(!dry)items.forEach((it,i)=>{const b=document.createElement('canvas');b.width=b.height=tam;escBola(b,it.hex,E);x.drawImage(b,x0+i*cw,y0);escRampa(it.hex,E).forEach((r,j)=>{x.fillStyle=r.hex;x.fillRect(x0+i*cw,y0+tam+8+j*sw,tam,sw-3)})});
   return tam+8+ESC_ROLES.length*sw}
 const escMiniHTML=(items,pjid)=>`<span class="esc-mini">${items.map(it=>`<canvas class="esc-bola esc-m" ${pjid?`data-pj="${pjid}"`:''} data-hex="${esc(it.hex)}" width="48" height="48" title="${esc(it.hex)}"></canvas>`).join('')}</span>`
-function escHTML(p){const E=escDe(p),mias=new Set((p.luces||[]).map(l=>l.k)),sl=(k,lab,min,max,st)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${E[k]}"></label>`,co=(k,lab)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="color" data-esc="${k}" value="${esc(E[k])}"></label>`;
-  return `<div class="box" id="esc-box"><h3>Constructor de luz y color</h3><p class="hint">Cada color de tu paleta, iluminado por la luz de tu escena: ves la esfera y la rampa de luz → sombra → rebote, con el color de la luz y el de las sombras que tú eliges. Elige una de tus claves de luz o ajusta a mano.</p>
+
+/* ============ LUZ Y COLOR EN 3D: tus colores sobre una cabeza y formas, con la misma luz de tu escena ============
+   Se ve el color bajo la luz antes de pintarlo. Se mide lo que de verdad sale en pantalla (luz, medio tono, terminador, sombra propia, rebote y sombra proyectada)
+   y se lee qué corregir (temperatura, saturación de la sombra, rebote). Usa la misma escena de luz del constructor de arriba: si la cambias, esto cambia. */
+const E3={T:null,forma:'loomis',idx:0,zonas:{},sucio:true,cargando:false,raf:0,tm:0};
+const E3_ZN=[['luz','Luz','la zona bien iluminada'],['medio','Medio tono','entre la luz y la sombra'],['term','Terminador','donde empieza la sombra'],['nucleo','Sombra propia','el núcleo, lo más oscuro de la forma'],['rebote','Rebote','luz que vuelve del suelo y del ambiente'],['proy','Sombra proyectada','sobre el suelo']];
+const e3Lin=c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4),e3Enc=c=>c<=.0031308?c*12.92:1.055*Math.pow(c,1/2.4)-.055;
+const e3Rgb=h=>{h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16))},e3Hex=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+function e3Hsv(hex){let [r,g,b]=e3Rgb(hex).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return [h,mx?d/mx:0,mx]}
+const e3Temp=hex=>{const [h,s]=e3Hsv(hex);if(s<.1)return 'neutro';if(h<=70||h>=335)return 'cálido';if(h>=165&&h<=285)return 'frío';return 'neutro'};
+async function e3Carga(){if(E3.T)return true;if(E3.cargando)return false;E3.cargando=true;try{const L=await v3dLib();E3.T=L.T;E3.OC=L.OrbitControls;e3Escena();return true}catch(e){console.error(e);return false}finally{E3.cargando=false}}
+function e3Escena(){const T=E3.T,R=E3.R=new T.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));R.shadowMap.enabled=true;R.shadowMap.type=T.PCFShadowMap;R.outputColorSpace=T.SRGBColorSpace;
+  const sc=E3.sc=new T.Scene();sc.background=new T.Color(0x181a20);const cam=E3.cam=new T.PerspectiveCamera(30,2,.1,100);cam.position.set(0,2.5,11.5);
+  const ctl=E3.ctl=new E3.OC(cam,R.domElement);ctl.target.set(0,1.5,0);ctl.enablePan=false;ctl.maxPolarAngle=Math.PI*.52;ctl.minDistance=4;ctl.maxDistance=20;ctl.addEventListener('change',()=>e3Dirty());
+  const mat=E3.mat=new T.MeshStandardMaterial({color:'#8a8a8a',roughness:.75}),fm=E3.fm=new T.MeshStandardMaterial({color:'#8a7a66',roughness:1}),fl=new T.Mesh(new T.PlaneGeometry(60,60).rotateX(-Math.PI/2),fm);fl.receiveShadow=true;sc.add(fl);
+  const sph=E3.sph=new T.Mesh(new T.SphereGeometry(1,64,48),mat),cub=E3.cub=new T.Mesh(new T.BoxGeometry(1.6,1.6,1.6),mat),cil=E3.cil=new T.Mesh(new T.CylinderGeometry(.75,.75,1.7,40),mat);cub.rotation.y=.55;
+  E3.grp={};for(const o of [sph,cub,cil])o.castShadow=o.receiveShadow=true;sc.add(sph,cub,cil);
+  const key=E3.key=new T.DirectionalLight(0xffffff,1),fill=E3.fill=new T.DirectionalLight(0xffffff,.3),hemi=E3.hemi=new T.HemisphereLight(0xffffff,0x887766,.5);
+  const l2=E3.l2=new T.DirectionalLight(0xffffff,0);sc.add(l2,l2.target);E3.marc=[0,1].map(()=>{const m=new T.Mesh(new T.SphereGeometry(.3,24,16),new T.MeshBasicMaterial({color:0xffffff,depthTest:false})),ln=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:0xffffff,depthTest:false,transparent:true,opacity:.7}));m.renderOrder=ln.renderOrder=10;sc.add(m,ln);return {m,ln}});
+  key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-9,right:9,top:9,bottom:-9,near:1,far:40});key.shadow.bias=-.0004;key.shadow.normalBias=.03;key.shadow.radius=3;sc.add(key,key.target,fill,fill.target,hemi)}
+function e3Dirty(){E3.sucio=true;if(E3.raf)return;E3.raf=requestAnimationFrame(()=>{E3.raf=0;if(!E3.R||!E3.slot?.isConnected)return;E3.ctl.update();E3.R.render(E3.sc,E3.cam);e3Etiquetas();E3.sucio=false})}
+const E3_FORMAS=[['loomis','Cabeza (Loomis)'],['xbot','Maniquí'],['michelle','Michelle'],['formas','Esfera, cubo y cilindro']];
+/* los modelos son los mismos del visor 3D: la cabeza de Loomis viene con la app y los maniquíes de la biblioteca de three.js */
+function e3Modelo(k){if(E3.grp[k])return Promise.resolve(E3.grp[k]);E3.cargaP=E3.cargaP||{};if(E3.cargaP[k])return E3.cargaP[k];
+  return E3.cargaP[k]=(async()=>{const L=V3.lib;let buf;if(k==='loomis'){buf=await (await v3dModeloFetch('loomis-4.glb')).arrayBuffer()}else{const r=await fetch(V3_LISTOS_URL+(k==='xbot'?'Xbot.glb':'Michelle.glb'));if(!r.ok)throw new Error('http');buf=await r.arrayBuffer()}
+    const g=await new Promise((ok,no)=>new L.GLTFLoader().parse(buf,'',ok,no)),m=g.scene;m.traverse(o=>{if(o.isMesh){o.material=E3.mat;o.castShadow=o.receiveShadow=true;o.frustumCulled=false}});
+    const T=E3.T;m.updateMatrixWorld(true);const b=new T.Box3().setFromObject(m,true),sz=b.getSize(new T.Vector3()),alto=k==='loomis'?2.8:4,esc=alto/Math.max(.01,sz.y);m.scale.multiplyScalar(esc);m.updateMatrixWorld(true);const b2=new T.Box3().setFromObject(m,true),w=new T.Group();m.position.x-=(b2.min.x+b2.max.x)/2;m.position.z-=(b2.min.z+b2.max.z)/2;m.position.y+=(k==='loomis'?.4:0)-b2.min.y;w.add(m);w.userData.alto=alto;w.visible=false;E3.sc.add(w);E3.grp[k]=w;return w})().catch(e=>{E3.cargaP[k]=null;toast('No pude cargar ese modelo: '+(e?.message||'error'));return null})}
+function e3Forma(){const f=E3.forma,sph=E3.sph;for(const [k,g] of Object.entries(E3.grp))g.visible=(k===f);const formas=f==='formas';E3.cub.visible=E3.cil.visible=formas;sph.visible=formas;
+  if(formas){sph.position.set(-2.4,1,0);E3.cub.position.set(0,.8,0);E3.cil.position.set(2.4,.85,0)}else sph.position.set(-3.5,1,0);
+  if(E3.camForma!==f){E3.camForma=f;const g=E3.grp[f],al=g?.userData.alto||3,ty=formas?1.1:(f==='loomis'?1.9:al*.78);E3.ctl.target.set(0,ty,0);E3.cam.position.set(0,ty+.5,f==='loomis'?7:(formas?11:8.5));E3.ctl.update()}
+  if(!formas&&!E3.grp[f]){E3.sph.visible=false;e3Modelo(f).then(g=>{if(g){e3Forma();e3Aplica()}})}}
+/* la escena de luz del constructor (luz, sombras, rebote, giro, altura, intensidad) pasa a luces reales */
+function e3Aplica(){const p=S.P[S.cur];if(!p||!E3.R)return;const E=escDe(p),pal=(p.mood.paleta||[]),hex=pal[Math.min(E3.idx,pal.length-1)]||'#8a8a8a',d=luzDir(E.ang,E.el);
+  E3.mat.color.set(hex);E3.fm.color.set(E.reb||'#8a7a66').lerp(new E3.T.Color('#8a8680'),.55);E3.sc.background.set(E.amb||'#202530').multiplyScalar(.3);E3.key.color.set(E.luz);E3.key.intensity=(E.int||1)*1.15*Math.PI;E3.key.position.set(d[0]*14,d[1]*14,d[2]*14);E3.key.castShadow=d[1]>-.03;
+  E3.fill.color.set(E.amb);E3.fill.intensity=.2*Math.PI;const l2=escL2(E),d2=luzDir(l2.a,l2.e);E3.l2.color.set(l2.c);E3.l2.intensity=l2.i*1.15*Math.PI;E3.l2.position.set(d2[0]*14,d2[1]*14,d2[2]*14);e3Marca(0,d,E.luz,E.int>0);e3Marca(1,d2,l2.c,l2.i>0);e3Dials(E);E3.fill.position.set(-d[0]*10,3,6);E3.hemi.color.set(E.amb);E3.hemi.groundColor.set(E.reb);E3.hemi.intensity=.5*Math.PI;e3Forma();e3Tam();e3Dirty();clearTimeout(E3.tm);E3.tm=setTimeout(()=>{E3.zonas=e3Mide(E);e3Lectura()},160)}
+function e3Tam(){const s=E3.slot;if(!s)return;const w=s.clientWidth||600,h=s.clientHeight||300;E3.R.setSize(w,h);E3.cam.aspect=w/h;E3.cam.updateProjectionMatrix()}
+/* medición: se dibuja solo la esfera con una cámara lateral (la luz queda a 60° del eje) y se leen los píxeles */
+function e3Mide(E){const T=E3.T,R=E3.R,sph=E3.sph,objs=[sph,E3.cub,E3.cil,...Object.values(E3.grp),...E3.marc.flatMap(x=>[x.m,x.ln])],vis=objs.map(o=>o.visible),bg=E3.sc.background,C=sph.position.clone(),d=luzDir(E.ang,E.el),L=new T.Vector3(d[0],d[1],d[2]).normalize(),zonas={};let rt=null;
+  const aHex=([r,g,b])=>e3Hex(e3Enc(Math.min(1,Math.max(0,r)))*255,e3Enc(Math.min(1,Math.max(0,g)))*255,e3Enc(Math.min(1,Math.max(0,b)))*255);
+  try{for(const o of objs)o.visible=false;sph.visible=true;E3.sc.background=new T.Color(0);
+    const up0=new T.Vector3(Math.abs(L.y)>.95?1:0,Math.abs(L.y)>.95?0:1,0),u=new T.Vector3().crossVectors(L,up0).normalize(),c=L.clone().multiplyScalar(.5).addScaledVector(u,.866).normalize();if(c.y<.25){c.y+=.45;c.normalize()}
+    const oc=new T.OrthographicCamera(-1.15,1.15,1.15,-1.15,.1,40);oc.position.copy(C).addScaledVector(c,12);oc.up.set(0,1,0);oc.lookAt(C);oc.updateMatrixWorld();
+    const right=new T.Vector3().setFromMatrixColumn(oc.matrixWorld,0),upv=new T.Vector3().setFromMatrixColumn(oc.matrixWorld,1),W=160,H=160;let byte=E3.byte;
+    const mk=()=>new T.WebGLRenderTarget(W,H,byte?{type:T.UnsignedByteType}:{type:T.FloatType,format:T.RGBAFormat});
+    const lee=(rt,sc2,cam2)=>{R.setRenderTarget(rt);R.render(sc2,cam2);const b=byte?new Uint8Array(W*H*4):new Float32Array(W*H*4);R.readRenderTargetPixels(rt,0,0,W,H,b);return b};
+    const px=(b,i,j)=>{const o=((H-1-j)*W+i)*4;return byte?[e3Lin(b[o]/255),e3Lin(b[o+1]/255),e3Lin(b[o+2]/255)]:[b[o],b[o+1],b[o+2]]};
+    rt=mk();let buf;try{buf=lee(rt,E3.sc,oc)}catch(er){if(!byte){E3.byte=byte=true;rt.dispose();rt=mk();buf=lee(rt,E3.sc,oc)}else throw er}
+    const bins={luz:[],medio:[],term:[],nucleo:[],rebote:[]};
+    for(let j=0;j<H;j++)for(let i=0;i<W;i++){const x=((i+.5)/W*2-1)*1.15,y=(1-(j+.5)/H*2)*1.15,r2=x*x+y*y;if(r2>.94)continue;const z=Math.sqrt(1-r2),n=right.clone().multiplyScalar(x).addScaledVector(upv,y).addScaledVector(c,z),NL=n.dot(L),q=px(buf,i,j);
+      if(NL>.72&&NL<.92)bins.luz.push(q);else if(NL>.4&&NL<.58)bins.medio.push(q);else if(NL>-.02&&NL<.1)bins.term.push(q);else if(NL>-.5&&NL<-.28&&z>.35)bins.nucleo.push(q);else if(NL<-.62&&z>.12&&z<.5)bins.rebote.push(q)}
+    for(const k in bins){const a=bins[k];if(a.length)zonas[k]=aHex(a.reduce((s,q)=>[s[0]+q[0]/a.length,s[1]+q[1]/a.length,s[2]+q[2]/a.length],[0,0,0]))}
+    /* suelo visto desde arriba: color dentro de la sombra proyectada y color iluminado */
+    const top=new T.OrthographicCamera(-4,4,4,-4,.1,40);top.position.set(C.x,14,0);top.up.set(0,0,-1);top.lookAt(C.x,0,0);top.updateMatrixWorld();buf=lee(rt,E3.sc,top);
+    const l2=Math.hypot(L.x,L.z)||1,dx=-L.x/l2,dz=-L.z/l2,dist=L.y>.14?Math.min(3.2,1/L.y+.25):3,pos=(X,Z)=>{const i=Math.round(((X-C.x)/4+1)/2*W-.5),j=Math.round((Z/4+1)/2*H-.5);if(i<2||j<2||i>W-3||j>H-3)return null;const a=[0,0,0];for(let p=-1;p<=1;p++)for(let q=-1;q<=1;q++){const v=px(buf,i+p,j+q);a[0]+=v[0]/9;a[1]+=v[1]/9;a[2]+=v[2]/9}return a};
+    const so=pos(C.x+dx*dist,dz*dist),li=pos(C.x-dx*3.2,-dz*3.2);if(so)zonas.proy=aHex(so);if(li)zonas.suelo=aHex(li)}
+  catch(e){console.error('medición 3D',e)}
+  finally{R.setRenderTarget(null);rt&&rt.dispose();objs.forEach((o,i)=>o.visible=vis[i]);E3.sc.background=bg;e3Dirty()}
+  return zonas}
+const e3V=h=>e3Hsv(h)[2],e3S=h=>e3Hsv(h)[1];
+function e3Tips(z){const t=[];if(!z.luz||!z.nucleo)return t;const tl=e3Temp(z.luz),tn=e3Temp(z.nucleo);
+  if(tl!=='neutro'&&tn!=='neutro'&&tl!==tn)t.push(['ok',`Contraste de temperatura: luz ${tl}, sombra ${tn}. Es lo que hace que la forma se sienta iluminada.`]);
+  else if(tl===tn&&tl!=='neutro')t.push(['to',`Luz y sombra son las dos ${tl}s: la forma se ve plana en color. Prueba un color de «Sombras / ambiente» de la temperatura contraria.`]);
+  else t.push(['to','La luz o la sombra casi no tienen color: dale un poco de saturación a la luz o al ambiente.']);
+  const vl=e3V(z.luz),vn=e3V(z.nucleo);if(vn>vl*.62)t.push(['to','La sombra es casi tan clara como la luz: el volumen se aplana. Baja el ambiente o sube la intensidad de la luz.']);else if(vn<vl*.15)t.push(['to','La sombra es casi negra: se pierde color y forma. Sube un poco el ambiente.']);else t.push(['ok','Hay buena separación entre luz y sombra.']);
+  if(e3S(z.nucleo)<e3S(z.luz)*.65)t.push(['to','La sombra es más gris que la luz. En pintura suele funcionar mejor que la sombra conserve su color, a veces incluso más saturado.']);
+  if(z.rebote){if(e3V(z.rebote)>vn*1.04)t.push(['ok','El rebote ilumina el borde de la sombra sin pasar al núcleo: así se despega la forma del fondo.']);else t.push(['to','El rebote debería ser un poco más claro que el núcleo de sombra: sube el color de rebote.'])}
+  if(z.proy&&z.suelo&&Math.abs(e3V(z.proy)-e3V(z.suelo))<.03)t.push(['to','No se ve sombra proyectada: baja la altura de la luz o sube su intensidad.']);
+  return t}
+
+/* cómo afecta tu luz a cada color de la paleta (con el mismo sistema del constructor: base → luz → sombra) */
+function e3Afecta(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);if(!pal.length)return '';
+  const dh=(a,b)=>Math.round(((b-a+540)%360)-180),calidez=h=>Math.abs(((h-30+540)%360)-180);
+  const filas=pal.map(hex=>{const R=escRampa(hex,E),luz=R.find(r=>r.n==='Luz').hex,som=R.find(r=>r.n==='Núcleo de sombra').hex,[h0,s0,v0]=e3Hsv(hex),[h1,s1,v1]=e3Hsv(luz),[h2,s2,v2]=e3Hsv(som);
+    const q=(h,h0_)=>{const d=dh(h0_,h);return Math.abs(d)<4||s0<.08?'casi el mismo matiz':`${d>0?'+':''}${d}° (${calidez(h)<calidez(h0_)?'más cálido':'más frío'})`};
+    return `<div class="e3-af"><span class="e3-afc"><i style="background:${esc(hex)}"></i><i style="background:${luz}"></i><i style="background:${som}"></i></span><span><b>${esc(hex)}</b> · en la luz: matiz ${q(h1,h0)}, valor ${Math.round(v1*100)}% · en la sombra: matiz ${q(h2,h0)}, saturación ${s2>s0*1.05?'sube':s2<s0*.9?'baja':'igual'}, valor ${Math.round(v2*100)}%</span></div>`}).join('');
+  return `<h4 style="margin:12px 0 4px">Cómo afecta tu luz a cada color</h4><p class="hint" style="margin:0 0 4px">Base → en la luz → en la sombra. Así cambia cada color de tu paleta bajo esta escena.</p>${filas}`}
+function e3Lectura(){const el=$('#e3-lect');if(!el)return;const z=E3.zonas,L=E3_ZN.filter(([k])=>z[k]);
+  el.innerHTML=`<div class="e3-zonas">${L.map(([k,n,d])=>`<button class="e3-z" data-e3="copy" data-hex="${z[k]}" title="${esc(d)}. Toca para copiar"><i style="background:${z[k]}"></i><span>${esc(n)}</span><small>${z[k]}</small></button>`).join('')}</div>
+   <ul class="e3-tips">${e3Tips(z).map(([k,t])=>`<li>${k==='ok'?'✓':'→'} ${esc(t)}</li>`).join('')}</ul>${S.P[S.cur]?e3Afecta(S.P[S.cur]):''}`}
+const e3Sws=(pal,I)=>pal.map((h,i)=>`<button class="e3-sw ${i===I?'on':''}" data-e3="idx" data-i="${i}" style="background:${esc(h)}" aria-label="Color ${i+1}"></button>`).join('');
+function e3Sync(p){const pal=(p.mood.paleta||[]).slice(0,8),k=pal.join(',');if(E3.palKey===k)return;E3.palKey=k;const el=$('#e3-sws');if(el){E3.idx=Math.min(E3.idx,Math.max(0,pal.length-1));el.innerHTML=e3Sws(pal,E3.idx)}}
+function e3HTML(p){const pal=(p.mood.paleta||[]).slice(0,8),I=Math.min(E3.idx,Math.max(0,pal.length-1));if(!pal.length)return '';
+  return `<div class="box" id="e3-box" style="border-top:3px solid var(--c-mood)"><h3>Verlo en 3D</h3><p class="hint" style="margin:0 0 6px">Tu color sobre una forma real con la misma luz de arriba: así ves la luz, el medio tono, la sombra y el rebote <b>antes de pintar</b>. Gira la forma con el mouse.</p>
+   <div class="chips"><span class="lbl">Forma</span>${E3_FORMAS.map(([k,n])=>`<button class="ch xs ${E3.forma===k?'on':''}" data-e3="forma" data-v="${k}">${n}</button>`).join('')}<span class="lbl" style="margin-left:8px">Color</span><span id="e3-sws" style="display:inline-flex;gap:4px">${e3Sws(pal,I)}</span></div>
+   <div id="e3-slot"></div><div class="e3-dials"><div><canvas id="e3-d1" width="130" height="130" aria-label="De dónde viene la luz principal"></canvas><span>Luz principal</span></div><div><canvas id="e3-d2" width="130" height="130" aria-label="De dónde viene la segunda luz"></canvas><span>Luz 2</span></div><div class="e3-dtxt"><b>De dónde viene la luz</b><p class="hint" style="margin:2px 0 6px">Arrastra el punto de cada círculo (visto desde arriba; el centro es luz desde arriba y el borde, luz rasante). En el 3D verás una esfera del color de cada luz y su rayo.</p><label class="chk"><input type="checkbox" id="e3-mostrar" ${E3.mostrar!==false?'checked':''}> Mostrar las luces en el 3D</label></div></div><div id="e3-lect"><p class="muted">Midiendo…</p></div>
+   <div class="prow"><button class="btn sm" data-e3="prog" title="Abre las sesiones de color de tu programa">Practicar este color de luz y sombra en mi programa</button></div></div>`}
+
+/* marcas de luz: una esfera del color de la luz, un rayo hasta el modelo y una etiqueta que sigue a la esfera */
+function e3Marca(i,d,color,on){const M=E3.marc?.[i];if(!M)return;const T=E3.T,t=E3.ctl.target,mostrar=on&&E3.mostrar!==false;M.m.visible=M.ln.visible=mostrar;M.m.material.color.set(color);M.ln.material.color.set(color);
+  const D=6.2,pos=new T.Vector3(t.x+d[0]*D,t.y+d[1]*D,t.z+d[2]*D);M.m.position.copy(pos);const a=M.ln.geometry.attributes.position;a.setXYZ(0,pos.x,pos.y,pos.z);a.setXYZ(1,t.x,t.y,t.z);a.needsUpdate=true;M.ln.geometry.computeBoundingSphere();M.pos=pos;M.on=mostrar}
+function e3Etiquetas(){const s=E3.slot;if(!s||!E3.marc)return;for(const [i,txt] of [[0,'☀ Luz principal'],[1,'● Luz 2']]){let el=s.querySelector('.e3-lab'+i);if(!el){el=document.createElement('div');el.className='e3-lab e3-lab'+i;s.appendChild(el)}const M=E3.marc[i];if(!M?.on||!M.pos){el.style.display='none';continue}
+    const v=M.pos.clone().project(E3.cam),w=s.clientWidth,h=s.clientHeight;let x=(v.x*.5+.5)*w,y=(-v.y*.5+.5)*h;const fuera=v.z>1||x<10||x>w-10||y<10||y>h-10;if(v.z>1){x=w-x;y=h-y}x=Math.max(46,Math.min(w-46,x));y=Math.max(14,Math.min(h-14,y));
+    el.style.display='block';el.style.left=x+'px';el.style.top=y+'px';el.textContent=(fuera?'↗ ':'')+txt;el.style.borderColor=M.m.material.color.getStyle()}}
+/* diales: vista desde arriba (la cámara está abajo). Arrastrar el punto cambia el giro y la altura de la luz */
+function e3DialDibuja(id,ang,el,color){const c=$(id);if(!c)return;const g=c.getContext('2d'),W=c.width,r=W/2-9;g.clearRect(0,0,W,W);g.strokeStyle='#313744';g.lineWidth=2;for(const k of [1,.66,.33]){g.beginPath();g.arc(W/2,W/2,r*k,0,6.283);g.stroke()}g.beginPath();g.moveTo(W/2,9);g.lineTo(W/2,W-9);g.moveTo(9,W/2);g.lineTo(W-9,W/2);g.stroke();
+  const d=luzDir(ang,el);g.fillStyle='#8a93a6';g.font='bold 12px sans-serif';g.textAlign='center';g.fillText('cámara',W/2,W-13);g.fillText('fondo',W/2,18);const x=W/2+d[0]*r,y=W/2+d[2]*r;g.beginPath();g.arc(x,y,10,0,6.283);g.fillStyle=color;g.fill();g.lineWidth=3;g.strokeStyle='#fff';g.stroke()}
+function e3Dials(E){const l2=escL2(E);e3DialDibuja('#e3-d1',E.ang,E.el,E.luz);e3DialDibuja('#e3-d2',l2.a,l2.e,l2.c)}
+function e3DialMueve(e,n){const p=S.P[S.cur],c=e.currentTarget;if(!p)return;const b=c.getBoundingClientRect(),W=c.width,r=W/2-9,px=(e.clientX-b.left)/b.width*W-W/2,py=(e.clientY-b.top)/b.height*W-W/2,dd=Math.min(1,Math.hypot(px,py)/r),el=Math.round(Math.acos(dd)/RAD);let ang=Math.round(Math.atan2(-py/r,px/r)/RAD);ang=((ang%360)+360)%360;if(dd<.03)ang=escDe(p)[n===1?'ang':'ang2']||0;
+  const E=escMut(p);E.k='';if(n===1){E.ang=ang;E.el=el}else{E.ang2=ang;E.el2=el;if(!(E.int2>0))E.int2=.6}
+  for(const [k,v] of Object.entries(n===1?{ang,el}:{ang2:ang,el2:el,int2:E.int2})){const i=document.querySelector('[data-esc="'+k+'"]');if(i)i.value=v}
+  document.querySelectorAll('#esc-box .ch.on').forEach(x=>x.classList.remove('on'));marcar();escDiferido(p);e3Aplica()}
+document.addEventListener('pointerdown',e=>{const c=e.target.closest?.('#e3-d1,#e3-d2');if(!c)return;const n=c.id==='e3-d1'?1:2;c.setPointerCapture(e.pointerId);const mv=ev=>e3DialMueve({clientX:ev.clientX,clientY:ev.clientY,currentTarget:c},n);mv(e);c.onpointermove=mv;c.onpointerup=()=>{c.onpointermove=null}});
+document.addEventListener('change',e=>{if(e.target.id==='e3-mostrar'){E3.mostrar=e.target.checked;e3Aplica()}});
+/* el lienzo 3D vive fuera del HTML que se redibuja: se vuelve a colocar solo cuando aparece su hueco */
+let e3Obs=null;
+function e3Monta(){const slot=$('#e3-slot');if(!slot){E3.slot=null;return}if(E3.slot===slot&&slot.contains(E3.R?.domElement))return;
+  e3Carga().then(ok=>{const s=$('#e3-slot');if(!ok||!s)return;E3.slot=s;s.appendChild(E3.R.domElement);e3Aplica()})}
+function e3Observa(){if(e3Obs)return;e3Obs=new MutationObserver(()=>{clearTimeout(e3Observa.t);e3Observa.t=setTimeout(e3Monta,60)});e3Obs.observe(document.body,{childList:true,subtree:true})}
+new ResizeObserver(()=>{if(E3.slot?.isConnected&&E3.R){e3Tam();e3Dirty()}}).observe(document.documentElement);
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-e3]');if(!t)return;const a=t.dataset.e3;
+  if(a==='forma'){E3.forma=t.dataset.v;document.querySelectorAll('[data-e3="forma"]').forEach(b=>b.classList.toggle('on',b.dataset.v===E3.forma));e3Aplica()}
+  else if(a==='idx'){E3.idx=+t.dataset.i;document.querySelectorAll('.e3-sw').forEach((b,i)=>b.classList.toggle('on',i===E3.idx));e3Aplica()}
+  else if(a==='copy'){copiarTexto(t.dataset.hex,'Copiado '+t.dataset.hex)}
+  else if(a==='prog'){const R=pgRaiz();R.ruta='color';if(!R.activas.includes('color'))R.activas.push('color');pgTr('color').pin=4;S.diTab='hoy';S.vista='diario';marcarAj();render()}});
+e3Observa();
+
+function escCtlHTML(p){const E=escDe(p),sl2=(k,lab,min,max,st,v)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`,mias=new Set((p.luces||[]).map(l=>l.k)),sl=(k,lab,min,max,st)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${E[k]}"></label>`,co=(k,lab)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="color" data-esc="${k}" value="${esc(E[k])}"></label>`;
+  return `<p class="hint">Elige una de tus claves de luz o ajusta a mano: el color de la luz, el de las sombras y el rebote.</p>
     <div class="chips">${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch ${E.k===k?'on':''}" data-act="esc-preset" data-k="${k}" title="${mias.has(k)?'Es una de tus claves de luz':''}">${mias.has(k)?'★ ':''}${esc(v.n)}</button>`).join('')}</div>
     <div class="esc-ctl">${co('luz','Color de la luz')}${co('amb','Sombras / ambiente')}${co('reb','Rebote')}${sl('ang','Giro de la luz',0,360,5)}${sl('el','Altura de la luz',-40,90,5)}${sl('int','Intensidad',0.3,1.6,0.05)}</div>
-    <div id="esc-rev">${escRevHTML(p)}</div>
+    <p class="hint" style="margin:8px 0 2px"><b>Segunda luz</b>: relleno o contraluz de otro color (por ejemplo, luz cálida de un lado y fría del otro). Con intensidad 0 está apagada.</p>
+    <div class="esc-ctl"><label class="esc-r"><span class="lbl">Color de la 2.ª luz</span><input type="color" data-esc="luz2" value="${esc(escL2(E).c)}"></label>${sl2('ang2','Giro de la 2.ª luz',0,360,5,escL2(E).a)}${sl2('el2','Altura de la 2.ª luz',-40,90,5,escL2(E).e)}${sl2('int2','Intensidad de la 2.ª luz',0,1.5,0.05,escL2(E).i)}</div>`}
+function escResHTML(p){return `<div id="esc-rev">${escRevHTML(p)}</div>
     <div id="esc-out">${escOutHTML(p)}</div>
     <div class="prow"><button class="btn sm" data-act="esc-guardar">Guardar esta escena</button><button class="btn sm" data-act="esc-png">Exportar PNG</button><button class="btn sm" data-act="esc-ase" title="Swatches que abre Photoshop (Ventana → Muestras → Cargar) y otros programas de Adobe">Exportar swatches (.ase)</button></div>
-    ${(p.escenas||[]).length?`<div class="chips"><span class="lbl">Mis escenas</span>${p.escenas.map(s=>`<span class="chip"><button style="color:var(--ink)" data-act="esc-cargar" data-id="${s.id}">${esc(s.n)}</button><button data-act="esc-del" data-id="${s.id}" aria-label="Quitar">×</button></span>`).join('')}</div>`:''}</div>`}
+    ${(p.escenas||[]).length?`<div class="chips"><span class="lbl">Mis escenas</span>${p.escenas.map(s=>`<span class="chip"><button style="color:var(--ink)" data-act="esc-cargar" data-id="${s.id}">${esc(s.n)}</button><button data-act="esc-del" data-id="${s.id}" aria-label="Quitar">×</button></span>`).join('')}</div>`:''}`}
+function escHTML(p){return `<div class="box" id="esc-box"><h3>Constructor de luz y color</h3><p class="hint">Cada color de tu paleta, iluminado por la luz de tu escena: ves la esfera y la rampa de luz → sombra → rebote, con el color de la luz y el de las sombras que tú eliges.</p>${escCtlHTML(p)}${e3HTML(p)}${escResHTML(p)}</div>`}
 function escASE(grupos){const bytes=[],u16=n=>bytes.push(n>>8&255,n&255),u32=n=>bytes.push(n>>>24&255,n>>16&255,n>>8&255,n&255),f32=v=>{const b=new DataView(new ArrayBuffer(4));b.setFloat32(0,v);for(let i=0;i<4;i++)bytes.push(b.getUint8(i))},str=s=>{u16(s.length+1);for(const ch of s)u16(ch.charCodeAt(0));u16(0)};
   [...'ASEF'].forEach(c=>bytes.push(c.charCodeAt(0)));u16(1);u16(0);u32(grupos.reduce((n,g)=>n+g.cols.length+2,0));
   grupos.forEach(g=>{u16(0xC001);u32(2+(g.n.length+1)*2);str(g.n);g.cols.forEach(c=>{u16(1);u32(2+(c.n.length+1)*2+4+12+2);str(c.n);[...'RGB '].forEach(x=>bytes.push(x.charCodeAt(0)));escRgbLin(c.hex).forEach(f32);u16(2)});u16(0xC002);u32(0)});
@@ -14432,7 +14565,7 @@ document.addEventListener('input',e=>{
   if(t.dataset.pjluz){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluz);if(c){c.luzAfecta=t.checked;if(c.luzK==null||c.luzK===.6)c.luzK=.85;marcar();renderMain()}return}
   if(t.dataset.pjluzk){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjluzk);if(c){c.luzK=+t.value;marcar();const l=t.closest('label')?.querySelector('.lbl');if(l)l.textContent='Cuánto lo afecta · '+Math.round(c.luzK*100)+'%';escRefrescaPj(p)}return}
   if(t.dataset.pjesc){const p=S.P[S.cur],c=p?.personajes?.find(x=>x.id===t.dataset.pjesc);if(c){c.luzEsc=t.value;marcar();escRefrescaPj(p)}return}
-  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escDiferido(p);document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
+  if(t.dataset.esc){const p=S.P[S.cur];if(!p)return;const E=escMut(p);E[t.dataset.esc]=t.type==='range'?+t.value:t.value;E.k='';marcar();escDiferido(p);if(E3.R&&E3.slot?.isConnected)e3Aplica();document.querySelectorAll('.esc-box .ch.on,#esc-box .ch.on').forEach(b=>b.classList.remove('on'));return}
   if(t.dataset.luz){const p=S.P[S.cur],[id,k]=t.dataset.luz.split('.'),l=p?.luces?.find(x=>x.id===id);if(l){l[k]=t.value;marcar()}return}
   if(t.dataset.pj){const p=S.P[S.cur],[id,k]=t.dataset.pj.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c[k]=t.value;marcar();pjRefresca(p,id);mapaVivo(p)}return}
   if(t.dataset.pjc){const p=S.P[S.cur],[id,i]=t.dataset.pjc.split('.'),c=p?.personajes?.find(x=>x.id===id);if(c){c.paleta=c.paleta||[];c.paleta[+i]={hex:t.value,lock:true};t.parentElement.style.background=t.value;marcar()}return}
