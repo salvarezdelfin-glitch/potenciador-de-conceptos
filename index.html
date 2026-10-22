@@ -1214,7 +1214,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk3iav2').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk3lacz').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1223,7 +1223,6 @@ const TABS=[['hoja','Hoja'],['idea','Idea y dirección'],['estilo','Mundo y esti
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
 const TAB_NUEVO={brief:['idea','brief'],concepto:['idea','que'],tension:['idea','tension'],ad:['idea','ad'],mood:['estilo','mood'],lenguaje:['estilo','lenguaje'],personajes:['estilo','personajes'],mundo:['estilo','mundo'],board:['refs','tablero'],bajar:['refs','bajar'],carpetas:['bocetos','carpetas'],critica:['bocetos','critica'],laminas:['produccion','laminas'],cerebro:['proyecto','asistente'],mapa:['proyecto','mapa'],revision:['proyecto','falta']};
 function tabResuelve(k){k=TAB_ALIAS[k]||k;return TAB_NUEVO[k]||[k,null]}
-const TAB_SEP=new Set();
 const TIPOS = ['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Ilustración','Prop / arma','Key art','Vehículo','Otro'];
 const GRUPOS_MUNDO=['Personajes','Criaturas','Entornos','Props','Keyframes'];
 const ESTADOS = ['Brief','Concepto','Referencias','Bocetos','Final','Archivado'];
@@ -1740,19 +1739,6 @@ function vConcepto(p){
 function vMundo(p){return `
   <div class="grid2">${MUNDO_Q.map(([k,q,h])=>`<div class="box"><h3>${q}</h3><p class="hint">${h}</p>${ta('mundo.'+k,p.mundo[k]||'')}</div>`).join('')}</div>`}
 
-function vKeywords(p){
-  return `
-  <p class="intro"><strong>Keywords antes que imágenes.</strong> Buscar "espada negra" da ruido; buscar "obsidiana tallada mesoamericana, macro, luz rasante" da referencias. Escribe palabras precisas y conviértelas en búsquedas.</p>
-  <div class="grid3">${KWCATS.map(([k,n])=>`<div class="box kwcat"><h3>${n}</h3>
-    <div class="chips">${(p.keywords[k]||[]).map((w,i)=>`<span class="chip">${esc(w)}<button data-act="kw-del" data-kw="${k}" data-i="${i}" aria-label="Quitar ${esc(w)}">×</button></span>`).join('')}</div>
-    <input type="text" id="kw-${k}" data-kwadd="${k}" placeholder="Palabra + Enter"></div>`).join('')}</div>
-  <div class="box"><h3>Búsquedas específicas</h3><p class="hint">Combina 2–3 keywords en una búsqueda y asígnala a una capa. Aparecen en Referencias con enlaces a Pinterest, ArtStation y Google.</p>
-    <div class="prow"><input type="text" id="f-bq" placeholder="obsidiana tallada azteca macro" style="flex:1 1 240px;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 10px" data-enter="bq">
-      <select id="f-bqcapa" style="border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px">${LAYERS.map(l=>`<option value="${l.k}">${esc(capaNombre(p,l.k))}</option>`).join('')}</select>
-      <button class="btn" data-act="bq">Añadir</button><button class="btn ghost" data-act="combinar" title="Combina keywords al azar">Combinar al azar</button></div>
-    ${busquedasHTML(p)}
-  </div>
-  ${asesor('keywords','Asesor: genera keywords y búsquedas','Propone palabras por categoría y búsquedas precisas a partir de tu concepto.')}`}
 
 function busquedasHTML(p){
   if(!p.busquedas.length)return '<p class="muted">Sin búsquedas todavía.</p>';
@@ -1767,31 +1753,6 @@ function busquedasHTML(p){
     <button class="btn ghost sm" data-act="bq-del" data-i="${i}" aria-label="Quitar">✕</button></div>`}).join('')}</div>`}
 function capaNombre(p,k){const m=/^p(\d)$/.exec(k);if(m){const t=p?.pilares?.[+m[1]-1]?.t;return t?`P${m[1]} · ${t}`:`Pilar ${m[1]}`}return LAYERS.find(l=>l.k===k)?.n||k}
 
-function vDireccion(p){return `
-  <p class="intro">Así se ordena el tablero: <strong>Mood</strong> es la sensación, <strong>Técnica</strong> es cómo está hecho y la <strong>Art Direction</strong> es qué quieres comunicar, sostenida por <strong>3 pilares</strong>. Cada referencia va a responder a una de estas capas.</p>
-  ${borradorBox(p)}
-  ${asesor('seis','Asesor: sácame los 6','Te propone 3 opciones para el Concepto, el Mood, la Técnica y cada uno de los 3 pilares, con búsquedas para encontrar sus referencias. Usa las que te sirvan y edítalas.')}
-  <div class="grid2">
-    <div class="box layer-mood" style="border-top:4px solid var(--c-mood)"><h3>Mood · la sensación</h3>
-      <div class="field"><label for="f-mood-sensacion">¿Qué tiene que sentir quien lo vea?</label>${ta('mood.sensacion',p.mood.sensacion,'Opresión sagrada, calma antes del golpe…')}</div>
-      <div class="field"><label for="f-mood-palabras">3 palabras de mood</label>${it('mood.palabras',p.mood.palabras,'solemne, húmedo, inevitable')}</div>
-      <div class="field"><label>Paleta</label><div class="pal">${p.mood.paleta.map((c,i)=>`<span class="sw" style="background:${esc(c)}"><input type="color" id="pal-${i}" data-b="mood.paleta.${i}" value="${esc(c)}" aria-label="Color ${i+1}"><button data-act="pal-del" data-i="${i}" aria-label="Quitar color">✕</button></span>`).join('')}${p.mood.paleta.length<8?'<button class="btn sm" data-act="pal-add">＋ color</button>':''}</div>${palGenHTML(p)}</div>
-    </div>
-    <div class="box" style="border-top:4px solid var(--c-tecnica)"><h3>Técnica · cómo está hecho</h3>
-      <div class="field"><label for="f-tecnica-medio">Medio y proceso</label>${ta('tecnica.medio',p.tecnica.medio,'Photobash + overpaint, 3D base en Blender, pincel seco…')}</div>
-      <div class="field"><label for="f-tecnica-acabado">Acabado</label>${it('tecnica.acabado',p.tecnica.acabado,'Render cerrado, sketch pintado, callouts de diseño…')}</div>
-      <div class="field"><label for="f-tecnica-referentes">Artistas de referencia técnica</label>${it('tecnica.referentes',p.tecnica.referentes,'Nicolas Weis, Crash McCreery…')}</div>
-    </div>
-  </div>
-  ${tallerHTML(p)}
-  <div class="box"><h3>Art Direction · qué quiero comunicar</h3>
-    <div class="field"><label for="f-ad">En una frase: ¿qué quieres que la gente entienda y sienta con este proyecto?</label>${ta('ad',p.ad||'','Ej. Que el poder de la guerra se sienta sagrado y condenado a la vez: el dios sabe que su propia arma lo va a devorar.','f-ad')}</div>
-    <p class="hint">Tres pilares que no se repiten entre sí. Cada uno es una intención, no una cosa: "Lo sagrado pesa", no "serpiente".</p>
-    <div class="grid3">${p.pilares.map((x,i)=>`<div class="box pillar"><span class="num">PILAR ${i+1}</span>
-      <input type="text" id="f-pil-t-${i}" data-b="pilares.${i}.t" value="${esc(x.t)}" placeholder="Nombre corto">
-      <textarea id="f-pil-f-${i}" data-b="pilares.${i}.f" placeholder="Qué comunica y cómo se va a notar en el diseño">${esc(x.f)}</textarea></div>`).join('')}</div>
-  </div>
-  ${asesor('direccion','Asesor: revisa mi dirección','Revisa si tus pilares son claros y distintos, y si el mood y la técnica los sostienen.')}`}
 
 function bocetosIniciales(p){
   const pil=p.pilares.map((x,i)=>({i,t:x.t,f:x.f||'',refs:p.refs.filter(r=>r.capa==='p'+(i+1)).length})).filter(x=>x.t);
@@ -1911,14 +1872,6 @@ function vHojaEditar(p){
     ${hojaPaletasHTML(p)}
     ${p.refs.length?`<div class="mosaic">${p.refs.map(r=>`<figure><img ${imgAttrs(r)} alt="" loading="lazy"><figcaption><b>${esc(capaNombre(p,r.capa))}</b> — ${esc(r.porque||'sin porqué')}</figcaption></figure>`).join('')}</div>`:'<p class="muted">Sin referencias todavía.</p>'}
   </article>`}
-function vPrincipios(){
-  const a=S.ajustes;
-  return `
-  <h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mis principios</h1>
-  <p class="intro">Lo que no se negocia en ningún proyecto. Vienen de tus asesorías; edítalos y agrega los nuevos que aprendas.</p>
-  <div class="box"><div class="princ">${a.principios.map((x,i)=>`<div class="pr"><textarea id="pr-${i}" data-aj="principios.${i}" style="min-height:44px">${esc(x)}</textarea><button class="btn ghost sm" data-act="pr-del" data-i="${i}" aria-label="Quitar">✕</button></div>`).join('')}</div>
-    <div><button class="btn sm" data-act="pr-add">＋ Principio</button></div></div>
-  `}
 
 const hoyN=()=>Math.floor(Date.now()/864e5);
 const asLink=n=>`https://www.google.com/search?q=${encodeURIComponent((n||'')+' artstation')}`;
@@ -4004,9 +3957,6 @@ function rfContexto(p){p=ctxProy(p);if(!p)return null;
 function rfTop(vis,n){const cap=Math.ceil(n*.6),cnt={},out=[],rest=[],vistos=new Set();
   for(const v of vis){const t=nz(v.x.titulo||'').slice(0,28);if(t.length>10&&vistos.has(t))continue;vistos.add(t);const k=v.x.prov||'';cnt[k]=(cnt[k]||0)+1;if(cnt[k]>cap||out.length>=n)rest.push(v);else out.push(v)}
   for(const v of rest){if(out.length>=n)break;out.push(v)}return out}
-function rfMisionesHTML(p){const M=S.rfM=rfMisiones(p),b=S.refB||{},lib=p.libre,ctx=lib&&ctxProy(p)!==p,proys=Object.entries(S.P).filter(([,x])=>!x.libre);
-  return M.length?`<div class="box"><h3>${lib&&!ctx?'Búsquedas rápidas':'Para tu proyecto'}</h3>${lib?`<div class="prow"><label class="lbl" for="herr-ctx">Armar con el contexto de</label><select id="herr-ctx" data-herrctx="1"><option value="">Ninguno: búsquedas generales</option>${proys.map(([id,x])=>`<option value="${esc(id)}" ${S.herrCtx===id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></div>`:''}<p class="hint" style="margin:0">${lib&&!ctx?'Búsquedas de partida para estudiar. Elige un proyecto arriba para que se armen con su tema, materiales y mood, o usa «Buscar otra cosa» para escribir la tuya. ':'Búsquedas armadas con tu tema, personajes, materiales y texturas, mood y luz. '}De cada una te muestro solo lo mejor: alta resolución y sin lo que pusiste en «Evitar».</p>
-    <div class="rf-ms">${M.map((m,i)=>`<button class="rf-m ${b.mision===m.t?'on':''}" data-act="rf-mision" data-i="${i}"><b>${esc(corto(m.t,52))}</b><small>${esc(corto(m.sub,90))}</small></button>`).join('')}</div></div>`:`<p class="hint">Escribe qué es tu proyecto, sus materiales, el mood o tus personajes y aquí aparecerán búsquedas hechas a la medida.</p>`}
 /* ---- la mesa ---- */
 /* ============ Dónde buscar: cómo encontrar en Pinterest, ArtStation y otras fuentes justo lo que necesitas ============ */
 const BS_NEC=[
@@ -4810,40 +4760,7 @@ function swSenal(k){const O=swObras(k).filter(o=>o.m);if(!O.length)return [];con
   if(dom<.4)L.push('Ningún valor manda: la imagen no tiene una clave clara.');else if(dom>.75)L.push('Un solo valor domina casi todo: cuida que haya variedad.');
   if(comp>=.4)L.push('En varias imágenes hay dos focos compitiendo por la atención.');
   return L}
-function swSubirHTML(k){const O=swObras(k);
-  return `<div class="box"><h3>Sube lo que haces en ${esc(swPorK(k).n)}</h3><p class="hint" style="margin:0">Capturas de pantalla, renders, esculturas o dibujos terminados y en proceso. Sirven para medir lo visible (contraste, lectura, foco) y para que Claude evalúe tu nivel. La app no ve tu técnica dentro del programa: por eso la autoevaluación y la lectura de Claude cuentan igual.</p>
-    <div class="prow"><label class="btn pri" for="sw-file">Subir imágenes</label><input type="file" id="sw-file" accept="image/*" multiple hidden></div>
-    ${O.length?`<div class="rcurs">${O.map(o=>`<div class="rcur"><img ${imgAttrs(o.mini?{asset:o.mini}:o)} alt="${esc(o.titulo)}" loading="lazy" data-act="zoom"><div class="rcur-b"><span class="muted">${esc(corto(o.titulo,30))}</span><button class="btn ghost sm danger" data-act="sw-obra-del" data-id="${o.id}">✕</button></div></div>`).join('')}</div>
-      ${swSenal(k).length?`<div><span class="lbl">Lo que se ve en tus imágenes</span><ul class="why-l">${swSenal(k).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}`:'<div class="empty">Aún no subes nada de este programa.</div>'}</div>`}
-function swEvalHTML(k){const ev=(S.ajustes.swEval||{})[k],sw=swPorK(k),key='sw-'+k;
-  return `<div class="box"><h3>Mi nivel, leído por el director de arte</h3><p class="hint" style="margin:0">Lee tu nivel con lo que contestaste, lo que subiste y lo que completaste, y te arma tus próximos ejercicios. No necesita llave ni chat.</p><div class="prow"><button class="btn pri" data-act="sw-local" data-k="${k}">Leer mi nivel (director de arte de la app)</button></div>
-    ${S.sample?(S.swBusy===k?'<div class="prow"><span class="muted">Claude está revisando… puede tardar un minuto.</span></div>':`<div class="prow"><button class="btn pri" data-act="sw-directo" data-k="${k}" ${swObras(k).length?'':'disabled title="Sube al menos una imagen"'}>Con Claude (más profundo)</button></div>${S.swErr?`<p class="muted" style="margin:0">${esc(S.swErr)}</p>`:''}`):(window.PC_SHIM?`<div class="nd-box sm">Opcional: conecta tu llave de Anthropic para una lectura más profunda de Claude. <button class="btn sm pri" data-act="cr-conecta">Conectar Claude</button></div>`:'')}
-    <details ${S.sample?'':'open'}><summary class="lbl" style="cursor:pointer">${S.sample?'O hazlo a mano: copiar y pegar en el chat':'Hazlo a mano con el chat de Claude'}</summary><div class="cr-steps" style="margin-top:8px"><div class="prow"><b>1.</b><button class="btn sm pri" data-act="sw-copiar" data-k="${k}">Copiar la petición</button></div><p class="hint" style="margin:0"><b>2.</b> Pégala en el chat con Claude y adjunta tus imágenes. <b>3.</b> Pega aquí su respuesta:</p>${crPegaHTML(key,'sw-guardar','data-k="'+k+'"')}</div></details>
-    ${ev?`<div class="cr-res"><div class="cr-ver"><span class="lbl">Lectura ${ev.local?'del director de arte':'de Claude'} · ${fecha(ev.ts)}</span><p>${ev.nivel?'Nivel '+esc(SW_NIV[ev.nivel]):'Sin nivel claro'}${ev.frase?': '+esc(ev.frase):''}</p></div>
-      ${ev.bien?.length?`<div class="cr-sec"><h4>Lo que ya haces bien</h4><ul>${ev.bien.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}${ev.falta?.length?`<div class="cr-sec"><h4>Lo que te falta para el siguiente nivel</h4><ul>${ev.falta.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
-      ${ev.ej?.length?`<div class="cr-sec"><h4>Tus ejercicios a medida</h4>${ev.ej.map((x,i)=>`<label class="cr-m ${x.hecho?'ok':''}"><input type="checkbox" data-sweval="${k}|${i}" ${x.hecho?'checked':''}><span>${esc(x.t)}</span></label>`).join('')}</div>`:''}</div>`:''}</div>`}
-function swEjHTML(k){const sw=swPorK(k),nv=swNivel(k),e=swEstado(k),lt=S.swLv&&S.swK===k?S.swLv:Math.min(4,nv+1),L=sw.ej[lt]||[],hechos=L.filter((x,i)=>e.ej[`${lt}|${i}`]).length;
-  return `<div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>Tus ejercicios en ${esc(sw.n)}</h3><span class="lbl">${hechos}/${L.length} hechos</span></div>
-    <div class="chips">${[1,2,3,4].map(l=>`<button class="ch xs ${lt===l?'on':''}" data-act="sw-lv" data-v="${l}">${SW_NIV[l]}${l===Math.min(4,nv+1)?' · siguiente':''}</button>`).join('')}</div>
-    <p class="hint" style="margin:0">${lt===Math.min(4,nv+1)?`Para subir a ${SW_NIV[lt]}: haz ${Math.max(2,Math.round(L.length*.7))} de los ${L.length} y la app sube tu nivel.`:'Puedes repasar o adelantarte.'} Cada uno trae su tiempo y lo que debes entregar.</p>
-    ${L.map(([t,min,ent],i)=>`<label class="des-p ${e.ej[`${lt}|${i}`]?'ok':''}"><input type="checkbox" data-swej="${k}|${lt}|${i}" ${e.ej[`${lt}|${i}`]?'checked':''}><span><b>${i+1}. ${esc(t)} · ${min} min</b><small>Entrega: ${esc(ent)}</small></span><button class="btn sm" data-act="sw-timer" data-min="${min}">Reloj</button></label>`).join('')}
-    ${S.timer||S.swT?timerHTML(S.desMin||20,'Reloj del ejercicio'):''}</div>`}
-function swTrucosHTML(k){const q=nz(S.swQ||''),L=swPorK(k).trucos.filter(([a,d])=>!q||nz(a+' '+d).includes(q));
-  return `<div class="box"><div class="prow" style="justify-content:space-between"><h3>Trucos y atajos de ${esc(swPorK(k).n)}</h3><input type="text" data-swq="1" value="${esc(S.swQ||'')}" placeholder="Buscar: capas, máscara, luz…" style="flex:1 1 180px;max-width:260px"></div>
-    <div class="sw-tr" id="sw-tr">${swTrucosLista(L)}</div></div>`}
 const swTrucosLista=L=>L.length?L.map(([a,d])=>`<div class="sw-t"><kbd>${esc(a)}</kbd><span>${esc(d)}</span></div>`).join(''):'<p class="muted">Nada con esa búsqueda.</p>';
-function vSoftware(){const k=S.swK||'blender',sw=swPorK(k),e=swEstado(k),nq=swNivelQuiz(k),ev=(S.ajustes.swEval||{})[k],nv=swNivel(k),O=swObras(k),conf=ev?'alta':O.length>=2?'media':'baja';
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Programas y medios</h1>
-  <p class="intro">Elige un programa, un medio tradicional (grafito, acuarela, óleo, acrílico) o la visualización y te digo más o menos en qué nivel estás (por tu autoevaluación, lo que subes y, si quieres, la lectura de Claude). De ahí te pongo ejercicios por nivel y trucos y atajos. Al completar ejercicios, subes de nivel.</p>
-  ${[['dig','Programas'],['trad','Medios tradicionales'],['vis','Visualización']].map(([g,n])=>`<div class="chips"><span class="lbl">${n}</span>${SW.filter(x=>x.grupo===g).map(x=>`<button class="ch ${k===x.k?'on':''}" data-act="sw-k" data-k="${x.k}">${x.ico} ${esc(x.n)} · ${SW_NIV[swNivel(x.k)]}</button>`).join('')}</div>`).join('')}
-  <div class="box" style="border-top:3px solid var(--accent)"><div class="prow" style="justify-content:space-between"><h3>${sw.ico} ${esc(sw.n)}: ${SW_NIV[nv]}</h3><span class="lbl">Confianza ${conf}</span></div>
-    <p class="hint" style="margin:0">${esc(sw.uso)}.</p>
-    <div class="bar"><i style="width:${nv/4*100}%"></i></div>
-    <p class="muted" style="margin:0;font-size:13px">Sale de: tu autoevaluación (${SW_NIV[nq]}), ${O.length} imagen${O.length===1?'':'es'} subida${O.length===1?'':'s'}${ev?', la lectura de Claude ('+(ev.nivel?SW_NIV[ev.nivel]:'sin nivel')+')':''}${e.nivel?` y tus ejercicios completados (subiste a ${SW_NIV[e.nivel]})`:''}. ${conf==='baja'?'Sube tu trabajo y pide la lectura de Claude para afinarlo.':''}</p>
-    <div class="prow"><button class="btn sm" data-act="ruta-f" data-v="${sw.ruta}">Ver cursos de ${esc(sw.n)} →</button></div></div>
-  <div class="box"><h3>¿Dónde estás? Responde con honestidad</h3><p class="hint" style="margin:0">Marca qué tan seguro estás con cada punto. No se califica: solo se usa para ponerte los ejercicios correctos.</p>
-    ${sw.quiz.map(([t,l],i)=>`<div class="sw-q"><span>${esc(t)} <small class="muted">· ${SW_NIV[l]}</small></span><span class="chips">${[[0,'No'],[1,'A medias'],[2,'Sí']].map(([v,n])=>`<button class="ch xs ${e.q[i]===v?'on':''}" data-act="sw-q" data-i="${i}" data-v="${v}">${n}</button>`).join('')}</span></div>`).join('')}</div>
-  ${swSubirHTML(k)}${swEvalHTML(k)}${swEjHTML(k)}${swTrucosHTML(k)}`}
 async function swSubir(k,files){const fs_=[...files].filter(f=>/^image\//.test(f.type));if(!fs_.length){toast('Sube imágenes');return}bloquear();let n=0;
   try{for(const f of fs_){try{const img=await guardarImagen(f,{mini:true});let m=null;try{const a=await analizarImagen(f);m={std:+a.std.toFixed(3),separ:+a.separ.toFixed(3),detalle:+a.detalle.toFixed(3),dom:+Math.max(...a.tres).toFixed(3),compite:!!a.foco2}}catch{}
       (S.ajustes.swObras=S.ajustes.swObras||[]).push({id:uid(),sw:k,titulo:f.name.replace(/\.[^.]+$/,''),ts:Date.now(),m,...img});n++}catch(e){toast(e?.code==='too_large'?'Una imagen pesa más de 20 MB':'No se pudo subir una imagen')}}}finally{desbloquear()}
@@ -4909,7 +4826,6 @@ const EST_CAN={silueta:['Reconozco formas simples en negro','Hago siluetas legib
   diseno:['Copio objetos reales','Hago 3 versiones distintas','Diseño con función y cultura','Mi diseño tiene estilo propio y historia'],
   color:['Uso colores sueltos','Uso paleta de 3 o 4 colores','Controlo temperatura y acento','Pinto color de luz y sombra con intención'],
   visualizar:['Dibujo lo que veo','Dibujo de memoria con apoyo','Construyo desde la imaginación con referencia','Dibujo de memoria desde otros ángulos']};
-const EST_COND=['Sin borrar nada.','Con un solo pincel.','Solo con 3 valores.','Desde una foto real (búscala primero).','De memoria; después compáralo con una foto y corrige.','En 3 ángulos distintos.'];
 const EST_MAP={valores:'valores',silueta:'silueta',composicion:'composicion',color:'color',perspectiva:'forma',anatomia:'forma',diseno:'diseno',materiales:'material',claves:'luz'};
 const estLista=()=>S.ajustes.estudios=S.ajustes.estudios||[];
 const estNivObj=()=>S.ajustes.estNiv=S.ajustes.estNiv||{};
@@ -5186,8 +5102,6 @@ function vtProx(f){const h=new Date();h.setHours(0,0,0,0);const y=h.getFullYear(
   let a=mk(y),b=fin(y);if(b<h){a=mk(y+1);b=fin(y+1)}const enCurso=a<=h&&h<=b,dias=Math.round((a-h)/864e5);return {fecha:a,fin:b,enCurso,dias:enCurso?0:dias,faltaFin:Math.round((b-h)/864e5)}}
 function vtLista(){return VT_FECHAS.map(f=>({f,p:vtProx(f)})).sort((a,b)=>a.p.dias-b.p.dias)}
 function vtFechaTxt(f,p){return p.fecha.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+(f.fin?' al '+p.fin.getDate():'')}
-function ventasBannerHTML(){const L=vtLista().filter(x=>x.p.enCurso||x.p.dias<=45).slice(0,2);if(!L.length)return '';
-  return `<div class="box" style="border-top:3px solid var(--accent)"><span class="lbl">Se acerca · ideas para vender</span>${L.map(({f,p})=>{const ya=p.dias<=f.sem*7;return `<p style="margin:4px 0"><b>${f.ico} ${esc(f.n)}</b> · ${p.enCurso?'ocurre ahora':'en '+p.dias+' días'}${ya&&!p.enCurso?' <span class="tagp">ya es momento de preparar algo</span>':''}</p>`}).join('')}<div class="prow"><button class="btn sm pri" data-act="vista" data-v="ventas">Ver ideas</button></div></div>`}
 /* ---- generador de ideas nuevas para cada fecha (botón ↻) y piezas para vender, SEPARADAS de tus proyectos de portafolio ---- */
 const VT_SUJ={inktober:['un personaje de tu mundo','una criatura','un objeto ritual','una planta rara','una máscara','un animal en pose','un lugar en ruinas','una herramienta antigua','un monstruo cute','un arma','un árbol con carácter','un insecto gigante'],
   halloween:['murciélago','búho','calabaza','casa embrujada','bruja','fantasma','gato negro','araña','esqueleto','luna llena','cementerio','espantapájaros','vampiro','momia','cuervo','caldero','serpiente','jaguar de noche'],
@@ -5378,11 +5292,7 @@ function errChecklistHTML(){const B=errBanco(),c=S.errChk=S.errChk||{},hechos=B.
     <div class="prow"><input type="text" id="err-t" placeholder="Un error tuyo, como pregunta (ej. ¿Dejé el fondo plano?)" data-enter="err-add" style="flex:1 1 240px"><button class="btn sm" data-act="err-add">＋</button></div></details>`}
 /* ---- 3. Revisión semanal ---- */
 function semKey(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return hoyKey(x)}
-function semDatos(){const h=Date.now(),d7=h-7*864e5,ps=Object.values(S.P).filter(p=>!p.libre);let crits=0,hechos=0,piezas=0,refs=0;
-  for(const p of ps){for(const c of p.criticas||[]){if(c.tipo==='Crítica'&&c.ts>=d7)crits++;for(const m of c.malo||[])if(m.hecho&&(m.hechoTs||0)>=d7)hechos++}piezas+=(p.piezas||[]).filter(x=>(x.creado||0)>=d7).length;refs+=(p.refs||[]).filter(x=>(x.creado||0)>=d7).length}
-  const est=estLista().filter(x=>x.ts>=d7).length,dias=Object.entries(S.ajustes.rutina?.dias||{}).filter(([k,v])=>v.hecho&&new Date(k).getTime()>=d7).length,des=(S.ajustes.desatorados||[]).filter(x=>x.ts>=d7).length,mae=(S.ajustes.maestros||[]).filter(x=>x.ts>=d7).length;
-  let ej=0;for(const k of Object.keys(S.ajustes.sw||{}))for(const t of Object.values(S.ajustes.sw[k].ej||{}))if(t>=d7)ej++;
-  return {crits,hechos,piezas,refs,est,dias,des,ej,mae}}const MAE_ENF=['Valores','Color','Bordes y pincelada','Composición','Forma y construcción','Luz y atmósfera'];
+const MAE_ENF=['Valores','Color','Bordes y pincelada','Composición','Forma y construcción','Luz y atmósfera'];
 function maeAnalisis(a,b){const L=[],f=x=>Math.round(x*100)+'%';
   const nom=['oscuros','medios','claros'];a.tres.forEach((v,i)=>{const d=b.tres[i]-v;if(Math.abs(d)>.12)L.push(`Tu copia tiene ${d>0?'más':'menos'} ${nom[i]} que la obra (${f(b.tres[i])} contra ${f(v)}).`)});
   if(b.std<a.std*.8)L.push('Tu copia tiene menos contraste que la obra: refuerza los oscuros y las luces.');else if(b.std>a.std*1.25)L.push('Tu copia tiene más contraste que la obra: el maestro suaviza más los pasos de valor.');
@@ -6579,14 +6489,6 @@ function refsFiltrar(items,b){return items.map((x,i)=>({x,i})).filter(({x})=>{
   if(+b.fRes&&Math.max(x.w||0,x.h||0)&&Math.max(x.w||0,x.h||0)<+b.fRes)return false;
   if(b.fProp){if(!(x.w&&x.h))return false;const r=x.w/x.h;if(b.fProp==='h'&&r<1.2)return false;if(b.fProp==='v'&&r>.85)return false;if(b.fProp==='c'&&(r<.85||r>1.2))return false}
   return true})}
-function refResHTML(p,b,x,i,ya){const L=LIC_EST[x.lic?.estado||'desconocida'],guard=ya.has(x.big)||ya.has(x.src),dims=x.w&&x.h?`${x.w}×${x.h}`:'tamaño sin dato';
-  return `<figure><img src="${esc(x.src)}" alt="${esc(x.titulo)}" loading="lazy" data-act="zoom" referrerpolicy="no-referrer">
-    <figcaption><span>${esc(x.titulo)}</span>
-    <small class="muted">${x.autor?(x.autorUrl?`<a href="${esc(x.autorUrl)}" target="_blank" rel="noopener" style="color:inherit">${esc(x.autor)}</a>`:esc(x.autor))+' · ':''}${esc(x.fuente)} · <a href="${esc(x.link)}" target="_blank" rel="noopener" style="color:var(--accent)">fuente ↗</a></small>
-    <span class="lic ${L[1]}" title="${esc(x.lic?.texto||'La fuente no indica licencia')}">${L[0]}</span>${x.lic?.texto&&x.lic.estado!=='desconocida'?`<small class="muted">${x.lic.url?`<a href="${esc(x.lic.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(corto(x.lic.texto,48))}</a>`:esc(corto(x.lic.texto,48))}</small>`:''}
-    <small class="muted">${dims}${x.cat?' · '+x.cat:''}</small>
-    ${(x.tags||[]).length?`<div class="chips">${x.tags.slice(0,4).map(t=>`<span class="chip" style="padding:2px 8px;font-size:11px">${esc(t)}</span>`).join('')}</div>`:''}
-    ${guard?'<span class="muted" style="font-size:12px">En tu moodboard ✓</span>':`<input type="text" id="rbn-${i}" placeholder="¿Para qué te sirve? (opcional)" style="font-size:12px;padding:5px 8px;background:var(--surface);border:1px solid var(--line2);border-radius:6px"><button class="btn sm pri" data-act="rb-add" data-i="${i}" style="align-self:flex-start">＋ A ${esc(capaNombre(p,b.capa||S.destinoCapa))}</button>`}</figcaption></figure>`}
 function refsBuscaHTML(p){
   const b=S.refB=S.refB||{},sug=[...new Set([...(p.busquedas||[]).map(x=>x.q),...KWCATS.flatMap(([k])=>p.keywords[k]||[])])].slice(0,10),q=encodeURIComponent(b.qUsada||b.q||'');
   const ya=new Set((p.refs||[]).map(r=>r.src)),vis=refsFiltrar(b.items||[],b),ocultos=(b.items||[]).length-vis.length;
@@ -7795,7 +7697,6 @@ const chSel=(path,opts,sel,multi=true)=>`<div class="chips">${opts.map(o=>{const
 const nd=v=>v?esc(v):'<span class="nd">NO DEFINIDO</span>';
 const tx=(path,val,ph,id,alto)=>`<textarea id="${id||'x-'+path.replace(/\./g,'-')}" data-b="${path}" placeholder="${esc(ph||'')}"${alto?` style="min-height:${alto}px"`:''}>${esc(val||'')}</textarea>`;
 const inp=(path,val,ph,id)=>`<input type="text" id="${id||'x-'+path.replace(/\./g,'-')}" data-b="${path}" value="${esc(val||'')}" placeholder="${esc(ph||'')}">`;
-const sel1=(path,opts,val,id,vacio='—')=>`<select id="${id||'x-'+path.replace(/\./g,'-')}" data-b="${path}"><option value="">${vacio}</option>${opts.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
 function porqueBtn(tema,dec){return `<button class="btn ghost sm why" data-act="why" data-tema="${esc(tema)}"${dec?` data-dec="${dec}"`:''} title="Cuestionar esta decisión">¿Por qué?</button>`}
 
 function etapasHTML(p){const cur=p.etapa||'idea',i=ETAPAS_P.findIndex(e=>e[0]===cur),D=DX(p);
@@ -8786,20 +8687,6 @@ function refsBalanceHTML(p){const R=p.refs||[],cats={};R.forEach(r=>(r.estudio||
     <div class="bal">${REF_POR.map(c=>`<div class="bal-r ${cats[c]?'':'cero'}"><span>${c}</span><i style="width:${(cats[c]||0)/max*100}%"></i><b>${cats[c]||0}</b></div>`).join('')}</div>
     ${msgs.map(m=>`<p class="nd-box sm">${esc(m)}</p>`).join('')}
     <p class="hint" style="margin:0">Para traer lo que falta usa <b>Conseguir</b>, en Referencias.</p></div>`}
-function autoLlenadoHTML(p){const els=typeof detectarElementos==='function'?detectarElementos(p):[],pj=(p.personajes||[]).filter(c=>c.nombre);
-  return `<div class="box" style="border-top:3px solid var(--accent)"><h3>Llenar mi moodboard automático</h3>
-    <p class="hint">Un clic y te traigo referencias <b>reales</b> (museos, naturaleza, materiales) y de <b>concept art</b> (artistas de ArtStation) para tu tensión, tus pilares, tus personajes${els.length?' y lo que detecté en tu proyecto':''}${els.length?': <b>'+els.map(e=>e.n).join(', ')+'</b>':''}.</p>
-    <div class="prow"><button class="btn pri" data-act="auto-refs" ${S.autoRef?"disabled":""}>${S.autoRef?'Buscando…':'Llenar mi moodboard (real + concept art)'}</button><span class="muted" id="auto-prog">${S.autoRef?`Buscando ${S.autoRef.n} de ${S.autoRef.t}… (${S.autoRef.add} agregadas)`:'Revisa y quita después lo que no sirva; a cada una le falta tu porqué.'}</span></div>
-    ${els.length?`<div class="chips" style="margin-top:8px">${els.map(e=>`<button class="chip" ${S.autoRef?"disabled":""} data-act="auto-refs-cat" data-n="${esc(e.n)}" style="border:0;cursor:pointer;padding:4px 10px" title="Solo esta categoría: más rápido">${e.ico} ${esc(e.n)}</button>`).join("")}</div>`:""}
-    ${pj.length?`<div class="chips" style="margin-top:6px">${pj.map(c=>`<button class="chip" ${S.autoRef?"disabled":""} data-act="auto-refs-pose" data-id="${esc(c.id)}" style="border:0;cursor:pointer;padding:4px 10px" title="Fotos y bocetos de cómo se mueve y carga el peso">🧍 Poses: ${esc(c.nombre)}</button>`).join("")}</div>`:""}
-    ${!els.length&&!pj.length?'<p class="nd-box sm" style="margin:8px 0 0">Para traer más, escribe primero tu tensión, pilares, personajes o de qué está hecho el proyecto.</p>':''}
-    ${els.length?`<details style="margin-top:8px"><summary class="lbl" style="cursor:pointer">✎ Ajustar qué busca cada categoría</summary>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${els.map(e=>{const auto=elementoBusca(p,e),ov=p.autoQ?.[e.n];return `<div class="prow" style="align-items:center;gap:6px"><span style="min-width:150px;font-size:13px">${e.ico} ${esc(e.n)}</span>
-        <input type="text" data-b="autoQ.${esc(e.n)}.q" value="${esc(ov?.q??auto.q)}" placeholder="Qué buscar (foto real)" style="flex:1 1 160px;font-size:12.5px;padding:5px 8px">
-        <input type="text" data-b="autoQ.${esc(e.n)}.qc" value="${esc(ov?.qc??auto.qc)}" placeholder="Qué buscar (concept art)" style="flex:1 1 160px;font-size:12.5px;padding:5px 8px">
-        ${ov?`<button class="btn ghost sm" data-act="autoq-reset" data-n="${esc(e.n)}" title="Volver a la búsqueda automática">↺</button>`:''}</div>`}).join('')}</div>
-      <p class="hint" style="margin:6px 0 0">Se guarda por proyecto. Bórralo con ↺ para que vuelva a calcularse solo.</p></details>`:''}
-    </div>`}
 const OBJS=['Forma','Anatomía','Material','Luz','Color','Cultura','Composición','Técnica','Mood','Arquitectura','Storytelling','Pilares'];
 function generadorHTML(p){const o=S.bqObj||'Forma',L=busquedasGen(p,o);
   return `<div class="box"><h3>Generador de búsquedas por objetivo</h3><p class="hint">No combina palabras al azar: arma la búsqueda según lo que necesitas estudiar y lo que ya definiste (sujeto, materiales, luz, cultura, mood).</p>
@@ -9562,56 +9449,8 @@ async function accionPro(a,el,p,ds){
 /* =====================================================================
    FORMATOS Y ENTREGA · en qué resolución y archivo luce cada pieza
    ===================================================================== */
-const FMT_DEST=[
- ['artstation','ArtStation / portafolio web'],['instagram','Instagram'],['estudio','Prueba de arte / estudio'],
- ['impresion','Impresión (A4, A3, póster)'],['pitch','Pitch de cine o animación'],['pantalla','Pantalla 4K / fondo']];
-const FMT_TIPO=[['keyframe','Keyframe / entorno'],['hoja','Hoja de personaje / turnaround'],['vertical','Ilustración vertical'],['props','Props / callouts'],['render','Render 3D para paintover']];
-const FMT_HERR=[['ps','Photoshop'],['procreate','Procreate (iPad)'],['csp','Clip Studio'],['3d','Blender / ZBrush']];
-const LIENZOS={keyframe:[3840,2160,'16:9 · 4K UHD'],hoja:[3840,2160,'16:9 · 4K (hoja horizontal)'],vertical:[2480,3508,'A4 vertical a 300 ppi'],props:[3840,2160,'16:9 · 4K'],render:[3840,2160,'16:9 · 4K']};
 function fmtDraft(){return S.fmt=S.fmt||{dest:['artstation','instagram'],tipo:'keyframe',herr:'ps'}}
-function fmtRecomendacion(d){const R=[],add=(t,items)=>R.push({t,items}),dest=d.dest,has=k=>dest.includes(k);
-  let [w,h,nom]=LIENZOS[d.tipo]||LIENZOS.keyframe;
-  if(has('pitch')&&d.tipo==='keyframe'){w=4096;h=1716;nom='2.39:1 · Cinemascope (4096×1716)'}
-  if(has('impresion')&&d.tipo!=='vertical'&&w<4961){const r=h/w;w=4961;h=Math.round(w*r);nom+=' → escalado a 4961 px de ancho para imprimir en A3 a 300 ppi'}
-  add('Lienzo de trabajo',[`<b>${w} × ${h} px</b> (${nom}).`,
-    'Trabaja siempre al tamaño final o más grande: agrandar después no agrega detalle, solo lo difumina.',
-    has('impresion')?'Para imprimir: 300 ppi al tamaño real. A4 = 2480×3508 · A3 = 3508×4961 · póster 45×60 cm = 5315×7087.':'Para pantalla los ppi no importan: cuentan los píxeles. 72 o 300 ppi se ven igual en pantalla.',
-    'HD (1920×1080) está bien para thumbnails y pruebas rápidas, pero en portafolio se ve chico al hacer zoom. 4K (3840×2160) es el estándar actual. 8K (7680×4320) solo vale la pena para impresión grande o matte painting: pesa 4 veces más y en pantalla casi no se nota.']);
-  const ex=[];
-  if(has('artstation'))ex.push('<b>ArtStation:</b> JPG de alta calidad (90–100%), 3840 px en el lado largo, sRGB. Sube además crops de detalle y el proceso como imágenes aparte.');
-  if(has('instagram'))ex.push('<b>Instagram:</b> 1080×1350 (4:5) para ocupar más pantalla; carrusel con la pieza completa + detalles. JPG sRGB. Las horizontales se ven chicas: recórtalas en 4:5 o ponlas sobre fondo.');
-  if(has('estudio'))ex.push('<b>Prueba de arte:</b> lo que pida el estudio manda. Si no dicen nada: JPG/PNG en 1920 px o más para revisar + PSD con capas nombradas y ordenadas. Nombra los archivos: nombre_estudio_prueba_v01.');
-  if(has('impresion'))ex.push('<b>Impresión:</b> TIFF o PNG sin compresión, 16 bits si hay degradados suaves. Trabaja en RGB y pregunta a la imprenta si quieren CMYK: la conversión cambia los colores saturados (rojos y verdes intensos se apagan).');
-  if(has('pitch'))ex.push('<b>Pitch:</b> 2.39:1 o 1.85:1 para cine, 16:9 para animación y videojuegos. Entrega en PDF con una imagen por página, más JPG sueltos.');
-  if(has('pantalla'))ex.push('<b>Pantalla 4K / fondo:</b> 3840×2160 exacto, PNG o JPG al 100%.');
-  add('Exportar según destino',ex.length?ex:['Elige al menos un destino arriba.']);
-  const fx=[];
-  if(d.herr==='ps')fx.push('<b>Photoshop:</b> guarda el PSD con capas (tu archivo maestro) y exporta aparte. Si pasa de 2 GB usa PSB. Exporta con «Exportar como» o «Guardar para web» en sRGB.');
-  if(d.herr==='procreate')fx.push('<b>Procreate:</b> el .procreate solo abre en Procreate; para compartir o seguir en PC exporta <b>PSD</b> (conserva capas). Al crear el lienzo, Procreate te dice cuántas capas máximas tendrás: si con 4K te da muy pocas para tu proceso, trabaja a 3840×2160 con capas agrupadas y combina las que ya cerraste. Elige perfil sRGB si va a web; si trabajaste en Display P3, al exportar los colores pueden verse distintos fuera del iPad.','Exporta el final en PNG (sin pérdida) y de ahí saca los JPG para redes.');
-  if(d.herr==='csp')fx.push('<b>Clip Studio:</b> guarda el .clip como maestro y exporta PSD si lo necesita otra persona. Revisa que la exportación esté en RGB 8 bits sRGB para web.');
-  if(d.herr==='3d')fx.push('<b>Blender:</b> renderiza al tamaño final (Propiedades de salida → 3840×2160, 100%) en PNG 16 bits o EXR. Saca pases para el paintover: Mist o Z (profundidad para niebla), AO y un pase de IDs/Cryptomatte para máscaras rápidas.','<b>ZBrush:</b> renderiza con BPR al doble del tamaño del documento y baja a la mitad (antialias limpio). Exporta pases de profundidad, AO y máscaras de material para pintar encima.');
-  fx.push('<b>Formatos:</b> PSD = capas, tu maestro · PNG = final sin pérdida (hojas, texto, colores planos) · JPG = web, pesa poco · TIFF = impresión · PDF = presentación de proyecto o portafolio.');
-  add('Tu herramienta y tus archivos',fx);
-  add('Organización profesional',['Nombre: <code>sebastian-alvarez_proyecto_pieza_v03.psd</code>. Nunca «final_final2».','Guarda versiones (v01, v02…) y un maestro por pieza; la pestaña Láminas ya exporta con nombres así.','Capas nombradas y agrupadas (fondo, plano medio, personaje, luz, FX): así las pide un estudio.']);
-  return R}
 function relacion(w,h){const r=w/h,L=[[16/9,'16:9'],[4/5,'4:5'],[2.39,'2.39:1 (cinemascope)'],[1.85,'1.85:1'],[3/2,'3:2'],[1,'1:1'],[1/1.414,'A (vertical)'],[1.414,'A (horizontal)'],[9/16,'9:16 (vertical)']];return L.sort((a,b)=>Math.abs(a[0]-r)-Math.abs(b[0]-r))[0][1]}
-function fmtCheck(k){const {w,h,nombre,tipo,peso}=k,largo=Math.max(w,h),O=[],cm=px=>(px/300*2.54).toFixed(1);
-  O.push(['info',`${w} × ${h} px · relación ${relacion(w,h)}${peso?` · ${(peso/1048576).toFixed(1)} MB`:''}${tipo?` · ${tipo.replace('image/','').toUpperCase()}`:''}`]);
-  O.push(largo>=3840?['ok','4K o más: se ve nítido en ArtStation y aguanta zoom.']:largo>=1920?['warn',`HD (${largo} px en el lado largo): aceptable en web, pero en portafolio el zoom se ve suave. Para piezas nuevas trabaja a 3840 px.`]:['no',`Muy chica (${largo} px): se ve poco profesional en portafolio. No la agrandes con escalado: repinta o rehaz a mayor tamaño.`]);
-  O.push(['info',`Impresión máxima a 300 ppi: ${cm(w)} × ${cm(h)} cm${w>=2480&&h>=3508||h>=2480&&w>=3508?' (alcanza para A4)':''}${w>=3508&&h>=4961||h>=3508&&w>=4961?' · alcanza para A3':''}.`]);
-  if(Math.abs(w/h-4/5)>.05)O.push(['info','Para Instagram, recórtala o ponla sobre fondo en 4:5 (1080×1350). La pestaña Láminas → Exportar para publicar lo hace sola.']);
-  if(/jpe?g/.test(tipo||'')&&largo<1920)O.push(['warn','JPG pequeño: si tienes el PSD, exporta de nuevo desde el maestro.']);
-  return O}
-function vFormatos(){const d=fmtDraft(),R=fmtRecomendacion(d),k=S.fmtK,piezas=[...Object.entries(S.P).flatMap(([pid,p])=>(p.piezas||[]).map(x=>({x,label:`${p.nombre} · ${x.etapa}`}))),...(S.ajustes.galeria||[]).map(x=>({x,label:'Mis ilustraciones · '+(x.titulo||x.tipo||'')}))];S.fmtPz=piezas;
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Formatos y entrega</h1>
-  <p class="intro">En qué tamaño trabajar, en qué formato guardar y cómo exportar cada pieza para que luzca: HD, 4K, 8K, PSD, Procreate, PNG, JPG, TIFF, según su destino.</p>
-  <div class="box"><h3>¿Para dónde es la pieza?</h3>${`<div class="chips">${FMT_DEST.map(([k2,n])=>`<button class="ch ${d.dest.includes(k2)?'on':''}" data-act="fmt-dest" data-v="${k2}">${n}</button>`).join('')}</div>`}
-    <span class="lbl">Tipo de pieza</span><div class="chips">${FMT_TIPO.map(([k2,n])=>`<button class="ch ${d.tipo===k2?'on':''}" data-act="fmt-tipo" data-v="${k2}">${n}</button>`).join('')}</div>
-    <span class="lbl">Herramienta</span><div class="chips">${FMT_HERR.map(([k2,n])=>`<button class="ch ${d.herr===k2?'on':''}" data-act="fmt-herr" data-v="${k2}">${n}</button>`).join('')}</div></div>
-  <div class="grid2">${R.map(s=>`<div class="box"><h3>${esc(s.t)}</h3><ul class="why-l fmt">${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>
-  <div class="box"><h3>Revisa una pieza tuya</h3><p class="hint">Te digo su resolución real, dónde luce y hasta qué tamaño se puede imprimir.</p>
-    <div class="prow"><select id="fmt-pz"><option value="">Elige una pieza…</option>${piezas.map((q,i)=>`<option value="${i}">${esc(q.label)}</option>`).join('')}</select><span class="muted">o</span><label class="btn sm" for="fmt-file">Subir archivo</label><input type="file" id="fmt-file" accept="image/*" hidden></div>
-    ${k?`<ul class="fmtck">${fmtCheck(k).map(([c,t])=>`<li class="${c}">${esc(t)}</li>`).join('')}</ul>`:''}</div>`}
 async function fmtMedir(src,meta){try{const bm=await cargarBitmap(src);S.fmtK={w:bm.width,h:bm.height,...meta};bm.close?.()}catch{toast('No pude leer esa imagen')}renderMain()}
 async function accionFmt(a,el,p,ds){const d=fmtDraft();
   switch(a){case 'fmt-dest':{const i=d.dest.indexOf(ds.v);i>=0?d.dest.splice(i,1):d.dest.push(ds.v);renderMain();return true}
@@ -9637,57 +9476,12 @@ Object.assign(RUTA,{
    RECURSOS Y PINCELES · novedades en vivo (API) + directorio curado
    ===================================================================== */
 const gq=q=>`https://www.google.com/search?q=${encodeURIComponent(q)}`;
-const REC_DIR=[
- /* [categoría, nombre, precio, qué es, para qué te sirve, url] */
- ['Pinceles 2D','Pinceles de Kyle T. Webster (Adobe)','Gratis con Photoshop','Cientos de pinceles oficiales de Photoshop.','Base sólida para pintura digital y texturas sin comprar nada.',gq('Kyle T. Webster brushes Photoshop Adobe descargar')],
- ['Pinceles 2D','Procreate Folio','Gratis','Comunidad oficial de Procreate: pinceles compartidos por artistas.','Pinceles para iPad probados por otros artistas.','https://folio.procreate.com/brushes'],
- ['Pinceles 2D','Gumroad (sets de artistas)','Gratis · paga lo que quieras · paga','Muchos concept artists venden o regalan sus pinceles aquí.','Pinceles hechos por artistas de la industria, a menudo con precio libre.','https://gumroad.com/discover?query=concept%20art%20brushes'],
- ['Pinceles 2D','ArtStation Marketplace · pinceles','Gratis y paga','Tienda de ArtStation: pinceles, tutoriales y kits de artistas profesionales.','Pinceles de concept artists que trabajan en estudios.',gq('site:artstation.com/marketplace concept art brushes')],
- ['Pinceles 2D','Brusheezy','Gratis (revisa licencia)','Pinceles gratuitos de Photoshop.','Texturas y efectos (humo, follaje, polvo) para experimentar.','https://www.brusheezy.com/'],
- ['Pinceles 2D','Creative Market · Design Cuts','Paga (paquetes)','Tiendas de recursos con bundles frecuentes.','Buenos paquetes en oferta; revisa que sean para pintura y no para diseño gráfico.','https://creativemarket.com/add-ons/brushes'],
- ['ZBrush','Pinceles incluidos en ZBrush','Incluido','ZBrush trae cientos de pinceles y alphas.','Domina Move, ClayBuildup, DamStandard, hPolish y TrimDynamic antes de comprar más.','https://www.maxon.net/zbrush'],
- ['ZBrush','FlippedNormals Marketplace','Gratis y paga','Pinceles, alphas y kits de artistas 3D profesionales.','Pinceles de criaturas, anatomía y hard surface.','https://flippednormals.com/'],
- ['ZBrush','ArtStation Marketplace · ZBrush','Gratis y paga','Pinceles IMM, alphas de piel y escamas, kitbash.','Detalle de criaturas (escamas, piel) y ornamento.',gq('site:artstation.com/marketplace zbrush brushes')],
- ['ZBrush','Gumroad · ZBrush','Gratis · paga lo que quieras · paga','Pinceles de escultores independientes.','Busca sets gratuitos para empezar sin gastar.','https://gumroad.com/discover?query=zbrush%20brushes'],
- ['Blender','Blender Extensions (oficial)','Gratis','Repositorio oficial de add-ons, integrado en Blender 4.2+.','Instalas add-ons desde Blender mismo, seguros y actualizados.','https://extensions.blender.org/'],
- ['Blender','Superhive (antes Blender Market)','Gratis y paga','La tienda más grande de add-ons y assets para Blender.','Add-ons de scatter, terreno, iluminación y kitbash para entornos.','https://superhivemarket.com/'],
- ['Blender','BlenderKit','Gratis con cuenta · suscripción','Biblioteca de modelos, materiales y HDRIs dentro de Blender (add-on).','Arrastras assets a tu blockout directo desde Blender.','https://www.blenderkit.com/'],
- ['Texturas / materiales','Poly Haven','Gratis (CC0)','HDRIs, texturas y modelos de muy alta calidad, sin restricciones.','Luz realista con HDRIs y materiales para blockouts.','https://polyhaven.com/'],
- ['Texturas / materiales','ambientCG','Gratis (CC0)','Materiales PBR escaneados, sin restricciones.','Piedra, madera, tierra: materiales de entornos en minutos.','https://ambientcg.com/'],
- ['Texturas / materiales','Fab (Epic Games)','Gratis y paga','Tienda de Epic que incluye Megascans (escaneos fotogramétricos).','Assets escaneados de altísima calidad; revisa la licencia para uso fuera de Unreal.','https://www.fab.com/'],
- ['Texturas / materiales','Textures.com','Gratis limitado · paga','Fotos de texturas y referencias de materiales.','Textura fotográfica para photobash y overpaint.','https://www.textures.com/'],
- ['Modelos 3D','Sketchfab (descargables)','Gratis y paga','Millones de modelos; filtra por «descargable» y revisa la licencia.','Props, ruinas y rocas para tu blockout.','https://sketchfab.com/search?features=downloadable&type=models'],
- ['Modelos 3D','Kitbash3D','Paga','Kits de entornos completos (ciudades, templos, ruinas).','Blockouts de entornos grandes en horas.','https://kitbash3d.com/']];
-const REC_CATS=['Todos','Pinceles 2D','ZBrush','Blender','Texturas / materiales','HDRI','Modelos 3D','Add-ons'];
 async function cargarRecursos(forzar){if(!S.db){S.recu={items:[],sin:true};renderMain();return}
   if(!S.recu)S.recu={cargando:true};try{const d=await S.db.doc('recursos/cache').get();if(d.exists)S.recu={...d.data()}}catch{}
   const viejo=!S.recu?.ts||Date.now()-S.recu.ts>24*36e5;
   if(window.PC_SHIM?.recursos&&(forzar||viejo)){S.recu={...(S.recu||{}),actualizando:true};renderMain();
     try{await window.PC_SHIM.recursos();const d=await S.db.doc('recursos/cache').get();if(d.exists)S.recu={...d.data()}}catch{S.recu={...(S.recu||{}),error:'No se pudo actualizar. Intenta más tarde.'}}}
   if(S.recu)S.recu.cargando=false;if(S.vista==='recursos')renderMain()}
-function recCatDe(x){return /HDRI/.test(x.tipo)?'HDRI':/Textura|Material/.test(x.tipo)?'Texturas / materiales':/Add-on/.test(x.tipo)?'Add-ons':/Pincel/.test(x.tipo)?'Blender':/Modelo/.test(x.tipo)?'Modelos 3D':'Blender'}
-function vRecursos(){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''},R=S.recu||{},favs=S.ajustes.recursosFav||[],qn=nz(f.q);
-  const pasa=(cat,precio,txt)=>(f.cat==='Todos'||f.cat===cat||(f.cat==='Blender'&&/Blender/.test(txt))||(f.cat==='ZBrush'&&/ZBrush/.test(txt)))&&(f.precio==='Todos'||(f.precio==='Gratis'?/Gratis|Incluido/.test(precio):/[Pp]aga|suscrip/.test(precio)))&&(!qn||nz(txt).includes(qn));
-  const vivos=(R.items||[]).filter(x=>pasa(recCatDe(x),x.precio,[x.nombre,x.tipo,x.fuente,x.app].join(' '))).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
-  const dir=REC_DIR.filter(d=>pasa(d[0],d[2],d.join(' ')));
-  const refs=[...guias().map(({r})=>r.nombre),...(S.ajustes.referentes||[]).map(r=>r.nombre)].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,10);
-  const card=x=>{const fav=favs.some(v=>v.id===x.id);return `<div class="rcur"><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.thumb?`<img src="${esc(x.thumb)}" alt="" loading="lazy">`:`<div class="rcur-ph">${esc(x.fuente)}</div>`}</a>
-    <div class="rcur-b"><b>${esc(corto(x.nombre,48))}</b><span class="muted">${esc(x.tipo)} · ${esc(x.fuente)}</span><span class="tagp ${/Gratis/.test(x.precio)?'free':''}">${esc(x.precio)}</span>${x.licencia?`<small class="muted">${esc(corto(x.licencia,40))}</small>`:''}
-    <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Abrir ↗</a><button class="btn ghost sm" data-act="recu-fav" data-id="${esc(x.id)}">${fav?'★':'☆'}</button></div></div></div>`};
-  return `<h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Recursos y pinceles</h1>
-  <p class="intro">Pinceles para Photoshop y Procreate, cosas para <strong>Blender</strong> y <strong>ZBrush</strong>, texturas, HDRIs y modelos, <strong>de gratis a de paga</strong>. Las novedades se actualizan solas cada día desde Poly Haven, ambientCG, BlenderKit, Sketchfab y Blender Extensions. <button class="btn ghost sm" data-act="vista" data-v="diario">Ir a mi programa de mejora →</button></p>
-  <div class="box"><div class="chips">${REC_CATS.map(c=>`<button class="ch ${f.cat===c?'on':''}" data-act="recu-cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
-    <div class="prow"><span class="lbl">Precio</span>${['Todos','Gratis','Paga'].map(c=>`<button class="ch xs ${f.precio===c?'on':''}" data-act="recu-precio" data-v="${c}">${c}</button>`).join('')}
-      <input type="text" id="recu-q" data-recq="1" value="${esc(f.q)}" placeholder="Buscar: roca, jaguar, niebla…" style="flex:1 1 200px"></div></div>
-  ${favs.length?`<div class="box"><h3>Tus guardados <span class="lbl">${favs.length}</span></h3><div class="rcurs">${favs.map(card).join('')}</div></div>`:''}
-  <div class="box"><div class="prow" style="justify-content:space-between"><h3>Novedades · se actualiza cada día</h3><span class="prow"><span class="lbl">${R.ts?'Actualizado '+new Date(R.ts).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span>${window.PC_SHIM?`<button class="btn sm" data-act="recu-act">${R.actualizando?'Actualizando…':'Actualizar ahora'}</button>`:''}</span></div>
-    ${R.sin?'<p class="muted">Las novedades en vivo funcionan en la app de GitHub (con tu cuenta).</p>':R.cargando?'<p class="muted">Cargando…</p>':R.error?`<p class="muted">${esc(R.error)}</p>`:''}
-    ${vivos.length?`<div class="rcurs">${vivos.slice(0,S.recuN||36).map(card).join('')}</div>${vivos.length>(S.recuN||36)?`<button class="btn" data-act="recu-mas">Ver más (${vivos.length-(S.recuN||36)})</button>`:''}`:R.items?'<p class="muted">Nada con esos filtros.</p>':''}</div>
-  <div class="box"><h3>Directorio · dónde conseguir pinceles y assets</h3><p class="hint">Las tiendas donde se mueven los artistas de la industria. Los enlaces de búsqueda siempre te muestran lo más nuevo.</p>
-    <div class="dirr">${dir.map(([cat,n,precio,que,para,url])=>`<a class="dirc" href="${esc(url)}" target="_blank" rel="noopener"><span class="lbl">${esc(cat)}</span><b>${esc(n)} ↗</b><span class="tagp ${/^Gratis|Incluido/.test(precio)?'free':''}">${esc(precio)}</span><span>${esc(que)}</span><small class="muted">${esc(para)}</small></a>`).join('')||'<p class="muted">Nada con esos filtros.</p>'}</div></div>
-  ${refs.length?`<div class="box"><h3>Pinceles de tus referentes</h3><p class="hint">Muchos concept artists venden o regalan sus pinceles. Búscalos directo: es la forma más rápida de entender cómo logran su textura.</p>
-    <div class="chips">${refs.map(n=>`<a class="ch" href="${gq(n+' brushes gumroad OR artstation')}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join('')}</div></div>`:''}
-  <p class="muted">Antes de usar un asset en un proyecto de portafolio o comercial, revisa su licencia (CC0 = libre; «personal use» = solo práctica).</p>`}
 async function accionRec(a,el,p,ds){const f=S.recF=S.recF||{cat:'Todos',precio:'Todos',q:''};
   switch(a){case 'recu-cat':f.cat=ds.v;S.recuN=36;renderMain();return true;case 'recu-precio':f.precio=ds.v;renderMain();return true;
     case 'recu-act':cargarRecursos(true);return true;case 'recu-mas':S.recuN=(S.recuN||36)+36;renderMain();return true;
@@ -9699,7 +9493,6 @@ async function accionRec(a,el,p,ds){const f=S.recF=S.recF||{cat:'Todos',precio:'
    ===================================================================== */
 const HAB=[['color','Iluminación y color'],['valores','Valores'],['perspectiva','Perspectiva y forma'],['composicion','Composición'],['anatomia','Anatomía'],['diseno','Diseño de forma'],['silueta','Silueta'],['materiales','Materiales y texturas'],['entornos','Entornos'],['3d','3D']];
 const HAB_EJ={color:['color','claves','bl_luz'],valores:['valores','claves'],perspectiva:['perspectiva','escala','bl_blockout','profundidad'],composicion:['composicion','bl_luz'],anatomia:['anatomia','zb_anatomia'],diseno:['diseno','zb_forma'],silueta:['silueta','zb_forma'],materiales:['diseno','zb_hard','bl_paint'],entornos:['escala','atmosfera','profundidad','bl_blockout'],'3d':['bl_blockout','bl_luz','bl_paint','zb_forma']};
-const REC_TIPOS2=['Pincel / set de pinceles','Plugin o add-on','App o programa','Libro','Curso o tutorial','Textura / HDRI / modelo','Otro'];
 /* conocimiento de herramientas conocidas: cómo usarlas para cada habilidad */
 const KB=[
  [/colou?r ?constructor/i,{color:'Antes de pintar arma una escena: tu luz principal (ej. fuego naranja), la luz de ambiente (cielo o selva) y los colores locales de tus materiales. Exporta los swatches (PNG) y úsalos como paleta: cada material en luz, en sombra y en luz rebotada.',valores:'Revisa los swatches de sombra de todos tus materiales: deben quedar agrupados en valor. Si una sombra sale muy clara, tu luz de ambiente es demasiado fuerte.',composicion:'Usa la misma escena con 2 luces (principal fuerte y relleno débil) y define qué material recibe el acento: ahí va tu foco.',materiales:'Prueba el mismo color local bajo 3 luces (fuego, luna, nublado) y guarda cada escena en LightScenes: así aprendes cómo reacciona cada material.',entornos:'Una escena por hora del día de tu entorno (amanecer, mediodía, noche): tu color script sale de ahí.'}],
@@ -9773,7 +9566,6 @@ function estiloMedidoHTML(){const E=S.ajustes.estiloMedido,items=E?.items||[],f=
 
 /* ---------- 2 · llenar el moodboard de cualquier proyecto ---------- */
 const OBJ2EST={Forma:'Forma',Anatomía:'Anatomía',Material:'Material',Luz:'Luz',Color:'Color',Cultura:'Cultura',Composición:'Composición',Técnica:'Técnica',Mood:'Mood',Arquitectura:'Arquitectura',Storytelling:'Storytelling',Pilares:'Forma'};
-const limpiaQ=q=>q.replace(/\b(reference|references|concept art|design|shape language|cinematic|photo|photography|texture macro|museum collection|film still|color palette|storytelling details|worn used|silhouette|low key|wide shot|low angle)\b/gi,' ').replace(/\s+/g,' ').trim();
 /* fuera lo que casi nunca sirve como referencia visual, aunque la licencia esté bien: logos, banderas, mapas, diagramas, iconos, capturas de pantalla, estampillas, escudos */
 const WM_BASURA=/\b(logo|flag of|coat of arms|locator map|map of|diagram|icon|screenshot|meme|postage stamp|banknote|seal of|emoji|favicon|wordmark|infographic)\b/i;
 /* rutinas automáticas: mismos proveedores y mismo criterio de licencia que la búsqueda manual (solo dominio público o licencia abierta) */
@@ -9858,13 +9650,7 @@ function requisitosDe(t){return String(t||'').split(/\n|•|;|\.(?=\s|$)/).map(s
 function tareaActiva(){const L=S.ajustes.tareas||[];return L.find(x=>x.id===S.tareaSel)||L[0]||null}
 function refsParaTarea(t,p){if(!p)return [];const tem=temasDe(t.enunciado),pal=toks(t.enunciado).filter(w=>w.length>4);
   return (p.refs||[]).map(r=>{const txt=nz([r.porque,r.fuente,(r.estudio||[]).join(' '),(r.aplica||[]).join(' ')].join(' '));let s=pal.filter(w=>txt.includes(w)).length*2;
-    if(tem.some(([,n])=>n==='Vegetación')&&/vegeta|raic|raiz|liana|helecho|ceiba|hoja|musgo|selva|bromel|monstera|arbol/.test(txt))s+=5;if(r.capa==='p3'||r.capa==='mood')s+=1;return {r,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,12).map(x=>x.r)}function nuevaTareaHTML(){const d=S.tarD=S.tarD||{titulo:'',pid:curReal(),entrega:'',enunciado:''};
-  return `<div class="box"><h3>Nueva tarea</h3><div class="grid2" style="gap:8px"><div class="field"><label for="tn-t">Título</label><input type="text" id="tn-t" data-tard="titulo" value="${esc(d.titulo)}" placeholder="Bocetos de vegetación"></div>
-    <div class="field"><label for="tn-p">Proyecto</label><select id="tn-p" data-tard="pid"><option value="">Sin proyecto</option>${ordenados().map(([id,p])=>`<option value="${esc(id)}" ${d.pid===id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></div>
-    <div class="field"><label for="tn-e">Entrega</label><input type="date" id="tn-e" data-tard="entrega" value="${esc(d.entrega)}"></div></div>
-    <div class="field"><label for="tn-x">¿Qué te pidieron exactamente? (cópialo tal cual; una indicación por línea)</label><textarea id="tn-x" data-tard="enunciado" style="min-height:90px" placeholder="Hacer 10 bocetos de vegetación a partir de las referencias.\nEmpezar a bajar ideas de las imágenes del moodboard.\nTraer 3 bocetos más trabajados.">${esc(d.enunciado)}</textarea></div>
-    <div class="prow"><button class="btn pri" data-act="tar-crear">Crear tarea</button>${S.tarNueva?'<button class="btn ghost" data-act="tar-cancel">Cancelar</button>':''}</div></div>`}
-async function subirBocetosTarea(files){const t=tareaActiva();if(!t)return;const fs_=[...files].filter(f=>/^image\//.test(f.type));if(!fs_.length)return;bloquear();
+    if(tem.some(([,n])=>n==='Vegetación')&&/vegeta|raic|raiz|liana|helecho|ceiba|hoja|musgo|selva|bromel|monstera|arbol/.test(txt))s+=5;if(r.capa==='p3'||r.capa==='mood')s+=1;return {r,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,12).map(x=>x.r)}async function subirBocetosTarea(files){const t=tareaActiva();if(!t)return;const fs_=[...files].filter(f=>/^image\//.test(f.type));if(!fs_.length)return;bloquear();
   try{let k=0;for(const f of fs_){k++;S.tarBusy=`Subiendo y revisando ${k} de ${fs_.length}…`;renderMain();
     try{const img=await guardarImagen(f),a=await analizarImagen(f),p=S.P[t.pid],cr=criticaImagen(a,p||null,{etapa:'Boceto',nota:t.titulo,tema:temasDe(t.enunciado)[0]?.[1]||''});registrarMetrica(a,'tarea',t.pid);
       const tt=tareaActiva();tt.bocetos.push({id:uid(),...img,ts:Date.now(),nota:'',cumple:[],cr:{funciona:cr.funciona.slice(0,3),problemas:cr.problemas.slice(0,3),experimentos:cr.experimentos.slice(0,2)}});
@@ -12008,27 +11794,7 @@ function ajObjetivoFoto(res,i,bm){const L=res.landmarks[i],Wd=res.worldLandmarks
   if(pts.length<20){const xs=Object.values(kp).map(p=>p[0]),ys=Object.values(kp).map(p=>p[1]);if(xs.length<6)return null;pts=[];const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);for(let t=0;t<40;t++){pts.push([x0+(x1-x0)*t/39,y0],[x0+(x1-x0)*t/39,y1],[x0,y0+(y1-y0)*t/39],[x1,y0+(y1-y0)*t/39])}}
   return {pts,kp,kp3,mask,init:v3dPoseDeLandmarks(Wd)}}
 /* silueta de la persona en una foto de estudio: lo que se distingue del color del fondo, sin props sueltos ni huecos */
-function ajMascaraFoto(bm,caja){const k=Math.min(1,320/Math.max(bm.width,bm.height)),W=Math.max(8,Math.round(bm.width*k)),H=Math.max(8,Math.round(bm.height*k)),cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d',{willReadFrequently:true});g.drawImage(bm,0,0,W,H);const d=g.getImageData(0,0,W,H).data;
-  const bg=[0,0,0],vals=[[],[],[]];const put=(x,y)=>{const i=(y*W+x)*4;for(let c=0;c<3;c++)vals[c].push(d[i+c])};for(let x=0;x<W;x++)for(let y=0;y<4;y++){put(x,y);put(x,H-1-y)}for(let y=0;y<H;y++)for(let x=0;x<4;x++){put(x,y);put(W-1-x,y)}
-  for(let c=0;c<3;c++){vals[c].sort((a,b)=>a-b);bg[c]=vals[c][vals[c].length>>1]}
-  const dist=new Float32Array(W*H),hist=new Float32Array(256);for(let i=0;i<W*H;i++){const v=Math.min(255,Math.hypot(d[i*4]-bg[0],d[i*4+1]-bg[1],d[i*4+2]-bg[2]));dist[i]=v;hist[v|0]++}
-  let tot=W*H,sum=0;for(let i=0;i<256;i++)sum+=i*hist[i];let sb=0,wb=0,mx=0,th=40;for(let i=0;i<256;i++){wb+=hist[i];if(!wb)continue;const wf=tot-wb;if(!wf)break;sb+=i*hist[i];const mb=sb/wb,mf=(sum-sb)/wf,v=wb*wf*(mb-mf)*(mb-mf);if(v>mx){mx=v;th=i}}th=Math.max(26,Math.min(80,th*.8));
-  let m=new Uint8Array(W*H);for(let i=0;i<W*H;i++)m[i]=dist[i]>th?1:0;
-  /* cierre (1 px), componente mayor y relleno de huecos */
-  const dil=(a)=>{const o=new Uint8Array(W*H);for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;if(a[i]||a[i-1]||a[i+1]||a[i-W]||a[i+W])o[i]=1}return o},ero=(a)=>{const o=new Uint8Array(W*H);for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;if(a[i]&&a[i-1]&&a[i+1]&&a[i-W]&&a[i+W])o[i]=1}return o};m=ero(dil(dil(m)));
-  const lab=new Int32Array(W*H),ar=[];let nl=0;const cola=[];for(let i=0;i<W*H;i++){if(!m[i]||lab[i])continue;nl++;let a=0;lab[i]=nl;cola.length=0;cola.push(i);while(cola.length){const p=cola.pop();a++;const x=p%W,y=(p/W)|0;for(const q of [x>0?p-1:-1,x<W-1?p+1:-1,y>0?p-W:-1,y<H-1?p+W:-1])if(q>=0&&m[q]&&!lab[q]){lab[q]=nl;cola.push(q)}}ar[nl]=a}
-  let best=0,bi=0;ar.forEach((a,i)=>{if(a>best){best=a;bi=i}});const out=new Uint8Array(W*H);for(let i=0;i<W*H;i++)if(lab[i]===bi)out[i]=1;
-  /* huecos: lo que no se alcanza desde el borde */
-  const fuera=new Uint8Array(W*H);cola.length=0;for(let x=0;x<W;x++){cola.push(x,(H-1)*W+x)}for(let y=0;y<H;y++){cola.push(y*W,y*W+W-1)}for(const p of cola)if(!out[p])fuera[p]=1;
-  while(cola.length){const p=cola.pop();if(out[p])continue;const x=p%W,y=(p/W)|0;for(const q of [x>0?p-1:-1,x<W-1?p+1:-1,y>0?p-W:-1,y<H-1?p+W:-1])if(q>=0&&!out[q]&&!fuera[q]){fuera[q]=1;cola.push(q)}}
-  for(let i=0;i<W*H;i++)if(!fuera[i])out[i]=1;let cuenta=0;for(let i=0;i<W*H;i++)cuenta+=out[i];
-  return {data:out,w:W,h:H,k,frac:cuenta/(W*H)}}
 /* foto de estudio: se afina la pose hasta que la silueta del maniquí cubre la de la persona y las articulaciones coinciden */
-async function ajFitFoto(cuerpo,bm,o,prog){const mk=ajMascaraFoto(bm);if(mk.frac<.04||mk.frac>.65)return null;const W=mk.w,H=mk.h,pts=[],d=mk.data;
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;if(d[i]&&(!d[i-1]||!d[i+1]||!d[i-W]||!d[i+W]))pts.push([x,y])}
-  const kp={};for(const j in o.kp)kp[j]=[o.kp[j][0]*mk.k,o.kp[j][1]*mk.k];const T=ajPreparaTinta(pts,{mask:{data:d,w:W,h:H},kp,kp3:o.kp3,wk:1.2,w3:1});if(!T)return null;
-  const v0=ajVec({...V3_POSES['De pie'],...o.init.pose},o.init.giro),vv=ajVoltea(v0),sem=[v0,vv];for(const dy of [-25,25]){const a=v0.slice(),b=vv.slice();a[a.length-1]+=dy;b[b.length-1]+=dy;sem.push(a,b)}
-  const E=ajMotor(cuerpo);try{const r=await ajAjusta(E,T,{solo:true,semillas:sem,mejores:3,prog});return {...r,frac:mk.frac}}finally{E.dispose()}}
 function ajMotor(cuerpo){const T=V3.T,r=V3.renderer,m=v3dInstancia(cuerpo),esc=new T.Scene();esc.background=new T.Color('#ffffff');esc.add(m);esc.overrideMaterial=new T.MeshBasicMaterial({color:0});
   const cam=new T.OrthographicCamera(-AJ_VIS,AJ_VIS,AJ_VIS,-AJ_VIS,.1,20);cam.position.set(0,AJ_CY,6);cam.lookAt(0,AJ_CY,0);
   const W=AJ_TL*AJ_NT,rt=new T.WebGLRenderTarget(W,W,{depthBuffer:true}),buf=new Uint8Array(W*W*4);m.traverse(o=>{if(o.isSkinnedMesh)o.frustumCulled=false});
@@ -13937,7 +13703,6 @@ const V3_NEUTRA=()=>({...V3_POSES['De pie']});
 const V3_GUARDA=['modelo','propModo','guias','rend','figs','sel','props','capa','luz2','luz3','cuerpo','material','forma','preset','pose','giro','luz','luzN','lente','fondo','rej','sombra','arcilla','perspCfg'];
 const v3dEstadoUtil=()=>{v3dFigSync();const s=S.v3d,o={};V3_GUARDA.forEach(k=>{if(s[k]!==undefined)o[k]=clone(s[k])});return o};
 /* El visor NO guarda solo: al cerrarlo se descarta lo que no guardaste (con «Mis poses», «Guardar esta luz como escena» o un export). Se borra lo que versiones anteriores recordaban. */
-function v3dRecuerda(){}
 function v3dPersistePronto(){}
 function v3dRestaura(){try{localStorage.removeItem('cdc.v3d')}catch{}return null}
 function v3dAplica(e,soloPose){const s=S.v3d;
