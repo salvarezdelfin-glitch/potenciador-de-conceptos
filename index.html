@@ -910,7 +910,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .lc-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}.lc-izq{position:sticky;top:8px}@media(max-width:900px){.lc-grid{grid-template-columns:1fr}.lc-izq{position:static}}
 #e3-slot{height:340px;border-radius:12px;overflow:hidden;background:#181a20;margin:8px 0;position:relative}#e3-slot canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
 .e3-sw{width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);cursor:pointer;padding:0}.e3-sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--accent)}
-.e3-zonas{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px}.e3-z{background:var(--surface);border:1px solid var(--line2);border-radius:11px;overflow:hidden;cursor:pointer;text-align:left;padding:0;color:var(--ink)}.e3-z:hover{border-color:var(--ink3)}.e3-z i{display:block;height:42px}.e3-z span{display:block;padding:5px 8px 1px;font-size:12px;font-weight:600}.e3-z small{display:block;padding:0 8px 6px;font:11px var(--mono);color:var(--ink2)}.e3-tips{padding-left:18px;margin:8px 0}.e3-tips li{margin:4px 0}
+.e3-mis{margin:8px 0}.e3-mrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}.e3-mc{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line2);border-radius:11px;padding:5px 9px 5px 5px;cursor:pointer}.e3-mc input{width:34px;height:34px;border:0;padding:0;background:none;cursor:pointer}.e3-mc span{font-size:12.5px;font-weight:600}.e3-mc small{font:11px var(--mono);color:var(--ink2)}.e3-flecha{color:var(--ink3)}.e3-zonas{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px}.e3-z{background:var(--surface);border:1px solid var(--line2);border-radius:11px;overflow:hidden;cursor:pointer;text-align:left;padding:0;color:var(--ink)}.e3-z:hover{border-color:var(--ink3)}.e3-z i{display:block;height:42px}.e3-z span{display:block;padding:5px 8px 1px;font-size:12px;font-weight:600}.e3-z small{display:block;padding:0 8px 6px;font:11px var(--mono);color:var(--ink2)}.e3-tips{padding-left:18px;margin:8px 0}.e3-tips li{margin:4px 0}
 
 .pq{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 14px;font-size:12.5px;color:var(--ink2)}.pq-f{border:1px solid;border-radius:999px;padding:1px 9px;font-weight:600;font-size:11.5px;white-space:nowrap}.pq b{color:var(--ink)}.pq .btn{margin-left:auto}
 .cm-frentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:14px}.cm-f{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px}.cm-m{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-top:4px}.cm-m b{color:var(--ink);font-family:var(--mono)}.cm-hito{padding:8px 0;border-top:1px solid var(--line)}.cm-hito:first-of-type{border-top:0}.cm-mas .ptitle{display:none}
@@ -1214,7 +1214,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk2u2vc').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvk33pad').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -10504,7 +10504,7 @@ function e3Forma(){const f=E3.forma,sph=E3.sph;for(const [k,g] of Object.entries
   if(E3.camForma!==f){E3.camForma=f;const g=E3.grp[f],al=g?.userData.alto||3,ty=formas?1.1:(f==='loomis'?1.9:al*.78);E3.ctl.target.set(0,ty,0);E3.cam.position.set(0,ty+.5,f==='loomis'?7:(formas?11:8.5));E3.ctl.update()}
   if(!formas&&!E3.grp[f]){E3.sph.visible=false;e3Modelo(f).then(g=>{if(g){e3Forma();e3Aplica()}})}}
 /* la escena de luz del constructor (luz, sombras, rebote, giro, altura, intensidad) pasa a luces reales */
-function e3Aplica(){const p=S.P[S.cur];if(!p||!E3.R)return;const E=escDe(p),pal=(p.mood.paleta||[]),hex=pal[Math.min(E3.idx,pal.length-1)]||'#8a8a8a',d=luzDir(E.ang,E.el);
+function e3Aplica(){const p=S.P[S.cur];if(!p||!E3.R)return;const E=escDe(p),pal=(p.mood.paleta||[]),hex=E3.base||pal[Math.min(E3.idx,pal.length-1)]||'#8a8a8a',d=luzDir(E.ang,E.el);e3Mis(E,hex);
   E3.mat.color.set(hex);E3.fm.color.set(E.reb||'#8a7a66').lerp(new E3.T.Color('#8a8680'),.55);E3.sc.background.set(E.amb||'#202530').multiplyScalar(.3);E3.key.color.set(E.luz);E3.key.intensity=(E.int||1)*1.15*Math.PI;E3.key.position.set(d[0]*14,d[1]*14,d[2]*14);E3.key.castShadow=d[1]>-.03;
   E3.fill.color.set(E.amb);E3.fill.intensity=.2*Math.PI;const l2=escL2(E),d2=luzDir(l2.a,l2.e);E3.l2.color.set(l2.c);E3.l2.intensity=l2.i*1.15*Math.PI;E3.l2.position.set(d2[0]*14,d2[1]*14,d2[2]*14);e3Marca(0,d,E.luz,E.int>0);e3Marca(1,d2,l2.c,l2.i>0);e3Dials(E);E3.fill.position.set(-d[0]*10,3,6);E3.hemi.color.set(E.amb);E3.hemi.groundColor.set(E.reb);E3.hemi.intensity=.5*Math.PI;e3Forma();e3Tam();e3Dirty();clearTimeout(E3.tm);E3.tm=setTimeout(()=>{E3.zonas=e3Mide(E);e3Lectura()},160)}
 function e3Tam(){const s=E3.slot;if(!s)return;const w=s.clientWidth||600,h=s.clientHeight||300;E3.R.setSize(w,h);E3.cam.aspect=w/h;E3.cam.updateProjectionMatrix()}
@@ -10541,23 +10541,37 @@ function e3Tips(z){const t=[];if(!z.luz||!z.nucleo)return t;const tl=e3Temp(z.lu
   if(z.proy&&z.suelo&&Math.abs(e3V(z.proy)-e3V(z.suelo))<.03)t.push(['to','No se ve sombra proyectada: baja la altura de la luz o sube su intensidad.']);
   return t}
 
-/* cómo afecta tu luz a cada color de la paleta (con el mismo sistema del constructor: base → luz → sombra) */
-function e3Afecta(p){const E=escDe(p),pal=(p.mood.paleta||[]).slice(0,8);if(!pal.length)return '';
-  const dh=(a,b)=>Math.round(((b-a+540)%360)-180),calidez=h=>Math.abs(((h-30+540)%360)-180);
-  const filas=pal.map(hex=>{const R=escRampa(hex,E),luz=R.find(r=>r.n==='Luz').hex,som=R.find(r=>r.n==='Núcleo de sombra').hex,[h0,s0,v0]=e3Hsv(hex),[h1,s1,v1]=e3Hsv(luz),[h2,s2,v2]=e3Hsv(som);
-    const q=(h,h0_)=>{const d=dh(h0_,h);return Math.abs(d)<4||s0<.08?'casi el mismo matiz':`${d>0?'+':''}${d}° (${calidez(h)<calidez(h0_)?'más cálido':'más frío'})`};
-    return `<div class="e3-af"><span class="e3-afc"><i style="background:${esc(hex)}"></i><i style="background:${luz}"></i><i style="background:${som}"></i></span><span><b>${esc(hex)}</b> · en la luz: matiz ${q(h1,h0)}, valor ${Math.round(v1*100)}% · en la sombra: matiz ${q(h2,h0)}, saturación ${s2>s0*1.05?'sube':s2<s0*.9?'baja':'igual'}, valor ${Math.round(v2*100)}%</span></div>`}).join('');
-  return `<h4 style="margin:12px 0 4px">Cómo afecta tu luz a cada color</h4><p class="hint" style="margin:0 0 4px">Base → en la luz → en la sombra. Así cambia cada color de tu paleta bajo esta escena.</p>${filas}`}
 function e3Lectura(){const el=$('#e3-lect');if(!el)return;const z=E3.zonas,L=E3_ZN.filter(([k])=>z[k]);
   el.innerHTML=`<div class="e3-zonas">${L.map(([k,n,d])=>`<button class="e3-z" data-e3="copy" data-hex="${z[k]}" title="${esc(d)}. Toca para copiar"><i style="background:${z[k]}"></i><span>${esc(n)}</span><small>${z[k]}</small></button>`).join('')}</div>
-   <ul class="e3-tips">${e3Tips(z).map(([k,t])=>`<li>${k==='ok'?'✓':'→'} ${esc(t)}</li>`).join('')}</ul>${S.P[S.cur]?e3Afecta(S.P[S.cur]):''}`}
+   <ul class="e3-tips">${e3Tips(z).map(([k,t])=>`<li>${k==='ok'?'✓':'→'} ${esc(t)}</li>`).join('')}</ul>`}
 const e3Sws=(pal,I)=>pal.map((h,i)=>`<button class="e3-sw ${i===I?'on':''}" data-e3="idx" data-i="${i}" style="background:${esc(h)}" aria-label="Color ${i+1}"></button>`).join('');
 function e3Sync(p){const pal=(p.mood.paleta||[]).slice(0,8),k=pal.join(',');if(E3.palKey===k)return;E3.palKey=k;const el=$('#e3-sws');if(el){E3.idx=Math.min(E3.idx,Math.max(0,pal.length-1));el.innerHTML=e3Sws(pal,E3.idx)}}
 function e3HTML(p){const pal=(p.mood.paleta||[]).slice(0,8),I=Math.min(E3.idx,Math.max(0,pal.length-1));if(!pal.length)return '';
-  return `<div class="box" id="e3-box" style="border-top:3px solid var(--c-mood)"><h3>Verlo en 3D</h3><p class="hint" style="margin:0 0 6px">Tu color sobre una forma real con la misma luz de arriba: así ves la luz, el medio tono, la sombra y el rebote <b>antes de pintar</b>. Gira la forma con el mouse.</p>
+  return `<div class="box" id="e3-box" style="border-top:3px solid var(--c-mood)"><h3>Verlo en 3D</h3><p class="hint" style="margin:0 0 6px">Elige tu color base y el de la luz: te propongo la sombra y el rebote. Abajo ves qué colores salen de verdad (luz, medio tono, sombra, rebote). Gira la forma con el mouse.</p>
    <div class="chips"><span class="lbl">Forma</span>${E3_FORMAS.map(([k,n])=>`<button class="ch xs ${E3.forma===k?'on':''}" data-e3="forma" data-v="${k}">${n}</button>`).join('')}<span class="lbl" style="margin-left:8px">Color</span><span id="e3-sws" style="display:inline-flex;gap:4px">${e3Sws(pal,I)}</span></div>
-   <div id="e3-slot"></div><div class="e3-dials"><div><canvas id="e3-d1" width="130" height="130" aria-label="De dónde viene la luz principal"></canvas><span>Luz principal</span></div><div><canvas id="e3-d2" width="130" height="130" aria-label="De dónde viene la segunda luz"></canvas><span>Luz 2</span></div><div class="e3-dtxt"><b>De dónde viene la luz</b><p class="hint" style="margin:2px 0 6px">Arrastra el punto de cada círculo (visto desde arriba; el centro es luz desde arriba y el borde, luz rasante). En el 3D verás una esfera del color de cada luz y su rayo.</p><label class="chk"><input type="checkbox" id="e3-mostrar" ${E3.mostrar!==false?'checked':''}> Mostrar las luces en el 3D</label></div></div><div id="e3-lect"><p class="muted">Midiendo…</p></div>
+   ${e3MisHTML(p)}<div id="e3-slot"></div><div class="e3-dials"><div><canvas id="e3-d1" width="130" height="130" aria-label="De dónde viene la luz principal"></canvas><span>Luz principal</span></div><div><canvas id="e3-d2" width="130" height="130" aria-label="De dónde viene la segunda luz"></canvas><span>Luz 2</span></div><div class="e3-dtxt"><b>De dónde viene la luz</b><p class="hint" style="margin:2px 0 6px">Arrastra el punto de cada círculo (visto desde arriba; el centro es luz desde arriba y el borde, luz rasante). En el 3D verás una esfera del color de cada luz y su rayo.</p><label class="chk"><input type="checkbox" id="e3-mostrar" ${E3.mostrar!==false?'checked':''}> Mostrar las luces en el 3D</label></div></div><div id="e3-lect"><p class="muted">Midiendo…</p></div>
    <div class="prow"><button class="btn sm" data-e3="prog" title="Abre las sesiones de color de tu programa">Practicar este color de luz y sombra en mi programa</button></div></div>`}
+
+
+/* mis colores: el color base y el de la luz los eliges tú; la app propone la sombra y el rebote (por temperatura) y tú puedes cambiarlos */
+const e3HsvHex=(h,s_,v)=>{h=((h%360)+360)%360;const f=n=>{const k=(n+h/60)%6;return v-v*s_*Math.max(0,Math.min(k,4-k,1))};return e3Hex(f(5)*255,f(3)*255,f(1)*255)};
+const e3MezclaH=(a,b,t)=>{const d=((b-a+540)%360)-180;return (a+d*t+360)%360};
+function e3Propone(base,luz){const [hb,sb,vb]=e3Hsv(base),[hl,sl]=e3Hsv(luz),tl=e3Temp(luz);
+  const hs=tl==='cálido'?250:tl==='frío'?25:e3MezclaH(hb+180,255,.5);
+  const amb=e3HsvHex(hs,Math.max(.35,Math.min(.65,.3+sb*.35)),.58);
+  const reb=e3HsvHex(e3MezclaH(hb,sl>.12?hl:35,.35),Math.max(.3,Math.min(.6,.25+sb*.3)),.55);
+  return {amb,reb}}
+function e3Sugiere(p,base){const E=escMut(p),r=e3Propone(base||'#8a8a8a',E.luz);E.amb=r.amb;E.reb=r.reb;E.k='';marcar();escDiferido(p);for(const k of ['amb','reb']){const i=document.querySelector('#esc-box [data-esc="'+k+'"]');if(i)i.value=E[k]}}
+function e3MisHTML(p){const E=escDe(p),pal=p.mood.paleta||[],b=E3.base||pal[Math.min(E3.idx,pal.length-1)]||'#8a8a8a',c=(k,n,v,t)=>`<label class="e3-mc" title="${esc(t)}"><input type="color" data-e3c="${k}" value="${esc(v)}"><span>${n}</span><small data-e3h="${k}">${esc(v)}</small></label>`;
+  return `<div class="e3-mis"><div class="e3-mrow">${c('base','Color base',b,'El color del objeto, sin luz. Cámbialo para probar otro')}${c('luz','Color de la luz',E.luz,'El color de la luz principal')}<span class="e3-flecha">→</span>${c('amb','Sombra',E.amb,'Color de las sombras: te lo propongo según la luz y el base, pero lo puedes cambiar')}${c('reb','Rebote',E.reb,'Color de la luz que rebota del suelo hacia la sombra')}</div>
+   <div class="prow" style="gap:10px;align-items:center"><label class="chk"><input type="checkbox" id="e3-auto" ${E3.auto!==false?'checked':''}> Proponer sombra y rebote solos al cambiar base o luz</label><button class="btn sm" data-e3="sugiere" title="Calcula una sombra y un rebote que acompañen a tu base y tu luz (luz cálida → sombra fría, y al revés)">Proponer ahora</button></div></div>`}
+function e3Mis(E,base){const v={base,luz:E.luz,amb:E.amb,reb:E.reb};for(const k in v){const i=document.querySelector('[data-e3c="'+k+'"]');if(i&&i!==document.activeElement&&i.value!==v[k])i.value=v[k];const h=document.querySelector('[data-e3h="'+k+'"]');if(h)h.textContent=v[k]}}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset?.e3c)return;const p=S.P[S.cur];if(!p)return;const k=t.dataset.e3c,E=escMut(p);E3.tocado=true;
+  if(k==='base')E3.base=t.value;else E[k]=t.value;E.k='';
+  if((k==='base'||k==='luz')&&E3.auto!==false)e3Sugiere(p,E3.base||(p.mood.paleta||[])[E3.idx]);
+  const i=document.querySelector('#esc-box [data-esc="'+k+'"]');if(i)i.value=E[k];
+  document.querySelectorAll('#esc-box .ch.on').forEach(b=>b.classList.remove('on'));marcar();escDiferido(p);e3Aplica()});
+document.addEventListener('change',e=>{if(e.target.id==='e3-auto'){E3.auto=e.target.checked;if(E3.auto){const p=S.P[S.cur];if(p){e3Sugiere(p,E3.base||(p.mood.paleta||[])[E3.idx]);e3Aplica()}}}});
 
 /* marcas de luz: una esfera del color de la luz, un rayo hasta el modelo y una etiqueta que sigue a la esfera */
 function e3Marca(i,d,color,on){const M=E3.marc?.[i];if(!M)return;const T=E3.T,t=E3.ctl.target,mostrar=on&&E3.mostrar!==false;M.m.visible=M.ln.visible=mostrar;M.m.material.color.set(color);M.ln.material.color.set(color);
@@ -10583,15 +10597,16 @@ function e3Observa(){if(e3Obs)return;e3Obs=new MutationObserver(()=>{clearTimeou
 new ResizeObserver(()=>{if(E3.slot?.isConnected&&E3.R){e3Tam();e3Dirty()}}).observe(document.documentElement);
 document.addEventListener('click',e=>{const t=e.target.closest?.('[data-e3]');if(!t)return;const a=t.dataset.e3;
   if(a==='forma'){E3.forma=t.dataset.v;document.querySelectorAll('[data-e3="forma"]').forEach(b=>b.classList.toggle('on',b.dataset.v===E3.forma));e3Aplica()}
-  else if(a==='idx'){E3.idx=+t.dataset.i;document.querySelectorAll('.e3-sw').forEach((b,i)=>b.classList.toggle('on',i===E3.idx));e3Aplica()}
+  else if(a==='idx'){E3.idx=+t.dataset.i;E3.base=null;if(E3.auto!==false&&E3.tocado){const p=S.P[S.cur];if(p)e3Sugiere(p,(p.mood.paleta||[])[E3.idx])}document.querySelectorAll('.e3-sw').forEach((b,i)=>b.classList.toggle('on',i===E3.idx));e3Aplica()}
+  else if(a==='sugiere'){const p=S.P[S.cur];if(p){e3Sugiere(p,E3.base||(p.mood.paleta||[])[E3.idx]);e3Aplica()}}
   else if(a==='copy'){copiarTexto(t.dataset.hex,'Copiado '+t.dataset.hex)}
   else if(a==='prog'){const R=pgRaiz();R.ruta='color';if(!R.activas.includes('color'))R.activas.push('color');pgTr('color').pin=4;S.diTab='hoy';S.vista='diario';marcarAj();render()}});
 e3Observa();
 
 function escCtlHTML(p){const E=escDe(p),sl2=(k,lab,min,max,st,v)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`,mias=new Set((p.luces||[]).map(l=>l.k)),sl=(k,lab,min,max,st)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="range" data-esc="${k}" min="${min}" max="${max}" step="${st}" value="${E[k]}"></label>`,co=(k,lab)=>`<label class="esc-r"><span class="lbl">${lab}</span><input type="color" data-esc="${k}" value="${esc(E[k])}"></label>`;
-  return `<p class="hint">Elige una de tus claves de luz o ajusta a mano: el color de la luz, el de las sombras y el rebote.</p>
+  return `<p class="hint">Elige una clave de luz ya hecha, o mueve la luz a mano. Los colores (base, luz, sombra y rebote) se eligen arriba, junto al 3D.</p>
     <div class="chips">${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch ${E.k===k?'on':''}" data-act="esc-preset" data-k="${k}" title="${mias.has(k)?'Es una de tus claves de luz':''}">${mias.has(k)?'★ ':''}${esc(v.n)}</button>`).join('')}</div>
-    <div class="esc-ctl">${co('luz','Color de la luz')}${co('amb','Sombras / ambiente')}${co('reb','Rebote')}${sl('ang','Giro de la luz',0,360,5)}${sl('el','Altura de la luz',-40,90,5)}${sl('int','Intensidad',0.3,1.6,0.05)}</div>
+    <div class="esc-ctl">${sl('ang','Giro de la luz',0,360,5)}${sl('el','Altura de la luz',-40,90,5)}${sl('int','Intensidad',0.3,1.6,0.05)}</div>
     <p class="hint" style="margin:8px 0 2px"><b>Segunda luz</b>: relleno o contraluz de otro color (por ejemplo, luz cálida de un lado y fría del otro). Con intensidad 0 está apagada.</p>
     <div class="esc-ctl"><label class="esc-r"><span class="lbl">Color de la 2.ª luz</span><input type="color" data-esc="luz2" value="${esc(escL2(E).c)}"></label>${sl2('ang2','Giro de la 2.ª luz',0,360,5,escL2(E).a)}${sl2('el2','Altura de la 2.ª luz',-40,90,5,escL2(E).e)}${sl2('int2','Intensidad de la 2.ª luz',0,1.5,0.05,escL2(E).i)}</div>`}
 function escResHTML(p){return `<div id="esc-rev">${escRevHTML(p)}</div>
