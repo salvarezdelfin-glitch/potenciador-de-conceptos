@@ -22,5 +22,9 @@
   const c2=document.createElement('canvas');c2.width=900;c2.height=450;const h=c2.getContext('2d');h.fillStyle='#fff';h.fillRect(0,0,900,450);h.fillStyle='#bbc';h.fillRect(0,150,900,110);h.fillStyle='#223';h.fillRect(0,260,900,190);h.fillStyle='#99a';h.fillRect(0,0,900,150);h.fillStyle='#dde';h.beginPath();h.arc(300,110,50,0,7);h.fill();h.fillStyle='#556';h.fillRect(560,150,200,150);
   const bm2=await createImageBitmap(c2);S.es=Object.assign(esPreparar(bm2,.5),{orig:bm2,crops:[],foco:null});const k=esCrop(.02,.02,.96,.96);S.es.crops=[k];await esAnaliza(k);
   chk('escena → key',esCrit(k).tipo==='key',esCrit(k).tipo);
+  /* personaje de pie: sin consejos de animal de perfil, con formas por tramo */
+  const c3=document.createElement('canvas');c3.width=300;c3.height=600;const q=c3.getContext('2d');q.fillStyle='#fff';q.fillRect(0,0,300,600);q.fillStyle='#223';q.beginPath();q.ellipse(150,60,40,50,0,0,7);q.fill();q.beginPath();q.moveTo(70,130);q.lineTo(230,130);q.lineTo(190,330);q.lineTo(110,330);q.fill();q.fillRect(115,330,70,240);
+  const bm3=await createImageBitmap(c3);S.es=Object.assign(esPreparar(bm3,.5),{orig:bm3,crops:[],foco:null});const f=esCrop(.05,.02,.9,.96);S.es.crops=[f];await esAnaliza(f);
+  const ids=(f.A.ops||[]).map(o=>o.id);chk('figura de pie: sin consejos de animal',f.A.cerrada&&!ids.some(i=>['pecho','cola','boca','patas','orejas'].includes(i)),ids.join(','));chk('figura de pie: bloquea en 3 tramos',ids.includes('prims')&&(f.A.primsFig||[]).filter(Boolean).length===3,JSON.stringify((f.A.primsFig||[]).map(x=>x&&x.t)));
   return out;
 })()
