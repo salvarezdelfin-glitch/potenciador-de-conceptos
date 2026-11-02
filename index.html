@@ -1234,7 +1234,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvyqznh4').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvyrdyju').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3594,6 +3594,8 @@ const COT_MARCA=[
  ['inv','Investigación y estrategia de marca','Benchmark, concepto, moodboard y dirección visual',10,0,1,'Brand research & strategy'],
  ['logo','Logotipo','3 propuestas y 1 final desarrollada, en versión horizontal y vertical',18,0,1,'Logo design'],
  ['iso','Isotipo / símbolo','Símbolo que funciona solo, para avatares, sellos y bordados',8,0,1,'Brandmark / symbol'],
+ ['let','Lettering personalizado (logotipo dibujado a mano)','Letras dibujadas a medida, con ornamentos y remates propios, en vez de una fuente existente',10,0,0,'Custom hand-drawn lettering'],
+ ['ilu','Emblema ilustrado (isotipo con ilustración)','Ilustración detallada del símbolo principal, dibujo a mano y vectorización limpia',24,0,0,'Illustrated emblem (detailed brandmark)'],
  ['var','Variantes y reducciones','Positivo, negativo, una tinta, tamaño mínimo y área de respeto',5,0,1,'Logo variations & minimum sizes'],
  ['col','Paleta de color con códigos','HEX, RGB, CMYK y Pantone, con reglas de uso y contraste',6,0,1,'Color palette (HEX, RGB, CMYK, Pantone)'],
  ['tipo','Sistema tipográfico','Fuente principal y secundaria, jerarquías y reglas de uso',5,0,1,'Typography system'],
