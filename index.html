@@ -936,7 +936,10 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .pg-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 14px;flex-wrap:wrap}.pg-tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--ink2);padding:9px 14px;cursor:pointer;font-weight:500}.pg-tab:hover{color:var(--ink)}.pg-tab.on{color:var(--ink);border-bottom-color:var(--accent)}
 .pg-dots{display:flex;gap:4px}.pg-dot{width:12px;height:12px;border-radius:4px;background:var(--surface3)}.pg-dot.on{background:var(--accent)}
 .pg-sesion{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}.pg-ses-h h2{margin:4px 0 6px;font-family:var(--display);font-size:clamp(22px,3.2vw,32px);text-transform:uppercase;letter-spacing:.01em}.pg-aviso{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--accent-soft)}
-.pg-bloques{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px;align-items:start}.pg-bn{display:inline-flex;width:22px;height:22px;border-radius:7px;background:var(--surface3);color:var(--ink);font-style:normal;font-size:12px;align-items:center;justify-content:center;margin-right:7px}.pg-bl.now .pg-bn{background:var(--accent);color:var(--accent-ink)}.pg-tarea{font-size:14px}.pg-tema{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding:10px 14px;border-radius:12px;border:1px solid var(--accent);background:linear-gradient(180deg,var(--accent-soft),var(--surface))}.pg-tema b{display:block;font-size:17px;margin-top:2px}.pg-hoy{margin:6px 0 0!important;padding:6px 8px;border-radius:8px;background:var(--accent-soft);font-size:13.5px}.fm-sil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.pg-bloques{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px;align-items:start}.pg-bn{display:inline-flex;width:22px;height:22px;border-radius:7px;background:var(--surface3);color:var(--ink);font-style:normal;font-size:12px;align-items:center;justify-content:center;margin-right:7px}.pg-bl.now .pg-bn{background:var(--accent);color:var(--accent-ink)}.pg-tarea{font-size:14px}.pg-tema{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding:10px 14px;border-radius:12px;border:1px solid var(--accent);background:linear-gradient(180deg,var(--accent-soft),var(--surface))}.pg-tema b{display:block;font-size:17px;margin-top:2px}.pg-hoy{margin:6px 0 0!important;padding:6px 8px;border-radius:8px;background:var(--accent-soft);font-size:13.5px}.cot-mk{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding:2px}
+.cot-mk-i{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--line2,#2a2f3a);padding-top:6px}
+.cot-mkq{width:52px;text-align:center;flex:none}
+.fm-sil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
 .fm-sil{position:relative;padding:0;border:2px solid var(--line2);border-radius:12px;background:#f1efe9;cursor:pointer;overflow:hidden;line-height:0;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
 .fm-sil small{display:block;padding:5px 6px 6px;font:600 10.5px/1.25 system-ui,sans-serif;color:#4a4a52;background:#e7e4db;text-align:center;border-top:1px solid #d6d2c6}
 .fm-sil canvas{width:100%;height:auto;display:block}
@@ -1231,7 +1234,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvr93txq').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mvyqznh4').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3573,7 +3576,7 @@ const COT_TIPOS=[['Personaje (diseño completo)',10,18,30,'concept'],['Criatura'
 const COT_CLIENTE=[['Personal / indie',.8],['Estudio de videojuegos o animación',1],['Editorial',.9],['Publicidad / marca',1.4]];
 const COT_USO=[['Portafolio / uso personal',1],['Comercial limitado',1.25],['Comercial amplio',1.6],['Exclusivo / cesión total',2]];
 const COT_URG=[['Normal',1],['Rápida',1.3],['Urgente',1.6]];
-const DISC={concept:'Concept art',ilustracion:'Ilustración',animacion:'Animación 2D'};
+const DISC={concept:'Concept art',ilustracion:'Ilustración',animacion:'Animación 2D',marca:'Diseño de marca'};
 // Estudio de mercado · septiembre 2026. Tarifas freelance por hora. d = dato publicado, e = estimado a partir de sueldos (+50–100% por ser freelance).
 const MERCADOS={
   mx:{n:'México',mon:'MXN',nota:'Clientes locales. Concept artist empleado ≈ $15,000 MXN/mes; ilustrador ≈ $9,400–12,000 MXN/mes; diseño gráfico freelance $200–600 MXN/h.',
@@ -3585,6 +3588,23 @@ const MERCADOS={
   eu:{n:'Europa',mon:'EUR',nota:'España, ilustración freelance: junior 15–25 €, media 25–45 €, senior 45–80 € (concept art para entretenimiento puede pasar de 80 €). Alemania, concept artist empleado ≈ 24.90 €/h. Reino Unido, ilustrador freelance promedio ≈ £38/h.',
     t:{concept:[[20,35],[35,60],[60,100],'e'],ilustracion:[[15,25],[25,45],[45,80],'d'],animacion:[[18,32],[32,55],[55,95],'e']}}
 };
+MERCADOS.mx.t.marca=[[200,350],[350,600],[600,1000],'e'];MERCADOS.us.t.marca=[[25,45],[45,80],[80,150],'e'];MERCADOS.ca.t.marca=[[28,48],[48,85],[85,140],'e'];MERCADOS.eu.t.marca=[[20,35],[35,60],[60,100],'e'];
+/* identidad de marca: [id, nombre, qué incluye, horas, contable, cantidad por defecto, nombre en inglés] */
+const COT_MARCA=[
+ ['inv','Investigación y estrategia de marca','Benchmark, concepto, moodboard y dirección visual',10,0,1,'Brand research & strategy'],
+ ['logo','Logotipo','3 propuestas y 1 final desarrollada, en versión horizontal y vertical',18,0,1,'Logo design'],
+ ['iso','Isotipo / símbolo','Símbolo que funciona solo, para avatares, sellos y bordados',8,0,1,'Brandmark / symbol'],
+ ['var','Variantes y reducciones','Positivo, negativo, una tinta, tamaño mínimo y área de respeto',5,0,1,'Logo variations & minimum sizes'],
+ ['col','Paleta de color con códigos','HEX, RGB, CMYK y Pantone, con reglas de uso y contraste',6,0,1,'Color palette (HEX, RGB, CMYK, Pantone)'],
+ ['tipo','Sistema tipográfico','Fuente principal y secundaria, jerarquías y reglas de uso',5,0,1,'Typography system'],
+ ['graf','Patrones y elementos gráficos de apoyo','Texturas, formas y recursos que extienden la marca',8,0,0,'Patterns & supporting graphics'],
+ ['icon','Iconografía (set de 6)','Íconos con el mismo estilo de la marca',6,1,0,'Icon set (6)'],
+ ['pap','Papelería básica','Tarjeta, hoja membretada y sobre',8,0,0,'Basic stationery'],
+ ['rrss','Plantillas para redes sociales (set de 6)','Posts, historias y portada',8,1,0,'Social media templates (6)'],
+ ['apl','Aplicaciones y mockups','Empaque, uniforme, señalética… cada aplicación',3,1,0,'Applications & mockups'],
+ ['man','Manual de identidad (PDF)','La guía para cualquiera que diseñe algo de la marca: construcción, usos correctos e incorrectos, colores, tipografía y aplicaciones',16,0,1,'Brand guidelines (PDF)'],
+ ['arch','Entrega de archivos organizados','AI, SVG, PDF, PNG (transparente y con fondo) y fuentes, en carpetas',3,0,1,'Organized final files']];
+const cotMkQ=(d,id)=>{const v=d.mk&&d.mk[id];return v==null?COT_MARCA.find(x=>x[0]===id)[5]:+v};
 const FUENTES=[['ZipRecruiter · Freelance Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Freelance-Concept-Artist-Salary'],['ZipRecruiter · Junior Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Junior-Concept-Artist-Salary'],['Glassdoor · Freelance Concept Artist','https://www.glassdoor.com/Salaries/freelance-concept-artist-salary-SRCH_KO0,24.htm'],['goLance · Illustrator hourly rates 2026','https://golance.com/hiring/best-freelance-illustrators-hourly-rate'],['Twine · 2D animator hourly rates','https://www.twine.net/blog/2d-animator-hourly-rates/'],['Freel · Illustrator cost in Canada 2026','https://freel.ca/cost/how-much-does-it-cost-to-hire-illustrator'],['Tarifa Autónomo · Ilustrador en España 2026','https://tarifaautonomo.com/blog/tarifa-hora-ilustrador-espana'],['Glassdoor México · Concept Artist','https://www.glassdoor.com.mx/Sueldo/concept-artist-sueldo-SRCH_KO0,14.htm'],['Data México · Dibujantes e ilustradores','https://www.economia.gob.mx/datamexico/es/profile/occupation/dibujantes-y-disenadores-artisticos-ilustradores-y-grabadores'],['RappiCard · Cómo cobrar como freelancer','https://rappicard.mx/2025/03/30/como-cobrar-como-freelancer/'],['ArtBlast · Concept artist salary guide','https://artblast.co/concept-artist-salary-guide/'],['Graphic Artists Guild Handbook (17ª ed.)','https://graphicartistsguild.org/the-graphic-artists-guild-handbook-pricing-ethical-guidelines/']];
 function cotBase(){const a=S.ajustes.cot||{};return {tarifa:+a.tarifa||0,tc:{USD:+a.tc||18.5,CAD:+a.tcCad||13.5,EUR:+a.tcEur||21.5,MXN:1},nombre:a.nombre||'Sebastián Álvarez',contacto:a.contacto||'salvarezdelfin@gmail.com',t:a.t||{}}}
 // tu tarifa por mercado y disciplina; si no la has fijado, el punto medio del rango junior
@@ -3593,11 +3613,14 @@ function cotDraft(){const d=S.cot=S.cot||{cliente:'',proyecto:'',tipo:2,compl:1,
 function dinero(n,mon){n=Math.round(n);return mon==='EUR'?n.toLocaleString('es-ES')+' €':(mon==='USD'?'US$':mon==='CAD'?'CA$':'$')+n.toLocaleString('es-MX')+(mon==='MXN'?' MXN':'')}
 const mxn=n=>dinero(n,'MXN');
 function cotCalc(d){
-  const b=cotBase(),m=MERCADOS[d.mercado]?d.mercado:'mx',mon=MERCADOS[m].mon,t=COT_TIPOS[d.tipo]||COT_TIPOS[0],disc=t[4],tarifa=tarifaDe(m,disc);
-  const horasU=t[1+(+d.compl)]+(+d.extraHoras||0),cant=Math.max(1,+d.cant||1),desc=Math.min(.2,(cant-1)*.05),horas=horasU*cant*(1-desc);
+  const b=cotBase(),m=MERCADOS[d.mercado]?d.mercado:'mx',mon=MERCADOS[m].mon,t=COT_TIPOS[d.tipo]||COT_TIPOS[0],disc=d.modo==='marca'?'marca':t[4],tarifa=tarifaDe(m,disc);
+  let horasU,cant,desc=0,horas,lin=null;
+  if(d.modo==='marca'){const fc=[.85,1,1.3][+d.compl]||1;lin=COT_MARCA.map(x=>({id:x[0],n:x[1],en:x[6],desc:x[2],q:cotMkQ(d,x[0]),h:x[3]*cotMkQ(d,x[0])*fc})).filter(x=>x.q>0);cant=1;horasU=lin.reduce((a,x)=>a+x.h,0)+(+d.extraHoras||0);horas=horasU}
+  else{horasU=t[1+(+d.compl)]+(+d.extraHoras||0);cant=Math.max(1,+d.cant||1);desc=Math.min(.2,(cant-1)*.05);horas=horasU*cant*(1-desc)}
   const revExtra=Math.max(0,(+d.rev||0)-2)*.1,mult=COT_CLIENTE[d.cliTipo][1]*COT_USO[d.uso][1]*COT_URG[d.urg][1]*(1+revExtra);
   const red=mon==='MXN'?50:5,base=horas*tarifa,total=Math.round(base*mult/red)*red;
-  return {m,mon,disc,tarifa,horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/red)*red,enMxn:Math.round(total*b.tc[mon]),usd:Math.round(total*b.tc[mon]/b.tc.USD),anticipo:Math.round(total/2),desc};
+  let lineas=null;if(lin&&lin.length){const H=lin.reduce((a,x)=>a+x.h,0)||1;let acum=0;lineas=lin.map((x,i)=>{const imp=i===lin.length-1?total-acum:Math.round(total*x.h/H/red)*red;acum+=imp;return {...x,importe:imp}})}
+  return {m,mon,disc,tarifa,horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/red)*red,enMxn:Math.round(total*b.tc[mon]),usd:Math.round(total*b.tc[mon]/b.tc.USD),anticipo:Math.round(total/2),desc,lineas};
 }
 /* Trabajos: une Cotizaciones + Cobros por folio (o por cliente+proyecto si el cobro se creo a mano) en una sola tira de estado por cliente, sin inventar una base de datos nueva */
 function vTrabajos(){
@@ -3675,17 +3698,19 @@ function vTarifas(){
   <div class="box"><h3>Fuentes</h3><ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7">${FUENTES.map(([n,u])=>`<li><a href="${u}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(n)}</a></li>`).join('')}</ul>
     <p class="hint" style="margin:6px 0 0">Los sueldos y tarifas cambian: pídele a Claude "actualiza el estudio de mercado" cada año.</p></div>`}
 function vCotizar(){
-  const d=cotDraft(),b=cotBase(),c=cotCalc(d),hist=S.cotHist;
+  const d=cotDraft(),b=cotBase(),c=cotCalc(d),hist=S.cotHist,marca=d.modo==='marca';
   const sel=(k,arr,lab)=>`<div class="field"><label for="ct-${k}">${lab}</label><select id="ct-${k}" data-cot="${k}">${arr.map((o,i)=>`<option value="${i}" ${+d[k]===i?'selected':''}>${esc(Array.isArray(o)?o[0]:o)}</option>`).join('')}</select></div>`;
   const inp=(k,lab,type='text',ph='')=>`<div class="field"><label for="ct-${k}">${lab}</label><input type="text" inputmode="${type==='number'?'decimal':'text'}" id="ct-${k}" data-cot="${k}" value="${esc(d[k])}" placeholder="${ph}"></div>`;
   return `
   <p class="intro">Horas por complejidad × tu tarifa de ese mercado y disciplina, ajustado por cliente, uso o licencia, urgencia y revisiones. Tus tarifas se definen en <a href="#" data-act="cot-tab" data-t="tarifas" style="color:var(--accent)">¿Cuánto cobrar?</a>. Tú decides el precio final.</p>
   <div class="grid2">
     <div class="box"><h3>El encargo</h3>
+      <div class="prow" style="margin-bottom:8px"><button class="btn sm${marca?'':' pri'}" data-act="cot-modo" data-m="pieza">Una pieza o ilustración</button><button class="btn sm${marca?' pri':''}" data-act="cot-modo" data-m="marca">Identidad de marca (paquete)</button></div>
       <div class="field"><label for="ct-mercado">Mercado del cliente</label><select id="ct-mercado" data-cot="mercado">${Object.entries(MERCADOS).map(([k,v])=>`<option value="${k}" ${d.mercado===k?'selected':''}>${v.n} (${v.mon})</option>`).join('')}</select></div>
       <div class="grid2" style="gap:10px">${inp('cliente','Cliente','text','Nombre o estudio')}${inp('proyecto','Proyecto','text','Ej. 3 criaturas para juego indie')}</div>
-      <div class="grid2" style="gap:10px"><div class="field"><label for="ct-tipo">Tipo de pieza</label><select id="ct-tipo" data-cot="tipo">${Object.entries(DISC).map(([dk,dn])=>`<optgroup label="${dn}">${COT_TIPOS.map((o,i)=>o[4]===dk?`<option value="${i}" ${+d.tipo===i?'selected':''}>${esc(o[0])}</option>`:'').join('')}</optgroup>`).join('')}</select></div>${sel('compl',['Simple','Media','Alta'],'Complejidad')}</div>
-      <div class="grid2" style="gap:10px">${inp('cant','Cantidad (piezas o bloques)','number')}${inp('rev','Rondas de revisión incluidas','number')}</div>
+      ${marca?cotMarcaHTML(d)+`<div class="grid2" style="gap:10px">${sel('compl',['Simple','Media','Alta'],'Complejidad del proyecto')}${inp('rev','Rondas de revisión incluidas','number')}</div>`:''}
+      ${marca?'':`<div class="grid2" style="gap:10px"><div class="field"><label for="ct-tipo">Tipo de pieza</label><select id="ct-tipo" data-cot="tipo">${Object.entries(DISC).map(([dk,dn])=>`<optgroup label="${dn}">${COT_TIPOS.map((o,i)=>o[4]===dk?`<option value="${i}" ${+d.tipo===i?'selected':''}>${esc(o[0])}</option>`:'').join('')}</optgroup>`).join('')}</select></div>${sel('compl',['Simple','Media','Alta'],'Complejidad')}</div>
+      <div class="grid2" style="gap:10px">${inp('cant','Cantidad (piezas o bloques)','number')}${inp('rev','Rondas de revisión incluidas','number')}</div>`}
       <div class="grid2" style="gap:10px">${sel('cliTipo',COT_CLIENTE,'Tipo de cliente')}${sel('uso',COT_USO,'Uso / licencia')}</div>
       <div class="grid2" style="gap:10px">${sel('urg',COT_URG,'Urgencia')}${inp('entrega','Fecha de entrega','text','Ej. 15 de octubre')}</div>
       <div class="grid2" style="gap:10px">${inp('extraHoras','Horas extra por pieza (opcional)','number')}<div class="field"><label for="ct-notas">Notas para el cliente</label><input type="text" id="ct-notas" data-cot="notas" value="${esc(d.notas)}" placeholder="Incluye archivos PSD, etc."></div></div>
@@ -3698,6 +3723,7 @@ function vCotizar(){
   <div class="box"><h3>Historial de cotizaciones</h3>${!hist?'<div><button class="btn" data-act="cot-hist">Ver historial</button></div>':hist.cargando?'<p class="muted">Cargando…</p>':hist.lista.length?`<div class="tbl"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Proyecto</th><th style="text-align:right">Total</th><th>Estado</th><th></th></tr></thead><tbody>${hist.lista.map(q=>`<tr><td>${esc(q.folio)}</td><td>${fecha(q.ts)}</td><td>${esc(q.cliente)}</td><td>${esc(q.proyecto)}</td><td class="num">${dinero(q.total,q.mon||'MXN')}</td>
     <td><select id="cq-${esc(q.folio)}" data-cotestado="${esc(q.folio)}">${['Enviada','Aceptada','Rechazada','Pagada'].map(e=>`<option ${q.estado===e?'selected':''}>${e}</option>`).join('')}</select></td>
     <td><button class="btn sm" data-act="cot-abrir" data-f="${esc(q.folio)}">Abrir</button><button class="btn sm" data-act="cot-contrato" data-f="${esc(q.folio)}" title="Generar contrato">${q.contrato?'✓ Contrato':'Contrato'}</button><button class="btn sm" data-act="cot-cobro" data-f="${esc(q.folio)}" title="Crear cobro">Cobro</button><button class="btn sm ghost danger" data-act="cot-del" data-f="${esc(q.folio)}">${S.confirmCot===q.folio?'¿Borrar?':'✕'}</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no guardas cotizaciones.</p>'}</div>`}
+function cotMarcaHTML(d){return `<div class="field"><label>Qué incluye el paquete (marca lo que entregas)</label><div class="cot-mk">${COT_MARCA.map(x=>{const q=cotMkQ(d,x[0]);return `<div class="cot-mk-i"><label class="chk" style="flex:1;align-items:flex-start"><input type="checkbox" data-cotmk="${x[0]}" ${q>0?'checked':''}><span><b>${esc(x[1])}</b> <span class="muted">· ~${x[3]} h${x[4]?' c/u':''}</span><br><small class="muted">${esc(x[2])}</small></span></label>${x[4]&&q>0?`<input type="text" inputmode="numeric" class="cot-mkq" data-cotmkq="${x[0]}" value="${q}" aria-label="Cantidad de ${esc(x[1])}">`:''}</div>`}).join('')}</div></div>`}
 function cotResHTML(d,c,b){
   const r=MERCADOS[c.m].t[c.disc][0];
   return `<span class="lbl">Precio recomendado · ${MERCADOS[c.m].n}</span><b class="cotbig">${dinero(c.total,c.mon)}</b>
@@ -3705,21 +3731,23 @@ function cotResHTML(d,c,b){
     <div class="desg"><span>Tu tarifa · ${DISC[c.disc]}</span><b>${dinero(c.tarifa,c.mon)}/h</b>
       <span>Rango junior del mercado</span><b>${dinero(r[0],c.mon)}–${dinero(r[1],c.mon)}</b>
       <span>Horas estimadas</span><b>${c.horas} h${c.desc?` (−${Math.round(c.desc*100)}% por volumen)`:''}</b>
+      ${c.lineas?`<span>Entregables</span><b>${c.lineas.length}</b>`:''}
       <span>Base</span><b>${dinero(c.base,c.mon)}</b>
       <span>Ajuste cliente · uso · urgencia · revisiones</span><b>×${c.mult.toFixed(2)}</b>
       <span>Anticipo 50%</span><b>${dinero(c.anticipo,c.mon)}</b></div>
     <div class="prow"><button class="btn pri" data-act="cot-guardar">Guardar y descargar</button><button class="btn" data-act="cot-copiar">Copiar texto</button></div>`}
 function cotTexto(q){
-  const t=COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN';
+  const marca=q.d.modo==='marca'&&q.lineas,t=marca?'Identidad de marca (paquete)':COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN';
+  if(marca)return `COTIZACIÓN ${q.folio} · ${fecha(q.ts)}\n${q.nombre} · ${q.contacto}\n\nCliente: ${q.d.cliente||'—'}\nProyecto: ${q.d.proyecto||'—'}\n\nPAQUETE DE IDENTIDAD DE MARCA\n${q.lineas.map(l=>'- '+(l.q>1?l.q+' × ':'')+l.n+': '+dinero(l.importe,mon)).join('\n')}\n\nUso: ${COT_USO[q.d.uso][0]}\nRevisiones incluidas: ${q.d.rev}\nEntrega: ${q.d.entrega||'por definir'}\n\nTOTAL: ${dinero(q.total,mon)}\nAnticipo 50% para iniciar: ${dinero(q.total/2,mon)}\n\nCondiciones:\n- Se inicia con el 50% de anticipo; el resto contra entrega final.\n- Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.\n- Los derechos de uso aplican según lo indicado una vez liquidado el pago total.\n- Se entregan los archivos finales y el manual de identidad en PDF.\n- Vigencia de la cotización: 15 días.${q.d.notas?'\n\nNotas: '+q.d.notas:''}`;
   return `COTIZACIÓN ${q.folio} · ${fecha(q.ts)}\n${q.nombre} · ${q.contacto}\n\nCliente: ${q.d.cliente||'—'}\nProyecto: ${q.d.proyecto||'—'}\n\n${q.d.cant} × ${t} (complejidad ${['simple','media','alta'][q.d.compl]})\nUso: ${COT_USO[q.d.uso][0]}\nRevisiones incluidas: ${q.d.rev}\nEntrega: ${q.d.entrega||'por definir'}\n\nTOTAL: ${dinero(q.total,mon)}\nAnticipo 50% para iniciar: ${dinero(q.total/2,mon)}\n\nCondiciones:\n- Se inicia con el 50% de anticipo; el resto contra entrega final.\n- Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.\n- Los derechos de uso aplican según lo indicado una vez liquidado el pago total.\n- El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.\n- Vigencia de la cotización: 15 días.${q.d.notas?'\n\nNotas: '+q.d.notas:''}`}
 function cotHTMLDoc(q){
-  const e=s=>esc(s),t=COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN',ing=mon!=='MXN';
+  const e=s=>esc(s),marca=q.d.modo==='marca'&&q.lineas,t=marca?'':COT_TIPOS[q.d.tipo][0],mon=q.mon||'MXN',ing=mon!=='MXN';
   const L=ing?{h:'QUOTE',cli:'Client',pro:'Project',con:'Item',can:'Qty',imp:'Amount',tot:'Total',uso:'Usage',rev:'revision round(s)',ent:'delivery',cond:'Terms',c:[`50% deposit (${dinero(q.total/2,mon)}) to start; balance on final delivery.`,`Includes ${q.d.rev} revision round(s); additional rounds are quoted separately.`,'Usage rights as stated, granted upon full payment.','The artist may show the work in their portfolio once the project is public, unless under NDA.','Quote valid for 15 days.'],cx:['simple','medium','high'][q.d.compl],nt:'Notes'}
     :{h:'COTIZACIÓN',cli:'Cliente',pro:'Proyecto',con:'Concepto',can:'Cantidad',imp:'Importe',tot:'Total',uso:'Uso',rev:'ronda(s) de revisión',ent:'entrega',cond:'Condiciones',c:[`Se inicia con el 50% de anticipo (${dinero(q.total/2,mon)}); el resto contra entrega final.`,`Incluye ${q.d.rev} ronda(s) de revisión; cada ronda adicional se cotiza aparte.`,'Los derechos de uso aplican según lo indicado una vez liquidado el pago total.','El artista puede mostrar el trabajo en su portafolio al publicarse el proyecto, salvo acuerdo de confidencialidad.','Vigencia: 15 días.'],cx:['simple','media','alta'][q.d.compl],nt:'Notas'};
   return `<!doctype html><html lang="${ing?'en':'es'}"><head><meta charset="utf-8"><title>${L.h} ${e(q.folio)}</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#15171b}h1{font-size:34px;letter-spacing:.02em;margin:0}.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid #ff6a3d;padding-bottom:14px}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}.tot{font-size:26px;font-weight:700}small{color:#666}ul{padding-left:18px;line-height:1.6}</style></head><body>
   <div class="top"><div><h1>${L.h}</h1><small>${e(q.folio)} · ${fecha(q.ts)}</small></div><div style="text-align:right"><b>${e(q.nombre)}</b><br><small>${e(q.contacto)}</small></div></div>
   <p><b>${L.cli}:</b> ${e(q.d.cliente||'—')}<br><b>${L.pro}:</b> ${e(q.d.proyecto||'—')}</p>
-  <table><tr><th>${L.con}</th><th>${L.can}</th><th style="text-align:right">${L.imp}</th></tr><tr><td>${e(t)} · ${L.cx}<br><small>${L.uso}: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ${L.rev} · ${L.ent} ${e(q.d.entrega||'—')}</small></td><td>${q.d.cant}</td><td style="text-align:right">${dinero(q.total,mon)}</td></tr>
+  <table><tr><th>${L.con}</th><th>${L.can}</th><th style="text-align:right">${L.imp}</th></tr>${marca?q.lineas.map(l=>`<tr><td>${e(ing?l.en:l.n)}<br><small>${e(l.desc)}</small></td><td>${l.q}</td><td style="text-align:right">${dinero(l.importe,mon)}</td></tr>`).join('')+`<tr><td colspan="3"><small>${L.uso}: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ${L.rev} · ${L.ent} ${e(q.d.entrega||'—')}</small></td></tr>`:`<tr><td>${e(t)} · ${L.cx}<br><small>${L.uso}: ${e(COT_USO[q.d.uso][0])} · ${q.d.rev} ${L.rev} · ${L.ent} ${e(q.d.entrega||'—')}</small></td><td>${q.d.cant}</td><td style="text-align:right">${dinero(q.total,mon)}</td></tr>`}
   <tr><td colspan="2" class="tot">${L.tot}</td><td class="tot" style="text-align:right">${dinero(q.total,mon)}</td></tr></table>
   <h3>${L.cond}</h3><ul>${L.c.map(x=>`<li>${x}</li>`).join('')}</ul>
   ${q.d.notas?`<p><b>${L.nt}:</b> ${e(q.d.notas)}</p>`:''}</body></html>`}
@@ -15092,6 +15120,8 @@ document.addEventListener('input',e=>{
   if(t.dataset.msgtexto){S.msgTexto=t.value;return}
   if(t.dataset.bib){S.bib=S.bib||{};S.bib[t.dataset.bib]=t.value;const g=$('#bibgrid');if(g){g.innerHTML=bibGrid();S.assets?.hydrate?.()}return}
   if(t.id==='f-artbuscar'){const q=t.value.toLowerCase();t.closest('.box').querySelectorAll('.list li').forEach(li=>{const v=[...li.querySelectorAll('input')].map(i=>i.value).join(' ')+' '+(li.querySelector('a[title^="@"]')?.title||'');li.hidden=!!q&&!v.toLowerCase().includes(q)});return}
+  if(t.dataset.cotmk){const d=cotDraft();d.mk=d.mk||{};const it=COT_MARCA.find(x=>x[0]===t.dataset.cotmk);d.mk[it[0]]=t.checked?Math.max(1,+d.mk[it[0]]||it[5]||1):0;renderMain();return}
+  if(t.dataset.cotmkq){const d=cotDraft();d.mk=d.mk||{};d.mk[t.dataset.cotmkq]=Math.max(0,Math.min(30,Math.round(+t.value)||0));const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(d,cotCalc(d),cotBase());return}
   if(t.dataset.cot){cotDraft()[t.dataset.cot]=t.value;const r=$('#cot-res');if(r)r.innerHTML=cotResHTML(S.cot,cotCalc(S.cot),cotBase());return}
   if(t.dataset.cotestado){const q=S.cotHist?.lista?.find(x=>x.folio===t.dataset.cotestado);if(q){q.estado=t.value;S.db?.collection('cotizaciones').doc(q.folio).set(clone(q)).catch(()=>toast('No se pudo guardar'))}return}
   if(t.dataset.pf){const {x}=pfDe(t.dataset.pf);if(!x?.pf)return;x.pf[t.dataset.pk]=t.type==='checkbox'?t.checked:t.value;guardarPf(t.dataset.pf);
@@ -15587,12 +15617,13 @@ async function accion(a,el){
     case 'cal-mes':{const b=S.calMes?new Date(S.calMes):new Date();b.setDate(1);if(+ds.d===0)S.calMes=null;else{b.setMonth(b.getMonth()+(+ds.d));S.calMes=b.getTime()}renderMain();break}
     case 'ev-add':{const t=$('#ev-titulo')?.value.trim(),f=$('#ev-fecha')?.value;if(!t||!f){toast('Escribe qué y cuándo');return}lista('eventos').push({id:uid(),titulo:t,fecha:f});marcarAj();render();break}
     case 'cot-tab':S.cotTab=ds.t;renderMain();break;
+    case 'cot-modo':{const d=cotDraft();d.modo=ds.m;if(ds.m==='marca'&&!d._mk){d._mk=1;d.uso=2;d.compl=1}renderMain();break}
     case 'mkt':S.mkt=ds.m;renderMain();break;
     case 'usar-minima':setPath(S.ajustes,'cot.t.mx.concept',+ds.v);setPath(S.ajustes,'cot.t.mx.ilustracion',+ds.v);setPath(S.ajustes,'cot.t.mx.animacion',+ds.v);marcarAj();renderMain();toast('Tarifa aplicada a concept, ilustración y animación en México');break;
-    case 'cot-copiar':{const d=cotDraft(),c=cotCalc(d),b=cotBase();const txt=cotTexto({folio:'(borrador)',ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,nombre:b.nombre,contacto:b.contacto});try{await navigator.clipboard.writeText(txt);toast('Copiada')}catch{toast('No se pudo copiar')}break}
+    case 'cot-copiar':{const d=cotDraft(),c=cotCalc(d),b=cotBase();const txt=cotTexto({folio:'(borrador)',ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,nombre:b.nombre,contacto:b.contacto,lineas:c.lineas});try{await navigator.clipboard.writeText(txt);toast('Copiada')}catch{toast('No se pudo copiar')}break}
     case 'cot-guardar':{const d=clone(cotDraft()),c=cotCalc(d),b=cotBase();
       let n=1;try{const s=S.db?await S.db.collection('cotizaciones').get():{docs:[]};n=1+s.docs.reduce((m,x)=>Math.max(m,+(String(x.id).split('-')[1])||0),0)}catch{}
-      const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,mercado:c.m,tarifa:c.tarifa,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto};
+      const folio='SA-'+String(n).padStart(4,'0'),q={folio,ts:Date.now(),d,total:c.total,usd:c.usd,mon:c.mon,mercado:c.m,tarifa:c.tarifa,horas:c.horas,cliente:d.cliente,proyecto:d.proyecto,estado:'Enviada',nombre:b.nombre,contacto:b.contacto,lineas:c.lineas||null};
       try{if(S.db)await S.db.collection('cotizaciones').doc(folio).set(q)}catch{toast('No se pudo guardar en el historial')}
       S.cotHist=null;S._finCots=null;S._finCotsPide=false;await guardarArchivo(`cotizacion-${folio}.html`,cotHTMLDoc(q));renderMain();finPublicar();break}
     case 'cot-abrir':{const q=S.cotHist?.lista?.find(x=>x.folio===ds.f);if(q)await guardarArchivo(`cotizacion-${q.folio}.html`,cotHTMLDoc(q));break}
