@@ -944,7 +944,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .pg-bloques{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px;align-items:start}.pg-bn{display:inline-flex;width:22px;height:22px;border-radius:7px;background:var(--surface3);color:var(--ink);font-style:normal;font-size:12px;align-items:center;justify-content:center;margin-right:7px}.pg-bl.now .pg-bn{background:var(--accent);color:var(--accent-ink)}.pg-tarea{font-size:14px}.pg-tema{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding:10px 14px;border-radius:12px;border:1px solid var(--accent);background:linear-gradient(180deg,var(--accent-soft),var(--surface))}.pg-tema b{display:block;font-size:17px;margin-top:2px}.pg-hoy{margin:6px 0 0!important;padding:6px 8px;border-radius:8px;background:var(--accent-soft);font-size:13.5px}.cot-mk{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding:2px}
 .cot-mk-i{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--line2,#2a2f3a);padding-top:6px}
 .cot-mkq{width:52px;text-align:center;flex:none}
-.fm-sil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.fm-sil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}.fm-sil-grid.cuad{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
 .fm-sil{position:relative;padding:0;border:2px solid var(--line2);border-radius:12px;background:#f1efe9;cursor:pointer;overflow:hidden;line-height:0;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
 .fm-sil small{display:block;padding:5px 6px 6px;font:600 10.5px/1.25 system-ui,sans-serif;color:#4a4a52;background:#e7e4db;text-align:center;border-top:1px solid #d6d2c6}
 .fm-sil canvas{width:100%;height:auto;display:block}
@@ -955,6 +955,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .ah-plano-svg{width:100%;height:auto;border-radius:12px;display:block;border:1px solid var(--line2)}
 .ah-med{margin:8px 0 10px;padding:12px;border:1px solid var(--line2);border-radius:12px;background:var(--surface2)}.ah-med-g{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}.ah-med-img{width:150px;max-height:200px;object-fit:contain;border-radius:8px;background:#fff;border:1px solid var(--line2)}.ah-med-r{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line2);padding:8px 0}.ah-med-n{font:700 26px var(--display,system-ui);white-space:nowrap}
 .es-prog{margin-bottom:12px}.es-spark{display:flex;gap:5px;align-items:flex-end;height:38px;margin:8px 0 4px}.es-spark i{display:block;width:18px;border-radius:3px 3px 0 0}.es-prog-g{display:grid;gap:6px}.es-prog-f{display:grid;grid-template-columns:minmax(120px,1.3fr) 2fr 40px 56px;gap:10px;align-items:center;font-size:14px}.es-prog-f .es-bar{height:8px;background:var(--surface2);border-radius:6px;overflow:hidden;display:block}.es-prog-f .es-bar i{display:block;height:100%}.es-prog-f small{color:var(--ink3)}.es-prac{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line2);padding:8px 0}.es-prac>span{flex:1 1 260px}
+.fresc{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 14px;margin:0 0 12px;border:1px solid var(--line2);border-radius:12px;background:var(--surface);font-size:14px}.fresc>span:first-child{flex:1 1 320px}.fresc.vieja{border-color:var(--warn,#ffb703);background:rgba(255,183,3,.08)}
 .ah-mini-g{display:grid;gap:16px}.ah-ev-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;border-top:1px solid var(--line2);padding-top:10px}.ah-ev-row>span{flex:1 1 260px}
 .ah-av-f{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:10px 0;border-top:1px solid var(--line2);padding-top:10px}.ah-av-f>b{flex:0 0 170px}.ah-bars{display:flex;gap:5px;align-items:flex-end;height:38px}.ah-bars i{display:block;width:18px;background:var(--accent);border-radius:3px 3px 0 0}
 @media (min-width:1100px){.ah-mini-g{grid-template-columns:1fr 1.1fr;align-items:center}}
@@ -1265,7 +1266,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw14jdtj').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw14sjv7').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1417,7 +1418,7 @@ const AJUSTES_BASE={principios:[],referentes:[],gusto:''};
 const S={db:null,assets:null,sample:null,downloads:null,modo:'cargando',
   P:{},ajustes:clone(AJUSTES_BASE),cur:null,vista:'inicio',tab:'brief',
   dirty:false,ajDirty:false,ai:{},aiBusy:{},provo:0,confirmDel:false,destinoCapa:'concepto',
-  navModo:(()=>{try{return localStorage.getItem('cdc.navmodo')||'mejorar'}catch{return 'mejorar'}})()};
+  navModo:(()=>{try{return localStorage.getItem('cdc.navmodo2')||'simple'}catch{return 'simple'}})()};
 let saveT=null,ajT=null;
 
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
@@ -1576,9 +1577,9 @@ function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" title="${esc(PQ[v]?PQ[v][1]:'')}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
   const side=$('#side');side.classList.toggle('open',!!S.menu);
-  const modo=({crecer:'mejorar',negocio:'trabajo',perfil:'mas',crear:S.navModo==='crear'?'crear':'mejorar'}[S.navModo]||S.navModo||'mejorar');
+  const modo=({crecer:'mejorar',negocio:'trabajo',perfil:'mas',crear:S.navModo==='crear'?'crear':'mejorar'}[S.navModo]||S.navModo||'simple');
   const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
-    return `<div class="prow" style="padding:0 10px 2px;flex-wrap:wrap;gap:4px">${m('mejorar','1 Mejorar')}${m('crear','2 Crear')}${m('trabajo','3 Trabajo')}${m('dinero','4 Dinero')}${m('mas','Más')}${m('todo','Todo')}</div><p class="hint" style="padding:0 10px 6px;margin:0;font-size:11.5px">Cada paso te acerca a tu meta.</p>`})();
+    return `<div class="prow" style="padding:0 10px 2px;flex-wrap:wrap;gap:4px">${m('simple','← Simple')}${m('mejorar','1 Mejorar')}${m('crear','2 Crear')}${m('trabajo','3 Trabajo')}${m('dinero','4 Dinero')}${m('mas','Más')}${m('todo','Todo')}</div><p class="hint" style="padding:0 10px 6px;margin:0;font-size:11.5px">Cada paso te acerca a tu meta.</p>`})();
   const grupo=(t,sub,html)=>`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 0">${t}</span><span class="hint" style="padding:0 10px 4px;margin:0;font-size:11px">${sub}</span>${html}</div>`;
   const grupoMejorar=grupo('Mejorar mi técnica','Para que tu portafolio mejore',`
       ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
@@ -1615,6 +1616,18 @@ function renderSide(){
   const grupoMas=grupo('Más','Tu sistema y apoyos',`
       ${nav('metas','target','Mis metas')}
       ${nav('estilo','eye','Mi estilo')}`);
+  const grupoSimple=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Hoy</span>
+      ${nav('ahora','spark','Idea y a dibujar')}
+      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
+      ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}</div>
+    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Mi avance</span>
+      ${nav('progreso','chart','Mi progreso')}
+      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}</div>
+    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Herramientas</span>
+      <button class="pitem" data-act="ir-taller">${ICO.frame}<span class="n">Taller de diseño</span></button>
+      <button class="pitem" data-act="fnd-3d">${ICO.spark}<span class="n">Poses 3D</span></button>
+      <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Luz, referencias y más</span></button></div>
+    <div style="padding:4px 10px"><button class="btn sm ghost" data-act="navmodo" data-m="mejorar" style="width:100%">Ver todas las secciones ▾</button></div>`;
   side.innerHTML=`
     <div class="brand"><img src="icon.svg" alt="" class="brand-ic">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div style="padding:0 10px"><button class="ir-btn" data-act="ir-abre" aria-label="Ir a cualquier pantalla"><span>🔍 Ir a…</span><kbd>Ctrl K</kbd></button></div>
@@ -1622,7 +1635,7 @@ function renderSide(){
       ${nav('inicio','home','Mi camino')}
       ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
     </div>
-    ${modos}
+    ${modo==='simple'?grupoSimple:modos}
     ${modo==='mejorar'||modo==='todo'?grupoMejorar:''}
     ${modo==='crear'||modo==='todo'?grupoCrear:''}
     ${modo==='trabajo'||modo==='todo'?grupoTrabajo:''}
@@ -1635,7 +1648,7 @@ function renderSide(){
     ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
     <span class="status" id="status">${S.modo==='local'?'Guardado solo en este navegador':S.modo==='error'?'Sin conexión al almacenamiento':''}</span>`;
   const bb=$('#bottombar');if(bb){const b=(act,v,ico,n,cur)=>`<button class="bb ${act==='nuevo'?'fab':''}" data-act="${act}" ${v?`data-v="${v}"`:''} aria-current="${!!cur}">${ICO[ico]}<span>${n}</span></button>`;
-    bb.innerHTML=b('vista','inicio','home','Inicio',S.vista==='inicio'&&!S.menu)+b('menu','','folder','Proyectos',S.menu||S.vista==='proyecto')+b('nuevo','','plus','Nuevo')+b('herr','','spark','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','biblioteca','grid','Biblioteca',S.vista==='biblioteca'&&!S.menu)}
+    bb.innerHTML=b('vista','inicio','home','Hoy',S.vista==='inicio'&&!S.menu)+b('vista','ahora','spark','Dibujar',S.vista==='ahora'&&!S.menu)+b('herr','','frame','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','progreso','chart','Avance',S.vista==='progreso'&&!S.menu)+b('menu','','grid','Más',S.menu)}
   const sc=$('#scrim');if(sc)sc.className=S.menu?'scrim':'';
 }
 function listaProyectos(){
@@ -1983,6 +1996,7 @@ function vCamino(){
   const frente=(k,tit,para,body,acc)=>`<div class="cm-f" style="border-top:3px solid ${FRENTES[k][1]}"><span class="lbl" style="color:${FRENTES[k][1]}">${tit}</span><p class="muted" style="margin:2px 0 8px">${para}</p>${body}<div class="prow" style="margin-top:8px;flex-wrap:wrap">${acc}</div></div>`;
   return `
   <div class="prow" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,44px);margin:0">Mi camino</h1><span class="muted" style="font-size:13px;text-transform:capitalize">${esc(new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}))}</span></div>
+  ${frescuraAvisoHTML()}
   ${ahMiniHTML()}
   ${hoy?`<div class="box cm-hoy"><span class="lbl">Hoy · ${esc(hoy.t.split(' · ')[0])}</span><h2 class="cm-hoy-t">${esc(hoy.tit)}</h2><p style="margin:0 0 6px">${esc(hoy.txt)}</p><p class="muted" style="margin:0 0 12px"><b>Para qué:</b> ${esc(hoy.para)}</p>${pgFocoHTML()}<div class="prow" style="flex-wrap:wrap"><button class="btn pri cm-go" data-act="hoy-ir" data-min="30">▶ Empezar · 30 min</button><button class="btn" data-act="hoy-ir" data-min="10">Día pesado: solo 10 min</button><button class="btn ghost" data-act="vista" data-v="ahora">💡 Dame una idea y dibujo</button></div><p class="muted" style="margin:10px 0 0">🔥 Racha: ${racha()} ${racha()===1?'día':'días'} · esta semana ${D.ses} de ${D.ritmo} sesiones</p></div>`:`<div class="box cm-hoy ok"><span class="lbl">Hoy</span><h2 class="cm-hoy-t">Tu sesión de hoy ya está hecha ✓</h2><p class="muted" style="margin:0 0 10px">🔥 Racha: ${racha()} ${racha()===1?'día':'días'} · esta semana ${D.ses} de ${D.ritmo} sesiones. Si te quedan ganas, puedes adelantar la siguiente.</p><div class="prow"><button class="btn" data-act="hoy-ir" data-min="30">Hacer otra sesión</button></div></div>${siguientePasoHTML(paso,ult)}`}
   <div class="box cm-meta"><span class="lbl">Tu meta</span><h2 style="margin:2px 0 4px;font-family:var(--display);text-transform:uppercase">${esc(rol)}</h2><p class="muted" style="margin:0">${m.plazo?esc(m.plazo)+' · ':''}${m.enfoque?esc(m.enfoque)+' · ':''}${m.porque?'Para qué: '+esc(corto(m.porque,160)):'<button class="btn ghost sm" data-act="vista" data-v="metas">Escribe por qué quieres esto</button>'}</p>
@@ -3643,6 +3657,15 @@ const COT_MARCA=[
  ['man','Manual de identidad (PDF)','La guía para cualquiera que diseñe algo de la marca: construcción, usos correctos e incorrectos, colores, tipografía y aplicaciones',16,0,1,'Brand guidelines (PDF)'],
  ['arch','Entrega de archivos organizados','AI, SVG, PDF, PNG (transparente y con fondo) y fuentes, en carpetas',3,0,1,'Organized final files']];
 const cotMkQ=(d,id)=>{const v=d.mk&&d.mk[id];return v==null?COT_MARCA.find(x=>x[0]===id)[5]:+v};
+/* ---------- datos que envejecen: cuándo se revisaron por última vez y aviso a los 90 días ---------- */
+const FRESCURA={
+ tarifas:{n:'Tarifas freelance por mercado',base:'2026-09-30',dias:90,donde:'cot-tab',cual:'tarifas',pasos:'Compara con 2 o 3 fuentes de la lista (ZipRecruiter, Glassdoor, goLance) y ajusta los rangos del código si cambiaron más de 15 %.'},
+ ruta:{n:'Cursos, libros y canales de la ruta',base:null,dias:120,donde:'vista',cual:'ruta',pasos:'Revisa que los enlaces sigan vivos y que el curso exista; quita lo descontinuado.'}};
+function frescuraDe(k){const F=FRESCURA[k],r=(S.ajustes.frescura||{})[k],ts=r||(F.base?new Date(F.base+'T12:00:00').getTime():null);return {F,ts,dias:ts?Math.floor((Date.now()-ts)/864e5):null,propio:!!r}}
+function frescuraViejas(){return Object.keys(FRESCURA).map(k=>({k,...frescuraDe(k)})).filter(x=>x.dias==null||x.dias>=x.F.dias)}
+function frescuraHTML(k){const f=frescuraDe(k),viejo=f.dias==null||f.dias>=f.F.dias,txt=f.dias==null?'Sin fecha de revisión: no sé qué tan al día está.':f.dias<1?'Revisado hoy.':'Revisado hace '+f.dias+' día'+(f.dias===1?'':'s')+(f.propio?'':' (fecha del estudio original)')+'.';
+  return '<div class="fresc'+(viejo?' vieja':'')+'" role="status"><span>'+(viejo?'⚠ ':'✓ ')+'<b>'+esc(f.F.n)+'.</b> '+txt+(viejo?' Pueden estar desactualizados. '+esc(f.F.pasos):'')+'</span><button class="btn sm'+(viejo?' pri':'')+'" data-act="fresc-ok" data-k="'+k+'">Ya los revisé</button></div>'}
+function frescuraAvisoHTML(){const v=frescuraViejas();if(!v.length)return '';return '<div class="fresc vieja" role="status"><span>⚠ <b>Datos por revisar:</b> '+v.map(x=>esc(x.F.n)+(x.dias==null?'':' (hace '+x.dias+' días)')).join(' · ')+'.</span><span class="prow">'+v.map(x=>x.F.donde==='cot-tab'?'<button class="btn sm" data-act="cot-ir-tarifas">Ver tarifas</button>':'<button class="btn sm" data-act="vista" data-v="'+x.F.cual+'">Ver cursos</button>').join('')+'</span></div>'}
 const FUENTES=[['ZipRecruiter · Freelance Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Freelance-Concept-Artist-Salary'],['ZipRecruiter · Junior Concept Artist (EE. UU.)','https://www.ziprecruiter.com/Salaries/Junior-Concept-Artist-Salary'],['Glassdoor · Freelance Concept Artist','https://www.glassdoor.com/Salaries/freelance-concept-artist-salary-SRCH_KO0,24.htm'],['goLance · Illustrator hourly rates 2026','https://golance.com/hiring/best-freelance-illustrators-hourly-rate'],['Twine · 2D animator hourly rates','https://www.twine.net/blog/2d-animator-hourly-rates/'],['Freel · Illustrator cost in Canada 2026','https://freel.ca/cost/how-much-does-it-cost-to-hire-illustrator'],['Tarifa Autónomo · Ilustrador en España 2026','https://tarifaautonomo.com/blog/tarifa-hora-ilustrador-espana'],['Glassdoor México · Concept Artist','https://www.glassdoor.com.mx/Sueldo/concept-artist-sueldo-SRCH_KO0,14.htm'],['Data México · Dibujantes e ilustradores','https://www.economia.gob.mx/datamexico/es/profile/occupation/dibujantes-y-disenadores-artisticos-ilustradores-y-grabadores'],['RappiCard · Cómo cobrar como freelancer','https://rappicard.mx/2025/03/30/como-cobrar-como-freelancer/'],['ArtBlast · Concept artist salary guide','https://artblast.co/concept-artist-salary-guide/'],['Graphic Artists Guild Handbook (17ª ed.)','https://graphicartistsguild.org/the-graphic-artists-guild-handbook-pricing-ethical-guidelines/']];
 function cotBase(){const a=S.ajustes.cot||{};return {tarifa:+a.tarifa||0,tc:{USD:+a.tc||18.5,CAD:+a.tcCad||13.5,EUR:+a.tcEur||21.5,MXN:1},nombre:a.nombre||'Sebastián Álvarez',contacto:a.contacto||'salvarezdelfin@gmail.com',t:a.t||{}}}
 // tu tarifa por mercado y disciplina; si no la has fijado, el punto medio del rango junior
@@ -3705,6 +3728,7 @@ function vTarifas(){
   const jrMx=MERCADOS.mx.t;
   const gi=(k,lab,val,suf='')=>`<div class="field"><label for="g-${k}">${lab}</label><input type="text" inputmode="decimal" id="g-${k}" data-aj="cot.gastos.${k}" value="${esc(val)}" placeholder="${esc(val)}">${suf?`<small class="muted">${suf}</small>`:''}</div>`;
   return `
+  ${frescuraHTML('tarifas')}
   <p class="intro">Estudio de mercado de <b>septiembre 2026</b> con tarifas <b>freelance por hora</b>. Tú estás en <b>Junior</b>: empieza en el rango junior y sube cada vez que tu portafolio y tus clientes lo justifiquen. Esto es una guía para decidir, no una regla.</p>
   <div class="box"><div class="prow" style="justify-content:space-between"><h3>Tarifas de mercado</h3>
     <div class="stepper" style="padding:0">${Object.entries(MERCADOS).map(([k,v])=>`<button class="step ${k===mk?'on':''}" data-act="mkt" data-m="${k}"><span class="sn">${v.mon==='MXN'?'$':v.mon==='EUR'?'€':v.mon[0]}</span><span class="st">${v.n}</span></button>`).join('')}</div></div>
@@ -6341,6 +6365,7 @@ function vRuta(){
   const g=(t,a)=>`https://www.google.com/search?q=${encodeURIComponent(t+' '+a)}`,yt=(t,a)=>`https://www.youtube.com/results?search_query=${encodeURIComponent(t+' '+a)}`;
   return `
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Cursos y ruta de aprendizaje</h1>
+  ${frescuraHTML('ruta')}
   <p class="intro">Libros, cursos y canales de la industria para Blender, ZBrush, Procreate, Procreate Dreams, Photoshop, photobash y los fundamentos. «Mis prioridades» ordena todo por tus puntos débiles (según tus críticas). Márcalos «En curso» o «Terminado» y aparecen en tu análisis de crecimiento.</p>
   <div class="chips">${RUTA_AREAS.map(([k,n])=>`<button class="ch ${F===k?'on':''}" data-act="ruta-f" data-v="${k}">${n}</button>`).join('')}</div>
   <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div><div class="stat"><b>${enCurso}</b><span>en curso</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
@@ -8817,16 +8842,62 @@ function fmSilueta(cv,pl,gn){const g=cv.getContext('2d'),W=cv.width,H=cv.height,
     else if(q==='pua'){for(let j=0;j<3;j++){const z=s,x0=shX+z*(sw*.25+j*u*.35),y0=tY+u*(.5+j*.3),l=L*(1-j*.22);poly([[x0-u*.13,y0],[x0+u*.13,y0],[x0+z*l*.45,y0-l]])}}});
   g.restore();g.strokeStyle='#cfcabc';g.lineWidth=1;g.beginPath();g.moveTo(10,sueloY+1);g.lineTo(W-10,sueloY+1);g.stroke();
   return {f:FM,cab:Math.round(cabezas*2)/2,rasgos:ac}}
-function fmSilLeyenda(m,pl){const R={A:[],B:[],C:[]};FM_REG.forEach(k=>R[fmRol(pl,m.f[k])].push(FM_REGN[k]));const nom={A:pl.famA,B:pl.famB,C:pl.contraste},pc={A:'60',B:'30',C:'10'};return ['A','B','C'].filter(x=>R[x].length).map(x=>pc[x]+' % '+(FM_FNOM_P[nom[x]]||nom[x])+': '+R[x].join(', ')).join(' · ')}
+/* ---------- siluetas de criatura de cuatro patas (perfil, mira a la derecha) ---------- */
+const FM_REGN_C={head:'cabeza y hocico',torso:'cuerpo',arms:'patas delanteras',legs:'patas traseras',feet:'cola'};
+const esCuad=pl=>pl.tipo==='criatura'||pl.tipo==='monstruo';
+function fmSiluetaCuad(cv,pl,gn){const g=cv.getContext('2d'),W=cv.width,H=cv.height,idx=gn.idx,R=fmRng(gn.seed*977+idx*131+7),r=(a,b)=>a+(b-a)*R();
+  g.fillStyle='#f1efe9';g.fillRect(0,0,W,H);const INK='#16181d',FM=gn.f,ac=gn.ac,tam=gn.tam,T=n=>ac.includes(n)?tam[ac.indexOf(n)%3]:0,suelo=H*.88,cx=W*.47;g.fillStyle=INK;g.strokeStyle=INK;g.lineJoin='round';g.lineCap='round';
+  const RO=k=>FM_ESC[fmRol(pl,FM[k])],sc=(k,p)=>1+(RO(k)-1)*p;
+  const u=W/13.2,alto=u*({alto:2.6,delgado:1.9,compacto:2.2,ancho:2.5}[pl.cuerpo]||2.3)*sc('torso',.55)*r(.92,1.1),largo=u*({alto:4.6,delgado:5.2,compacto:3.9,ancho:4.7}[pl.cuerpo]||4.5)*r(.94,1.08),
+    gP=u*({gruesas:.75,finas:.32,largas:.42,cortas:.64,desiguales:.5}[pl.ext]||.46),lP=({largas:1.25,cortas:.7,gruesas:.92,finas:1.12,desiguales:1}[pl.ext]||1)*r(.94,1.06),
+    pe=idx%4===3?({arriba:'abajo',abajo:'arriba',centro:'arriba',adelante:'abajo'}[pl.peso]||pl.peso):pl.peso;
+  const patasL=u*2.5*lP,cuerpoY=suelo-patasL-alto/2,x0=cx-largo/2,x1=cx+largo/2,hu=u*({pequeña:1.25,media:1.6,grande:2.1}[pl.cabeza]||1.6)*sc('head',.8);
+  const ova=(x,y,w,h,rot)=>{g.beginPath();g.ellipse(x,y,Math.max(.5,w/2),Math.max(.5,h/2),rot||0,0,7);g.fill()},poly=p=>{g.beginPath();p.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.fill()},
+    mid=(p,q)=>[(p[0]+q[0])/2,(p[1]+q[1])/2],suave=p=>{const n=p.length;g.beginPath();const a=mid(p[n-1],p[0]);g.moveTo(a[0],a[1]);for(let i=0;i<n;i++){const q=mid(p[i],p[(i+1)%n]);g.quadraticCurveTo(p[i][0],p[i][1],q[0],q[1])}g.closePath();g.fill()},
+    limb=(P,Wd,f)=>{const n=P.length,A=[],B=[];for(let i=0;i<n;i++){const p0=P[Math.max(0,i-1)],p1=P[Math.min(n-1,i+1)];let dx=p1[0]-p0[0],dy=p1[1]-p0[1];const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;A.push([P[i][0]-dy*Wd[i]/2,P[i][1]+dx*Wd[i]/2]);B.push([P[i][0]+dy*Wd[i]/2,P[i][1]-dx*Wd[i]/2])}const pts=[...A,...B.reverse()];if(f==='cua'||f==='tri'||f==='tra'||f==='pir')poly(pts);else suave(pts);ova(P[0][0],P[0][1],Wd[0]*1.05,Wd[0]*1.05)};
+  const PA={cua:[1.1,1,.95,.95,1],cir:[1.25,1,.62,.8,.9],tri:[1.5,1.05,.6,.4,.18],tra:[1.5,1.2,.8,.7,.55],pir:[.7,.78,.9,1.15,1.5],ese:[1,.7,.95,.65,.85],ova:[.8,.9,.6,.8,.5]};
+  /* patas: 4, delanteras rectas, traseras con corvejón (digitígradas) */
+  const pata=(hx,hy,tras,fam,k,pro)=>{const f=fam,pf=PA[f]||PA.cua,w=gP*k*(pro?1:.92);const kx=hx+(tras?-1:.1)*u*.55,ky=hy+patasL*.5,px=hx+(tras?-.35:.12)*u*.6,py=suelo-w*.2;
+    limb([[hx,hy],[kx,ky],[(kx+px)/2+(tras?u*.2:0),(ky+py)/2],[px,py]],[pf[0]*w*1.15,pf[1]*w,pf[2]*w*.8,pf[3]*w*.95],f);
+    const ft=FM.feet==='tri'?[[px-w*.5,py-w*.8],[px+w*.5,py-w*.8],[px+w*1.3,suelo],[px-w*.4,suelo]]:[[px-w*.55,py-w*.7],[px+w*.55,py-w*.7],[px+w*1.0,suelo],[px-w*.7,suelo]];poly(ft)};
+  const dxS=u*.5,fy=cuerpoY+alto*.22,hxF=x1-largo*.16,hxT=x0+largo*.14;
+  [[.55,0],[0,1]].forEach(([desp,front])=>{pata(hxF-desp*u*.6,fy,false,FM.arms,sc('arms',.8),front);pata(hxT+desp*u*.6,fy,true,FM.legs,sc('legs',.8),front)});
+  /* cola detrás */
+  {const fam=FM.feet,m=sc('feet',.9)*(T('cola')?1+T('cola')*.5:1),L=u*(1.8+1.3*m)*r(.9,1.1),sx=x0+u*.15,sy=cuerpoY-alto*.1;const P=[],Wd=[];for(let i=0;i<=6;i++){const t=i/6,x=sx-t*L*.95,y=sy+Math.sin(t*Math.PI*(idx%2?1.4:.9))*u*.9*(idx%2?-1:1)-t*u*(pe==='arriba'?.3:-.4);P.push([x,y]);Wd.push(u*(.8*m)*(1-t*.82)*(PA[fam]?PA[fam][Math.min(4,i)]:1)*.7+u*.06)}limb(P,Wd,fam);if(fam==='tri'||fam==='pir'){const e=P[6];poly([[e[0]-u*.3,e[1]-u*.5],[e[0]-u*.9*m,e[1]],[e[0]-u*.3,e[1]+u*.5]])}else{const e=P[6];ova(e[0],e[1],u*.7*m,u*.7*m)}}
+  /* cuerpo por familia */
+  const fam=FM.torso,ch=pe==='arriba'||pe==='adelante'?1.15:pe==='abajo'?.92:1,an=pe==='abajo'?1.12:.95,yT=cuerpoY-alto/2,yB=cuerpoY+alto/2,col=t=>[x0+largo*t];
+  const perf=({cua:[.86,.9,.9,.86],cir:[.7,1.05,1.05,.75],ova:[.62,.8,.8,.6],tra:[1.05,1,.8,.62],pir:[.62,.74,.95,1.05],tri:[1,.85,.62,.4],ese:[.7,1,.65,.95]}[fam]||[.86,.9,.9,.86]);
+  const top=[0,.33,.66,1].map((t,i)=>[x0+largo*t,cuerpoY-alto*.5*perf[i]*(i>=2?ch:an)+Math.sin(t*3.1)*alto*(fam==='ese'?.14:0)]),bot=[1,.66,.33,0].map((t,i)=>[x0+largo*t,cuerpoY+alto*.5*perf[3-i]*.9]);
+  const cuerpo=[[x0-u*.2,cuerpoY],...top,[x1+u*.15,cuerpoY-alto*.1],...bot];(['cir','ova','ese'].includes(fam))?suave(cuerpo):poly(cuerpo);
+  /* cuello y cabeza */
+  const nx=x1-u*.1,ny=cuerpoY-alto*.35,hx=x1+u*(.9+.25*sc('head',.5)),hy=cuerpoY-alto*(pe==='arriba'?.75:.5);
+  limb([[nx,ny],[(nx+hx)/2,(ny+hy)/2],[hx,hy]],[alto*.62,alto*.5,hu*.62],FM.head==='cua'?'cir':FM.head);
+  const hf=FM.head;
+  if(hf==='cua')poly([[hx-hu*.45,hy-hu*.5],[hx+hu*.5,hy-hu*.42],[hx+hu*.95,hy+hu*.18],[hx+hu*.78,hy+hu*.5],[hx-hu*.4,hy+hu*.48]]);
+  else if(hf==='tri')poly([[hx-hu*.5,hy-hu*.5],[hx+hu*.35,hy-hu*.38],[hx+hu*1.15,hy+hu*.28],[hx+hu*.2,hy+hu*.55],[hx-hu*.45,hy+hu*.4]]);
+  else if(hf==='tra')poly([[hx-hu*.5,hy-hu*.55],[hx+hu*.5,hy-hu*.35],[hx+hu*.95,hy+hu*.2],[hx+hu*.7,hy+hu*.5],[hx-hu*.4,hy+hu*.5]]);
+  else if(hf==='pir')poly([[hx-hu*.5,hy-hu*.35],[hx+hu*1.2,hy+hu*.12],[hx-hu*.3,hy+hu*.55]]);
+  else if(hf==='cir'){ova(hx,hy,hu,hu);ova(hx+hu*.6,hy+hu*.15,hu*.7,hu*.55)}
+  else if(hf==='ese'){ova(hx,hy,hu*.9,hu*.85);limb([[hx+hu*.2,hy],[hx+hu*.9,hy+hu*.2],[hx+hu*1.2,hy+hu*.4]],[hu*.55,hu*.4,hu*.3],'ova')}
+  else{ova(hx,hy,hu*.95,hu*.85);ova(hx+hu*.55,hy+hu*.12,hu*.75,hu*.5)}
+  /* rasgos de la silueta */
+  ac.forEach((q,i)=>{const m=tam[i%3],L=u*(.8+m*1.4);
+    if(q==='cuernos'||q==='corona'){[0,1].forEach(z=>{const bx=hx-hu*.15+z*hu*.35,by=hy-hu*.42,l=L*(z?.8:1);g.beginPath();g.moveTo(bx-hu*.12,by+hu*.1);g.quadraticCurveTo(bx-l*.25,by-l*.7,bx-l*.05+z*l*.25,by-l);g.quadraticCurveTo(bx+hu*.18,by-l*.45,bx+hu*.12,by+hu*.1);g.closePath();g.fill()})}
+    else if(q==='redondo'){ova(hx-hu*.2,hy-hu*.6,hu*(.4+m*.3),hu*(.45+m*.3));ova(hx+hu*.15,hy-hu*.55,hu*(.35+m*.25),hu*(.4+m*.25))}
+    else if(q==='melena'){for(let j=0;j<7;j++){const a=Math.PI*1.1+j*.28,r0=hu*.5,r1=hu*(.35+m*.7);poly([[hx+Math.cos(a-.12)*r0,hy+Math.sin(a-.12)*r0],[hx+Math.cos(a+.12)*r0,hy+Math.sin(a+.12)*r0],[hx+Math.cos(a)*(r0+r1),hy+Math.sin(a)*(r0+r1)]])}}
+    else{/* pua, hombros, capa, cola, manos...: crestas a lo largo del lomo */const n=5+Math.round(m*3);for(let j=0;j<n;j++){const t=.12+j*(.78/(n-1)),x=x0+largo*t,y=cuerpoY-alto*.5*perf[Math.min(3,Math.round(t*3))]*1.0,l=L*(1-.35*Math.abs(t-.5)*2)*.8;poly([[x-u*.22,y+u*.1],[x+u*.22,y+u*.1],[x+u*.05+j%2*u*.08,y-l]])}}});
+  g.strokeStyle='#cfcabc';g.lineWidth=1;g.beginPath();g.moveTo(10,suelo+1);g.lineTo(W-10,suelo+1);g.stroke();
+  return {f:FM,rasgos:ac}}
+function fmSilLeyenda(m,pl){const R={A:[],B:[],C:[]};FM_REG.forEach(k=>R[fmRol(pl,m.f[k])].push((esCuad(pl)?FM_REGN_C:FM_REGN)[k]));const nom={A:pl.famA,B:pl.famB,C:pl.contraste},pc={A:'60',B:'30',C:'10'};return ['A','B','C'].filter(x=>R[x].length).map(x=>pc[x]+' % '+(FM_FNOM_P[nom[x]]||nom[x])+': '+R[x].join(', ')).join(' · ')}
 function fmSilHTML(P,pl){const f=P.favs||[],n=8,gen=P.gen&&P.gen.some(x=>x.mezcla)?'mezcla':'';
-  return `<div class="box"><h3 style="margin:0 0 4px">Ocho siluetas para «${pl.adj.map(a=>a[1].toLowerCase()).join(' · ')}»${gen?' <span class="muted" style="font:600 12px system-ui">· mezcla de tus favoritas</span>':''}</h3><p class="hint" style="margin:0 0 8px">Cada zona del cuerpo (cabeza, torso, brazos, piernas, pies) lleva su propia forma: la dominante (${esc(FM_FNOM_P[pl.famA]||pl.famA)}) manda en las zonas grandes, la segunda (${esc(FM_FNOM_P[pl.famB]||pl.famB)}) en las medianas y el contraste (${esc(FM_FNOM_P[pl.contraste]||pl.contraste)}) en un detalle. <b>Toca las que te llamen</b> y pulsa <b>Mezclar mis favoritas</b>: cruza sus zonas y salen ocho nuevas. Cuando una te convenza, dibuja encima: cambia solo una zona.</p>
-    <div class="fm-sil-grid">${Array.from({length:n},(_,j)=>`<button class="fm-sil${f.includes(j)?' on':''}" data-fm="sil-fav:${j}" aria-pressed="${f.includes(j)}"><canvas id="fm-s-${j}" width="300" height="460"></canvas><span>${j+1}</span><small id="fm-sm-${j}"></small></button>`).join('')}</div>
+  return `<div class="box"><h3 style="margin:0 0 4px">Ocho siluetas para «${pl.adj.map(a=>a[1].toLowerCase()).join(' · ')}»${gen?' <span class="muted" style="font:600 12px system-ui">· mezcla de tus favoritas</span>':''}</h3><p class="hint" style="margin:0 0 8px">Cada zona del cuerpo (${esCuad(pl)?'cabeza, cuerpo, patas delanteras, patas traseras y cola':'cabeza, torso, brazos, piernas, pies'}) lleva su propia forma: la dominante (${esc(FM_FNOM_P[pl.famA]||pl.famA)}) manda en las zonas grandes, la segunda (${esc(FM_FNOM_P[pl.famB]||pl.famB)}) en las medianas y el contraste (${esc(FM_FNOM_P[pl.contraste]||pl.contraste)}) en un detalle. <b>Toca las que te llamen</b> y pulsa <b>Mezclar mis favoritas</b>: cruza sus zonas y salen ocho nuevas. Cuando una te convenza, dibuja encima: cambia solo una zona.</p>
+    <div class="fm-sil-grid${esCuad(pl)?' cuad':''}">${Array.from({length:n},(_,j)=>`<button class="fm-sil${f.includes(j)?' on':''}" data-fm="sil-fav:${j}" aria-pressed="${f.includes(j)}"><canvas id="fm-s-${j}" width="${esCuad(pl)?460:300}" height="${esCuad(pl)?340:460}"></canvas><span>${j+1}</span><small id="fm-sm-${j}"></small></button>`).join('')}</div>
     <div class="prow" style="margin-top:8px;flex-wrap:wrap"><button class="btn sm pri" data-fm="sil-mezcla" ${f.length?'':'disabled'}>Mezclar mis favoritas${f.length?' ('+f.length+')':''}</button><button class="btn sm" data-fm="sil-otras">Otras ocho nuevas</button><button class="btn sm" data-fm="sil-png">Descargar la hoja (PNG)</button><span class="muted">${f.length?'Elegidas: '+f.map(j=>j+1).sort((a,b)=>a-b).join(', '):'Elige 1 o más'}</span></div></div>`}
-function fmSilPinta(P,pl){const G=fmGenes(P,pl);for(let j=0;j<8;j++){const cv=document.getElementById('fm-s-'+j);if(cv){const m=fmSilueta(cv,pl,G[j]),e=document.getElementById('fm-sm-'+j);if(e)e.textContent=fmSilLeyenda(m,pl)}}}
-async function fmSilPng(P,pl){const G=fmGenes(P,pl),c=document.createElement('canvas'),w=300,h=460;c.width=w*4;c.height=h*2;const g=c.getContext('2d');for(let j=0;j<8;j++){const t=document.createElement('canvas');t.width=w;t.height=h;fmSilueta(t,pl,G[j]);g.drawImage(t,(j%4)*w,Math.floor(j/4)*h);g.fillStyle='#e0623a';g.font='700 26px system-ui,sans-serif';g.fillText(String(j+1),(j%4)*w+12,Math.floor(j/4)*h+34)}await bajarBlob('siluetas-del-plan.png',await aBlob(c))}
+function fmSilPinta(P,pl){const G=fmGenes(P,pl);for(let j=0;j<8;j++){const cv=document.getElementById('fm-s-'+j);if(cv){const m=(esCuad(pl)?fmSiluetaCuad:fmSilueta)(cv,pl,G[j]),e=document.getElementById('fm-sm-'+j);if(e)e.textContent=fmSilLeyenda(m,pl)}}}
+async function fmSilPng(P,pl){const G=fmGenes(P,pl),c=document.createElement('canvas'),w=esCuad(pl)?460:300,h=esCuad(pl)?340:460;c.width=w*4;c.height=h*2;const g=c.getContext('2d');for(let j=0;j<8;j++){const t=document.createElement('canvas');t.width=w;t.height=h;(esCuad(pl)?fmSiluetaCuad:fmSilueta)(t,pl,G[j]);g.drawImage(t,(j%4)*w,Math.floor(j/4)*h);g.fillStyle='#e0623a';g.font='700 26px system-ui,sans-serif';g.fillText(String(j+1),(j%4)*w+12,Math.floor(j/4)*h+34)}await bajarBlob('siluetas-del-plan.png',await aBlob(c))}
 function fmPlanHTML(P){const pl=fmPlanDe(P);if(!pl)return '<p class="hint">Elige de 1 a 3 adjetivos para generar tu plan de formas.</p>';
   const A=FM_FAM[pl.famA],B=FM_FAM[pl.famB],C=FM_FAM[pl.contraste],li=t=>`<li>${t}</li>`;
-  const bip=pl.tipo==='humano'||pl.tipo==='dios';
+  const bip=pl.tipo==='humano'||pl.tipo==='dios'||esCuad(pl);
   return `${bip?fmSilHTML(P,pl):''}<div class="box"><div class="prow" style="align-items:flex-start">${bip?'':'<canvas id="fm-esq" width="300" height="380" style="width:min(300px,100%);border-radius:10px"></canvas>'}<div style="flex:1 1 280px">
     <h3 style="margin:0 0 4px">Tu plan de formas</h3><p class="hint" style="margin:0 0 6px">Para «${pl.adj.map(a=>a[1].toLowerCase()).join(' · ')}»${P.concepto?' · '+esc(corto(P.concepto,60)):''}. El esquema es solo de partida: sirve para bloquear masas, no para copiarlo.</p>
     <ul class="bs-pasos" style="margin:0">
@@ -15373,7 +15444,7 @@ async function accion(a,el){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
-    case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo',ds.m)}catch{}renderSide();break;
+    case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo2',ds.m)}catch{}renderSide();break;
     case 'tab':{if(ds.tab==='board'){S.refVista='tablero';S.refModo='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
@@ -15769,6 +15840,8 @@ async function accion(a,el){
     case 'cal-mes':{const b=S.calMes?new Date(S.calMes):new Date();b.setDate(1);if(+ds.d===0)S.calMes=null;else{b.setMonth(b.getMonth()+(+ds.d));S.calMes=b.getTime()}renderMain();break}
     case 'ev-add':{const t=$('#ev-titulo')?.value.trim(),f=$('#ev-fecha')?.value;if(!t||!f){toast('Escribe qué y cuándo');return}lista('eventos').push({id:uid(),titulo:t,fecha:f});marcarAj();render();break}
     case 'cot-tab':S.cotTab=ds.t;renderMain();break;
+    case 'cot-ir-tarifas':S.vista='cotizador';S.cotTab='tarifas';render();break;
+    case 'fresc-ok':{(S.ajustes.frescura=S.ajustes.frescura||{})[ds.k]=Date.now();marcarAj();toast('Anotado: revisado hoy');renderMain();break}
     case 'cot-preset':{const d=cotDraft(),pr=COT_PRESETS[ds.p];if(!pr)return;d.mk={};COT_MARCA.forEach(x=>d.mk[x[0]]=pr[1][x[0]]||0);renderMain();break}
     case 'cot-modo':{const d=cotDraft();d.modo=ds.m;if(ds.m==='marca'&&!d._mk){d._mk=1;d.uso=2;d.compl=1}renderMain();break}
     case 'mkt':S.mkt=ds.m;renderMain();break;
