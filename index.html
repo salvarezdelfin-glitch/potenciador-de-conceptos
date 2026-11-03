@@ -972,6 +972,8 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .car-c{min-height:0!important;height:28px!important;width:28px!important;flex:none;position:relative}.car-c::after{content:"";position:absolute;inset:-9px}
 .ptitle+.intro,.ptitle+p{margin-top:4px}
 @media (max-width:1000px){.grid3{grid-template-columns:1fr}}
+@media (min-width:560px) and (max-width:1000px){.grid3.form2,.post .grid3{grid-template-columns:1fr 1fr}.grid3.form2 .field:nth-child(2),.grid3.form2 .field:nth-child(3){grid-column:auto}}
+@media (min-width:1001px){.grid3.form2{grid-template-columns:repeat(3,1fr)}}
 .prow>select{width:auto;max-width:100%;flex:none}.prow>input[type=text],.prow>input[type=number]{min-width:90px}
 .dock{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 12px;padding:8px 10px;border:1px solid var(--line2);border-radius:12px;background:var(--surface)}
 .es-crit{margin-bottom:8px}.es-ver{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid;border-radius:12px;padding:10px 12px}.es-ver b{display:block;font-size:16px;margin:1px 0}.es-ver small{display:block;color:var(--ink2)}.es-nota{font-size:32px;font-weight:700;line-height:1}.es-nota small{font-size:13px;display:inline;color:var(--ink3)}.es-dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}.es-dos h4{margin:0 0 4px;font-size:13px}.es-dos ul{margin:0;padding-left:18px;font-size:13px}.es-dos li{margin:0 0 4px}.es-primero{margin-top:10px;padding:8px 10px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent)}.es-primero b{display:block}.es-det{margin-top:8px}.es-h4{margin:8px 0 3px;font-size:13px}.es-ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink2)}.es-ul li{margin:0 0 3px}.es-det summary{cursor:pointer;color:var(--ink2);font-size:12.5px}.es-fila{margin:8px 0}.es-fh{display:flex;justify-content:space-between;font-size:13px}.es-bar{height:6px;border-radius:4px;background:var(--surface3);overflow:hidden;margin:3px 0}.es-bar i{display:block;height:100%}.es-fila small{color:var(--ink2);font-size:12px}.es-rank .es-rl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.es-ri{display:flex;align-items:baseline;gap:6px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:5px 10px;cursor:pointer;color:var(--ink)}.es-ri span{font-weight:700}.es-ri small{color:var(--ink3)}
@@ -1260,7 +1262,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw13ab8l').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw13fgze').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -3930,7 +3932,7 @@ function vPostulaciones(){
   <p class="intro">Cada estudio al que aplicas, en qué va y cuándo dar seguimiento. La regla de la industria: si no te responden, seguimiento amable a los 7–10 días, y otro a las 3 semanas.</p>
   <div class="stats">${['Aplicado','Prueba de arte','Entrevista','Oferta'].map(e=>`<div class="stat"><b>${cuenta(e)}</b><span>${e}</span></div>`).join('')}</div>
   ${pend.length?`<div class="banner"><b>Toca dar seguimiento:</b> ${pend.map(x=>esc(x.estudio)).join(', ')}</div>`:''}
-  <div class="box"><h3>Nueva postulación</h3><div class="grid3" style="gap:10px">
+  <div class="box"><h3>Nueva postulación</h3><div class="grid3 form2" style="gap:10px">
     <div class="field"><label for="po-n-estudio">Estudio</label><input type="text" id="po-n-estudio" placeholder="Ej. Grafit Studio"></div>
     <div class="field"><label for="po-n-puesto">Puesto</label><input type="text" id="po-n-puesto" placeholder="Junior Environment Concept Artist"></div>
     <div class="field"><label for="po-n-link">Link de la vacante</label><input type="text" id="po-n-link" placeholder="https://…"></div>
