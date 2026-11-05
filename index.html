@@ -1266,7 +1266,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw14sjv7').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw44bpwc').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1599,6 +1599,7 @@ function renderSide(){
       ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}`);
   const grupoTrabajo=grupo('Que te contraten','Portafolio, vacantes y envíos',`
       ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
+      ${nav('pagina','frame','Páginas y siluetas')}
       ${nav('cv','doc','Mi CV')}
       ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
       ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
@@ -1626,6 +1627,7 @@ function renderSide(){
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Herramientas</span>
       <button class="pitem" data-act="ir-taller">${ICO.frame}<span class="n">Taller de diseño</span></button>
       <button class="pitem" data-act="fnd-3d">${ICO.spark}<span class="n">Poses 3D</span></button>
+      <button class="pitem" data-act="vista" data-v="pagina" aria-current="${S.vista==='pagina'}">${ICO.frame}<span class="n">Siluetas y páginas</span></button>
       <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Luz, referencias y más</span></button></div>
     <div style="padding:4px 10px"><button class="btn sm ghost" data-act="navmodo" data-m="mejorar" style="width:100%">Ver todas las secciones ▾</button></div>`;
   side.innerHTML=`
@@ -1699,6 +1701,7 @@ function renderMainInner(){
   if(S.vista==='cv'){m.innerHTML=pqHTML('cv')+vCV();return}
   if(S.vista==='portafolio'){m.innerHTML=pqHTML('portafolio')+vPortafolio();return}
   if(S.vista==='cotizador'){m.innerHTML=pqHTML('cotizador')+vCotizador();return}
+  if(S.vista==='pagina'){m.innerHTML=pqHTML('pagina')+vPagina();setTimeout(pgDibuja,0);return}
   if(S.vista==='trabajos'){m.innerHTML=pqHTML('trabajos')+vTrabajos();return}
   if(S.vista==='artistas'){m.innerHTML=pqHTML('artistas')+vArtistas();return}
   if(S.vista==='progreso'){m.innerHTML=pqHTML('progreso')+vProgreso();return}
@@ -1972,6 +1975,7 @@ const PQ={
  mensajes:['trabajo','Escribir mensajes en inglés a estudios y reclutadores.','Mensajes listos para enviar.'],
  ventas:['dinero','Convertir lo que dibujas en productos sencillos que se venden, según las fechas del año.','Piezas a la venta con precio y ficha de publicación.'],
  redes:['dinero','Planear qué publicar y cuándo para que te vean y te compren.','Un calendario de publicaciones.'],
+ pagina:['trabajo','Armar páginas de portafolio con exploración de siluetas y pieza final.','Una página lista para tu portafolio.'],
  trabajos:['dinero','Llevar tus trabajos por encargo de principio a fin.','Trabajos con estado y entrega.'],
  cotizador:['dinero','Saber cuánto cobrar para que valga la pena.','Un precio con tu tiempo, costos y margen.'],
  cobros:['dinero','No perder dinero: ver qué te deben y qué ya cobraste.','Cobros pendientes y pagados.'],
@@ -3589,7 +3593,7 @@ function vPortafolio(){
   <h1 class="ptitle" style="font-size:clamp(30px,5vw,52px)">Portafolio</h1>
   <div class="banner" style="background:var(--accent-soft)"><b>Nada se publica solo.</b> Una pieza entra a tu portafolio únicamente si tú le das el visto bueno después de revisarla con tu asesor. Después, tú decides cuándo subir el paquete.</div>
   ${portafolioGapHTML()}
-  <p class="intro">Propón piezas desde <b>Crítica</b> (en cada proyecto) o desde <b>Mi estilo</b>.</p><div class="prow" style="flex-wrap:wrap;margin-bottom:10px"><button class="btn pri" data-act="ir-taller">📏 Medir una pieza en el Taller</button><button class="btn" data-act="ir-abre">🔍 Ir a un proyecto…</button></div>
+  <p class="intro">Propón piezas desde <b>Crítica</b> (en cada proyecto) o desde <b>Mi estilo</b>.</p><div class="prow" style="flex-wrap:wrap;margin-bottom:10px"><button class="btn pri" data-act="ir-taller">📏 Medir una pieza en el Taller</button><button class="btn pri" data-act="vista" data-v="pagina">🖼 Armar página de portafolio</button><button class="btn" data-act="ir-abre">🔍 Ir a un proyecto…</button></div>
   <div class="kanban">
     <div class="kcol"><div class="colh"><b>Candidatas</b><span>${cand.length}</span></div>${cand.map(pfCard).join('')||'<div class="empty">Sin candidatas. Usa "Proponer para portafolio" en una pieza.</div>'}</div>
     <div class="kcol"><div class="colh"><b>Con visto bueno</b><span>${apr.length}</span></div>
@@ -3684,6 +3688,108 @@ function cotCalc(d){
   return {m,mon,disc,tarifa,horas:Math.round(horas*10)/10,base:Math.round(base),mult,total,minimo:Math.round(total*.85/red)*red,enMxn:Math.round(total*b.tc[mon]),usd:Math.round(total*b.tc[mon]/b.tc.USD),anticipo:Math.round(total/2),desc,lineas};
 }
 /* Trabajos: une Cotizaciones + Cobros por folio (o por cliente+proyecto si el cobro se creo a mano) en una sola tira de estado por cliente, sin inventar una base de datos nueva */
+/* ================= Páginas de portafolio: exploración de siluetas + pieza final ================= */
+const PG_CATS=[['personaje','Personaje'],['criatura','Criatura'],['arma','Arma de fuego'],['filo','Espada, hacha, maza'],['vehiculo','Vehículo o mecha'],['prop','Objeto o prop'],['entorno','Torre y arquitectura'],['riscos','Riscos y paisaje']];
+const PG_TIT={personaje:'Diseño de personaje',criatura:'Diseño de criatura',arma:'Diseño de arma',filo:'Diseño de arma blanca',vehiculo:'Diseño de vehículo',prop:'Diseño de objeto',entorno:'Diseño de arquitectura',riscos:'Diseño de entorno'};
+const PG_INK='#16181d',PG_BG='#f1efe9';
+const pgPoly=(g,p)=>{g.beginPath();p.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.fill()};
+const pgOva=(g,x,y,w,h,r)=>{g.beginPath();g.ellipse(x,y,Math.max(.5,w/2),Math.max(.5,h/2),r||0,0,7);g.fill()};
+const pgSuave=(g,p)=>{const n=p.length,m=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2];g.beginPath();const a=m(p[n-1],p[0]);g.moveTo(a[0],a[1]);for(let i=0;i<n;i++){const q=m(p[i],p[(i+1)%n]);g.quadraticCurveTo(p[i][0],p[i][1],q[0],q[1])}g.closePath();g.fill()};
+const pgLin=(g,P,w)=>{g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.beginPath();P.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.stroke()};
+function pgLienzo(cv,seed,v){const g=cv.getContext('2d'),W=cv.width,H=cv.height;g.fillStyle=PG_BG;g.fillRect(0,0,W,H);g.fillStyle=PG_INK;g.strokeStyle=PG_INK;
+  const B=fmRng(seed*7919+13),V=fmRng(seed*977+v*131+7),b=()=>B(),p=(x,k)=>x*(1+(V()-.5)*k);return {g,W,H,b,p,V,B}}
+/* arma de fuego, de perfil mirando a la derecha */
+function pgSilArma(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed,v),cy=H*.5,L=W*(.74+b()*.16),x0=(W-L)/2,u=H/10;
+  const recL=L*(.3+b()*.1),recH=u*p(1.5+b()*.8,.25),rx=x0+L*.26,tipo=b();
+  pgPoly(g,[[rx,cy-recH*.55],[rx+recL*.85,cy-recH*.55],[rx+recL,cy-recH*.2],[rx+recL,cy+recH*.5],[rx,cy+recH*.5]]);
+  const bl=L*p(.42+b()*.18,.2),bh=u*p(.32+b()*.25,.3),sx=rx+recL;g.fillRect(sx,cy-bh*.5-recH*.05,bl,bh);
+  const sh=u*(.7+b()*.7);pgPoly(g,[[sx+L*.04,cy-sh/2-recH*.05],[sx+L*.04+bl*.55,cy-sh/2-recH*.05],[sx+L*.04+bl*.55+u*.4,cy+sh/2],[sx+L*.04,cy+sh/2+recH*.05]]);
+  if(b()>.4){const mx=sx+bl;for(let i=0;i<3;i++)g.fillRect(mx-u*.1-i*u*.35,cy-bh*1.1,u*.18,bh*2.2)}
+  const sk=tipo>.5;pgPoly(g,sk?[[rx,cy-recH*.45],[x0+L*.02,cy-recH*.35],[x0,cy+u*p(1.4,.3)],[rx-L*.04,cy+u*1.1],[rx,cy+recH*.5]]:[[rx,cy-recH*.5],[x0+L*.03,cy-recH*.2],[x0,cy+u*p(1.1,.3)],[x0+L*.04,cy+u*p(1.7,.3)],[rx,cy+recH*.5]]);
+  const gx=rx+recL*.2,ang=p(.35,.5);pgPoly(g,[[gx,cy+recH*.3],[gx+u*.8,cy+recH*.3],[gx+u*.8+u*1.5*ang,cy+recH*.3+u*p(2.2,.3)],[gx+u*1.5*ang-u*.1,cy+recH*.3+u*p(2.2,.3)]]);
+  const mx2=rx+recL*(.55+b()*.2),ml=u*p(1.8+b()*1.8,.3),cu=b()>.5?u*.6:0;pgPoly(g,[[mx2,cy+recH*.3],[mx2+u*1,cy+recH*.3],[mx2+u*1+cu,cy+recH*.3+ml],[mx2+cu,cy+recH*.3+ml]]);
+  const o=b();if(o>.3){const ox=rx+recL*.2,ol=recL*(.5+b()*.3);g.fillRect(ox,cy-recH*.55-u*.35,ol,u*.4);if(o>.65){pgOva(g,ox+ol*.5,cy-recH*.55-u*.9,ol*.6,u*.9);g.fillRect(ox+ol*.1,cy-recH*.55-u*.5,ol*.15,u*.3);g.fillRect(ox+ol*.75,cy-recH*.55-u*.5,ol*.15,u*.3)}}
+  return cv}
+/* arma blanca: espada, hacha o maza (vertical-diagonal) */
+function pgSilFilo(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed,v),t=b(),u=H/12;g.save();g.translate(W*.5,H*.5);g.rotate(-.5);const Lh=H*.9;
+  const mango=(len,w)=>{g.fillRect(-w/2,0,w,len);pgOva(g,0,len+w*.4,w*2.1,w*1.6)};
+  if(t<.45){const bw=u*p(.9+b()*.9,.2),bl=Lh*p(.62,.15);pgPoly(g,[[-bw/2,0],[bw/2,0],[bw/2,-bl*.85],[0,-bl],[-bw/2,-bl*.85]]);
+    const cw=u*p(2.4+b()*3,.25),ar=b();pgPoly(g,[[-cw,u*.1],[cw,u*.1],[cw+(ar>.5?u*.7:0),u*.55],[0,u*.8],[-cw-(ar>.5?u*.7:0),u*.55]]);mango(Lh*.2,u*.45)}
+  else if(t<.8){const hw=u*p(2.2+b()*1.8,.2),hh=u*p(2.8+b(),.2),dob=b()>.5;mango(Lh*.52,u*.5);g.translate(0,-Lh*.12);
+    const cre=(s2,a,c)=>{g.beginPath();g.moveTo(s2*u*.2,-hh*.5);g.quadraticCurveTo(s2*hw*a,-hh*1.15,s2*hw*1.25,-hh*.95);g.quadraticCurveTo(s2*hw*(c),0,s2*hw*1.25,hh*.95);g.quadraticCurveTo(s2*hw*a,hh*1.15,s2*u*.2,hh*.5);g.closePath();g.fill()};cre(1,.9,.55);if(dob)cre(-1,.9,.55);else pgPoly(g,[[-u*.2,-hh*.35],[-hw*.35,-hh*.5],[-hw*.35,hh*.5],[-u*.2,hh*.35]]);pgPoly(g,[[-u*.25,-hh*.5],[u*.25,-hh*.5],[0,-hh*1.4]])}
+  else{const r=u*p(1.4+b()*.9,.2);mango(Lh*.55,u*.5);g.translate(0,-Lh*.1);pgOva(g,0,0,r*2,r*2);const n=7+Math.floor(b()*4);for(let i=0;i<n;i++){const a=i/n*Math.PI*2;pgPoly(g,[[Math.cos(a-.2)*r*.9,Math.sin(a-.2)*r*.9],[Math.cos(a+.2)*r*.9,Math.sin(a+.2)*r*.9],[Math.cos(a)*r*p(1.7,.3),Math.sin(a)*r*p(1.7,.3)]])}}
+  g.restore();return cv}
+/* vehículo o mecha de dos o cuatro patas */
+function pgSilVeh(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed,v),cx=W/2,ty=H*.36,u=W/12,patas=b()>.55?4:2,ancho=u*p(2.8+b()*1.6,.15),alto=u*p(1.7+b()*.9,.2);
+  pgPoly(g,[[cx-ancho,ty+alto*.4],[cx-ancho*.8,ty-alto*.5],[cx+ancho*.6,ty-alto*.6],[cx+ancho,ty-alto*.1],[cx+ancho*.8,ty+alto*.6],[cx-ancho*.6,ty+alto*.7]]);
+  const cab=b();pgOva(g,cx+ancho*.35,ty-alto*.75,u*p(1.6,.2),u*p(1.1,.2));if(cab>.5)g.fillRect(cx+ancho*.25,ty-alto*1.9,u*.12,alto*.9);
+  const hom=u*p(1+b()*.9,.2);[-1,1].forEach(s=>{pgOva(g,cx+s*(ancho+hom*.3),ty-alto*.1,hom,hom*1.3);if(b()>.35)g.fillRect(cx+s*(ancho+hom*.3)-u*.12,ty-alto*.1-hom*1.2,u*.24,hom*1.2)});
+  const suelo=H*.92,gr=u*p(.62+b()*.3,.2),kneeX=u*p(1.4+b()*1.1,.25);
+  const pierna=(hx,s,off)=>{const hy=ty+alto*.55,kx=hx+s*kneeX,ky=hy+(suelo-hy)*.45,ax=hx+s*u*p(.3,.5)+off,ay=suelo-u*.35;pgLin(g,[[hx,hy],[kx,ky],[ax,ay]],gr);pgOva(g,kx,ky,gr*1.5,gr*1.5);pgPoly(g,[[ax-gr,ay-u*.1],[ax+gr,ay-u*.1],[ax+gr*1.9,suelo],[ax-gr*1.9,suelo]])};
+  if(patas===2){pierna(cx-ancho*.5,-1,0);pierna(cx+ancho*.5,1,0)}else{pierna(cx-ancho*.75,-1,-u*.3);pierna(cx-ancho*.3,-1,u*.5);pierna(cx+ancho*.3,1,-u*.5);pierna(cx+ancho*.75,1,u*.3)}
+  g.fillRect(cx-ancho*.5,ty+alto*.4,ancho,u*.35);return cv}
+/* objeto de revolución: frasco, jarra, lámpara */
+function pgSilProp(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed,v),cx=W/2,y1=H*.9,h=H*.74,R=W*.3;
+  const base=R*p(.55+b()*.3,.15),pan=R*p(.9+b()*.5,.2),pan2=R*p(.85+b()*.5,.2),cue=R*p(.18+b()*.25,.25),bo=R*(cue*.0+.22+b()*.14),ta=.1+b()*.1,ce=.2+b()*.2,hom=.42+b()*.15;
+  const Pf=[[0,base],[.04,base*1.05],[.12,pan*.9],[hom*.5,pan],[hom,pan2*.88],[hom+ce*.6,cue*1.6],[1-ta-.14,cue],[1-ta,cue*1.3],[1-ta*.2,bo]];
+  const pts=[];Pf.forEach(([t,r])=>pts.push([cx+r,y1-t*h]));Pf.slice().reverse().forEach(([t,r])=>pts.push([cx-r,y1-t*h]));pgSuave(g,pts);
+  const top=Pf[Pf.length-1],tp=b();if(tp<.35){pgOva(g,cx,y1-h-u0(H)*.5,bo*2.4,u0(H)*1.6)}else if(tp<.7){g.fillRect(cx-bo*.35,y1-h-u0(H)*1.6,bo*.7,u0(H)*1.7);g.fillRect(cx-bo*1.3,y1-h-u0(H)*1.1,bo*2.6,u0(H)*.55)}else pgPoly(g,[[cx-bo,y1-h],[cx+bo,y1-h],[cx+bo*.5,y1-h-u0(H)*1.1],[cx-bo*.5,y1-h-u0(H)*1.1]]);
+  if(b()>.45){g.lineWidth=R*.22;g.beginPath();g.ellipse(cx+pan2*1.05,y1-hom*h,R*.55,h*.18,0,-1.5,1.5);g.stroke()}
+  if(b()>.6){g.lineWidth=R*.2;g.beginPath();g.moveTo(cx-pan*.9,y1-hom*h*.6);g.quadraticCurveTo(cx-pan*2.1,y1-hom*h*.9,cx-pan*1.7,y1-hom*h*1.3);g.stroke()}
+  g.fillRect(cx-base*1.15,y1,base*2.3,H*.025);return cv}
+const u0=H=>H/12;
+/* torre y arquitectura escalonada */
+function pgSilEnt(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed,v),cx=W/2,n=3+Math.floor(b()*4),u=H/14;let y=H*.84,w=W*(.34+b()*.1);
+  g.beginPath();g.moveTo(0,H);g.lineTo(0,H*.86);const pts=14;for(let i=0;i<=pts;i++){const t=i/pts,k=Math.sin(t*3.2+b()*.5)*H*.05+(Math.abs(t-.5)<.25?-H*.03:0);g.lineTo(t*W,H*.86+k+(i%2?H*.02:0))}g.lineTo(W,H);g.closePath();g.fill();
+  const curv=u*(.7+b()*1.3),vuelo=1.25+b()*.35;for(let i=0;i<n;i++){const bh=u*p(1.4+b()*.7,.2),rh=u*p(1.6+b()*.9,.2);
+    g.fillRect(cx-w/2,y-bh,w,bh);y-=bh;const ew=w*p(vuelo,.08);g.beginPath();g.moveTo(cx-ew,y+u*.12);g.quadraticCurveTo(cx-w*.45,y-rh*.1,cx-w*.4,y-rh*.5);g.quadraticCurveTo(cx-w*.1,y-rh*.85,cx,y-rh);g.quadraticCurveTo(cx+w*.1,y-rh*.85,cx+w*.4,y-rh*.5);g.quadraticCurveTo(cx+w*.45,y-rh*.1,cx+ew,y+u*.12);g.lineTo(cx+ew-curv*.3,y+u*.12+curv*.15);g.lineTo(cx-ew+curv*.3,y+u*.12+curv*.15);g.closePath();g.fill();y-=rh*.8;w*=.74}
+  g.fillRect(cx-u*.1,y-u*(1.8+b()*1.8),u*.2,u*(1.8+b()*1.8)+u);pgOva(g,cx,y-u*.2,u*.9,u*.9);
+  if(b()>.4){const sw=W*.12,sy=H*.82;pgPoly(g,[[cx+W*.27,sy],[cx+W*.27+sw,sy],[cx+W*.27+sw*.5,sy-u*3]]);g.fillRect(cx+W*.27+sw*.2,sy-u*2,sw*.6,u*2)}
+  return cv}
+/* masa de riscos con torre o figura encima */
+function pgSilRiscos(cv,seed,v){const {g,W,H,b,B,V}=pgLienzo(cv,seed,v),N=26,h=[],hb=[];for(let i=0;i<=N;i++){hb.push(B());}
+  for(let i=0;i<=N;i++){const t=i/N,env=Math.sin(Math.PI*Math.min(1,Math.max(0,(t-.05)/.9)))**.7,ru=hb[i]*.75+V()*.25;h.push(H*.9-(env*(.45+ru*.35)*H*.7))}
+  g.beginPath();g.moveTo(0,H);for(let i=0;i<=N;i++){const x=i/N*W;g.lineTo(x,h[i]);if(i<N&&hb[i]>.55)g.lineTo(x+W/N*.5,h[i]-H*.04*hb[i])}g.lineTo(W,H);g.closePath();g.fill();
+  const k=Math.floor(N*(.3+B()*.4)),tx=k/N*W,ty=h[k];g.fillRect(tx-W*.012,ty-H*.2,W*.024,H*.2);pgPoly(g,[[tx-W*.04,ty-H*.2],[tx+W*.04,ty-H*.2],[tx,ty-H*.32]]);
+  pgOva(g,W*(.78+B()*.1),H*.18,H*.16,H*.16);return cv}
+/* generador de personaje y criatura: reutiliza el plan de formas */
+const PG_ADJ=[['heroico','Heroico'],['noble','Noble'],['imponente','Imponente'],['siniestro','Siniestro'],['agil','Ágil'],['elegante','Elegante'],['salvaje','Salvaje'],['monstruoso','Monstruoso'],['antiguo','Antiguo'],['magico','Mágico'],['pesado','Pesado'],['tierno','Tierno']];
+function pgPlan(st){const k=st.cat+'|'+st.adj.join(',')+'|'+st.seed;if(!st._pk||st._pk!==k){st._pk=k;st._P={adj:st.adj.length?st.adj:(st.cat==='criatura'?['imponente','salvaje']:['heroico','noble']),tipo:st.cat==='criatura'?'criatura':'humano',mundo:[],seed:st.seed,favs:[],gen:null};st._pl=fmPlanDe(st._P);st._G=st._pl?fmGenes(st._P,st._pl):null}return st}
+function pgGen(st,v,mult){const m=mult||1;let w=480,h=360;
+  if(st.cat==='personaje'){w=300;h=460}else if(st.cat==='criatura'){w=460;h=340}else if(st.cat==='filo'||st.cat==='prop'||st.cat==='entorno'){w=320;h=440}else if(st.cat==='vehiculo'){w=440;h=420}
+  const cv=document.createElement('canvas');cv.width=w*m;cv.height=h*m;
+  if(st.cat==='personaje'||st.cat==='criatura'){pgPlan(st);if(st._pl&&st._G)(st.cat==='criatura'?fmSiluetaCuad:fmSilueta)(cv,st._pl,st._G[v]);return cv}
+  ({arma:pgSilArma,filo:pgSilFilo,vehiculo:pgSilVeh,prop:pgSilProp,entorno:pgSilEnt,riscos:pgSilRiscos}[st.cat])(cv,st.seed,v);return cv}
+const pgCont=(g,img,x,y,w,h,pad)=>{const s=Math.min((w-2*pad)/img.width,(h-2*pad)/img.height),dw=img.width*s,dh=img.height*s;g.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)};
+const pgCubre=(g,img,x,y,w,h)=>{const s=Math.max(w/img.width,h/img.height),dw=img.width*s,dh=img.height*s;g.save();g.beginPath();g.rect(x,y,w,h);g.clip();g.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);g.restore()};
+function pgTexto(g,t,x,y,w,lh){const pal=String(t||'').split(/\s+/);let l='';for(const p of pal){const q=l?l+' '+p:p;if(g.measureText(q).width>w&&l){g.fillText(l,x,y);y+=lh;l=p}else l=q}if(l)g.fillText(l,x,y)}
+function pgDibujaEn(cv,st){const g=cv.getContext('2d'),W=cv.width=1600,H=cv.height=1000;g.fillStyle='#f3f1ea';g.fillRect(0,0,W,H);
+  const ink='#16181d',gris='#6b6a63',M=64;g.fillStyle=ink;g.font='700 46px system-ui,Segoe UI,sans-serif';g.textBaseline='alphabetic';g.fillText(st.t||PG_TIT[st.cat],M,96);
+  g.fillStyle=gris;g.font='22px system-ui,Segoe UI,sans-serif';pgTexto(g,st.d||'El problema, el mundo y el proceso, en una frase.',M,138,900,30);
+  const top=210,bot=880,gx=M,gw=780,fx=gx+gw+40,fw=W-M-fx,n=st.lay,cols=n===8?4:2,rows=n/cols,gap=14,cw=(gw-gap*(cols-1))/cols,ch=(bot-top-gap*(rows-1))/rows;
+  g.fillStyle='#eae7dd';g.strokeStyle='#cfcabc';g.lineWidth=2;
+  for(let i=0;i<n;i++){const x=gx+(i%cols)*(cw+gap),y=top+Math.floor(i/cols)*(ch+gap);g.fillStyle=PG_BG;g.fillRect(x,y,cw,ch);g.strokeStyle=i===st.fin?'#e0623a':'#cfcabc';g.lineWidth=i===st.fin?4:2;g.strokeRect(x,y,cw,ch);
+    const u=st.minis[i];if(u)pgCubre(g,u,x,y,cw,ch);else pgCont(g,pgGen(st,i),x,y,cw,ch,12);g.fillStyle=gris;g.font='600 16px system-ui,sans-serif';g.fillText(String(i+1),x+8,y+22)}
+  g.fillStyle=PG_BG;g.fillRect(fx,top,fw,bot-top);g.strokeStyle='#cfcabc';g.lineWidth=2;g.strokeRect(fx,top,fw,bot-top);
+  if(st.final)pgCubre(g,st.final,fx,top,fw,bot-top);else pgCont(g,pgGen(st,st.fin,2),fx,top,fw,bot-top,24);
+  g.fillStyle=gris;g.font='20px system-ui,sans-serif';g.fillText('Exploración de siluetas',gx,bot+34);g.fillText('Pieza final · silueta elegida',fx,bot+34);
+  g.fillStyle=ink;g.font='600 20px system-ui,sans-serif';g.fillText(st.c||'Tu nombre',M,H-36);g.fillStyle=gris;g.font='20px system-ui,sans-serif';g.textAlign='right';g.fillText('Página '+(PG_CATS.findIndex(c=>c[0]===st.cat)+1)+' de '+PG_CATS.length,W-M,H-36);g.textAlign='left'}
+function pgEst(){return S.pg=S.pg||{cat:'arma',adj:[],seed:1,fin:0,lay:8,t:'',d:'',c:'',minis:[],final:null}}
+function pgDibuja(){const cv=document.getElementById('pg-cv');if(cv)try{pgDibujaEn(cv,pgEst())}catch(e){console.error(e)}}
+function vPagina(){const st=pgEst(),usa=st.cat==='personaje'||st.cat==='criatura';
+  return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Páginas de portafolio</h1>
+  <p class="intro">Un portafolio de concept art enseña <b>el proceso</b>: muchas siluetas distintas y la que elegiste, grande. Elige el tipo de diseño, genera ocho siluetas, escoge la mejor y descarga la página. También puedes subir tus propios bocetos.</p>
+  <div class="box"><span class="lbl">1 · Qué vas a diseñar</span><div class="chips" style="margin-top:6px">${PG_CATS.map(([k,n])=>`<button class="ch ${st.cat===k?'on':''}" data-act="pg-cat" data-k="${k}" aria-pressed="${st.cat===k}">${n}</button>`).join('')}</div>
+    ${usa?`<span class="lbl" style="margin-top:10px;display:block">Cómo se siente (1 a 3)</span><div class="chips" style="margin-top:6px">${PG_ADJ.map(([k,n])=>`<button class="ch xs ${st.adj.includes(k)?'on':''}" data-act="pg-adj" data-k="${k}" aria-pressed="${st.adj.includes(k)}">${n}</button>`).join('')}</div>`:''}
+    <div class="prow" style="margin-top:10px;flex-wrap:wrap"><button class="btn pri" data-act="pg-otras">Otras ocho nuevas</button><span class="muted">Cada tanda es un diseño base distinto con sus variaciones.</span></div></div>
+  <div class="box"><span class="lbl">2 · Elige la pieza final</span><div class="chips" style="margin-top:6px">${Array.from({length:st.lay},(_,i)=>`<button class="ch ${st.fin===i?'on':''}" data-act="pg-final" data-k="${i}" aria-pressed="${st.fin===i}">${i+1}</button>`).join('')}<button class="ch xs" data-act="pg-lay" data-k="${st.lay===8?6:8}">Usar ${st.lay===8?6:8} miniaturas</button></div></div>
+  <div class="box"><span class="lbl">3 · Texto de la página</span><div class="grid3 form2" style="gap:10px;margin-top:6px"><div class="field"><label for="pg-t">Título</label><input type="text" id="pg-t" value="${esc(st.t)}" placeholder="${esc(PG_TIT[st.cat])}"></div><div class="field"><label for="pg-c">Tu nombre o crédito</label><input type="text" id="pg-c" value="${esc(st.c)}" placeholder="Sebastián Álvarez"></div><div class="field" style="grid-column:1/-1"><label for="pg-d">Descripción</label><input type="text" id="pg-d" value="${esc(st.d)}" placeholder="El brief, el mundo y qué buscabas con estas formas"></div></div>
+    <div class="prow" style="margin-top:8px;flex-wrap:wrap"><label class="btn sm" for="pg-fm">🖼 Subir mis bocetos (varios)</label><input type="file" id="pg-fm" accept="image/*" multiple hidden><label class="btn sm" for="pg-ff">🖼 Subir mi pieza final</label><input type="file" id="pg-ff" accept="image/*" hidden>${st.minis.length||st.final?`<button class="btn sm ghost" data-act="pg-limpia">Quitar mis imágenes</button>`:''}</div></div>
+  <div class="box"><div class="prow" style="justify-content:space-between;flex-wrap:wrap"><span class="lbl">Vista previa de la página</span><button class="btn pri" data-act="pg-png">Descargar la página (PNG)</button></div><canvas id="pg-cv" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--line2)"></canvas><p class="hint" style="margin:6px 0 0">Las siluetas generadas son punto de partida para explorar, no obra terminada: ponles tu mano antes de enseñarlas.</p></div>`}
+document.addEventListener('input',e=>{const t=e.target;if(!t||!/^pg-[tdc]$/.test(t.id||''))return;const st=pgEst();st[t.id.slice(3)]=t.value;pgDibuja()});
+document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='pg-fm'&&t.id!=='pg-ff')||!t.files||!t.files.length)return;const st=pgEst(),fs_=[...t.files];t.value='';
+  try{if(t.id==='pg-ff'){st.final=await fmCarga(fs_[0])}else{const L=[];for(const f of fs_.slice(0,8)){const b=await fmCarga(f);if(b)L.push(b)}st.minis=L}}catch(err){toast('No pude abrir esa imagen')}renderMain()});
+
 function vTrabajos(){
   if(!S.cotHist&&S.db&&!S._trCarga){S._trCarga=true;setTimeout(()=>{cargarCotHist();S._trCarga=false},50)}
   const paso=(ok,label)=>`<span class="nivel" style="color:${ok?'var(--ok)':'var(--ink3)'};border-color:${ok?'var(--ok)':'var(--ink3)'}">${ok?'✓ ':''}${esc(label)}</span>`;
@@ -15840,6 +15946,13 @@ async function accion(a,el){
     case 'cal-mes':{const b=S.calMes?new Date(S.calMes):new Date();b.setDate(1);if(+ds.d===0)S.calMes=null;else{b.setMonth(b.getMonth()+(+ds.d));S.calMes=b.getTime()}renderMain();break}
     case 'ev-add':{const t=$('#ev-titulo')?.value.trim(),f=$('#ev-fecha')?.value;if(!t||!f){toast('Escribe qué y cuándo');return}lista('eventos').push({id:uid(),titulo:t,fecha:f});marcarAj();render();break}
     case 'cot-tab':S.cotTab=ds.t;renderMain();break;
+    case 'pg-cat':{const st=pgEst();st.cat=ds.k;st.fin=0;st.seed=(st.seed||1);st.minis=[];st.final=null;if(!st.t||Object.values(PG_TIT).includes(st.t))st.t='';renderMain();break}
+    case 'pg-adj':{const st=pgEst(),i=st.adj.indexOf(ds.k);if(i>=0)st.adj.splice(i,1);else{if(st.adj.length>=3)st.adj.shift();st.adj.push(ds.k)}renderMain();break}
+    case 'pg-otras':{const st=pgEst();st.seed=(st.seed||1)+1;st.minis=[];st.final=null;renderMain();break}
+    case 'pg-final':{const st=pgEst();st.fin=+ds.k;renderMain();break}
+    case 'pg-lay':{const st=pgEst();st.lay=+ds.k;st.fin=Math.min(st.fin,st.lay-1);renderMain();break}
+    case 'pg-limpia':{const st=pgEst();st.minis=[];st.final=null;renderMain();break}
+    case 'pg-png':{const cv=document.getElementById('pg-cv');if(!cv)break;pgDibuja();await bajarBlob('pagina-portafolio-'+pgEst().cat+'.png',await aBlob(cv));break}
     case 'cot-ir-tarifas':S.vista='cotizador';S.cotTab='tarifas';render();break;
     case 'fresc-ok':{(S.ajustes.frescura=S.ajustes.frescura||{})[ds.k]=Date.now();marcarAj();toast('Anotado: revisado hoy');renderMain();break}
     case 'cot-preset':{const d=cotDraft(),pr=COT_PRESETS[ds.p];if(!pr)return;d.mk={};COT_MARCA.forEach(x=>d.mk[x[0]]=pr[1][x[0]]||0);renderMain();break}
