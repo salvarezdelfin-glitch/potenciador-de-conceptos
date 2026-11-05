@@ -1269,7 +1269,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw44u5u3').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mw458xsl').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1595,6 +1595,7 @@ function renderSide(){
       <button class="pitem" data-act="herr" title="Luz y color, referencias, tablero y 3D para usar sin proyecto" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
       ${nav('ahora','spark','Idea y a dibujar')}
       ${nav('siluetas','spark','Siluetas')}
+      ${nav('cuadricula','frame','Cuadrículas de perspectiva')}
       ${nav('generador','spark','Generador de ideas')}
       ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
       ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
@@ -1631,6 +1632,7 @@ function renderSide(){
     <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Herramientas</span>
       <button class="pitem" data-act="ir-taller">${ICO.frame}<span class="n">Taller de diseño</span></button>
       <button class="pitem" data-act="fnd-3d">${ICO.spark}<span class="n">Poses 3D</span></button>
+      <button class="pitem" data-act="vista" data-v="cuadricula" aria-current="${S.vista==='cuadricula'}">${ICO.frame}<span class="n">Cuadrículas</span></button>
       <button class="pitem" data-act="vista" data-v="siluetas" aria-current="${S.vista==='siluetas'}">${ICO.spark}<span class="n">Siluetas</span></button>
       <button class="pitem" data-act="vista" data-v="pagina" aria-current="${S.vista==='pagina'}">${ICO.frame}<span class="n">Mi portafolio</span></button>
       <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Luz, referencias y más</span></button></div>
@@ -1707,6 +1709,7 @@ function renderMainInner(){
   if(S.vista==='portafolio'){m.innerHTML=pqHTML('portafolio')+vPortafolio();return}
   if(S.vista==='cotizador'){m.innerHTML=pqHTML('cotizador')+vCotizador();return}
   if(S.vista==='pagina'){m.innerHTML=pqHTML('pagina')+vPagina();setTimeout(()=>{pgDibuja();silPinta()},0);return}
+  if(S.vista==='cuadricula'){m.innerHTML=pqHTML('cuadricula')+vCuadricula();return}
   if(S.vista==='siluetas'){m.innerHTML=pqHTML('siluetas')+vSiluetas();setTimeout(silPinta,0);return}
   if(S.vista==='trabajos'){m.innerHTML=pqHTML('trabajos')+vTrabajos();return}
   if(S.vista==='artistas'){m.innerHTML=pqHTML('artistas')+vArtistas();return}
@@ -1982,6 +1985,7 @@ const PQ={
  ventas:['dinero','Convertir lo que dibujas en productos sencillos que se venden, según las fechas del año.','Piezas a la venta con precio y ficha de publicación.'],
  redes:['dinero','Planear qué publicar y cuándo para que te vean y te compren.','Un calendario de publicaciones.'],
  pagina:['trabajo','Armar las 9 páginas de tu portafolio y llevarlas a tu sitio.','Un paquete listo para importar en tu portafolio.'],
+ cuadricula:['crear','Descargar una cuadrícula de perspectiva profesional para pintar encima en Photoshop o Procreate.','Un PSD con capas listo para usar.'],
  siluetas:['crear','Explorar muchas formas distintas antes de dibujar: personajes, criaturas, armas, naves, árboles y más.','Siluetas favoritas para usar de punto de partida.'],
  trabajos:['dinero','Llevar tus trabajos por encargo de principio a fin.','Trabajos con estado y entrega.'],
  cotizador:['dinero','Saber cuánto cobrar para que valga la pena.','Un precio con tu tiempo, costos y margen.'],
@@ -3776,13 +3780,13 @@ function pgSilRiscos(cv,seed){const {g,W,H,b,B}=pgLienzo(cv,seed),N=26,h=[];for(
   const k=Math.floor(N*(.3+B()*.4)),tx=k/N*W,ty=h[k];g.fillRect(tx-W*.012,ty-H*.2,W*.024,H*.2);pgPoly(g,[[tx-W*.04,ty-H*.2],[tx+W*.04,ty-H*.2],[tx,ty-H*.32]]);pgCir(g,W*(.7+B()*.2),H*.18,H*.08)}
 function pgSilKey(cv,seed){const {g,W,H,B}=pgLienzo(cv,seed);pgSilRiscos(cv,seed*3+1);const g2=cv.getContext('2d'),x=W*(.25+B()*.5),y=H*.7;g2.fillStyle=PG_INK;pgCir(g2,x,y-H*.2,H*.035);pgPoly(g2,[[x-H*.03,y-H*.16],[x+H*.03,y-H*.16],[x+H*.045,y],[x-H*.045,y]]);g2.fillRect(x+H*.03,y-H*.17,H*.1,H*.01)}
 const PG_DIM={personaje:[360,480],criatura:[480,360],arma:[480,330],vehiculo:[440,420],prop:[330,450],entorno:[330,450],riscos:[520,320],keyframe:[560,320]};
-function pgGen(cat,seed,v,m){const [w,h]=PG_DIM[cat]||[400,400],k=m||1,cv=document.createElement('canvas');cv.width=w*k;cv.height=h*k;const s=seed*1009+v*7919;
+function pgGen(cat,seed,v,m){const [w,h]=PG_DIM[cat]||[400,400],k=m||1,cv=document.createElement('canvas');cv.width=w*k;cv.height=h*k;const s=seed*1009+v*7919;if(cat==='turno'){const g=pgInicio(cv),sx=[1,.82,.5,-1][v%4],i=Math.abs(seed)%10,R=fmRng(seed*977+5),j=(a,b)=>a+(b-a)*R();g.save();g.translate(cv.width/2,0);g.scale(sx,1);g.translate(-cv.width/2,0);PG_PER[i](g,cv.width,cv.height,R,j);g.restore();return cv}
   if(cat==='personaje'||cat==='criatura'){const g=pgInicio(cv),R=fmRng(s+5),j=(a,b)=>a+(b-a)*R();(cat==='criatura'?PG_CRI:PG_PER)[v%10](g,cv.width,cv.height,R,j);return cv}
   if(cat==='arma'){(v%3===2?pgSilFilo:pgSilArma)(cv,s);return cv}
   (PG_NUEVAS[cat]||{vehiculo:pgSilVeh,prop:pgSilProp,entorno:pgSilEnt,riscos:pgSilRiscos,keyframe:pgSilKey}[cat]||pgSilProp)(cv,s,v);return cv}
 /* ---------- las 9 páginas ---------- */
 const pgRej=(c,f,x,y,w,h,gap)=>{const o=[],cw=(w-gap*(c-1))/c,ch=(h-gap*(f-1))/f;for(let i=0;i<c*f;i++)o.push([x+(i%c)*(cw+gap),y+Math.floor(i/c)*(ch+gap),cw,ch,'mini']);return o};
-const PG_PAGS=[
+const PG_CONCEPT=[
  {n:1,cat:'personaje',nom:'Diseño de personaje',capA:'Exploración de siluetas',capB:'Silueta elegida',slots:[...pgRej(4,2,0,0,.5,1,.012),[.52,0,.48,1,'final']]},
  {n:2,cat:'personaje',nom:'Evolución del personaje',capA:'Etapas del diseño',capB:'Variantes',slots:[[0,0,.26,1,'mini'],[.27,0,.26,1,'mini'],[.54,0,.26,1,'mini'],[.82,0,.18,.49,'mini'],[.82,.51,.18,.49,'mini']]},
  {n:3,cat:'arma',nom:'Diseño de arma',capA:'Exploración de siluetas',capB:'Diseño elegido',slots:[...pgRej(2,3,0,0,.4,1,.012),[.42,0,.58,1,'final']]},
@@ -3792,9 +3796,47 @@ const PG_PAGS=[
  {n:7,cat:'entorno',nom:'Diseño de arquitectura',capA:'Silueta elegida',capB:'Exploración',slots:[[0,0,.6,1,'final'],...pgRej(2,2,.62,0,.38,1,.012)]},
  {n:8,cat:'riscos',nom:'Pintura de entorno',capA:'Pintura final',capB:'',slots:[[0,0,1,1,'final']]},
  {n:9,cat:'keyframe',nom:'Pintura de keyframe',capA:'Keyframe final',capB:'',slots:[[0,0,1,1,'final']]}];
+const PG_VISDEV=[
+ {n:1,cat:'personaje',nom:'Personajes',capA:'Exploración de personajes',capB:'Diseño elegido',slots:[...pgRej(3,2,0,0,.5,1,.012),[.52,0,.48,1,'final']]},
+ {n:2,cat:'expresion',nom:'Expresiones',capA:'Hoja de expresiones',capB:'',slots:pgRej(5,2,0,0,1,1,.012)},
+ {n:3,cat:'prop',nom:'Props',capA:'Exploración de props',capB:'Prop elegido',slots:[...pgRej(1,3,0,0,.36,1,.014),[.38,0,.62,1,'final']]},
+ {n:4,cat:'criatura',nom:'Criaturas',capA:'Exploración de criaturas',capB:'Criatura elegida',slots:[...pgRej(2,2,0,0,.44,1,.012),[.46,0,.54,1,'final']]},
+ {n:5,cat:'layout',nom:'Layout de escenario',capA:'Layout de planos y bloques',capB:'Variantes',slots:[[0,0,.62,1,'final'],...pgRej(1,3,.64,0,.36,1,.014)]},
+ {n:6,cat:'keyframe',nom:'Thumbnails de storyboard',capA:'Thumbnails',capB:'',slots:pgRej(3,3,0,0,1,1,.012)},
+ {n:7,cat:'entorno',nom:'Diseño de entorno',capA:'Diseño elegido',capB:'Vistas',slots:[[0,0,.6,1,'final'],...pgRej(1,2,.62,0,.38,1,.014)]},
+ {n:8,cat:'riscos',nom:'Pintura de entorno',capA:'Pintura final',capB:'',slots:[[0,0,1,1,'final']]},
+ {n:9,cat:'keyframe',nom:'Keyframe',capA:'Keyframe final',capB:'',slots:[[0,0,1,1,'final']]}];
+const PG_CHAR=[
+ {n:1,cat:'personaje',nom:'Presentación del personaje',capA:'Concepto',capB:'Exploración',slots:[[0,0,.55,1,'final'],...pgRej(1,3,.57,0,.43,1,.014)]},
+ {n:2,cat:'personaje',nom:'Exploración de siluetas',capA:'Siluetas',capB:'',slots:pgRej(4,3,0,0,1,1,.012)},
+ {n:3,cat:'turno',nom:'Turnaround',capA:'Frente · tres cuartos · perfil · espalda',capB:'',slots:pgRej(4,1,0,0,1,1,.014)},
+ {n:4,cat:'expresion',nom:'Expresiones',capA:'Hoja de expresiones',capB:'',slots:pgRej(5,2,0,0,1,1,.012)},
+ {n:5,cat:'casco',nom:'Detalles y accesorios',capA:'Detalle principal',capB:'Accesorios',slots:[[0,0,.5,1,'final'],...pgRej(2,2,.52,0,.48,1,.012)]},
+ {n:6,cat:'personaje',nom:'Pose y color',capA:'Pose y color final',capB:'Variantes de color',slots:[[0,0,.6,1,'final'],...pgRej(1,2,.62,0,.38,1,.014)]}];
+const PG_STORY=[
+ {n:1,cat:'keyframe',nom:'Beats de la historia',capA:'Momento clave',capB:'Beats',slots:[[0,0,.6,1,'final'],...pgRej(1,3,.62,0,.38,1,.014)]},
+ {n:2,cat:'keyframe',nom:'Thumbnails · primera pasada',capA:'Thumbnails rápidos',capB:'',slots:pgRej(4,3,0,0,1,1,.012)},
+ {n:3,cat:'keyframe',nom:'Thumbnails · segunda pasada',capA:'Thumbnails refinados',capB:'',slots:pgRej(4,3,0,0,1,1,.012)},
+ {n:4,cat:'riscos',nom:'Boards limpios con texto',capA:'Boards con subtítulo',capB:'',slots:pgRej(2,3,0,0,1,1,.014)},
+ {n:5,cat:'keyframe',nom:'Secuencia clave',capA:'Secuencia',capB:'',slots:pgRej(1,3,0,0,1,1,.014)},
+ {n:6,cat:'keyframe',nom:'Cierre',capA:'Plano final',capB:'',slots:[[0,0,1,1,'final']]}];
+const PG_ILUS=[
+ {n:1,cat:'keyframe',nom:'Portada',capA:'Ilustración principal',capB:'',slots:[[0,0,1,1,'final']]},
+ {n:2,cat:'keyframe',nom:'Concepto y thumbnails',capA:'Thumbnails',capB:'Elegido',slots:[...pgRej(3,2,0,0,.5,1,.012),[.52,0,.48,1,'final']]},
+ {n:3,cat:'keyframe',nom:'Boceto, línea y color plano',capA:'Boceto · línea · color plano',capB:'',slots:pgRej(3,1,0,0,1,1,.014)},
+ {n:4,cat:'riscos',nom:'Valores y luz',capA:'Valores y luz',capB:'Estudios',slots:[[0,0,.62,1,'final'],...pgRej(1,2,.64,0,.36,1,.014)]},
+ {n:5,cat:'riscos',nom:'Detalles',capA:'Detalles',capB:'Acabado',slots:[...pgRej(2,2,0,0,.4,1,.012),[.42,0,.58,1,'final']]},
+ {n:6,cat:'keyframe',nom:'Del thumbnail a la pieza final',capA:'Proceso paso a paso',capB:'',slots:pgRej(4,1,0,0,1,1,.012)},
+ {n:7,cat:'keyframe',nom:'Pieza final',capA:'Ilustración final',capB:'',slots:[[0,0,1,1,'final']]}];
+const PG_SETS={concept:PG_CONCEPT,visdev:PG_VISDEV,chardes:PG_CHAR,story:PG_STORY,ilus:PG_ILUS};
+const PG_SETMETA=[['concept','Concept Art'],['visdev','Visual Development'],['chardes','Character Design'],['story','Storyboard'],['ilus','Illustration']];
+const PG_PRE={concept:'conceptart',visdev:'visdev',chardes:'chardesign',story:'storyboard',ilus:'ilustracion'},PG_CARP={concept:'concept-art',visdev:'visual-development',chardes:'character-design',story:'storyboard',ilus:'illustration'};
+const PG_PAGS=PG_CONCEPT.slice();
+function pgUsaSet(k){S.pgSet=PG_SETS[k]?k:'concept';PG_PAGS.length=0;PG_PAGS.push(...PG_SETS[S.pgSet]);if(S.ajustes)S.ajustes.pgSet=S.pgSet}
+const pgBag=P=>{const k=S.pgSet||'concept';if(k==='concept')return P.pags;const f=k==='visdev'?'pagsV':'pags_'+k;return P[f]=P[f]||{}};
 const PG_OPC=10;
 function pgProy(){const a=S.ajustes;a.pgProy=a.pgProy||{autor:'',pags:{}};return a.pgProy}
-function pgEst(n){const P=pgProy();n=n||S.pgCur||1;return P.pags[n]=P.pags[n]||{seed:n,fin:0,t:'',d:'',imgs:{}}}
+function pgEst(n){const P=pgProy();n=n||S.pgCur||1;const B=pgBag(P);return B[n]=B[n]||{seed:n,fin:0,t:'',d:'',imgs:{}}}
 const PG_BM={};
 async function pgBm(ref){if(!ref)return null;if(ref.sil){const k='sil|'+silKey(ref.sil);if(!PG_BM[k])PG_BM[k]=await createImageBitmap(pgGen(ref.sil.cat,ref.sil.seed,ref.sil.v,2));return PG_BM[k]}const k=ref.mem||ref.asset;if(!k)return null;if(PG_BM[k])return PG_BM[k];try{const bl=ref.mem?null:await blobDeRef(ref);if(bl)PG_BM[k]=await createImageBitmap(bl)}catch{}return PG_BM[k]||null}
 const pgMk=(w,h)=>{const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);return c};
@@ -3813,21 +3855,23 @@ async function pgCapas(n,vista){const pg=PG_PAGS[n-1],st=pgEst(n),P=pgProy(),W=1
     if(own){if(st.imgs[i]&&st.imgs[i].sil)pgCont(qi,own,w,h,rol==='final'?24:12);else pgCubre(qi,own,w,h)}else if(vista){qi.fillStyle='#b9b5a8';qi.font='600 '+Math.max(16,Math.min(26,w/12))+'px system-ui,sans-serif';qi.textAlign='center';qi.fillText(rol==='final'?'Tu pieza final':'Boceto '+(idx+1),w/2,h/2)}
     L.push({name:rol==='final'?'Pieza final':'Opción '+(idx+1),canvas:im,left:Math.round(x),top:Math.round(y)})}
   txt('Rótulos',M,Y0+CH+10,CW,44,q=>{q.fillStyle=gris;q.font='20px system-ui,sans-serif';const f=pg.slots.find(s=>s[4]==='final'),mini=pg.slots.find(s=>s[4]==='mini');const lx=s=>(s?s[0]*CW:0);if(pg.capA)q.fillText(pg.capA,lx(pg.slots[0]),26);if(pg.capB&&pg.slots.length>1){const o=pg.slots.find(s=>s[0]>.3)||pg.slots[pg.slots.length-1];q.fillText(pg.capB,lx(o),26)}});
-  txt('Pie',M,H-70,CW,50,q=>{q.fillStyle=ink;q.font='600 20px system-ui,sans-serif';q.fillText(P.autor||'Tu nombre',0,30);q.fillStyle=gris;q.font='20px system-ui,sans-serif';q.textAlign='right';q.fillText('Página '+n+' de 9',CW,30)});
+  txt('Pie',M,H-70,CW,50,q=>{q.fillStyle=ink;q.font='600 20px system-ui,sans-serif';q.fillText(P.autor||'Tu nombre',0,30);q.fillStyle=gris;q.font='20px system-ui,sans-serif';q.textAlign='right';q.fillText('Página '+n+' de '+PG_PAGS.length,CW,30)});
   return {W,H,layers:L}}
 async function pgRender(n,vista){const {W,H,layers}=await pgCapas(n,vista),cv=pgMk(W,H),g=cv.getContext('2d');for(const l of layers)g.drawImage(l.canvas,l.left,l.top);return cv}
 async function pgDibuja(){const cv=document.getElementById('pg-cv');if(!cv)return;const tok=S._pgTok=(S._pgTok||0)+1;try{const r=await pgRender(S.pgCur||1,true);if(tok!==S._pgTok)return;cv.width=r.width;cv.height=r.height;cv.getContext('2d').drawImage(r,0,0)}catch(e){console.error(e)}
 }
 
-function vPagina(){const n=S.pgCur||1,pg=PG_PAGS[n-1],st=pgEst(n),P=pgProy(),hecha=k=>{const e=P.pags[k];return e&&(e.t||Object.values(e.imgs||{}).some(r=>!r.sil))},nHechas=PG_PAGS.filter(p=>hecha(p.n)).length,F=S.ajustes.silFavs||[];
+function vPagina(){if(!S._pgInit){pgUsaSet(S.ajustes.pgSet||'concept');S._pgInit=1}const n=S.pgCur||1,pg=PG_PAGS[n-1],st=pgEst(n),P=pgProy(),hecha=k=>{const e=pgBag(P)[k];return e&&(e.t||Object.values(e.imgs||{}).some(r=>!r.sil))},nHechas=PG_PAGS.filter(p=>hecha(p.n)).length,F=S.ajustes.silFavs||[];
   return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Mi portafolio</h1>
-  <p class="intro">Nueve páginas en el orden que usan los estudios: <b>personaje, evolución, arma, criatura, vehículo, objeto, arquitectura, pintura de entorno y keyframe</b>. Cada una muestra tu proceso —muchas opciones— y la pieza elegida, grande. Llénalas con tus bocetos; cuando estén listas, salen en un paquete que tu sitio importa con el <b>ojo apagado</b>, y ahí decides si se publica, se borra o se queda oculta. Para buscar ideas de formas usa <button class="btn sm ghost" data-act="vista" data-v="siluetas">Siluetas</button>.</p>
-  <div class="box"><span class="lbl">Páginas · ten ${nHechas} de 9 listas</span><div class="chips" style="margin-top:6px">${PG_PAGS.map(p=>`<button class="ch ${n===p.n?'on':''}" data-act="pg-pag" data-k="${p.n}" aria-pressed="${n===p.n}">${p.n} · ${p.nom}${hecha(p.n)?' ✓':''}</button>`).join('')}</div></div>
+  <p class="intro">Cinco plantillas —<b>Concept Art, Visual Development, Character Design, Storyboard e Illustration</b>— con las páginas que usan los estudios. Este set: <b>${PG_PAGS.map(p=>p.nom.toLowerCase()).join(', ')}</b>. Cada una muestra tu proceso —muchas opciones— y la pieza elegida, grande. Llénalas con tus bocetos; cuando estén listas, salen en un paquete que tu sitio importa con el <b>ojo apagado</b>, y ahí decides si se publica, se borra o se queda oculta. Para buscar ideas de formas usa <button class="btn sm ghost" data-act="vista" data-v="siluetas">Siluetas</button>.</p>
+  <div class="box"><span class="lbl">Plantilla</span><div class="chips" style="margin-top:6px">${PG_SETMETA.map(([k,nom])=>`<button class="ch ${(S.pgSet||'concept')===k?'on':''}" data-act="pg-set" data-k="${k}" aria-pressed="${(S.pgSet||'concept')===k}">${nom} · ${PG_SETS[k].length} páginas</button>`).join('')}</div></div>
+  <div class="box"><span class="lbl">Páginas · ten ${nHechas} de ${PG_PAGS.length} listas</span><div class="chips" style="margin-top:6px">${PG_PAGS.map(p=>`<button class="ch ${n===p.n?'on':''}" data-act="pg-pag" data-k="${p.n}" aria-pressed="${n===p.n}">${p.n} · ${p.nom}${hecha(p.n)?' ✓':''}</button>`).join('')}</div></div>
   <div class="box"><span class="lbl">1 · Pon tu trabajo en la página ${n}</span><div class="prow" style="margin-top:8px;flex-wrap:wrap">${pg.slots.some(s=>s[4]==='mini')?`<label class="btn sm pri" for="pg-fm">🖼 Subir mis bocetos (varios)</label><input type="file" id="pg-fm" accept="image/*" multiple hidden>`:''}<label class="btn sm ${pg.slots.some(s=>s[4]==='mini')?'':'pri'}" for="pg-ff">🖼 Subir mi pieza final</label><input type="file" id="pg-ff" accept="image/*" hidden><button class="btn sm" data-act="pg-rellena" title="Rellena los marcos vacíos con siluetas generadas para ver cómo quedaría">Rellenar con ideas de ejemplo</button>${Object.keys(st.imgs||{}).length?`<button class="btn sm ghost" data-act="pg-limpia">Vaciar la página</button>`:''}</div>
     ${F.length?`<span class="lbl" style="margin-top:12px;display:block">O usa una de tus siluetas favoritas como pieza final</span><div class="pg-favs">${F.slice(-12).map(o=>`<button class="pg-fav" data-act="pg-sil" data-k="${esc(silKey(o))}" title="Usar como pieza final"><canvas data-sil="${esc(silKey(o))}" width="200" height="170"></canvas></button>`).join('')}</div>`:`<p class="hint" style="margin:10px 0 0">Tip: en <b>Siluetas</b> puedes marcar ★ tus favoritas y usarlas aquí.</p>`}</div>
   <div class="box"><span class="lbl">2 · Texto de la página</span><div class="grid3 form2" style="gap:10px;margin-top:6px"><div class="field"><label for="pg-t">Título</label><input type="text" id="pg-t" value="${esc(st.t)}" placeholder="${esc(pg.nom)}"></div><div class="field"><label for="pg-c">Tu nombre (en todas las páginas)</label><input type="text" id="pg-c" value="${esc(P.autor)}" placeholder="Sebastián Álvarez"></div><div class="field" style="grid-column:1/-1"><label for="pg-d">Descripción</label><input type="text" id="pg-d" value="${esc(st.d)}" placeholder="El brief, el mundo y qué buscabas con estas formas"></div></div></div>
-  <div class="box"><div class="prow" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="lbl">Vista previa · página ${n} de 9</span><span class="prow" style="flex-wrap:wrap"><button class="btn sm" data-act="pg-png">PNG</button><button class="btn sm" data-act="pg-psd">PSD con capas</button><button class="btn sm" data-act="pg-todas">Las 9 en PNG</button></span></div><canvas id="pg-cv" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--line2)"></canvas>
+  <div class="box"><div class="prow" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="lbl">Vista previa · página ${n} de ${PG_PAGS.length}</span><span class="prow" style="flex-wrap:wrap"><button class="btn sm" data-act="pg-png">PNG</button><button class="btn sm" data-act="pg-psd">PSD con capas</button><button class="btn sm" data-act="pg-todas">Todas en PNG</button></span></div><canvas id="pg-cv" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--line2)"></canvas>
     <p class="hint" style="margin:6px 0 0">El PSD trae cada marco, opción, texto y rótulo en su capa; ábrelo en Photoshop o impórtalo en Procreate.</p></div>
+  <div class="box"><span class="lbl">Plantillas para descargar (vacías)</span><p style="margin:6px 0">Las páginas del set como <b>PSD con capas</b>, a 3200 × 2000 px, para armarlas en Photoshop o en el iPad. Cada recuadro es un grupo con su marco y una capa vacía donde dibujas o pegas tu arte. <b>Procreate</b> importa PSD y conserva las capas (Importar → elige el archivo).</p><div class="prow" style="flex-wrap:wrap"><button class="btn pri" data-act="pg-plant-todas">Las de este set (.zip)</button><button class="btn pri" data-act="pg-plant-18">Todos los sets · 37 plantillas (.zip)</button>${PG_PAGS.map(p=>`<button class="btn sm" data-act="pg-plant" data-k="${p.n}">${p.n} · ${p.nom}</button>`).join('')}</div></div>
   <div class="box" style="border-left:4px solid var(--ok)"><span class="lbl">3 · Llevarlas a tu sitio</span><p style="margin:6px 0">${nHechas?`Tienes <b>${nHechas}</b> página${nHechas>1?'s':''} lista${nHechas>1?'s':''} (las que tienen título o tus imágenes).`:'Cuando tengas título o imágenes tuyas en una página, entra al paquete.'} El paquete es un .zip: en el panel de tu sitio usa <b>Importar</b> y elígelo. Llegan <b>ocultas</b> (ojo apagado): tú las revisas y decides si las publicas (ojo prendido), las borras o las dejas ocultas.</p><div class="prow" style="flex-wrap:wrap"><button class="btn pri" data-act="pg-paquete" ${nHechas?'':'disabled'}>Descargar paquete para mi portafolio (.zip)</button><a class="btn sm ghost" href="https://sebastianalvarezdelfin.github.io/portafolio/admin.html" target="_blank" rel="noopener">Abrir el panel de mi sitio ↗</a></div></div>`}
 document.addEventListener('input',e=>{const t=e.target;if(!t||!/^pg-[tdc]$/.test(t.id||''))return;if(t.id==='pg-c')pgProy().autor=t.value;else pgEst()[t.id.slice(3)]=t.value;marcarAj();pgDibuja()});
 document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='pg-fm'&&t.id!=='pg-ff')||!t.files||!t.files.length)return;const n=S.pgCur||1,pg=PG_PAGS[n-1],st=pgEst(n),fs_=[...t.files];t.value='';
@@ -3835,12 +3879,33 @@ document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='pg
   try{if(t.id==='pg-ff'){await poner(pg.slots.findIndex(s=>s[4]==='final'),fs_[0])}else{const ms=pg.slots.map((s,i)=>s[4]==='mini'?i:-1).filter(i=>i>=0);for(let k=0;k<Math.min(ms.length,fs_.length);k++)await poner(ms[k],fs_[k])}marcarAj()}catch(err){toast('No pude abrir esa imagen')}renderMain()});
 function pgFinSlot(pg){return pg.slots.findIndex(s=>s[4]==='final')}
 async function pgPaquete(){if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}
-  const P=pgProy(),DI={personaje:'Character Design',criatura:'Creature Design',arma:'Weapon Design',vehiculo:'Vehicle Design',prop:'Prop Design',entorno:'Environment Design',riscos:'Environment Painting',keyframe:'Keyframe Painting'},zip=new JSZip(),raiz=zip.folder('portafolio-paquete'),entradas=[];
-  for(const pg of PG_PAGS){const st=P.pags[pg.n];if(!(st&&(st.t||Object.values(st.imgs||{}).some(r=>!r.sil))))continue;expStatus('Armando página '+pg.n+'…');const nombre='pagina-'+pg.n+'/pagina-'+pg.n+'.png';raiz.file(nombre,await aBlob(await pgRender(pg.n,false)));
-    entradas.push({title:st.t||pg.nom,year:String(new Date().getFullYear()),discipline:DI[pg.cat]||pg.nom,section:/personaje|criatura/.test(pg.cat)?'characters':'projects',description:st.d||'',images:[nombre]})}
+  const P=pgProy(),DI={personaje:'Character Design',criatura:'Creature Design',arma:'Weapon Design',vehiculo:'Vehicle Design',prop:'Prop Design',entorno:'Environment Design',riscos:'Environment Painting',keyframe:'Keyframe Painting',expresion:'Expression Sheet',layout:'Environment Layout',turno:'Turnaround',casco:'Props and Accessories'},zip=new JSZip(),raiz=zip.folder('portafolio-paquete'),entradas=[];
+  for(const pg of PG_PAGS){const st=pgBag(P)[pg.n];if(!(st&&(st.t||Object.values(st.imgs||{}).some(r=>!r.sil))))continue;expStatus('Armando página '+pg.n+'…');const nombre='pagina-'+pg.n+'/pagina-'+pg.n+'.png';raiz.file(nombre,await aBlob(await pgRender(pg.n,false)));
+    entradas.push({title:st.t||pg.nom,year:String(new Date().getFullYear()),discipline:DI[pg.cat]||pg.nom,section:/personaje|criatura|expresion|turno/.test(pg.cat)?'characters':'projects',description:st.d||'',images:[nombre]})}
   expStatus('');if(!entradas.length){toast('Pon título o tus imágenes en al menos una página');return}
   raiz.file('entradas.json',JSON.stringify(entradas,null,2));raiz.file('LEEME.txt','Paquete de portafolio ('+fecha(Date.now())+')\n\nEn el panel de tu sitio usa Importar y elige este .zip.\nLas páginas llegan ocultas (ojo apagado): ahí decides si las publicas, las borras o las dejas ocultas.\n\n'+entradas.map(e=>'- '+e.title+' · '+e.discipline).join('\n'));
   expStatus('Comprimiendo…');const blob=await zip.generateAsync({type:'blob'});expStatus('');await guardarArchivo('portafolio-paquete-paginas-'+hoyKey()+'.zip',blob);toast('Paquete listo: impórtalo en el panel de tu sitio')}
+async function pgCargaPsd(){if(window.agPsd)return;await new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/ag-psd@28.0.0/dist/bundle.js';sc.onload=ok;sc.onerror=()=>no(new Error('No pude cargar el generador de PSD: revisa tu conexión'));document.head.appendChild(sc)})}
+/* plantilla vacía de una página: a doble tamaño (3200 × 2000), con un grupo por recuadro para dibujar o pegar tu arte */
+async function pgPlantillaPsd(n){await pgCargaPsd();const pg=PG_PAGS[n-1],K=2,W=1600*K,H=1000*K,M=64*K,X0=64*K,Y0=210*K,CW=(1600-128)*K,CH=670*K,ink='#16181d',gris='#6b6a63',hijos=[];
+  const fondo=pgMk(W,H),qf=fondo.getContext('2d');qf.fillStyle='#f3f1ea';qf.fillRect(0,0,W,H);hijos.push({name:'Fondo',canvas:fondo,left:0,top:0});
+  const txt=(name,x,y,w,h,fn)=>{const c=pgMk(w,h),q=c.getContext('2d');q.textBaseline='alphabetic';fn(q);hijos.push({name,canvas:c,left:x,top:y})};
+  txt('Título',M,40*K,1100*K,70*K,q=>{q.fillStyle=ink;q.font='700 '+46*K+'px system-ui,Segoe UI,sans-serif';q.fillText('Título del proyecto',0,56*K)});
+  txt('Descripción',M,118*K,1000*K,80*K,q=>{q.fillStyle=gris;q.font=22*K+'px system-ui,Segoe UI,sans-serif';pgTexto(q,'El brief, el mundo y qué buscas con estas formas.',0,22*K,1000*K,30*K)});
+  let mi=0;pg.slots.forEach((sl,i)=>{const [fx,fy,fw,fh,rol]=sl,x=Math.round(X0+fx*CW),y=Math.round(Y0+fy*CH),w=Math.round(fw*CW),h=Math.round(fh*CH),nom=rol==='final'?'Pieza final':'Boceto '+(++mi);
+    const marco=pgMk(w,h),qm=marco.getContext('2d');qm.fillStyle=PG_BG;qm.fillRect(0,0,w,h);qm.strokeStyle='#cfcabc';qm.lineWidth=2*K;qm.strokeRect(K,K,w-2*K,h-2*K);
+    hijos.push({name:nom,opened:false,children:[{name:'Marco',canvas:marco,left:x,top:y},{name:'Dibuja o pega aquí',canvas:pgMk(w,h),left:x,top:y}]})});
+  txt('Rótulos',M,Y0+CH+10*K,CW,44*K,q=>{q.fillStyle=gris;q.font=20*K+'px system-ui,sans-serif';if(pg.capA)q.fillText(pg.capA,pg.slots[0][0]*CW,26*K);if(pg.capB&&pg.slots.length>1){const o=pg.slots.find(x=>x[0]>.3)||pg.slots[pg.slots.length-1];q.fillText(pg.capB,o[0]*CW,26*K)}});
+  txt('Pie',M,H-70*K,CW,50*K,q=>{q.fillStyle=ink;q.font='600 '+20*K+'px system-ui,sans-serif';q.fillText('Tu nombre',0,30*K);q.fillStyle=gris;q.font=20*K+'px system-ui,sans-serif';q.textAlign='right';q.fillText('Página '+n+' de '+PG_PAGS.length,CW,30*K)});
+  return new Blob([window.agPsd.writePsd({width:W,height:H,children:hijos})],{type:'image/vnd.adobe.photoshop'})}
+const pgNomPlant=n=>'plantilla-'+PG_PRE[S.pgSet||'concept']+'-'+n+'-'+slug(PG_PAGS[n-1].nom,30).toLowerCase()+'.psd';
+async function pgPlantillasTodas(){if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}const cur=S.pgSet||'concept',zip=new JSZip(),raiz=zip.folder('plantillas-portafolio');let tot=0;
+  try{for(const [k] of PG_SETMETA){pgUsaSet(k);const f=raiz.folder(PG_CARP[k]);for(let n=1;n<=PG_PAGS.length;n++){expStatus(PG_CARP[k]+' · plantilla '+n+' de '+PG_PAGS.length+'…');f.file(pgNomPlant(n),await pgPlantillaPsd(n));tot++}}}finally{pgUsaSet(cur)}
+  raiz.file('LEEME.txt','Plantillas de portafolio ('+tot+' páginas, 3200 × 2000 px)\n\nUna carpeta por set: concept-art, visual-development, character-design, storyboard, illustration.\nCada archivo es un PSD con capas: en cada recuadro hay un grupo con el marco y una capa vacía "Dibuja o pega aquí".\nPhotoshop: ábrelo y pinta o pega tu arte. Procreate (iPad): Importar → elige el .psd; conserva las capas.\n');expStatus('Comprimiendo…');const bl=await zip.generateAsync({type:'blob'});expStatus('');await guardarArchivo('plantillas-portafolio-'+tot+'-paginas.zip',bl)}
+async function pgPlantillasZip(){if(!window.JSZip){toast('No cargó el empaquetador. Recarga la página.');return}const zip=new JSZip(),raiz=zip.folder('plantillas-portafolio');
+  for(let n=1;n<=PG_PAGS.length;n++){expStatus('Plantilla '+n+' de '+PG_PAGS.length+'…');raiz.file(pgNomPlant(n),await pgPlantillaPsd(n))}
+  raiz.file('LEEME.txt','Plantillas de portafolio de concept art (9 páginas, 3200 × 2000 px)\n\nCada archivo es un PSD con capas. En cada recuadro hay un grupo con el marco y una capa vacía "Dibuja o pega aquí".\nPhotoshop: ábrelo y pinta o pega tu arte dentro de cada grupo.\nProcreate (iPad): Importar → elige el .psd; conserva las capas.\n');
+  expStatus('Comprimiendo…');const b=await zip.generateAsync({type:'blob'});expStatus('');await guardarArchivo('plantillas-'+PG_CARP[S.pgSet||'concept']+'-9-paginas.zip',b)}
 async function pgPsd(n){if(!window.agPsd)await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/ag-psd@28.0.0/dist/bundle.js';s.onload=ok;s.onerror=()=>no(new Error('No pude cargar el generador de PSD: revisa tu conexión'));document.head.appendChild(s)});
   const {W,H,layers}=await pgCapas(n,false),ps={width:W,height:H,children:layers.map(l=>({name:l.name,canvas:l.canvas,left:l.left,top:l.top}))};const buf=window.agPsd.writePsd(ps);return new Blob([buf],{type:'image/vnd.adobe.photoshop'})}
 
@@ -3913,13 +3978,30 @@ function pgSilInstr(cv,seed,v){const {g,W,H,b,p}=pgLienzo(cv,seed),k=(v||0)%4,cx
   else if(k===1){g.lineWidth=W*.04;g.beginPath();g.moveTo(cx-W*.3,H*.9);g.quadraticCurveTo(cx-W*.4,H*.15,cx+W*.3,H*.12);g.stroke();g.fillRect(cx-W*.32,H*.88,W*.64,H*.03);g.fillRect(cx+W*.28,H*.1,W*.03,H*.8);for(let i=0;i<7;i++)pgLin(g,[[cx-W*.3+i*W*.09,H*.3+i*H*.08],[cx-W*.3+i*W*.09+W*.02,H*.88]],2)}
   else if(k===2){g.lineWidth=W*.07;g.lineCap='round';g.beginPath();for(let a=0;a<14;a+=.2){const r=a*W*.018+4,x=cx+Math.cos(a)*r,y=H*.5+Math.sin(a)*r;a?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();pgOva(g,cx+W*.3,H*.62,W*.28,H*.2,.3)}
   else{pgOva(g,cx,H*.7,W*.5,H*.34);g.fillRect(cx-W*.25,H*.52,W*.5,H*.18);pgOva(g,cx,H*.52,W*.5,H*.1);[-1,1].forEach(s=>pgLin(g,[[cx+s*W*.1,H*.5],[cx+s*W*.26,H*.1]],W*.03));pgCir(g,cx-W*.26,H*.1,W*.03);pgCir(g,cx+W*.26,H*.1,W*.03)}}
-const PG_NUEVAS={arbol:pgSilArbol,nave:pgSilNave,barco:pgSilBarco,robot:pgSilRobot,casco:pgSilCasco,escudo:pgSilEscudo,casa:pgSilCasa,totem:pgSilTotem,ave:pgSilAve,insecto:pgSilInsecto,hongo:pgSilHongo,instrumento:pgSilInstr};
-Object.assign(PG_DIM,{arbol:[360,440],nave:[540,320],barco:[520,340],robot:[320,440],casco:[340,400],escudo:[330,420],casa:[380,420],totem:[300,460],ave:[460,340],insecto:[460,340],hongo:[420,380],instrumento:[340,440]});
-const SIL_CATS=[['personaje','Personajes'],['criatura','Criaturas'],['arma','Armas'],['vehiculo','Mechas y vehículos'],['nave','Naves'],['barco','Barcos'],['robot','Robots'],['prop','Objetos'],['casco','Cascos y máscaras'],['escudo','Escudos'],['casa','Casas y cabañas'],['entorno','Torres'],['riscos','Riscos y paisajes'],['arbol','Árboles'],['hongo','Hongos y plantas'],['ave','Aves'],['insecto','Insectos'],['totem','Tótems'],['instrumento','Instrumentos']];
+function pgSilExpr(cv,seed,v){const g=pgInicio(cv),W=cv.width,H=cv.height,R=fmRng(seed*977+5),cx=W/2,cy=H*.52,r=W*.3,forma=Math.floor(R()*4),pelo=Math.floor(R()*4),e=(v||0)%10,BG=PG_BG;
+  if(pelo===1)pgOva(g,cx,cy-r*.45,r*2.5,r*1.8);else if(pelo===2){[-1,0,1].forEach(k=>pgPoly(g,[[cx+k*r*.7-r*.4,cy-r*.6],[cx+k*r*.7+r*.4,cy-r*.6],[cx+k*r*.7,cy-r*1.6]]))}else if(pelo===3)pgPoly(g,[[cx-r*1.1,cy+r*.2],[cx-r,cy-r*1.1],[cx+r*.2,cy-r*1.3],[cx+r*1.1,cy-r*.8],[cx+r,cy+r*.9],[cx+r*1.3,cy+r*1.6],[cx-r*1.3,cy+r*1.6]]);
+  if(R()>.5)[-1,1].forEach(s=>pgOva(g,cx+s*r*1.05,cy+r*.05,r*.35,r*.6));
+  if(forma===0)pgOva(g,cx,cy,r*2,r*2.1);else if(forma===1)pgOva(g,cx,cy,r*1.7,r*2.5);else if(forma===2)pgSuave(g,[[cx-r,cy-r],[cx+r,cy-r],[cx+r,cy+r*.6],[cx+r*.5,cy+r*1.1],[cx-r*.5,cy+r*1.1],[cx-r,cy+r*.6]]);else pgSuave(g,[[cx-r*1.1,cy-r*.8],[cx+r*1.1,cy-r*.8],[cx,cy+r*1.3]]);
+  g.fillStyle=BG;g.strokeStyle=BG;g.lineCap='round';const lw=r*.12,ex=r*.45,ey=cy-r*.1,ojo=(x,y,w,h)=>pgOva(g,x,y,w,h),arco=(x,y,rad,a0,a1)=>{g.lineWidth=lw;g.beginPath();g.arc(x,y,rad,a0,a1);g.stroke()},ceja=(x,y,a)=>pgLin(g,[[x-r*.3,y-a*r*.2],[x+r*.3,y+a*r*.2]],lw);
+  if(e===0){ojo(cx-ex,ey,r*.2,r*.2);ojo(cx+ex,ey,r*.2,r*.2);pgLin(g,[[cx-r*.3,cy+r*.55],[cx+r*.3,cy+r*.55]],lw)}
+  else if(e===1){arco(cx-ex,ey+r*.1,r*.18,Math.PI*1.1,Math.PI*1.9);arco(cx+ex,ey+r*.1,r*.18,Math.PI*1.1,Math.PI*1.9);arco(cx,cy+r*.3,r*.4,.15,Math.PI-.15)}
+  else if(e===2){ojo(cx-ex,ey+r*.05,r*.26,r*.12);ojo(cx+ex,ey+r*.05,r*.26,r*.12);ceja(cx-ex,ey-r*.22,-1);ceja(cx+ex,ey-r*.22,1);arco(cx,cy+r*.8,r*.35,Math.PI*1.1,Math.PI*1.9)}
+  else if(e===3){ojo(cx-ex,ey+r*.1,r*.18,r*.22);ojo(cx+ex,ey+r*.1,r*.18,r*.22);ceja(cx-ex,ey-r*.2,1);ceja(cx+ex,ey-r*.2,-1);arco(cx,cy+r*.8,r*.3,Math.PI*1.15,Math.PI*1.85)}
+  else if(e===4){ojo(cx-ex,ey,r*.32,r*.4);ojo(cx+ex,ey,r*.32,r*.4);ceja(cx-ex,ey-r*.45,0);ceja(cx+ex,ey-r*.45,0);ojo(cx,cy+r*.6,r*.3,r*.42)}
+  else if(e===5){pgLin(g,[[cx-ex-r*.15,ey],[cx-ex+r*.15,ey+r*.04]],lw);pgLin(g,[[cx+ex-r*.15,ey+r*.04],[cx+ex+r*.15,ey]],lw);ojo(cx+r*.1,cy+r*.55,r*.2,r*.14)}
+  else if(e===6){ojo(cx-ex,ey,r*.2,r*.2);ojo(cx+ex,ey,r*.2,r*.2);ceja(cx+ex,ey-r*.3,-1.4);ceja(cx-ex,ey-r*.2,0);arco(cx+r*.1,cy+r*.35,r*.4,.1,Math.PI*.7)}
+  else if(e===7){ojo(cx-ex,ey,r*.34,r*.4);ojo(cx+ex,ey,r*.34,r*.4);g.fillStyle=PG_INK;pgCir(g,cx-ex,ey,r*.06);pgCir(g,cx+ex,ey,r*.06);g.fillStyle=BG;ceja(cx-ex,ey-r*.45,1);ceja(cx+ex,ey-r*.45,-1);pgLin(g,[[cx-r*.3,cy+r*.6],[cx-r*.15,cy+r*.5],[cx,cy+r*.62],[cx+r*.15,cy+r*.5],[cx+r*.3,cy+r*.6]],lw)}
+  else if(e===8){pgLin(g,[[cx-ex-r*.15,ey+r*.05],[cx-ex+r*.15,ey-r*.03]],lw);pgLin(g,[[cx+ex-r*.15,ey-r*.03],[cx+ex+r*.15,ey+r*.05]],lw);pgLin(g,[[cx-r*.15,cy+r*.15],[cx,cy+r*.05],[cx+r*.15,cy+r*.15]],lw);arco(cx,cy+r*.85,r*.35,Math.PI*1.1,Math.PI*1.7)}
+  else{pgLin(g,[[cx-ex-r*.15,ey-r*.05],[cx-ex+r*.15,ey+r*.05]],lw);pgLin(g,[[cx+ex-r*.15,ey+r*.05],[cx+ex+r*.15,ey-r*.05]],lw);ojo(cx,cy+r*.55,r*.7,r*.8)}}
+function pgSilLayout(cv,seed){const {g,W,H,b}=pgLienzo(cv,seed),n=7+Math.floor(b()*6),y0=H*.9;for(let i=0;i<n;i++){const w=W*(.06+b()*.16),h=H*(.1+b()*.5),x=b()*(W-w);g.save();g.translate(x+w/2,y0);g.rotate((b()-.5)*.25);g.fillRect(-w/2,-h,w,h);if(b()>.5)pgPoly(g,[[-w/2,-h],[w/2,-h],[0,-h-H*(.05+b()*.12)]]);g.restore()}g.fillRect(W*.08,H*(.45+b()*.2),W*.84,H*.025);g.fillRect(0,y0,W,H*.1)}
+const PG_NUEVAS={expresion:pgSilExpr,layout:pgSilLayout,arbol:pgSilArbol,nave:pgSilNave,barco:pgSilBarco,robot:pgSilRobot,casco:pgSilCasco,escudo:pgSilEscudo,casa:pgSilCasa,totem:pgSilTotem,ave:pgSilAve,insecto:pgSilInsecto,hongo:pgSilHongo,instrumento:pgSilInstr};
+Object.assign(PG_DIM,{turno:[300,460],expresion:[300,300],layout:[520,360],arbol:[360,440],nave:[540,320],barco:[520,340],robot:[320,440],casco:[340,400],escudo:[330,420],casa:[380,420],totem:[300,460],ave:[460,340],insecto:[460,340],hongo:[420,380],instrumento:[340,440]});
+const SIL_CATS=[['personaje','Personajes'],['criatura','Criaturas'],['arma','Armas'],['vehiculo','Mechas y vehículos'],['nave','Naves'],['barco','Barcos'],['robot','Robots'],['prop','Objetos'],['casco','Cascos y máscaras'],['escudo','Escudos'],['casa','Casas y cabañas'],['entorno','Torres'],['riscos','Riscos y paisajes'],['arbol','Árboles'],['hongo','Hongos y plantas'],['ave','Aves'],['insecto','Insectos'],['totem','Tótems'],['instrumento','Instrumentos'],['expresion','Rostros y expresiones'],['layout','Bloques de escenario']];
 const SIL_N=30;
 function silEst(){const a=S.ajustes;a.silFavs=a.silFavs||[];return S.sil=S.sil||{cat:'todo',tanda:1}}
 function silItem(cat,tanda,i){if(cat!=='todo')return {cat,seed:tanda,v:i};const R=fmRng(tanda*131+i*977+3),c=SIL_CATS[Math.floor(R()*SIL_CATS.length)][0];return {cat:c,seed:tanda*7+i,v:i}}
 const silKey=o=>o.cat+'|'+o.seed+'|'+o.v;
+function vCuadricula(){const I=(S.ahora&&S.ahora.idea)||{cam:'',luz:'',luzK:''};return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Cuadrículas de perspectiva</h1><p class="intro">Elige 1, 2 o 3 puntos de fuga, dónde cae el horizonte y qué tan densa la quieres. Se descarga como <b>PSD con capas</b> (suelo, techo, verticales, horizonte, tercios, luz y masas de valor por separado) o como PNG transparente, a tamaño real para trabajar encima.</p>${ahGridHTML(I)}`}
 function vSiluetas(){const st=silEst(),F=S.ajustes.silFavs,items=st.cat==='favs'?F:Array.from({length:SIL_N},(_,i)=>silItem(st.cat,st.tanda,i));
   return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Siluetas</h1>
   <p class="intro">Una fábrica de ideas para explorar formas: ${SIL_CATS.length} tipos de cosas y <b>${SIL_N} ideas por tanda</b>, cada una distinta de las demás. Mira muchas, quédate con las raras que te llamen (★) y úsalas como punto de partida en tu portafolio o para dibujar encima.</p>
@@ -5708,7 +5790,58 @@ function ahPlano(I){const t=(I.cam||'').toLowerCase(),W=800,H=450;let hy=.52,vp=
   ${luzSvg}<line x1="${L[0]}" y1="${L[1]+(lz==='fuego'?-30:34)}" x2="${Math.max(30,Math.min(W-30,L[0]+sx))}" y2="${Math.min(H-30,L[1]+sy+(lz==='fuego'?0:40))}" stroke="#ffd166" stroke-width="2.4" stroke-dasharray="6 6" opacity=".85"/>
   <g font-family="system-ui,sans-serif" font-size="21" font-weight="800"><text x="12" y="${fuera?20:Y-8}" fill="#ff6a3d">${fuera?'↑ HORIZONTE FUERA DEL CUADRO (arriba)':'HORIZONTE'}</text><text x="${foco[0]-44}" y="${foco[1]+5}" fill="#14161b">3 · FOCO</text><text x="${(lado>=0?560:50)+14}" y="${Y-102}" fill="#fff">2 · MEDIO</text><text x="14" y="${H-14}" fill="#fff">1 · OSCURO (primer plano)</text>${vp===1&&!fuera?`<text x="${px+8}" y="${Y+20}" fill="#4cc9f0">PUNTO DE FUGA</text>`:vp===2?`<text x="12" y="${H-100}" fill="#4cc9f0">2 PUNTOS DE FUGA (fuera del cuadro)</text>`:''}</g>
   <g font-family="system-ui,sans-serif" font-size="19" fill="#cbd0da"><text x="${W-12}" y="22" text-anchor="end">${esc(I.luz)}</text></g></svg>`}
-function ahPlanoHTML(I){return `<div class="ah-plano"><span class="lbl">Plano de la escena · dónde va cada cosa (no es el dibujo, es tu punto de partida)</span>${ahPlano(I)}<p class="muted" style="margin:6px 0 0;font-size:13px">Dibuja tus 3 thumbnails sobre este esquema: el horizonte naranja, los puntos de fuga azules, la luz amarilla y las tres masas de valor (1 oscuro, 2 medio, 3 claro).</p></div>`}
+/* ================= Cuadrícula de perspectiva para Photoshop: capas reales, 1/2/3 puntos de fuga ================= */
+const GRID_TAM={hd:[1920,1080],'2k':[2560,1440],'4k':[3840,2160]};
+function ahPlanoDatos(I){const t=(I.cam||'').toLowerCase();let hy=.52,vp=1,fuera=false;if(/baja/.test(t))hy=.8;else if(/picada|vista alta/.test(t)){hy=.04;fuera=true}else if(/esquina|dos puntos/.test(t)){hy=.56;vp=2}else if(/gran angular/.test(t))hy=.5;
+  const Y=Math.round(450*hy),lz=I.luzK||'',L={amanecer:[110,Y-26,1],atardecer:[690,Y-26,-1],fuego:[400,372,0],luna:[690,64,-1],cenital:[400,36,0]}[lz]||[150,62,1],lado=L[2]||1;return {hy,vp,fuera,Y,lz,L,lado,foco:lado>=0?[540,168]:[260,168]}}
+function ahGridEst(I){const A=S.ahora=S.ahora||{};if(!A.grid){const d=ahPlanoDatos(I);A.grid={pts:d.vp,hor:d.fuera?'fuera':d.hy>.7?'bajo':'medio',den:'media',tam:'2k',vpd:'int',col:'negro',extra:'no'}}return A.grid}
+function ahGridCapas(I,cfg,W,H){const d=ahPlanoDatos(I),hy=({fuera:-.25,alto:.28,medio:.5,bajo:.74})[cfg.hor];const Y=Math.round(H*(hy==null?.5:hy)),K=W/1920,s=W/800,
+  den=({suelta:[10,12],media:[5,24],densa:[2.5,48],ultra:[1.25,72]})[cfg.den]||[5,24],step=den[0]*Math.PI/180,N=den[1];
+  const cap=(name,o)=>{const c=pgMk(W,H);return Object.assign({name,canvas:c,left:0,top:0,g:c.getContext('2d')},o||{})};
+  const lin=(g,x1,y1,x2,y2,col,w,dash)=>{g.strokeStyle=col;g.lineWidth=w;g.setLineDash(dash||[]);g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();g.setLineDash([])};
+  const ray=(g,vx,vy,x2,y2,col,w)=>{const dx=x2-vx,dy=y2-vy,l=Math.hypot(dx,dy)||1,R=Math.hypot(W,H)*5;lin(g,vx,vy,vx+dx/l*R,vy+dy/l*R,col,w)};
+  const neg=cfg.col==='negro',CS='#1fb6e8',CT='#e34fa6',CV='#7a8499',HO=neg?'#000':'#ff6a3d',cl=(b,mj)=>neg?(mj?'#000':'#5f5f5f'):b,w1=Math.max(1,1.4*K),w2=Math.max(2,2.6*K);
+  const suelo=cap('Suelo · líneas al punto de fuga (cian)',{opacity:.9}),techo=cap('Techo y cielo · líneas (magenta)',{opacity:.9}),vert=cap(cfg.pts===3?'Verticales convergentes (3.er punto)':'Verticales',{opacity:.7}),prof=cap('Profundidad del suelo (horizontales)',{opacity:.8});
+  const gS=suelo.g,gT=techo.g,y0s=Math.max(0,Y),y1t=Math.min(H,Y);gS.save();gS.beginPath();gS.rect(0,y0s,W,H-y0s);gS.clip();gT.save();gT.beginPath();gT.rect(0,0,W,Math.max(0,y1t));gT.clip();
+  const pts=[];
+  if(cfg.pts===1){const vx=W/2;pts.push([vx,Y,'PUNTO DE FUGA']);for(let i=-N;i<=2*N;i++){const x=i*(W/N),m=i%4===0?w2:w1;ray(gS,vx,Y,x,H,cl(CS,m===w2),m);ray(gT,vx,Y,x,0,cl(CT,m===w2),m)}
+    if(Y<H){const n=Math.round(N*1.2);for(let k=0;k<=n*2;k++){const z=1+k*(.55*24/N),y=Y+(H-Y)/z;if(y>Y+6*K&&y<H+2)lin(prof.canvas.getContext('2d'),0,y,W,y,cl(CS,k%4===0),k%4===0?w2:w1)}}
+    const cuenta=Math.round(N/2);for(let i=0;i<=cuenta;i++)lin(vert.g,i*W/cuenta,0,i*W/cuenta,H,cl(CV,i%4===0),i%4===0?w2:w1)}
+  else{const int=cfg.vpd!=='ext',kx=cfg.pts===3?.95:.6,vl=int?[W*.07,Y]:[-W*kx,Y],vr=int?[W*.93,Y]:[W*(1+kx),Y],lim=int?Math.PI-step*.5:1.48;pts.push([vl[0],vl[1],'PF IZQUIERDO'],[vr[0],vr[1],'PF DERECHO']);
+    for(let i=1;i*step<lim;i++){const a=i*step,m=i%4===0?w2:w1;[[vl,1],[vr,-1]].forEach(([v,sg])=>{const dx=Math.cos(a)*sg,dy=Math.sin(a);ray(gS,v[0],v[1],v[0]+dx*100,v[1]+dy*100,cl(CS,m===w2),m);ray(gT,v[0],v[1],v[0]+dx*100,v[1]-dy*100,cl(CT,m===w2),m)})}
+    lin(gS,0,Y,W,Y,cl(CS,true),w2*1.6);
+    if(cfg.pts===3){const above=Y>=H*.45,vy=above?-H*1.5:H*2.5,vx=W/2;pts.push([vx,vy,'PF VERTICAL']);for(let i=-N;i<=2*N;i++){const x=i*(W/N);ray(vert.g,vx,vy,x,above?H:0,cl(CV,i%4===0),i%4===0?w2:w1)}}
+    else{const cuenta=Math.round(N/1.5);for(let i=0;i<=cuenta;i++)lin(vert.g,i*W/cuenta,0,i*W/cuenta,H,cl(CV,i%4===0),i%4===0?w2:w1)}}
+  gS.restore();gT.restore();
+  const ter=cap('Tercios y centro',{opacity:.7}),gt=ter.g;[1,2].forEach(i=>{lin(gt,W*i/3,0,W*i/3,H,'#8a93a6',w1,[10*K,8*K]);lin(gt,0,H*i/3,W,H*i/3,'#8a93a6',w1,[10*K,8*K])});lin(gt,W/2-18*K,H/2,W/2+18*K,H/2,'#8a93a6',w1);lin(gt,W/2,H/2-18*K,W/2,H/2+18*K,'#8a93a6',w1);
+  const mar=cap('Márgenes de seguridad (5 % y 10 %)',{hidden:true}),gm=mar.g;gm.strokeStyle='#ffb703';gm.lineWidth=w1;gm.setLineDash([14*K,10*K]);gm.strokeRect(W*.05,H*.05,W*.9,H*.9);gm.strokeStyle='#9aa4b8';gm.strokeRect(W*.1,H*.1,W*.8,H*.8);
+  const hor=cap('Horizonte'),gh=hor.g;if(Y>=0&&Y<=H)lin(gh,0,Y,W,Y,HO,neg?4.5*K:3*K,neg?[]:[18*K,12*K]);
+  const pf=cap('Puntos de fuga'),gp=pf.g;pts.forEach(([x,y])=>{const cx=Math.max(24*K,Math.min(W-24*K,x)),cy=Math.max(24*K,Math.min(H-24*K,y)),fuera=cx!==x||cy!==y;gp.strokeStyle=fuera?'#ffb703':(neg?'#000':'#1fb6e8');gp.lineWidth=3*K;gp.beginPath();gp.arc(cx,cy,14*K,0,7);gp.stroke();lin(gp,cx-26*K,cy,cx+26*K,cy,gp.strokeStyle,3*K);lin(gp,cx,cy-26*K,cx,cy+26*K,gp.strokeStyle,3*K);if(fuera){gp.fillStyle='#ffb703';gp.beginPath();const dx=x<0?-1:x>W?1:0,dy=y<0?-1:y>H?1:0;gp.moveTo(cx+dx*34*K,cy+dy*34*K);gp.lineTo(cx+dx*14*K-dy*12*K,cy+dy*14*K+dx*12*K);gp.lineTo(cx+dx*14*K+dy*12*K,cy+dy*14*K-dx*12*K);gp.closePath();gp.fill()}});
+  /* luz y masas de valor */
+  const lz=d.lz,Lx=d.L[0]*s,Ly=(lz==='amanecer'||lz==='atardecer')?Y-26*s:d.L[1]*s,lado=d.lado,sx=lz==='cenital'?0:-lado*130*s,sy=lz==='cenital'?70*s:(lz==='fuego'?-60*s:34*s);
+  const m1=cap('Masa 1 · oscuro (primer plano)',{opacity:.55,hidden:cfg.extra!=='si'}),g1=m1.g;g1.fillStyle='#0c0e13';g1.beginPath();g1.moveTo(0,H-62*s);g1.quadraticCurveTo(200*s,H-86*s,330*s,H-66*s);g1.quadraticCurveTo(480*s,H-60*s,620*s,H-74*s);g1.quadraticCurveTo(720*s,H-80*s,W,H-58*s);g1.lineTo(W,H);g1.lineTo(0,H);g1.closePath();g1.fill();
+  const m2=cap('Masa 2 · medio',{opacity:.5,hidden:cfg.extra!=='si'}),g2=m2.g;g2.fillStyle='#5a6070';g2.beginPath();g2.roundRect((lado>=0?560:50)*s,Math.max(20*s,Y-130*s),190*s,150*s,6*s);g2.fill();
+  const m3=cap('Masa 3 · foco (claro)',{opacity:.7,hidden:cfg.extra!=='si'}),g3=m3.g;g3.fillStyle='#f4e7c8';g3.beginPath();g3.ellipse(d.foco[0]*s,d.foco[1]*s,62*s,46*s,0,0,7);g3.fill();
+  const luz=cap('Luz · dirección',{hidden:cfg.extra!=='si'}),gl=luz.g;gl.fillStyle='#ffd166';gl.strokeStyle='#ffd166';gl.lineWidth=3*K;gl.beginPath();gl.arc(Lx,Ly,16*s,0,7);gl.fill();for(let i=0;i<8;i++){const a=i/8*Math.PI*2;lin(gl,Lx+Math.cos(a)*24*s,Ly+Math.sin(a)*24*s,Lx+Math.cos(a)*34*s,Ly+Math.sin(a)*34*s,'#ffd166',3*K)}lin(gl,Lx,Ly+34*s,Math.max(30*s,Math.min(W-30*s,Lx+sx)),Math.min(H-30*s,Ly+sy+40*s),'#ffd166',3*K,[12*K,10*K]);
+  const rot=cap('Rótulos'),gr=rot.g;gr.font='800 '+Math.round(26*K)+'px system-ui,Segoe UI,sans-serif';gr.fillStyle=HO;if(Y>=0&&Y<=H)gr.fillText('HORIZONTE',16*K,Math.max(34*K,Y-12*K));else gr.fillText('↑ HORIZONTE FUERA DEL CUADRO',16*K,34*K);
+  gr.fillStyle='#1fb6e8';pts.forEach(([x,y,t])=>{const cx=Math.max(24*K,Math.min(W-24*K,x)),cy=Math.max(24*K,Math.min(H-24*K,y)),tw=gr.measureText(t).width;gr.fillText(t,Math.max(8*K,Math.min(W-tw-8*K,cx+30*K)),cy+(cy<H/2?44*K:-24*K))});
+  if(cfg.extra==='si'){gr.fillStyle=neg?'#222':'#e9eef7';gr.fillText('1 · OSCURO',16*K,H-20*K);gr.fillText('2 · MEDIO',(lado>=0?560:50)*s+10*K,Math.max(20*s,Y-130*s)+34*K);gr.fillText('3 · FOCO',d.foco[0]*s-48*K,d.foco[1]*s+8*K)}gr.fillStyle='#8a93a6';gr.font='600 '+Math.round(20*K)+'px system-ui,sans-serif';gr.textAlign='right';gr.fillText(cfg.pts+' punto'+(cfg.pts>1?'s':'')+' de fuga · '+W+'×'+H+' px'+(cfg.extra==='si'&&I.luz?' · '+I.luz:''),W-16*K,H-18*K);
+  const fon=cap('Fondo (apágalo para dejarla transparente)');fon.g.fillStyle=neg?'#ffffff':'#eceef2';fon.g.fillRect(0,0,W,H);
+  const lim=c=>({name:c.name,canvas:c.canvas,left:0,top:0,opacity:c.opacity,hidden:c.hidden});
+  const capas=[lim(fon),{name:'Perspectiva',opened:true,children:[lim(prof),lim(vert),lim(techo),lim(suelo)]},lim(ter),lim(mar),lim(hor),lim(pf),{name:'Luz y masas de valor',opened:true,children:[lim(m1),lim(m2),lim(m3),lim(luz)]},lim(rot)];
+  return {W,H,capas}}
+function ahGridAplana(capas,W,H,conFondo){const cv=pgMk(W,H),g=cv.getContext('2d');const dib=L=>L.forEach(c=>{if(c.hidden)return;if(c.children)return dib(c.children);if(!conFondo&&/^Fondo/.test(c.name))return;g.globalAlpha=c.opacity==null?1:c.opacity;g.drawImage(c.canvas,c.left||0,c.top||0)});dib(capas);g.globalAlpha=1;return cv}
+async function ahGridPsd(I){await pgCargaPsd();const cfg=ahGridEst(I),[W,H]=GRID_TAM[cfg.tam]||GRID_TAM['2k'],r=ahGridCapas(I,cfg,W,H);return new Blob([window.agPsd.writePsd({width:W,height:H,children:r.capas})],{type:'image/vnd.adobe.photoshop'})}
+function ahGridPinta(){const cv=document.getElementById('ah-gr-cv'),I=(S.ahora&&S.ahora.idea)||{cam:'',luz:'',luzK:''};if(!cv)return;const cfg=ahGridEst(I),r=ahGridCapas(I,cfg,1280,720),p=ahGridAplana(r.capas,1280,720,true);cv.width=1280;cv.height=720;cv.getContext('2d').drawImage(p,0,0)}
+function ahGridHTML(I){const c=ahGridEst(I),ch=(f,v,t)=>`<button class="ch xs ${String(c[f])===String(v)?'on':''}" data-act="ah-gr" data-f="${f}" data-v="${v}" aria-pressed="${String(c[f])===String(v)}">${t}</button>`;setTimeout(ahGridPinta,30);
+  return `<div class="ah-plano" style="margin-top:10px"><span class="lbl">Cuadrícula para Photoshop · perspectiva real en capas</span>
+  <p class="muted" style="margin:4px 0 8px;font-size:14px">Una cuadrícula lista para pintar encima: líneas al punto de fuga (suelo cian, techo magenta), verticales, horizonte, tercios, luz y las tres masas de valor, cada cosa en su capa. Ajusta y descárgala como PSD (Photoshop; Procreate también lo importa) o como PNG transparente.</p>
+  <div class="prow" style="flex-wrap:wrap;gap:6px"><span class="muted">Puntos de fuga</span>${ch('pts',1,'1 punto')}${ch('pts',2,'2 puntos')}${ch('pts',3,'3 puntos')}${c.pts>1?`<span class="muted" style="margin-left:8px">Fugas</span>${ch('vpd','int','Dentro del cuadro')}${ch('vpd','ext','Fuera (amplio)')}`:''}<span class="muted" style="margin-left:8px">Horizonte</span>${ch('hor','fuera','Fuera (picada)')}${ch('hor','alto','Alto')}${ch('hor','medio','Medio')}${ch('hor','bajo','Bajo')}</div>
+  <div class="prow" style="flex-wrap:wrap;gap:6px;margin-top:6px"><span class="muted">Densidad</span>${ch('den','suelta','Suelta')}${ch('den','media','Media')}${ch('den','densa','Densa')}${ch('den','ultra','Ultra')}<span class="muted" style="margin-left:8px">Líneas</span>${ch('col','negro','Negro (mayor/menor)')}${ch('col','color','Color por capa')}<span class="muted" style="margin-left:8px">Luz y masas</span>${ch('extra','si','Mostrar')}${ch('extra','no','Ocultas')}<span class="muted" style="margin-left:8px">Tamaño</span>${ch('tam','hd','HD 1920×1080')}${ch('tam','2k','2K 2560×1440')}${ch('tam','4k','4K 3840×2160')}</div>
+  <canvas id="ah-gr-cv" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--line2);background:#fff"></canvas>
+  <div class="prow" style="margin-top:8px;flex-wrap:wrap"><button class="btn pri" data-act="ah-gr-psd">⬇ PSD con capas</button><button class="btn" data-act="ah-gr-png">⬇ PNG transparente</button><span class="muted">${c.tam==='4k'?'4K usa bastante memoria: en iPad conviene 2K.':'Cada línea, la luz y las masas quedan en capas separadas.'}</span></div></div>`}
+
+function ahPlanoHTML(I){return `<div class="ah-plano"><span class="lbl">Plano de la escena · dónde va cada cosa (no es el dibujo, es tu punto de partida)</span>${ahPlano(I)}<p class="muted" style="margin:6px 0 0;font-size:13px">Dibuja tus 3 thumbnails sobre este esquema: el horizonte naranja, los puntos de fuga azules, la luz amarilla y las tres masas de valor (1 oscuro, 2 medio, 3 claro).</p></div>${ahGridHTML(I)}`}
 
 /* ---- medir tu boceto al terminar: lo que sale del dibujo, no de lo que dices ---- */
 const AH_ITEM_REST=r=>/valores/i.test(r)?['valores','planos']:/masas|sin líneas|2 cm/i.test(r)?['estructura']:/tercio/i.test(r)?['foco']:/primer plano oscuro/i.test(r)?['planos']:['estructura','foco'];
@@ -6655,6 +6788,9 @@ async function accionCrec(a,el,p,ds){
     case 'ah-go':{const A=S.ahora=S.ahora||{};if(!A.idea)A.idea=ahIdea();A.t0=Date.now();S.timer={fin:Date.now()+20*60e3};renderMain();return true}
     case 'ah-fin':{const A=S.ahora=S.ahora||{};A.eval=A.eval||{};S.timer=null;A.t0=null;renderMain();return true}
     case 'ah-ev':{const A=S.ahora=S.ahora||{};A.eval=A.eval||{};A.eval[ds.k]=+ds.v;renderMain();return true}
+    case 'ah-gr':{const A=S.ahora=S.ahora||{},I=A.idea||{cam:'',luz:'',luzK:''},c=ahGridEst(I);c[ds.f]=ds.f==='pts'?+ds.v:ds.v;renderMain();break}
+    case 'ah-gr-psd':{const I=(S.ahora&&S.ahora.idea)||{cam:'',luz:'',luzK:''};try{toast('Armando la cuadrícula…');const c=ahGridEst(I);await bajarBlob('cuadricula-'+c.pts+'-puntos-'+(GRID_TAM[c.tam]||GRID_TAM['2k']).join('x')+'.psd',await ahGridPsd(I))}catch(e){toast(e.message||'No pude armar el PSD')}break}
+    case 'ah-gr-png':{const I=(S.ahora&&S.ahora.idea)||{cam:'',luz:'',luzK:''},c=ahGridEst(I),[W,H]=GRID_TAM[c.tam]||GRID_TAM['2k'];await bajarBlob('cuadricula-'+c.pts+'-puntos-'+W+'x'+H+'.png',await aBlob(ahGridAplana(ahGridCapas(I,c,W,H).capas,W,H,false)));break}
     case 'ah-mundo':{S.ajustes.ahMundo=ds.v;marcarAj();S.ahora={idea:ahIdea()};S.timer=null;renderMain();return true}
     case 'ah-guarda':{const A0=S.ahora||{},e=A0.eval||{},md=A0.med&&!A0.med.error?A0.med:null;if(!md&&(e.luz==null||e.cam==null||e.rest==null)){toast('Sube tu boceto para medirlo, o marca las tres casillas');return true}(S.ajustes.ahLog=S.ajustes.ahLog||[]).push({ts:Date.now(),t:A0.idea?.titulo||'',luz:e.luz,cam:e.cam,rest:e.rest,mluz:md?md.luz:null,mcam:md?md.cam:null,mrest:md?md.rest:null,tot:md?md.total:null});A0.med=null;S.ajustes.ahLog=S.ajustes.ahLog.slice(-150);A0.eval=null;const r=S.ajustes.rutina=S.ajustes.rutina||{dias:{}};r.dias=r.dias||{};if(!r.dias[hoyKey()]?.hecho)r.dias[hoyKey()]={skill:'idea',texto:S.ahora?.idea?.titulo||'Idea y a dibujar',hecho:true,ts:Date.now()};marcarAj();S.timer=null;if(S.ahora)S.ahora.t0=null;renderMain();toast('Hecho. Racha: '+racha()+' '+(racha()===1?'día':'días'));return true}
     case 'ah-luz':{const I=S.ahora?.idea;if(!I)return true;const p=herrP();p.mood.paleta=[...I.pal];const E=escMut(p),P=ESC_PRE[I.luzK]||ESC_PRE.neutro;Object.assign(E,P,{k:I.luzK,int:E.int||1});delete E.n;E3.idx=-1;E3.base=null;E3.fuente='proy';herrAbre('luzcolor');marcar();toast('Luz y paleta de tu idea listas: mueve la luz y mira la sombra');return true}
@@ -16084,9 +16220,13 @@ async function accion(a,el){
     case 'cal-mes':{const b=S.calMes?new Date(S.calMes):new Date();b.setDate(1);if(+ds.d===0)S.calMes=null;else{b.setMonth(b.getMonth()+(+ds.d));S.calMes=b.getTime()}renderMain();break}
     case 'ev-add':{const t=$('#ev-titulo')?.value.trim(),f=$('#ev-fecha')?.value;if(!t||!f){toast('Escribe qué y cuándo');return}lista('eventos').push({id:uid(),titulo:t,fecha:f});marcarAj();render();break}
     case 'cot-tab':S.cotTab=ds.t;renderMain();break;
+    case 'pg-set':{pgUsaSet(ds.k);S.pgCur=1;marcarAj();renderMain();break}
+    case 'pg-plant-18':{try{await pgPlantillasTodas()}catch(e){expStatus('');toast(e.message||'No pude armar las plantillas')}break}
     case 'pg-pag':{S.pgCur=+ds.k;renderMain();break}
     case 'pg-rellena':{const pg=PG_PAGS[(S.pgCur||1)-1],st=pgEst();st.seed=(st.seed||1)+1;let k=0;pg.slots.forEach((sl,i)=>{const r=st.imgs[i];if(r&&!r.sil)return;st.imgs[i]={sil:{cat:pg.cat,seed:st.seed,v:k++}}});marcarAj();renderMain();break}
     case 'pg-sil':{const pg=PG_PAGS[(S.pgCur||1)-1],st=pgEst(),[cat,seed,v]=ds.k.split('|'),fi=pg.slots.findIndex(x=>x[4]==='final');st.imgs[fi]={sil:{cat,seed:+seed,v:+v}};marcarAj();renderMain();break}    case 'pg-paquete':{await pgPaquete();break}
+    case 'pg-plant':{try{toast('Armando la plantilla…');await bajarBlob(pgNomPlant(+ds.k),await pgPlantillaPsd(+ds.k))}catch(e){toast(e.message||'No pude armar la plantilla')}break}
+    case 'pg-plant-todas':{try{await pgPlantillasZip()}catch(e){expStatus('');toast(e.message||'No pude armar las plantillas')}break}
     case 'sil-cat':{silEst().cat=ds.k;renderMain();break}
     case 'sil-otras':{silEst().tanda++;renderMain();break}
     case 'sil-fav':{const F=(S.ajustes.silFavs=S.ajustes.silFavs||[]),i=F.findIndex(f=>silKey(f)===ds.k);if(i>=0)F.splice(i,1);else{const [cat,seed,v]=ds.k.split('|');F.push({cat,seed:+seed,v:+v});if(F.length>60)F.shift()}marcarAj();renderMain();break}
@@ -16094,7 +16234,7 @@ async function accion(a,el){
     case 'sil-hoja':{const st=silEst(),cv=pgMk(1800,1500),g=cv.getContext('2d');g.fillStyle=PG_BG;g.fillRect(0,0,1800,1500);for(let i=0;i<SIL_N;i++){const o=silItem(st.cat,st.tanda,i),x=(i%6)*300,y=Math.floor(i/6)*300;g.save();g.beginPath();g.rect(x+4,y+4,292,292);g.clip();g.translate(x+4,y+4);pgCont(g,pgGen(o.cat,o.seed,o.v,1),292,292,10);g.restore();g.strokeStyle='#cfcabc';g.strokeRect(x+4,y+4,292,292)}await bajarBlob('siluetas-tanda-'+st.tanda+'.png',await aBlob(cv));break}    case 'pg-limpia':{pgEst().imgs={};marcarAj();renderMain();break}
     case 'pg-png':{const n=S.pgCur||1;await bajarBlob('portafolio-pagina-'+n+'.png',await aBlob(await pgRender(n,false)));break}
     case 'pg-psd':{const n=S.pgCur||1;try{toast('Armando el PSD con capas…');await bajarBlob('portafolio-pagina-'+n+'.psd',await pgPsd(n))}catch(e){toast(e.message||'No pude armar el PSD')}break}
-    case 'pg-todas':{for(let n=1;n<=9;n++){await bajarBlob('portafolio-pagina-'+n+'.png',await aBlob(await pgRender(n,false)));await new Promise(r=>setTimeout(r,350))}break}
+    case 'pg-todas':{for(let n=1;n<=PG_PAGS.length;n++){await bajarBlob('portafolio-pagina-'+n+'.png',await aBlob(await pgRender(n,false)));await new Promise(r=>setTimeout(r,350))}break}
     case 'cot-ir-tarifas':S.vista='cotizador';S.cotTab='tarifas';render();break;
     case 'fresc-ok':{(S.ajustes.frescura=S.ajustes.frescura||{})[ds.k]=Date.now();marcarAj();toast('Anotado: revisado hoy');renderMain();break}
     case 'cot-preset':{const d=cotDraft(),pr=COT_PRESETS[ds.p];if(!pr)return;d.mk={};COT_MARCA.forEach(x=>d.mk[x[0]]=pr[1][x[0]]||0);renderMain();break}
