@@ -1280,7 +1280,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwchic34').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwchoo0f').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -6926,7 +6926,7 @@ function camPaso(s,n,deb,sig){const e=camEst(s),T=CAM_TIPOS[s.tipo]||['','var(--
     <div class="cam-d"><b>Aprendes:</b> ${esc(s.que)}</div><div class="cam-d"><b>Dibuja:</b> ${esc(s.ej)}</div><div class="cam-d"><b>Listo cuando:</b> ${esc(s.ok)}</div>
     <div class="prow" style="margin-top:6px">${camLink(s)}${s.go?`<button class="btn sm" data-act="des-go" data-go="${esc(s.go)}">${esc(s.gl||'Abrir en la app')}</button>`:''}
       ${e==='Terminado'?`<button class="btn ghost sm" data-act="cam-est" data-id="${s.id}" data-v="Pendiente">Deshacer</button>`:`${e==='Pendiente'?`<button class="btn sm ${sig?'pri':''}" data-act="cam-est" data-id="${s.id}" data-v="En curso">Empezar</button>`:'<span class="tagp">en curso</span>'}<button class="btn sm ${e==='En curso'?'pri':''}" data-act="cam-est" data-id="${s.id}" data-v="Terminado">Terminé</button>`}</div></div></li>`}
-function vCamino(){
+function vCaminoRuta(){
   const {orden}=debilidades(),deb=new Set(orden.slice(0,2)),ini=camInicio(),h=+S.ajustes.horasSemana||10;
   const hechos=e=>e.pasos.filter(s=>camEst(s)==='Terminado').length;
   let act=CAMINO.findIndex((e,i)=>i>=ini.i&&hechos(e)<e.pasos.length);if(act<0)act=CAMINO.length-1;
@@ -6956,7 +6956,7 @@ function vRuta(){
   <p class="intro">${F==='camino'?'Una ruta con orden desde tu nivel actual: videos gratis de YouTube, cursos de Domestika, libros y prácticas dentro de esta app. Siempre ves tu siguiente paso, qué aprendes, qué dibujar para comprobarlo y cuándo darlo por terminado.':'Libros, cursos y canales de la industria para Blender, ZBrush, Procreate, Procreate Dreams, Photoshop, photobash y los fundamentos. «Mis prioridades» ordena todo por tus puntos débiles (según tus críticas). Márcalos «En curso» o «Terminado» y aparecen en tu análisis de crecimiento.'}</p>
   <div class="chips">${RUTA_AREAS.map(([k,n])=>`<button class="ch ${F===k?'on':''}" data-act="ruta-f" data-v="${k}">${n}</button>`).join('')}</div>
   <div class="stats"><div class="stat"><b>${hechos}/${total}</b><span>recursos terminados</span></div><div class="stat"><b>${enCurso}</b><span>en curso</span></div>${orden.slice(0,2).map(k=>`<div class="stat"><b>${prom[k]!=null?prom[k].toFixed(1):'—'}</b><span>${SKILLS[k]} (a mejorar)</span></div>`).join('')}</div>
-  ${F==='camino'?vCamino():''}${F==='photobash'?photobashHTML():''}
+  ${F==='camino'?vCaminoRuta():''}${F==='photobash'?photobashHTML():''}
   ${mostrar.map((k,i)=>`<div class="box"><div class="prow" style="justify-content:space-between"><h3>${F==='prio'&&i<3?`<span style="color:var(--accent)">Prioridad ${i+1} · </span>`:''}${esc(nombre(k))}</h3></div>
     <ul class="list">${(RUTA[k]||[]).map(([tipo,t,a])=>{const key=k+'|'+t,e=r[key]||'Pendiente';return `<li style="grid-template-columns:1fr auto"><span><span class="tag" style="--lc:var(--ink3)">${esc(tipo)}</span> <b>${esc(t)}</b> · <span class="muted">${esc(a)}</span></span>
       <span class="prow" style="flex-wrap:nowrap">${tipo==='youtube'||tipo==='curso'?`<a class="btn ghost sm" href="${yt(t,a)}" target="_blank" rel="noopener">YouTube ↗</a>`:''}<a class="btn ghost sm" href="${g(t,a)}" target="_blank" rel="noopener">Buscar ↗</a><select id="ru-${esc(key)}" data-ruta="${esc(key)}" style="width:auto">${RUTA_EST.map(s=>`<option ${s===e?'selected':''}>${s}</option>`).join('')}</select></span></li>`}).join('')}</ul></div>`).join('')}
