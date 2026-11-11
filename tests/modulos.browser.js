@@ -10,8 +10,8 @@
     /* los 5 sets arman todas sus páginas */
     for(const [k,nom] of PG_SETMETA){pgUsaSet(k);let bien=0;for(let n=1;n<=PG_PAGS.length;n++){const cv=await pgRender(n,false);if(cv.width===1600&&cv.height===1000)bien++}ok('set '+nom+' ('+PG_PAGS.length+' págs)',bien===PG_PAGS.length)}
     pgUsaSet('concept');
-    /* cuadrícula: 1, 2 y 3 puntos */
-    const I={cam:'',luz:'',luzK:''};S.ahora=null;const g=ahGridEst(I);for(const p of [1,2,3]){g.pts=p;const r=ahGridCapas(I,g,640,360);ok('cuadrícula '+p+' puntos',r.capas.length>=6&&r.capas.some(c=>c.children))}
+    /* cuadrícula profesional dentro de Perspectiva: 1, 2 y 3 puntos dibujan sin error y en blanco y negro */
+    {const P=C.persp,sv=JSON.stringify(P),svA=C.A,svB=C.bm;C.bm=null;C.A=.5625;for(const m of ['1','2','3']){Object.assign(P,{modo:m,pro:true,tinta:'negro',hy:.5,u1:.07,u2:.93,v3:-1.2,rayos:48});const cv=pgMk(640,360),g=cv.getContext('2d'),Tx={X:x=>x*640,Y:y=>y*640,s:640,ox:0,oy:0};try{compRender(g,Tx,{cw:640,ch:360});const d=g.getImageData(0,0,640,360).data;let neg=0,blanco=0;for(let i=0;i<d.length;i+=40){if(d[i]<60)neg++;if(d[i]>240)blanco++}ok('cuadrícula profesional '+m+' punto(s)',neg>20&&blanco>200,neg+' oscuros / '+blanco+' blancos')}catch(e){ok('cuadrícula profesional '+m,false,e.message)}}Object.assign(P,JSON.parse(sv));C.A=svA;C.bm=svB}
     /* secciones: cada pantalla agrupada abre y tiene barra */
     let falla=[];for(const h of HUBS)for(const [v] of h[3]){if(v[0]==='@')continue;try{S.vista=v;render();await w(60);if(h[3].length>1&&!document.querySelector('.hub-bar'))falla.push(v)}catch(e){falla.push(v+':'+e.message)}}ok('secciones abren con su barra',!falla.length,falla.join(','));
     /* vender: la fórmula de precio */
