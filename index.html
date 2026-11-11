@@ -953,6 +953,9 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .fm-sil.on{border-color:var(--ac,#ff6a3d);box-shadow:0 0 0 2px var(--ac,#ff6a3d) inset}
 .fm-sil.on::after{content:'✓';position:absolute;top:4px;right:6px;font:700 14px system-ui,sans-serif;color:#fff;background:var(--ac,#ff6a3d);border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center}
 .ah-plano-svg{width:100%;height:auto;border-radius:12px;display:block;border:1px solid var(--line2)}
+.ah-ley{display:grid;gap:10px;margin:14px 0 6px}.ah-ley-f{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start}.ah-ley-f b{display:block;font-size:14px}.ah-ley-f span:not(.ah-bd){display:block;font-size:13px;line-height:1.45;color:var(--muted,#8b93a6)}
+.ah-bd{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:800 15px system-ui,sans-serif;background:#fff;color:#14161b;border:2px solid #14161b;box-sizing:border-box}.ah-bd.h{background:#ff6a3d;border-color:#ff6a3d;font-size:13px}.ah-bd.pf{background:#0c0e12;color:#4cc9f0;border-color:#4cc9f0;font-size:12px}.ah-bd.lz{background:#ffd166;border-color:#ffd166;font-size:16px}
+.ah-uso{margin:10px 0;padding-left:20px;font-size:13px;line-height:1.5}.ah-uso li{margin:2px 0}
 .ah-med{margin:8px 0 10px;padding:12px;border:1px solid var(--line2);border-radius:12px;background:var(--surface2)}.ah-med-g{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}.ah-med-img{width:150px;max-height:200px;object-fit:contain;border-radius:8px;background:#fff;border:1px solid var(--line2)}.ah-med-r{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line2);padding:8px 0}.ah-med-n{font:700 26px var(--display,system-ui);white-space:nowrap}
 .es-prog{margin-bottom:12px}.es-spark{display:flex;gap:5px;align-items:flex-end;height:38px;margin:8px 0 4px}.es-spark i{display:block;width:18px;border-radius:3px 3px 0 0}.es-prog-g{display:grid;gap:6px}.es-prog-f{display:grid;grid-template-columns:minmax(120px,1.3fr) 2fr 40px 56px;gap:10px;align-items:center;font-size:14px}.es-prog-f .es-bar{height:8px;background:var(--surface2);border-radius:6px;overflow:hidden;display:block}.es-prog-f .es-bar i{display:block;height:100%}.es-prog-f small{color:var(--ink3)}.es-prac{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line2);padding:8px 0}.es-prac>span{flex:1 1 260px}
 .fresc{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 14px;margin:0 0 12px;border:1px solid var(--line2);border-radius:12px;background:var(--surface);font-size:14px}.fresc>span:first-child{flex:1 1 320px}.fresc.vieja{border-color:var(--warn,#ffb703);background:rgba(255,183,3,.08)}
@@ -1271,7 +1274,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwcgp54o').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwch0d5u').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -5870,32 +5873,73 @@ function ahIdea(){const libre=S.ajustes.ahMundo==='libre',use=k=>(libre||Math.ra
   if(deb==='rest')rest=ahPick(['solo 3 valores planos','que se lea a 2 cm de tamaño','sin líneas: solo masas','primer plano oscuro y fondo claro']);
   const luz=LZ[0],cam=CM[0],h=Math.random()*360,arm=ahPick(['analogos','compl','adyac','triada']),pal=palArmonia(arm,hslHex(h,.55,.5)).filter((_,i)=>i!==0&&i!==5).slice(0,4),cap=x=>x.charAt(0).toUpperCase()+x.slice(1);
   return {id:uid(),titulo:cap(lugar),frase:`Dibuja ${lugar}, ${giro}. Que se vea ${det}.`,lugar,giro,det,luz,luzK:LZ[1],cam,camRec:CM[1],camModo:CM[2]||null,camHy:CM[3]??null,rest,pal,arm:(PAL_ARM.find(a=>a[0]===arm)||[0,''])[1],foco:deb}}
-/* plano de la escena: dónde van el horizonte, los puntos de fuga, la luz y las tres masas de valor */
-function ahPlano(I){const t=(I.cam||'').toLowerCase(),W=800,H=450;let hy=.52,vp=1,fuera=false;
-  if(/baja/.test(t))hy=.8;else if(/picada|vista alta/.test(t)){hy=.04;fuera=true}else if(/esquina|dos puntos/.test(t)){hy=.56;vp=2}else if(/gran angular/.test(t))hy=.5;
-  const Y=Math.round(H*hy),lz=I.luzK||'',L={amanecer:[110,Y-26,1],atardecer:[690,Y-26,-1],fuego:[400,372,0],luna:[690,64,-1],cenital:[400,36,0]}[lz]||[150,62,1],lado=L[2]||1;
-  const C=I.pal||['#4c6edb','#a7b6e8','#5a3a12','#c97b3a'],fg='#0c0e13',medio='#5a6070',claro='#f4e7c8',foco=lado>=0?[540,168]:[260,168];
-  let vpL='',px=400;
-  if(vp===1){const xs=[40,230,560,760],ys=[60,170,330,420];vpL=xs.map(x=>`<line x1="${px}" y1="${Y}" x2="${x}" y2="${H}" />`).join('')+xs.map(x=>`<line x1="${px}" y1="${Y}" x2="${x}" y2="0" />`).join('')}
-  else if(vp===2){const L1=-140,R1=940,ex=400;vpL=`<line x1="${ex}" y1="${Y-170}" x2="${ex}" y2="${Y+150}" />`+[[Y-170],[Y+150],[Y-60],[Y+60]].map(([y])=>`<line x1="${L1}" y1="${Y}" x2="${ex}" y2="${y}" /><line x1="${R1}" y1="${Y}" x2="${ex}" y2="${y}" />`).join('')}
-  else vpL='';
-  const luzSvg=lz==='tormenta'||/relámpago/.test(I.luz||'')?`<polygon points="${L[0]},${L[1]-34} ${L[0]-16},${L[1]+4} ${L[0]-2},${L[1]+4} ${L[0]-12},${L[1]+36} ${L[0]+18},${L[1]-8} ${L[0]+3},${L[1]-8}" fill="#dfe8ff"/>`:lz==='fuego'?`<circle cx="${L[0]}" cy="${L[1]}" r="46" fill="#ff8a3d" opacity=".35"/><circle cx="${L[0]}" cy="${L[1]}" r="18" fill="#ffb25a"/>`:lz==='luna'?`<circle cx="${L[0]}" cy="${L[1]}" r="22" fill="#cfe0ff"/><circle cx="${L[0]+9}" cy="${L[1]-4}" r="19" fill="#14161b"/>`:`<circle cx="${L[0]}" cy="${L[1]}" r="22" fill="#ffd166"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${L[0]+Math.cos(r)*28}" y1="${L[1]+Math.sin(r)*28}" x2="${L[0]+Math.cos(r)*40}" y2="${L[1]+Math.sin(r)*40}" stroke="#ffd166" stroke-width="3"/>`}).join('');
-  const sx=lz==='cenital'?0:-lado*130,sy=lz==='cenital'?70:(lz==='fuego'?-60:34);
-  return `<svg class="ah-plano-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano de composición de la escena"><rect width="${W}" height="${H}" fill="#14161b"/>
-  <g stroke="#ffffff" stroke-opacity=".12" stroke-width="1"><line x1="${W/3}" y1="0" x2="${W/3}" y2="${H}"/><line x1="${W*2/3}" y1="0" x2="${W*2/3}" y2="${H}"/><line x1="0" y1="${H/3}" x2="${W}" y2="${H/3}"/><line x1="0" y1="${H*2/3}" x2="${W}" y2="${H*2/3}"/></g>
-  <g stroke="#4cc9f0" stroke-opacity=".55" stroke-width="1.6">${vpL}</g>
-  <path d="M0 ${H} L0 ${H-62} Q200 ${H-86} 330 ${H-66} T620 ${H-74} T${W} ${H-58} L${W} ${H}Z" fill="${fg}" opacity=".92"/>
-  <rect x="${lado>=0?560:50}" y="${Y-130}" width="190" height="${Math.max(60,150)}" rx="6" fill="${medio}" opacity=".62"/>
-  <ellipse cx="${foco[0]}" cy="${foco[1]}" rx="62" ry="46" fill="${claro}" opacity=".9"/>
-  <line x1="0" y1="${Y}" x2="${W}" y2="${Y}" stroke="#ff6a3d" stroke-width="2.4" stroke-dasharray="10 7"/>
-  ${luzSvg}<line x1="${L[0]}" y1="${L[1]+(lz==='fuego'?-30:34)}" x2="${Math.max(30,Math.min(W-30,L[0]+sx))}" y2="${Math.min(H-30,L[1]+sy+(lz==='fuego'?0:40))}" stroke="#ffd166" stroke-width="2.4" stroke-dasharray="6 6" opacity=".85"/>
-  <g font-family="system-ui,sans-serif" font-size="21" font-weight="800"><text x="12" y="${fuera?20:Y-8}" fill="#ff6a3d">${fuera?'↑ HORIZONTE FUERA DEL CUADRO (arriba)':'HORIZONTE'}</text><text x="${foco[0]-44}" y="${foco[1]+5}" fill="#14161b">3 · FOCO</text><text x="${(lado>=0?560:50)+14}" y="${Y-102}" fill="#fff">2 · MEDIO</text><text x="14" y="${H-14}" fill="#fff">1 · OSCURO (primer plano)</text>${vp===1&&!fuera?`<text x="${px+8}" y="${Y+20}" fill="#4cc9f0">PUNTO DE FUGA</text>`:vp===2?`<text x="12" y="${H-100}" fill="#4cc9f0">2 PUNTOS DE FUGA (fuera del cuadro)</text>`:''}</g>
-  <g font-family="system-ui,sans-serif" font-size="19" fill="#cbd0da"><text x="${W-12}" y="22" text-anchor="end">${esc(I.luz)}</text></g></svg>`}
+/* plano de la escena: horizonte, puntos de fuga, luz y las 3 masas de valor. Los números se explican en la leyenda (ahLeyenda) y el PNG (full) trae su propia leyenda */
+function ahPlano(I,full){
+  const D=ahPlanoDatos(I),fuera=D.fuera,vp=D.vp,lz=D.lz,lado=D.lado,Y=D.Y,W=800,H=450,T=fuera?88:46,X0=70,Yh=fuera?-34:Y,Wc=940,Hc=T+H+34+(full?290:0);
+  const izq=/izquierdo/.test(I.rest||'')?true:lado<0,fc=[izq?267:533,150],L=D.L,FS='font-family="system-ui,-apple-system,Segoe UI,sans-serif"';
+  const mx=fc[0]-135,my=fc[1]-100,mb=fuera?H-120:Math.max(fc[1]+70,Math.min(Y+26,H-96));
+  const pill=(txt,x,y,al,bg,fg)=>{const w=Math.round(txt.length*18.6+24),x0=al==='end'?x-w:al==='middle'?x-w/2:x;return `<rect x="${x0}" y="${y-28}" width="${w}" height="40" rx="9" fill="${bg}" opacity=".94"/><text x="${x0+12}" y="${y}" font-size="28" font-weight="800" fill="${fg}" ${FS}>${txt}</text>`};
+  const bd=(n,x,y,bg,fg)=>`<circle cx="${x}" cy="${y}" r="23" fill="${bg||'#fff'}" stroke="#14161b" stroke-width="3"/><text x="${x}" y="${y+10}" text-anchor="middle" font-size="30" font-weight="800" fill="${fg||'#14161b'}" ${FS}>${n}</text>`;
+  const cut=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s};
+  /* guías de perspectiva (por encima de las masas, se recortan al encuadre) */
+  let guias='',marcas='';
+  const vpMarca=(x,y)=>`<circle cx="${x}" cy="${y}" r="11" fill="#0c0e12" stroke="#4cc9f0" stroke-width="3.5"/><line x1="${x-20}" y1="${y}" x2="${x+20}" y2="${y}" stroke="#4cc9f0" stroke-width="3"/><line x1="${x}" y1="${y-20}" x2="${x}" y2="${y+20}" stroke="#4cc9f0" stroke-width="3"/>`;
+  if(vp===1){const px=400;for(let a=0;a<360;a+=18){if(a%180===0)continue;const r=a*Math.PI/180;guias+=`<line x1="${px}" y1="${Yh}" x2="${(px+Math.cos(r)*1400).toFixed(1)}" y2="${(Yh+Math.sin(r)*1400).toFixed(1)}"/>`}
+    marcas=vpMarca(px,Yh)+pill('PUNTO DE FUGA',px+20,Yh+(fuera?64:46),'start','#0c0e12','#4cc9f0')}
+  else{const ex=400,yT=Yh-170,yB=Yh+150,VL=-46,VR=W+46,ys=[yT,Yh-100,Yh-35,Yh+45,yB],yAt=(vx,py,x)=>Yh+(py-Yh)*(x-vx)/(ex-vx);
+    guias=`<polygon points="${ex},${yT} 0,${yAt(VL,yT,0).toFixed(1)} 0,${yAt(VL,yB,0).toFixed(1)} ${ex},${yB}" fill="#4cc9f0" fill-opacity=".07" stroke="none"/><polygon points="${ex},${yT} ${W},${yAt(VR,yT,W).toFixed(1)} ${W},${yAt(VR,yB,W).toFixed(1)} ${ex},${yB}" fill="#4cc9f0" fill-opacity=".07" stroke="none"/>`
+      +ys.map(y=>`<line x1="${VL}" y1="${Yh}" x2="${ex}" y2="${y}"/><line x1="${VR}" y1="${Yh}" x2="${ex}" y2="${y}"/>`).join('')+`<line x1="${ex}" y1="${yT}" x2="${ex}" y2="${yB}" stroke-width="3.4" stroke-opacity=".9"/>`;
+    marcas=vpMarca(VL,Yh)+vpMarca(VR,Yh)+pill('PF 1',VL+2,Yh+46,'start','#0c0e12','#4cc9f0')+pill('PF 2',VR-2,Yh+46,'end','#0c0e12','#4cc9f0')}
+  /* luz: icono + flecha hacia el foco */
+  const lx=L[0],ly=L[1],dx=fc[0]-lx,dy=fc[1]-ly,dl=Math.hypot(dx,dy)||1,ux=dx/dl,uy=dy/dl,sx=lx+ux*(lz==='fuego'?52:40),sy=ly+uy*(lz==='fuego'?52:40),ex2=fc[0]-ux*78,ey2=fc[1]-uy*58;
+  const luzSvg=lz==='tormenta'||/relámpago/.test(I.luz||'')?`<polygon points="${lx},${ly-34} ${lx-16},${ly+4} ${lx-2},${ly+4} ${lx-12},${ly+36} ${lx+18},${ly-8} ${lx+3},${ly-8}" fill="#dfe8ff"/>`:lz==='fuego'?`<circle cx="${lx}" cy="${ly}" r="46" fill="#ff8a3d" opacity=".35"/><circle cx="${lx}" cy="${ly}" r="18" fill="#ffb25a"/>`:lz==='luna'?`<circle cx="${lx}" cy="${ly}" r="22" fill="#cfe0ff"/><circle cx="${lx+9}" cy="${ly-4}" r="19" fill="#14161b"/>`:`<circle cx="${lx}" cy="${ly}" r="22" fill="#ffd166"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${lx+Math.cos(r)*28}" y1="${ly+Math.sin(r)*28}" x2="${lx+Math.cos(r)*40}" y2="${ly+Math.sin(r)*40}" stroke="#ffd166" stroke-width="3"/>`}).join('');
+  const flecha=Math.hypot(ex2-sx,ey2-sy)>50?`<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex2.toFixed(1)}" y2="${ey2.toFixed(1)}" stroke="#ffd166" stroke-width="3.2" stroke-dasharray="9 7" marker-end="url(#ahArr)"/>`:'';
+  const alD=lado>0?'end':lado<0?'start':(izq?'end':'start'),hx=alD==='end'?W-14:14,hal=alD;   // la etiqueta del horizonte va del lado contrario a la luz
+  const pie=full?(()=>{const y0=H+84,fl=(n,y,tit,txt)=>bd(n,24,y-8)+`<text x="62" y="${y+2}" font-size="26" fill="#e8ebf2" ${FS}><tspan font-weight="800">${tit}</tspan> · ${txt}</text>`;return `<line x1="0" y1="${H+34}" x2="${W}" y2="${H+34}" stroke="#ffffff" stroke-opacity=".18"/>`
+    +fl(1,y0,'Oscuro','primer plano: la masa más oscura y simple')+fl(2,y0+44,'Medio','plano medio: donde vive el lugar')+fl(3,y0+88,'Foco','lo más claro, en un tercio: aquí termina el ojo')
+    +`<text x="0" y="${y0+150}" font-size="25" fill="#ffd166" ${FS}>Luz: ${esc(cut(I.luz,62))}</text><text x="0" y="${y0+188}" font-size="25" fill="#cbd0da" ${FS}>Cámara: ${esc(cut(I.cam,60))}</text><text x="0" y="${y0+226}" font-size="22" fill="#8b93a6" ${FS}>Naranja = horizonte · Azul = puntos de fuga y guías · Amarillo = dirección de la luz</text>`})():'';
+  return `<svg class="ah-plano-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Wc} ${Hc}" role="img" aria-label="Plano de composición de la escena: horizonte, puntos de fuga, luz y tres masas de valor"><defs><clipPath id="ahClip"><rect width="${W}" height="${H}"/></clipPath><marker id="ahArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ffd166"/></marker></defs>
+  <rect width="${Wc}" height="${Hc}" fill="#0c0e12"/><g transform="translate(${X0},${T})">
+  <rect width="${W}" height="${H}" fill="#161920"/>
+  <g stroke="#ffffff" stroke-opacity=".1" stroke-width="1.4"><line x1="${W/3}" y1="0" x2="${W/3}" y2="${H}"/><line x1="${W*2/3}" y1="0" x2="${W*2/3}" y2="${H}"/><line x1="0" y1="${H/3}" x2="${W}" y2="${H/3}"/><line x1="0" y1="${H*2/3}" x2="${W}" y2="${H*2/3}"/></g>
+  <g clip-path="url(#ahClip)">
+  <rect x="${mx}" y="${my}" width="270" height="${mb-my}" rx="12" fill="#5a6070" opacity=".85"/>
+  <ellipse cx="${fc[0]}" cy="${fc[1]}" rx="64" ry="46" fill="#f4e7c8"/>
+  <path d="M0 ${H} L0 ${H-150} Q70 ${H-118} 140 ${H-96} T340 ${H-84} T620 ${H-92} T${W} ${H-76} L${W} ${H}Z" fill="#090b0f" stroke="#ffffff" stroke-opacity=".3" stroke-width="2"/>
+  <g stroke="#4cc9f0" stroke-opacity=".6" stroke-width="1.8">${guias}</g>
+  ${flecha}${luzSvg}</g>
+  <rect width="${W}" height="${H}" fill="none" stroke="#3b4254" stroke-width="2"/>
+  <line x1="-${X0}" y1="${Yh}" x2="${W+X0}" y2="${Yh}" stroke="#ff6a3d" stroke-width="3" stroke-dasharray="12 8"/>
+  ${marcas}${pill(fuera?'HORIZONTE ↑':'HORIZONTE',hx,Yh-8,hal,'#ff6a3d','#14161b')}
+  ${bd(1,52,H-30)}${bd(2,izq?mx+34:mx+236,my+34)}${bd(3,fc[0],fc[1]+10,'#fff')}
+  </g>${pie}</svg>`}
 /* ================= Cuadrícula de perspectiva para Photoshop: capas reales, 1/2/3 puntos de fuga ================= */
 function ahPlanoDatos(I){const t=(I.cam||'').toLowerCase();let hy=.52,vp=1,fuera=false;if(/baja/.test(t))hy=.8;else if(/picada|vista alta/.test(t)){hy=.04;fuera=true}else if(/esquina|dos puntos/.test(t)){hy=.56;vp=2}else if(/gran angular/.test(t))hy=.5;
   const Y=Math.round(450*hy),lz=I.luzK||'',L={amanecer:[110,Y-26,1],atardecer:[690,Y-26,-1],fuego:[400,372,0],luna:[690,64,-1],cenital:[400,36,0]}[lz]||[150,62,1],lado=L[2]||1;return {hy,vp,fuera,Y,lz,L,lado,foco:lado>=0?[540,168]:[260,168]}}
 function ahGridLink(I){const d=ahPlanoDatos(I);return `<div class="ah-plano" style="margin-top:10px"><span class="lbl">Cuadrícula de perspectiva para esta escena</span><p class="muted" style="margin:4px 0 8px">Abre la herramienta de perspectiva con el horizonte y los puntos de fuga de este plano (${d.vp} punto${d.vp>1?'s':''}), en estilo profesional, para exportarla en PSD o Procreate.</p><button class="btn pri" data-act="ir-persp" data-idea="1">Abrir cuadrícula de esta escena</button></div>`}
-function ahPlanoHTML(I){return `<div class="ah-plano"><span class="lbl">Plano de la escena · dónde va cada cosa (no es el dibujo, es tu punto de partida)</span>${ahPlano(I)}<p class="muted" style="margin:6px 0 0;font-size:13px">Dibuja tus 3 thumbnails sobre este esquema: el horizonte naranja, los puntos de fuga azules, la luz amarilla y las tres masas de valor (1 oscuro, 2 medio, 3 claro).</p></div>${ahGridLink(I)}`}
+/* leyenda del plano: qué es cada cosa, por qué está ahí y qué hacer con ella */
+function ahLeyenda(I){
+  const D=ahPlanoDatos(I),izq=/izquierdo/.test(I.rest||'')?true:D.lado<0,lz=D.lz;
+  const cam=D.fuera?'Vista en picada: miras desde arriba. El horizonte queda <b>fuera del cuadro</b>, arriba (en tu hoja márcalo en el margen). Todo lo que se aleja baja hacia el punto de fuga.'
+    :D.vp===2?'Cámara a la altura de los ojos mirando una esquina: el horizonte cruza a media altura y dos puntos de fuga quedan a los lados. Lo que cruce esa línea está a tu altura.'
+    :D.hy>=.7?'Cámara baja: el horizonte está cerca del borde inferior, casi todo queda por encima de tus ojos y la escena se siente enorme.'
+    :'Cámara a la altura de los ojos: el horizonte cruza a media altura. Lo que cruce esa línea está a tu altura; lo de arriba se ve desde abajo y lo de abajo desde arriba.';
+  const pf=D.vp===2?'Dos puntos de fuga sobre el horizonte, <b>fuera del encuadre</b> (PF 1 y PF 2). En tu hoja ponlos lejos, hasta en el escritorio. Las caras de cada pared convergen a su punto; las verticales quedan rectas.'
+    :D.fuera?'Un punto de fuga arriba, fuera del cuadro. Las líneas que bajan convergen hacia él.':'Un punto de fuga en el horizonte. Todo lo que se aleja de ti converge ahí; lo que mira de frente queda sin deformar.';
+  const luz=lz==='fuego'?'viene desde abajo, al centro: las sombras suben y se estiran hacia atrás.':lz==='cenital'?'cae desde arriba: sombras cortas y duras justo debajo de cada forma.':D.lado>0?'entra por la <b>izquierda</b>: las sombras caen hacia la derecha.':'entra por la <b>derecha</b>: las sombras caen hacia la izquierda.';
+  const fila=(b,cl,t,d)=>`<div class="ah-ley-f"><span class="ah-bd ${cl}">${b}</span><div><b>${t}</b><span>${d}</span></div></div>`;
+  return `<div class="ah-ley">
+    ${fila('1','','Oscuro · primer plano','La masa más oscura y simple. Enmarca la escena y empuja el ojo hacia adentro. Sin detalle.')}
+    ${fila('2','','Medio · plano medio','Donde vive el lugar: arquitectura y formas grandes en valor medio, con detalle moderado. Sostiene al foco.')}
+    ${fila('3','',"Foco · lo más claro",`Aquí termina el ojo: el valor más claro, el mayor contraste y el único detalle fino. Va en un tercio (a la ${izq?'izquierda':'derecha'}), no al centro.`)}
+    ${fila('H','h','Horizonte (naranja)',cam)}
+    ${fila('PF','pf','Puntos de fuga (azul)',pf)}
+    ${fila('☀','lz','Luz (amarillo): '+esc(I.luz||''),'La flecha va de la luz al foco. La luz '+luz)}
+  </div>`}
+function ahPlanoHTML(I){return `<div class="ah-plano"><span class="lbl">Plano de la escena · tu punto de partida (no es el dibujo)</span>${ahPlano(I)}${ahLeyenda(I)}
+  <ol class="ah-uso"><li>En tu hoja marca primero el <b>horizonte</b> y los <b>puntos de fuga</b>.</li><li>Pinta las <b>3 masas</b> con 3 valores planos: oscuro, medio y claro.</li><li>Pon el <b>foco</b> en el tercio indicado y comprueba que sea lo más claro.</li><li>Haz 3 thumbnails cambiando solo el plano medio.</li></ol>
+  <div class="prow"><button class="btn sm" data-act="ah-plano-png">⬇ Descargar plano (PNG)</button></div></div>${ahGridLink(I)}`}
+async function ahPlanoPNG(I){try{const s=ahPlano(I,true),m=s.match(/viewBox="0 0 (\d+) (\d+)"/),w=+m[1],h=+m[2],img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)});const k=2,c=document.createElement('canvas');c.width=w*k;c.height=h*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/png'));if(!b)throw 0;const slug=String(I.titulo||'escena').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'escena';bajarBlob('plano-'+slug+'.png',b)}catch(e){toast('No pude crear la imagen del plano')}}
 
 /* ---- medir tu boceto al terminar: lo que sale del dibujo, no de lo que dices ---- */
 const AH_ITEM_REST=r=>/valores/i.test(r)?['valores','planos']:/masas|sin líneas|2 cm/i.test(r)?['estructura']:/tercio/i.test(r)?['foco']:/primer plano oscuro/i.test(r)?['planos']:['estructura','foco'];
@@ -6887,6 +6931,7 @@ async function accionCrec(a,el,p,ds){
     case 'ah-comp':{const I=S.ahora?.idea;if(!I)return true;C.pendIdea={rec:I.camRec,modo:I.camModo,hy:I.camHy};herrAbre('comp');toast('Cámara de tu idea lista: '+I.cam);return true}
     case 'ah-blk':{window.open(new URL('escenarios/index.html',location.href).href,'_blank','noopener');return true}
     case 'ah-mani':{v3dAbrir('maniqui','pose');return true}
+    case 'ah-plano-png':{const I=S.ahora?.idea;if(I)ahPlanoPNG(I);return true}
     case 'ah-ref':{const I=S.ahora?.idea;if(I)window.open('https://www.google.com/search?tbm=isch&q='+encodeURIComponent(I.lugar+' concept art environment'),'_blank','noopener');return true}
     case 'ah-pieza':{const I=S.ahora?.idea;if(!I)return true;const id=uid(),p=nuevoProyecto(I.titulo);p.tipo='Entorno';p.brief.texto=I.frase+' Luz: '+I.luz+'. Cámara: '+I.cam+'. Reto: '+I.rest+'.';S.P[id]=p;S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();toast('Proyecto creado con tu idea');return true}
     case 'pg-repite':{const R=pgRaiz();R.ruta=ds.k;if(!R.activas.includes(ds.k))R.activas.push(ds.k);const T=pgTr(ds.k),x=T.ses[pgKey(+ds.w,+ds.i)];if(x){x.repite=true}T.sesPin={w:+ds.w,i:+ds.i};S.vista='diario';S.diTab='hoy';S.pgCorta=false;S.timer=null;marcarAj();render();window.scrollTo({top:0});return true}
