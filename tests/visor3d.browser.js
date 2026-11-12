@@ -16,6 +16,12 @@
     const f=S.v3d.figs[0],en=V3.figs[0],bn=en.model.userData.bn;ok('separar dedos está calibrado',['Index','Ring','Pinky'].every(d=>bn['LeftHand'+d+'1']&&bn['LeftHand'+d+'1'].userData.spr));
     const T=V3.T,dist=()=>{const a=new T.Vector3(),b=new T.Vector3();bn.LeftHandIndex4.getWorldPosition(a);bn.LeftHandPinky4.getWorldPosition(b);return a.distanceTo(b)};
     f.dedos={L:V3_MANOS['Abierta'].slice(),R:V3_MANOS['Abierta'].slice()};f.abre={L:0,R:0};v3dManos(en.model,f);en.model.updateMatrixWorld(true);const a0=dist();f.abre.L=1;v3dManos(en.model,f);en.model.updateMatrixWorld(true);const a1=dist();ok('separar dedos abre la mano',a1>a0*1.4,a0.toFixed(3)+'→'+a1.toFixed(3));
-    f.abre.L=0;f.pies={L:48,R:0};v3dManos(en.model,f);ok('pies rápidos aplican',f.pies.L===48&&V3_PIES_RAPIDOS.length>=6)
+    f.abre.L=0;f.pies={L:48,R:0};v3dManos(en.model,f);ok('pies rápidos aplican',f.pies.L===48&&V3_PIES_RAPIDOS.length>=6);
+    /* lógica anatómica de las poses */
+    let cod=0,rod=0,n=0;for(const k in V3_POSES){const P=V3_POSES[k];n++;if(P.aLe<0||P.aRe<0||P.aLe>150||P.aRe>150)cod++;if(P.lLk<0||P.lRk<0)rod++}ok('ningún codo ni rodilla hiperextendidos en '+n+' poses',!cod&&!rod,cod+' codos, '+rod+' rodillas');
+    ok('la cabeza mira al frente en la salida de carrera (torso inclinado)',V3_POSES['Salida de carrera'].hn<-25,V3_POSES['Salida de carrera'].hn);ok('la cabeza acompaña la torsión de la estocada',Math.abs(V3_POSES['Estocada de espada'].hy)>=10,V3_POSES['Estocada de espada'].hy);ok('la reverencia conserva la cabeza baja',V3_POSES['Reverencia'].hn>=10,V3_POSES['Reverencia'].hn);
+    f.pose={...V3_POSES['Estocada de espada']};ok('el pie de atrás apunta en la estocada',v3dPieLogico(f,'R')>20,v3dPieLogico(f,'R'));f.pose={...V3_POSES['De pie']};ok('de pie los pies no se tuercen',v3dPieLogico(f,'L')===0&&v3dPieLogico(f,'R')===0);
+    /* movimientos y fondos */
+    S.v3d.movK=0;v3dMovPon(0);const pA=JSON.stringify(S.v3d.pose);v3dMovPon(.5);ok('el deslizador de movimiento cambia la pose',JSON.stringify(S.v3d.pose)!==pA&&V3_MOVS.length>=12,V3_MOVS.length+' movimientos');ok('ambientes nuevos de fondo',!!V3_FONDO_N.atelier&&!!V3_FONDO_N.foto);ok('poses nuevas con línea de acción en la biblioteca',['Puñetazo a cámara','Alcanzando algo (escorzo)','Estocada de espada','Salida de carrera'].every(x=>V3_POSES[x]))
   }catch(e){ok('excepción',false,e.message)}
   return {todo:out.every(x=>x.ok),fallos:out.filter(x=>!x.ok),total:out.length}})()
