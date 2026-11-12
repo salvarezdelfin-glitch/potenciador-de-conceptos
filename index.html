@@ -1303,7 +1303,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwckj5ba').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwdvbbiz').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1454,8 +1454,7 @@ const AJUSTES_BASE={principios:[],referentes:[],gusto:''};
 /* ============ Estado + almacenamiento ============ */
 const S={db:null,assets:null,sample:null,downloads:null,modo:'cargando',
   P:{},ajustes:clone(AJUSTES_BASE),cur:null,vista:'inicio',tab:'brief',
-  dirty:false,ajDirty:false,ai:{},aiBusy:{},provo:0,confirmDel:false,destinoCapa:'concepto',
-  navModo:(()=>{try{return localStorage.getItem('cdc.navmodo2')||'simple'}catch{return 'simple'}})()};
+  dirty:false,ajDirty:false,ai:{},aiBusy:{},provo:0,confirmDel:false,destinoCapa:'concepto'};
 let saveT=null,ajT=null;
 
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
@@ -1614,63 +1613,6 @@ function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" title="${esc(PQ[v]?PQ[v][1]:'')}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
   const side=$('#side');side.classList.toggle('open',!!S.menu);
-  const modo='hubs';
-  const modos=(()=>{const m=(k,n)=>`<button class="ch ${modo===k?'on':''}" data-act="navmodo" data-m="${k}">${n}</button>`;
-    return `<div class="prow" style="padding:0 10px 2px;flex-wrap:wrap;gap:4px">${m('simple','← Simple')}${m('mejorar','1 Mejorar')}${m('crear','2 Crear')}${m('trabajo','3 Trabajo')}${m('dinero','4 Dinero')}${m('mas','Más')}${m('todo','Todo')}</div><p class="hint" style="padding:0 10px 6px;margin:0;font-size:11.5px">Cada paso te acerca a tu meta.</p>`})();
-  const grupo=(t,sub,html)=>`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 0">${t}</span><span class="hint" style="padding:0 10px 4px;margin:0;font-size:11px">${sub}</span>${html}</div>`;
-  const grupoMejorar=grupo('Mejorar mi técnica','Para que tu portafolio mejore',`
-      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
-      ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}
-      ${nav('maestros','frame','Estudio de maestros')}
-      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}
-      ${nav('progreso','chart','Mi progreso')}
-      ${nav('ruta','map','Cursos y ruta')}`);
-  const grupoCrear=grupo('Crear piezas','Lo que vas a mostrar y vender',`
-      <button class="pitem" data-act="herr" title="Luz y color, referencias, tablero y 3D para usar sin proyecto" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Herramientas</span></button>
-      ${nav('ahora','spark','Idea y a dibujar')}
-      ${nav('siluetas','spark','Siluetas')}
-      ${nav('cuadricula','frame','Cuadrículas de perspectiva')}
-      ${nav('generador','spark','Generador de ideas')}
-      ${nav('desatorar','target','Desatorarme',(()=>{const n=estancadas().length;return n?`<span class="s">${n} WIP</span>`:''})())}
-      ${nav('galeria','frame','Mis ilustraciones',(S.ajustes.galeria||[]).length?`<span class="s">${S.ajustes.galeria.length}</span>`:'')}
-      ${nav('biblioteca','grid','Biblioteca',`<span class="s">${todasRefs().length}</span>`)}
-      ${nav('artistas','users','Artistas a seguir',`<span class="s">${S.ajustes.referentes.length}</span>`)}
-      ${nav('nombres','spark','Nombres y títulos',(S.ajustes.nombresFav||[]).length?`<span class="s">★${S.ajustes.nombresFav.length}</span>`:'')}`);
-  const grupoTrabajo=grupo('Que te contraten','Portafolio, vacantes y envíos',`
-      ${nav('portafolio','frame','Portafolio',(()=>{const n=candidatas().filter(c=>c.pf.estado==='aprobada').length;return n?`<span class="s">${n} lista${n>1?'s':''}</span>`:''})())}
-      ${nav('pagina','frame','Mi portafolio · 9 páginas')}
-      ${nav('cv','doc','Mi CV')}
-      ${nav('vacantes','search','Vacantes',(()=>{const n=(S.vac?.items||[]).filter(x=>encaje(x)>=5&&!(S.ajustes.vacDesc||[]).includes(x.id)).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('postulaciones','brief','Postulaciones',(()=>{const n=lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('pruebas','clock','Pruebas de arte',lista('pruebas').some(x=>x.estado==='En curso')?'<span class="s">⏱</span>':'')}
-      ${nav('reclutador','eye','Revisión de reclutador')}
-      ${nav('adaptar','target','Adaptar a vacante')}
-      ${nav('mensajes','mail','Mensajes en inglés')}`);
-  const grupoDinero=grupo('Ingresos','Vender y cobrar tu trabajo',`
-      ${nav('ventas','spark','Ideas para vender')}
-      ${nav('redes','mega','Plan de publicación',(()=>{const n=lista('posts').filter(x=>x.estado!=='Publicado'&&diasHasta(x.fecha)===0).length;return n?`<span class="s">hoy</span>`:''})())}
-      ${nav('trabajos','frame','Trabajos')}
-      ${nav('cotizador','coin','Cotizador freelance')}
-      ${nav('cobros','wallet','Cobros',(()=>{const n=lista('cobros').filter(c=>c.estado!=='Cancelado'&&c.total-cobroPagado(c)>0).length;return n?`<span class="s">${n}</span>`:''})())}
-      ${nav('contratos','doc','Contratos')}`);
-  const grupoMas=grupo('Más','Tu sistema y apoyos',`
-      ${nav('metas','target','Mis metas')}
-      ${nav('estilo','eye','Mi estilo')}`);
-  const grupoSimple=`<div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Hoy</span>
-      ${nav('ahora','spark','Idea y a dibujar')}
-      ${nav('diario','flame','Programa de mejora',racha()?`<span class="s">🔥${racha()}</span>`:'')}
-      ${nav('estudios','frame','Estudios sencillos',estSemana().d7?`<span class="s">${estSemana().d7} esta semana</span>`:'')}</div>
-    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Mi avance</span>
-      ${nav('progreso','chart','Mi progreso')}
-      ${nav('nivel','chart','Mi nivel',(()=>{const u=(S.ajustes.niveles||[]).slice().sort((x,y)=>x.ts-y.ts).at(-1);return u?`<span class="s">${esc(u.data.nivel)}</span>`:''})())}</div>
-    <div class="plist navlinks"><span class="lbl" style="padding:0 10px 4px">Herramientas</span>
-      <button class="pitem" data-act="ir-taller">${ICO.frame}<span class="n">Taller de diseño</span></button>
-      <button class="pitem" data-act="fnd-3d">${ICO.spark}<span class="n">Poses 3D</span></button>
-      <button class="pitem" data-act="vista" data-v="cuadricula" aria-current="${S.vista==='cuadricula'}">${ICO.frame}<span class="n">Cuadrículas</span></button>
-      <button class="pitem" data-act="vista" data-v="siluetas" aria-current="${S.vista==='siluetas'}">${ICO.spark}<span class="n">Siluetas</span></button>
-      <button class="pitem" data-act="vista" data-v="pagina" aria-current="${S.vista==='pagina'}">${ICO.frame}<span class="n">Mi portafolio</span></button>
-      <button class="pitem" data-act="herr" aria-current="${S.vista==='proyecto'&&S.cur===HERR_ID}">${ICO.spark}<span class="n">Luz, referencias y más</span></button></div>
-    <div style="padding:4px 10px"><button class="btn sm ghost" data-act="navmodo" data-m="mejorar" style="width:100%">Ver todas las secciones ▾</button></div>`;
   side.innerHTML=`
     <div class="brand"><img src="icon.svg" alt="" class="brand-ic">Potenciador<br><em>de Conceptos</em><small>Concepto · Mood · Técnica · AD</small></div>
     <div style="padding:0 10px"><button class="ir-btn" data-act="ir-abre" aria-label="Ir a cualquier pantalla"><span>🔍 Ir a…</span><kbd>Ctrl K</kbd></button></div>
@@ -1679,11 +1621,6 @@ function renderSide(){
       ${nav('calendario','cal','Calendario',(()=>{const n=proximos(99).filter(e=>diasHasta(e.fecha)<=3).length;return n?`<span class="s">${n}</span>`:''})())}
     </div>
     <div class="plist navlinks">${HUBS.map(h=>{const v0=h[3][0][0],cur=!!hubDe(S.vista)&&hubDe(S.vista)===h,badge=h[0]==='mejorar'&&racha()?`<span class="s">🔥${racha()}</span>`:h[0]==='empleo'&&lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length?`<span class="s">${lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length}</span>`:h[0]==='inicio'&&proximos(99).filter(e=>diasHasta(e.fecha)<=3).length?`<span class="s">${proximos(99).filter(e=>diasHasta(e.fecha)<=3).length}</span>`:'';return `<button class="pitem" data-act="vista" data-v="${v0}" aria-current="${cur}" title="${esc(h[3].map(x=>x[1]).join(' · '))}">${ICO[h[2]]||ICO.spark}<span class="n">${esc(h[1])}</span>${badge}</button>`}).join('')}</div>
-    ${modo==='mejorar'||modo==='todo'?grupoMejorar:''}
-    ${modo==='crear'||modo==='todo'?grupoCrear:''}
-    ${modo==='trabajo'||modo==='todo'?grupoTrabajo:''}
-    ${modo==='dinero'||modo==='todo'?grupoDinero:''}
-    ${modo==='mas'||modo==='todo'?grupoMas:''}
     <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
       ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
       <div class="plist" id="plist-proy">${listaProyectos()}</div>
@@ -1756,7 +1693,6 @@ function renderMainInner(){
   if(S.vista==='pagina'){m.innerHTML=pqHTML('pagina')+vPagina();setTimeout(()=>{pgDibuja();silPinta()},0);return}
   if(S.vista==='ventas'){m.innerHTML=pqHTML('ventas')+vVentasNuevo();return}
   if(S.vista==='respaldo'){m.innerHTML=pqHTML('respaldo')+vRespaldo();return}
-  if(S.vista==='cuadricula'){m.innerHTML=pqHTML('cuadricula')+vCuadricula();return}
   if(S.vista==='siluetas'){m.innerHTML=pqHTML('siluetas')+vSiluetas();setTimeout(silPinta,0);return}
   if(S.vista==='trabajos'){m.innerHTML=pqHTML('trabajos')+vTrabajos();return}
   if(S.vista==='artistas'){m.innerHTML=pqHTML('artistas')+vArtistas();return}
@@ -2032,7 +1968,6 @@ const PQ={
  ventas:['dinero','Convertir lo que dibujas en productos sencillos que se venden, según las fechas del año.','Piezas a la venta con precio y ficha de publicación.'],
  redes:['dinero','Planear qué publicar y cuándo para que te vean y te compren.','Un calendario de publicaciones.'],
  pagina:['trabajo','Armar las 9 páginas de tu portafolio y llevarlas a tu sitio.','Un paquete listo para importar en tu portafolio.'],
- cuadricula:['crear','Descargar una cuadrícula de perspectiva profesional para pintar encima en Photoshop o Procreate.','Un PSD con capas listo para usar.'],
  respaldo:['sistema','Guardar una copia de tus datos y recuperarla si algo falla.','Un archivo de respaldo.'],
  siluetas:['crear','Explorar muchas formas distintas antes de dibujar: personajes, criaturas, armas, naves, árboles y más.','Siluetas favoritas para usar de punto de partida.'],
  trabajos:['dinero','Llevar tus trabajos por encargo de principio a fin.','Trabajos con estado y entrega.'],
@@ -4117,7 +4052,6 @@ function silEst(){const a=S.ajustes;a.silFavs=a.silFavs||[];return S.sil=S.sil||
 function silItem(cat,tanda,i){if(cat==='mundo')return {cat:'mundo~'+mdHash(),seed:tanda,v:i};if(cat!=='todo')return {cat,seed:tanda,v:i};const R=fmRng(tanda*131+i*977+3),c=SIL_CATS[Math.floor(R()*SIL_CATS.length)][0];return {cat:c,seed:tanda*7+i,v:i}}
 const silKey=o=>o.cat+'|'+o.seed+'|'+o.v;
 function irPersp(I){const d=I&&ahPlanoDatos(I);herrAbre('comp');setTimeout(()=>{const P=C.persp;P.pro=true;P.tinta=P.tinta||'negro';const m=d?Math.min(3,d.vp):2;P.modo=String(m<1?2:m);if(d)P.hy=d.fuera?-.2:d.hy;else if(P.modo==='ninguna')P.hy=.5;if(P.modo==='2'||P.modo==='3'){P.u1=.07;P.u2=.93;if(P.modo==='3')P.v3=P.v3>=0&&P.v3<=1?-1.2:P.v3}else P.u1=.5;if(P.rayos<24||P.rayos>72)P.rayos=48;if(!C.bm){C.A=.5625;C.ar='1.7778';C.zoom=1;C.dim=false;C.ov={};compCentra()}C.receta='';compAjusta();compPanel();compDibuja()},500)}
-function vCuadricula(){setTimeout(()=>irPersp(null),0);return '<p class="muted">Abriendo la herramienta de perspectiva…</p>'}
 /* ============ CINE Y JUEGOS ============
    1) Brief con problema de diseño (no una ruleta de frases): función, pregunta, solución a probar, lectura en 2 s, cámara, luz, restricciones y entrega.
    2) Etapa actual del proyecto: el pipeline de Producción, a la vista en la Hoja y en el Inicio, con la herramienta de cada etapa.
@@ -14832,6 +14766,10 @@ function v3dFigChips(){const S3=S.v3d,L=S3.figs||[];if(L.length<2||S3.modelo!=='
 /* ============ Complexión del cuerpo, manos y pies ============ */
 const V3_DEDOS=['Thumb','Index','Middle','Ring','Pinky'],V3_DEDOS_N=['Pulgar','Índice','Medio','Anular','Meñique'];
 const V3_MANOS={'Relajada':[.25,.2,.25,.3,.35],'Abierta':[0,0,0,0,0],'Puño':[.7,1,1,1,1],'Señalar':[.6,0,1,1,1],'Pinza':[.5,.55,.2,.2,.2],'Agarrar':[.5,.7,.7,.7,.7],'Garra':[.4,.45,.45,.45,.45],'Pulgar arriba':[0,1,1,1,1],'Paz':[.7,0,0,1,1],'Cuernos':[.6,0,1,1,0]};
+Object.assign(V3_MANOS,{'OK':[.5,.62,0,0,0],'Pistola':[0,0,1,1,1],'Bendición':[.15,0,0,.9,.9],'Cuenco':[.3,.35,.35,.35,.35],'Esfera':[.4,.45,.45,.5,.55],'Empuñar arma':[.85,.9,.9,.9,.9],'Lápiz':[.5,.5,.55,.9,.9],'Garra felina':[.2,.55,.55,.55,.55],'Mano muerta':[.1,.1,.1,.15,.15],'Tensa':[.2,.05,.05,.05,.1],'Suplicante':[.05,.1,.1,.15,.2]});
+/* cuántos grados se separan los dedos en cada gesto (0 = juntos, 1 = muy separados) */
+const V3_MANOS_ABRE={'Abierta':.45,'Garra':.7,'Garra felina':.9,'Esfera':.35,'Cuenco':.2,'Tensa':.8,'Suplicante':.3,'Relajada':.1};
+const V3_PIES_RAPIDOS=[['Plano',0,0],['Punta de bailarín',48,48],['Talón arriba',34,34],['Pie flexionado',-32,-32],['Uno en punta',48,0],['Pasito (uno atrás)',0,38]];
 const V3_COMPLEXION={'Cuadrado (bloque)':{peso:1.2,hom:1.3,pec:1.2,vie:1.25,cad:1.3,grb:1.2,grp:1.25,brz:1.05,tor:.95,cab:1.05,esc:1},'Triángulo ▽ (héroe)':{peso:1.05,hom:1.5,pec:1.35,vie:.85,cad:.85,grb:1.3,grp:.9,brz:1.1,tor:1.05,pie:1,cab:.95,esc:1},'Triángulo △ (pera)':{peso:1.1,hom:.85,pec:.9,vie:1.15,cad:1.45,grb:.9,grp:1.4,brz:.95,tor:.95,cab:1.05,esc:1},'Círculo (redondo)':{peso:1.35,hom:1.05,pec:1.2,vie:1.7,cad:1.25,grb:1.1,grp:1.3,brz:.9,pie:.85,tor:.9,cab:1.1,esc:1},'Rectángulo (alto y recto)':{peso:.95,hom:1,pec:.95,vie:.95,cad:.95,brz:1.1,pie:1.1,tor:1.2,cab:.95,esc:1.05},'Reloj de arena':{peso:1,hom:1.25,pec:1.2,vie:.7,cad:1.3,grb:1,grp:1.2,tor:1,esc:1},'Huevo (panza y hombros chicos)':{peso:1.3,hom:.9,pec:1,vie:1.6,cad:1.1,grb:.9,grp:1.1,brz:.9,pie:.85,tor:.85,cab:1.1,esc:1},'Estándar':{peso:1,hom:1,brz:1,pie:1,tor:1,cab:1,esc:1},'Atlético':{peso:1.04,hom:1.14,pec:1.1,grb:1.1,grp:1.1,brz:1.02,pie:1.02,tor:1.03,cab:.98,esc:1.02},'Robusto':{peso:1.2,hom:1.06,pec:1.1,vie:1.2,grb:1.1,grp:1.12,pie:.98,cab:1,man:1.05,esc:1},'Delgado':{peso:.86,hom:.95,brz:1.04,pie:1.05,tor:1.02,cab:.98,grb:.9,grp:.9,esc:1},'Niño':{peso:.95,hom:.9,brz:.88,pie:.82,tor:.9,cab:1.32,esc:.62},'Gigante':{peso:1.1,hom:1.12,pec:1.1,grb:1.12,grp:1.12,brz:1.04,pie:1.04,tor:1.04,cab:.94,man:1.06,pt:1.06,esc:1.35}};
 const V3_CX=[['peso','Peso / volumen',.5,2.2],['hom','Hombros (ancho)',.6,2.2],['brz','Largo de brazos',.5,2.5],['pie','Largo de piernas',.5,2.2],['tor','Largo de torso',.6,1.9],['cab','Tamaño de cabeza',.5,2.6],
   ['pec','Ancho del pecho',.6,2],['vie','Vientre / panza',.6,2.2],['cad','Ancho de cadera',.6,2],['cue','Largo de cuello',.4,20],['ant','Antebrazos (largo)',.5,2],['pan','Pantorrillas (largo)',.5,2],['grb','Grosor de brazos',.5,2.5],['grp','Grosor de piernas',.5,2.5],['man','Tamaño de manos',.5,3],['pt','Tamaño de pies',.5,3],['bzI','Brazo izquierdo (extra)',.5,2.5],['bzD','Brazo derecho (extra)',.5,2.5]];
@@ -14840,6 +14778,7 @@ const V3_MONSTRUO={'Bruto':{peso:1.2,hom:1.3,pec:1.3,vie:1.15,cad:1.05,brz:1.1,p
 function v3dCalibraManos(root){const T=V3.T,bn=root.userData.bn,v=new T.Vector3(),AX={x:new T.Vector3(1,0,0),y:new T.Vector3(0,1,0),z:new T.Vector3(0,0,1)};root.updateMatrixWorld(true);
   const sonda=(b,tip,ejes)=>{let best=null;for(const ax of ejes)for(const sg of [1,-1]){const q0=b.quaternion.clone();b.quaternion.copy(q0).multiply(new T.Quaternion().setFromAxisAngle(AX[ax],sg*.7));root.updateMatrixWorld(true);tip.getWorldPosition(v);const y=v.y;b.quaternion.copy(q0);root.updateMatrixWorld(true);if(!best||y<best.y)best={ax,sg,y}}return best};
   for(const lado of ['Left','Right']){V3_DEDOS.forEach((d,i)=>{const b1=bn[lado+'Hand'+d+'1'],tip=bn[lado+'Hand'+d+'4'];if(!b1||!tip)return;const c=sonda(b1,tip,i?['x','z']:['x','y','z']);for(let j=1;j<=3;j++){const bj=bn[lado+'Hand'+d+j];if(bj)bj.userData.curl={ax:c.ax,sg:c.sg,q0:bj.quaternion.clone()}}});
+    {const pm=new T.Vector3(),mid=bn[lado+'HandMiddle4'];if(mid){root.updateMatrixWorld(true);mid.getWorldPosition(pm);[1,3,4].forEach(i=>{const dn=V3_DEDOS[i],b1=bn[lado+'Hand'+dn+'1'],tip=bn[lado+'Hand'+dn+'4'],cu=b1&&b1.userData.curl;if(!b1||!tip||!cu)return;const base=new T.Vector3();tip.getWorldPosition(base);const d0=base.distanceTo(pm);let best=null;for(const ax of ['x','y','z']){if(ax===cu.ax)continue;for(const sg of [1,-1]){const q0=b1.quaternion.clone();b1.quaternion.copy(q0).multiply(new T.Quaternion().setFromAxisAngle(AX[ax],sg*.3));root.updateMatrixWorld(true);tip.getWorldPosition(v);const dd=v.distanceTo(pm)-d0;b1.quaternion.copy(q0);root.updateMatrixWorld(true);if(!best||dd>best.dd)best={ax,sg,dd}}}if(best&&best.dd>.0005)b1.userData.spr={ax:best.ax,sg:best.sg}})}}
     const f=bn[lado+'Foot'],t=bn[lado+'ToeBase'];if(f&&t){const c=sonda(f,t,['x']);f.userData.pie={ax:'x',sg:c.sg,q0:f.quaternion.clone()}}}}
 /* pies al piso: en una pose de pie los dos pies deben pisar. Si uno queda flotando unos centímetros (cadera inclinada, una pierna más doblada), se estira esa rodilla hasta que la planta toque el suelo. No toca los pasos en el aire (pierna muy levantada), los saltos ni las poses sentadas o de rodillas. */
 function v3dMuestraPies(o){const g=o.geometry,p=g.attributes.position,si=g.attributes.skinIndex,sw=g.attributes.skinWeight,names=o.skeleton.bones.map(b=>b.name.replace(/^mixamorig:?/,'')),L={Left:[],Right:[]};for(let i=0;i<p.count;i++){let bi=si.getX(i),bw=sw.getX(i);if(sw.getY(i)>bw){bi=si.getY(i);bw=sw.getY(i)}if(sw.getZ(i)>bw){bi=si.getZ(i);bw=sw.getZ(i)}if(sw.getW(i)>bw){bi=si.getW(i);bw=sw.getW(i)}const n=names[bi];if(/^Left(Foot|ToeBase)$/.test(n))L.Left.push(i);else if(/^Right(Foot|ToeBase)$/.test(n))L.Right.push(i)}
@@ -14862,7 +14801,7 @@ function v3dPiesAuto(m,f){const bn=m.userData.bn,T=V3.T,rat=m.userData.pieRatio;
     const m0=meas(0),m1=meas(20),tgt=rat*m0.len,sl=(m1.d-m0.d)/20;let a=Math.abs(sl)<1e-5?0:(tgt-m0.d)/sl;a=Math.max(-55,Math.min(55,a));meas(Math.max(-60,Math.min(60,a+base)))}}
 function v3dManos(m,f){const bn=m.userData.bn,T=V3.T;if(!bn)return;const AX={x:new T.Vector3(1,0,0),y:new T.Vector3(0,1,0),z:new T.Vector3(0,0,1)};
   for(const lado of ['L','R']){const nl=lado==='L'?'Left':'Right',cur=f.dedos?.[lado]||V3_MANOS['Relajada'];
-    V3_DEDOS.forEach((d,i)=>{const c=clamp(cur[i]??0,0,1),mx=i===0?[40,45,45]:[85,95,70];for(let j=1;j<=3;j++){const b=bn[nl+'Hand'+d+j],k=b?.userData.curl;if(b&&k)b.quaternion.copy(k.q0).multiply(new T.Quaternion().setFromAxisAngle(AX[k.ax],k.sg*c*mx[j-1]*RAD))}});
+    V3_DEDOS.forEach((d,i)=>{const c=clamp(cur[i]??0,0,1),mx=i===0?[40,45,45]:[85,95,70];for(let j=1;j<=3;j++){const b=bn[nl+'Hand'+d+j],k=b?.userData.curl;if(b&&k){const q=k.q0.clone(),sp=j===1?b.userData.spr:null;if(sp)q.multiply(new T.Quaternion().setFromAxisAngle(AX[sp.ax],sp.sg*(f.abre?.[lado]||0)*24*RAD));b.quaternion.copy(q).multiply(new T.Quaternion().setFromAxisAngle(AX[k.ax],k.sg*c*mx[j-1]*RAD))}}});
     const foot=bn[nl+'Foot'],kp=foot?.userData.pie;if(kp)foot.quaternion.copy(kp.q0).multiply(new T.Quaternion().setFromAxisAngle(AX.x,kp.sg*(f.pies?.[lado]||0)*RAD))}}
 /* Complexión: cada hueso se estira SOLO a lo largo de su propio eje (hombro = ancho, brazo y pierna = largo, torso = alto) y lo que cuelga de él no hereda ese estiramiento. Sin esto, al estirar el hombro se alargaban los brazos y al alargar los brazos se engrosaban, porque el estiramiento pasaba a todos los huesos hijos. El eje de cada hueso se lee de dónde está el siguiente, porque cada cuerpo trae sus huesos orientados distinto. */
 function v3dCompEscala(m){const u=m.userData;if(u.compEsc||!V3.T)return;u.compEsc=true;const T=V3.T,t=new T.Matrix4(),i=new T.Matrix4(),r=new T.Matrix4(),z=new T.Vector3(),bn=u.bn||{};
@@ -15623,9 +15562,9 @@ function v3dCuerpoHTML00(s){const gui=v3dGuiasHTML(s);const f=s.figs?.[s.sel||0]
   ${v3dAnatHTML(f)}
   ${v3dCabezaHTML(f)}
   <div class="v3-g"><b>Tono de piel de este personaje</b><p class="hint" style="margin:0">Para estudiar cómo se comporta la luz en distintos tonos, desde piel muy clara hasta muy oscura.</p><div class="chips"><button class="ch xs ${!f.mat?'on':''}" data-act="v3d-piel" data-k="">Como el material general</button>${Object.entries(V3_MATS).filter(([,v])=>v.t).map(([k,v])=>`<button class="ch xs ${f.mat===k?'on':''}" data-act="v3d-piel" data-k="${k}"><i class="v3-dot" style="background:${v.c}"></i>${v.n.replace('Piel ','')}</button>`).join('')}</div></div>
-  <div class="v3-g"><b>Manos y pies</b>${mano('L','Mano izquierda')}${mano('R','Mano derecha')}<div class="prow"><button class="btn xs" data-act="v3d-mano-copia" data-l="L">Copiar la izquierda a la derecha</button><button class="btn xs" data-act="v3d-mano-copia" data-l="R">Copiar la derecha a la izquierda</button></div>
+  <div class="v3-g"><b>Manos y pies</b>${mano('L','Mano izquierda')}${mano('R','Mano derecha')}<div class="prow"><button class="btn xs" data-act="v3d-mano-copia" data-l="L">Copiar la izquierda a la derecha</button><button class="btn xs" data-act="v3d-mano-copia" data-l="R">Copiar la derecha a la izquierda</button></div><div class="prow"><button class="btn xs" data-act="v3d-mano-var" data-l="L" title="Cambia un poco cada dedo para que no se vea de molde">Variar la izquierda</button><button class="btn xs" data-act="v3d-mano-var" data-l="R">Variar la derecha</button></div>
     <details class="v3-d"><summary>Dedo por dedo</summary>${['L','R'].map(l=>'<b class="lbl">'+(l==='L'?'Mano izquierda':'Mano derecha')+'</b>'+V3_DEDOS_N.map((n,i)=>slF(n,'dedos.'+l+'.'+i,0,1,.02,f.dedos[l][i]??0,'')).join('')).join('')}</details>
-    ${slF('Pie izquierdo: punta arriba ↔ abajo','pies.L',-40,50,1,f.pies.L||0,'°')}${slF('Pie derecho: punta arriba ↔ abajo','pies.R',-40,50,1,f.pies.R||0,'°')}</div>`}
+    ${slF('Separar dedos · mano izquierda','abre.L',0,1,.02,f.abre?.L||0,'')}${slF('Separar dedos · mano derecha','abre.R',0,1,.02,f.abre?.R||0,'')}<div class="chips"><span class="lbl">Pies rápidos</span>${V3_PIES_RAPIDOS.map(([n],i)=>`<button class="ch xs" data-act="v3d-pies" data-k="${i}">${n}</button>`).join('')}</div>${slF('Pie izquierdo: punta arriba ↔ abajo','pies.L',-40,50,1,f.pies.L||0,'°')}${slF('Pie derecho: punta arriba ↔ abajo','pies.R',-40,50,1,f.pies.R||0,'°')}</div>`}
 /* ============ Objetos (props): muebles y armas de Quaternius (CC0) y formas para armar la escena ============ */
 const V3_PROPS_N=['Silla','Silla acolchada','Sofá','Sofá largo','Cama','Mesa','Mesa de centro','Banca','Banco','Mesa grande','Caja de madera','Cofre','Barril','Espada','Hacha','Pico','Escudo','Antorcha','Maniquí de entrenamiento','Yunque','Mesa de trabajo','Caldero','Cubeta'];
 const V3_PROPS_FORMAS=[['f:caja','Caja'],['f:escalon','Escalón'],['f:escalera','Escalera de 3'],['f:plataforma','Plataforma alta'],['f:cilindro','Cilindro'],['f:rampa','Rampa'],['f:esfera','Esfera'],['f:pared','Pared de fondo']];
@@ -16191,14 +16130,42 @@ const V3_LUZ3P={'Tres puntos':{luz:{dir:225,alt:35,int:2.4,color:'#ffffff'},luz2
 function v3dLucesExtra(s){const bloque=(k,n)=>{const X=s[k]||{on:false,color:k==='luz2'?'#cfd8ff':'#ffffff',int:1.2,dir:k==='luz2'?315:90,alt:k==='luz2'?12:35};return `<div class="v3-g"><label class="chk"><input type="checkbox" data-v3l="${k}.on" ${X.on?'checked':''}><span><b>${n}</b> <small class="muted">(color, dirección y fuerza)</small></span></label>${X.on?`<div class="prow"><label class="esc-r"><span class="lbl">Color</span><input type="color" data-v3l="${k}.color" value="${esc(X.color)}"></label></div>${v3Sl('Dirección',k+'.dir',0,360,1,X.dir)}${v3Sl('Altura',k+'.alt',-40,90,1,X.alt)}${v3Sl('Intensidad',k+'.int',0,4,.05,X.int,'')}`:''}</div>`};
   return `<div class="chips"><span class="lbl">Esquemas de 3 luces</span>${Object.keys(V3_LUZ3P).map(k=>`<button class="ch xs" data-act="v3d-luz3p" data-k="${k}">${k}</button>`).join('')}</div>${bloque('luz2','Luz 2 (relleno)')}${bloque('luz3','Luz 3 (contraluz o color)')}`}
 function v3dPropsRapidos(s){const n=(s.props||[]).length;return `<div class="v3-g"><b>Objetos</b> <small class="muted">${n?n+' en la escena':'ninguno todavía'}</small><div class="chips">${['Silla','Banco','Mesa','Espada','Escudo','Hacha','Caja de madera'].map(k=>`<button class="ch xs" data-act="v3d-prop-add" data-k="${k}">＋ ${k}</button>`).join('')}<button class="ch xs on" data-act="v3d-tab" data-k="objetos">Ver todos los objetos →</button></div></div>`}
+/* ---- Perspectiva dramática: abre el lente y acerca la cámara a la vez (dolly zoom), la figura no cambia de tamaño pero el escorzo se exagera ---- */
+function v3dDrama(t){const s=S.v3d;if(!V3.camera||!V3.controls||s.persp)return;const tg=V3.controls.target,dir=V3.camera.position.clone().sub(tg),dist=dir.length();if(dist<.01)return;
+  let R=s.dramaRef;const esp=R?R.d0*s.lente/R.f0:0;if(!R||Math.abs(dist-esp)/esp>.03){R=s.dramaRef={f0:s.lente,d0:dist,t0:s.drama!=null?s.drama:0}}
+  const dt=t-R.t0,f=Math.max(10,Math.min(200,dt>=0?R.f0*Math.pow(10/Math.max(R.f0,10.1),dt/100):R.f0*Math.pow(200/R.f0,-dt/50))),d=R.d0*f/R.f0;
+  dir.normalize();V3.camera.position.copy(tg).addScaledVector(dir,d);s.lente=f;s.drama=t;v3dEscena();V3.controls.update();V3.dirty=true;
+  const lb=document.getElementById('v3v-lente');if(lb)lb.textContent=Math.round(f)+' mm';const inp=document.querySelector('[data-v3="lente"]');if(inp)inp.value=f;const lb2=document.getElementById('v3v-drama');if(lb2)lb2.textContent=Math.round(t)+' %'}
+function v3dDramaHTML(s){const t=s.drama||0,ch=(k,n)=>`<button class="ch xs ${Math.abs(t-k)<8?'on':''}" data-act="v3d-drama" data-k="${k}">${n}</button>`;
+  return `<div class="v3-g"><b>Perspectiva dramática</b><p class="hint" style="margin:0 0 6px">Exagera el escorzo sin cambiar el tamaño de la figura: el lente se abre y la cámara se acerca a la vez. Lo que está cerca (un puño, un pie, una espada) crece y lo lejano se encoge. A la izquierda se aplana, como con un teleobjetivo.</p><div class="chips">${ch(-40,'Aplanado')}${ch(0,'Normal')}${ch(35,'Marcado')}${ch(70,'Dramático')}${ch(100,'Extremo')}</div>${v3Sl('Intensidad','drama',-50,100,1,t,' %')}</div>`}
+/* ---- Hoja de luces: el mismo modelo y pose con ocho luces, para estudiar cómo cambia el ánimo ---- */
+const V3_LUCES_HOJA=[['Suave','suave','Luz amplia: formas fáciles de leer, sin drama.'],['Lateral','lateral','Mitad luz, mitad sombra: da volumen y carácter.'],['Contraluz','contraluz','Silueta fuerte con borde de luz; la cara queda en sombra.'],['Cenital','cenital','Desde arriba: sombras en ojos y cuello, tono solemne o amenazante.'],['Desde abajo','abajo','Luz de fogata o de monstruo: inquieta y deforma.'],['Drama','@drama','Un solo lado y sombra profunda: alto contraste.'],['Hora dorada','@dorada','Luz cálida y baja con sombra fría: nostalgia, aventura.'],['Luna fría','@luna','Luz azulada suave y sombra muy oscura: misterio, calma.']];
+const V3_LUCES_HOJA_X={drama:{dir:320,alt:22,int:3.6,amb:.08,rim:0,color:'#ffffff',ambc:'#101218'},dorada:{dir:250,alt:12,int:3,amb:.35,rim:.3,color:'#ffb066',ambc:'#3a4a7a'},luna:{dir:150,alt:45,int:1.4,amb:.18,rim:.5,color:'#9fb8ff',ambc:'#0c1020'}};
+function v3dNotan(g,W,H){const im=g.getImageData(0,0,W,H),d=im.data,L=new Float32Array(W*H),h=new Uint32Array(256);for(let i=0;i<W*H;i++){const v=d[i*4]*.3+d[i*4+1]*.59+d[i*4+2]*.11;L[i]=v;h[v|0]++}
+  let a=0,lo=0,hi=255;for(let v=0;v<256;v++){a+=h[v];if(a>=W*H*.03){lo=v;break}}a=0;for(let v=255;v>=0;v--){a+=h[v];if(a>=W*H*.03){hi=v;break}}const r=Math.max(10,hi-lo);
+  for(let i=0;i<W*H;i++){const x=(L[i]-lo)/r,o=x<.34?22:x<.68?128:238;d[i*4]=d[i*4+1]=d[i*4+2]=o;d[i*4+3]=255}g.putImageData(im,0,0)}
+function v3dCuadroFigura(cv){const T=V3.T,ms=V3.figs?V3.figs.map(x=>x.model):[V3.model];V3.camera.updateMatrixWorld(true);V3.camera.updateProjectionMatrix();let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const m of ms){if(!m)continue;m.updateMatrixWorld(true);const b=new T.Box3().setFromObject(m);for(const x of [b.min.x,b.max.x])for(const y of [b.min.y,b.max.y])for(const z of [b.min.z,b.max.z]){const p=new T.Vector3(x,y,z).project(V3.camera),px=(p.x+1)/2*cv.width,py=(1-p.y)/2*cv.height;x0=Math.min(x0,px);x1=Math.max(x1,px);y0=Math.min(y0,py);y1=Math.max(y1,py)}}
+  if(!(x1>x0)||!(y1>y0))return {x:0,y:0,w:cv.width,h:cv.height};let w=(x1-x0)*1.3,h=(y1-y0)*1.18;const asp=.8;if(w/h>asp)h=w/asp;else w=h*asp;const cx=(x0+x1)/2,cy=(y0+y1)/2;w=Math.min(w,cv.width);h=Math.min(h,cv.height);return {x:Math.max(0,Math.min(cv.width-w,cx-w/2)),y:Math.max(0,Math.min(cv.height-h,cy-h/2)),w,h}}
+async function v3dHojaLuces(modo){const s=S.v3d;if(!V3.renderer||!V3.model){toast('Abre primero un cuerpo o un modelo');return}toast('Armando la hoja de luces…');
+  const L0=JSON.parse(JSON.stringify(s.luz)),N0=s.luzN,x2=s.luz2&&s.luz2.on,x3=s.luz3&&s.luz3.on,cv0=V3.renderer.domElement,W=520,H=650,fr=[],rej0=V3.rej&&V3.rej.visible,R=v3dCuadroFigura(cv0);
+  if(s.luz2)s.luz2.on=false;if(s.luz3)s.luz3.on=false;if(V3.rej)V3.rej.visible=false;
+  try{for(const [nom,k,tip] of V3_LUCES_HOJA){const L=k[0]==='@'?Object.assign({},luz3dPre('suave'),V3_LUCES_HOJA_X[k.slice(1)]):luz3dPre(k);Object.assign(s.luz,L);v3dLuz();V3.renderer.render(V3.scene,V3.camera);const t=document.createElement('canvas');t.width=W;t.height=H;const g=t.getContext('2d');g.drawImage(cv0,R.x,R.y,R.w,R.h,0,0,W,H);if(modo==='notan')v3dNotan(g,W,H);fr.push([nom,tip,t])}}
+  finally{for(const k of Object.keys(s.luz))delete s.luz[k];Object.assign(s.luz,L0);s.luzN=N0;if(s.luz2)s.luz2.on=x2;if(s.luz3)s.luz3.on=x3;if(V3.rej)V3.rej.visible=rej0;v3dLuz();V3.dirty=true}
+  const cols=4,pad=16,cw=W+pad,ch=H+86,top=84,sheet=document.createElement('canvas');sheet.width=cols*cw+pad;sheet.height=top+2*ch+pad;const g=sheet.getContext('2d');g.fillStyle='#14161b';g.fillRect(0,0,sheet.width,sheet.height);
+  g.fillStyle='#fff';g.font='700 28px system-ui,sans-serif';g.fillText('Mismo modelo, ocho luces'+(modo==='notan'?' · en 3 valores':''),pad,44);g.fillStyle='#9aa3b5';g.font='16px system-ui,sans-serif';g.fillText('Compara cómo cambia el ánimo, dónde se pierde la forma y qué se lee primero.',pad,70);
+  const par=(t,x,y,w,lh)=>{const pal=t.split(' ');let l='';for(const p of pal){const q=l?l+' '+p:p;if(g.measureText(q).width>w&&l){g.fillText(l,x,y);y+=lh;l=p}else l=q}g.fillText(l,x,y)};
+  fr.forEach(([nom,tip,t],i)=>{const x=pad+(i%cols)*cw,y=top+Math.floor(i/cols)*ch;g.drawImage(t,x,y);g.strokeStyle='#2c313c';g.strokeRect(x+.5,y+.5,W-1,H-1);g.fillStyle='#ff9a6b';g.font='700 18px system-ui,sans-serif';g.fillText((i+1)+' · '+nom,x,y+H+24);g.fillStyle='#b8c0d0';g.font='14px system-ui,sans-serif';par(tip,x,y+H+44,W,18)});
+  await bajarBlob('hoja-de-luces'+(modo==='notan'?'-3-valores':'')+'.png',await aBlob(sheet));toast('Hoja de luces lista')}
+function v3dHojaLucesHTML(){return `<div class="v3-g"><b>Comparar luces</b><p class="hint" style="margin:0 0 6px">Una sola imagen con tu modelo y tu pose bajo 8 luces distintas (suave, lateral, contraluz, cenital, desde abajo, drama, hora dorada y luna), cada una con qué logra. Ideal para decidir la luz antes de pintar.</p><div class="prow"><button class="btn sm pri" data-act="v3d-hoja-luces" data-k="color">⬇ Hoja de 8 luces</button><button class="btn sm" data-act="v3d-hoja-luces" data-k="notan">⬇ En 3 valores (notan)</button></div></div>`}
 function v3dTabLuz(s,p){const ch=v3Ch,L=s.luz,E=p?.escena;return `<div class="chips">${Object.entries(V3_LUCES).map(([k,v])=>ch('v3d-luzp',k,v.n,s.luzN===v.n)).join('')}</div>
       ${v3Sl('Dirección','luz.dir',0,360,1,L.dir)}${v3Sl('Altura','luz.alt',-40,90,1,L.alt)}${v3Sl('Intensidad','luz.int',0,5,.05,L.int,'')}${v3Sl('Ambiente','luz.amb',0,2,.05,L.amb,'')}
       <div class="prow"><label class="esc-r"><span class="lbl">Color de la luz</span><input type="color" data-v3c="color" value="${esc(L.color)}"></label><label class="esc-r"><span class="lbl">Color de la sombra</span><input type="color" data-v3c="ambc" value="${esc(L.ambc)}"></label></div>
       ${v3dPaletaLuz(s,p)}
       ${v3dLucesExtra(s)}
+      ${v3dHojaLucesHTML()}
       <div class="v3-g"><b>Usar las luces de tu proyecto</b><div class="chips">${E?`<button class="ch" data-act="v3d-escena" data-k="proyecto">Mi escena: ${esc(escNombre(p,E))}</button>`:''}${Object.entries(ESC_PRE).map(([k,v])=>`<button class="ch" data-act="v3d-escena" data-k="${k}">${esc(v.n)}</button>`).join('')}</div>
       <button class="btn sm" data-act="v3d-guardar-luz" title="La guarda en «Mis escenas» de Mood">Guardar esta luz como escena</button></div>`}
-function v3dTabCamara(s){const ch=v3Ch;return `<div class="chips"><span class="lbl">${s.figs?.length>1?'El seleccionado visto de':'El modelo visto de'}</span>${V3_VISTAS.map(([nm,a])=>`<button class="ch xs ${Math.round(s.giro.y)===a?'on':''}" data-act="v3d-vista" data-a="${a}">${nm}</button>`).join('')}</div><div class="chips"><span class="lbl">Cámara</span>${V3_CAMS.map(([nm,a])=>`<button class="ch xs" data-act="v3d-cam" data-a="${a}">${nm}</button>`).join('')}</div>${v3Sl('Lente (mm)','lente',18,135,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
+function v3dTabCamara(s){const ch=v3Ch;return `<div class="chips"><span class="lbl">${s.figs?.length>1?'El seleccionado visto de':'El modelo visto de'}</span>${V3_VISTAS.map(([nm,a])=>`<button class="ch xs ${Math.round(s.giro.y)===a?'on':''}" data-act="v3d-vista" data-a="${a}">${nm}</button>`).join('')}</div><div class="chips"><span class="lbl">Cámara</span>${V3_CAMS.map(([nm,a])=>`<button class="ch xs" data-act="v3d-cam" data-a="${a}">${nm}</button>`).join('')}</div>${s.persp?'':v3dDramaHTML(s)}${v3Sl('Lente (mm)','lente',10,200,1,s.lente,' mm')}${v3Sl('Girar modelo','giro.y',-180,180,1,s.giro.y)}${v3Sl('Inclinar modelo','giro.x',-90,90,1,s.giro.x)}${v3Sl('Ladear modelo','giro.z',-90,90,1,s.giro.z)}
     <div class="chips"><span class="lbl">Rendimiento</span><button class="ch xs ${!v3dLigero()?'on':''}" data-act="v3d-rend" data-k="normal">Normal (nítido)</button><button class="ch xs ${v3dLigero()?'on':''}" data-act="v3d-rend" data-k="ligero">Ligero (celular)</button></div>
     <div class="chips"><span class="lbl">Fondo</span>${Object.keys(V3_FONDO_N).map(k=>ch('v3d-fondo',k,V3_FONDO_N[k],s.fondo===k)).join('')}</div>
     <label class="chk"><input type="checkbox" data-v3chk="rej" ${s.rej?'checked':''}><span>Cuadrícula del piso</span></label><label class="chk"><input type="checkbox" data-v3chk="cielo" ${s.cielo?'checked':''}><span>Guías de perspectiva: horizonte, puntos de fuga y líneas hacia el cielo (siguen a la cámara)</span></label><label class="chk"><input type="checkbox" data-v3chk="sombra" ${s.sombra?'checked':''}><span>Suelo y sombra</span></label>
@@ -16427,7 +16394,7 @@ async function v3dExporta(k){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!V3.mod
 const v3dTabCuerpo=s=>s.modelo==='animal'?v3dTabAnimalCuerpo(s):s.modelo==='maniqui'?v3dCuerpoHTML(s):'<p class="hint">La complexión, las manos, los tonos de piel y la anatomía son para el cuerpo posable. Cambia a «Cuerpo» en la pestaña Modelo.</p>';
 const v3dTabObjetos=s=>v3dPropsHTML(s);
 const V3_TABS={escena:s=>v3dSec('esc-luz','Luz',v3dTabLuz(s),true)+v3dSec('esc-cam','Cámara, lente y fondo',v3dTabCamara(s),true),persp:v3dTabPersp,modelo:v3dTabModelo,pose:v3dTabPose,cuerpo:v3dTabCuerpo,objetos:v3dTabObjetos,luz:v3dTabLuz,camara:v3dTabCamara,poses:s=>v3dEscenasHTML()+v3dTabPoses(s),guardar:s=>v3dEscenasHTML()+v3dTabGuardar(s)};
-function v3dNovedades(){let v=false;try{v=localStorage.getItem('cdc.v3dnov4')==='1'}catch{}if(v)return '';return `<div class="v3-nov"><b>Novedades del visor</b><ul><li><b>Modelo:</b> hasta 4 personajes, escenas y escenas con palabras.</li><li><b>Pose:</b> 100+ poses con buscador, desde foto o boceto, y arrastrar articulaciones.</li><li><b>Cuerpo:</b> <b>guías de proporción</b> (ojos, nariz, boca, medio del cuerpo, 8 cabezas), complexión, piel, manos y pies, esqueleto y volúmenes.</li><li><b>Objetos:</b> muebles, armas y formas (también en la pestaña Modelo).</li><li><b>Escenas:</b> 62 escenas de partida por tipo.</li><li><b>Luz:</b> 3 luces. <b>Cámara:</b> fondos y modo ligero para celular. <b>Poses:</b> tu biblioteca de fotos, que ahora se guarda en tu cuenta.</li></ul><button class="btn sm pri" data-act="v3d-nov">Entendido</button></div>`}
+function v3dNovedades(){let v=false;try{v=localStorage.getItem('cdc.v3dnov5')==='1'}catch{}if(v)return '';return `<div class="v3-nov"><b>Novedades del visor</b><ul><li><b>Modelo:</b> hasta 4 personajes, escenas y escenas con palabras.</li><li><b>Pose:</b> 100+ poses con buscador, desde foto o boceto, y arrastrar articulaciones.</li><li><b>Cuerpo:</b> <b>guías de proporción</b> (ojos, nariz, boca, medio del cuerpo, 8 cabezas), complexión, piel, manos y pies, esqueleto y volúmenes.</li><li><b>Cámara:</b> <b>perspectiva dramática</b> (exagera el escorzo sin cambiar el tamaño de la figura) y lente de 10 a 200 mm.</li><li><b>Luz:</b> <b>hoja de 8 luces</b> del mismo modelo, también en 3 valores.</li><li><b>Manos y pies:</b> 21 gestos, separar dedos, variar la mano y pies rápidos.</li><li><b>Objetos:</b> muebles, armas y formas (también en la pestaña Modelo).</li><li><b>Escenas:</b> 62 escenas de partida por tipo.</li><li><b>Luz:</b> 3 luces. <b>Cámara:</b> fondos y modo ligero para celular. <b>Poses:</b> tu biblioteca de fotos, que ahora se guarda en tu cuenta.</li></ul><button class="btn sm pri" data-act="v3d-nov">Entendido</button></div>`}
 /* pintar el modelo con la paleta: el color de tu paleta (del proyecto o de una pieza) se aplica al personaje elegido, o al modelo si es uno solo, en la pose que tienes */
 function v3dPalPintar(p,s){const f=s?.palFuente||'proy',x=f!=='proy'?p?.paletasPieza?.[f]:null;return (x?x.pal.map(z=>z.hex):(p?.mood?.paleta||[])).filter(Boolean).slice(0,8)}
 function v3dPintaHTML(s,p){const pal=v3dPalPintar(p,s),f=s.modelo==='maniqui'?s.figs?.[s.sel||0]:null,act=((f?f.col:s.colGen)||'').toLowerCase(),PP=p?.paletasPieza||{},fu=s.palFuente||'proy',multi=s.modelo==='maniqui'&&(s.figs?.length||0)>1;
@@ -16464,8 +16431,8 @@ async function v3dGuardar(modo){const p=S.P[S.cur],s=S.v3d;if(!V3.renderer||!p)r
 document.addEventListener('input',e=>{const t=e.target;if(!t.closest?.('#v3d'))return;const s=S.v3d;
   if(t.dataset.v3?.startsWith('bone.')){const i=+t.dataset.v3.split('.')[1];s.bones[s.hueso]=s.bones[s.hueso]||[0,0,0];s.bones[s.hueso][i]=+t.value;const lb=$('#v3v-bone-'+i);if(lb)lb.textContent=t.value+'°';v3dHuesos();return}
   if(t.dataset.v3){const [a,b]=t.dataset.v3.split('.');let v=+t.value;if(b===undefined)s[a]=v;else{s[a][b]=v}
-    const lb=$('#v3v-'+t.dataset.v3.replace(/\./g,'-'));if(lb)lb.textContent=(Math.round(v*100)/100)+(a==='anim'?'':a==='luz'&&(b==='int'||b==='amb')?'':a==='lente'?' mm':'°');
-    if(a==='pose'){s.preset='Mía';v3dPose()}else if(a==='luz'||a==='luz2'||a==='luz3'){if(a==='luz')s.luzN='';v3dLuz()}else if(a==='lente')v3dEscena();else if(a==='giro')v3dGiro();else if(a==='anim')v3dAnim()}
+    const lb=$('#v3v-'+t.dataset.v3.replace(/\./g,'-'));if(lb)lb.textContent=(Math.round(v*100)/100)+(a==='anim'?'':a==='luz'&&(b==='int'||b==='amb')?'':a==='lente'?' mm':a==='drama'?' %':'°');
+    if(a==='pose'){s.preset='Mía';v3dPose()}else if(a==='luz'||a==='luz2'||a==='luz3'){if(a==='luz')s.luzN='';v3dLuz()}else if(a==='lente'){s.dramaRef=null;v3dEscena()}else if(a==='drama')v3dDrama(v);else if(a==='giro')v3dGiro();else if(a==='anim')v3dAnim()}
   else if(t.dataset.v3c){s.luz[t.dataset.v3c]=t.value;s.luzN='';v3dLuz()}
   else if(t.dataset.v3chk){s[t.dataset.v3chk]=t.checked;if(t.dataset.v3chk==='arcilla')v3dArcilla();else v3dEscena()}
   else if(t.dataset.v3sel){s[t.dataset.v3sel]=t.value}
@@ -16986,7 +16953,6 @@ async function accion(a,el){
     case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
-    case 'navmodo':S.navModo=ds.m;try{localStorage.setItem('cdc.navmodo2',ds.m)}catch{}renderSide();break;
     case 'tab':{if(ds.tab==='board'){S.refVista='tablero';S.refModo='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
     case 'ir-sec':{document.getElementById('sec-'+ds.id)?.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'tension':p.concepto.tension=ds.v;marcar();renderMain();break;
@@ -17229,8 +17195,10 @@ async function accion(a,el){
     case 'v3d-prop-reor':{const p=(S.v3d.props||[]).find(x=>x.id===S.v3d.propSel);if(p){p.q=null;p.rx=p.ry=p.rz=0;v3dPropsPos();v3dPanel()}break}
     case 'v3d-prop-dup':{const S3=S.v3d,p=(S3.props||[]).find(x=>x.id===S3.propSel);if(p){const n={...p,id:uid(),x:clamp((p.x||0)+.5,-3.2,3.2)};S3.props.push(n);S3.propSel=n.id;v3dPropsMonta();v3dPanel()}break}
     case 'v3d-cx':{const f=S.v3d.figs?.[S.v3d.sel||0],c=V3_COMPLEXION[ds.k]||V3_MONSTRUO[ds.k];if(f&&c){const {esc,...r}=c;f.cx={...r};f.esc=esc;const en=V3.figs?.[S.v3d.sel||0];if(en){v3dColoca(en.model,f);v3dAnillo()}v3dPanel()}break}
-    case 'v3d-mano':{const f=S.v3d.figs?.[S.v3d.sel||0],v=V3_MANOS[ds.k];if(f&&v){f.dedos=f.dedos||{L:V3_MANOS['Relajada'].slice(),R:V3_MANOS['Relajada'].slice()};f.dedos[ds.l]=v.slice();const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
-    case 'v3d-mano-copia':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f?.dedos){const o=ds.l==='L'?'R':'L';f.dedos[o]=f.dedos[ds.l].slice();const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
+    case 'v3d-mano':{const f=S.v3d.figs?.[S.v3d.sel||0],v=V3_MANOS[ds.k];if(f&&v){f.dedos=f.dedos||{L:V3_MANOS['Relajada'].slice(),R:V3_MANOS['Relajada'].slice()};f.dedos[ds.l]=v.slice();(f.abre=f.abre||{L:0,R:0})[ds.l]=V3_MANOS_ABRE[ds.k]||0;const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
+    case 'v3d-mano-var':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f){f.dedos=f.dedos||{L:V3_MANOS['Relajada'].slice(),R:V3_MANOS['Relajada'].slice()};f.abre=f.abre||{L:0,R:0};f.dedos[ds.l]=f.dedos[ds.l].map(x=>clamp(x+(Math.random()-.5)*.22,0,1));f.abre[ds.l]=clamp((f.abre[ds.l]||0)+(Math.random()-.5)*.25,0,1);const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
+    case 'v3d-pies':{const f=S.v3d.figs?.[S.v3d.sel||0],q=V3_PIES_RAPIDOS[+ds.k];if(f&&q){f.pies={L:q[1],R:q[2]};const en=V3.figs?.[S.v3d.sel||0];if(en){v3dManos(en.model,f);v3dColoca(en.model,f)}V3.dirty=true;v3dPanel()}break}
+    case 'v3d-mano-copia':{const f=S.v3d.figs?.[S.v3d.sel||0];if(f?.dedos){const o=ds.l==='L'?'R':'L';f.dedos[o]=f.dedos[ds.l].slice();(f.abre=f.abre||{L:0,R:0})[o]=f.abre[ds.l]||0;const en=V3.figs?.[S.v3d.sel||0];if(en)v3dManos(en.model,f);V3.dirty=true;v3dPanel()}break}
     case 'v3d-fig-mas':v3dFigMas();break;
     case 'v3d-fig-menos':v3dFigMenos(ds.k!==undefined?+ds.k:undefined);break;
     case 'v3d-fig-uno':{const S3=S.v3d;if((S3.figs?.length||0)>1){v3dFigSync();S3.figs=[S3.figs[S3.sel||0]];S3.sel=0;v3dCargaSel();v3dModelo();v3dPanel()}break}
@@ -17288,7 +17256,9 @@ async function accion(a,el){
     case 'v3d-guardar-luz':{const L=S.v3d.luz;p.escenas=p.escenas||[];p.escenas.push(luz3dAEsc(L,'Luz 3D '+(p.escenas.length+1)));marcar();toast('Guardada en «Mis escenas» (pestaña Mood)');break}
     case 'v3d-rend':{S.v3d.rend=ds.k;v3dRendimiento();V3.dirty=true;v3dPanel();break}
     case 'v3d-fondo':S.v3d.fondo=ds.k;v3dEscena();v3dPanel();break;
-    case 'v3d-encuadra':v3dEncuadra();break;
+    case 'v3d-encuadra':S.v3d.dramaRef=null;v3dEncuadra();break;
+    case 'v3d-drama':{S.v3d.drama=S.v3d.drama!=null?S.v3d.drama:0;v3dDrama(+ds.k);v3dPanel();break}
+    case 'v3d-hoja-luces':{v3dHojaLuces(ds.k);break}
     case 'v3d-luzc':{const L=S.v3d.luz;L[ds.r]=ds.c;S.v3d.luzN='';if(ds.r==='rimc'&&!(L.rim>0))L.rim=1.2;v3dLuz();v3dPanel();break}
     case 'v3d-exp':v3dExporta(ds.k);break;
     case 'v3d-neutra':v3dNeutra(false);toast('Pose neutra');break;

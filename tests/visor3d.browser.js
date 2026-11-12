@@ -1,0 +1,21 @@
+/* Pruebas del visor 3D: perspectiva dramática, hoja de luces, manos (separar dedos) y pies.
+   Uso: abrir la app y ejecutar con javascript_tool: fetch('/tests/visor3d.browser.js').then(r=>r.text()).then(t=>(0,eval)(t)) */
+(async()=>{const w=ms=>new Promise(r=>setTimeout(r,ms)),out=[],ok=(n,c,d)=>out.push({n,ok:!!c,d:d||''});
+  try{
+    v3dAbrir('maniqui','poses');for(let i=0;i<40&&!(V3.open&&V3.figs&&V3.figs[0]);i++)await w(300);ok('el visor abre con un maniquí',V3.open&&V3.figs&&V3.figs[0]);
+    /* perspectiva dramática: el lente baja, la cámara se acerca y vuelve a normal */
+    S.v3d.drama=0;S.v3d.dramaRef=null;const l0=S.v3d.lente,d0=V3.camera.position.distanceTo(V3.controls.target);v3dDrama(70);const d1=V3.camera.position.distanceTo(V3.controls.target);
+    ok('dolly: el lente se abre',S.v3d.lente<l0*.6,l0+'→'+Math.round(S.v3d.lente)+' mm');ok('dolly: la cámara se acerca en proporción',Math.abs(d1/d0-S.v3d.lente/l0)<.05,d0.toFixed(2)+'→'+d1.toFixed(2));
+    v3dDrama(100);ok('extremo llega a 10 mm',Math.abs(S.v3d.lente-10)<.6,S.v3d.lente.toFixed(1));v3dDrama(-40);ok('aplanado usa teleobjetivo',S.v3d.lente>90,S.v3d.lente.toFixed(0));v3dDrama(0);ok('vuelve a normal',Math.abs(S.v3d.lente-l0)<1,S.v3d.lente.toFixed(1));
+    /* hoja de luces: baja 2 archivos y deja la luz como estaba */
+    const luz0=JSON.stringify(S.v3d.luz),rej0=V3.rej&&V3.rej.visible;let cap=[];const og=window.bajarBlob;window.bajarBlob=async(n,b)=>{cap.push({n,b})};
+    try{await v3dHojaLuces('color');await v3dHojaLuces('notan')}finally{window.bajarBlob=og}
+    ok('hoja de luces: 2 imágenes',cap.length===2&&cap.every(c=>c.b.size>20000),cap.map(c=>c.n).join(', '));ok('la luz del usuario se restaura',JSON.stringify(S.v3d.luz)===luz0);ok('la rejilla del piso se restaura',(V3.rej&&V3.rej.visible)===rej0);
+    /* manos */
+    ok('21 gestos de mano',Object.keys(V3_MANOS).length>=21,Object.keys(V3_MANOS).length);
+    const f=S.v3d.figs[0],en=V3.figs[0],bn=en.model.userData.bn;ok('separar dedos está calibrado',['Index','Ring','Pinky'].every(d=>bn['LeftHand'+d+'1']&&bn['LeftHand'+d+'1'].userData.spr));
+    const T=V3.T,dist=()=>{const a=new T.Vector3(),b=new T.Vector3();bn.LeftHandIndex4.getWorldPosition(a);bn.LeftHandPinky4.getWorldPosition(b);return a.distanceTo(b)};
+    f.dedos={L:V3_MANOS['Abierta'].slice(),R:V3_MANOS['Abierta'].slice()};f.abre={L:0,R:0};v3dManos(en.model,f);en.model.updateMatrixWorld(true);const a0=dist();f.abre.L=1;v3dManos(en.model,f);en.model.updateMatrixWorld(true);const a1=dist();ok('separar dedos abre la mano',a1>a0*1.4,a0.toFixed(3)+'→'+a1.toFixed(3));
+    f.abre.L=0;f.pies={L:48,R:0};v3dManos(en.model,f);ok('pies rápidos aplican',f.pies.L===48&&V3_PIES_RAPIDOS.length>=6)
+  }catch(e){ok('excepción',false,e.message)}
+  return {todo:out.every(x=>x.ok),fallos:out.filter(x=>!x.ok),total:out.length}})()
