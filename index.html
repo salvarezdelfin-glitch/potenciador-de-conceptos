@@ -1305,7 +1305,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnznt1e').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnzptby').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -4914,7 +4914,7 @@ function cnSaludoHTML(){const T=cnTema();return T.saludo?`<div class="cn-saludo"
 /* ================= Secciones: 36 pantallas agrupadas en 10, sin borrar ninguna ================= */
 const HUBS=[
  ['inicio','Mi camino','home',[['inicio','Hoy'],['calendario','Calendario'],['metas','Mis metas']]],
- ['dibujar','Dibujar hoy','spark',[['brief','Brief completo'],['ahora','Idea y a dibujar'],['generador','Ideas libres'],['desatorar','Desatorarme'],['nombres','Nombres y títulos']]],
+ ['dibujar','Dibujar hoy','spark',[['brief','Brief de producción'],['ahora','Dibujo de 20 min'],['generador','Ruleta de ideas'],['desatorar','Desatorarme'],['nombres','Nombres y títulos']]],
  ['mejorar','Mejorar mi técnica','flame',[['diario','Programa de mejora'],['estudios','Estudios sencillos'],['maestros','Estudio de maestros'],['ruta','Cursos y ruta']]],
  ['avance','Mi avance','chart',[['progreso','Progreso medido'],['nivel','Mi nivel']]],
  ['cine','Cine y juegos','frame',[['valores','Escala de grises y color'],['colorscript','Color script'],['encuadre','Encuadres y lectura'],['blockout','Blockout cenital'],['kit','Kit modular'],['shots','Shot list'],['iter','Comparar y anotar'],['entrega','Entrega a 3D'],['paleta','Paleta de colores']]],
@@ -4927,7 +4927,8 @@ const HUBS=[
  ['mas','Más','grid',[['tema','Apariencia'],['uso','Qué uso de la app'],['respaldo','Respaldo'],['avisos','Avisos por correo'],['papelera','Papelera']]]];
 const hubDe=v=>HUBS.find(h=>h[3].some(x=>x[0]===v));
 function hubBarra(){const h=hubDe(S.vista);if(!h||h[3].length<2)return '';return `<nav class="hub-bar" aria-label="${esc(h[1])}"><span class="hub-t">${esc(h[1])}</span>${h[3].map(([v,n])=>v[0]==='@'?`<button class="ch xs" data-act="${v.slice(1)}">${esc(n)}</button>`:`<button class="ch xs ${S.vista===v?'on':''}" data-act="vista" data-v="${v}" aria-pressed="${S.vista===v}">${esc(n)}</button>`).join('')}</nav>`}
-function hubInserta(){if(S.vista==='proyecto')return;const m=$('#main'),old=m&&m.querySelector('.hub-bar');if(old)old.remove();const h=hubBarra();if(m&&h)m.insertAdjacentHTML('afterbegin',h)}
+function hubInserta(){if(S.vista==='proyecto')return;const m=$('#main'),old=m&&m.querySelector('.hub-bar');if(old)old.remove();const h=hubBarra();if(m&&h)m.insertAdjacentHTML('afterbegin',h);
+  const hb=hubDe(S.vista);if(m&&hb&&S.vista!=='inicio'){const tab=hb[3].find(x=>x[0]===S.vista),t1=m.querySelector('h1');if(tab&&t1&&!t1.children.length&&t1.textContent.trim()!==tab[1])t1.textContent=tab[1]}}
 /* respaldo */
 function vRespaldo(){const P=Object.keys(S.P||{}).length,A=Object.keys(S.ajustes||{}).length,pend=S.rpPend;
   return `<h1 class="ptitle" style="font-size:clamp(28px,4vw,40px)">Respaldo</h1><p class="intro">Una copia de tus datos en un archivo: <b>${P} proyecto${P===1?'':'s'}</b> y tus ajustes (progreso medido, siluetas favoritas, páginas de portafolio, ventas, metas). Las <b>imágenes no van dentro</b>: viven en tu almacenamiento y el archivo solo guarda a qué imagen apunta cada cosa.</p>
