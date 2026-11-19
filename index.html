@@ -1306,7 +1306,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnzvwrp').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwo00hk2').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -7506,12 +7506,36 @@ async function cargarVacantes(forzar){
   if(S.vac)S.vac.cargando=false;
   if(S.vista==='vacantes')renderMain();
 }
+/* siempre al día: el servidor trae vacantes todos los días; la app además las vuelve a pedir si están viejas (cada 20 min revisa, y al volver a la pestaña) */
+const vacTx=v=>typeof v==='string'?v:typeof v==='number'?String(v):(v&&(v.name||v.label||v.title||v.text))||'';
+setInterval(()=>{if(document.hidden||!window.PC_SHIM?.vacantes||!S.db)return;const edad=Date.now()-(S.vac?.ts||0);if(edad>(S.vista==='vacantes'?6:12)*36e5)cargarVacantes(true)},20*60*1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&window.PC_SHIM?.vacantes&&S.db&&Date.now()-(S.vac?.ts||0)>12*36e5)cargarVacantes(true)});
+/* pulso del mercado: lo que dicen las vacantes de hoy, comparado con la última vez que lo viste */
+function vacPulso(all){const n=all.length;if(!n)return null;const pc=k=>Math.round(k/n*100),jr=/junior|jr|entry|graduate|intern|trainee|associate/i,sr=/senior|sr|lead|principal|director|head of/i,
+  rem=all.filter(x=>x.remote).length,jun=all.filter(x=>jr.test(x.title+' '+x.level)).length,sen=all.filter(x=>sr.test(x.title)).length,alto=all.filter(x=>x.s>=5).length,mx=all.filter(x=>/m[eé]xico|latam|latin america|americas/i.test(vacTx(x.loc))).length;
+  const emp={};all.forEach(x=>{const c=vacTx(x.company);if(c)emp[c]=(emp[c]||0)+1});
+  const KW=[['Environment y fondos',/environment|background|world ?build|level/i],['Keyframe y key art',/keyframe|key art|matte/i],['Visual development',/visual ?dev/i],['Personaje',/character/i],['Criatura',/creature/i],['Ilustración',/illustrat|2d/i],['3D y modelado',/3d|modeler|modell?ing|sculpt/i],['Concept (general)',/concept/i]],
+    kw=KW.map(([n,re])=>[n,all.filter(x=>re.test(vacTx(x.title))).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+  return {n,rem,jun,sen,alto,mx,remP:pc(rem),junP:pc(jun),senP:pc(sen),altoP:pc(alto),kw,top:Object.entries(emp).sort((a,b)=>b[1]-a[1]).slice(0,6)}}
+function vacPulsoHTML(P){if(!P)return '';const a=S.ajustes,ant=a.vacPulso;
+  if(!ant||Date.now()-ant.ts>20*36e5){a.vacPulso={ts:Date.now(),n:P.n,remP:P.remP,alto:P.alto,prev:ant?{ts:ant.ts,n:ant.n,remP:ant.remP,alto:ant.alto}:null};marcarAj()}
+  const pr=a.vacPulso?.prev,dias=pr?Math.max(1,Math.round((Date.now()-pr.ts)/864e5)):0,dl=(x,y)=>{const d=x-y;return d===0?'igual':(d>0?'+':'')+d};
+  const bar=(n,v)=>`<div class="est-fila"><b style="min-width:150px">${esc(n)}</b>${estBarra(v/P.n,'var(--accent)')}<span class="muted" style="font-size:12px">${v}</span></div>`;
+  return `<details class="box" open><summary><b>Pulso del mercado</b> <span class="muted">· lo que dicen las ${P.n} vacantes de hoy</span></summary>
+    <div class="stats" style="margin:10px 0"><div class="stat"><b>${P.n}</b><span>vacantes abiertas${pr?' ('+dl(P.n,pr.n)+' vs hace '+dias+' d)':''}</span></div><div class="stat"><b>${P.remP}%</b><span>son remotas</span></div><div class="stat"><b>${P.junP}%</b><span>piden junior o entrada</span></div><div class="stat"><b>${P.alto}</b><span>encajan alto contigo${pr?' ('+dl(P.alto,pr.alto)+')':''}</span></div></div>
+    <span class="lbl">Qué piden más</span>${P.kw.slice(0,6).map(([n,v])=>bar(n,v)).join('')}
+    ${P.top.length?`<span class="lbl" style="margin-top:8px;display:block">Quién más contrata ahora</span><p style="margin:4px 0">${P.top.map(([c,v])=>esc(c)+' ('+v+')').join(' · ')}</p>`:''}
+    <p class="hint" style="margin:6px 0 0">${P.sen>P.n*.5?'Más de la mitad pide senior: aplica igual si tu portafolio encaja, pero busca también las de entrada.':'Hay oferta de entrada: no esperes a sentirte listo.'} ${P.mx?`${P.mx} mencionan México o Latinoamérica.`:''}</p></details>`}
 function vVacantes(){
   const v=S.vac,f=S.vacF=S.vacF||{nivel:'todos',remoto:false,q:'',src:''},desc=new Set(S.ajustes.vacDesc||[]),ya=new Set(lista('postulaciones').map(x=>x.link));
-  let items=(v?.items||[]).filter(x=>!desc.has(x.id)).map(x=>({...x,s:encaje(x)}));
+  let items=(v?.items||[]).filter(x=>!desc.has(x.id)).map(x=>({...x,s:encaje(x)}));const all=items.slice();
+  if(v?.ts&&S.vacNuevasKey!==v.ts){const prev=new Set(S.ajustes.vacVistas||[]);S.vacNuevas=prev.size?all.filter(x=>!prev.has(x.id)).map(x=>x.id):[];S.vacNuevasKey=v.ts}
+  const nuevasSet=new Set(S.vacNuevas||[]);clearTimeout(S.vacVistoT);S.vacVistoT=setTimeout(()=>{if(S.vista==='vacantes'&&S.vac?.items?.length){S.ajustes.vacVistas=S.vac.items.map(x=>x.id).slice(0,800);marcarAj()}},4000);
+  const pulso=vacPulso(all);
   if(f.nivel==='junior')items=items.filter(x=>/junior|\bjr\b|entry|graduate|intern|trainee|associate/i.test(x.title+' '+x.level));
   if(f.nivel==='sin-senior')items=items.filter(x=>!/senior|\bsr\b|lead|principal|director|manager|head of/i.test(x.title));
   if(f.remoto)items=items.filter(x=>x.remote);
+  if(f.nuevas)items=items.filter(x=>nuevasSet.has(x.id));
   if(f.src)items=items.filter(x=>x.src===f.src);
   if(f.q){const q=f.q.toLowerCase();items=items.filter(x=>(x.title+' '+x.company+' '+x.loc).toLowerCase().includes(q))}
   items.sort((a,b)=>b.s-a.s||String(b.date).localeCompare(String(a.date)));
@@ -7529,10 +7553,11 @@ function vVacantes(){
     <div class="grid2" style="gap:10px">
       <div class="field"><label for="vf-q">Buscar</label><input type="text" id="vf-q" data-vacf="q" value="${esc(f.q)}" placeholder="environment, remote, Canada…"></div>
       <div class="field"><label for="vf-src">Fuente</label><select id="vf-src" data-vacf="src"><option value="">Todas</option>${Object.keys(v?.fuentes||{}).map(k=>`<option ${f.src===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
-    <label class="chk" style="align-self:flex-start"><input type="checkbox" id="vf-remoto" data-vacf="remoto" ${f.remoto?'checked':''}><span><b>Solo remoto</b></span></label></div>
+    <label class="chk" style="align-self:flex-start"><input type="checkbox" id="vf-remoto" data-vacf="remoto" ${f.remoto?'checked':''}><span><b>Solo remoto</b></span></label>${nuevasSet.size?`<label class="chk" style="align-self:flex-start"><input type="checkbox" id="vf-nuevas" data-vacf="nuevas" ${f.nuevas?'checked':''}><span><b>Solo las ${nuevasSet.size} nuevas</b> desde tu última visita</span></label>`:''}</div>
+  ${vacPulsoHTML(pulso)}
   <p class="muted" style="margin:0">${total} vacante${total===1?'':'s'}${total>N?` · mostrando las ${N} que más encajan contigo`:''}</p>
   <div class="vacs">${items.map(x=>{const [et,ec]=encajeTxt(x.s),guardada=ya.has(x.url);return `<div class="vac">
-    <div class="prow" style="justify-content:space-between;align-items:flex-start"><span><b>${esc(tx(x.title))}</b><br><span class="muted">${esc([tx(x.company),tx(x.loc)].filter(Boolean).join(' · ')||'Empresa sin nombre')}</span></span><span class="nivel" style="color:${ec};border-color:${ec};flex:0 0 auto">${et}</span></div>
+    <div class="prow" style="justify-content:space-between;align-items:flex-start"><span><b>${esc(tx(x.title))}</b>${nuevasSet.has(x.id)?' <span class="tagp free">NUEVA</span>':''}<br><span class="muted">${esc([tx(x.company),tx(x.loc)].filter(Boolean).join(' · ')||'Empresa sin nombre')}</span></span><span class="nivel" style="color:${ec};border-color:${ec};flex:0 0 auto">${et}</span></div>
     <div class="prow" style="font-size:12px;gap:6px">${x.remote?'<span class="chip">Remoto</span>':''}${tx(x.type)?`<span class="chip">${esc(tx(x.type))}</span>`:''}${tx(x.salary)?`<span class="chip">${esc(tx(x.salary))}</span>`:''}<span class="muted">${esc(tx(x.src))}${x.date?' · '+fecha(Date.parse(x.date)):''}</span></div>
     <div class="prow"><a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener">Ver vacante ↗</a>${guardada?'<span class="muted" style="font-size:12px">En postulaciones ✓</span>':`<button class="btn sm pri" data-act="vac-guardar" data-id="${esc(x.id)}">A postulaciones</button>`}<button class="btn sm" data-act="vac-adaptar" data-id="${esc(x.id)}">Adaptar</button><button class="btn sm ghost" data-act="vac-desc" data-id="${esc(x.id)}">Descartar</button></div></div>`}).join('')||'<div class="empty">Nada con estos filtros.</div>'}</div>${total>N?`<div class="prow" style="justify-content:center"><button class="btn" data-act="vac-mas">Ver ${Math.min(12,total-N)} más</button></div>`:''}`}
   <div class="box"><h3>Busca también en</h3><p class="hint">Estas bolsas no dejan leerse automáticamente; los links ya van con la búsqueda hecha.</p>
