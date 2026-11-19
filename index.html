@@ -1305,7 +1305,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnyggqf').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnza77e').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -13757,6 +13757,17 @@ const V3_POSES_G=[['Básicas',['De pie','Contrapposto','Caminar','Correr','Agach
  ['Sentado y agachado',['Sentado erguido','Sentado relajado','Sentado inclinado','Sentado con piernas cruzadas','Sentado leyendo','Sentado derrotado','Rodilla en tierra','Cuclillas','Recogiendo algo','Atándose el zapato','Aterrizaje de héroe']],
  ['Combate y armas (más)',['Gancho','Uppercut','Codazo','Rodillazo','Patada baja','Patada giratoria','Bloqueo bajo','Parada con espada','Corte horizontal','Corte descendente','Arquero tensando','Lanzando jabalina','Lanzando una piedra','Apuntando una pistola','Apuntando un rifle','Salto de ataque','Victoria con arma en alto','Lanzando un hechizo','Hechizo con ambas manos']],
  ['Deportes y baile',['Pateando un balón','Golpe de bate','Saque de tenis','Estirando','Baile con cadera','Baile con giro','Pose elegante']]];
+/* ---- Poses afinadas con referencias de poses de estudio (pasos más largos, brazos que sí oponen, bate con brazos extendidos, guardia con puños al mentón) ---- */
+(()=>{const af={'Caminar':{tb:2,tt:8,py:7,lLs:32,lLk:3,lRs:-26,lRk:30,aLs:-28,aLe:16,aRs:32,aRe:24},
+ 'Correr':{tb:18,tt:10,py:10,hn:-20,lLs:68,lLk:34,lRs:-42,lRk:105,aLs:-58,aLe:92,aRs:52,aRe:96},
+ 'Boxeo guardia':{tb:10,tt:24,py:-16,hn:16,aLs:88,aLp:10,aLe:104,aRs:52,aRp:8,aRe:96,lLs:20,lLk:24,lRs:-20,lRk:22},
+ 'Golpe de bate':{tb:14,tt:-62,py:18,hy:-34,aLs:76,aLp:14,aLe:22,aRs:70,aRp:14,aRe:24,lLs:10,lLp:28,lLk:30,lRs:-12,lRp:28,lRk:24}};
+ for(const k in af)if(V3_POSES[k])V3_POSES[k]={...V3_POSES[k],...af[k]};
+ const nu={'Tajo de espada grande (preparación)':{tb:8,tt:4,py:-4,hn:-6,aLs:26,aLp:10,aLe:62,aRs:30,aRp:10,aRe:58,lLs:8,lLp:10,lLk:12,lRs:-12,lRp:10,lRk:10},
+  'Jab y cruzado (guardia cerrada)':{tb:10,tt:26,py:-18,hn:18,hy:-4,aLs:44,aLp:8,aLe:142,aRs:50,aRp:8,aRe:146,lLs:22,lLp:14,lLk:20,lRs:-20,lRp:14,lRk:18},
+  'Recargado casual (piernas cruzadas)':{tb:-4,tt:4,tl:6,pz:6,hl:5,hy:6,aLs:-6,aLp:12,aLe:16,aRs:12,aRp:8,aRe:36,lLs:10,lLp:-3,lLk:4,lRs:-8,lRp:-8,lRk:12}};
+ const b=V3_POSES['De pie'];for(const k in nu){const q={...b,...nu[k]};q.en=k.toLowerCase()+' pose reference';V3_POSES[k]=q}})();
+V3_POSES_G.push(['De referencia de estudio',['Tajo de espada grande (preparación)','Jab y cruzado (guardia cerrada)','Recargado casual (piernas cruzadas)']]);
 V3_POSES_G.push(['Acción y escorzo',['Puñetazo a cámara','Alcanzando algo (escorzo)','Salida de carrera','Lanzamiento (preparando)','Al acecho (felino)','Pateando con rabia','Cubriéndose de un golpe','Sin aire, manos en las rodillas']],['Espada y héroes',['Estocada de espada','Guardia de espada baja','Desenvaine veloz','Héroe, capa al viento','Puño al cielo']],['Modelo y actitud',['Paso de pasarela','Modelo, mano en la cadera','Mirando el cielo (alivio)']]);
 
 /* ============ Poses por mood o personaje: héroe, guerrero, sereno, enojado, peleando, dios imponente, villano… ============
