@@ -1305,7 +1305,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnzmfft').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwnznt1e').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -4913,7 +4913,7 @@ document.addEventListener('DOMContentLoaded',()=>{try{cnTemaAplica()}catch(e){}}
 function cnSaludoHTML(){const T=cnTema();return T.saludo?`<div class="cn-saludo"><h2>${esc(cnSaludo())}</h2><p>${esc(cnTip())}</p></div>`:''}
 /* ================= Secciones: 36 pantallas agrupadas en 10, sin borrar ninguna ================= */
 const HUBS=[
- ['inicio','Mi camino','home',[['inicio','Mi camino'],['calendario','Calendario'],['metas','Mis metas']]],
+ ['inicio','Mi camino','home',[['inicio','Hoy'],['calendario','Calendario'],['metas','Mis metas']]],
  ['dibujar','Dibujar hoy','spark',[['brief','Brief completo'],['ahora','Idea y a dibujar'],['generador','Ideas libres'],['desatorar','Desatorarme'],['nombres','Nombres y títulos']]],
  ['mejorar','Mejorar mi técnica','flame',[['diario','Programa de mejora'],['estudios','Estudios sencillos'],['maestros','Estudio de maestros'],['ruta','Cursos y ruta']]],
  ['avance','Mi avance','chart',[['progreso','Progreso medido'],['nivel','Mi nivel']]],
@@ -4922,7 +4922,7 @@ const HUBS=[
  ['portafolio','Portafolio','frame',[['portafolio','Piezas con visto bueno'],['pagina','Páginas y plantillas'],['galeria','Mis ilustraciones']]],
  ['biblioteca','Biblioteca','grid',[['biblioteca','Referencias'],['artistas','Artistas a seguir'],['estilo','Mi estilo']]],
  ['clientes','Clientes y dinero','coin',[['cotizador','Cotizador'],['trabajos','Trabajos'],['cobros','Cobros'],['contratos','Contratos']]],
- ['vender','Vender','spark',[['ventas','Vender'],['redes','Plan de publicación']]],
+ ['vender','Vender','spark',[['ventas','Ideas para vender'],['redes','Plan de publicación']]],
  ['empleo','Buscar trabajo','brief',[['vacantes','Vacantes'],['postulaciones','Postulaciones'],['pruebas','Pruebas de arte'],['cv','Mi CV'],['adaptar','Adaptar a vacante'],['reclutador','Revisión de reclutador'],['mensajes','Mensajes en inglés']]],
  ['mas','Más','grid',[['tema','Apariencia'],['uso','Qué uso de la app'],['respaldo','Respaldo'],['avisos','Avisos por correo'],['papelera','Papelera']]]];
 const hubDe=v=>HUBS.find(h=>h[3].some(x=>x[0]===v));
