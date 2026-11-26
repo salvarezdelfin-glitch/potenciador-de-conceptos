@@ -79,8 +79,15 @@
       if(error){v.querySelector('#pcx-err').textContent=error.message;return}
       await tras_login();});
   }
+  function pantallaSinRed(){
+    document.querySelector('.pcx.login')?.remove();
+    const v=el(`<div class="pcx login"><div class="pcx-card"><h2>Sin conexión con el servidor</h2><p>Tu sesión sigue abierta y los cambios que no se habían subido siguen en este aparato. En cuanto haya internet, entra solo.</p><button class="btn pri" type="button" id="pcx-re">Reintentar</button></div></div>`);
+    document.body.append(v);
+    const re=()=>{window.removeEventListener('online',re);tras_login()};v.querySelector('#pcx-re').onclick=re;window.addEventListener('online',re);
+  }
   async function tras_login(){
-    const {data:ok}=await sb.rpc('pc_allowed');
+    const {data:ok,error}=await sb.rpc('pc_allowed');
+    if(error){pantallaSinRed();return}/* sin conexión o servidor caído: NO se cierra la sesión */
     if(ok!==true){await sb.auth.signOut();pantallaLogin('Esta cuenta no tiene acceso a este sistema.');return}
     const {data:k}=await sb.rpc('pc_has_secret');tieneLlave=k===true;
     document.querySelector('.pcx.login')?.remove();listo();

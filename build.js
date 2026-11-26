@@ -1,7 +1,13 @@
 // Genera index.html para GitHub Pages a partir de la misma fuente que el artifact.
 // Uso: node build.js
 const fs = require('fs'), path = require('path');
-const src = fs.readFileSync(path.join(__dirname, '..', 'cuaderno-de-concepto.html'), 'utf8');
+// La fuente se edita en ../cuaderno-de-concepto.html; cada build guarda copia en src/app.html para que quede versionada.
+const fuera = path.join(__dirname, '..', 'cuaderno-de-concepto.html'), dentro = path.join(__dirname, 'src', 'app.html');
+if (fs.existsSync(fuera)) fs.copyFileSync(fuera, dentro);
+const src = fs.readFileSync(dentro, 'utf8');
+// Guarda: JavaScript deja redeclarar funciones sin avisar y la última gana. Si hay dos con el mismo nombre, el build se detiene.
+{ const n = new Map(); for (const m of src.matchAll(/^(?:async )?function ([A-Za-z_$][\w$]*)\s*\(/gm)) n.set(m[1], (n.get(m[1]) || 0) + 1);
+  const rep = [...n].filter(([, c]) => c > 1).map(([k]) => k); if (rep.length) { console.error('Funciones duplicadas: ' + rep.join(', ')); process.exit(1); } }
 const shim = fs.readFileSync(path.join(__dirname, 'src', 'shim.js'), 'utf8');
 const v = Date.now().toString(36);
 

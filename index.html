@@ -817,7 +817,6 @@ body{font-feature-settings:"cv11","ss01";letter-spacing:-.003em}
 
 /* ===== Taller · editorial minimalista: tinta cálida sobre grafito, líneas finas en vez de cajas, cifras grandes, la luz como único color ===== */
 :root{--ink:#ece8e1;--ink2:#a9a49b;--ink3:#6d6962;--railw:232px;--serif:"Big Shoulders Display","Arial Narrow",system-ui,sans-serif}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 520px at var(--mx,72%) var(--my,-4%),rgba(244,169,92,.07),transparent 70%)}
 .main{max-width:1040px!important;padding:44px clamp(20px,5vw,72px) 110px!important}
 .side{background:transparent!important;border-right:1px solid var(--line)!important;padding:26px 14px 18px!important}
 .pitem{border-radius:8px!important;color:var(--ink3)!important;font-weight:500!important;padding:7px 10px!important;box-shadow:none!important;background:transparent!important}
@@ -859,7 +858,17 @@ input[type=text],input[type=email],input[type=number],input[type=search],textare
 .bar{height:3px!important;border-radius:0!important;background:var(--line)!important}.bar i{border-radius:0!important}
 .pfcard,.rcur,.pdfp-f,.vac{border-radius:12px!important}
 #bottombar{background:rgba(12,13,16,.86)!important;border-top:1px solid var(--line)!important}
-@media (prefers-reduced-motion:reduce){body::after{display:none}}
+/* ---- Estudio y mesa de proyecto ---- */
+.es{display:grid;gap:34px}.es h2{font-size:15px;font-weight:600;margin:0 0 12px}.es-cont{border-left:2px solid var(--accent);padding-left:20px}.es-cont h2{font-family:var(--display);font-size:clamp(30px,4vw,46px);font-weight:800;text-transform:uppercase;line-height:.95;margin:6px 0}.es-cont p{margin:0 0 12px}
+.es-proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}.es-p{display:grid;gap:5px;text-align:left;background:none;border:0;padding:0;color:inherit;cursor:pointer;align-content:start}.es-img{display:block;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--surface)}.es-img img{width:100%;height:100%;object-fit:cover;display:block}.es-img em{display:grid;place-items:center;height:100%;font-style:normal;font-size:12px;color:var(--ink3)}.es-p:hover .es-img{outline:1px solid var(--ink2)}.es-p small{color:var(--ink3);font-size:12px}.es-p .bar{display:block}.es-p .bar i{display:block;height:100%;background:var(--accent)}
+.es-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px}.es-l{list-style:none;margin:0;padding:0}.es-l li{border-top:1px solid var(--line)}.es-l button{display:grid;gap:1px;width:100%;text-align:left;background:none;border:0;color:inherit;padding:10px 0;cursor:pointer}.es-l button:hover b{color:var(--accent)}.es-l b{font-weight:500;font-size:14px}.es-l span{font-size:12.5px;color:var(--ink2)}.es-l small{font-size:11.5px;color:var(--ink3)}
+.mesa{display:grid;gap:20px}.mesa-ficha{display:grid;grid-template-columns:minmax(180px,300px) 1fr;gap:22px}.mesa-portada{display:grid;gap:8px;align-content:start}.mesa-portada img{width:100%;aspect-ratio:4/3;max-height:300px;object-fit:cover;border-radius:6px}.mesa-portada>span{display:grid;place-items:center;aspect-ratio:4/3;background:var(--surface);border-radius:6px;font-size:13px}
+.mesa-prog{display:flex;gap:16px;align-items:center;margin-top:10px}.mesa-prog>b{font-family:var(--display);font-size:46px;font-weight:800;line-height:1;min-width:80px}.mesa-prog>div{flex:1;display:grid;gap:6px;font-size:13px}.mesa-prog .bar i,.mesa .bar i{display:block;height:100%;background:var(--accent)}.mesa-mas summary{cursor:pointer;color:var(--ink2);font-size:13.5px;padding:8px 0}
+.mesa-etapas{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:1px solid var(--line)}.mesa-et{display:grid;gap:2px;text-align:left;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--ink3);padding:8px 8px 10px;cursor:pointer;min-width:0}.mesa-et span{font:500 10.5px var(--mono);letter-spacing:.12em}.mesa-et b{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mesa-et small{font-size:11.5px}.mesa-et.on{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:900px){.mesa-ficha{grid-template-columns:1fr}.mesa-etapas{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mesa-herr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}.mesa-nuevo{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}.mesa-err{flex:1 1 100%;margin:0;color:var(--warn);font-size:13px;min-height:0}
+.ent{border-top:1px solid var(--line)}.ent>header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}.ent-abre{flex:1;display:grid;gap:2px;text-align:left;background:none;border:0;color:inherit;cursor:pointer;padding:0 0 0 12px;border-left:2px solid var(--line2);min-width:0}.ent-abre b{font-weight:600}.ent-abre small{color:var(--ink3);font-size:12px}.ent-des .ent-abre{border-left-color:var(--c-concepto)}.ent-rev .ent-abre{border-left-color:var(--c-tecnica)}.ent-cor .ent-abre{border-left-color:var(--warn)}.ent-ok .ent-abre{border-left-color:var(--ok)}.ent>header select{max-width:200px}
+.ent-cuerpo{display:grid;gap:12px;padding:4px 0 18px 14px}.ent-imgs{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}.ent-imgs figure{margin:0;display:grid;gap:3px;justify-items:start}.ent-imgs img{width:150px;height:110px;object-fit:cover;border-radius:6px;cursor:zoom-in}.ent-imgs figcaption{font-size:11.5px;color:var(--ink3)}.ent-hist{margin:6px 0 0;padding:0;list-style:none;font-size:13px}.ent-hist li{padding:3px 0;border-top:1px solid var(--line)}.ent-hist span{color:var(--ink3);margin-right:8px}
 </style>
 <style id="tema2">
 /* ================= Estudio v2 · capa visual de toda la app =================
@@ -1194,8 +1203,15 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
       if(error){v.querySelector('#pcx-err').textContent=error.message;return}
       await tras_login();});
   }
+  function pantallaSinRed(){
+    document.querySelector('.pcx.login')?.remove();
+    const v=el(`<div class="pcx login"><div class="pcx-card"><h2>Sin conexión con el servidor</h2><p>Tu sesión sigue abierta y los cambios que no se habían subido siguen en este aparato. En cuanto haya internet, entra solo.</p><button class="btn pri" type="button" id="pcx-re">Reintentar</button></div></div>`);
+    document.body.append(v);
+    const re=()=>{window.removeEventListener('online',re);tras_login()};v.querySelector('#pcx-re').onclick=re;window.addEventListener('online',re);
+  }
   async function tras_login(){
-    const {data:ok}=await sb.rpc('pc_allowed');
+    const {data:ok,error}=await sb.rpc('pc_allowed');
+    if(error){pantallaSinRed();return}/* sin conexión o servidor caído: NO se cierra la sesión */
     if(ok!==true){await sb.auth.signOut();pantallaLogin('Esta cuenta no tiene acceso a este sistema.');return}
     const {data:k}=await sb.rpc('pc_has_secret');tieneLlave=k===true;
     document.querySelector('.pcx.login')?.remove();listo();
@@ -1374,12 +1390,12 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwxyjynt').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwxzol8t').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
 /* ============ El proyecto en 8 pestañas (antes 20). Las claves viejas siguen funcionando: llevan a su pestaña y a la parte que les toca ============ */
-const TABS=[['hoja','Hoja'],['idea','Idea y dirección'],['estilo','Mundo y estilo'],['refs','Referencias'],['bocetos','Bocetos y crítica'],['explorar','Explorar'],['produccion','Producción y láminas'],['proyecto','Proyecto']];
+const TABS=[['seisfases','Etapas'],['hoja','Hoja'],['idea','Idea y dirección'],['estilo','Mundo y estilo'],['refs','Referencias'],['bocetos','Bocetos y crítica'],['explorar','Explorar'],['produccion','Producción y láminas'],['proyecto','Proyecto']];
 const TAB_ALIAS={direccion:'ad',keywords:'refs',rmapa:'board'};
 const TAB_NUEVO={brief:['idea','brief'],concepto:['idea','que'],tension:['idea','tension'],ad:['idea','ad'],mood:['estilo','mood'],lenguaje:['estilo','lenguaje'],personajes:['estilo','personajes'],mundo:['estilo','mundo'],board:['refs','tablero'],bajar:['refs','bajar'],carpetas:['bocetos','carpetas'],critica:['bocetos','critica'],laminas:['produccion','laminas'],cerebro:['proyecto','asistente'],mapa:['proyecto','mapa'],revision:['proyecto','falta']};
 function tabResuelve(k){k=TAB_ALIAS[k]||k;return TAB_NUEVO[k]||[k,null]}
@@ -1531,7 +1547,45 @@ let saveT=null,ajT=null;
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
 function lsSet(){try{localStorage.setItem('cdc.v1',JSON.stringify({P:S.P,ajustes:S.ajustes}))}catch{}}
 
-function marcar(){const p=S.P[S.cur];if(!p)return;try{bdAutoLlena(p)}catch{}p.actualizado=Date.now();S.dirty=true;setStatus('Guardando…');clearTimeout(saveT);saveT=setTimeout(guardar,700)}
+/* ============ Red de seguridad de los datos ============
+   1) Todo cambio que todavía no llega al servidor se copia en este aparato (IndexedDB), así sobrevive a recargar o cerrar sin internet.
+   2) Al volver la conexión se sube solo. 3) Los ajustes se mezclan a tres bandas (lo que cambiaste aquí + lo que cambió en otro aparato) en vez de que gane el último. */
+const PEND=(()=>{let dbp;const abre=()=>dbp=dbp||new Promise((ok,ko)=>{const r=indexedDB.open('taller-pendientes',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)});
+  const tx=async(modo,fn)=>{const db=await abre();return new Promise((ok,ko)=>{const t=db.transaction('kv',modo),q=fn(t.objectStore('kv'));t.oncomplete=()=>ok(q&&q.result);t.onerror=()=>ko(t.error);t.onabort=()=>ko(t.error)})};
+  return {pon:(k,v)=>tx('readwrite',s=>s.put(v,k)),da:k=>tx('readonly',s=>s.get(k)),quita:k=>tx('readwrite',s=>s.delete(k)),claves:()=>tx('readonly',s=>s.getAllKeys())}})();
+const pendEspera=new Map(),pendClaves=new Set();
+function pendProgramar(clave,arma){pendClaves.add(clave);const v=pendEspera.get(clave);if(v)clearTimeout(v.t);const tarea={arma,t:setTimeout(()=>pendEscribe(clave),200)};pendEspera.set(clave,tarea)}
+async function pendEscribe(clave){const v=pendEspera.get(clave);if(!v)return;clearTimeout(v.t);pendEspera.delete(clave);try{const x=v.arma();if(x&&x.data)await PEND.pon(clave,{data:clone(x.data),base:x.base===undefined?null:clone(x.base),ts:Date.now()})}catch(e){console.warn('No pude hacer la copia local',e)}}
+async function pendQuita(clave){const v=pendEspera.get(clave);if(v){clearTimeout(v.t);pendEspera.delete(clave)}pendClaves.delete(clave);try{await PEND.quita(clave)}catch{}}
+const pendAhora=()=>{for(const k of [...pendEspera.keys()])pendEscribe(k)};
+window.addEventListener('pagehide',pendAhora);document.addEventListener('visibilitychange',()=>{if(document.hidden)pendAhora()});
+const AVISO_SIN_RED='Sin conexión: tus cambios quedaron guardados en este aparato y se subirán solos';
+/* los ajustes usan la misma mezcla a tres bandas que los proyectos (mezcla3, más abajo): por clave y, en listas, por id */
+let ajCola=Promise.resolve();
+function guardarAjustes(){ajCola=ajCola.catch(()=>{}).then(guardarAjustes0);return ajCola}
+async function guardarAjustes0(){
+  if(!S.db){lsSet();S.ajDirty=false;await pendQuita('ajustes');return}
+  const ref=S.db.doc('ajustes/principios'),d=await ref.get(),servidor=d.exists?d.data():null;
+  const antes=JSON.stringify(S.ajustes),junto=servidor&&S._ajBase?mezcla3(S._ajBase,JSON.parse(antes),servidor):JSON.parse(antes);
+  await ref.set(clone(junto));
+  const siguio=JSON.stringify(S.ajustes)===antes;
+  if(siguio){for(const k of Object.keys(S.ajustes))if(!(k in junto))delete S.ajustes[k];Object.assign(S.ajustes,clone(junto));S._ajBase=clone(junto);S.ajDirty=false;await pendQuita('ajustes')}
+  else S._ajBase=clone(JSON.parse(antes))}
+/* al abrir: lo que quedó sin subir se recupera; si el proyecto cambió en otro aparato, se conservan las dos versiones */
+async function recuperarPendientes(){
+  let claves=[];try{claves=await PEND.claves()}catch{return 0}let n=0;
+  for(const k of claves||[]){let x;try{x=await PEND.da(k)}catch{continue}if(!x||!x.data){await pendQuita(k);continue}pendClaves.add(k);
+    if(k==='ajustes'){const d=await S.db.doc('ajustes/principios').get().catch(()=>null);if(!d)continue;const servidor=d.exists?d.data():{};const junto=x.base?mezcla3(x.base,x.data,servidor):{...servidor,...x.data};S.ajustes={...clone(AJUSTES_BASE),...junto};S._ajBase=clone(servidor);S.ajDirty=true;try{await guardarAjustes();n++}catch{}continue}
+    const id=k.replace('proyectos/',''),vivo=S.P[id],igualBase=vivo?(x.base!=null&&vivo.actualizado===x.base):x.base==null;
+    if(vivo&&vivo.actualizado===x.data.actualizado){await pendQuita(k);continue}
+    let destino=id,copia=clone(x.data);
+    if(!igualBase){destino=uid();copia.nombre=(copia.nombre||'Proyecto')+' (cambios sin subir de este aparato)'}
+    S.P[destino]=normaliza(copia);try{await S.db.collection('proyectos').doc(destino).set(clone(S.P[destino]));S._baseAct=S._baseAct||{};S._baseAct[destino]=S.P[destino].actualizado;await pendQuita(k);n++}catch{}}
+  if(n){toast(n===1?'Recuperé un cambio que no había llegado al servidor':'Recuperé '+n+' cambios que no habían llegado al servidor',6000);render()}return n}
+async function reintentaPendientes(){if(!S.db||navigator.onLine===false)return;try{if(S.dirty)await guardar();if(S.ajDirty)await guardarAjustes();if(!S.dirty&&!S.ajDirty&&pendClaves.size&&!pendEspera.size)await recuperarPendientes();if(!S.dirty&&!S.ajDirty)setStatus('Guardado')}catch{setStatus(AVISO_SIN_RED)}}
+window.addEventListener('online',()=>setTimeout(reintentaPendientes,800));
+setInterval(()=>{if(S.dirty||S.ajDirty)reintentaPendientes()},30000);
+function marcar(){const p=S.P[S.cur];if(!p)return;try{bdAutoLlena(p)}catch{}p.actualizado=Date.now();S.dirty=true;const id=S.cur;pendProgramar('proyectos/'+id,()=>S.P[id]?{data:S.P[id],base:S._baseAct?.[id]??null}:null);setStatus('Guardando…');clearTimeout(saveT);saveT=setTimeout(guardar,700)}
 /* ---- historial: una foto del proyecto cada 15 min de trabajo, al abrirlo y antes de restaurar ---- */
 const HIST_MAX=40;
 function histLocal(){try{return JSON.parse(localStorage.getItem('cdc.hist')||'[]')}catch{return []}}
@@ -1571,12 +1625,12 @@ async function guardar(forzar){
           }
         }catch{}
       }
-      await S.db.collection('proyectos').doc(id).set(clone(p));
-      S._baseAct=S._baseAct||{};S._baseAct[id]=p.actualizado;fijaBase(id);
+      const enviado=clone(p);await S.db.collection('proyectos').doc(id).set(enviado);
+      S._baseAct=S._baseAct||{};S._baseAct[id]=enviado.actualizado;fijaBase(id);if(S.P[id]&&S.P[id].actualizado===enviado.actualizado)await pendQuita('proyectos/'+id);
       if(S.conflicto?.[id]){delete S.conflicto[id];if(S.vista==='proyecto'&&S.cur===id)renderMain()}
-    }else lsSet();
+    }else{lsSet();await pendQuita('proyectos/'+id)}
     S.dirty=false;setStatus('Guardado');renderSide();snapshot(id);
-  }catch(e){setStatus(e.code==='quota_exceeded'?'Sin espacio: borra proyectos viejos':'No se pudo guardar — reintenta editando');}
+  }catch(e){setStatus(e.code==='quota_exceeded'?'Sin espacio: borra proyectos viejos':AVISO_SIN_RED);}
 }
 function conflictoHTML(id){
   if(!S.conflicto?.[id])return'';
@@ -1594,8 +1648,8 @@ function mezcla3(b,m,t){
     return out}
   return m}
 function fijaBase(id){const p=S.P[id];if(p)(S._base=S._base||{})[id]=clone(p)}
-function marcarAj(){S.ajDirty=true;setStatus('Guardando…');clearTimeout(ajT);ajT=setTimeout(async()=>{
-  try{if(S.db)await S.db.doc('ajustes/principios').set(clone(S.ajustes));else lsSet();S.ajDirty=false;setStatus('Guardado')}catch{setStatus('No se pudo guardar')}
+function marcarAj(){S.ajDirty=true;pendProgramar('ajustes',()=>({data:S.ajustes,base:S._ajBase??null}));setStatus('Guardando…');clearTimeout(ajT);ajT=setTimeout(async()=>{
+  try{await guardarAjustes();setStatus('Guardado')}catch{setStatus(AVISO_SIN_RED)}
 },700)}
 function setStatus(t){const el=$('#status');if(el)el.textContent=t}
 
@@ -1618,13 +1672,13 @@ async function arrancar(){
         if(prev&&prev.actualizado===data.actualizado)continue;
         S.P[d.id]=normaliza(clone(data));S._baseAct=S._baseAct||{};S._baseAct[d.id]=data.actualizado;fijaBase(d.id);if(d.id===S.cur)tocoActual=true;
       }
-      for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty))delete S.P[id];
-      if(primera){primera=false;elegirInicial();render();cargarVacantes(false).then(renderSide);setTimeout(syncAlAbrir,1500);setTimeout(cdcEntrada,900);return}
+      for(const id of Object.keys(S.P))if(!snap.docs.some(d=>d.id===id)&&!(id===S.cur&&S.dirty)&&!pendClaves.has('proyectos/'+id))delete S.P[id];/* un proyecto que aún no se sube no se borra de la memoria */
+      if(primera){primera=false;elegirInicial();render();setTimeout(()=>recuperarPendientes().catch(()=>{}),900);cargarVacantes(false).then(renderSide);setTimeout(syncAlAbrir,1500);setTimeout(cdcEntrada,900);return}
       renderSide();
       if(tocoActual&&!document.activeElement?.closest('#main'))renderMain();
     },e=>{S.modo='error';render()});
     db.doc('ajustes/principios').onSnapshot(d=>{
-      if(S.ajDirty||S.bloqueo)return;S.ajustes={...clone(AJUSTES_BASE),...(d.exists?clone(d.data()):{})};
+      if(S.ajDirty||S.bloqueo||pendClaves.has('ajustes'))return;S._ajBase=d.exists?clone(d.data()):{};S.ajustes={...clone(AJUSTES_BASE),...(d.exists?clone(d.data()):{})};
       if(S.vista!=='proyecto'&&!document.activeElement?.closest('#main'))renderMain();
     },()=>{});
   }else{
@@ -1676,6 +1730,104 @@ function salud(p){
   const ok=items.filter(i=>i[1]).length;
   return {items,ok,total:items.length,pct:Math.round(ok/items.length*100),conP,refs:refs.length};
 }
+/* ============ Sistema de proyectos: ficha, seis etapas y entregables ============
+   Cada entregable tiene estado, fecha, notas, imágenes, relaciones con personajes y referencias, e historial. El progreso sale solo de ellos. */
+const ET6=[
+ ['fundamento','Fundamento',['Historia','Premisa','Temática','Narrativa','Universo','Dirección artística'],[['Idea y dirección','tab','idea']]],
+ ['investigacion','Investigación',['Referencias culturales','Arquitectura','Anatomía','Fauna','Vestimenta','Materiales','Texturas','Fotografía'],[['Referencias y tablero','tab','refs'],['Archivo visual','vista','biblioteca']]],
+ ['diseno','Diseño',['Personajes','Criaturas','Escenarios','Props','Armas','Vestuario'],[['Mundo, estilo y personajes','tab','estilo']]],
+ ['exploracion','Exploración',['Thumbnails','Siluetas','Variaciones','Pruebas de color','Composición','Exploración visual'],[['Explorar','tab','explorar'],['Siluetas','vista','siluetas']]],
+ ['produccion','Producción',['Model sheets','Orthos','Expresiones','Turnarounds','Keyframes','Ilustraciones','Renders'],[['Producción y láminas','tab','produccion'],['Bocetos y crítica','tab','bocetos']]],
+ ['presentacion','Presentación',['Selección de piezas','Desarrollo del proyecto','Presentación visual','Artbook','Portafolio'],[['Portafolio en PDF','vista','pdfport'],['Hoja del proyecto','tab','hoja']]]];
+const EST5=[['por','Por comenzar'],['des','En desarrollo'],['rev','En revisión'],['cor','Necesita correcciones'],['ok','Terminado']];
+const estNom=k=>(EST5.find(x=>x[0]===k)||EST5[0])[1],etNom=k=>(ET6.find(x=>x[0]===k)||ET6[0])[1];
+const entregas=p=>Array.isArray(p&&p.entregables)?p.entregables:[];
+function progresoDe(p){const L=entregas(p),ok=L.filter(x=>x.estado==='ok').length;return {total:L.length,ok,pct:L.length?Math.round(ok/L.length*100):null}}
+const progTxt=p=>{const g=progresoDe(p);return g.total?`${g.ok} de ${g.total} entregables terminados · ${g.pct}%`:'Sin entregables todavía'};
+function entNuevo(p,etapa,cat,titulo){const t=String(titulo||'').trim();if(!t)return null;const x={id:uid(),etapa,cat:cat||'',titulo:t,nota:'',estado:'por',fecha:'',imgs:[],rel:[],hist:[{ts:Date.now(),t:'Creado en '+etNom(etapa)}],creado:Date.now()};(p.entregables=entregas(p)).push(x);return x}
+function entCambia(x,campo,valor){if(x[campo]===valor)return false;const antes=x[campo];x[campo]=valor;
+  if(campo==='estado')x.hist.push({ts:Date.now(),t:estNom(antes)+' → '+estNom(valor)});else if(campo==='fecha')x.hist.push({ts:Date.now(),t:valor?'Fecha objetivo: '+valor:'Se quitó la fecha'});else if(campo==='titulo')x.hist.push({ts:Date.now(),t:'Se llamaba «'+antes+'»'});
+  else if(campo==='nota'){const u=x.hist[x.hist.length-1];if(!u||u.t!=='Notas editadas'||Date.now()-u.ts>6e5)x.hist.push({ts:Date.now(),t:'Notas editadas'});else u.ts=Date.now()}
+  x.cambiado=Date.now();return true}
+/* con qué se puede relacionar un entregable dentro del proyecto */
+function entRelacionables(p){return [...(p.personajes||[]).filter(c=>c.nombre).map(c=>({k:'pj:'+c.id,n:'Personaje · '+c.nombre})),...(p.refs||[]).slice(0,60).filter(r=>r.id).map(r=>({k:'ref:'+r.id,n:'Referencia · '+corto(r.porque||r.fuente||r.clase||'imagen',44)})),...(p.piezas||[]).slice(0,40).filter(r=>r.id).map(r=>({k:'pz:'+r.id,n:'Pieza · '+corto([r.etapa,r.nota].filter(Boolean).join(' · ')||'imagen',40)}))]}
+const mesaSt=()=>S.mesa=S.mesa||{etapa:'fundamento',abierto:null,borra:null};
+const TIPOS_PROY=['Proyecto completo (mundo)','Personaje','Criatura','Entorno','Prop / arma','Key art','Ilustración','Otro'];
+function vEtapas(p){const M=mesaSt(),g=progresoDe(p),et=ET6.find(x=>x[0]===M.etapa)||ET6[0],L=entregas(p).filter(x=>x.etapa===et[0]),F=p.ficha=p.ficha||{descripcion:'',objetivo:'',direccion:''},rels=entRelacionables(p),
+  campo=(id,l,v,ph,area)=>`<div class="field"><label for="mf-${id}">${l}</label>${area?`<textarea id="mf-${id}" data-mf="${id}" rows="3" placeholder="${esc(ph)}">${esc(v||'')}</textarea>`:`<input type="text" id="mf-${id}" data-mf="${id}" value="${esc(v||'')}" placeholder="${esc(ph)}">`}</div>`;
+  return `<section class="mesa">
+  <div class="mesa-ficha"><div class="mesa-portada">${p.portada?`<img ${imgAttrs(p.portada)} alt="Portada del proyecto" data-act="zoom">`:'<span class="muted">Sin imagen de portada</span>'}<div class="prow"><label class="btn sm" for="mesa-portada-f">${p.portada?'Cambiar portada':'Subir portada'}</label><input type="file" id="mesa-portada-f" accept="image/*" hidden>${p.portada?'<button class="btn sm ghost" data-act="mesa-quita-portada">Quitar</button>':''}</div></div>
+    <div class="mesa-datos"><div class="grid2">${campo('nombre','Nombre',p.nombre,'Nombre del proyecto')}<div class="field"><label for="mf-tipo">Tipo de proyecto</label><select id="mf-tipo" data-mf="tipo">${[...new Set([...TIPOS_PROY,p.tipo].filter(Boolean))].map(t=>`<option ${p.tipo===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+      <div class="field"><label for="mf-entrega">Fecha objetivo</label><input type="date" id="mf-entrega" data-mf="entrega" value="${esc(p.entrega||'')}"></div><div class="field"><label for="mf-estado">Estado</label><input type="text" id="mf-estado" data-mf="estado" value="${esc(p.estado||'')}" list="mf-estados"><datalist id="mf-estados"><option>Brief</option><option>En desarrollo</option><option>En revisión</option><option>Final</option><option>Archivado</option></datalist></div></div>
+      <p class="muted" style="margin:4px 0">Creado el ${esc(fecha(p.creado||Date.now()))}</p>
+      <div class="mesa-prog"><b>${g.pct==null?'—':g.pct+'%'}</b><div><span>${esc(progTxt(p))}</span><div class="bar"><i style="width:${g.pct||0}%"></i></div></div></div></div></div>
+  <details class="mesa-mas" ${F.descripcion||F.objetivo||F.direccion||p.notas?'':'open'}><summary>Descripción, objetivo, dirección artística y notas</summary><div class="grid2">${campo('descripcion','Descripción',F.descripcion,'De qué trata el proyecto',true)}${campo('objetivo','Objetivo',F.objetivo,'Qué quieres lograr o demostrar con él',true)}${campo('direccion','Dirección artística',F.direccion,'Mood, forma, color, luz y qué evitar',true)}${campo('notas','Notas',p.notas,'Lo que no quieres olvidar',true)}</div></details>
+  <nav class="mesa-etapas" aria-label="Etapas del proyecto">${ET6.map(([k,n],i)=>{const l=entregas(p).filter(x=>x.etapa===k),ok=l.filter(x=>x.estado==='ok').length;return `<button class="mesa-et ${k===et[0]?'on':''}" data-act="mesa-etapa" data-k="${k}" aria-pressed="${k===et[0]}"><span>${String(i+1).padStart(2,'0')}</span><b>${n}</b><small>${l.length?ok+' / '+l.length:'vacía'}</small></button>`}).join('')}</nav>
+  <div class="mesa-herr"><span class="muted">Herramientas de esta etapa:</span>${et[3].map(([n,t,d])=>`<button class="btn sm" data-act="mesa-herr" data-t="${t}" data-d="${d}">${esc(n)}</button>`).join('')}</div>
+  <form class="mesa-nuevo" data-mesa-form="1"><div class="field"><label for="mn-cat">Categoría</label><select id="mn-cat">${et[2].map(c=>`<option>${esc(c)}</option>`).join('')}</select></div><div class="field" style="flex:1"><label for="mn-tit">Nuevo entregable</label><input type="text" id="mn-tit" placeholder="Por ejemplo: exploración de siluetas del guardián" maxlength="140"></div><button type="submit" class="btn pri">Agregar</button><p class="mesa-err" id="mn-err" role="alert">${esc(M.err||'')}</p></form>
+  <div class="mesa-lista">${L.length?L.map(x=>{const ab=M.abierto===x.id;return `<article class="ent ent-${x.estado}"><header><button class="ent-abre" data-act="mesa-abre" data-id="${x.id}" aria-expanded="${ab}"><b>${esc(x.titulo)}</b><small>${esc([x.cat,x.fecha?'para el '+x.fecha:'',x.imgs.length?x.imgs.length+(x.imgs.length===1?' imagen':' imágenes'):''].filter(Boolean).join(' · '))}</small></button><select data-ent="estado" data-id="${x.id}" aria-label="Estado de ${esc(x.titulo)}">${EST5.map(([k,n])=>`<option value="${k}" ${x.estado===k?'selected':''}>${n}</option>`).join('')}</select></header>
+    ${ab?`<div class="ent-cuerpo"><div class="grid2"><div class="field"><label for="et-${x.id}">Título</label><input type="text" id="et-${x.id}" data-ent="titulo" data-id="${x.id}" value="${esc(x.titulo)}"></div><div class="field"><label for="ef-${x.id}">Fecha objetivo</label><input type="date" id="ef-${x.id}" data-ent="fecha" data-id="${x.id}" value="${esc(x.fecha||'')}"></div></div>
+      <div class="field"><label for="en-${x.id}">Notas, decisiones y problemas</label><textarea id="en-${x.id}" data-ent="nota" data-id="${x.id}" rows="4">${esc(x.nota||'')}</textarea></div>
+      <div class="ent-imgs">${x.imgs.map((im,i)=>`<figure><img ${imgAttrs(im.mini?{asset:im.mini}:im)} alt="${esc(im.nombre||'Imagen '+(i+1))}" data-act="zoom"><figcaption>v${i+1} · ${esc(fecha(im.ts||x.creado))}</figcaption><button class="btn xs ghost" data-act="mesa-borra-img" data-id="${x.id}" data-i="${i}">Quitar</button></figure>`).join('')}<label class="btn sm" for="ei-${x.id}">Subir imágenes</label><input type="file" id="ei-${x.id}" data-ent-img="${x.id}" accept="image/*" multiple hidden></div>
+      <div class="field"><label for="er-${x.id}">Relacionar con (personajes, referencias y piezas de este proyecto)</label><select id="er-${x.id}" data-ent-rel="${x.id}"><option value="">${rels.length?'Elegir…':'Aún no hay personajes ni referencias en el proyecto'}</option>${rels.filter(r=>!x.rel.includes(r.k)).map(r=>`<option value="${esc(r.k)}">${esc(r.n)}</option>`).join('')}</select><div class="chips">${x.rel.map(k=>`<button class="ch xs" data-act="mesa-borra-rel" data-id="${x.id}" data-k="${esc(k)}" title="Quitar relación">${esc((rels.find(r=>r.k===k)||{n:'(ya no existe)'}).n)} ✕</button>`).join('')}</div></div>
+      <details><summary>Historial (${x.hist.length})</summary><ul class="ent-hist">${x.hist.slice().reverse().map(h=>`<li><span>${esc(fecha(h.ts))}</span> ${esc(h.t)}</li>`).join('')}</ul></details>
+      <div class="prow"><button class="btn sm ghost danger" data-act="${M.borra===x.id?'mesa-borra-si':'mesa-pide-borrar'}" data-id="${x.id}">${M.borra===x.id?'Confirmar: eliminar este entregable':'Eliminar entregable'}</button>${M.borra===x.id?'<button class="btn sm" data-act="mesa-cancela">Cancelar</button>':''}</div></div>`:''}</article>`}).join(''):`<div class="empty">La etapa ${esc(et[1])} está vacía. Agrega tu primer entregable arriba: aquí vivirán sus imágenes, notas, estado, fecha e historial.</div>`}</div></section>`}
+function mesaAccion(a,ds){const p=S.P[S.cur];if(!p)return;const M=mesaSt(),x=entregas(p).find(v=>v.id===ds.id),fin=()=>{marcar();renderMain()};
+  if(a==='mesa-etapa'){M.err='';M.etapa=ds.k;M.abierto=null;M.borra=null;renderMain();return}
+  if(a==='mesa-abre'){M.abierto=M.abierto===ds.id?null:ds.id;M.borra=null;renderMain();return}
+  if(a==='mesa-herr'){if(ds.t==='tab'){S.tab=ds.d}else{S.vista=ds.d}S.hist=null;render();window.scrollTo(0,0);return}
+  if(a==='mesa-quita-portada'){delete p.portada;fin();return}
+  if(!x)return;
+  if(a==='mesa-pide-borrar'){M.borra=x.id;renderMain();return}
+  if(a==='mesa-cancela'){M.borra=null;renderMain();return}
+  if(a==='mesa-borra-si'){p.entregables=entregas(p).filter(v=>v.id!==x.id);M.borra=null;M.abierto=null;fin();return}
+  if(a==='mesa-borra-img'){const q=x.imgs.splice(+ds.i,1)[0];x.hist.push({ts:Date.now(),t:'Se quitó una imagen'+(q&&q.nombre?': '+q.nombre:'')});fin();return}
+  if(a==='mesa-borra-rel'){x.rel=x.rel.filter(k=>k!==ds.k);fin();return}}
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.dataset||!f.dataset.mesaForm)return;e.preventDefault();const p=S.P[S.cur];if(!p)return;const M=mesaSt(),t=f.querySelector('#mn-tit'),x=entNuevo(p,M.etapa,f.querySelector('#mn-cat').value,t.value);
+  if(!x){f.querySelector('#mn-err').textContent=M.err='Escribe un nombre para el entregable.';t.setAttribute('aria-invalid','true');t.focus();return}M.err='';M.abierto=x.id;marcar();renderMain()});
+document.addEventListener('input',e=>{const t=e.target,p=S.P[S.cur];if(!t||!t.dataset||!p)return;
+  if(t.dataset.mf&&t.tagName!=='SELECT'&&t.type!=='date'){const k=t.dataset.mf;if(k==='nombre'){if(!t.value.trim())return;p.nombre=t.value}else if(k==='notas'||k==='estado')p[k]=t.value;else (p.ficha=p.ficha||{})[k]=t.value;marcar();return}
+  if(t.dataset.ent&&(t.dataset.ent==='titulo'||t.dataset.ent==='nota')){const x=entregas(p).find(v=>v.id===t.dataset.id);if(!x)return;if(t.dataset.ent==='titulo'&&!t.value.trim())return;if(t.dataset.ent==='nota'){entCambia(x,'nota',t.value);marcar()}}});
+document.addEventListener('change',async e=>{const t=e.target,p=S.P[S.cur];if(!t||!p)return;const d=t.dataset||{};
+  if(d.mf){if(d.mf==='nombre'&&!t.value.trim()){t.value=p.nombre;toast('El proyecto necesita un nombre');return}if(t.tagName==='SELECT'||t.type==='date'){p[d.mf]=t.value;marcar();renderMain()}else renderSide();return}
+  if(d.ent){const x=entregas(p).find(v=>v.id===d.id);if(!x)return;if(d.ent==='titulo'&&!t.value.trim()){t.value=x.titulo;toast('El entregable necesita un nombre');return}if(d.ent!=='nota'&&entCambia(x,d.ent,t.value)){marcar();renderMain()}return}
+  if(d.entRel!==undefined&&t.value){const x=entregas(p).find(v=>v.id===d.entRel);if(!x)return;if(!x.rel.includes(t.value))x.rel.push(t.value);marcar();renderMain();return}
+  if((d.entImg||t.id==='mesa-portada-f')&&t.files&&t.files.length){const pid=S.cur,files=[...t.files];t.value='';let n=0;
+    for(const f of files){if(!/^image\//.test(f.type)&&!/\.(heic|heif)$/i.test(f.name)){toast('«'+f.name+'» no es una imagen');continue}
+      try{const r=await guardarImagen(f,{mini:true}),q=S.P[pid];if(!q)return;if(d.entImg){const x=entregas(q).find(v=>v.id===d.entImg);if(!x)return;x.imgs.push({...r,nombre:f.name,ts:Date.now()});x.hist.push({ts:Date.now(),t:'Imagen v'+x.imgs.length+': '+f.name})}else q.portada=r;n++}
+      catch(err){console.error(err);toast('No se pudo subir «'+f.name+'»: revisa tu conexión e inténtalo otra vez',5000)}}
+    if(n){if(S.cur===pid){marcar();renderMain()}}}});
+
+/* ============ Estudio: tu escritorio de trabajo ============ */
+function guardaUltimo(){if(S.vista!=='proyecto'||!S.P[S.cur]||S.cur===HERR_ID)return;try{localStorage.setItem('taller.ultimo',JSON.stringify({id:S.cur,tab:S.tab,ts:Date.now()}))}catch{}}
+function ultimoTrabajo(){let u=null;try{u=JSON.parse(localStorage.getItem('taller.ultimo')||'null')}catch{}if(u&&S.P[u.id])return u;const o=ordenados()[0];return o?{id:o[0],tab:'seisfases',ts:o[1].actualizado}:null}
+function estudioDatos(){const activos=ordenados().filter(([,p])=>p.estado!=='Archivado'&&p.decision!=='Discarded'),proximos_=[],pendientes=[],actividad=[];
+  for(const [id,p] of activos){if(p.entrega&&p.estado!=='Final')proximos_.push({id,p,t:'Entrega del proyecto',fecha:p.entrega});
+    for(const x of entregas(p)){if(x.fecha&&x.estado!=='ok')proximos_.push({id,p,x,t:x.titulo,fecha:x.fecha});if(['des','rev','cor'].includes(x.estado))pendientes.push({id,p,x});for(const h of x.hist)actividad.push({id,p,x,ts:h.ts,t:x.titulo+': '+h.t})}
+    for(const z of p.piezas||[])if(z.creado)actividad.push({id,p,ts:z.creado,t:'Subiste una pieza'+(z.etapa?' ('+z.etapa+')':'')})}
+  proximos_.sort((a,b)=>a.fecha.localeCompare(b.fecha));const orden={cor:0,rev:1,des:2};pendientes.sort((a,b)=>orden[a.x.estado]-orden[b.x.estado]||(b.x.cambiado||b.x.creado)-(a.x.cambiado||a.x.creado));actividad.sort((a,b)=>b.ts-a.ts);
+  return {activos,proximos:proximos_.slice(0,8),pendientes:pendientes.slice(0,8),actividad:actividad.slice(0,8)}}
+function vEstudio(){const D=estudioDatos(),u=ultimoTrabajo(),up=u&&S.P[u.id],tabN=t=>(TABS.find(x=>x[0]===t)||[0,'Etapas'])[1],
+  abre=(id,etapa,ent)=>`data-act="est-abre" data-id="${esc(id)}"${etapa?` data-k="${etapa}"`:''}${ent?` data-e="${ent}"`:''}`,
+  fila=(attrs,a,b,c)=>`<li><button ${attrs}><b>${esc(a)}</b><span>${esc(b)}</span>${c?`<small>${esc(c)}</small>`:''}</button></li>`,
+  lista_=(tit,L,vacio)=>`<section><h2>${tit}</h2>${L.length?`<ul class="es-l">${L.join('')}</ul>`:`<p class="muted">${vacio}</p>`}</section>`;
+  return `<div class="es">
+  ${up?`<section class="es-cont"><span class="lbl">Continuar donde lo dejaste</span><h2>${esc(up.nombre)}</h2><p class="muted">${esc(tabN(u.tab))} · ${esc(progTxt(up))}</p><div class="prow"><button class="btn pri" data-act="est-continuar">Continuar</button><button class="btn" data-act="nuevo">Nuevo proyecto</button></div></section>`:`<section class="es-cont"><span class="lbl">Empieza aquí</span><h2>Tu primer proyecto</h2><p class="muted">Un proyecto reúne la idea, las referencias, los diseños, los entregables y la presentación.</p><div class="prow"><button class="btn pri" data-act="nuevo">Crear un proyecto</button></div></section>`}
+  <section><h2>Proyectos activos <small class="muted">${D.activos.length}</small></h2>${D.activos.length?`<div class="es-proy">${D.activos.slice(0,8).map(([id,p])=>{const g=progresoDe(p),img=p.portada||(p.piezas||[]).find(z=>z.asset||z.src);return `<button class="es-p" ${abre(id)}><span class="es-img">${img?`<img ${imgAttrs(img.mini?{asset:img.mini}:img)} alt="" loading="lazy">`:'<em>Sin portada</em>'}</span><b>${esc(p.nombre)}</b><span class="muted">${esc(p.tipo||'')}${p.entrega?' · '+esc(p.entrega):''}</span><span class="bar"><i style="width:${g.pct||0}%"></i></span><small>${esc(progTxt(p))}</small></button>`}).join('')}</div>`:'<p class="muted">No tienes proyectos activos.</p>'}</section>
+  <div class="es-cols">
+  ${lista_('Entregables próximos',D.proximos.map(x=>fila(abre(x.id,x.x?.etapa,x.x?.id),x.t,x.p.nombre,x.fecha<hoyKey()?'Venció el '+x.fecha:x.fecha)),'Ningún entregable tiene fecha. Ponla en la etapa del proyecto para verlo aquí.')}
+  ${lista_('Pendientes',D.pendientes.map(x=>fila(abre(x.id,x.x.etapa,x.x.id),x.x.titulo,x.p.nombre,estNom(x.x.estado))),'Nada en desarrollo, en revisión ni con correcciones.')}
+  ${lista_('Actividad reciente',D.actividad.map(x=>fila(abre(x.id,x.x?.etapa,x.x?.id),x.t,x.p.nombre,fecha(x.ts))),'Aquí aparecerá lo que vayas haciendo en tus proyectos.')}
+  </div></div>`}
+function estudioAccion(a,ds){const u=ultimoTrabajo();
+  const ir=(id,tab,etapa,ent)=>{if(!S.P[id])return;S.cur=id;S.vista='proyecto';S.tab=tab;S.hist=null;S.confirmDel=false;if(etapa){const M=mesaSt();M.etapa=etapa;M.abierto=ent||null}recordar();render();window.scrollTo(0,0)};
+  if(a==='est-continuar'&&u){ir(u.id,u.tab||'seisfases');return}
+  if(a==='est-abre')ir(ds.id,'seisfases',ds.k,ds.e)}
+/* accesibilidad: ningún campo queda sin nombre para lectores de pantalla */
+function etiquetaCampos(){const m=document.getElementById('main');if(!m)return;
+  for(const x of m.querySelectorAll('input:not([type=hidden]):not([type=file]),select,textarea')){if(x.getAttribute('aria-label')||x.closest('label')||x.title||x.placeholder||(x.id&&m.querySelector('label[for="'+CSS.escape(x.id)+'"]')))continue;
+    let t='';for(let n=x,i=0;n&&n!==m&&i<4&&!t;n=n.parentElement,i++){const prev=n.previousElementSibling;if(prev&&!prev.querySelector('input,select,textarea'))t=prev.textContent.trim();if(!t){const h=n.parentElement?.querySelector(':scope > label, :scope > .lbl, :scope > h3, :scope > h4, :scope > b');if(h)t=h.textContent.trim()}}
+    x.setAttribute('aria-label',(t||x.name||x.type||'campo').replace(/\s+/g,' ').slice(0,80))}}
 function tabCompleta(p,t){const it=salud(p).items.filter(i=>tabResuelve(i[2])[0]===t);return it.length&&it.every(i=>i[1])}
 
 /* ============ Render ============ */
@@ -1714,7 +1866,7 @@ const pgNav=items=>`<div class="chips pgnav">${items.map(([id,n])=>`<button clas
 const enMapa=()=>S.vista==='proyecto'&&S.tab==='proyecto';
 const enTablero=()=>S.vista==='proyecto'&&(S.tab==='board'||(S.tab==='refs'&&!!document.getElementById('sec-tablero')));
 function pgAncla(){if(S.vista!=='proyecto'||!S.ancla)return;const id=S.ancla;S.ancla=null;const d=document.getElementById('sec-'+id);if(d)requestAnimationFrame(()=>d.scrollIntoView({block:'start'}))}
-function renderMain(){renderMainInner();hubInserta();pgAncla();S.assets?.hydrate?.();if(S.vista==='proyecto'&&S.tab==='relite')requestAnimationFrame(rlMonta);if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.vista==='proyecto'&&S.tab==='comp'&&S.P[S.cur]?.libre)requestAnimationFrame(compInit);if(S.vista==='proyecto'&&S.tab==='forma'&&S.P[S.cur]?.libre)requestAnimationFrame(fmInit);if(S.tab==='bocetos'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
+function renderMain(){renderMainInner();hubInserta();guardaUltimo();etiquetaCampos();pgAncla();S.assets?.hydrate?.();if(S.vista==='proyecto'&&S.tab==='relite')requestAnimationFrame(rlMonta);if(enMapa())requestAnimationFrame(()=>mapaLineas());if(S.vista==='proyecto')requestAnimationFrame(escDibuja);if(enTablero())requestAnimationFrame(S.bdVista==='red'?rmInit:bdInit);if(S.vista==='proyecto'&&S.tab==='comp'&&S.P[S.cur]?.libre)requestAnimationFrame(compInit);if(S.vista==='proyecto'&&S.tab==='forma'&&S.P[S.cur]?.libre)requestAnimationFrame(fmInit);if(S.tab==='bocetos'&&S.vista==='proyecto')requestAnimationFrame(gdDibuja);const lg=document.getElementById('chat-log');if(lg)lg.scrollTop=lg.scrollHeight}
 function renderMainInner(){
   const m=$('#main');
   if(['taller','retos','semana','potenciar'].includes(S.vista))S.vista='diario';
@@ -1779,7 +1931,7 @@ function renderMainInner(){
       <span class="muted" style="font-size:13px">${esc(p.tipo)} · ${esc(p.estado)}${p.encargo?' · '+esc(p.encargo):''}</span>
     </div>
     <div class="prow" style="gap:10px;align-items:center">
-      <div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>
+      ${S.tab==='seisfases'?'':`<div class="health" title="Salud del proceso"><div class="bar"><i style="width:${s.pct}%"></i></div><span class="lbl">${s.ok}/${s.total} pasos</span></div>`}
       <button class="btn sm blk" data-act="blk" title="Revisa tu contexto y te da preguntas, experimentos y direcciones">Estoy bloqueado</button>
       <details class="phead-mas"><summary class="btn sm ghost" style="list-style:none;cursor:pointer">Datos y más</summary>
         <div class="prow" style="margin:8px 0;flex-wrap:wrap">
@@ -1798,9 +1950,9 @@ function renderMainInner(){
     </div>
   </div>
   ${p.brief.una?.frase?.trim()?`<div class="banner" style="background:var(--accent-soft)"><span class="lbl">Tu brief de una frase</span><br><b style="font-family:var(--display);font-size:20px">${esc(p.brief.una.frase)}</b><br><span class="muted">Si una idea nueva no cabe en esta frase, no va en esta pieza: guárdala para otro proyecto.</span></div>`:''}
-  ${etapasHTML(p)}
+  ${S.tab==='seisfases'?'':etapasHTML(p)}
   <nav class="tabs" role="tablist">${TABS.map(([k,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}${k!=='hoja'&&tabCompleta(p,k)?'<span class="dot" title="Completo"></span>':''}</button>`).join('')}</nav>
-  <section class="panel">${({hoja:vHoja,idea:pgIdea,estilo:pgEstilo,refs:pgRefs,bocetos:pgBocetos,explorar:pgExplorar,produccion:pgProduccion,proyecto:pgProyecto})[S.tab](p)}</section>`;
+  <section class="panel">${({seisfases:vEtapas,hoja:vHoja,idea:pgIdea,estilo:pgEstilo,refs:pgRefs,bocetos:pgBocetos,explorar:pgExplorar,produccion:pgProduccion,proyecto:pgProyecto})[S.tab](p)}</section>`;
 }
 function seisHTML(p){
   const slots=[['concepto','Concepto',p.concepto.frase||p.concepto.nucleos.filter(Boolean).join(' / '),'concepto'],['ad','Qué comunica',p.ad,'direccion'],
@@ -1981,7 +2133,7 @@ function vHojaEditar(p){
 
 const hoyN=()=>Math.floor(Date.now()/864e5);
 const asLink=n=>`https://www.google.com/search?q=${encodeURIComponent((n||'')+' artstation')}`;
-function vInicio(){return cnSaludoHTML()+cnContinuarHTML()+vCamino()+`<details class="box cm-mas"><summary class="lbl" style="cursor:pointer">Más: último proyecto, próximos e inspiración</summary>${vInicioViejo()}</details>`}
+function vInicio(){return cnSaludoHTML()+vEstudio()+`<details class="box cm-mas"><summary class="lbl" style="cursor:pointer">Mi camino: sesión de hoy, metas y avance</summary>${cnContinuarHTML()}${vCamino()}${vInicioViejo()}</details>`}
 
 /* ============ MI CAMINO: el para qué de toda la app ============
    La app existe para una meta tuya (la de «Mis metas»). Todo lo que hay se agrupa en cuatro frentes y cada pantalla dice para qué sirve y qué sale de ella:
@@ -4969,7 +5121,6 @@ function cnTemaAplica(){const T=cnTema(),sig=JSON.stringify(T);if(cnS().temaSig=
  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:${cnPatronSvg(T.patron,A[1])};opacity:${T.patron==='ninguno'?0:(.04+.2*T.pint).toFixed(3)}}
  .app,#bottombar,#overlay{position:relative;z-index:1}#bottombar{position:fixed}`;
 }
-(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;let raf=0,x=0,y=0;document.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;x=e.clientX;y=e.clientY;if(!raf)raf=requestAnimationFrame(()=>{raf=0;const r=document.documentElement.style;r.setProperty('--mx',x+'px');r.setProperty('--my',y+'px')})},{passive:true})})();
 function cnSaludo(){const T=cnTema(),h=new Date().getHours(),s=h<12?'Buen día':h<19?'Qué onda':'Buenas noches';return `${s}, ${T.nombre}`}
 function cnTip(){const T=cnTema(),n=T.nombre,v=S.vista,ps=ordenados(),p=ps[0]&&ps[0][1];let E=null;try{E=p?cnEtapa(p):null}catch{}
  const por={inicio:E?`${n}, hoy toca «${E.e.n}» de «${p.nombre}». Un paso a la vez.`:`${n}, empieza con un brief: sin problema de diseño no hay pieza.`,brief:'Dale al dado hasta que la pregunta de diseño te pique. Esa es tu pieza.',valores:'Primero valores, luego color. Si se lee en grises, el color solo la hace brillar.',colorscript:'Un color script cuenta la historia aunque nadie lea el guion.',blockout:'Si el jugador se pierde, no fue culpa del jugador.',kit:'Pocas piezas, muchas escenas. Eso es un kit.',encuadre:'Entrecierra los ojos: lo que sobrevive es lo que importa.',paleta:'Elige la luz primero. La sombra es su contraparte: cálida contra fría.',shots:'Planos cerrados para lo que duele, abiertos para lo que pesa.',iter:'Compara con la versión anterior: así se ve si de verdad mejoró.',ahora:'20 minutos bastan: thumbnails, valores y luz. Va.',nivel:'No es un examen, es un mapa.',proyecto:E?`Etapa «${E.e.n}»: ${E.e.diseno}`:'Una etapa a la vez.'};
@@ -5119,7 +5270,7 @@ document.addEventListener('DOMContentLoaded',()=>{try{cnTemaAplica()}catch(e){}}
 function cnSaludoHTML(){const T=cnTema(),f=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});return `<header class="hero"><span class="hero-fecha">${esc(f)}</span>${T.saludo?`<h2>${esc(cnSaludo())}</h2><p>${esc(cnTip())}</p>`:''}</header>`}
 /* ================= Secciones: 36 pantallas agrupadas en 10, sin borrar ninguna ================= */
 const HUBS=[
- ['inicio','Mi camino','home',[['inicio','Hoy'],['calendario','Calendario'],['metas','Mis metas']]],
+ ['inicio','Estudio','home',[['inicio','Escritorio'],['calendario','Calendario'],['metas','Mis metas']]],
  ['dibujar','Dibujar hoy','target',[['brief','Brief de producción'],['ahora','Dibujo de 20 min'],['generador','Ruleta de ideas'],['desatorar','Desatorarme'],['nombres','Nombres y títulos']]],
  ['mejorar','Mejorar mi técnica','flame',[['diario','Programa de mejora'],['estudios','Estudios sencillos'],['maestros','Estudio de maestros'],['ruta','Cursos y ruta']]],
  ['avance','Mi avance','chart',[['progreso','Progreso medido'],['nivel','Mi nivel']]],
@@ -5133,7 +5284,7 @@ const HUBS=[
  ['mas','Más','grid',[['tema','Apariencia'],['uso','Qué uso de la app'],['respaldo','Respaldo'],['avisos','Avisos por correo'],['papelera','Papelera']]]];
 const hubDe=v=>HUBS.find(h=>h[3].some(x=>x[0]===v));
 /* el menú lateral por temas: lo de cada día, lo de dibujar y mejorar, y lo del trabajo */
-const HUB_GRUPOS=[['',['inicio']],['Dibujar y mejorar',['dibujar','mejorar','forma','cine','biblioteca','avance']],['Trabajo',['portafolio','empleo','clientes','vender']],['',['mas']]];
+const HUB_GRUPOS=[['Estudio',['inicio']],['Laboratorio',['dibujar','forma','cine']],['Archivo visual',['biblioteca']],['Academia',['mejorar','avance']],['Carrera',['portafolio','empleo','clientes','vender']],['Sistema',['mas']]];
 function hubBarra(){const h=hubDe(S.vista);if(!h||h[3].length<2)return '';return `<nav class="hub-bar" aria-label="${esc(h[1])}"><span class="hub-t">${esc(h[1])}</span>${h[3].map(([v,n])=>v[0]==='@'?`<button class="ch xs" data-act="${v.slice(1)}">${esc(n)}</button>`:`<button class="ch xs ${S.vista===v?'on':''}" data-act="vista" data-v="${v}" aria-pressed="${S.vista===v}">${esc(n)}</button>`).join('')}</nav>`}
 function hubInserta(){if(S.vista==='proyecto')return;const m=$('#main'),old=m&&m.querySelector('.hub-bar');if(old)old.remove();const h=hubBarra();if(m&&h)m.insertAdjacentHTML('afterbegin',h);
   const hb=hubDe(S.vista);if(m&&hb){const tab=hb[3].find(x=>x[0]===S.vista),t1=m.querySelector('h1');if(tab&&t1&&!t1.children.length&&t1.textContent.trim()!==tab[1])t1.textContent=tab[1]}}
@@ -8958,7 +9109,7 @@ async function optimizarGaleria(){
         const m=await miniDe(o);const mini=m?(await S.assets.upload(m)).id:null;
         if(nuevo!==x.asset)viejos.push(x.asset);x.asset=nuevo;if(mini)x.mini=mini;x.opt=true}catch{}}
     /* guarda primero; solo después borra los originales pesados que ya nadie usa */
-    if(S.db)await S.db.doc('ajustes/principios').set(clone(S.ajustes));else lsSet();S.ajDirty=false;
+    await guardarAjustes();
     const usado=JSON.stringify(S.P)+JSON.stringify(S.ajustes);
     for(const v of viejos)if(!usado.includes(v))try{await S.assets.delete?.(v)}catch{}
   }finally{desbloquear(5000);S.galOpt=false;setStatus('Guardado')}
@@ -17406,13 +17557,16 @@ async function accionBase(a,el){
   if(['abrir','vista','nuevo','abrir-tab','unl'].includes(a))S.menu=false;
   /* el selector de carpeta necesita un gesto del usuario recién hecho: se atiende antes que cualquier otra cosa */
   if(a==='tp-carpeta'){tpCarpeta();return}
+  if(a.startsWith('pdfp-')){pdfpAccion(a,ds);return}
+  if(a.startsWith('mesa-')){mesaAccion(a,ds);return}
+  if(a==='est-continuar'||a==='est-abre'){estudioAccion(a,ds);return}
   switch(a){
     case 'herr':herrAbre(ds.t);break;
     case 'comp-abrir':C.pend={pid:S.cur,lista:'piezas',id:ds.id};herrAbre('comp');break;
     case 'herr-img':{const d=document.querySelector('[data-det="imagen"]');if(d)d.open=true;document.getElementById('pf-img')?.click();break}
     case 'herr-reset':{if(!S.confirmHerr){S.confirmHerr=true;renderMain();break}S.confirmHerr=false;const q=S.P[HERR_ID];if(q){q.mood=JSON.parse(JSON.stringify(nuevoProyecto().mood));delete q.escena;q.paletasPieza={};S.palImg=null;marcar();renderMain();toast('Colores y luz restablecidos')}break}
     case 'herr-reset-no':S.confirmHerr=false;renderMain();break;
-    case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='brief';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
+    case 'nuevo':{const id=uid();S.P[id]=nuevoProyecto('Nuevo proyecto');S.cur=id;S.vista='proyecto';S.tab='seisfases';S.ai={};recordar();marcar();render();setTimeout(()=>{const t=$('#f-nombre');t?.focus();t?.select()},0);break}
     case 'abrir':S.hojaEdit=false;S.palImg=null;S.cur=ds.id;S.vista='proyecto';S.ai={};S.confirmDel=false;S.hist=null;recordar();render();snapshot(ds.id);break;
     case 'vista':S.vista=ds.v;S.hist=null;render();if(ds.v==='papelera')verPapelera();if(ds.v==='vacantes')cargarVacantes(false);if(ds.v==='avisos')cargarAvisos();if(ds.v==='trabajos'&&!S.cotHist)cargarCotHist();break;
     case 'tab':{if(ds.tab==='board'){S.refVista='tablero';S.refModo='tablero';ds.tab='refs'}let a=null;if(S.P[S.cur]?.libre)S.tab=ds.tab;else{const r=tabResuelve(ds.tab);S.tab=r[0];a=r[1]}S.ancla=a;S.confirmDel=false;renderMain();if(!a)window.scrollTo({top:0});break}
@@ -17515,7 +17669,7 @@ async function accionBase(a,el){
     case 'av-key':{const k=$('#av-key')?.value.trim();if(!/^re_/.test(k||'')){toast('Esa no parece una clave de Resend (empieza con re_)');return}try{await window.PC_SHIM.setSecret('resend',k);S.avisosKey=true;S.ajustes.avisos={activo:true,email:'salvarezdelfin@gmail.com',...(S.ajustes.avisos||{})};marcarAj();renderMain();toast('Correo conectado')}catch{toast('No se pudo guardar')}break}
     case 'av-quitar':{try{await window.PC_SHIM.setSecret('resend','');S.avisosKey=false;renderMain()}catch{}break}
     case 'av-mes':{S.avPrueba='enviando';renderMain();try{const r=await window.PC_SHIM.avisarMes();S.avPrueba=r.enviado?'Resumen del mes enviado a '+r.para+'.':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}renderMain();break}
-    case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await S.db.doc('ajustes/principios').set(clone(S.ajustes));S.ajDirty=false}catch{}
+    case 'av-prueba':{S.avPrueba='enviando';renderMain();await guardar();clearTimeout(ajT);if(S.ajDirty)try{await guardarAjustes()}catch{}
       try{const r=await window.PC_SHIM.avisarAhora();S.avPrueba=r.enviado?'Enviado a '+r.para+'. Revisa tu bandeja (y spam).':'No se envió.'}catch(e){S.avPrueba=e?.code==='bad_key'?'Resend rechazó la clave: revísala.':e?.code==='no_key'?'Primero conecta Resend.':'No se pudo enviar'+(e?.message?': '+e.message:'.')}
       renderMain();break}
     case 'nom-taller':S.nom={...nomDraft(),pid:curReal(),para:'Proyecto'};S.vista='nombres';render();break;
@@ -17940,7 +18094,7 @@ async function accionBase(a,el){
     default:if(!ideaAccion(a,ds)&&!(await accionPro(a,el,p,ds))&&!(await accionFmt(a,el,p,ds))&&!(await accionRec(a,el,p,ds))&&!(await accionCr(a,el,p,ds))&&!(await accionRg(a,el,p,ds))&&!(await accionFc(a,el,p,ds))&&!(await accionCrec(a,el,p,ds))&&!(await accionRl(a,el,p,ds))&&!(await accionSw(a,el,p,ds))&&!(await accionEst(a,el,p,ds))&&!(await accionVt(a,el,p,ds))&&!(await accionProp(a,el,p,ds))&&!(await accionAd(a,el,p,ds))&&!(await accionHi(a,el,p,ds))&&!(await accionPot(a,el,p,ds))&&!(await accionExt(a,el,p,ds))&&!(await accionPj(a,el,p,ds))&&!(await accionCf(a,el,p,ds))&&!(await accionTp(a,el,p,ds))&&!(await accionBajar(a,el,p,ds))&&!(await accionAs(a,el,p,ds)))await accionDir(a,el,p,ds);
   }
 }
-window.addEventListener('beforeunload',()=>{if(S.dirty)guardar()});
+window.addEventListener('beforeunload',()=>{pendAhora();if(S.dirty)guardar()});
 arrancar();
 </script>
 
