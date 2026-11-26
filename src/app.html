@@ -1270,12 +1270,21 @@ const pendAhora=()=>{for(const k of [...pendEspera.keys()])pendEscribe(k)};
 window.addEventListener('pagehide',pendAhora);document.addEventListener('visibilitychange',()=>{if(document.hidden)pendAhora()});
 const AVISO_SIN_RED='Sin conexión: tus cambios quedaron guardados en este aparato y se subirán solos';
 /* los ajustes usan la misma mezcla a tres bandas que los proyectos (mezcla3, más abajo): por clave y, en listas, por id */
+/* Si todavía no se habían cargado los ajustes del servidor, lo de este aparato NO es «tu versión»: son valores de fábrica con quizá algún cambio suelto.
+   En ese caso manda el servidor; de lo local solo se agrega lo que allá no existe o está vacío. Así un guardado temprano nunca vacía nada. */
+const ajVacio=v=>v==null||v===''||(Array.isArray(v)&&!v.length)||(typeof v==='object'&&!Array.isArray(v)&&!Object.keys(v).length);
+function mezclaSinBase(local,servidor){
+  if(ajVacio(servidor))return local===undefined?servidor:local;
+  if(Array.isArray(servidor)){if(!Array.isArray(local)||![...local,...servidor].every(x=>x&&typeof x==='object'&&x.id!=null))return servidor;
+    const ya=new Set(servidor.map(x=>x.id));return [...servidor,...local.filter(x=>!ya.has(x.id))]}
+  if(typeof servidor==='object'){if(!local||typeof local!=='object'||Array.isArray(local))return servidor;const o={};for(const k of new Set([...Object.keys(servidor),...Object.keys(local)]))o[k]=mezclaSinBase(local[k],servidor[k]);return o}
+  return servidor}
 let ajCola=Promise.resolve();
 function guardarAjustes(){ajCola=ajCola.catch(()=>{}).then(guardarAjustes0);return ajCola}
 async function guardarAjustes0(){
   if(!S.db){lsSet();S.ajDirty=false;await pendQuita('ajustes');return}
   const ref=S.db.doc('ajustes/principios'),d=await ref.get(),servidor=d.exists?d.data():null;
-  const antes=JSON.stringify(S.ajustes),junto=servidor&&S._ajBase?mezcla3(S._ajBase,JSON.parse(antes),servidor):JSON.parse(antes);
+  const antes=JSON.stringify(S.ajustes),junto=!servidor?JSON.parse(antes):S._ajBase?mezcla3(S._ajBase,JSON.parse(antes),servidor):mezclaSinBase(JSON.parse(antes),servidor);
   await ref.set(clone(junto));
   const siguio=JSON.stringify(S.ajustes)===antes;
   if(siguio){for(const k of Object.keys(S.ajustes))if(!(k in junto))delete S.ajustes[k];Object.assign(S.ajustes,clone(junto));S._ajBase=clone(junto);S.ajDirty=false;await pendQuita('ajustes')}
@@ -1284,7 +1293,7 @@ async function guardarAjustes0(){
 async function recuperarPendientes(){
   let claves=[];try{claves=await PEND.claves()}catch{return 0}let n=0;
   for(const k of claves||[]){let x;try{x=await PEND.da(k)}catch{continue}if(!x||!x.data){await pendQuita(k);continue}pendClaves.add(k);
-    if(k==='ajustes'){const d=await S.db.doc('ajustes/principios').get().catch(()=>null);if(!d)continue;const servidor=d.exists?d.data():{};const junto=x.base?mezcla3(x.base,x.data,servidor):{...servidor,...x.data};S.ajustes={...clone(AJUSTES_BASE),...junto};S._ajBase=clone(servidor);S.ajDirty=true;try{await guardarAjustes();n++}catch{}continue}
+    if(k==='ajustes'){const d=await S.db.doc('ajustes/principios').get().catch(()=>null);if(!d)continue;const servidor=d.exists?d.data():{};const junto=x.base?mezcla3(x.base,x.data,servidor):mezclaSinBase(x.data,servidor);S.ajustes={...clone(AJUSTES_BASE),...junto};S._ajBase=clone(servidor);S.ajDirty=true;try{await guardarAjustes();n++}catch{}continue}
     const id=k.replace('proyectos/',''),vivo=S.P[id],igualBase=vivo?(x.base!=null&&vivo.actualizado===x.base):x.base==null;
     if(vivo&&vivo.actualizado===x.data.actualizado){await pendQuita(k);continue}
     let destino=id,copia=clone(x.data);
