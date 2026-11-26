@@ -1306,7 +1306,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwo00hk2').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwxwl4em').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -6767,12 +6767,18 @@ function ahPlano(I,full){
   /* guías de perspectiva (por encima de las masas, se recortan al encuadre) */
   let guias='',marcas='';
   const vpMarca=(x,y)=>`<circle cx="${x}" cy="${y}" r="11" fill="#0c0e12" stroke="#4cc9f0" stroke-width="3.5"/><line x1="${x-20}" y1="${y}" x2="${x+20}" y2="${y}" stroke="#4cc9f0" stroke-width="3"/><line x1="${x}" y1="${y-20}" x2="${x}" y2="${y+20}" stroke="#4cc9f0" stroke-width="3"/>`;
-  if(vp===1){const px=400;for(let a=0;a<360;a+=18){if(a%180===0)continue;const r=a*Math.PI/180;guias+=`<line x1="${px}" y1="${Yh}" x2="${(px+Math.cos(r)*1400).toFixed(1)}" y2="${(Yh+Math.sin(r)*1400).toFixed(1)}"/>`}
+  /* cuadrícula profesional: rayos que pasan por puntos parejos del borde del cuadro (no por ángulos fijos), transversales con la compresión real de la distancia y líneas mayores más gruesas */
+  const ln=(x1,y1,x2,y2,w,o)=>`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke-width="${w}" stroke-opacity="${o}"/>`;
+  if(vp===1){const px=400,paso=W/8;
+    for(let k=-8;k<=16;k++){const xb=k*paso,may=((k-4)%4===0),dx=xb-px,dy=(H+60)-Yh;if(Yh>=H+60)continue;guias+=ln(px,Yh,px+dx*1.5,Yh+dy*1.5,may?2.4:1.2,may?.85:.34)}
+    if(Yh>H*.12){const pt=W/4;for(let k=-4;k<=8;k++){const xt=k*pt,dx=xt-px,dy=-60-Yh,may=(k-2)%4===0;guias+=ln(px,Yh,px+dx*1.5,Yh+dy*1.5,may?1.8:1,may?.5:.22)}}
+    const C=(H-Yh)*1.12;let yp=1e9;for(let i=1;i<=14;i++){const y=Yh+C/i;if(y>H+4||y<Yh+2||yp-y<7)continue;yp=y;guias+=ln(-20,y,W+20,y,i%4===0?2:1.1,i%4===0?.7:.34)}
+    if(Yh>H*.2){const C2=Yh*1.0;let yq=-1e9;for(let i=1;i<=8;i++){const y=Yh-C2/i;if(y<-4||y-yq<9&&yq>-1e8)continue;yq=y;guias+=ln(-20,y,W+20,y,1,.2)}}
     marcas=vpMarca(px,Yh)+pill('PUNTO DE FUGA',px+20,Yh+(fuera?64:46),'start','#0c0e12','#4cc9f0')}
-  else{const ex=400,yT=Yh-170,yB=Yh+150,VL=-46,VR=W+46,ys=[yT,Yh-100,Yh-35,Yh+45,yB],yAt=(vx,py,x)=>Yh+(py-Yh)*(x-vx)/(ex-vx);
-    guias=`<polygon points="${ex},${yT} 0,${yAt(VL,yT,0).toFixed(1)} 0,${yAt(VL,yB,0).toFixed(1)} ${ex},${yB}" fill="#4cc9f0" fill-opacity=".07" stroke="none"/><polygon points="${ex},${yT} ${W},${yAt(VR,yT,W).toFixed(1)} ${W},${yAt(VR,yB,W).toFixed(1)} ${ex},${yB}" fill="#4cc9f0" fill-opacity=".07" stroke="none"/>`
-      +ys.map(y=>`<line x1="${VL}" y1="${Yh}" x2="${ex}" y2="${y}"/><line x1="${VR}" y1="${Yh}" x2="${ex}" y2="${y}"/>`).join('')+`<line x1="${ex}" y1="${yT}" x2="${ex}" y2="${yB}" stroke-width="3.4" stroke-opacity=".9"/>`;
-    marcas=vpMarca(VL,Yh)+vpMarca(VR,Yh)+pill('PF 1',VL+2,Yh+46,'start','#0c0e12','#4cc9f0')+pill('PF 2',VR-2,Yh+46,'end','#0c0e12','#4cc9f0')}
+  else{const ex=400,VL=-W*.45,VR=W*1.45,sp=H/9,yAt=(vx,py,x)=>Yh+(py-Yh)*(x-vx)/(ex-vx);
+    for(let k=-11;k<=11;k++){const y=Yh+k*sp,may=k%3===0;if(k===0)continue;guias+=ln(0,yAt(VL,y,0),W,yAt(VL,y,W),may?2.2:1.1,may?.75:.32)+ln(0,yAt(VR,y,0),W,yAt(VR,y,W),may?2.2:1.1,may?.75:.32)}
+    for(let j=-4;j<=4;j++){const x=ex+j*W/6;guias+=ln(x,-20,x,H+20,j===0?3:1,j===0?.95:.24)}
+    marcas=pill('◄ PF 1',4,Yh+46,'start','#0c0e12','#4cc9f0')+pill('PF 2 ►',W-4,Yh+46,'end','#0c0e12','#4cc9f0')}
   /* luz: icono + flecha hacia el foco */
   const lx=L[0],ly=L[1],dx=fc[0]-lx,dy=fc[1]-ly,dl=Math.hypot(dx,dy)||1,ux=dx/dl,uy=dy/dl,sx=lx+ux*(lz==='fuego'?52:40),sy=ly+uy*(lz==='fuego'?52:40),ex2=fc[0]-ux*78,ey2=fc[1]-uy*58;
   const luzSvg=lz==='tormenta'||/relámpago/.test(I.luz||'')?`<polygon points="${lx},${ly-34} ${lx-16},${ly+4} ${lx-2},${ly+4} ${lx-12},${ly+36} ${lx+18},${ly-8} ${lx+3},${ly-8}" fill="#dfe8ff"/>`:lz==='fuego'?`<circle cx="${lx}" cy="${ly}" r="46" fill="#ff8a3d" opacity=".35"/><circle cx="${lx}" cy="${ly}" r="18" fill="#ffb25a"/>`:lz==='luna'?`<circle cx="${lx}" cy="${ly}" r="22" fill="#cfe0ff"/><circle cx="${lx+9}" cy="${ly-4}" r="19" fill="#14161b"/>`:`<circle cx="${lx}" cy="${ly}" r="22" fill="#ffd166"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${lx+Math.cos(r)*28}" y1="${ly+Math.sin(r)*28}" x2="${lx+Math.cos(r)*40}" y2="${ly+Math.sin(r)*40}" stroke="#ffd166" stroke-width="3"/>`}).join('');
