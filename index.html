@@ -814,6 +814,52 @@ body{font-feature-settings:"cv11","ss01";letter-spacing:-.003em}
 .brand small{margin-top:8px;font-size:10px;letter-spacing:.14em}
 .cn-saludo h2{font-family:var(--body)!important;text-transform:none!important;font-weight:700;letter-spacing:-.02em;font-size:clamp(22px,2.6vw,30px)}
 .side{padding-top:24px}
+
+/* ===== Penumbra · editorial minimalista: tinta cálida sobre grafito, líneas finas en vez de cajas, cifras grandes, la luz como único color ===== */
+:root{--ink:#ece8e1;--ink2:#a9a49b;--ink3:#6d6962;--railw:232px;--serif:"Big Shoulders Display","Arial Narrow",system-ui,sans-serif}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 520px at var(--mx,72%) var(--my,-4%),rgba(244,169,92,.07),transparent 70%)}
+.main{max-width:1040px!important;padding:44px clamp(20px,5vw,72px) 110px!important}
+.side{background:transparent!important;border-right:1px solid var(--line)!important;padding:26px 14px 18px!important}
+.pitem{border-radius:8px!important;color:var(--ink3)!important;font-weight:500!important;padding:7px 10px!important;box-shadow:none!important;background:transparent!important}
+.pitem svg{stroke-width:1.5!important;opacity:.75}
+.pitem:hover{color:var(--ink)!important;background:rgba(255,255,255,.035)!important}
+.pitem[aria-current="true"]{color:var(--ink)!important;background:rgba(255,255,255,.05)!important;box-shadow:inset 2px 0 0 var(--accent)!important}
+.nav-g{padding:16px 10px 4px!important;font-size:10px!important;letter-spacing:.16em!important;color:var(--ink3)!important}
+.hero{margin:0 0 34px;padding:0}.hero-fecha{display:block;font:500 11.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin:0 0 14px}
+.hero h2{margin:0;font-family:var(--serif)!important;font-weight:800!important;text-transform:uppercase!important;font-size:clamp(46px,7.4vw,88px)!important;line-height:.9!important;letter-spacing:.005em!important;color:var(--ink)}
+.hero p{margin:16px 0 0;max-width:56ch;color:var(--ink2);font-size:17px;line-height:1.5}
+.ptitle{font-weight:600!important;font-size:clamp(28px,3.6vw,42px)!important;letter-spacing:-.035em!important;margin-bottom:6px!important}
+.intro{font-size:15px!important;color:var(--ink2)!important;max-width:66ch!important}
+.hub-bar{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;padding:0!important;gap:24px!important;margin-bottom:26px!important}
+.hub-bar .ch{border:0!important;background:none!important;border-radius:0!important;padding:11px 0!important;min-height:0!important;font-size:14px!important;font-weight:500!important;color:var(--ink3)!important;border-bottom:2px solid transparent!important;margin-bottom:-1px;box-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+.hub-bar .ch:hover{color:var(--ink)!important}.hub-bar .ch.ch.on{background:none!important;color:var(--ink)!important;border-color:transparent!important;border-bottom-color:var(--accent)!important}
+.hub-t{display:none!important}
+.pq{border:0!important;background:none!important;padding:0!important;margin:-10px 0 24px!important;color:var(--ink3)!important;font-size:13px!important;border-radius:0!important}
+.pq b{color:var(--ink2);font-weight:500}.pq-f{border:0!important;padding:0!important;font:500 10.5px var(--mono)!important;letter-spacing:.14em;text-transform:uppercase}
+.pq .btn{display:none}
+.box{background:none!important;border-radius:0!important;padding:22px 0!important}
+.box:not([style*="border"]){border:0!important;border-top:1px solid var(--line)!important}
+.box .box:not([style*="border"]){border-top-color:transparent!important;padding:10px 0!important}
+.btn{background:transparent!important;border:1px solid var(--line2)!important;border-radius:999px!important;padding:7px 16px!important;font-weight:500!important;color:var(--ink)!important;box-shadow:none!important}
+.btn:hover{border-color:var(--ink2)!important}
+.btn.pri{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important;font-weight:600!important}.btn.pri:hover{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--accent-ink)!important}
+.btn.ghost{border-color:transparent!important;color:var(--ink2)!important}.btn.ghost:hover{color:var(--ink)!important;border-color:var(--line2)!important}
+.btn.danger,.btn.ghost.danger{color:var(--warn)!important}
+.ch{background:transparent!important;border-radius:999px!important;color:var(--ink2)!important;box-shadow:none!important}
+.ch.on{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important;font-weight:600!important;box-shadow:none!important}
+input[type=text],input[type=email],input[type=number],input[type=search],textarea,select{background:transparent!important;border-radius:10px!important}
+.stats{gap:0!important;border-top:1px solid var(--line)}
+.stat{background:none!important;border:0!important;border-radius:0!important;padding:18px 18px 18px 0!important}
+.stat b{font-family:var(--serif)!important;font-weight:800!important;font-size:clamp(40px,5vw,60px)!important;line-height:.95!important;letter-spacing:.01em}
+.stat span{font:500 10.5px var(--mono)!important;letter-spacing:.12em!important;text-transform:uppercase;color:var(--ink3)!important}
+.cm-hoy{background:none!important;border:0!important;border-left:2px solid var(--accent)!important;border-top:0!important;padding:4px 0 4px 22px!important}
+.cm-hoy-t{font-family:var(--serif)!important;text-transform:uppercase!important;font-weight:800!important;font-size:clamp(30px,4vw,46px)!important;line-height:.95!important;letter-spacing:.01em!important}
+.cm-f{border-top-width:1px!important}
+.lbl{font-size:11px!important;letter-spacing:.14em!important}
+.bar{height:3px!important;border-radius:0!important;background:var(--line)!important}.bar i{border-radius:0!important}
+.pfcard,.rcur,.pdfp-f,.vac{border-radius:12px!important}
+#bottombar{background:rgba(12,13,16,.86)!important;border-top:1px solid var(--line)!important}
+@media (prefers-reduced-motion:reduce){body::after{display:none}}
 </style>
 <style id="tema2">
 /* ================= Estudio v2 · capa visual de toda la app =================
@@ -1328,7 +1374,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwxxzl40').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwxy55b1').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1649,7 +1695,7 @@ function renderSide(){
     ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
     <span class="status" id="status">${S.modo==='local'?'Guardado solo en este navegador':S.modo==='error'?'Sin conexión al almacenamiento':''}</span>`;
   const bb=$('#bottombar');if(bb){const b=(act,v,ico,n,cur)=>`<button class="bb ${act==='nuevo'?'fab':''}" data-act="${act}" ${v?`data-v="${v}"`:''} aria-current="${!!cur}">${ICO[ico]}<span>${n}</span></button>`;
-    bb.innerHTML=b('vista','inicio','home','Hoy',S.vista==='inicio'&&!S.menu)+b('vista','ahora','spark','Dibujar',S.vista==='ahora'&&!S.menu)+b('herr','','frame','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','progreso','chart','Avance',S.vista==='progreso'&&!S.menu)+b('menu','','grid','Más',S.menu)}
+    bb.innerHTML=b('vista','inicio','home','Hoy',S.vista==='inicio'&&!S.menu)+b('vista','ahora','target','Dibujar',S.vista==='ahora'&&!S.menu)+b('herr','','frame','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','progreso','chart','Avance',S.vista==='progreso'&&!S.menu)+b('menu','','grid','Más',S.menu)}
   const sc=$('#scrim');if(sc)sc.className=S.menu?'scrim':'';
 }
 function listaProyectos(){
@@ -1992,8 +2038,7 @@ function vCamino(){
   const hitos=[['Terminar la ruta de Entornos',D.env_pct,100,D.env_pct+'%','Es la base técnica de tu meta.','diario'],['Piezas de portafolio listas',D.lis,D.c.piezas,D.lis+' de '+D.c.piezas,'Es lo que ven quienes te contratan.','portafolio'],['Postulaciones enviadas',D.env,D.c.post,D.env+' de '+D.c.post,'Sin envíos no hay respuestas.','postulaciones'],['Piezas publicadas para vender',D.pubs,D.c.ventas,D.pubs+' de '+D.c.ventas,'Ingreso mientras llegas al trabajo ideal.','ventas']];
   const frente=(k,tit,para,body,acc)=>`<div class="cm-f" style="border-top:3px solid ${FRENTES[k][1]}"><span class="lbl" style="color:${FRENTES[k][1]}">${tit}</span><p class="muted" style="margin:2px 0 8px">${para}</p>${body}<div class="prow" style="margin-top:8px;flex-wrap:wrap">${acc}</div></div>`;
   return `
-  <div class="prow" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap"><h1 class="ptitle" style="font-size:clamp(28px,4.5vw,44px);margin:0">Mi camino</h1><span class="muted" style="font-size:13px;text-transform:capitalize">${esc(new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}))}</span></div>
-  ${frescuraAvisoHTML()}
+    ${frescuraAvisoHTML()}
   ${ahMiniHTML()}
   ${hoy?`<div class="box cm-hoy"><span class="lbl">Hoy · ${esc(hoy.t.split(' · ')[0])}</span><h2 class="cm-hoy-t">${esc(hoy.tit)}</h2><p style="margin:0 0 6px">${esc(hoy.txt)}</p><p class="muted" style="margin:0 0 12px"><b>Para qué:</b> ${esc(hoy.para)}</p>${pgFocoHTML()}<div class="prow" style="flex-wrap:wrap"><button class="btn pri cm-go" data-act="hoy-ir" data-min="30">▶ Empezar · 30 min</button><button class="btn" data-act="hoy-ir" data-min="10">Día pesado: solo 10 min</button><button class="btn ghost" data-act="vista" data-v="ahora">💡 Dame una idea y dibujo</button></div><p class="muted" style="margin:10px 0 0">🔥 Racha: ${racha()} ${racha()===1?'día':'días'} · esta semana ${D.ses} de ${D.ritmo} sesiones</p></div>`:`<div class="box cm-hoy ok"><span class="lbl">Hoy</span><h2 class="cm-hoy-t">Tu sesión de hoy ya está hecha ✓</h2><p class="muted" style="margin:0 0 10px">🔥 Racha: ${racha()} ${racha()===1?'día':'días'} · esta semana ${D.ses} de ${D.ritmo} sesiones. Si te quedan ganas, puedes adelantar la siguiente.</p><div class="prow"><button class="btn" data-act="hoy-ir" data-min="30">Hacer otra sesión</button></div></div>${siguientePasoHTML(paso,ult)}`}
   <div class="box cm-meta"><span class="lbl">Tu meta</span><h2 style="margin:2px 0 4px;font-family:var(--display);text-transform:uppercase">${esc(rol)}</h2><p class="muted" style="margin:0">${m.plazo?esc(m.plazo)+' · ':''}${m.enfoque?esc(m.enfoque)+' · ':''}${m.porque?'Para qué: '+esc(corto(m.porque,160)):'<button class="btn ghost sm" data-act="vista" data-v="metas">Escribe por qué quieres esto</button>'}</p>
@@ -4891,6 +4936,7 @@ function cnTemaAplica(){const T=cnTema(),sig=JSON.stringify(T);if(cnS().temaSig=
  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:${cnPatronSvg(T.patron,A[1])};opacity:${T.patron==='ninguno'?0:(.04+.2*T.pint).toFixed(3)}}
  .app,#bottombar,#overlay{position:relative;z-index:1}#bottombar{position:fixed}`;
 }
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;let raf=0,x=0,y=0;document.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;x=e.clientX;y=e.clientY;if(!raf)raf=requestAnimationFrame(()=>{raf=0;const r=document.documentElement.style;r.setProperty('--mx',x+'px');r.setProperty('--my',y+'px')})},{passive:true})})();
 function cnSaludo(){const T=cnTema(),h=new Date().getHours(),s=h<12?'Buen día':h<19?'Qué onda':'Buenas noches';return `${s}, ${T.nombre}`}
 function cnTip(){const T=cnTema(),n=T.nombre,v=S.vista,ps=ordenados(),p=ps[0]&&ps[0][1];let E=null;try{E=p?cnEtapa(p):null}catch{}
  const por={inicio:E?`${n}, hoy toca «${E.e.n}» de «${p.nombre}». Un paso a la vez.`:`${n}, empieza con un brief: sin problema de diseño no hay pieza.`,brief:'Dale al dado hasta que la pregunta de diseño te pique. Esa es tu pieza.',valores:'Primero valores, luego color. Si se lee en grises, el color solo la hace brillar.',colorscript:'Un color script cuenta la historia aunque nadie lea el guion.',blockout:'Si el jugador se pierde, no fue culpa del jugador.',kit:'Pocas piezas, muchas escenas. Eso es un kit.',encuadre:'Entrecierra los ojos: lo que sobrevive es lo que importa.',paleta:'Elige la luz primero. La sombra es su contraparte: cálida contra fría.',shots:'Planos cerrados para lo que duele, abiertos para lo que pesa.',iter:'Compara con la versión anterior: así se ve si de verdad mejoró.',ahora:'20 minutos bastan: thumbnails, valores y luz. Va.',nivel:'No es un examen, es un mapa.',proyecto:E?`Etapa «${E.e.n}»: ${E.e.diseno}`:'Una etapa a la vez.'};
@@ -5037,7 +5083,7 @@ document.addEventListener('pointermove',e=>{if(cnPaDrag)cnPaDesdeRueda(e,true)})
 const _v3dPanel0=v3dPanel;window.v3dPanel=function(){const r=_v3dPanel0.apply(this,arguments);try{cnV3Aplica()}catch(e){}return r};
 const _renderMainInner1=renderMainInner;window.renderMainInner=function(){try{cnTemaAplica();cnV3Aplica()}catch(e){}const r=_renderMainInner1.apply(this,arguments);if(S.vista==='paleta')cnPaPinta();return r};
 document.addEventListener('DOMContentLoaded',()=>{try{cnTemaAplica()}catch(e){}});
-function cnSaludoHTML(){const T=cnTema();return T.saludo?`<div class="cn-saludo"><h2>${esc(cnSaludo())}</h2><p>${esc(cnTip())}</p></div>`:''}
+function cnSaludoHTML(){const T=cnTema(),f=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});return `<header class="hero"><span class="hero-fecha">${esc(f)}</span>${T.saludo?`<h2>${esc(cnSaludo())}</h2><p>${esc(cnTip())}</p>`:''}</header>`}
 /* ================= Secciones: 36 pantallas agrupadas en 10, sin borrar ninguna ================= */
 const HUBS=[
  ['inicio','Mi camino','home',[['inicio','Hoy'],['calendario','Calendario'],['metas','Mis metas']]],
