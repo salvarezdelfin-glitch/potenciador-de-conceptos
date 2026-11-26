@@ -37,3 +37,15 @@ Todas corren en el navegador local. `proyectos` usa un **servidor simulado** que
 - Fase 4: Academia, crecimiento, CV y vacantes según la especificación.
 - Fase 5: estabilización y rendimiento.
 - Los correos de `pc-avisos` aún usan el nombre anterior.
+
+## Estudio y menú (26 de noviembre de 2026)
+
+**Incidente de datos.** El 11 de noviembre los ajustes (principios, referentes, ilustraciones y otras secciones) fueron reemplazados por una copia casi vacía. Causa reproducida: un guardado antes de que cargaran los ajustes del servidor subía los valores de fábrica y reemplazaba todo. Corregido: en ese caso manda el servidor y lo local solo agrega. No se probó qué acción concreta lo disparó aquel día. La última versión completa se copió a un documento de respaldo aparte; restaurarla es decisión del dueño.
+
+**Guardado, otros fallos corregidos:** los proyectos que no estaban abiertos se guardaban sin revisar conflictos ni dejar copia local; cambiar de proyecto antes de guardar podía dejar el primero sin subir; el reintento podía descartar una copia sin subirla.
+
+**Pantalla principal:** encabezado compacto, accesos a herramientas, tarjetas de proyecto, WIP reciente, pendientes (fechas, entregables, notas de feedback, tareas) y actividad. Todo sale de datos existentes. No cambia el esquema: usa `piezas`, `entregables`, `rondas[].notas[].estado` y `ajustes.tareas`. La imagen de tarjeta es la portada o, si no hay, el boceto o entregable más reciente, con rótulo.
+
+**Menú:** proyectos arriba, nombres completos, lo de sistema plegado; las mismas secciones de antes.
+
+**Build:** se detiene si hay funciones duplicadas o si un script no compila.

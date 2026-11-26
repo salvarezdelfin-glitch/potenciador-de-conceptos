@@ -859,9 +859,20 @@ input[type=text],input[type=email],input[type=number],input[type=search],textare
 .pfcard,.rcur,.pdfp-f,.vac{border-radius:12px!important}
 #bottombar{background:rgba(12,13,16,.86)!important;border-top:1px solid var(--line)!important}
 /* ---- Estudio y mesa de proyecto ---- */
-.es{display:grid;gap:34px}.es h2{font-size:15px;font-weight:600;margin:0 0 12px}.es-cont{border-left:2px solid var(--accent);padding-left:20px}.es-cont h2{font-family:var(--display);font-size:clamp(30px,4vw,46px);font-weight:800;text-transform:uppercase;line-height:.95;margin:6px 0}.es-cont p{margin:0 0 12px}
-.es-proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}.es-p{display:grid;gap:5px;text-align:left;background:none;border:0;padding:0;color:inherit;cursor:pointer;align-content:start}.es-img{display:block;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--surface)}.es-img img{width:100%;height:100%;object-fit:cover;display:block}.es-img em{display:grid;place-items:center;height:100%;font-style:normal;font-size:12px;color:var(--ink3)}.es-p:hover .es-img{outline:1px solid var(--ink2)}.es-p small{color:var(--ink3);font-size:12px}.es-p .bar{display:block}.es-p .bar i{display:block;height:100%;background:var(--accent)}
-.es-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px}.es-l{list-style:none;margin:0;padding:0}.es-l li{border-top:1px solid var(--line)}.es-l button{display:grid;gap:1px;width:100%;text-align:left;background:none;border:0;color:inherit;padding:10px 0;cursor:pointer}.es-l button:hover b{color:var(--accent)}.es-l b{font-weight:500;font-size:14px}.es-l span{font-size:12.5px;color:var(--ink2)}.es-l small{font-size:11.5px;color:var(--ink3)}
+.ini{display:grid;gap:22px;min-width:0}.ini-head{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between}.ini-hola{margin:4px 0 0;font-family:var(--serif)!important;font-weight:800!important;text-transform:uppercase!important;font-size:clamp(28px,2.8vw,36px)!important;line-height:1!important;color:var(--ink)}
+.ini-atajos{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));border-block:1px solid var(--line);padding:6px 0;gap:2px}.ini-atajos button{display:grid;justify-items:center;align-content:start;gap:6px;background:none;border:0;border-radius:6px;color:var(--ink2);font-size:12.5px;line-height:1.25;padding:10px 4px;cursor:pointer;min-height:62px}.ini-atajos button:hover{background:var(--surface);color:var(--ink)}.ini-atajos svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.ini-atajos button:hover svg{stroke:var(--accent)}
+.ini-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:34px}.ini-col{display:contents}.ini-proy{order:1}.ini-pend{order:2}.ini-wip{order:3}.ini-hist{order:4}.ini-sec{min-width:0}
+@media (min-width:1180px){.ini-grid{grid-template-columns:minmax(0,1fr) minmax(290px,340px);gap:32px;align-items:start}.ini-col{display:grid;gap:34px;align-content:start;min-width:0}.ini-der{border-left:1px solid var(--line);padding-left:26px}}
+.ini-h{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 0 12px}.ini-h h2{margin:0;font-size:15px;font-weight:600}.ini-h h2 small{font:500 11px var(--mono);color:var(--ink3);margin-left:6px}
+.ini-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}.ini-card{display:grid;grid-template-rows:auto 1fr;background:var(--surface);border-radius:8px;overflow:hidden;min-width:0}.ini-card-main{grid-column:1/-1}.ini-card:not(.ini-card-main){grid-template-columns:108px minmax(0,1fr);grid-template-rows:auto}.ini-card:not(.ini-card-main) .ini-img{aspect-ratio:auto;height:100%;min-height:150px}.ini-card:not(.ini-card-main) .ini-img span{display:none}.ini-card:not(.ini-card-main) .ini-info{padding:12px 14px;gap:6px}.ini-card:not(.ini-card-main) .ini-info h3{font-size:20px}.ini-card:not(.ini-card-main) .ini-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ini-img{display:block;position:relative;width:100%;aspect-ratio:16/10;border:0;padding:0;background:#0a0b0d;cursor:pointer;overflow:hidden;color:inherit}.ini-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.ini-img span{position:absolute;left:8px;bottom:8px;background:rgba(8,9,11,.82);color:var(--ink);font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:4px}.ini-img em{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:12.5px;color:var(--ink3);padding:12px}
+.ini-card-main .ini-img img{object-fit:contain}
+.ini-info{display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px;min-width:0}.ini-info h3{margin:0;font-family:var(--display);font-weight:800;font-size:24px;line-height:1.02;text-transform:uppercase;overflow-wrap:anywhere}.ini-card-main .ini-info h3{font-size:clamp(28px,2.8vw,36px)}.ini-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0;font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}.ini-meta span:first-child{color:var(--accent)}.ini-meta .ini-venc{color:var(--warn)}
+.ini-desc{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink2)}.ini-falta{color:var(--ink3)}.ini-prog{display:grid;gap:5px;font-size:12.5px;color:var(--ink2)}.ini-prog .bar{display:block}.ini-prog .bar i{display:block;height:100%;background:var(--accent)}.ini-act{margin:0;font-size:12px;color:var(--ink3);border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}.ini-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+@media (min-width:760px){.ini-card-main{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:auto}.ini-card-main .ini-img{aspect-ratio:auto;min-height:290px;height:100%}}
+.ini-subir{display:flex;gap:8px;align-items:center;min-width:0}.ini-subir select{max-width:190px}.ini-wip-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,150px),1fr));gap:14px 12px;margin-bottom:8px}.ini-w{display:grid;gap:3px;align-content:start;text-align:left;background:none;border:0;padding:0;color:inherit;cursor:pointer;min-width:0}.ini-w img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:var(--surface)}.ini-w b{font-weight:500;font-size:13px;overflow-wrap:anywhere}.ini-w small{font-size:11.5px;color:var(--ink3);line-height:1.35}.ini-w:hover img{outline:1px solid var(--ink2)}
+.ini-pend h4{margin:14px 0 2px;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}.ini-pend .ini-h+h4{margin-top:0}.ini-l{list-style:none;margin:0;padding:0}.ini-l li{display:flex;gap:10px;align-items:center;border-top:1px solid var(--line);padding:9px 0;min-width:0}.ini-t{flex:1;display:grid;gap:2px;min-width:0;text-align:left;background:none;border:0;color:inherit;padding:0;cursor:pointer}.ini-t b{font-weight:500;font-size:13.5px;line-height:1.35;overflow-wrap:anywhere}.ini-t span{font-size:11.5px;color:var(--ink3)}.ini-t:hover b{color:var(--accent)}.ini-l select{flex:none;width:118px;font-size:12px;padding:5px 6px}.ini-l em{flex:none;font-style:normal;font-size:11.5px;color:var(--ink2);text-align:right;max-width:110px}.ini-l .ini-venc em{color:var(--warn)}.ini-hecho .ini-t b{text-decoration:line-through;color:var(--ink3)}
+.ini-nuevo{display:grid;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line2)}.ini-nuevo input,.ini-nuevo select,.ini-subir select{min-width:0;border:1px solid var(--line2);background:var(--bg);border-radius:6px;padding:8px 10px}.ini-nuevo-f{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:6px}
 .mesa{display:grid;gap:20px}.mesa-ficha{display:grid;grid-template-columns:minmax(180px,300px) 1fr;gap:22px}.mesa-portada{display:grid;gap:8px;align-content:start}.mesa-portada img{width:100%;aspect-ratio:4/3;max-height:300px;object-fit:cover;border-radius:6px}.mesa-portada>span{display:grid;place-items:center;aspect-ratio:4/3;background:var(--surface);border-radius:6px;font-size:13px}
 .mesa-prog{display:flex;gap:16px;align-items:center;margin-top:10px}.mesa-prog>b{font-family:var(--display);font-size:46px;font-weight:800;line-height:1;min-width:80px}.mesa-prog>div{flex:1;display:grid;gap:6px;font-size:13px}.mesa-prog .bar i,.mesa .bar i{display:block;height:100%;background:var(--accent)}.mesa-mas summary{cursor:pointer;color:var(--ink2);font-size:13.5px;padding:8px 0}
 .mesa-etapas{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:1px solid var(--line)}.mesa-et{display:grid;gap:2px;text-align:left;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--ink3);padding:8px 8px 10px;cursor:pointer;min-width:0}.mesa-et span{font:500 10.5px var(--mono);letter-spacing:.12em}.mesa-et b{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mesa-et small{font-size:11.5px}.mesa-et.on{color:var(--ink);border-bottom-color:var(--accent)}
@@ -869,6 +880,16 @@ input[type=text],input[type=email],input[type=number],input[type=search],textare
 .mesa-herr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}.mesa-nuevo{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}.mesa-err{flex:1 1 100%;margin:0;color:var(--warn);font-size:13px;min-height:0}
 .ent{border-top:1px solid var(--line)}.ent>header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}.ent-abre{flex:1;display:grid;gap:2px;text-align:left;background:none;border:0;color:inherit;cursor:pointer;padding:0 0 0 12px;border-left:2px solid var(--line2);min-width:0}.ent-abre b{font-weight:600}.ent-abre small{color:var(--ink3);font-size:12px}.ent-des .ent-abre{border-left-color:var(--c-concepto)}.ent-rev .ent-abre{border-left-color:var(--c-tecnica)}.ent-cor .ent-abre{border-left-color:var(--warn)}.ent-ok .ent-abre{border-left-color:var(--ok)}.ent>header select{max-width:200px}
 .ent-cuerpo{display:grid;gap:12px;padding:4px 0 18px 14px}.ent-imgs{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}.ent-imgs figure{margin:0;display:grid;gap:3px;justify-items:start}.ent-imgs img{width:150px;height:110px;object-fit:cover;border-radius:6px;cursor:zoom-in}.ent-imgs figcaption{font-size:11.5px;color:var(--ink3)}.ent-hist{margin:6px 0 0;padding:0;list-style:none;font-size:13px}.ent-hist li{padding:3px 0;border-top:1px solid var(--line)}.ent-hist span{color:var(--ink3);margin-right:8px}
+/* ===== consistencia entre pantallas y menú legible ===== */
+:root{--railw:252px}
+.main{max-width:1440px!important;padding:32px clamp(18px,3vw,44px) 110px!important}
+.main h1.ptitle{font-size:clamp(28px,3vw,40px)!important;line-height:1.02!important}
+.pitem .n{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25;overflow-wrap:anywhere}
+.pitem .meta{line-height:1.3;margin-top:-4px}
+.side .nav-g{margin:0 0 2px}.side>*{flex:none}.side>.status{margin-top:auto}
+.nav-sis summary{cursor:pointer;padding:2px 10px;list-style-position:inside}.nav-sis .navlinks{border-top:0;padding-top:4px}
+.nav-proy>.prow{flex-wrap:nowrap}
+@media (max-width:860px){.side{background:#0e1013!important}.main{padding:14px 16px calc(96px + env(safe-area-inset-bottom,0px))!important}.ini-nuevo-f{grid-template-columns:1fr 1fr}.ini-nuevo-f .btn{grid-column:1/-1}}
 </style>
 <style id="tema2">
 /* ================= Estudio v2 · capa visual de toda la app =================
@@ -1390,7 +1411,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwy049zg').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){let tenia=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tenia){tenia=true;return}if(document.getElementById('pc-nueva'))return;const b=document.createElement('div');b.id='pc-nueva';b.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:99999;background:#ff6a3d;color:#111;padding:10px 16px;border-radius:12px;font:600 14px system-ui;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';b.textContent='Hay una versión nueva · toca para actualizar';b.onclick=()=>location.reload();document.body.appendChild(b)});window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=mwy0iqt2').catch(()=>{}))}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ============ Constantes del método ============ */
@@ -1542,7 +1563,7 @@ const AJUSTES_BASE={principios:[],referentes:[],gusto:''};
 const S={db:null,assets:null,sample:null,downloads:null,modo:'cargando',
   P:{},ajustes:clone(AJUSTES_BASE),cur:null,vista:'inicio',tab:'brief',
   dirty:false,ajDirty:false,ai:{},aiBusy:{},provo:0,confirmDel:false,destinoCapa:'concepto'};
-let saveT=null,ajT=null;
+let saveT=null,saveId=null,ajT=null;
 
 function lsGet(){try{return JSON.parse(localStorage.getItem('cdc.v1')||'null')}catch{return null}}
 function lsSet(){try{localStorage.setItem('cdc.v1',JSON.stringify({P:S.P,ajustes:S.ajustes}))}catch{}}
@@ -1585,16 +1606,18 @@ async function recuperarPendientes(){
   let claves=[];try{claves=await PEND.claves()}catch{return 0}let n=0;
   for(const k of claves||[]){let x;try{x=await PEND.da(k)}catch{continue}if(!x||!x.data){await pendQuita(k);continue}pendClaves.add(k);
     if(k==='ajustes'){const d=await S.db.doc('ajustes/principios').get().catch(()=>null);if(!d)continue;const servidor=d.exists?d.data():{};const junto=x.base?mezcla3(x.base,x.data,servidor):mezclaSinBase(x.data,servidor);S.ajustes={...clone(AJUSTES_BASE),...junto};S._ajBase=clone(servidor);S.ajDirty=true;try{await guardarAjustes();n++}catch{}continue}
-    const id=k.replace('proyectos/',''),vivo=S.P[id],igualBase=vivo?(x.base!=null&&vivo.actualizado===x.base):x.base==null;
-    if(vivo&&vivo.actualizado===x.data.actualizado){await pendQuita(k);continue}
+    const id=k.replace('proyectos/','');if(pendEspera.has(k)||otrosT[id]||saveId===id||S.conflicto?.[id])continue;
+    let vivo;try{const d=await S.db.doc(k).get();vivo=d.exists?d.data():null}catch{continue}
+    const igualBase=vivo?(x.base!=null&&vivo.actualizado===x.base):x.base==null;
+    if(vivo&&vivo.actualizado===x.data.actualizado){S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.actualizado;await pendQuita(k);continue}
     let destino=id,copia=clone(x.data);
-    if(!igualBase){destino=uid();copia.nombre=(copia.nombre||'Proyecto')+' (cambios sin subir de este aparato)'}
+    if(!igualBase){if(vivo){S.P[id]=normaliza(clone(vivo));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.actualizado}destino=uid();copia.nombre=(copia.nombre||'Proyecto')+' (cambios sin subir de este aparato)'}
     S.P[destino]=normaliza(copia);try{await S.db.collection('proyectos').doc(destino).set(clone(S.P[destino]));S._baseAct=S._baseAct||{};S._baseAct[destino]=S.P[destino].actualizado;await pendQuita(k);n++}catch{}}
   if(n){toast(n===1?'Recuperé un cambio que no había llegado al servidor':'Recuperé '+n+' cambios que no habían llegado al servidor',6000);render()}return n}
 async function reintentaPendientes(){if(!S.db||navigator.onLine===false)return;try{if(S.dirty)await guardar();if(S.ajDirty)await guardarAjustes();if(!S.dirty&&!S.ajDirty&&pendClaves.size&&!pendEspera.size)await recuperarPendientes();if(!S.dirty&&!S.ajDirty)setStatus('Guardado')}catch{setStatus(AVISO_SIN_RED)}}
 window.addEventListener('online',()=>setTimeout(reintentaPendientes,800));
-setInterval(()=>{if(S.dirty||S.ajDirty)reintentaPendientes()},30000);
-function marcar(){const p=S.P[S.cur];if(!p)return;try{bdAutoLlena(p)}catch{}p.actualizado=Date.now();S.dirty=true;const id=S.cur;pendProgramar('proyectos/'+id,()=>S.P[id]?{data:S.P[id],base:S._baseAct?.[id]??null}:null);setStatus('Guardando…');clearTimeout(saveT);saveT=setTimeout(guardar,700)}
+setInterval(()=>{if(S.dirty||S.ajDirty||pendClaves.size)reintentaPendientes()},30000);
+function marcar(){const p=S.P[S.cur];if(!p)return;try{bdAutoLlena(p)}catch{}p.actualizado=Date.now();S.dirty=true;const id=S.cur;pendProgramar('proyectos/'+id,()=>S.P[id]?{data:S.P[id],base:S._baseAct?.[id]??null}:null);setStatus('Guardando…');if(saveId&&saveId!==id){clearTimeout(saveT);guardar(false,saveId)}else clearTimeout(saveT);saveId=id;saveT=setTimeout(()=>{saveId=null;guardar(false,id)},700)}
 /* ---- historial: una foto del proyecto cada 15 min de trabajo, al abrirlo y antes de restaurar ---- */
 const HIST_MAX=40;
 function histLocal(){try{return JSON.parse(localStorage.getItem('cdc.hist')||'[]')}catch{return []}}
@@ -1620,8 +1643,8 @@ async function verPapelera(){S.papelera={cargando:true};renderMain();
     for(const h of todos){if(S.P[h.pid]||vistos.has(h.pid))continue;vistos.add(h.pid);lista.push(h)}
     S.papelera={lista}}catch{S.papelera={error:true}}renderMain()}
 /* evita que una pestaña con datos viejos (tuya en otro aparato, o un cambio hecho por fuera) pise sin avisar un cambio más nuevo */
-async function guardar(forzar){
-  const id=S.cur,p=S.P[id];if(!p)return;
+async function guardar(forzar,pid){
+  const id=pid||S.cur,p=S.P[id];if(!p)return;
   try{
     if(S.db){
       if(!forzar){
@@ -1630,7 +1653,7 @@ async function guardar(forzar){
           const vivo=await S.db.doc('proyectos/'+id).get();
           const servAct=vivo.exists?vivo.data()?.actualizado:null;
           if(base!=null&&servAct!=null&&servAct!==base){
-            S.conflicto=S.conflicto||{};S.conflicto[id]=true;setStatus('⚠ Cambió en otro lugar');renderMain();return;
+            S.conflicto=S.conflicto||{};S.conflicto[id]=true;setStatus('⚠ Cambió en otro lugar');if(id!==S.cur)toast('«'+p.nombre+'» cambió en otro lugar. Ábrelo para decidir qué conservar',6000);renderMain();return;
           }
         }catch{}
       }
@@ -1638,7 +1661,7 @@ async function guardar(forzar){
       S._baseAct=S._baseAct||{};S._baseAct[id]=enviado.actualizado;fijaBase(id);if(S.P[id]&&S.P[id].actualizado===enviado.actualizado)await pendQuita('proyectos/'+id);
       if(S.conflicto?.[id]){delete S.conflicto[id];if(S.vista==='proyecto'&&S.cur===id)renderMain()}
     }else{lsSet();await pendQuita('proyectos/'+id)}
-    S.dirty=false;setStatus('Guardado');renderSide();snapshot(id);
+    if(id===S.cur)S.dirty=false;setStatus('Guardado');renderSide();snapshot(id);
   }catch(e){setStatus(e.code==='quota_exceeded'?'Sin espacio: borra proyectos viejos':AVISO_SIN_RED);}
 }
 function conflictoHTML(id){
@@ -1677,6 +1700,7 @@ async function arrancar(){
       for(const d of snap.docs){
         const data=d.data();
         if(d.id===S.cur&&(S.dirty||snap.metadata.hasPendingWrites))continue;
+        if(S.P[d.id]&&pendClaves.has('proyectos/'+d.id))continue;
         const prev=S.P[d.id];
         if(prev&&prev.actualizado===data.actualizado)continue;
         S.P[d.id]=normaliza(clone(data));S._baseAct=S._baseAct||{};S._baseAct[d.id]=data.actualizado;fijaBase(d.id);if(d.id===S.cur)tocoActual=true;
@@ -1810,28 +1834,94 @@ document.addEventListener('change',async e=>{const t=e.target,p=S.P[S.cur];if(!t
 /* ============ Estudio: tu escritorio de trabajo ============ */
 function guardaUltimo(){if(S.vista!=='proyecto'||!S.P[S.cur]||S.cur===HERR_ID)return;try{localStorage.setItem('taller.ultimo',JSON.stringify({id:S.cur,tab:S.tab,ts:Date.now()}))}catch{}}
 function ultimoTrabajo(){let u=null;try{u=JSON.parse(localStorage.getItem('taller.ultimo')||'null')}catch{}if(u&&S.P[u.id])return u;const o=ordenados()[0];return o?{id:o[0],tab:'seisfases',ts:o[1].actualizado}:null}
-function estudioDatos(){const activos=ordenados().filter(([,p])=>p.estado!=='Archivado'&&p.decision!=='Discarded'),proximos_=[],pendientes=[],actividad=[];
-  for(const [id,p] of activos){if(p.entrega&&p.estado!=='Final')proximos_.push({id,p,t:'Entrega del proyecto',fecha:p.entrega});
-    for(const x of entregas(p)){if(x.fecha&&x.estado!=='ok')proximos_.push({id,p,x,t:x.titulo,fecha:x.fecha});if(['des','rev','cor'].includes(x.estado))pendientes.push({id,p,x});for(const h of x.hist)actividad.push({id,p,x,ts:h.ts,t:x.titulo+': '+h.t})}
-    for(const z of p.piezas||[])if(z.creado)actividad.push({id,p,ts:z.creado,t:'Subiste una pieza'+(z.etapa?' ('+z.etapa+')':'')})}
-  proximos_.sort((a,b)=>a.fecha.localeCompare(b.fecha));const orden={cor:0,rev:1,des:2};pendientes.sort((a,b)=>orden[a.x.estado]-orden[b.x.estado]||(b.x.cambiado||b.x.creado)-(a.x.cambiado||a.x.creado));actividad.sort((a,b)=>b.ts-a.ts);
-  return {activos,proximos:proximos_.slice(0,8),pendientes:pendientes.slice(0,8),actividad:actividad.slice(0,8)}}
-function vEstudio(){const D=estudioDatos(),u=ultimoTrabajo(),up=u&&S.P[u.id],tabN=t=>(TABS.find(x=>x[0]===t)||[0,'Etapas'])[1],
+const tieneImg=r=>!!(r&&(r.asset||r.src));
+const esMs=t=>typeof t==='number'?t:(Date.parse(t||'')||0);
+const imgChica=r=>imgAttrs(r.mini?{asset:r.mini}:r);
+const piezaFinal=z=>z.etapa==='Final'||!!z.soltada;
+/* la imagen de la tarjeta, en orden: tu portada, tu boceto más reciente, la última imagen de un entregable. Nunca una referencia ajena ni un relleno. */
+function portadaDe(p){if(tieneImg(p.portada))return {r:p.portada,de:''};
+  const z=(p.piezas||[]).filter(tieneImg).sort((a,b)=>esMs(b.creado)-esMs(a.creado))[0];if(z)return {r:z,de:piezaFinal(z)?'Última pieza final':'Último boceto'};
+  const im=entregas(p).flatMap(x=>x.imgs||[]).filter(tieneImg).sort((a,b)=>esMs(b.ts)-esMs(a.ts))[0];return im?{r:im,de:'Último entregable'}:null}
+const descDe=p=>corto((p.ficha&&p.ficha.descripcion)||(p.concepto&&p.concepto.frase)||(p.brief&&p.brief.texto)||'',170);
+function eventosDe(p){const L=[];for(const x of entregas(p))for(const h of x.hist||[])L.push({ts:esMs(h.ts),t:x.titulo+': '+h.t,x});
+  for(const z of p.piezas||[])if(z.creado)L.push({ts:esMs(z.creado),t:'Subiste '+(z.nombre?'«'+corto(z.nombre,40)+'»':'una pieza')+(z.etapa?' ('+z.etapa+')':''),tab:'bocetos'});
+  for(const r of p.rondas||[])if(r.ts)L.push({ts:esMs(r.ts),t:'Ronda de feedback: '+corto(r.titulo,40),tab:'bocetos'});
+  return L.sort((a,b)=>b.ts-a.ts)}
+function ultimaActividad(p){const e=eventosDe(p)[0],m=esMs(p.actualizado);if(e&&e.ts>=m-864e5)return {ts:e.ts,t:e.t};return m?{ts:m,t:'Cambios en el proyecto'}:e?{ts:e.ts,t:e.t}:null}
+function estHechas(){return S.estHechas=S.estHechas||new Set()}
+function estudioDatos(){const activos=ordenados().filter(([,p])=>p.estado!=='Archivado'&&p.decision!=='Discarded'),fechas=[],pend=[],notas=[],wip=[],actividad=[],H=estHechas();
+  for(const [id,p] of activos){
+    if(p.entrega&&p.estado!=='Final')fechas.push({id,p,t:'Entrega del proyecto',fecha:p.entrega});
+    for(const x of entregas(p)){if(x.fecha&&x.estado!=='ok')fechas.push({id,p,x,t:x.titulo,fecha:x.fecha});
+      if(x.estado!=='ok'||H.has('e:'+x.id))pend.push({id,p,x});
+      if(x.estado!=='ok'){const im=(x.imgs||[]).filter(tieneImg).slice(-1)[0];if(im)wip.push({id,p,x,r:im,ts:esMs(im.ts||x.cambiado||x.creado),t:x.titulo,s:estNom(x.estado)+' · v'+x.imgs.length})}}
+    (p.rondas||[]).forEach(r=>(r.notas||[]).forEach(n=>{if(n.estado==='Pendiente'||H.has('n:'+n.id))notas.push({id,p,r,n})}));
+    for(const z of p.piezas||[])if(tieneImg(z)&&!piezaFinal(z))wip.push({id,p,z,r:z,ts:esMs(z.creado),t:z.nombre||z.etapa||'Boceto',s:z.etapa||'Boceto'});
+    for(const e of eventosDe(p))actividad.push({id,p,...e})}
+  const orden={cor:0,rev:1,des:2,por:3,ok:4};
+  fechas.sort((a,b)=>a.fecha.localeCompare(b.fecha));pend.sort((a,b)=>orden[a.x.estado]-orden[b.x.estado]||(b.x.cambiado||b.x.creado)-(a.x.cambiado||a.x.creado));wip.sort((a,b)=>b.ts-a.ts);actividad.sort((a,b)=>b.ts-a.ts);
+  const tareas=(S.ajustes.tareas||[]).filter(t=>!t.hecha&&t.estado!=='Hecha'&&!(t.reqs&&t.reqs.length&&t.reqs.every(r=>r.ok)));
+  return {activos,fechas,pend,notas,tareas,wip,actividad:actividad.slice(0,6)}}
+const EST_ATAJOS=[['ahora','target','Dibujar 20 min','vista'],['ir-persp','map','Perspectiva','accion'],['luzcolor','spark','Luz y color','herr'],['valores','frame','Grises y color','vista'],['fnd-3d','users','Poses 3D','accion'],['ir-taller','eye','Analizar diseño','accion'],['siluetas','grid','Siluetas','vista'],['biblioteca','book','Referencias','vista'],['pdfport','doc','Portafolio PDF','vista']];
+function vEstudio(){const D=estudioDatos(),u=ultimoTrabajo(),f=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}),hoy=hoyKey(),H=estHechas(),
   abre=(id,etapa,ent)=>`data-act="est-abre" data-id="${esc(id)}"${etapa?` data-k="${etapa}"`:''}${ent?` data-e="${ent}"`:''}`,
-  fila=(attrs,a,b,c)=>`<li><button ${attrs}><b>${esc(a)}</b><span>${esc(b)}</span>${c?`<small>${esc(c)}</small>`:''}</button></li>`,
-  lista_=(tit,L,vacio)=>`<section><h2>${tit}</h2>${L.length?`<ul class="es-l">${L.join('')}</ul>`:`<p class="muted">${vacio}</p>`}</section>`;
-  return `<div class="es">
-  ${up?`<section class="es-cont"><span class="lbl">Continuar donde lo dejaste</span><h2>${esc(up.nombre)}</h2><p class="muted">${esc(tabN(u.tab))} · ${esc(progTxt(up))}</p><div class="prow"><button class="btn pri" data-act="est-continuar">Continuar</button><button class="btn" data-act="nuevo">Nuevo proyecto</button></div></section>`:`<section class="es-cont"><span class="lbl">Empieza aquí</span><h2>Tu primer proyecto</h2><p class="muted">Un proyecto reúne la idea, las referencias, los diseños, los entregables y la presentación.</p><div class="prow"><button class="btn pri" data-act="nuevo">Crear un proyecto</button></div></section>`}
-  <section><h2>Proyectos activos <small class="muted">${D.activos.length}</small></h2>${D.activos.length?`<div class="es-proy">${D.activos.slice(0,8).map(([id,p])=>{const g=progresoDe(p),img=p.portada||(p.piezas||[]).find(z=>z.asset||z.src);return `<button class="es-p" ${abre(id)}><span class="es-img">${img?`<img ${imgAttrs(img.mini?{asset:img.mini}:img)} alt="" loading="lazy">`:'<em>Sin portada</em>'}</span><b>${esc(p.nombre)}</b><span class="muted">${esc(p.tipo||'')}${p.entrega?' · '+esc(p.entrega):''}</span><span class="bar"><i style="width:${g.pct||0}%"></i></span><small>${esc(progTxt(p))}</small></button>`}).join('')}</div>`:'<p class="muted">No tienes proyectos activos.</p>'}</section>
-  <div class="es-cols">
-  ${lista_('Entregables próximos',D.proximos.map(x=>fila(abre(x.id,x.x?.etapa,x.x?.id),x.t,x.p.nombre,x.fecha<hoyKey()?'Venció el '+x.fecha:x.fecha)),'Ningún entregable tiene fecha. Ponla en la etapa del proyecto para verlo aquí.')}
-  ${lista_('Pendientes',D.pendientes.map(x=>fila(abre(x.id,x.x.etapa,x.x.id),x.x.titulo,x.p.nombre,estNom(x.x.estado))),'Nada en desarrollo, en revisión ni con correcciones.')}
-  ${lista_('Actividad reciente',D.actividad.map(x=>fila(abre(x.id,x.x?.etapa,x.x?.id),x.t,x.p.nombre,fecha(x.ts))),'Aquí aparecerá lo que vayas haciendo en tus proyectos.')}
-  </div></div>`}
+  tabN=t=>(TABS.find(x=>x[0]===t)||[0,'Etapas'])[1],
+  cuando=k=>{const d=diasHasta(k);return d<0?'Venció hace '+(-d)+(d===-1?' día':' días'):d===0?'Vence hoy':d===1?'Vence mañana':'En '+d+' días'},
+  sec=(id,tit,n,cuerpo,extra='')=>`<section class="ini-sec ini-${id}" aria-labelledby="ini-h-${id}"><div class="ini-h"><h2 id="ini-h-${id}">${tit}${n?` <small>${n}</small>`:''}</h2>${extra}</div>${cuerpo}</section>`;
+  const orden=D.activos.slice().sort((a,b)=>(u&&b[0]===u.id?1:0)-(u&&a[0]===u.id?1:0));
+  const tarjeta=([id,p],i)=>{const g=progresoDe(p),c=portadaDe(p),a=ultimaActividad(p),d=descDe(p),ult=u&&u.id===id,venc=p.entrega&&p.estado!=='Final'&&p.entrega<hoy;
+    return `<article class="ini-card${i===0?' ini-card-main':''}" data-pid="${esc(id)}"><button class="ini-img" ${abre(id)} aria-label="Abrir ${esc(p.nombre)}">${c?`<img ${imgChica(c.r)} alt="" loading="lazy">${c.de?`<span>${c.de}</span>`:''}`:'<em>Sin portada ni bocetos todavía</em>'}</button>
+    <div class="ini-info"><p class="ini-meta"><span>${esc(p.estado||'Sin estado')}</span><span>${esc(p.tipo||'')}</span>${p.entrega?`<span class="${venc?'ini-venc':''}">${venc?'Entrega vencida':'Entrega'} ${esc(p.entrega)}</span>`:''}</p>
+      <h3>${esc(p.nombre)}</h3>${d?`<p class="ini-desc">${esc(d)}</p>`:'<p class="ini-desc ini-falta">Sin descripción. Escríbela en la ficha del proyecto.</p>'}
+      <div class="ini-prog">${g.total?`<span class="bar" role="img" aria-label="${g.pct}% de entregables terminados"><i style="width:${g.pct}%"></i></span>`:''}<small>${esc(progTxt(p))}</small></div>
+      <p class="ini-act">${a?`${esc(fecha(a.ts))} · ${esc(corto(a.t,70))}`:'Sin actividad todavía'}</p>
+      <div class="ini-btns">${ult?`<button class="btn sm pri" data-act="est-continuar">Continuar en ${esc(tabN(u.tab))}</button>`:`<button class="btn sm pri" ${abre(id)}>Abrir</button>`}${ult?`<button class="btn sm" ${abre(id)}>Etapas</button>`:''}<button class="btn sm ghost" data-act="est-refs" data-id="${esc(id)}">Referencias</button></div></div></article>`};
+  const proy=D.activos.length?`<div class="ini-cards">${orden.map(tarjeta).join('')}</div>`:`<div class="ini-vacio"><p>Todavía no tienes proyectos activos. Un proyecto reúne la idea, las referencias, los diseños, los entregables y la presentación.</p><button class="btn pri" data-act="nuevo">Crear mi primer proyecto</button></div>`;
+  const opProy=sel=>D.activos.map(([id,p])=>`<option value="${esc(id)}"${id===sel?' selected':''}>${esc(p.nombre)}</option>`).join('');
+  const wipProy=S.estWipP&&S.P[S.estWipP]?S.estWipP:(u&&D.activos.some(a=>a[0]===u.id)?u.id:D.activos[0]&&D.activos[0][0]);
+  const wip=(D.wip.length?`<div class="ini-wip-g">${D.wip.slice(0,S.estWipTodo?24:8).map(w=>`<button class="ini-w" ${w.x?abre(w.id,w.x.etapa,w.x.id):`data-act="est-pieza" data-id="${esc(w.id)}"`}><img ${imgChica(w.r)} alt="${esc(w.t)}" loading="lazy"><b>${esc(corto(w.t,38))}</b><small>${esc(w.s)} · ${esc(corto(w.p.nombre,24))}${w.ts?' · '+esc(fecha(w.ts)):''}</small></button>`).join('')}</div>${D.wip.length>8?`<button class="btn sm ghost" data-act="est-wip-mas">${S.estWipTodo?'Ver menos':'Ver más ('+D.wip.length+')'}</button>`:''}`:'<p class="muted">Aún no hay trabajo en proceso. Sube un boceto y aparecerá aquí.</p>');
+  const wipSubir=D.activos.length?`<div class="ini-subir"><select id="ini-wip-p" aria-label="Proyecto para el nuevo boceto">${opProy(wipProy)}</select><label class="btn sm" for="ini-wip-f">Subir boceto</label><input type="file" id="ini-wip-f" accept="image/*" multiple hidden></div>`:'';
+  const fila=(clase,principal,control)=>`<li class="${clase}">${principal}${control||''}</li>`,
+    abreTxt=(attrs,a,b)=>`<button class="ini-t" ${attrs}><b>${esc(a)}</b><span>${esc(b)}</span></button>`;
+  const lFechas=D.fechas.slice(0,5).map(x=>fila(x.fecha<hoy?'ini-venc':'',abreTxt(abre(x.id,x.x&&x.x.etapa,x.x&&x.x.id),x.t,x.p.nombre+' · '+x.fecha),`<em>${cuando(x.fecha)}</em>`));
+  const lEnt=D.pend.slice(0,S.estEntTodo?99:6).map(x=>fila(x.x.estado==='ok'?'ini-hecho':'',abreTxt(abre(x.id,x.x.etapa,x.x.id),x.x.titulo,x.p.nombre+' · '+etNom(x.x.etapa)),`<select data-es-est="${esc(x.x.id)}" data-pid="${esc(x.id)}" aria-label="Estado de ${esc(x.x.titulo)}">${EST5.map(([k,n])=>`<option value="${k}"${k===x.x.estado?' selected':''}>${n}</option>`).join('')}</select>`));
+  const nPend=D.notas.filter(x=>x.n.estado==='Pendiente').length;
+  const lNotas=D.notas.slice(0,S.estNotasTodo?99:5).map(x=>{const hecha=x.n.estado!=='Pendiente';return fila(hecha?'ini-hecho':'',abreTxt(`data-act="est-pieza" data-id="${esc(x.id)}"`,x.n.t,x.p.nombre+' · '+x.r.titulo),`<button class="btn xs" data-act="est-nota" data-id="${esc(x.id)}" data-n="${esc(x.n.id)}" aria-pressed="${hecha}">${hecha?'Reabrir':'Corregida'}</button>`)});
+  const lTar=D.tareas.slice(0,4).map(t=>fila('',abreTxt(`data-act="est-tarea" data-id="${esc(t.id)}"`,t.titulo||'Tarea','Tarea del taller'),''));
+  const grupo=(tit,L,mas)=>L.length?`<h4>${tit}</h4><ul class="ini-l">${L.join('')}</ul>${mas||''}`:'';
+  const mas=(tot,tope,k,ab)=>tot>tope?`<button class="btn xs ghost" data-act="est-mas" data-k="${k}">${ab?'Ver menos':'Ver todo ('+tot+')'}</button>`:'';
+  const nuevoPend=D.activos.length?`<form class="ini-nuevo" data-es-form="1"><label class="lbl" for="ini-n-t">Anotar un entregable</label><input type="text" id="ini-n-t" maxlength="140" placeholder="Por ejemplo: 3 claves de luz del templo" value="${esc(S.estNuevoT||'')}"><div class="ini-nuevo-f"><select id="ini-n-p" aria-label="Proyecto del entregable">${opProy(wipProy)}</select><select id="ini-n-e" aria-label="Etapa del entregable">${ET6.map(e=>`<option value="${e[0]}"${e[0]===(S.estNuevoE||'exploracion')?' selected':''}>${e[1]}</option>`).join('')}</select><button type="submit" class="btn sm pri">Agregar</button></div><p class="mesa-err" id="ini-n-err" role="alert">${esc(S.estErr||'')}</p></form>`:'';
+  const pendHTML=(grupo('Fechas',lFechas)+grupo('Entregables',lEnt,mas(D.pend.length,6,'estEntTodo',S.estEntTodo))+grupo('Notas de feedback'+(nPend?' ('+nPend+')':''),lNotas,mas(D.notas.length,5,'estNotasTodo',S.estNotasTodo))+grupo('Tareas',lTar)||'<p class="muted">No hay nada pendiente.</p>')+nuevoPend;
+  const act=D.actividad.length?`<ul class="ini-l">${D.actividad.map(e=>fila('',abreTxt(e.x?abre(e.id,e.x.etapa,e.x.id):`data-act="est-pieza" data-id="${esc(e.id)}"`,corto(e.t,80),e.p.nombre+' · '+fecha(e.ts)),'')).join('')}</ul>`:'<p class="muted">Aquí aparecerá lo que vayas haciendo.</p>';
+  return `<div class="ini">
+  <header class="ini-head"><div><span class="lbl">${esc(f)}</span><h1 class="ini-hola"><span>${esc(cnSaludo())}</span></h1></div><button class="btn pri" data-act="nuevo">Nuevo proyecto</button></header>
+  <nav class="ini-atajos" aria-label="Herramientas principales">${EST_ATAJOS.map(([v,i,n,t])=>`<button ${t==='vista'?`data-act="vista" data-v="${v}"`:t==='herr'?`data-act="herr" data-t="${v}"`:`data-act="${v}"`}>${ICO[i]}<span>${n}</span></button>`).join('')}</nav>
+  <div class="ini-grid"><div class="ini-col ini-izq">${sec('proy','Proyectos activos',D.activos.length||'',proy)}${sec('wip','WIP reciente',D.wip.length||'',wip,wipSubir)}</div>
+  <div class="ini-col ini-der">${sec('pend','Pendientes',D.pend.filter(x=>x.x.estado!=='ok').length+nPend+D.tareas.length||'',pendHTML)}${sec('hist','Actividad reciente','',act)}</div></div></div>`}
+function estIr(id,tab,etapa,ent){if(!S.P[id])return;S.cur=id;S.vista='proyecto';S.tab=tab;S.hist=null;S.confirmDel=false;S.ai={};if(etapa){const M=mesaSt();M.etapa=etapa;M.abierto=ent||null}recordar();render();window.scrollTo(0,0)}
+function estCambiaEstado(pid,eid,estado){const p=S.P[pid],x=p&&entregas(p).find(v=>v.id===eid);if(!x)return;const antes=x.estado;if(!entCambia(x,'estado',estado))return;if(estado==='ok')estHechas().add('e:'+eid);marcarPid(pid);renderMain();
+  toastDeshacer('«'+corto(x.titulo,40)+'»: '+estNom(estado),()=>{entCambia(x,'estado',antes);marcarPid(pid);renderMain()})}
+const INI_ACC=new Set(['est-continuar','est-abre','est-refs','est-pieza','est-tarea','est-wip-mas','est-mas','est-nota']);
 function estudioAccion(a,ds){const u=ultimoTrabajo();
-  const ir=(id,tab,etapa,ent)=>{if(!S.P[id])return;S.cur=id;S.vista='proyecto';S.tab=tab;S.hist=null;S.confirmDel=false;if(etapa){const M=mesaSt();M.etapa=etapa;M.abierto=ent||null}recordar();render();window.scrollTo(0,0)};
-  if(a==='est-continuar'&&u){ir(u.id,u.tab||'seisfases');return}
-  if(a==='est-abre')ir(ds.id,'seisfases',ds.k,ds.e)}
+  if(a==='est-continuar'){if(u)estIr(u.id,u.tab||'seisfases');return}
+  if(a==='est-abre'){estIr(ds.id,'seisfases',ds.k,ds.e);return}
+  if(a==='est-refs'){estIr(ds.id,'refs');return}
+  if(a==='est-pieza'){estIr(ds.id,'bocetos');return}
+  if(a==='est-tarea'){S.tareaSel=ds.id;S.vista='diario';render();window.scrollTo(0,0);return}
+  if(a==='est-wip-mas'){S.estWipTodo=!S.estWipTodo;renderMain();return}
+  if(a==='est-mas'){S[ds.k]=!S[ds.k];renderMain();return}
+  if(a==='est-nota'){const p=S.P[ds.id],n=p&&(p.rondas||[]).flatMap(r=>r.notas||[]).find(v=>v.id===ds.n);if(!n)return;const antes=n.estado;n.estado=antes==='Pendiente'?'Corregida':'Pendiente';estHechas().add('n:'+n.id);marcarPid(ds.id);renderMain()}}
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.dataset||!f.dataset.esForm)return;e.preventDefault();const t=f.querySelector('#ini-n-t'),pid=f.querySelector('#ini-n-p').value,etapa=f.querySelector('#ini-n-e').value,p=S.P[pid];if(!p)return;
+  const x=entNuevo(p,etapa,'',t.value);if(!x){S.estErr='Escribe qué tienes que entregar.';renderMain();document.getElementById('ini-n-t')?.focus();return}S.estErr='';S.estNuevoT='';S.estNuevoE=etapa;S.estWipP=pid;marcarPid(pid);renderMain();toast('Anotado en '+p.nombre+' · '+etNom(etapa))});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='ini-n-t')S.estNuevoT=e.target.value});
+document.addEventListener('change',async e=>{const t=e.target;if(!t)return;
+  if(t.dataset&&t.dataset.esEst){estCambiaEstado(t.dataset.pid,t.dataset.esEst,t.value);return}
+  if(t.id==='ini-wip-p'){S.estWipP=t.value;return}
+  if(t.id==='ini-wip-f'&&t.files&&t.files.length){const pid=document.getElementById('ini-wip-p').value,files=[...t.files];t.value='';let n=0;
+    for(const f of files){if(!/^image\//.test(f.type)&&!/\.(heic|heif)$/i.test(f.name)){toast('«'+f.name+'» no es una imagen');continue}
+      try{const r=await guardarImagen(f,{mini:true}),p=S.P[pid];if(!p)return;(p.piezas=p.piezas||[]).push({id:uid(),etapa:'Boceto',nombre:f.name.replace(/\.[^.]+$/,''),nota:'',creado:Date.now(),...r});n++}
+      catch(err){console.error(err);toast('No se pudo subir «'+f.name+'»: revisa tu conexión e inténtalo otra vez',5000)}}
+    if(n){S.estWipP=pid;marcarPid(pid);if(S.vista==='inicio')renderMain();toast((n===1?'Boceto guardado en ':n+' bocetos guardados en ')+S.P[pid].nombre)}}});
 /* accesibilidad: ningún campo queda sin nombre para lectores de pantalla */
 function etiquetaCampos(){const m=document.getElementById('main');if(!m)return;
   for(const x of m.querySelectorAll('input:not([type=hidden]):not([type=file]),select,textarea')){if(x.getAttribute('aria-label')||x.closest('label')||x.title||x.placeholder||(x.id&&m.querySelector('label[for="'+CSS.escape(x.id)+'"]')))continue;
@@ -1845,26 +1935,29 @@ function renderSide(){
   if(document.activeElement?.id==='f-buscar'){const l=$('#plist-proy');if(l)l.innerHTML=listaProyectos();return}
   const nav=(v,ico,n,extra='')=>`<button class="pitem" data-act="vista" data-v="${v}" title="${esc(PQ[v]?PQ[v][1]:'')}" aria-current="${S.vista===v}">${ICO[ico]}<span class="n">${n}</span>${extra}</button>`;
   const side=$('#side');side.classList.toggle('open',!!S.menu);
+  const grupo=([tit,ids])=>`<div class="plist navlinks">${tit?`<span class="lbl nav-g">${tit}</span>`:''}${ids.map(id=>HUBS.find(x=>x[0]===id)).filter(Boolean).map(h=>{const v0=h[3][0][0],cur=!!hubDe(S.vista)&&hubDe(S.vista)===h,nPost=h[0]==='empleo'?lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length:0,nPronto=h[0]==='inicio'?proximos(99).filter(e=>diasHasta(e.fecha)<=3).length:0,badge=h[0]==='mejorar'&&racha()?`<span class="s">${racha()} d</span>`:nPost?`<span class="s">${nPost}</span>`:nPronto?`<span class="s">${nPronto}</span>`:'';return `<button class="pitem" data-act="vista" data-v="${v0}" aria-current="${cur}" title="${esc(h[3].map(x=>x[1]).join(' · '))}">${ICO[h[2]]||ICO.spark}<span class="n">${esc(h[1])}</span>${badge}</button>`}).join('')}</div>`;
+  const enSis=['papelera','avisos'].includes(S.vista)||(hubDe(S.vista)||[])[0]==='mas';
   side.innerHTML=`
     <div class="brand"><img src="icon.svg" alt="" class="brand-ic"><span class="brand-n">Taller</span><small>Sistema de concept art</small></div>
-    <div style="padding:0 10px"><button class="ir-btn" data-act="ir-abre" aria-label="Ir a cualquier pantalla"><span>🔍 Ir a…</span><kbd>Ctrl K</kbd></button></div>
-    ${HUB_GRUPOS.map(([tit,ids])=>`<div class="plist navlinks">${tit?`<span class="lbl nav-g">${tit}</span>`:''}${ids.map(id=>HUBS.find(x=>x[0]===id)).filter(Boolean).map(h=>{const v0=h[3][0][0],cur=!!hubDe(S.vista)&&hubDe(S.vista)===h,badge=h[0]==='mejorar'&&racha()?`<span class="s">🔥${racha()}</span>`:h[0]==='empleo'&&lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length?`<span class="s">${lista('postulaciones').filter(x=>!['Oferta','Rechazado'].includes(x.estado)).length}</span>`:h[0]==='inicio'&&proximos(99).filter(e=>diasHasta(e.fecha)<=3).length?`<span class="s">${proximos(99).filter(e=>diasHasta(e.fecha)<=3).length}</span>`:'';return `<button class="pitem" data-act="vista" data-v="${v0}" aria-current="${cur}" title="${esc(h[3].map(x=>x[1]).join(' · '))}">${ICO[h[2]]||ICO.spark}<span class="n">${esc(h[1])}</span>${badge}</button>`}).join('')}</div>`).join('')}
-    <div class="field navlinks"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl">Proyectos</span><button class="btn sm pri" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
-      ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
-      <div class="plist" id="plist-proy">${listaProyectos()}</div>
-      ${nav('papelera','trash','Papelera')}</div>
-    ${window.PC_SHIM?`<div class="navlinks"><button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button></div>`:''}
+    <div style="padding:0 10px"><button class="ir-btn" data-act="ir-abre" aria-label="Ir a cualquier pantalla"><span>Ir a…</span><kbd>Ctrl K</kbd></button></div>
+    ${grupo(HUB_GRUPOS[0])}
+    <div class="field navlinks nav-proy"><div class="prow" style="justify-content:space-between;padding:0 10px"><span class="lbl nav-g">Proyectos</span><button class="btn sm ghost" data-act="nuevo" aria-label="Nuevo proyecto">＋ Nuevo</button></div>
+      ${Object.keys(S.P).length>4?`<input type="text" id="f-buscar" aria-label="Buscar proyecto" placeholder="Buscar proyecto…" value="${esc(S.q||'')}" style="border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px">`:''}
+      <div class="plist" id="plist-proy">${listaProyectos()}</div></div>
+    ${HUB_GRUPOS.slice(1).filter(g=>g[0]!=='Sistema').map(grupo).join('')}
+    <details class="navlinks nav-sis" id="nav-sis" ${S.navSis||enSis?'open':''}><summary class="lbl nav-g">Sistema y cuenta</summary>${grupo(['',HUB_GRUPOS.find(g=>g[0]==='Sistema')[1]])}${nav('papelera','trash','Papelera')}${window.PC_SHIM?`<button class="pitem" data-act="vista" data-v="avisos" aria-current="${S.vista==='avisos'}">${ICO.mail}<span class="n">Avisos por correo</span></button><button class="pitem" data-act="ia">${ICO.spark}<span class="n">Conexión con Claude</span></button><button class="pitem" data-act="salir">${ICO.out}<span class="n">Cerrar sesión</span></button>`:''}</details>
     <span class="status" id="status">${S.modo==='local'?'Guardado solo en este navegador':S.modo==='error'?'Sin conexión al almacenamiento':''}</span>`;
+  const sis=document.getElementById('nav-sis');sis.ontoggle=()=>{S.navSis=sis.open};
   const bb=$('#bottombar');if(bb){const b=(act,v,ico,n,cur)=>`<button class="bb ${act==='nuevo'?'fab':''}" data-act="${act}" ${v?`data-v="${v}"`:''} aria-current="${!!cur}">${ICO[ico]}<span>${n}</span></button>`;
-    bb.innerHTML=b('vista','inicio','home','Hoy',S.vista==='inicio'&&!S.menu)+b('vista','ahora','target','Dibujar',S.vista==='ahora'&&!S.menu)+b('herr','','frame','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','progreso','chart','Avance',S.vista==='progreso'&&!S.menu)+b('menu','','grid','Más',S.menu)}
+    bb.innerHTML=b('vista','inicio','home','Estudio',S.vista==='inicio'&&!S.menu)+b('vista','ahora','target','Dibujar',S.vista==='ahora'&&!S.menu)+b('herr','','frame','Herramientas',S.vista==='proyecto'&&S.cur===HERR_ID&&!S.menu)+b('vista','progreso','chart','Avance',S.vista==='progreso'&&!S.menu)+b('menu','','grid','Más',S.menu)}
   const sc=$('#scrim');if(sc)sc.className=S.menu?'scrim':'';
 }
 function listaProyectos(){
   const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''),q=norm(S.q||''),filt=([,p])=>!q||norm(p.nombre+' '+p.tipo+' '+p.encargo).includes(q);
   const todos=ordenados().filter(filt),activos=todos.filter(([,p])=>p.estado!=='Archivado'),arch=todos.filter(([,p])=>p.estado==='Archivado'),
     chicos=Object.entries(S.P).filter(([,p])=>!p.libre&&esChico(p)&&p.estado!=='Archivado').filter(filt).sort((a,b)=>(b[1].actualizado||0)-(a[1].actualizado||0));
-  const item=([id,p])=>{const s=salud(p);return `<button class="pitem" data-act="abrir" data-id="${esc(id)}" aria-current="${S.vista==='proyecto'&&id===S.cur}">
-      <span class="dotp" style="background:${s.pct>=75?'var(--ok)':s.pct>=35?'var(--c-tecnica)':'var(--ink3)'}"></span><span class="n">${esc(p.nombre)}</span><span class="s">${s.pct}%</span>
+  const item=([id,p])=>{const g=progresoDe(p);return `<button class="pitem" data-act="abrir" data-id="${esc(id)}" aria-current="${S.vista==='proyecto'&&id===S.cur}">
+      <span class="dotp" style="background:${g.pct===100?'var(--ok)':g.total?'var(--accent)':'var(--ink3)'}"></span><span class="n">${esc(p.nombre)}</span><span class="s" title="${esc(progTxt(p))}">${g.total?g.pct+'%':''}</span>
       <span class="meta">${esc(p.tipo)} · ${esc(p.estado)}</span></button>`};
   if(!todos.length&&!chicos.length)return `<p class="muted">${q?'Sin resultados.':'Todavía no hay proyectos.'}</p>`;
   return activos.map(item).join('')+(arch.length?`<button class="pitem" data-act="ver-arch"><span class="n" style="color:var(--ink3)">${S.verArch?'Ocultar':'Ver'} archivados (${arch.length})</span></button>${S.verArch?arch.map(item).join(''):''}`:'')
@@ -2142,7 +2235,7 @@ function vHojaEditar(p){
 
 const hoyN=()=>Math.floor(Date.now()/864e5);
 const asLink=n=>`https://www.google.com/search?q=${encodeURIComponent((n||'')+' artstation')}`;
-function vInicio(){return cnSaludoHTML()+vEstudio()+`<details class="box cm-mas"><summary class="lbl" style="cursor:pointer">Mi camino: sesión de hoy, metas y avance</summary>${cnContinuarHTML()}${vCamino()}${vInicioViejo()}</details>`}
+function vInicio(){return vEstudio()+`<details class="box cm-mas"><summary class="lbl" style="cursor:pointer">Mi camino: sesión de hoy, metas y avance</summary>${cnContinuarHTML()}${vCamino()}${vInicioViejo()}</details>`}
 
 /* ============ MI CAMINO: el para qué de toda la app ============
    La app existe para una meta tuya (la de «Mis metas»). Todo lo que hay se agrupa en cuatro frentes y cada pantalla dice para qué sirve y qué sale de ella:
@@ -2589,8 +2682,8 @@ async function subir(files){
 const otrosT={};
 function marcarPid(pid){
   if(pid===S.cur){marcar();return}
-  const p=S.P[pid];if(!p)return;p.actualizado=Date.now();setStatus('Guardando…');clearTimeout(otrosT[pid]);
-  otrosT[pid]=setTimeout(async()=>{try{if(S.db)await S.db.collection('proyectos').doc(pid).set(clone(p));else lsSet();setStatus('Guardado')}catch{setStatus('No se pudo guardar')}},700);
+  const p=S.P[pid];if(!p)return;p.actualizado=Date.now();setStatus('Guardando…');pendProgramar('proyectos/'+pid,()=>S.P[pid]?{data:S.P[pid],base:S._baseAct?.[pid]??null}:null);
+  clearTimeout(otrosT[pid]);otrosT[pid]=setTimeout(()=>{delete otrosT[pid];guardar(false,pid)},700);
 }
 const hoyKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 
@@ -5278,7 +5371,6 @@ document.addEventListener('pointermove',e=>{if(cnPaDrag)cnPaDesdeRueda(e,true)})
 const _v3dPanel0=v3dPanel;window.v3dPanel=function(){const r=_v3dPanel0.apply(this,arguments);try{cnV3Aplica()}catch(e){}return r};
 const _renderMainInner1=renderMainInner;window.renderMainInner=function(){try{cnTemaAplica();cnV3Aplica()}catch(e){}const r=_renderMainInner1.apply(this,arguments);if(S.vista==='paleta')cnPaPinta();return r};
 document.addEventListener('DOMContentLoaded',()=>{try{cnTemaAplica()}catch(e){}});
-function cnSaludoHTML(){const T=cnTema(),f=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});return `<header class="hero"><span class="hero-fecha">${esc(f)}</span>${T.saludo?`<h2>${esc(cnSaludo())}</h2><p>${esc(cnTip())}</p>`:''}</header>`}
 /* ================= Secciones: 36 pantallas agrupadas en 10, sin borrar ninguna ================= */
 const HUBS=[
  ['inicio','Estudio','home',[['inicio','Escritorio'],['calendario','Calendario'],['metas','Mis metas']]],
@@ -17293,11 +17385,11 @@ async function accionTp(a,el,p,ds){
     case 'bib-clasifica':{let n=0;for(const x of todasRefs()){if((x.r.tema||'').trim())continue;const t=temaAuto(x.r);if(t){x.r.tema=t;n++;marcarPid(x.pid)}}toast(n+' clasificadas por tema');renderMain();break}
     case 'bib-del':{const [pid,id]=ds.k.split('|'),p=S.P[pid];if(!p)break;bibQuita([{pid,r:{id}}]);renderMain();break}
     case 'bib-copiar':{const [pid,id]=ds.k.split('|'),sel=document.querySelector('[data-bdest="'+ds.k+'"]'),dest=sel?.value,r=S.P[pid]?.refs.find(x=>x.id===id),P2=S.P[dest];if(!r||!P2){toast('Elige a qué proyecto copiarla');break}if((P2.refs||[]).some(x=>x.src&&x.src===r.src)){toast('Esa ya está en ese proyecto');break}P2.refs.push({...clone(r),id:uid(),creado:Date.now()});marcarPid(dest);toast('Copiada a «'+(P2.libre?'Herramientas':P2.nombre)+'»');break}
-    case 'confl-sobrescribir':{const id=ds.id||S.cur;if(S.conflicto)delete S.conflicto[id];p.actualizado=Date.now();await guardar(true);render();toast('Guardado: tu versión quedó encima');break}
-    case 'confl-recargar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(vivo.exists){S.P[id]=normaliza(clone(vivo.data()));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.data().actualizado;fijaBase(id)}if(S.conflicto)delete S.conflicto[id];S.dirty=false;render();toast('Traído lo más nuevo')}catch{toast('No se pudo recargar')}break}
+    case 'confl-sobrescribir':{const id=ds.id||S.cur;if(S.conflicto)delete S.conflicto[id];S.P[id].actualizado=Date.now();await guardar(true,id);render();toast('Guardado: tu versión quedó encima');break}
+    case 'confl-recargar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(vivo.exists){S.P[id]=normaliza(clone(vivo.data()));S._baseAct=S._baseAct||{};S._baseAct[id]=vivo.data().actualizado;fijaBase(id)}if(S.conflicto)delete S.conflicto[id];S.dirty=false;await pendQuita('proyectos/'+id);render();toast('Traído lo más nuevo')}catch{toast('No se pudo recargar')}break}
     case 'confl-combinar':{const id=ds.id||S.cur;try{const vivo=await S.db.doc('proyectos/'+id).get();if(!vivo.exists){toast('No encontré la versión nueva');break}
       const t=vivo.data(),m=clone(S.P[id]),b=S._base?.[id]||null,r=normaliza(mezcla3(b,m,t));r.actualizado=Date.now();S.P[id]=r;if(S.conflicto)delete S.conflicto[id];
-      await guardar(true);render();toast(b?'Combinado: lo nuevo y lo que cambiaste tú':'Combinado (sin punto de comparación: lo tuyo mandó donde chocaron)')}catch(e){console.error(e);toast('No se pudo combinar')}break}
+      await guardar(true,id);render();toast(b?'Combinado: lo nuevo y lo que cambiaste tú':'Combinado (sin punto de comparación: lo tuyo mandó donde chocaron)')}catch(e){console.error(e);toast('No se pudo combinar')}break}
     default:return false}
   return true}
 
@@ -17570,7 +17662,7 @@ async function accionBase(a,el){
   if(a==='tp-carpeta'){tpCarpeta();return}
   if(a.startsWith('pdfp-')){pdfpAccion(a,ds);return}
   if(a.startsWith('mesa-')){mesaAccion(a,ds);return}
-  if(a==='est-continuar'||a==='est-abre'){estudioAccion(a,ds);return}
+  if(INI_ACC.has(a)){estudioAccion(a,ds);return}
   switch(a){
     case 'herr':herrAbre(ds.t);break;
     case 'comp-abrir':C.pend={pid:S.cur,lista:'piezas',id:ds.id};herrAbre('comp');break;
@@ -17627,7 +17719,7 @@ async function accionBase(a,el){
     case 'ref-no':reemplazarRef(p,ds.id);break;
     case 'unzoom':$('#overlay').innerHTML='';break;
     case 'borrar':{if(!S.confirmDel){S.confirmDel=true;renderMain();return}
-      const id=S.cur;clearTimeout(saveT);await snapshot(id,true);S.dirty=false;delete S.P[id];S.confirmDel=false;
+      const id=S.cur;clearTimeout(saveT);saveId=null;clearTimeout(otrosT[id]);delete otrosT[id];await snapshot(id,true);await pendQuita('proyectos/'+id);S.dirty=false;delete S.P[id];S.confirmDel=false;
       try{if(S.db)await S.db.collection('proyectos').doc(id).delete();else lsSet()}catch{}
       S.cur=ordenados()[0]?.[0]||null;if(!S.cur)S.vista='inicio';recordar();render();toast('Proyecto borrado');break}
     case 'pap-del':{const k='pap:'+ds.pid;if(S.confirmLi!==k){S.confirmLi=k;renderMain();return}S.confirmLi=null;

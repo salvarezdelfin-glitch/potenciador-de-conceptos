@@ -44,6 +44,8 @@ let out = head + src.replace(marker, libs + marker);
 out = out.replace('</style>\n\n<div class="app">', '</style>\n</head>\n<body>\n<div class="app">');
 if (!out.includes('</head>')) throw new Error('No pude cerrar <head>');
 out += '\n</body>\n</html>\n';
+// Guarda: si algún script no compila (por ejemplo, una constante declarada dos veces), no se escribe nada.
+{ const vm = require('vm'); for (const m of out.matchAll(/<script>([\s\S]*?)<\/script>/g)) { try { new vm.Script(m[1]); } catch (e) { console.error('Error de sintaxis, no se genera la app: ' + e.message); process.exit(1); } } }
 fs.writeFileSync(path.join(__dirname, 'index.html'), out);
 fs.writeFileSync(path.join(__dirname, 'sw.js'), fs.readFileSync(path.join(__dirname, 'src', 'sw.js'), 'utf8').replace('__V__', v));
 console.log('index.html listo (' + (out.length / 1024).toFixed(0) + ' KB), versión ' + v);
