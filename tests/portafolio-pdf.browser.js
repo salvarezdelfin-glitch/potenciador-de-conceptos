@@ -14,6 +14,7 @@
     S.vista='pdfport';render();await new Promise(r=>setTimeout(r,800));ok('la pantalla lista las piezas aprobadas',document.querySelectorAll('.pdfp-f').length===2);
     /* editor de páginas */
     pgUsaSet('concept');const st=pgEst(1);st.t='X';st.esq=28;st.num=false;st.cred='Cr';st.tOn=false;let e=null;try{await pgRender(1,true)}catch(x){e=x.message}ok('la página se dibuja con esquinas, sin número y con crédito',!e,e||'');
+    {const C2=pdfCfg();C2.perfil='estudios';C2.chk={};const h=pdfEstudiosHTML();ok('revisión para Disney, DreamWorks y Netflix',/Walt Disney/.test(h)&&/DreamWorks/.test(h)&&/Netflix/.test(h)&&PDF_PERFIL.estudios.pide.length>=3);const p0=pdfSelecc();ok('una casilla marcada por ti sube el porcentaje',(()=>{const a1=pdfEstudiosHTML().match(/([0-9]+)%/g).join();C2.chk.persp=true;C2.chk.luz=true;return pdfEstudiosHTML().match(/([0-9]+)%/g).join()!==a1})());C2.chk={};C2.perfil='juegos'}
     ok('hay consejos por plantilla',Object.keys(PG_TIPS).length===5);delete S.P['tpdf'];st.esq=0;st.num=true;st.cred='';st.tOn=true;
   }catch(e){ok('excepción',false,e.message)}
   return {todo:out.every(x=>x.ok),fallos:out.filter(x=>!x.ok),total:out.length}})()

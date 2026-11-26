@@ -1,4 +1,4 @@
-# Penumbra
+# Taller
 
 Sistema privado de conceptualización para concept art e ilustración: Concepto, Mood, Técnica y 3 pilares de Art Direction, referencias con porqué, pipeline de producción, crítica profesional y estilo propio.
 
