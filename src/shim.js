@@ -1,4 +1,4 @@
-/* Potenciador de Conceptos — capa para GitHub Pages.
+/* Penumbra — capa para GitHub Pages.
    Da a la app las mismas piezas que tiene como artifact (db, assets, sample, downloads)
    usando Supabase: login, datos privados por RLS, imágenes en bucket privado y Claude vía Edge Function. */
 (function(){
@@ -44,7 +44,7 @@
     document.querySelector('.pcx.login')?.remove();
     let recordado='';try{recordado=localStorage.getItem('pc-email')||''}catch{}
     const v=el(`<div class="pcx login"><form class="pcx-card" id="pcx-login" method="post" action="#" autocomplete="on">
-      <h1>Potenciador<br>de Conceptos</h1><p>Tu sistema privado. Entra una vez: la sesión se queda abierta en este aparato.</p>
+      <h1>Penumbra</h1><p>Tu sistema privado de concept art. Entra una vez: la sesión se queda abierta en este aparato.</p>
       <input type="email" id="pcx-email" name="email" autocomplete="username" inputmode="email" autocapitalize="off" placeholder="Correo" value="${escH(recordado)}" required>
       <input type="password" id="pcx-pass" name="password" autocomplete="current-password" placeholder="Contraseña" required>
       <div class="pcx-err" id="pcx-err">${escH(msg||'')}</div>
